@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema 
+    xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+    targetNamespace="http://www.nexml.org/1.0"
+    xmlns="http://www.nexml.org/1.0">
+    
+    <xs:include schemaLocation="../abstract.xsd"/>
+
+    <xs:complexType name="AbstractNode" abstract="true">
+        <xs:annotation>
+            <xs:documentation>
+                The AbstractNode superclass is what concrete nodes inherit
+                from by restriction. It represents a node element much like
+                that of GraphML, i.e. an element that is connected into a 
+                tree by edge elements.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="OptionalTaxonLinked">
+                <xs:attribute name="root" type="xs:boolean" default="false" use="optional"/>
+            </xs:extension>            
+        </xs:complexContent>        
+    </xs:complexType>
+    
+    <xs:complexType name="AbstractEdge" abstract="true">
+        <xs:annotation>
+            <xs:documentation>
+                The AbstractEdge superclass is what concrete edge inherit
+                from by restriction. It represents an edge element much like
+                that of GraphML, i.e. an element that connects node elements.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="IDTagged">
+                <xs:attribute name="source" type="xs:NCName" use="required"/>
+                <xs:attribute name="target" type="xs:NCName" use="required"/>                
+            </xs:extension>            
+        </xs:complexContent>         
+    </xs:complexType>
+
+    <xs:complexType name="AbstractTree" abstract="true">
+        <xs:annotation>
+            <xs:documentation>
+                The AbstractTree superclass is what a concrete tree inherits
+                from.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="IDTagged">
+                <xs:sequence minOccurs="1" maxOccurs="1">
+                    <xs:element name="node" type="AbstractNode" minOccurs="1" maxOccurs="unbounded"/>
+                    <xs:element name="edge" type="AbstractEdge" minOccurs="1" maxOccurs="unbounded"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    
+    <xs:complexType name="AbstractTrees" abstract="true">
+        <xs:annotation>
+            <xs:documentation>
+                The AbstractTrees superclass is what concrete trees inherit
+                from.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="IDTagged">
+                <xs:sequence minOccurs="1" maxOccurs="1">
+                    <xs:element name="tree" type="AbstractTree" minOccurs="1" maxOccurs="unbounded"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+</xs:schema>

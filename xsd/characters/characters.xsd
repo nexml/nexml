@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.nexml.org/1.0"
+    xmlns="http://www.nexml.org/1.0">
+    <xs:include schemaLocation="continuous.xsd"/>
+    <xs:include schemaLocation="dna.xsd"/>
+    <!--<xs:include schemaLocation="nucleotide.xsd"/>-->
+    <xs:include schemaLocation="protein.xsd"/>
+    <xs:include schemaLocation="restriction.xsd"/>
+    <xs:include schemaLocation="rna.xsd"/>
+    <xs:include schemaLocation="standard.xsd"/>
+</xs:schema>

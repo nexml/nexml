@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema 
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    targetNamespace="http://www.nexml.org/1.0"
+    xmlns="http://www.nexml.org/1.0">
+    
+    <xs:include schemaLocation="abstract.xsd"/>
+
+    <xs:complexType name="NetworkNode" abstract="false">
+        <xs:annotation>
+            <xs:documentation>
+                A concrete network node implementation.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="AbstractNode"/>
+        </xs:complexContent>
+    </xs:complexType>
+    
+    <xs:complexType name="NetworkEdge" abstract="false">
+        <xs:annotation>
+            <xs:documentation>
+                A concrete network edge implementation, no length specified.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="AbstractEdge"/>            
+        </xs:complexContent>
+    </xs:complexType> 
+    
+    <xs:complexType name="NetworkFloatEdge" abstract="false">
+        <xs:annotation>
+            <xs:documentation>
+                A concrete network edge implementation, with float edge.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="NetworkEdge">
+                <xs:attribute name="length" type="xs:float"/>
+            </xs:extension>            
+        </xs:complexContent>
+    </xs:complexType>     
+
+    <xs:complexType name="NetworkIntEdge" abstract="false">
+        <xs:annotation>
+            <xs:documentation>
+                A concrete network edge implementation, with int edge.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="NetworkEdge">
+                <xs:attribute name="length" type="xs:integer"/>
+            </xs:extension>            
+        </xs:complexContent>
+    </xs:complexType>         
+            
+    <xs:complexType name="FloatNetwork" abstract="false">
+        <xs:annotation>
+            <xs:documentation>
+                A concrete network implementation, with floating point edge lengths.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:restriction base="AbstractTree">
+                <xs:sequence>
+                    <xs:element minOccurs="0" maxOccurs="unbounded" name="node" type="NetworkNode"/>
+                    <xs:element minOccurs="0" maxOccurs="unbounded" name="edge" type="NetworkFloatEdge"/>
+                </xs:sequence>
+            </xs:restriction>
+        </xs:complexContent>
+    </xs:complexType>   
+    
+    <xs:complexType name="IntNetwork" abstract="false">
+        <xs:annotation>
+            <xs:documentation>
+                A concrete network implementation, with integer edge lengths.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:restriction base="AbstractTree">
+                <xs:sequence>
+                    <xs:element minOccurs="0" maxOccurs="unbounded" name="node" type="NetworkNode"/>
+                    <xs:element minOccurs="0" maxOccurs="unbounded" name="edge" type="NetworkIntEdge"/>
+                </xs:sequence>
+            </xs:restriction>
+        </xs:complexContent>
+    </xs:complexType>             
+
+</xs:schema>

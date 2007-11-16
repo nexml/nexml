@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema 
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    targetNamespace="http://www.nexml.org/1.0"
+    xmlns="http://www.nexml.org/1.0"
+    xmlns:xml="http://www.w3.org/XML/1998/namespace">
+    <xs:include schemaLocation="../abstract.xsd"/>
+    <xs:import namespace="http://www.w3.org/XML/1998/namespace" schemaLocation="http://www.w3.org/2001/xml.xsd"/>
+    
+    <!-- dna token -->
+    <xs:simpleType name="DnaToken">
+        <xs:restriction base="xs:string">
+            <xs:length value="1"/>
+            <xs:pattern value="[aAbBcCdDgGhHkKmMnNrRsStTvVwWxXyY]"/>
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <!-- dna character -->
+    <xs:complexType name="DnaChar">
+        <xs:complexContent>
+            <xs:extension base="AbstractAlignedCell">
+                <xs:attribute name="val" use="required" type="DnaToken"/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType> 
+    
+    <!-- a list of dna characters -->
+    <xs:simpleType name="DnaSeq">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="[aAbBcCdDgGhHkKmMnNrRsStTvVwWxXyY\s]*"/>
+            <xs:whiteSpace value="collapse"/>
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <!-- polymorphic override of AbstractRow for DNA data -->
+    <xs:complexType name="DnaRow">
+        <xs:complexContent>
+            <xs:extension base="AbstractRow">
+                <xs:choice>
+                    <xs:element name="seq" type="DnaSeq" minOccurs="1" maxOccurs="1"/>
+                    <xs:element name="obs" type="DnaChar" minOccurs="1" maxOccurs="unbounded"/>
+                </xs:choice>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    
+    <!-- a matrix of dna rows -->
+    <xs:complexType name="DnaMatrix">
+        <xs:sequence>
+            <xs:element name="row" type="DnaRow" minOccurs="0" maxOccurs="unbounded">
+                <xs:key name="DNAobs">
+                    <xs:selector xpath="./obs"/>
+                    <xs:field xpath="@def"/>
+                </xs:key>
+                <xs:key name="DnaCharInChars">
+                    <xs:selector xpath="./char"/>
+                    <xs:field xpath="@id"/>
+                </xs:key>                
+            </xs:element>
+        </xs:sequence>
+        <xs:attribute name="aligned" type="xs:boolean" use="required"/>
+        <xs:attribute ref="xml:base" use="optional"/>
+        <xs:attribute ref="xml:lang" use="optional"/>
+    </xs:complexType>
+    
+    
+</xs:schema>

@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    targetNamespace="http://www.nexml.org/1.0"
+    xmlns="http://www.nexml.org/1.0">
+    <xs:include schemaLocation="../abstract.xsd"/>
+
+    <!--  
+        The following element type definitions build up a trees block
+    -->
+
+    <!-- an abstract tree we'll inherit from -->
+    <xs:complexType name="AbstractTree" abstract="true">
+        <xs:complexContent>
+            <xs:extension base="IDTagged">
+                <xs:attribute name="rooted" type="xs:boolean" use="required"/>                
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>    
+            
+    <!-- an abstract node that we'll inherit from -->
+    <xs:complexType name="AbstractNode" abstract="true">
+        <xs:complexContent>
+            <xs:extension base="IDTagged">
+                <xs:attribute name="float" type="xs:float" use="optional"/>  
+                <xs:attribute name="integer" type="xs:int" use="optional"/>         
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    
+     <!-- an abstract node that we'll inherit from -->
+    <xs:complexType name="InternalNode">
+        <xs:complexContent>
+            <xs:extension base="AbstractNode">
+                <xs:attribute name="taxon" type="xs:NCName" use="optional"/>          
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>    
+        
+    <!-- an abstract node that we'll inherit from -->
+    <xs:complexType name="InternalListNode">
+        <xs:complexContent>
+            <xs:extension base="InternalNode">
+                <xs:attribute name="parent" type="xs:NCName" use="required"/>          
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <!-- a node in a nested tree -->
+    <xs:complexType name="InternalNestedNode">
+        <xs:complexContent>
+            <xs:extension base="InternalNode">
+                <xs:sequence minOccurs="2" maxOccurs="unbounded">
+                    <xs:choice>
+                        <xs:element name="internal" type="InternalNestedNode" minOccurs="0" maxOccurs="unbounded"/>
+                        <xs:element name="terminal" type="TerminalNode" minOccurs="0" maxOccurs="unbounded"/>
+                    </xs:choice>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType> 
+
+    <!-- an abstract tip that we'll inherit from -->
+    <xs:complexType name="TerminalNode">
+        <xs:complexContent>
+            <xs:extension base="AbstractNode">
+                <xs:attribute name="taxon" type="xs:NCName" use="required"/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>      
+            
+    <!-- an abstract tip that we'll inherit from -->
+    <xs:complexType name="TerminalListNode">
+        <xs:complexContent>
+            <xs:extension base="TerminalNode">
+                <xs:attribute name="parent" type="xs:NCName" use="required"/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>  
+
+    <!-- an ancestor function tree -->
+    <xs:complexType name="ListTree">
+        <xs:complexContent>
+            <xs:extension base="AbstractTree">
+                <xs:sequence>
+                    <xs:element name="root" type="InternalNode" minOccurs="1" maxOccurs="1"/>
+                    <xs:element name="internal" type="InternalListNode" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element name="terminal" type="TerminalListNode" minOccurs="0" maxOccurs="unbounded"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    
+    <!-- a nested tree -->
+    <xs:complexType name="NestedTree">
+        <xs:complexContent>
+            <xs:extension base="AbstractTree">
+                <xs:sequence>
+                    <xs:element name="root" type="InternalNestedNode" minOccurs="1" maxOccurs="1"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    
+    <!-- a compact tree -->
+    <xs:complexType name="CompactTree">
+        <xs:complexContent>
+            <xs:extension base="AbstractTree">
+                <xs:sequence>
+                    <xs:element name="nodes">
+                        <xs:simpleType>
+                            <xs:list itemType="xs:nonNegativeInteger"/>
+                        </xs:simpleType>
+                    </xs:element>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <!-- trees -->
+    <xs:complexType name="Trees">
+        <xs:complexContent>
+            <xs:extension base="TaxaLinked">
+                <xs:sequence>
+                    <xs:element name="tree" type="AbstractTree" minOccurs="0" maxOccurs="unbounded">
+                        <xs:key name="node">
+                            <xs:selector xpath=".//terminal|internal|root"/>
+                            <xs:field xpath="@id"/>
+                        </xs:key>
+                        <xs:keyref refer="node" name="parentNodeRef">
+                            <xs:selector xpath=".//terminal|internal"/>
+                            <xs:field xpath="@parent"/>
+                        </xs:keyref>
+                    </xs:element>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+</xs:schema>
