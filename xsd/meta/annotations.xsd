@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema 
+    xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+    targetNamespace="http://www.nexml.org/1.0"
+    xmlns:xml="http://www.w3.org/XML/1998/namespace" 
+    xmlns="http://www.nexml.org/1.0">
+    <xs:import namespace="http://www.w3.org/XML/1998/namespace" schemaLocation="http://www.w3.org/2001/xml.xsd"/>
+    <!-- the following types define attachments for objects -->
+    
+    <!-- first define complex dict values -->
+    <xs:simpleType name="IntegerVector">        
+        <xs:list itemType="xs:integer"/>
+    </xs:simpleType>
+    <xs:simpleType name="FloatVector">
+        <xs:list itemType="xs:float"/>
+    </xs:simpleType>
+    <xs:simpleType name="StringVector">
+        <xs:list itemType="xs:string"/>
+    </xs:simpleType>
+    <xs:simpleType name="BooleanVector">
+        <xs:list itemType="xs:boolean"/>
+    </xs:simpleType>
+    <xs:simpleType name="DateVector">
+        <xs:list itemType="xs:dateTime"/>
+    </xs:simpleType>
+    <xs:simpleType name="UrlVector">
+        <xs:list itemType="xs:anyURI"/>
+    </xs:simpleType>
+    <xs:simpleType name="IdVector">
+        <xs:list itemType="xs:ID"/>
+    </xs:simpleType>
+    <xs:simpleType name="Base64Vector">
+        <xs:list itemType="xs:base64Binary"/>
+    </xs:simpleType>
+    
+    <!-- now the complex structures -->
+    
+    <!-- dict data structure -->
+    <xs:complexType name="Dict">                        
+        <xs:sequence minOccurs="1" maxOccurs="unbounded">
+            <xs:element name="key" minOccurs="1" maxOccurs="1" type="xs:string"/>
+            <xs:choice minOccurs="1" maxOccurs="1">
+                <xs:element name="base64" type="xs:base64Binary"/>
+                <xs:element name="base64vector" type="Base64Vector"/>
+                <xs:element name="date" type="xs:dateTime"/>
+                <xs:element name="datevector" type="DateVector"/>
+                <xs:element name="boolean" type="xs:boolean"/>
+                <xs:element name="booleanvector" type="BooleanVector"/>
+                <xs:element name="float" type="xs:float"/>
+                <xs:element name="floatvector" type="FloatVector"/>
+                <xs:element name="id" type="xs:ID"/>
+                <xs:element name="idvector" type="IdVector"/>
+                <xs:element name="integer" type="xs:integer"/>
+                <xs:element name="integervector" type="IntegerVector"/>
+                <xs:element name="string" type="xs:string"/>                
+                <xs:element name="stringvector" type="StringVector"/>
+                <xs:element name="url" type="xs:anyURI"/>
+                <xs:element name="urlvector" type="UrlVector"/>
+                <xs:element name="dict" type="Dict"/>                
+                <xs:element name="dictvector" type="DictVector"/>
+                <xs:element name="any" type="xs:anyType" form="unqualified"/>
+            </xs:choice>
+        </xs:sequence>
+        <xs:attribute ref="xml:base" use="optional"/>
+        <xs:attribute ref="xml:lang" use="optional"/>
+    </xs:complexType>
+    
+    <!-- array data structure -->
+    <xs:complexType name="DictVector">
+        <xs:sequence minOccurs="1" maxOccurs="unbounded">
+            <xs:element name="dict" type="Dict"/>
+        </xs:sequence>
+    </xs:complexType>
+    
+</xs:schema>

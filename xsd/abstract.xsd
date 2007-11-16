@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema 
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:xml="http://www.w3.org/XML/1998/namespace" 
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    targetNamespace="http://www.nexml.org/1.0"
+    xmlns="http://www.nexml.org/1.0">
+    <xs:import namespace="http://www.w3.org/XML/1998/namespace" schemaLocation="http://www.w3.org/2001/xml.xsd"/>
+    <xs:import namespace="http://www.w3.org/1999/xlink" schemaLocation="http://www.loc.gov/standards/mets/xlink.xsd"/>
+    <xs:include schemaLocation="meta/annotations.xsd"/>
+    
+    <xs:simpleType name="IDVector">
+        <xs:annotation>
+            <xs:documentation>
+                This simple type is used to specify a list of names of classes (i.e. sets) to which the
+                element that holds this attribute belongs to.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:list itemType="xs:NCName"/>                    
+    </xs:simpleType>
+    
+    <xs:complexType name="Base" abstract="true">
+        <xs:sequence/>
+        <xs:attribute ref="xml:base" use="optional"/>
+        <xs:attribute ref="xml:lang" use="optional"/>
+        <xs:attribute ref="xml:id" use="optional"/>
+        <xs:attribute ref="xlink:href" use="optional"/>
+        <xs:attribute name="class" type="IDVector" use="optional"/>
+    </xs:complexType>
+    
+    <!-- a labelled element that encloses a key/value dictionary -->
+    <xs:complexType name="Annotated" abstract="true">
+        <xs:annotation>
+            <xs:documentation>
+                The Annotated complexType is a super class for objects that 
+                optionally have key/value annotations of type Dict.
+            </xs:documentation>
+        </xs:annotation>          
+        <xs:complexContent>
+            <xs:extension base="Base">
+                <xs:sequence>
+                    <xs:element name="dict" type="Dict" minOccurs="0" maxOccurs="unbounded"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>    
+
+    <!-- an IDTagged element with a human readable label -->
+    <xs:complexType name="Labelled" abstract="true">
+        <xs:annotation>
+            <xs:documentation>
+                The Labelled complexType is a super class for objects that 
+                optionally have label attributes to use as a (non-unique)
+                name of type xs:string.
+            </xs:documentation>
+        </xs:annotation>        
+        <xs:complexContent>
+            <xs:extension base="Annotated">
+                <xs:attribute name="label" type="xs:string" use="optional"/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>    
+            
+    <!-- any element that requires an ID -->
+    <xs:complexType name="IDTagged" abstract="true">
+        <xs:annotation>
+            <xs:documentation>
+                The IDTagged complexType is a super class for objects that require
+                unique id attributes of type xs:NCName. IDTagged doesn't define
+                scope for uniqueness, derivations are free to do so using xs:keyRef.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="Labelled">
+                <xs:sequence/>
+                <xs:attribute name="id" type="xs:NCName" use="required"/>
+            </xs:extension>
+        </xs:complexContent>        
+    </xs:complexType>    
+    
+    <!-- elements that enclose "class" elements -->
+    <xs:complexType name="Segmented" abstract="true">
+        <xs:annotation>
+            <xs:documentation>
+                The Segmented complexType is for elements that contain multiple child 
+                elements of the same type, e.g. multiple cells in a row, multiple nodes
+                in a tree, etc. Segmented elements can hold one or more elements of type
+                Class, such that the segments can refer to the ID of the class they belong
+                to.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="IDTagged">
+                <xs:sequence>
+                    <xs:element name="class" type="Class" minOccurs="0" maxOccurs="unbounded"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>    
+    
+    <!-- an annotated element with a required link to an otu -->
+    <xs:complexType name="TaxonLinked" abstract="true">
+        <xs:annotation>
+            <xs:documentation>
+                The TaxonLinked complexType is a super class for objects that 
+                require a taxon id reference.
+            </xs:documentation>
+        </xs:annotation>         
+        <xs:complexContent>
+            <xs:extension base="IDTagged">
+                <xs:attribute name="otu" type="xs:NCName" use="required"/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    
+    <!-- an annotated element with an optional link to an otu -->
+    <xs:complexType name="OptionalTaxonLinked" abstract="true">
+        <xs:annotation>
+            <xs:documentation>
+                The OptionalOTULinked complexType is a super class for objects that 
+                that optionally have an otu id reference.
+            </xs:documentation>
+        </xs:annotation>          
+        <xs:complexContent>
+            <xs:extension base="IDTagged">
+                <xs:attribute name="otu" type="xs:NCName" use="optional"/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>    
+    
+    <!-- an annotated element with a required link to an otu container -->
+    <xs:complexType name="TaxaLinked" abstract="true">
+        <xs:annotation>
+            <xs:documentation>
+                The TaxaLinked complexType is a super class for objects that 
+                that require an otus id reference.
+            </xs:documentation>
+        </xs:annotation>         
+        <xs:complexContent>
+            <xs:extension base="IDTagged">
+                <xs:attribute name="otus" type="xs:NCName" use="required"/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    
+    <!-- class element -->
+    <xs:complexType name="Class" abstract="false">
+        <xs:annotation>
+            <xs:documentation>
+                Elements of the Class complexType are elements with an ID to which
+                other elements refer using the "class" attribute. The purpose of this 
+                to allow creation of sets, but rather than having a set specify its
+                members (such as character sets in nexus), in nexml the members specify
+                which class(es) they belong to. This is more idiomatic for xml, consider
+                for example the "class" attribute in (X)HTML which works the same way,
+                and is used for example for cascading style sheets.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="IDTagged"/>            
+        </xs:complexContent>
+    </xs:complexType>
+    
+    <!-- matrix cell -->
+    <xs:complexType abstract="true" name="AbstractCell">
+        <xs:annotation>
+            <xs:documentation>
+                The AbstractCell complexType is a super class for
+                character matrix cells, which can be annotated using
+                key/value structures of type Dict, and which are
+                linked to a character definition using the def attribute
+                id reference.
+            </xs:documentation>
+        </xs:annotation>  
+        <xs:complexContent>
+            <xs:extension base="Labelled">
+                <xs:attribute name="def" type="xs:NCName" use="required"/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    
+    <!-- matrix cell -->
+    <xs:complexType abstract="true" name="AbstractAlignedCell">
+        <xs:annotation>
+            <xs:documentation>
+                The AbstractAlignedCell complexType is a super class for
+                character matrix cells, which can be annotated using
+                key/value structures of type Dict, and which have
+                their alignment position specified using the def
+                attribute of type xs:nonNegativeInteger.
+            </xs:documentation>
+        </xs:annotation>         
+        <xs:complexContent>
+            <xs:extension base="Labelled">
+                <xs:attribute name="def" type="xs:nonNegativeInteger" use="required"/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>    
+    
+    <!-- matrix row -->
+    <xs:complexType abstract="true" name="AbstractRow">
+        <xs:annotation>
+            <xs:documentation>
+                The AbstractRow complexType is a super class for
+                character matrix rows.
+            </xs:documentation>
+        </xs:annotation>         
+        <xs:complexContent>
+            <xs:extension base="TaxonLinked">
+                <xs:sequence/>                
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    
+    <!-- matrix -->
+    <xs:complexType abstract="true" name="AbstractCharacters">
+        <xs:annotation>
+            <xs:documentation>
+                The AbstractCharacters complexType is a super class for
+                character matrices.
+            </xs:documentation>
+        </xs:annotation>         
+        <xs:complexContent>
+            <xs:extension base="TaxaLinked">
+                <xs:sequence/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>   
+           
+</xs:schema>

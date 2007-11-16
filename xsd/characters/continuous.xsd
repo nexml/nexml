@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema 
+    xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+    targetNamespace="http://www.nexml.org/1.0"
+    xmlns="http://www.nexml.org/1.0" 
+    xmlns:xml="http://www.w3.org/XML/1998/namespace">
+    
+    <xs:include schemaLocation="abstract.xsd"/>
+    
+    <xs:import 
+        namespace="http://www.w3.org/XML/1998/namespace" 
+        schemaLocation="http://www.w3.org/2001/xml.xsd"/>
+    
+    <xs:simpleType name="ContinuousToken">
+        <xs:restriction base="xs:float"/>
+    </xs:simpleType>   
+     
+    <!--
+        The following type definitions have to do with states and ambiguity mapping,
+        which should be omitted for continuous data.
+        
+    <xs:complexType name="ContinuousMapping">
+        <xs:annotation>
+            <xs:documentation>A standard character ambiguity mapping.</xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:restriction base="AbstractMapping"/>            
+        </xs:complexContent>
+    </xs:complexType>
+    
+    <xs:complexType name="ContinuousState">
+        <xs:annotation>
+            <xs:documentation> This is a concrete implementation of the state element, which requires
+                a symbol element, in this case restricted to integers, and optional mapping
+                elements to refer to other states. </xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:restriction base="AbstractState">
+                <xs:sequence minOccurs="1" maxOccurs="1">
+                    <xs:element name="dict" minOccurs="0" maxOccurs="unbounded" type="Dict"/>
+                    <xs:element name="symbol" type="ContinuousToken" minOccurs="1" maxOccurs="1"/>
+                    <xs:element name="mapping" type="ContinuousMapping" minOccurs="0" maxOccurs="unbounded"/>
+                </xs:sequence>
+            </xs:restriction>
+        </xs:complexContent>
+    </xs:complexType>
+    
+    <xs:complexType name="ContinuousStates">
+        <xs:annotation>
+            <xs:documentation>
+                A container for a set of states.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:restriction base="AbstractStates">
+                <xs:sequence minOccurs="1" maxOccurs="1">
+                    <xs:element name="dict" minOccurs="0" maxOccurs="unbounded" type="Dict"/>
+                    <xs:element name="state" type="ContinuousState" minOccurs="0" maxOccurs="unbounded"/>
+                </xs:sequence>
+            </xs:restriction>
+        </xs:complexContent>        
+    </xs:complexType> -->
+    
+    <xs:complexType name="ContinuousChar">
+        <xs:annotation>
+            <xs:documentation> 
+                A concrete implementation of the char element, which requires
+                only an id attribute.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:restriction base="AbstractChar">
+                <xs:sequence minOccurs="1" maxOccurs="1">
+                    <xs:element name="dict" minOccurs="0" maxOccurs="unbounded" type="Dict"/>
+                </xs:sequence>                
+                <xs:attribute name="states" type="xs:NCName" use="prohibited"/>
+                <xs:attribute name="codon" type="CodonPosition" use="prohibited"/>
+                <xs:attribute name="tokens" type="MSTokenLength" use="prohibited"/>
+                <xs:attribute name="id" type="xs:NCName" use="required"/>
+            </xs:restriction>
+        </xs:complexContent>
+    </xs:complexType>
+    
+    <xs:complexType name="ContinuousFormat" abstract="false">
+        <xs:annotation>
+            <xs:documentation> 
+                The ContinuousFormat class is the container of continuous column definitions.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:restriction base="AbstractFormat">
+                <xs:sequence minOccurs="1" maxOccurs="1">
+                    <xs:element name="char" type="ContinuousChar" minOccurs="1" maxOccurs="unbounded"/>
+                </xs:sequence>
+            </xs:restriction>
+        </xs:complexContent>
+    </xs:complexType>
+    
+    <xs:complexType name="ContinuousObs" abstract="false">
+        <xs:annotation>
+            <xs:documentation> 
+                This is a single cell in a matrix containing a continuous
+                observation. 
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:restriction base="AbstractObs">
+                <xs:sequence minOccurs="1" maxOccurs="1">
+                    <xs:element name="dict" minOccurs="0" maxOccurs="unbounded" type="Dict"/>
+                </xs:sequence>
+                <xs:attribute name="char" use="required" type="xs:NCName"/>
+                <xs:attribute name="state" use="required" type="ContinuousToken"/>
+            </xs:restriction>
+        </xs:complexContent>
+    </xs:complexType>
+    
+    <xs:simpleType name="ContinuousSeq">
+        <xs:annotation>
+            <xs:documentation> 
+                This is a simple type that specifies 
+                a list of xs:float characters.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:list itemType="xs:float"/>       
+    </xs:simpleType>
+    
+    <xs:complexType name="ContinuousMatrixSeqRow" abstract="false">
+        <xs:annotation>
+            <xs:documentation> 
+                This is a row in a matrix of continuous data as character sequences. 
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:restriction base="AbstractSeqRow">
+                <xs:sequence minOccurs="1" maxOccurs="1">
+                    <xs:element name="dict" minOccurs="0" maxOccurs="unbounded" type="Dict"/>
+                    <xs:element name="seq" minOccurs="1" maxOccurs="1" type="ContinuousSeq"/>
+                </xs:sequence>
+            </xs:restriction>
+        </xs:complexContent>
+    </xs:complexType>
+    
+    <xs:complexType name="ContinuousMatrixObsRow" abstract="false">
+        <xs:annotation>
+            <xs:documentation> 
+                This is a row in a matrix of continuous data as granular obervations. 
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:restriction base="AbstractObsRow">
+                <xs:sequence minOccurs="1" maxOccurs="1">
+                    <xs:element name="dict" minOccurs="0" maxOccurs="unbounded" type="Dict"/>
+                    <xs:element name="cell" minOccurs="1" maxOccurs="unbounded" type="ContinuousObs"/>
+                </xs:sequence>
+            </xs:restriction>
+        </xs:complexContent>
+    </xs:complexType>
+    
+    <xs:complexType name="ContinuousSeqMatrix" abstract="false">
+        <xs:annotation>
+            <xs:documentation>
+                A matrix of rows with seq strings of type continuous.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:restriction base="AbstractSeqMatrix">
+                <xs:sequence minOccurs="1" maxOccurs="1">                    
+                    <xs:element name="row" minOccurs="1" maxOccurs="unbounded" type="ContinuousMatrixSeqRow"/>
+                </xs:sequence>
+            </xs:restriction>
+        </xs:complexContent>
+    </xs:complexType>
+    
+    <xs:complexType name="ContinuousObsMatrix" abstract="false">
+        <xs:annotation>
+            <xs:documentation>
+                A matrix of rows with single character observations.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:restriction base="AbstractObsMatrix">
+                <xs:sequence minOccurs="1" maxOccurs="1">
+                    <xs:element name="row" minOccurs="1" maxOccurs="unbounded" type="ContinuousMatrixObsRow"/>
+                </xs:sequence>
+            </xs:restriction>
+        </xs:complexContent>
+    </xs:complexType>
+    
+    <xs:complexType name="ContinuousSeqs" abstract="false">
+        <xs:annotation>
+            <xs:documentation>
+                A continuous characters block consisting of float sequences preceded by metadata.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:restriction base="AbstractSeqs">
+                <xs:sequence minOccurs="1" maxOccurs="1">
+                    <xs:element name="dict" minOccurs="0" maxOccurs="unbounded" type="Dict"/>
+                    <xs:element name="format" minOccurs="0" maxOccurs="1" type="ContinuousFormat"/>
+                    <xs:element name="matrix" minOccurs="1" maxOccurs="1" type="ContinuousSeqMatrix"/>
+                </xs:sequence>
+            </xs:restriction>
+        </xs:complexContent>
+    </xs:complexType>
+    
+    <xs:complexType name="ContinuousCells" abstract="false">
+        <xs:annotation>
+            <xs:documentation>
+                A continuous characters block consisting of granular cells preceded by metadata.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:restriction base="AbstractCells">
+                <xs:sequence minOccurs="1" maxOccurs="1">
+                    <xs:element name="dict" minOccurs="0" maxOccurs="unbounded" type="Dict"/>
+                    <xs:element name="format" minOccurs="1" maxOccurs="1" type="ContinuousFormat"/>
+                    <xs:element name="matrix" minOccurs="1" maxOccurs="1" type="ContinuousObsMatrix"/>                   
+                </xs:sequence>
+            </xs:restriction>
+        </xs:complexContent>
+    </xs:complexType>
+    
+</xs:schema>
