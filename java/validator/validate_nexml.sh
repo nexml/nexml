@@ -17,19 +17,19 @@ script_name=`basename $program`
 script_directory=`dirname $program`
 script_directory=`cd $script_directory && /bin/pwd`
 
-xml="$1"
 xsd="${script_directory}/../../xsd/nexml.xsd"
 ns="http://www.nexml.org/1.0"
 
 if test -f "${script_directory}/build/validator/XmlValidator.class"
 then
-	for filen in $@
+	for xml in $@
 	do
 		if ! test -e "$xml"
 		then
 			echo "$script_name: file $xml does not exist"
 			exit 1
 		else
+			echo "checking $xml"
 			java -classpath "${script_directory}/build:${script_directory}/jars/xercesImpl.jar" -Dxml="$xml" -Dxsd="$xsd" -Dns="$ns" validator.XmlValidator || exit 2
 		fi
 	done
