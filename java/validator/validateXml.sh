@@ -16,7 +16,6 @@ done
 script_name=`basename $program`
 script_directory=`dirname $program`
 script_directory=`cd $script_directory && /bin/pwd`
-lib=${script_directory}/../lib/cipres
 
 xml="$1"
 xsd="$2"
