@@ -1,3 +1,13 @@
+================================================================================
+General layout
+================================================================================
+The repository has the following structure:
+/examples - nexml instance documents that should validate (i.e. testable)
+/java     - xerces-j validator, generic class libs, mesquite code
+/perl     - Bio::Phylo parser code
+/soap     - experimental nexml schema inclusions in wsdl
+/xsd      - schema files
+/xslt     - experimental style sheets, including schematron
 
 ================================================================================
 Third party tools
