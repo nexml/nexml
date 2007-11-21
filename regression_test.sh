@@ -1,11 +1,6 @@
 #!/bin/sh
 echo "The following files are currently invalid example files (according to the xerces-based validator in java/validator):"
 
-# [Error] :2:20: cvc-elt.1: Cannot find the declaration of element 'models'.
-# [Fatal Error] :8:55: The prefix "xsi" for attribute "xsi:type" associated with an element type "states" is not bound.
-echo "  examples/models.xml"
-
-
 echo "The following schema in the examples directory are not nexml instances:"
 echo "  examples/mesquite.xml"
 
