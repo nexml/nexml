@@ -7,15 +7,15 @@ Bio::Phylo::IO architecture.
 ================================================================================
 Installation
 ================================================================================
-This is what Mark Holder had to do to run t/Nexml.pm
-create a directory to add to my PERL5LIB the contents are shown below. They were
-obtained by copying the files from a CIPRES installation  -- they were in
-CIPRES_ROOT/lib/perl/lib.
+The file list below comprises the minimum required to be able to run
 
-Then I added the ext directory mentioned below to my DYLD_LIBRARY_PATH (on Mac, 
-on *nix it would be added to the LD_LIBRARY_PATH)
+$ perl Makefile.PL && make test
 
-Contents of the new directory on my PERL5LIB:
+You can obtain the files below by installing cipres and adding 
+$CIPRES_ROOT/lib/perl/lib to your $PERL5LIB environment variable, or by
+installing Bio::Phylo and XML::Twig from CPAN.
+
+File list:
 	auto
 	auto/XML
 	auto/XML/Parser
