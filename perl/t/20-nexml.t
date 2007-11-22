@@ -11,7 +11,7 @@ Bio::Phylo::Util::Logger->VERBOSE(
 use XML::Twig;
 use Data::Dumper;
 
-my $XML_PATH = '../../examples';    # TODO fixme
+my $XML_PATH = '../examples';    # TODO fixme
 
 # here we just parse a file with only taxon elements
 my $taxa = parse( -format => 'nexml', -file => "$XML_PATH/taxa.xml" )->[0];
