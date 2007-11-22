@@ -11,8 +11,11 @@ use Bio::Phylo::Forest::Node;
 use Bio::Phylo::Forest::Tree;
 use Bio::Phylo::Util::Exceptions 'throw';
 use Data::Dumper;
-use vars '@ISA';
+use vars qw(@ISA $VERSION);
 @ISA = qw(Bio::Phylo::IO);
+
+# We re-use the core Bio::Phylo version number.
+$VERSION=$Bio::Phylo::VERSION;
 
 # I factored the logging methods in Bio::Phylo (debug, info,
 # warning, error, fatal) out of the inheritance tree and put
