@@ -5,7 +5,7 @@ use Bio::Phylo::IO 'parse';
 use Test::More 'no_plan';
 use Bio::Phylo::Util::Logger;
 Bio::Phylo::Util::Logger->VERBOSE(
-	-level => 3,
+	-level => 4,
 	-class => 'Bio::Phylo::Parsers::Nexml'
 );
 use XML::Twig;
@@ -20,7 +20,7 @@ my $taxa = parse( -format => 'nexml', -file => "$XML_PATH/taxa.xml" )->[0];
 my @ids      = qw(t1 t2 t3 t4 t5);
 my @children = @{ $taxa->get_entities };
 for my $i ( 0 .. $#children ) {
-	ok( $ids[$i] eq $children[$i]->get_generic('id'), "$ids[$i]" );
+	ok( $ids[$i] eq $children[$i]->get_name, "$ids[$i]" );
 }
 
 # here we parse a file with taxon elements and a trees element
