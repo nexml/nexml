@@ -53,15 +53,16 @@ my %CLASS = (
 # be specified using named arguments, e.g. -type => 'dna'
 sub _obj_from_elt {
 	my ( $self, $elt, $class, %args ) = @_;
-	my $obj = $class->new(%args);
-	my $id = $elt->att('id');
+	my $obj   = $class->new(%args);
+	my $id    = $elt->att('id');
+	my $label = $elt->att('label');
 	$obj->set_name( $id );
-	$obj->set_desc( $elt->att('label') );
+	$obj->set_desc( $label ) if $label;
 	for my $dict_elt ( $elt->children('dict') ) {
 		my $dict_hash = $self->_process_dictionary( $dict_elt );
 		$obj->set_generic( 'dict' => $dict_hash );
 	}
-	$logger->debug("created object of class $class with xml id $id $args{-type}");
+	$logger->debug("created object of class $class with xml id $id");
 	return ( $obj, $id );
 }
 
