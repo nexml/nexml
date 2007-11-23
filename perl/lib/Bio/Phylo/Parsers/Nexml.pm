@@ -83,11 +83,14 @@ sub _set_taxon_for_obj {
 			$obj->set_taxon( $taxon_obj );
 		}
 		else {
-			throw 'API' => "no taxon '$taxon_idref' in block '$taxa_idref'", 'line' => $self->{'_twig'}->parser->current_line;
+			throw( 
+				'API'  => "no OTU '$taxon_idref' in block '$taxa_idref'", 
+				'line' => $self->{'_twig'}->parser->current_line 
+			);
 		}
 	}
 	else {
-		die "no taxon idref at line ", $self->{'_twig'}->parser->current_line;
+		$logger->info( "no taxon idref at line " . $self->{'_twig'}->parser->current_line );
 	}
 }
 
@@ -359,107 +362,92 @@ sub _process_forest {
 	
 	# loop over tree elements
 	for my $tree_elt ( $trees_elt->children('tree') ) {
-		
-		# instantiate the tree object, set name and id
-		my ( $tree_obj, $tree_id ) = $self->_obj_from_elt( $tree_elt, $CLASS{Tree} );	
-		
-		# there is always a root, so might as well instantiate that
-		my $root_elt = $tree_elt->first_child('root');
-		my ( $root_obj, $root_id ) = $self->_obj_from_elt( $root_elt, $CLASS{Node} );
 	
-		# can insert really at any time, nice to have it first in the list though
-		$tree_obj->insert($root_obj);	
-		
-		# things to pass to process methods
-		my @args = ( $tree_elt, $tree_obj, $root_obj, $root_id, $taxa_idref );
-		
-		# now dispatch based on xsi:type
-		my $type = $tree_elt->att('xsi:type');
-		if ( $type eq 'nex:NestedTree' ) {
-			$forest_obj->insert( $self->_process_nestedtree( @args ) );
+		# for now we can only process true trees, not networks,
+		# which would require extensions to the Bio::Phylo API
+		my $type = $tree_elt->att('xsi:type');		
+		if ( $type =~ qr/Tree$/ ) {
+
+			# instantiate the tree object, set name and id
+			my ( $tree_obj, $tree_id ) = $self->_obj_from_elt( $tree_elt, $CLASS{Tree} );				
+
+			# things to pass to process methods
+			my @args = ( $tree_elt, $tree_obj, $taxa_idref );
+
+			$forest_obj->insert( $self->_process_listtree( @args ) );					
+			
 		}
-		elsif ( $type eq 'nex:ListTree' ) {
-			$forest_obj->insert( $self->_process_listtree( @args ) );
-		}
+		
+		# TODO fixme
 		else {
-			die "Can't handle xsi:type '$type'";
+			$logger->warn("Can't process networks yet");
 		}
+				
 	}
 	push @{ $self->{'_blocks'} }, $forest_obj;
 }
 
-# this is just the entry point for the recursive _process_nestednode
-# method below
-sub _process_nestedtree { 
-	my ( $self, $tree_elt, $tree_obj, $root_obj, $root_id, $taxa_idref ) = @_;
-	$self->_process_nestednode( $tree_obj, $tree_elt->first_child('root'), $root_obj, $taxa_idref );
-	return $tree_obj;
-}
-
-# beware, here we're recursing
-sub _process_nestednode {
-	my ( $self, $tree_obj, $node_elt, $node_obj, $taxa_idref ) = @_;
-	
-	# link to taxon
-	if ( $node_elt->tag eq 'terminal' ) {
-		$self->_set_taxon_for_obj( $node_elt, $node_obj, $taxa_idref );
-	}	
-	
-	# get all the child elements of focal element with name 'internal' or 'terminal'
-	my @child_elts = ( $node_elt->children('internal'), $node_elt->children('terminal') );
-	
-	# iterate over child elements
-	for my $child_elt ( @child_elts ) {
-		
-		# instantiate child node objects, set branch length
-		my ( $child_obj, $child_id ) = $self->_obj_from_elt( $child_elt, $CLASS{Node} );
-		my $branch_length;
-		if ( defined $child_elt->att('float') ) {
-			$branch_length = $child_elt->att('float');
-		}
-		elsif ( defined $child_elt->att('int') ) {
-			$branch_length = $child_elt->att('int');
-		}
-		$child_obj->set_branch_length( $branch_length ) if defined $branch_length;
-		
-		# we're now going one level deeper, once we've set the parent, and inserted
-		# the node
-		$child_obj->set_parent( $node_obj );
-		$tree_obj->insert( $child_obj );
-		
-		# same thing all over again, one generation deeper
-		$self->_process_nestednode( $tree_obj, $child_elt, $child_obj, $taxa_idref );
-	}
-}
-
 sub _process_listtree {
-	my ( $self, $tree_elt, $tree_obj, $root_obj, $root_id, $taxa_idref ) = @_;
+	my ( $self, $tree_elt, $tree_obj, $taxa_idref ) = @_;
+	my $tree_id = $tree_elt->att('id');
 
 	# this is going to be our lookup to get things back by id
 	my ( %node_by_id, %parent_of );
-	$node_by_id{$root_id} = $root_obj;
 	
 	# loop over nodes
-	my @node_elts = ( $tree_elt->children('internal'), $tree_elt->children('terminal') );
-	for my $node_elt ( @node_elts ) {
-		my ( $node_obj, $node_id, $parent_id ) = $self->_process_listnode( $node_elt, $taxa_idref );
+	for my $node_elt ( $tree_elt->children('node') ) {
+		my ( $node_obj, $node_id ) = $self->_obj_from_elt( $node_elt, $CLASS{Node} );
 		$node_by_id{$node_id} = $node_obj;
-		$parent_of{$node_id} = $parent_id;
+		$self->_set_taxon_for_obj( $node_elt, $node_obj, $taxa_idref );
+		$tree_obj->insert( $node_obj );
 	}
 	
-	# here's where the magic happens!
-	for my $id ( keys %node_by_id ) {
-		my $node_obj = $node_by_id{$id};
-		if ( my $parent = $node_by_id{ $parent_of{$id} } ) {
-			$node_obj->set_parent( $parent );
+	# loop over branches
+	for my $edge_elt ( $tree_elt->children('edge') ) {
+		my $node_id   = $edge_elt->att('target');
+		my $parent_id = $edge_elt->att('source');
+		my $edge_id   = $edge_elt->att('id');
+		
+		# referential integrity check for target
+		if ( not exists $node_by_id{$node_id} ) {
+			throw( 
+				'API'  => "no target '$node_id' for edge '$edge_id' in tree '$tree_id'", 
+				'line' => $self->{'_twig'}->parser->current_line 
+			);
 		}
-		#TODO: Double check my logic here.  Root was appearing twice in tree
-		if ($id eq $root_id) {
-   		next;
+
+		# referential integrity check for source
+		if ( not exists $node_by_id{$parent_id} ) {
+			throw( 
+				'API'  => "no source '$parent_id' for edge '$edge_id' in tree '$tree_id'", 
+				'line' => $self->{'_twig'}->parser->current_line 
+			);
 		}
-		#End my addition
-		$tree_obj->insert( $node_obj );
+
+		$node_by_id{$node_id}->set_parent( $node_by_id{$parent_id} );
+		if ( defined ( my $length = $edge_elt->att('length') ) ) {
+			$node_by_id{$node_id}->set_branch_length( $length );
+		}
+
+	}
+	
+	# tree structure integrity check
+	my $orphan_count = 0;
+	for my $node_id ( keys %node_by_id ) {
+		$orphan_count++ if not $node_by_id{$node_id}->get_parent;
 	}	
+	if ( $orphan_count == 0 ) {
+		throw(
+			'API'  => "tree '$tree_id' has reticulations",
+			'line' => $self->{'_twig'}->parser->current_line 
+		);
+	}
+	if ( $orphan_count > 1 ) {
+		throw(
+			'API'  => "tree '$tree_id' has too many orphans",
+			'line' => $self->{'_twig'}->parser->current_line
+		);
+	}
 	
 	return $tree_obj;
 }
