@@ -62,13 +62,20 @@ sub _obj_from_elt {
 		my $dict_hash = $self->_process_dictionary( $dict_elt );
 		$obj->set_generic( 'dict' => $dict_hash );
 	}
-	$logger->debug("created object of class $class with xml id $id");
+	$logger->debug($self->_pos . " created object of class $class with xml id $id");
 	return ( $obj, $id );
 }
 
 # gets the current line we're looking at, for informational purposes only
 sub _line {
 	shift->{'_twig'}->parser->current_line
+}
+
+sub _pos {
+	my $self = shift;
+	my $t = $self->{'_twig'};
+	my @pos = ( $t->current_line, $t->current_column, $t->current_byte );
+	return join ':', @pos;
 }
 
 # again, nice 'n' generic: we provide an element, which must have an
@@ -90,7 +97,7 @@ sub _set_taxon_for_obj {
 		}
 	}
 	else {
-		$logger->info( "no taxon idref at line " . $self->{'_twig'}->parser->current_line );
+		$logger->info( $self->_pos . " no taxon idref" );
 	}
 }
 
@@ -192,7 +199,7 @@ sub _process_taxa {
 
 sub _process_chars {
 	my ( $twig, $characters_elt, $self ) = @_;
-	$logger->debug("going to parse characters element");
+	$logger->debug($self->_pos . " going to parse characters element");
 		
 	# create matrix object, send extra constructor args
 	my $type = $characters_elt->att('xsi:type');
@@ -237,7 +244,7 @@ sub _process_chars {
 				}			
 			}
 		}
-		$logger->debug("set char: '@chars'");
+		$logger->debug($self->_pos . " set char: '@chars'");
 		$row_obj->set_char(\@chars);		
 		$self->_set_taxon_for_obj( $row_elt, $row_obj, $taxa_idref );
 		
@@ -380,7 +387,7 @@ sub _process_forest {
 		
 		# TODO fixme
 		else {
-			$logger->warn("Can't process networks yet");
+			$logger->warn($self->_pos . " Can't process networks yet");
 		}
 				
 	}
