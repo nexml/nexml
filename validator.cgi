@@ -22,38 +22,38 @@ my @lines; # will hold lines in the file
 
 # set logger to transmit messages at all levels
 $logger->VERBOSE( 
-	'-level' => 4, 
-	'-class' => 'Bio::Phylo::Parsers::Nexml' 
+    '-level' => 4, 
+    '-class' => 'Bio::Phylo::Parsers::Nexml' 
 );
 
 # closure to turn log messages into html
 my $make_html_msg = sub {
-	my ( $level, $msg, $line ) = @_;
-	my $link = defined $line ? ' at line ' . a( { '-href' => '#line' . $line }, $line ) : '';
-	return pre(
-		{ '-class' => lc( $level ) },
-		encode_entities( $msg ) . $link
-	);
+    my ( $level, $msg, $line ) = @_;
+    my $link = defined $line ? ' at line ' . a( { '-href' => '#line' . $line }, $line ) : '';
+    return pre(
+        { '-class' => lc( $level ) },
+        encode_entities( $msg ) . $link
+    );
 };
 
 # attach a listener that passes log messages thru make_html_msg closure and pushes onto stack
 $logger->set_listeners(
-	sub {
-		# check Bio::Phylo::Util::Logger for details on this argument stack
-		my ( $log_string, $method, $subroutine, $filename, $line, $msg ) = @_;
-		
-		# these will hold line, column and byte location of xml parser 
-		my ( $xline, $xcol, $xbyte );
-		
-		# log messages are prefixed with 1:2:3 for line 1, col 2, byte 3
-		if ( $msg =~ m/^(\d+):(\d+):(\d+)\b/ ) {
-			( $xline, $xcol, $xbyte ) = ( $1, $2, $3 );
-			$msg =~ s/^(\d+:\d+:\d+)\s*//;
-		}
-		
-		# appends <pre class="info">$msg at line <a href="#line12">12</a></pre>
-		push @logmessages, $make_html_msg->( $method, $msg, $xline );
-	}
+    sub {
+        # check Bio::Phylo::Util::Logger for details on this argument stack
+        my ( $log_string, $method, $subroutine, $filename, $line, $msg ) = @_;
+        
+        # these will hold line, column and byte location of xml parser 
+        my ( $xline, $xcol, $xbyte );
+        
+        # log messages are prefixed with 1:2:3 for line 1, col 2, byte 3
+        if ( $msg =~ m/^(\d+):(\d+):(\d+)\b/ ) {
+            ( $xline, $xcol, $xbyte ) = ( $1, $2, $3 );
+            $msg =~ s/^(\d+:\d+:\d+)\s*//;
+        }
+        
+        # appends <pre class="info">$msg at line <a href="#line12">12</a></pre>
+        push @logmessages, $make_html_msg->( $method, $msg, $xline );
+    }
 );
 
 ####################################################################################################
@@ -61,24 +61,24 @@ $logger->set_listeners(
 
 my $file = $q->upload('file') || shift(@ARGV); # file name can also be provided on command line
 if ( fileno( $file ) ) {
-	@lines = <$file>;
+    @lines = <$file>;
 }
 else {
-	open my $fh, '<', $file or die $!;
-	@lines = <$fh>;
-	close $fh;
+    open my $fh, '<', $file or die $!;
+    @lines = <$fh>;
+    close $fh;
 }
 eval { 
-	parse( 
-		'-format' => 'nexml', 
-		'-string' => join( '', @lines ),
-	) 
+    parse( 
+        '-format' => 'nexml', 
+        '-string' => join( '', @lines ),
+    ) 
 };
 if ( $@ ) {
-	$code = '400 Bad Request';
-	my $error = UNIVERSAL::can( $@, 'error' ) ? $@->error : 'Probably not xml: ' . $@;
-	my $line  = UNIVERSAL::can( $@, 'line' ) ? $@->line : 1;
-	push @logmessages, $make_html_msg->( 'fatal', $error, $line );
+    $code = '400 Bad Request';
+    my $error = UNIVERSAL::can( $@, 'error' ) ? $@->error : 'Probably not xml: ' . $@;
+    my $line  = UNIVERSAL::can( $@, 'line' ) ? $@->line : 1;
+    push @logmessages, $make_html_msg->( 'fatal', $error, $line );
 }
 
 ####################################################################################################
@@ -86,29 +86,29 @@ if ( $@ ) {
 
 print header('text/html', $code); # response code (201 or 400) here as second arg
 print start_html(
-	'-title' => 'nexml validation results',
-	'-style' => { 
-		'-src'  => 'style.css',
-		'-type' => 'text/css',
-	},
-	'-script' => { 
-		'-type' => 'text/javascript',
-		'-src'  => 'script.js',	
-	},
+    '-title' => 'nexml validation results',
+    '-style' => { 
+        '-src'  => 'style.css',
+        '-type' => 'text/css',
+    },
+    '-script' => { 
+        '-type' => 'text/javascript',
+        '-src'  => 'script.js', 
+    },
 );
 my @links;
 for ( qw(debug info warn error fatal) ) {
-	push @links, a( { '-href' => "javascript:toggle('$_')", '-class' => $_, }, $_ );
+    push @links, a( { '-href' => "javascript:toggle('$_')", '-class' => $_, }, $_ );
 }
 print 'Show: ', join '|', @links;
 print @logmessages;
 my $i = 0;
 print table(
-	map {
-		Tr(
-			td( pre( ++$i, a( { '-name' => 'line' . $i } ) ) ),
-			td( pre( encode_entities( $_ ) ) )
-		)
-	} @lines
+    map {
+        Tr(
+            td( pre( ++$i, a( { '-name' => 'line' . $i } ) ) ),
+            td( pre( encode_entities( $_ ) ) )
+        )
+    } @lines
 );
 print end_html;
