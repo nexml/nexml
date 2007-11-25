@@ -45,7 +45,12 @@
 			<node id="n1" label="n1" root="true"/>
 			<node id="n2" label="n2" otu="t1"/>
 			<node id="n3" label="n3"/>
-			<node id="n4" label="n4"/>
+			<node id="n4" label="n4">
+				<dict>
+					<key>has_tag</key>
+					<boolean>true</boolean>
+				</dict>
+			</node>
 			<node id="n5" label="n5" otu="t3"/>
 			<node id="n6" label="n6" otu="t2"/>
 			<node id="n7" label="n7"/>
@@ -67,7 +72,12 @@
 			<node id="n1" label="n1"/>
 			<node id="n2" label="n2" otu="t1"/>
 			<node id="n3" label="n3"/>
-			<node id="n4" label="n4"/>
+			<node id="n4" label="n4">
+				<dict>
+					<key>has_tag</key>
+					<boolean>true</boolean>
+				</dict>
+			</node>
 			<node id="n5" label="n5" otu="t3"/>
 			<node id="n6" label="n6" otu="t2"/>
 			<node id="n7" label="n7"/>
