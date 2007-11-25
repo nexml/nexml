@@ -76,7 +76,9 @@ eval {
 };
 if ( $@ ) {
 	$code = '400 Bad Request';
-	push @logmessages, $make_html_msg->( 'fatal', $@->error, $@->line );
+	my $error = UNIVERSAL::can( $@, 'error' ) ? $@->error : $@;
+	my $line  = UNIVERSAL::can( $@, 'line' ) ? $@->line : 1;
+	push @logmessages, $make_html_msg->( 'fatal', $error, $line );
 }
 
 ####################################################################################################
