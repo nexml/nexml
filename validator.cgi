@@ -60,21 +60,25 @@ $logger->set_listeners(
 # PARSING
 
 my $file = $q->upload('file') || shift(@ARGV); # file name can also be provided on command line
-$@ = 'No file specified' if not defined $file;
-if ( fileno( $file ) ) {
-    @lines = <$file>;
+if ( not defined $file ) {
+	$@ = 'No file specified';
 }
 else {
-    open my $fh, '<', $file or die $!;
-    @lines = <$fh>;
-    close $fh;
+	if ( fileno( $file ) ) {
+		@lines = <$file>;
+	}
+	else {
+		open my $fh, '<', $file or die $!;
+		@lines = <$fh>;
+		close $fh;
+	}
+	eval { 
+		parse( 
+			'-format' => 'nexml', 
+			'-string' => join( '', @lines ),
+		) 
+	};
 }
-eval { 
-    parse( 
-        '-format' => 'nexml', 
-        '-string' => join( '', @lines ),
-    ) 
-};
 if ( $@ ) {
     $code = '400 Bad Request';
     my $error = UNIVERSAL::can( $@, 'error' ) ? $@->error : 'Probably not xml: ' . $@;
