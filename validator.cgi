@@ -31,11 +31,11 @@ pre.warn, pre.error, pre.fatal { display: block }
 table, tr, td, pre { padding: 0px; margin: 0px }
 </style>
 <script type="text/javascript">
-function toggle(class) {
+function toggle(theClass) {
 	var pre_elts = document.getElementsByTagName('pre');
 	for ( var i = 0; i < pre_elts.length; i++ ) {
 		var this_class = pre_elts[i].className;
-		if ( this_class == class ) {
+		if ( this_class == theClass ) {
 			if ( pre_elts[i].style.display != 'block' ) {
 				pre_elts[i].style.display = 'block';
 			}
