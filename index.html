@@ -1,0 +1,108 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+  <head>
+    <meta name="keywords" content="nexml xml nexus phylogenetics phylogenies trees dna rna nucleotide standard continuous amino acid matrix tree network data" />
+    <meta name="robots" content="index,follow" />
+    <meta name="description" content="Nexml is a file format for encoding phylogenetic data using xml." />
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title="nexml-discuss mailing list - RSS 2.0"
+      href="http://mailbucket.org/nexml_discuss.xml"/>
+    <link 
+      rel="alternate" 
+      type="application/rss+xml" 
+      title="SourceForge project summary - RSS 2.0" 
+      href="http://sourceforge.net/export/rss2_projsummary.php?group_id=209571"/>
+    <link
+      rel="alternate"
+      type="application/rss+xml" 
+      title="Wiki changes - RSS 2.0"
+      href="https://www.nescent.org/wg/evoinfo/index.php?title=Future_Data_Exchange_Standard&amp;action=history&amp;feed=rss"/>
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title="SVN revision history - RSS 2.0"
+      href="http://subtlety.errtheblog.com/O_o/283.xml"/>
+    <title>nexml - encoding phylogenetic data using xml</title>
+    <script type="text/javascript">
+      //<![CDATA[
+      function toggle_display(id) {
+        var theDiv = document.getElementById(id);
+        var theLi = document.getElementById( id + 'li' );
+        if ( theDiv != null ) {
+          if ( theDiv.style.display == 'none' ) {
+            theDiv.style.display = 'block';
+            theLi.style.listStyleImage = 'url(\'triangle_down.gif\')';
+            theLi.style.borderBottom = '1px solid black';
+            theLi.style.borderTop = '1px solid black';
+          }
+          else if ( theDiv.style.display != 'none' ) {
+            theDiv.style.display = 'none';
+            theLi.style.listStyleImage = 'url(\'triangle.gif\')';
+            theLi.style.borderBottom = '1px solid white';
+            theLi.style.borderTop = '1px solid white'; 
+          }
+        }
+      }
+      var itemCounter = 0;
+      function process_feed(feed) {
+        var theDiv = document.getElementById('feeds');
+        var theContent = '<h2>' + feed.value.title + '<\/h2><p>' + feed.value.description + '<\/p>';                             
+        theContent += '<ul>';
+        for ( var i = 0; i < feed.value.items.length; i++ ) {
+          var item = feed.value.items[i];
+          var id = 'item' + itemCounter++;
+          theContent += '<li id="' + id + 'li"><a href="javascript:toggle_display(\'' + id + '\')">' + item.title + '<\/a>';
+          theContent += ' <small>by ' + item.author + ' on ' + item.pubDate + '<\/small>';
+          theContent += '<div id="' + id + '" style="display:none">' + item.description;
+          theContent += '<br/><small><a href="' + item.link + '">more...<\/a><\/small><\/div><\/li>\n';
+        }
+        theContent += '<\/ul>';
+        theDiv.innerHTML += theContent;
+      }
+      //]]>
+    </script>
+    <style type="text/css">
+      body { font-family: verdana, arial, sans serif }
+      small { color: gray }
+      li { 
+        margin-bottom: 1em; 
+        list-style-image: url('triangle.gif'); 
+        border-bottom: 1px solid white;
+        border-top: 1px solid white; 
+        list-style-position: inside;
+      }
+      a { text-decoration: none }
+      a:link {}
+      a:visited {}
+      a:hover { text-decoration: underline }
+      a:active {}
+      p > span.autocomment { display: none }
+    </style>
+  </head>
+  <body>
+    <h1>nexml</h1>
+    <h2>Validator</h2>
+    <form action="nexml/validator.cgi" enctype="multipart/form-data" method="post">
+      <input type="file" name="file"/>
+      <input type="submit"/>
+    </form>
+    <h2>Static links</h2>
+    <ul>
+      <li><a href="http://www.nescent.org/wg_evoinfo/Future_Data_Exchange_Standard">evoinfo wiki page</a></li>
+      <li><a href="http://sourceforge.net/projects/nexml/">sourceforge project page</a></li>
+    </ul>
+    <div id="feeds"></div>
+    <script type="text/javascript" src="http://pipes.yahoo.com/pipes/pipe.run?_id=PLIrzi2Y3BGLOzPq8TxBKg&amp;_render=json&amp;_callback=process_feed"></script>
+    <script type="text/javascript" src="http://pipes.yahoo.com/pipes/pipe.run?_id=mFzHKL6X3BGhQ3_D2R2EvQ&amp;_render=json&amp;_callback=process_feed"></script>
+    <script type="text/javascript" src="http://pipes.yahoo.com/pipes/pipe.run?_id=bKPzI8yX3BGsgnk6xAnzeQ&amp;_render=json&amp;_callback=process_feed"></script>
+    <script type="text/javascript" src="http://pipes.yahoo.com/pipes/pipe.run?_id=6d460b43b6f6ab43291486607cedf36f&amp;_render=json&amp;_callback=process_feed"></script>
+    <p style="border-top:1px solid silver;padding-top:1em">
+      <a href="http://validator.w3.org/check?uri=referer">
+        <img src="http://www.w3.org/Icons/valid-xhtml10-blue" style="border-style:none" alt="Valid XHTML 1.0 Strict" height="31" width="88" />
+      </a>
+    </p>
+  </body>
+</html>
