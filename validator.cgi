@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 BEGIN {
     unshift @INC, 'perl/lib';
-    unshift @INC, '../phylo/lib';
+    unshift @INC, '../phylo/lib'; # i.e. the latest Bio::Phylo on CIPRES svn, in framework/perl
 }
 use strict;
 use warnings;
