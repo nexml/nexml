@@ -76,7 +76,7 @@ eval {
 };
 if ( $@ ) {
 	$code = '400 Bad Request';
-	my $error = UNIVERSAL::can( $@, 'error' ) ? $@->error : $@;
+	my $error = UNIVERSAL::can( $@, 'error' ) ? $@->error : 'Probably not xml: ' . $@;
 	my $line  = UNIVERSAL::can( $@, 'line' ) ? $@->line : 1;
 	push @logmessages, $make_html_msg->( 'fatal', $error, $line );
 }
