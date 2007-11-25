@@ -64,7 +64,7 @@ $logger->set_listeners(
 		my ( $xline, $xcol, $xbyte );
 		if ( $msg =~ m/^(\d+):(\d+):(\d+)\b/ ) {
 			( $xline, $xcol, $xbyte ) = ( $1, $2, $3 );
-			$msg =~ s/^(\d+:\d+:\d)\s*//;
+			$msg =~ s/^(\d+:\d+:\d+)\s*//;
 		}
 		print '<pre class="', lc($method), '">', encode_entities($msg), ' at line <a href="#line', $xline, '">',$xline,'</a></pre>';
 	}
