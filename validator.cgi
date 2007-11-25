@@ -60,7 +60,7 @@ $logger->set_listeners(
 # PARSING
 
 my $file = $q->upload('file') || shift(@ARGV); # file name can also be provided on command line
-if ( UNIVERSAL::isa( $file, 'IO::Handle' ) ) {
+if ( fileno( $file ) ) {
 	@lines = <$file>;
 }
 else {
