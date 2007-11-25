@@ -71,7 +71,7 @@ else {
 eval { 
 	parse( 
 		'-format' => 'nexml', 
-		'-file'   => $file 
+		'-string' => join( '', @lines ),
 	) 
 };
 if ( $@ ) {
