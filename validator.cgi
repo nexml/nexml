@@ -21,11 +21,13 @@ Content-type:text/html
 <html>
 <head><title>nexml validation results</title>
 <style type="text/css">
-.debug { background-color: #7DACFF; display: none }
-.info  { background-color: #82FF7B; display: none }
+.debug { background-color: #7DACFF }
+.info  { background-color: #82FF7B }
 .warn  { background-color: #D0FF7D }
 .error { background-color: #FFB77B }
 .fatal { background-color: #FF7B7B }
+pre.debug, pre.info { display: none }
+pre.warn, pre.error, pre.fatal { display: block }
 table, tr, td, pre { padding: 0px; margin: 0px }
 </style>
 <script type="text/javascript">
