@@ -21,19 +21,37 @@ Content-type:text/html
 <html>
 <head><title>nexml validation results</title>
 <style type="text/css">
-.debug { background-color: #7DACFF }
-.info  { background-color: #82FF7B }
+.debug { background-color: #7DACFF; display: none }
+.info  { background-color: #82FF7B; display: none }
 .warn  { background-color: #D0FF7D }
 .error { background-color: #FFB77B }
 .fatal { background-color: #FF7B7B }
 table, tr, td, pre { padding: 0px; margin: 0px }
 </style>
 <script type="text/javascript">
+function toggle(class) {
+	var pre_elts = document.getElementsByTagName('pre');
+	for ( var i = 0; i < pre_elts.length; i++ ) {
+		var this_class = pre_elts[i].className;
+		if ( this_class == class ) {
+			if ( pre_elts[i].style.display == 'none' ) {
+				pre_elts[i].style.display = 'block';
+			}
+			else if ( pre_elts[i].style.display == 'block' ) {
+				pre_elts[i].style.display = 'none';
+			}
+		}
+	}
+}
 </script>
 </head>
 <body>
-Show: <a href="toggle('info')" class="info">info</a> | <a href="toggle('warn')" class="warn">warnings</a> | 
-<a href="toggle('error')" class="error">errors</a> | <a href="toggle('fatal')" class="fatal">fatal</a>
+Show: 
+<a href="javascript:toggle('debug')" class="debug">debug</a> |
+<a href="javascript:toggle('info')" class="info">info</a> | 
+<a href="javascript:toggle('warn')" class="warn">warnings</a> | 
+<a href="javascript:toggle('error')" class="error">errors</a> | 
+<a href="javascript:toggle('fatal')" class="fatal">fatal</a>
 HEADER
 my @lines = <$file>;
 my $logger = Bio::Phylo::Util::Logger->new;
