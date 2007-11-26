@@ -23,6 +23,7 @@ my $logger = Bio::Phylo::Util::Logger->new; # the logger, transmits messages fro
 my @logmessages; # will hold marked up logging messages
 my $code = '201 Created'; # will hold code as per http://users.sdsc.edu/~lcchan/rest-api-table1.html
 my @lines; # will hold lines in the file
+my $title = 'nexml validation results'; # will say "valid" or "invalid"
 
 my $make_java_cmd = sub {
 	my ( $xml, $base, $xsd, $ns ) = @_;
@@ -137,6 +138,10 @@ if ( $@ ) {
     	( $error, $line ) = ( $@, 1 );
     }
     push @logmessages, $make_html_msg->( 'fatal', $error, $line );
+    $title .= ': INVALID';
+}
+else {
+	$title .= ': VALID';
 }
 
 ####################################################################################################
@@ -144,7 +149,7 @@ if ( $@ ) {
 
 print header('text/html', $code); # response code (201 or 400) here as second arg
 print start_html(
-    '-title' => 'nexml validation results',
+    '-title' => $title,
     '-style' => { 
         '-src'  => 'style.css',
         '-type' => 'text/css',
