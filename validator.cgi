@@ -136,7 +136,7 @@ if ( $@ ) {
     else {
     	( $error, $line ) = ( $@, 1 );
     }
-    push @logmessages, $make_html_msg->( 'fatal', $@->error, $@->line );
+    push @logmessages, $make_html_msg->( 'fatal', $error, $line );
 }
 
 ####################################################################################################
