@@ -5,17 +5,43 @@ BEGIN {
 }
 use strict;
 use warnings;
+use Cwd;
 use CGI ':standard';
 use CGI::Carp 'fatalsToBrowser';
+use File::Temp;
+use File::Spec;
+use HTML::Entities;
+use IO::Handle;
+use Scalar::Util 'blessed';
+
 use Bio::Phylo::IO 'parse';
 use Bio::Phylo::Util::Logger;
-use HTML::Entities;
+use Bio::Phylo::Util::Exceptions 'throw';
 
 my $q = CGI->new; # the CGI object, parses request parameters, generates response markup
 my $logger = Bio::Phylo::Util::Logger->new; # the logger, transmits messages from Bio::Phylo
 my @logmessages; # will hold marked up logging messages
 my $code = '201 Created'; # will hold code as per http://users.sdsc.edu/~lcchan/rest-api-table1.html
 my @lines; # will hold lines in the file
+
+my $make_java_cmd = sub {
+	my ( $xml, $base, $xsd, $ns ) = @_;
+	$ns   = 'http://www.nexml.org/1.0' if not $ns;
+	$base = File::Spec->catdir( getcwd, 'java', 'validator' ) if not $base;
+	$xsd  = File::Spec->catfile( getcwd, 'xsd', 'nexml.xsd' ) if not $xsd;
+	$xml  = 'infile.xml' if not $xml;	
+	die if not -r $xml;
+	my @cmd = (
+		'java',
+		'-classpath',
+		"${base}/build:${base}/jars/xercesImpl.jar",
+		"-Dxml=$xml",
+		"-Dxsd=$xsd",
+		"-Dns=$ns",
+		'validator.XmlValidator',
+	);
+	return @cmd;
+};
 
 ####################################################################################################
 # LOGGER CONFIGURATION
@@ -72,18 +98,45 @@ else {
 		@lines = <$fh>;
 		close $fh;
 	}
+	my ( $fh, $filename ) = File::Temp::tempfile;
+	$fh->print( @lines );
+	$fh->close;
+	
 	eval { 
+		close STDERR;
+		open STDERR, '>', 'validator.log';
+		system( $make_java_cmd->( $filename ) );
+		close STDERR;
+		open my $fh, '<', 'validator.log' or die $!;
+		while(<$fh>) {
+			my $logline = $_;
+			chomp($logline);
+			if ( $logline =~ qr/^\[(.*?)\] :(\d+?):\d+?: (.*)$/ ) {
+				my ( $level, $line, $msg ) = ( lc( $1 ), $2, $3 );
+				if ( $level =~ qr/error/ ) {
+					throw( 'API' => $msg, 'line' => $line );
+				}
+				else {
+					push @logmessages, $make_html_msg->( $level, $msg, $line );
+				}
+			}			
+		}
 		parse( 
 			'-format' => 'nexml', 
-			'-string' => join( '', @lines ),
+			'-file'   => $filename,
 		) 
 	};
 }
 if ( $@ ) {
     $code = '400 Bad Request';
-    my $error = UNIVERSAL::can( $@, 'error' ) ? $@->error : 'Probably not xml: ' . $@;
-    my $line  = UNIVERSAL::can( $@, 'line' ) ? $@->line : 1;
-    push @logmessages, $make_html_msg->( 'fatal', $error, $line );
+    my ( $error, $line );
+    if ( blessed $@ ) {
+    	( $error, $line ) = ( $@->error, $@->line );
+    }
+    else {
+    	( $error, $line ) = ( $@, 1 );
+    }
+    push @logmessages, $make_html_msg->( 'fatal', $@->error, $@->line );
 }
 
 ####################################################################################################
@@ -105,13 +158,13 @@ my @links;
 for ( qw(debug info warn error fatal) ) {
     push @links, a( { '-href' => "javascript:toggle('$_')", '-class' => $_, }, $_ );
 }
-print 'Show: ', join '|', @links;
+print 'Show: ', join ' | ', @links;
 print @logmessages;
 my $i = 0;
 print table(
     map {
         Tr(
-            td( pre( ++$i, a( { '-name' => 'line' . $i } ) ) ),
+            td( pre( a( { '-name' => 'line' . ++$i, '-class' => 'line' }, $i ) ) ),
             td( pre( encode_entities( $_ ) ) )
         )
     } @lines

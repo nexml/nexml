@@ -6,3 +6,4 @@
 pre.debug, pre.info { display: none }
 pre.warn, pre.error, pre.fatal { display: block }
 table, tr, td, pre { padding: 0px; margin: 0px }
+a.line { color: gray }
