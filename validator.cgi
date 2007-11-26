@@ -94,7 +94,7 @@ else {
 		@lines = <$file>;
 	}
 	else {
-		open my $fh, '<', $file or die $!;
+		open my $fh, '<', $file or die "Can't open file to validate: $!";
 		@lines = <$fh>;
 		close $fh;
 	}
