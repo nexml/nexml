@@ -1,4 +1,5 @@
 #!/usr/bin/perl
+# $Id$
 BEGIN {
     unshift @INC, 'perl/lib';
     unshift @INC, '../phylo/lib'; # i.e. the latest Bio::Phylo on CIPRES svn, in framework/perl
@@ -24,25 +25,6 @@ my @logmessages; # will hold marked up logging messages
 my $code = '201 Created'; # will hold code as per http://users.sdsc.edu/~lcchan/rest-api-table1.html
 my @lines; # will hold lines in the file
 my $title = 'nexml validation results'; # will say "valid" or "invalid"
-
-my $make_java_cmd = sub {
-	my ( $xml, $base, $xsd, $ns ) = @_;
-	$ns   = 'http://www.nexml.org/1.0' if not $ns;
-	$base = File::Spec->catdir( getcwd, 'java', 'validator' ) if not $base;
-	$xsd  = File::Spec->catfile( getcwd, 'xsd', 'nexml.xsd' ) if not $xsd;
-	$xml  = 'infile.xml' if not $xml;	
-	die if not -r $xml;
-	my @cmd = (
-		'java',
-		'-classpath',
-		"${base}/build:${base}/jars/xercesImpl.jar",
-		"-Dxml=$xml",
-		"-Dxsd=$xsd",
-		"-Dns=$ns",
-		'validator.XmlValidator',
-	);
-	return @cmd;
-};
 
 ####################################################################################################
 # LOGGER CONFIGURATION
@@ -106,7 +88,7 @@ else {
 	eval { 
 		close STDERR;
 		open STDERR, '>', 'validator.log';
-		system( $make_java_cmd->( $filename ) );
+		system( make_java_cmd( $filename ) );
 		close STDERR;
 		open my $fh, '<', 'validator.log' or die $!;
 		while(<$fh>) {
@@ -175,3 +157,64 @@ print table(
     } @lines
 );
 print end_html;
+
+=head1 SUBROUTINES
+
+=over
+
+=item make_java_cmd()
+
+This subroutine constructs the command line arguments to invoke a Xerces-J grammar validator on 
+an input file. This way we can re-use Terri's validation class and run files against the same 
+validator used by Eclipse's Oxygen plugin, which we use to design the schema. The result of this 
+subroutine is an array of arguments (@cmd), e.g.:
+
+ @cmd = "java", "-classpath", "${base}/build:${base}/jars/xercesImpl.jar",
+ "-Dxml=$xml", "-Dxsd=$xsd", "-Dns=$ns", "validator.XmlValidator";
+
+$base is the base directory from which the class path is constructed, $xml is the name of the
+file to validate, $xsd the name of the schema file, $ns is the namespace.
+
+This list of commands can be passed to perl built-in functions such as system(@cmd), which returns
+and hands back the exit code; exec(@cmd), which *never* returns, or: 
+
+ open my $handle, join(' ', @cmd, '|');
+
+Which will pipe the output of the java program back into $handle where it can be read as the 
+output of an object implementing L<IO::Handle>.
+
+ Type    : Subroutine
+ Title   : make_java_cmd
+ Usage   : my @cmd = make_java_cmd( $filename );
+ Function: Constructs the command to invoke the Xerces-J grammar validator on an input file.
+ Returns : An array of arguments, e.g. to pass to system()
+ Args    : The arguments are positional, the first one is required, the rest are optional:
+           * the path to the xml file to validate
+           * the base location from which the classpath is built, default is `pwd`/java/validator
+           * the path to the root schema file, default is `pwd`/xsd/nexml.xsd
+           * the namespace to validate, default is 'http://www.nexml.org/1.0'
+
+=cut
+
+sub make_java_cmd {
+	my ( $xml, $base, $xsd, $ns ) = @_;
+	$ns   = 'http://www.nexml.org/1.0' if not $ns;
+	$base = File::Spec->catdir( getcwd, 'java', 'validator' ) if not $base;
+	$xsd  = File::Spec->catfile( getcwd, 'xsd', 'nexml.xsd' ) if not $xsd;
+	$xml  = 'infile.xml' if not $xml;	
+	die if not -r $xml;
+	my @cmd = (
+		'java',
+		'-classpath',
+		"${base}/build:${base}/jars/xercesImpl.jar",
+		"-Dxml=$xml",
+		"-Dxsd=$xsd",
+		"-Dns=$ns",
+		'validator.XmlValidator',
+	);
+	return @cmd;
+}
+
+=back
+
+=cut
