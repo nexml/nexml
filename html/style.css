@@ -264,10 +264,11 @@ border-bottom:1px solid #bbb;
 border-left:1px solid #ddd;
 }
 
-h3.validator{
-display:inline;
-float:left;
+#validatorLegend{
 color:#FF8400;
+}
+fieldset.validator{
+border:1px dotted #FF8400;
 }
 
 /* Original open source design by Andreas Viklund - http://andreasviklund.com
