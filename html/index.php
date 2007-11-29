@@ -271,7 +271,7 @@
                 <?= date("r") ?> 
             </div>
             <a class="sharelink" href="<?= $feed ?>">
-                <img class="sharelink" src="/nexml/html/img/feed.png"/>
+                <img class="rsslink" src="/nexml/html/img/feed.png"/>
             </a>            
         </div>        
         <p>
