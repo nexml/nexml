@@ -235,7 +235,7 @@ background-color:inherit;
 }
 
 .linkshare{
-border-bottom: 1px dotted #bbb;
+/*border-bottom: 1px dotted #bbb;*/
 margin-left: 15px;
 margin-bottom: 1.5em;
 padding-bottom: 1em;
@@ -254,6 +254,7 @@ font-size:0.9em;
 width:415px;
 clear:none;
 float:right;
+margin-right: 10px;
 }
 
 .hide{
