@@ -264,6 +264,10 @@ border-bottom:1px solid #bbb;
 border-left:1px solid #ddd;
 }
 
+form.validator, fieldset.validator {
+width:530px;
+}
+
 #validatorLegend{
 color:#FF8400;
 }
