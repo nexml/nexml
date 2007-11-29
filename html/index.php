@@ -243,8 +243,9 @@
             
             if ( isset( $feed_url[$requested_feed] ) ) {
                 $base = 'http://pipes.yahoo.com/pipes/pipe.run?_id=';
+                $feed = $base . $feed_url[$requested_feed] . '&_render=rss';
                 $rss = new rss_parser();       
-                $rss->file = $base . $feed_url[$requested_feed] . '&_render=rss';
+                $rss->file = $feed;
                 $rss->parse() or die( $rss->error );     
                 if ( $rss->error ) {
                     print $rss->error;
@@ -254,7 +255,7 @@
         <h3 class="headerstyle"><? echo($rss->channel['TITLE']) ?></h3>
         <div class="linkshare">
             <? $url = curPageURL(); ?>
-            <a class="sharelink" href="http://digg.com/submit?phase=2&url=<?= $url ?>">
+            <a class="sharelink" href="http://digg.com/submit?phase=2&amp;url=<?= $url ?>">
                 <img class="sharelink" src="/nexml/html/img/digg.gif"/>
             </a>
             <a class="sharelink" href="http://reddit.com/submit?url=<?= $url ?>">
@@ -269,6 +270,9 @@
             <div class="credit date">  &mdash; 
                 <?= date("r") ?> 
             </div>
+            <a class="sharelink" href="<?= $feed ?>">
+                <img class="sharelink" src="/nexml/html/img/feed.png"/>
+            </a>            
         </div>        
         <p>
             <? echo( $rss->channel['DESCRIPTION'] ) ?>
