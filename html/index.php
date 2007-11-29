@@ -231,7 +231,7 @@
           </p>
         </div>
         <div class="clear"></div>
-        <h3>
+        <h3 id="validateHeading">
           Validate nexml data
         </h3>      
         <form 
@@ -239,7 +239,7 @@
             enctype="multipart/form-data" 
             method="post">
           <fieldset class="validator" id="inputContainer">
-            <input type="file" name="file" id="fileInput"/>
+            <input type="file" name="file" class="sidelink"/>
             <input type="submit" value="Validate!" class="sidelink"/>
           </fieldset>
         </form>        

@@ -113,8 +113,15 @@ font-size:1em;
 line-height:1.3em;
 }
 
+#validateHeading, input.sidelink {
+display:inline;
+}
+
+h3.validateHeading { color: #FF8400 }
+
 #inputContainer {
 position: relative;
+border:none;
 }
 
 #sidebar p{
