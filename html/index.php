@@ -230,16 +230,14 @@
             NEXUS format, but more robust and easier to process.
           </p>
         </div>
-        <div class="clear"></div>
-        <h3 class="validator">
-          Validate nexml data
-        </h3>      
+        <div class="clear"></div>   
         <form 
             action="http://nexml-dev.nescent.org/nexml/validator" 
             enctype="multipart/form-data" 
             method="post"
             class="validator">
           <fieldset class="validator" id="inputContainer">
+            <legend id="validatorLegend">Validate nexml data</legend>
             <input type="file" name="file" class="validator"/>
             <input type="submit" value="Validate!" class="validator"/>
           </fieldset>
