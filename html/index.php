@@ -12,7 +12,7 @@
         // url argument comes from $PATH_INFO
         $page = explode("/",$_SERVER['PATH_INFO']);
         $requested_feed = $page[1];
-        $requested_feed = 'wiki';
+//        $requested_feed = 'wiki';
         
         // define hooks to rss_parser class as xml functions do not allow object methods as handlers.
         function rss_start_element( $parser, $name, $attributes ) {
@@ -182,7 +182,7 @@
     
   </head>
   
-  <body onload="javascript:rss_link_image()">
+  <body>
     <div id="thetop">
       <a id="top" name="top"></a>
       <p class="hide">
