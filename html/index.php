@@ -196,7 +196,7 @@
         <!-- main banner in the top-left -->
         <div id="logo">       
           <h1>
-            [<a href="index.html" accesskey="4">nexml</a>]
+            [<a href="/" accesskey="4">nexml</a>]
           </h1><span id="tagline">Encoding phylogenetic data in xml</span>
 
         </div>
@@ -265,21 +265,16 @@
           The idea behind the project
         </h3>
         <p>
-          The andreas03 template has a small file size, a simple
-          layout for easy editing, good accessibility features and
-          semantic markup. Five small images have been used for the
-          design, adding only 3 kilobytes to the template load size
-          (which is approximately 12kb).
-        </p>
-        <p>
-          The images are linked from the stylesheet, which means
-          that they will not show up in browsers that does not
-          support CSS. They can also be safely removed, since the
-          images do not affect the layout in any way. In
-          CSS-enabled browsers the removed images will be replaced
-          by a background color. In browsers with no CSS support,
-          there will be no difference. See examples of this by
-          looking at the alternate versions listed under the menu.
+          The <a href="http://www.citeulike.org/user/rvosa/article/2011773">
+          NEXUS file format</a> is a commonly used format for 
+          phylogenetic data. Unfortunately, over times, the format
+          has become overloaded, which has caused various
+          <a href="https://www.nescent.org/wg_evoinfo/NEXUS_Problems">
+          problems</a>. Meanwhile, new technologies around the
+          <a href="http://www.w3.org/XML/">XML</a> standard have
+          emerged. These technologies have the potential to greatly
+          simplify processing of phylogenetic data - and thereby
+          improve interoperability in phylogenetics.
         </p>
         <p class="internallink">
 
