@@ -312,7 +312,7 @@
             <a class="sharelink" href="http://www.facebook.com/share.php?u=<?= $url ?>">
                 <img class="sharelink" src="/nexml/html/img/facebook.gif"/>
             </a>   
-            <div class="date"> &mdash;
+            <div class="credit date"> &mdash;
                 <?= date("r") ?> 
             </div>
         </div>
