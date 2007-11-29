@@ -1,0 +1,6 @@
+<files validator>
+ForceType application/x-httpd-perl
+</files> 
+<files site>
+ForceType application/x-httpd-php
+</files>
