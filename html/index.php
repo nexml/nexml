@@ -267,12 +267,12 @@
             <a class="sharelink" href="http://www.facebook.com/share.php?u=<?= $url ?>">
                 <img class="sharelink" src="/nexml/html/img/facebook.gif"/>
             </a> 
-            <div class="credit date">  &mdash; 
-                <?= date("r") ?> 
-            </div>
             <a class="sharelink" href="<?= $feed ?>">
                 <img class="rsslink" src="/nexml/html/img/feed.png"/>
-            </a>            
+            </a>              
+            <div class="credit date">  &mdash; 
+                <?= date("r") ?> 
+            </div>          
         </div>        
         <p>
             <? echo( $rss->channel['DESCRIPTION'] ) ?>
