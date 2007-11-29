@@ -267,15 +267,46 @@
         <p>
           The <a href="http://www.citeulike.org/user/rvosa/article/2011773">
           NEXUS file format</a> is a commonly used format for 
-          phylogenetic data. Unfortunately, over times, the format
-          has become overloaded, which has caused various
+          phylogenetic data. Unfortunately, over time, the format
+          has become overloaded - which has caused various
           <a href="https://www.nescent.org/wg_evoinfo/NEXUS_Problems">
           problems</a>. Meanwhile, new technologies around the
           <a href="http://www.w3.org/XML/">XML</a> standard have
           emerged. These technologies have the potential to greatly
-          simplify processing of phylogenetic data. Therefore, a
-          group of developers of phylogenetic software have come
-          together as part of the <a href="http://www.nescent.org">
+          simplify, and improve robustness, in the processing of phylogenetic data:
+          <ul>
+            <li class="rss">
+                <strong>Validation</strong> &em; some of the issues hampering
+                interoperability are caused by the fact that no formal
+                specification exists for NEXUS files, and no objective way
+                to validate files. Thanks to <a href="http://www.w3.org/XML/Schema">
+                XML Schema</a> we can now define a grammar against which 
+                data files can be validated.
+            </li>
+            <li class="rss">
+                <strong>Web services</strong> &em; a number of different 
+                technologies (such as <a href="http://www.xmlrpc.com/">XML-RPC</a>, 
+                <a href="http://en.wikipedia.org/wiki/Representational_State_Transfer">REST</a> 
+                and <a href="http://www.w3.org/TR/soap/">SOAP</a>) have 
+                emerged allowing disparate services to be glued together 
+                over the internet. Using such services, researchers can 
+                "farm out" their calculations to dedicated servers, such
+                as those of the <a href="http://www.phylo.org">CIPRES
+                project</a>.
+            </li>
+            <li class="rss">
+                <strong>Native XML databases</strong> &em; relational
+                databases are based on a fixed schema. For phylogenetic
+                data this poses problems, because the field of phyloinformatics
+                moves very rapidly: new metrics and analysis types are
+                published constantly. 
+                <a href="http://xmldb-org.sourceforge.net/">XML databases</a>
+                are freed from this constraint, simplifying storage of
+                unusual data types.
+            </li>          
+          </ul>
+          Therefore, a group of developers of phylogenetic software have 
+          come together as part of the <a href="http://www.nescent.org">
           NESCent</a> working group for <a href="https://www.nescent.org/wg_evoinfo">
           evolutionary informatics</a> to develop a 
           <a href="https://www.nescent.org/wg_evoinfo/Future_Data_Exchange_Standard">
