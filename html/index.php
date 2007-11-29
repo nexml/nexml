@@ -178,7 +178,7 @@
       href="http://subtlety.errtheblog.com/O_o/283.xml"/>
     
     <!-- external inclusions -->
-    <link rel="stylesheet" type="text/css" href="style.css" />
+    <link rel="stylesheet" type="text/css" href="/nexml/html/style.css" />
     <script type="text/javascript" src="script.js" />
     
   </head>
