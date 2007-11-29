@@ -2,6 +2,22 @@
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
     <?
+
+        function curPageURL() {
+            $pageURL = 'http';
+            if ( $_SERVER["HTTPS"] == "on" ) {
+                $pageURL .= "s";
+            }
+            $pageURL .= "://";
+            if ( $_SERVER["SERVER_PORT"] != "80" ) {
+                $pageURL .= $_SERVER["SERVER_NAME"].":".$_SERVER["SERVER_PORT"].$_SERVER["REQUEST_URI"];
+            } 
+            else {
+                $pageURL .= $_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"];
+            }
+            return $pageURL;
+        }    
+    
         /*
         possible sections:
             wiki
@@ -236,6 +252,24 @@
 
         ?>
         <h3 class="headerstyle"><? echo($rss->channel['TITLE']) ?></h3>
+        <div class="linkshare">
+            <? $url = curPageURL(); ?>
+            <a class="sharelink" href="http://digg.com/submit?phase=2&url=<?= $url ?>">
+                <img class="sharelink" src="/nexml/html/img/digg.gif"/>
+            </a>
+            <a class="sharelink" href="http://reddit.com/submit?url=<?= $url ?>">
+                <img class="sharelink" src="/nexml/html/img/reddit.gif"/>
+            </a>
+            <a class="sharelink" href="http://del.icio.us/post?url=<?= $url ?>">
+                <img class="sharelink" src="/nexml/html/img/delicious.gif"/>
+            </a>    
+            <a class="sharelink" href="http://www.facebook.com/share.php?u=<?= $url ?>">
+                <img class="sharelink" src="/nexml/html/img/facebook.gif"/>
+            </a>   
+            <div class="date">
+                <?= date("r") ?> 
+            </div>
+        </div>        
         <p>
             <? echo( $rss->channel['DESCRIPTION'] ) ?>
         </p><ul>
@@ -264,6 +298,24 @@
         <h3 class="headerstyle">
           The idea behind the project
         </h3>
+        <div class="linkshare">
+            <? $url = curPageURL(); ?>
+            <a class="sharelink" href="http://digg.com/submit?phase=2&url=<?= $url ?>">
+                <img class="sharelink" src="/nexml/html/img/digg.gif"/>
+            </a>
+            <a class="sharelink" href="http://reddit.com/submit?url=<?= $url ?>">
+                <img class="sharelink" src="/nexml/html/img/reddit.gif"/>
+            </a>
+            <a class="sharelink" href="http://del.icio.us/post?url=<?= $url ?>">
+                <img class="sharelink" src="/nexml/html/img/delicious.gif"/>
+            </a>    
+            <a class="sharelink" href="http://www.facebook.com/share.php?u=<?= $url ?>">
+                <img class="sharelink" src="/nexml/html/img/facebook.gif"/>
+            </a>   
+            <div class="date">
+                <?= date("r") ?> 
+            </div>
+        </div>
         <p>
           The <a href="http://www.citeulike.org/user/rvosa/article/2011773">
           NEXUS file format</a> is a commonly used format for 
@@ -319,7 +371,7 @@
           [ <a href="#top">Back to top</a> ]
         </p>
         <h3 class="headerstyle">
-          What is 'interoperability' and why is it important?
+          What are we doing about it?
         </h3>
         <p>
           Accessibility is about making your website available and
