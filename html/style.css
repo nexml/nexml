@@ -266,6 +266,7 @@ border-left:1px solid #ddd;
 
 form.validator, fieldset.validator {
 width:530px;
+display:block;
 }
 
 #validatorLegend{
