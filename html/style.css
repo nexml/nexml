@@ -245,6 +245,8 @@ padding-bottom: 1em;
 text-align: right;
 display:inline;
 width:100%;
+color:#888;
+font-size:0.9em;
 }
 
 .hide{
