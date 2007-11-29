@@ -246,7 +246,7 @@ margin-right: 10px;
 display:none;
 }
 
-#validateHeading, input.sidelink {
+#validateHeading, input.sidelink, form, fieldset {
 display:inline;
 clear:none;
 }
