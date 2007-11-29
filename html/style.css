@@ -243,8 +243,8 @@ padding-bottom: 1em;
 
 .date{
 text-align: right;
-display:inline;
-width:100%;
+display:block;
+/*width:100%;*/
 color:#888;
 font-size:0.9em;
 width:435px;
