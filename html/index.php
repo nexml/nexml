@@ -12,7 +12,8 @@
         // url argument comes from $PATH_INFO
         $page = explode("/",$_SERVER['PATH_INFO']);
         $requested_feed = $page[1];
-             
+        $requested_feed = 'wiki';
+        
         // define hooks to rss_parser class as xml functions do not allow object methods as handlers.
         function rss_start_element( $parser, $name, $attributes ) {
             global $rss;
@@ -247,7 +248,11 @@
                     </h5><small class="credit">
                     by 
                     <? echo($item['AUTHOR']); ?>  on <? echo( $item['PUBDATE'] ) ?>                                                         
-                    [<a class="rss" href="<? echo( htmlspecialchars(trim($item['LINK']) ) ); ?>">link</a>]
+                    [
+                        <a class="rss" href="<? echo( htmlspecialchars(trim($item['LINK']) ) ); ?>">
+                        link
+                        </a>
+                    ]
                     </small>
                     <?
                 }
