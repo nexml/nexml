@@ -113,17 +113,6 @@ font-size:1em;
 line-height:1.3em;
 }
 
-.validator{
-width:155px;
-border:none;
-padding:0 0 20px 0;
-}
-
-#fileInput {
-opacity:0;
-z-index:2;
-}
-
 #inputContainer {
 position: relative;
 }

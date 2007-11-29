@@ -231,7 +231,18 @@
           </p>
         </div>
         <div class="clear"></div>
-        
+        <h3>
+          Validate nexml data
+        </h3>      
+        <form 
+            action="http://nexml-dev.nescent.org/nexml/validator" 
+            enctype="multipart/form-data" 
+            method="post">
+          <fieldset class="validator" id="inputContainer">
+            <input type="file" name="file" id="fileInput"/>
+            <input type="submit" value="Validate!" class="sidelink"/>
+          </fieldset>
+        </form>        
         <?
             // feed urls
             $feed_url = array(
@@ -304,7 +315,7 @@
         </h3>
         <div class="linkshare">
             <? $url = curPageURL(); ?>
-            <a class="sharelink" href="http://digg.com/submit?phase=2&url=<?= $url ?>">
+            <a class="sharelink" href="http://digg.com/submit?phase=2&amp;url=<?= $url ?>">
                 <img class="sharelink" src="/nexml/html/img/digg.gif"/>
             </a>
             <a class="sharelink" href="http://reddit.com/submit?url=<?= $url ?>">
@@ -457,27 +468,10 @@
         <span class="hide">|</span>
         
         <a class="hide" href="#top" accesskey="1">Top of page</a>
-        <h3>
-          Validate nexml data
-        </h3>
-
-        <p>
-          This site implements an online validator for nexml
-          data files. Upload your data here:
-        </p>          
-        <form 
-            action="http://nexml-dev.nescent.org/nexml/validator" 
-            enctype="multipart/form-data" 
-            method="post">
-          <fieldset class="validator" id="inputContainer">
-            <input type="file" name="file" id="fileInput"/>
-            <input type="submit" value="Validate!" class="sidelink"/>
-          </fieldset>
-        </form>
         
         <!-- links at the bottom right -->
         <h3>
-          Regular links
+          External links
         </h3>
         <p>
           - <a href="http://sourceforge.net/projects/nexml/">
