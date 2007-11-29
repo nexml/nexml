@@ -231,7 +231,7 @@
           </p>
         </div>
         <div class="clear"></div>
-        <h3 id="validator">
+        <h3 class="validator">
           Validate nexml data
         </h3>      
         <form 
