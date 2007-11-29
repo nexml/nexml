@@ -241,6 +241,10 @@ margin-bottom: 1.5em;
 padding-bottom: 1em;
 }
 
+img.sharelink{
+float:right;
+}
+
 .date{
 text-align: right;
 display:block;
