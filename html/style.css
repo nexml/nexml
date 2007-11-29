@@ -246,16 +246,22 @@ margin-right: 10px;
 display:none;
 }
 
-#validateHeading, input.sidelink, form, fieldset {
-display:inline;
+.validator{
 clear:none;
+border:none;
+display:inline;
 }
 
-#validateHeading { color: #FF8400 }
-
-#inputContainer {
-position: relative;
-border:none;
+input.sidelink{
+font-size:1.1em;
+font-weight:bold;
+text-align:left;
+background:#eee url(img/gradient1.png) repeat-x;
+color:#26c;
+border-top:1px solid #ddd;
+border-right:1px solid #bbb;
+border-bottom:1px solid #bbb;
+border-left:1px solid #ddd;
 }
 
 /* Original open source design by Andreas Viklund - http://andreasviklund.com

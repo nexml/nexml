@@ -231,16 +231,17 @@
           </p>
         </div>
         <div class="clear"></div>
-        <h3 id="validateHeading">
+        <h3 id="validator">
           Validate nexml data
         </h3>      
         <form 
             action="http://nexml-dev.nescent.org/nexml/validator" 
             enctype="multipart/form-data" 
-            method="post">
+            method="post"
+            class="validator">
           <fieldset class="validator" id="inputContainer">
-            <input type="file" name="file" class="sidelink"/>
-            <input type="submit" value="Validate!" class="sidelink"/>
+            <input type="file" name="file" class="validator"/>
+            <input type="submit" value="Validate!" class="validator"/>
           </fieldset>
         </form>        
         <?
