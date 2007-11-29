@@ -178,7 +178,6 @@
     
     <!-- external inclusions -->
     <link rel="stylesheet" type="text/css" href="/nexml/html/style.css" />
-    <script type="text/javascript" src="script.js" />
     
   </head>
   
