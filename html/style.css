@@ -248,9 +248,10 @@ display:none;
 
 #validateHeading, input.sidelink {
 display:inline;
+clear:none;
 }
 
-h3.validateHeading { color: #FF8400 }
+#validateHeading { color: #FF8400 }
 
 #inputContainer {
 position: relative;
