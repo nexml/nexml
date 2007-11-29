@@ -13,7 +13,8 @@
         $_GET['section'] = 'tracker';
         // url argument
         //$requested_feed = $_GET['section'];     
-        $requested_feed = 'wiki'; // $page[1]
+        $requested_feed = $page[4];
+echo($page[4]);
              
         // define hooks to rss_parser class as xml functions do not allow object methods as handlers.
         function rss_start_element( $parser, $name, $attributes ) {
