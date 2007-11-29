@@ -277,7 +277,7 @@
           group of developers of phylogenetic software have come
           together as part of the <a href="http://www.nescent.org">
           NESCent</a> working group for <a href="https://www.nescent.org/wg_evoinfo">
-          evolutionary informatics to develop a 
+          evolutionary informatics</a> to develop a 
           <a href="https://www.nescent.org/wg_evoinfo/Future_Data_Exchange_Standard">
           new data exchange standard</a> based on these technologies.
         </p>
