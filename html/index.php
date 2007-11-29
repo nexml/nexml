@@ -350,7 +350,7 @@
         <h2 class="sidelink menuheader">
           <a id="sitemenu" name="sitemenu"></a>Site menu:
         </h2>
-        <a class="sidelink" href="home">Home</a>
+        <a class="sidelink" href="/">Home</a>
         <span class="hide">|</span> 
         
         <a class="sidelink" href="wiki">Wiki</a> 
