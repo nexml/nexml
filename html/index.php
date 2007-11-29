@@ -274,9 +274,10 @@
           <a href="http://www.w3.org/XML/">XML</a> standard have
           emerged. These technologies have the potential to greatly
           simplify, and improve robustness, in the processing of phylogenetic data:
+          </p>
           <ul>
             <li class="rss">
-                <strong>Validation</strong> &em; some of the issues hampering
+                <strong>Validation</strong> &mdash; some of the issues hampering
                 interoperability are caused by the fact that no formal
                 specification exists for NEXUS files, and no objective way
                 to validate files. Thanks to <a href="http://www.w3.org/XML/Schema">
@@ -284,7 +285,7 @@
                 data files can be validated.
             </li>
             <li class="rss">
-                <strong>Web services</strong> &em; a number of different 
+                <strong>Web services</strong> &mdash; a number of different 
                 technologies (such as <a href="http://www.xmlrpc.com/">XML-RPC</a>, 
                 <a href="http://en.wikipedia.org/wiki/Representational_State_Transfer">REST</a> 
                 and <a href="http://www.w3.org/TR/soap/">SOAP</a>) have 
@@ -295,7 +296,7 @@
                 project</a>.
             </li>
             <li class="rss">
-                <strong>Native XML databases</strong> &em; relational
+                <strong>Native XML databases</strong> &mdash; relational
                 databases are based on a fixed schema. For phylogenetic
                 data this poses problems, because the field of phyloinformatics
                 moves very rapidly: new metrics and analysis types are
@@ -305,6 +306,7 @@
                 unusual data types.
             </li>          
           </ul>
+        <p>
           Therefore, a group of developers of phylogenetic software have 
           come together as part of the <a href="http://www.nescent.org">
           NESCent</a> working group for <a href="https://www.nescent.org/wg_evoinfo">
