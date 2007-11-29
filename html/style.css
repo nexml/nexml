@@ -234,6 +234,11 @@ color:#888;
 background-color:inherit;
 }
 
+.linkshare{
+border-bottom: 1px solid #bbb;
+margin:0 0 15px 0;
+}
+
 .hide{
 display:none;
 }
