@@ -311,8 +311,8 @@
             </a>    
             <a class="sharelink" href="http://www.facebook.com/share.php?u=<?= $url ?>">
                 <img class="sharelink" src="/nexml/html/img/facebook.gif"/>
-            </a>   
-            <div class="credit date"> &mdash;
+            </a>  &mdash;
+            <div class="credit date">
                 <?= date("r") ?> 
             </div>
         </div>
