@@ -235,8 +235,14 @@ background-color:inherit;
 }
 
 .linkshare{
-border-bottom: 1px solid #bbb;
-margin:0 0 15px 0;
+border-bottom: 1px dotted #bbb;
+margin-left: 15px;
+}
+
+.date{
+text-align: right;
+display:inline;
+width:100%;
 }
 
 .hide{
