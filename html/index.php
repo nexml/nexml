@@ -14,7 +14,7 @@
         // url argument
         //$requested_feed = $_GET['section'];     
         $requested_feed = $page[4];
-echo($page[4]);
+print_r($page);
              
         // define hooks to rss_parser class as xml functions do not allow object methods as handlers.
         function rss_start_element( $parser, $name, $attributes ) {
