@@ -200,6 +200,7 @@ font-size:1em;
 li.rss{
 list-style-image:url(img/resultset_next.png);
 margin-bottom:2em;
+line-height:1.5em;
 }
 
 .clear{
