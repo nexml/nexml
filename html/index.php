@@ -377,7 +377,7 @@
           data files. Upload your data here:
         </p>          
         <form 
-            action="http://nexml-dev.nescent.org/nexml/validator.cgi" 
+            action="http://nexml-dev.nescent.org/nexml/validator" 
             enctype="multipart/form-data" 
             method="post">
           <fieldset class="validator" id="inputContainer">
