@@ -4,6 +4,4 @@ ForceType application/x-httpd-perl
 <files site>
 ForceType application/x-httpd-php
 </files>
-<Location /xsd>
 AddType application/xml .xsd
-</Location>
