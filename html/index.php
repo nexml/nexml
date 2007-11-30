@@ -1,5 +1,5 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
     <?
 
@@ -193,12 +193,12 @@
       href="http://subtlety.errtheblog.com/O_o/283.xml"/>
     
     <!-- external inclusions -->
-    <link rel="stylesheet" type="text/css" href="/nexml/html/style.css" />
-    <script type="text/javascript" src="/nexml/html/script.js" />
+    <link rel="stylesheet" type="text/css" href="/nexml/html/layout.css" />
+    <script type="text/javascript" src="/nexml/html/scripts.js" />
     
   </head>
   
-  <body onload="initFileUploads()">
+  <body>
     <div id="thetop">
       <a id="top" name="top"></a>
       <p class="hide">
@@ -214,7 +214,7 @@
         <div id="logo">       
           <h1>
             [<a href="/" accesskey="4">nexml</a>]
-          </h1><span id="tagline">Encoding phylogenetic data in xml</span>
+          </h1><span id="tagline">phylogenetic data in xml</span>
 
         </div>
         
@@ -225,26 +225,28 @@
             The future data exchange standard is here!
           </h2>
           <p>
-            nexml is an xml format that represents phylogenetic data 
-            (trees, character matrices, sets of OTUs, substitution 
-            models). The format is inspired by the commonly used 
+            nexml is an exchange standard for representing 
+            phylogenetic data inspired by the commonly used 
             NEXUS format, but more robust and easier to process.
           </p>
         </div>
-        <div class="clear"></div>   
+        <div class="clear"></div>
+
+        <!-- validate form -->   
+        <div id="validateDiv">
         <form 
             action="http://nexml-dev.nescent.org/nexml/validator" 
             enctype="multipart/form-data" 
             method="post" 
-            class="validator">
-            <fieldset>
-                <legend>Validate nexml data</legend>
-                <div class="fileinputs">
-                    <input type="file" class="file" name="file"/>
-                </div>
-                <input type="submit" id="validateSubmit"/>
+            id="validateForm">
+            <fieldset id="validateFieldset">
+                <legend id="validateLegend">Validate nexml data</legend>
+                <label for="validateUpload">Select file to validate</label>
+                <input type="file" name="file" id="validateUpload"/>
+                <input type="submit" id="validateSubmit" value="Validate"/>
             </fieldset>
         </form>          
+        </div>
         <?
             // feed urls
             $feed_url = array(
@@ -269,41 +271,34 @@
         <div class="linkshare">
             <? $url = curPageURL(); ?>
             <a class="sharelink" href="http://digg.com/submit?phase=2&amp;url=<?= $url ?>">
-                <img class="sharelink" src="/nexml/html/img/digg.gif"/>
+                <img class="sharelink" src="/nexml/html/img/digg.gif" alt="digg"/>
             </a>
             <a class="sharelink" href="http://reddit.com/submit?url=<?= $url ?>">
-                <img class="sharelink" src="/nexml/html/img/reddit.gif"/>
+                <img class="sharelink" src="/nexml/html/img/reddit.gif" alt="reddit"/>
             </a>
             <a class="sharelink" href="http://del.icio.us/post?url=<?= $url ?>">
-                <img class="sharelink" src="/nexml/html/img/delicious.gif"/>
+                <img class="sharelink" src="/nexml/html/img/delicious.gif" alt="del.icio.us"/>
             </a>    
             <a class="sharelink" href="http://www.facebook.com/share.php?u=<?= $url ?>">
-                <img class="sharelink" src="/nexml/html/img/facebook.gif"/>
+                <img class="sharelink" src="/nexml/html/img/facebook.gif" alt="facebook"/>
             </a>              
             <div class="credit date">  &mdash; 
                 <?= date("r") ?> &nbsp;
-                <a class="sharelink" href="<?= $feed ?>">
-                    <img class="rsslink" src="/nexml/html/img/feed.png"/>
+                <a class="sharelink" href="<?= htmlspecialchars($feed) ?>">
+                    <img class="rsslink" src="/nexml/html/img/feed.png" alt="rss"/>
                 </a>                 
             </div>          
         </div>        
-        <p>
-            <? echo( $rss->channel['DESCRIPTION'] ) ?>
+        <p><?= $rss->channel['DESCRIPTION'] ?>
         </p><ul>
         <?
-                //print_r($rss->channel['ITEM']);
                 foreach( $rss->channel['ITEM'] as $item ) {
                     ?>
-                    <li class="rss"><h5><? echo($item['TITLE']); ?>                    
-                    </h5><small class="credit">
-                    by 
-                    <? echo($item['AUTHOR']); ?>  on <? echo( $item['PUBDATE'] ) ?>                                                         
-                    [
-                        <a class="rss" href="<? echo( htmlspecialchars(trim($item['LINK']) ) ); ?>">
-                        link
-                        </a>
-                    ]
-                    </small>
+                    <li class="rss"><strong><?= htmlspecialchars($item['TITLE']) ?></strong>       
+                    <small class="credit"> by <?= htmlspecialchars($item['AUTHOR']) ?> on 
+                    <?= htmlspecialchars($item['PUBDATE']) ?>                                                         
+                    [<a class="rss" href="<?= htmlspecialchars(trim($item['LINK'])) ?>">link</a>]
+                    </small></li>
                     <?
                 }
                 ?></ul><?
@@ -318,16 +313,16 @@
         <div class="linkshare">
             <? $url = curPageURL(); ?>
             <a class="sharelink" href="http://digg.com/submit?phase=2&amp;url=<?= $url ?>">
-                <img class="sharelink" src="/nexml/html/img/digg.gif"/>
+                <img class="sharelink" src="/nexml/html/img/digg.gif" alt="digg"/>
             </a>
             <a class="sharelink" href="http://reddit.com/submit?url=<?= $url ?>">
-                <img class="sharelink" src="/nexml/html/img/reddit.gif"/>
+                <img class="sharelink" src="/nexml/html/img/reddit.gif" alt="reddit"/>
             </a>
             <a class="sharelink" href="http://del.icio.us/post?url=<?= $url ?>">
-                <img class="sharelink" src="/nexml/html/img/delicious.gif"/>
+                <img class="sharelink" src="/nexml/html/img/delicious.gif" alt="del.icio.us"/>
             </a>    
             <a class="sharelink" href="http://www.facebook.com/share.php?u=<?= $url ?>">
-                <img class="sharelink" src="/nexml/html/img/facebook.gif"/>
+                <img class="sharelink" src="/nexml/html/img/facebook.gif" alt="facebook"/>
             </a>  
             <div class="credit date"> &mdash;
                 <?= date("r") ?> 
