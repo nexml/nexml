@@ -275,6 +275,55 @@ color:#FF8400;
 fieldset.validator{
 border:1px dotted #FF8400;
 }
+div.fileinputs {
+	position: relative;
+	width:278px;clear:none;
+}
+
+div.fakefile {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	z-index: 1;
+	clear:none;
+}
+
+img.fakeimage, input.fakeinput, #validateSubmit {
+    vertical-align:middle;
+}
+img.fakeimage { padding:0px; margin:0px }
+
+input.fakeinput {
+    border: 1px solid silver;
+    height: 23px;
+    width: 146px;
+}
+
+input.file {
+	position: relative;
+	text-align: right;
+	-moz-opacity:0 ;
+	filter:alpha(opacity: 0);
+	opacity: 0;
+	height:27px;
+	z-index: 2;
+	width:250px;
+}
+form { position:relative }
+#validateSubmit {
+    position:absolute;
+    top: 18px;
+    left: 260px;
+}
+fieldset { 
+    width: 507px;
+    border: 1px dotted #477ED4;
+}
+legend { 
+    color: #477ED4;
+    font-weight: bold;
+}
+
 
 /* Original open source design by Andreas Viklund - http://andreasviklund.com
 Released through OSWD.org */
