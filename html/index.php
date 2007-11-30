@@ -279,12 +279,12 @@
             </a>    
             <a class="sharelink" href="http://www.facebook.com/share.php?u=<?= $url ?>">
                 <img class="sharelink" src="/nexml/html/img/facebook.gif"/>
-            </a> 
-            <a class="sharelink" href="<?= $feed ?>">
-                <img class="rsslink" src="/nexml/html/img/feed.png"/>
             </a>              
             <div class="credit date">  &mdash; 
-                <?= date("r") ?> 
+                <?= date("r") ?> &nbsp;
+                <a class="sharelink" href="<?= $feed ?>">
+                    <img class="rsslink" src="/nexml/html/img/feed.png"/>
+                </a>                 
             </div>          
         </div>        
         <p>
