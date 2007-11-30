@@ -389,55 +389,59 @@
           What are we doing about it?
         </h3>
         <p>
-          Accessibility is about making your website available and
-          understandable for everyone, including users with
-          disabilities. W3 explains it in a great way at the
-          <a href=
-          "http://www.w3.org/WAI/intro/accessibility.php">Web
-          Accessibility Initiative</a>.
+          Nexml development is being undertaken in a number of
+          subprojects:
         </p>
-
-        <p>
-          This template allows visitors to use the following
-          accesskeys:<br />
-          <strong>1 -</strong> Back to top | <strong>2 -</strong>
-          Skip to site menu | <strong>3 -</strong> Skip to main
-          content | <strong>4 -</strong> Return to index.html
-        </p>
-
-        <p>
-          You can easily change these or add more accesskeys to
-          make the site fit your needs, for example to allow easy
-          access to each site menu link. Adding a logical tab order
-          is recommended! And finally: the template allows
-          browser-based font resizing, making sure that site
-          visitors can enlarge the font size without breaking the
-          page layout in any way.
-        </p>
+        <ul>
+          <li>
+          In the first place, we're designing an XML schema. This
+          schema (designated as namespace http://www.nexml.org/1.0)
+          is documented on our 
+          <a href="https://www.nescent.org/wg_evoinfo/Future_Data_Exchange_Standard">wiki</a>;
+          the bleeding edge version is available from <a href="/nexml/html/index/svn">svn</a>;
+          the <a href="/1.0">source code can be browsed</a> on our
+          site (it's a check out from our repository which is updated
+          every five minutes); for bug reports and feature requests please
+          visit our <a href="/nexml/html/index/tracker">issue tracker
+          page.
+          </li>
+          <li>
+          Secondly, we're developing java class libraries to aid
+          software developers wanting to use nexml in their applications
+          These class libraries will support reading of nexml data
+          through a SAX API (to facilitate large data sets or data
+          streams) and writing through a set of simple interfaces objects
+          need to implement in order to become xml writable. The code
+          for this subproject is in the java subfolder on the svn
+          repository.
+          </li>
+          <li>
+          Third, we're developing perl modules that plug into the 
+          IO backend of the Bio::Phylo package on CPAN. Much of the
+          validator code on this website runs on these modules. As
+          Bio::Phylo is (developing to become) compatible with BioPerl
+          and Bio::NEXUS, this will make nexml IO available to a large
+          number of perl programmers.
+          </li>
+        </ul>
+        In addition, the developers of the phycas project are working
+        on parsing and serializing their python objects in nexml, and
+        Sergei Kosakovsky Pond of hyphy is interested in nexml IO for
+        that project. We've also had (very tentative) conversations with
+        Paul Lewis of NCL (the nexus class libraries in c++) about nexml
+        integration. In short, a lot of active but alpha stage development
+        is going on.
         <p class="internallink">
           [ <a href="#top">Back to top</a> ]
         </p>
         <h3 class="headerstyle">
           Get involved!
         </h3>
-
         <p>
-          If you like this idea and would like to use it in any
-          way, you are free to do so. Nexml is released as open 
-          source (LGPL), which means that you are free to make any
-          changes you may want to. I kindly ask that you leave the
-          "Design by Andreas Viklund" link in the footer, but you
-          are free to remove it if you want (or need) to. If you
-          use this design for commercial purposes, please consider
-          making a symbolic donation through <a href=
-          "http://andreasviklund.com/">my website</a>.
+          If you are interested in being involved in the nexml project
+          in any way, please do! 
+          <!-- more goes here -->
         </p>
-        <p class="block">
-          <strong>Additional information:</strong> Download more of
-          my free website templates from <a href=
-          "http://oswd.org/userinfo.phtml?user=Andreas">OSWD.org</a>!
-        </p>
-
         <p class="internallink">
           [ <a href="#top">Back to top</a> ]
         </p>
