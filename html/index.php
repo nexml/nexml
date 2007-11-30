@@ -198,7 +198,7 @@
     
   </head>
   
-  <body>
+  <body onload="initFileUploads()">
     <div id="thetop">
       <a id="top" name="top"></a>
       <p class="hide">
