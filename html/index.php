@@ -234,14 +234,16 @@
         <form 
             action="http://nexml-dev.nescent.org/nexml/validator" 
             enctype="multipart/form-data" 
-            method="post"
+            method="post" 
             class="validator">
-          <fieldset class="validator" id="inputContainer">
-            <legend id="validatorLegend">Validate nexml data</legend>
-            <input type="file" name="file" class="validator"/>
-            <input type="submit" value="Validate!" class="validator"/>
-          </fieldset>
-        </form>        
+            <fieldset>
+                <legend>Validate nexml data</legend>
+                <div class="fileinputs">
+                    <input type="file" class="file" name="file"/>
+                </div>
+                <input type="submit" id="validateSubmit"/>
+            </fieldset>
+        </form>          
         <?
             // feed urls
             $feed_url = array(
