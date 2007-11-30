@@ -194,6 +194,7 @@
     
     <!-- external inclusions -->
     <link rel="stylesheet" type="text/css" href="/nexml/html/style.css" />
+    <script type="text/javascript" href="/nexml/html/script.css" />
     
   </head>
   
