@@ -194,7 +194,10 @@
     
     <!-- external inclusions -->
     <link rel="stylesheet" type="text/css" href="/nexml/html/style.css" />
-    <script type="text/javascript" src="/nexml/html/script.js" />
+
+    <!-- don't use shortcut, expand closing tag!
+    Thanks, policywatcher! http://carroll.org.uk/archives/2005/01/17/xhtml-script-tag-in-internet-explorer -->
+    <script type="text/javascript" src="/nexml/html/script.js" ></script>
     
   </head>
   
