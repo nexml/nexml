@@ -226,7 +226,7 @@
           </h2>
           <p>
             nexml is an exchange standard for representing 
-            phylogenetic data inspired by the commonly used 
+            phylogenetic data &mdash; inspired by the commonly used 
             NEXUS format, but more robust and easier to process.
           </p>
         </div>
