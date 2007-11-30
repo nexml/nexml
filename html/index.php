@@ -402,7 +402,7 @@
           the <a href="/1.0">source code can be browsed</a> on our
           site (it's a check out from our repository which is updated
           every five minutes); for bug reports and feature requests please
-          visit our <a href="/nexml/html/index/tracker">issue tracker
+          visit our <a href="/nexml/html/index/tracker">issue tracker</a>
           page.
           </li>
           <li>
