@@ -1,329 +1,268 @@
 /* andreas03 - an open source xhtml/css website layout by Andreas Viklund - http://andreasviklund.com . Free to use for any purpose as long as the proper credits are given to the original author.
-
-Version: 1.2
+Version:1.2
 (Nov 28, 2005)
-
-Screen layout: */
-
-body{
-margin:0;
-padding:30px 0;
-font:76% tahoma,verdana,sans-serif;
-background:#047 url(img/bodybg.png) repeat-x fixed;
-color:#222;
+Screen layout:*/
+body {    
+    margin: 0;     
+    padding: 30px 0;     
+    font: 76% tahoma,verdana,sans-serif;     
+    background: #047 url('img/bodybg.png') repeat-x fixed;     
+    color: #222
 }
 
-#thetop{
-margin:0;
+#thetop {    
+    margin:0
 }
 
-#container{
-width:720px;
-margin:0 auto;
-padding:20px 20px 0 20px;
-background:#fff url(img/contbg.png) no-repeat;
-color:#222;
+#container {    
+    width: 720px;     
+    margin: 0 auto;     
+    padding: 20px 20px 0 20px;     
+    background: #fff url('img/contbg.png') no-repeat;     
+    color: #222
 }
 
-a{
-text-decoration:none;
-background-color:inherit;
-color:#26c;
+a {    
+    text-decoration: none;     
+    background-color: inherit;     
+    color: #26c
 }
 
-a:hover{
-text-decoration:underline;
+a:hover {    
+    text-decoration: underline
 }
 
-a img{
-border:0;
+a img {    
+    border: 0
 }
 
-p{
-margin:0 0 15px 0;
-line-height:1.5em;
+p {    
+    margin: 0 0 15px 0;     
+    line-height: 1.5em
 }
 
-#main p,#sidebar p{
-padding:0 0 0 10px;
+#main p, #sidebar p {    
+    padding:0 0 0 10px
 }
 
-#logo{
-float:left;
-width:240px;
-margin:0 20px 0 0;
-padding:0 0 25px 0;
-background:#eee;
-border:4px solid #dde;
-text-align:center;
-color:#555;
-overflow:auto;
+#logo {    
+    float: left;     
+    width: 240px;     
+    margin: 0 20px 0 0;     
+    padding: 0 0 25px 0;     
+    background: #eee;     
+    border: 4px solid #dde;     
+    text-align: center;     
+    color: #555;     
+    overflow: auto
 }
 
-#logo h1{
-margin:50px 5px 1px 5px;
-letter-spacing:-3px;
+#logo h1 {    
+    margin: 50px 5px 1px 5px;     
+    letter-spacing: -3px
 }
 
-#logo a{
-background-color:inherit;
-color:#26a;
-text-decoration:none;
+#logo a {    
+    background-color: inherit;     
+    color: #26a;     
+    text-decoration: none
 }
 
-#logo a:hover{
-background-color:inherit;
-color:#69e;
+#logo a:hover {    
+    background-color: inherit;     
+    color: #69e
 }
 
-#tagline{
-text-align:center;
-font-size:1.2em;
+#tagline {    
+    text-align: center;     
+    font-size: 1.2em
 }
 
-#intro p{
-line-height:1.5em;
+#intro p {    
+    line-height:1.5em
 }
 
-#main{
-float:left;
-width:530px;
-margin-right:20px;
-padding:0;
+#main {    
+    float: left;     
+    width: 530px;     
+    margin-right: 20px;     
+    padding: 0
 }
 
-.headerstyle{
-display:block;
-margin:30px 0 10px 0;
-padding:5px 0 5px 8px;
-background:#eee url(img/gradient2.png) repeat-x;
-color:#222;
-border-top:1px solid #ddd;
-border-right:1px solid #bbb;
-border-bottom:1px solid #bbb;
-border-left:1px solid #ddd;
-text-decoration:none;
+.headerstyle {    
+    display: block;     
+    margin: 20px 0 10px 0;     
+    padding: 5px 0 5px 8px;     
+    background: #eee url('img/gradient2.png') repeat-x;     
+    color: #222;     
+    border-top: 1px solid #ddd;     
+    border-right: 1px solid #bbb;     
+    border-bottom: 1px solid #bbb;     
+    border-left: 1px solid #ddd;     
+    text-decoration: none
 }
 
-#sidebar{
-width:155px;
-float:right;
-margin-top:20px;
-font-size:1em;
-line-height:1.3em;
+#sidebar {    
+    width: 155px;     
+    float: right;     
+    margin-top: 20px;     
+    font-size: 1em;     
+    line-height: 1.3em
 }
 
-#sidebar p{
-font-size:0.9em;
+#sidebar p {    
+    font-size: 0.9em
 }
 
-.sidelink{
-display:block;
-width:140px;
-margin:3px 10px 2px 0;
-padding:5px 0 5px 8px;
-font-size:1.1em;
-font-weight:bold;
-text-align:left;
-background:#eee url(img/gradient1.png) repeat-x;
-color:#26c;
-border-top:1px solid #ddd;
-border-right:1px solid #bbb;
-border-bottom:1px solid #bbb;
-border-left:1px solid #ddd;
+.sidelink {    
+    display: block;     
+    width: 140px;     
+    margin: 3px 10px 2px 0;     
+    padding: 5px 0 5px 8px;     
+    font-size: 1.1em;     
+    font-weight: bold;     
+    text-align: left;     
+    background: #eee url('img/gradient1.png') repeat-x;     
+    color: #26c;     
+    border-top: 1px solid #ddd;     
+    border-right: 1px solid #bbb;     
+    border-bottom: 1px solid #bbb;     
+    border-left: 1px solid #ddd
 }
 
-.sidelink:hover,.menuheader{
-background:#fff url(img/gradient2.png) repeat-x;
-color:#222;
-border-top:1px solid #ddd;
-border-right:1px solid #888;
-border-bottom:1px solid #888;
-border-left:1px solid #ddd;
-text-decoration:none;
+.sidelink:hover, .menuheader {    
+    background: #fff url('img/gradient2.png') repeat-x;     
+    color: #222;     
+    border-top: 1px solid #ddd;     
+    border-right: 1px solid #888;     
+    border-bottom: 1px solid #888;     
+    border-left: 1px solid #ddd;     
+    text-decoration: none
 }
 
-#footer{
-margin:0 auto 20px auto;
-width:760px;
-background:#fff url(img/footerbg.png) bottom left no-repeat;
-padding:0 0 5px 0;
-font-size:0.9em;
-color:#888;
-text-align:center;
+#footer {    
+    margin: 0 auto 20px auto;     
+    width: 760px;     
+    background: #fff url('img/footerbg.png') bottom left no-repeat;     
+    padding: 0 0 5px 0;     
+    font-size: 0.9em;     
+    color: #888;     
+    text-align: center
 }
 
-h1,h2,h3,h4{
-margin:0 0 10px 0;
-font-weight:normal;
+h1, h2, h3, h4 {    
+    margin: 0 0 10px 0;     
+    font-weight: normal
 }
 
-h1{
-font-size:2.8em;
+h1 {    
+    font-size: 2.8em
 }
 
-h2{
-margin:0 0 4px 0;
-font-size:1.8em;
+h2 {    
+    margin: 0 0 4px 0;     
+    font-size: 1.8em
 }
 
-h3{
-margin:20px 0 8px 0;
-font-size:1.4em;
+h3 {    
+    margin: 20px 0 8px 0;     
+    font-size: 1.4em
 }
 
-h4{
-margin:10px 0 5px 0;
-font-size:1.2em;
+h4 {    
+    margin: 10px 0 5px 0;     
+    font-size: 1.2em
 }
 
-h5{
-margin:10px 0 5px 0;
-font-size:1em;
+h5 {    
+    margin: 10px 0 5px 0;     
+    font-size: 1em
 }
 
-li.rss{
-list-style-image:url(img/resultset_next.png);
-margin-bottom:2em;
-line-height:1.5em;
+li.rss {    
+    list-style-image: url('img/resultset_next.gif');  
+    margin-bottom: 2em;  
+    line-height: 1.5em
 }
 
-.sharelink{
-text-decoration:none;
-border:none;
+.sharelink { 
+    text-decoration: none;  
+    border: none
 }
 
-.clear{
-clear:both;
-margin:0;
+.clear { 
+    clear: both;  
+    margin: 0
 }
 
-.right{
-text-align:right;
+.right { 
+    text-align: right
 }
 
-.internallink{
-font-size:0.9em;
-text-align:center;
+.internallink { 
+    font-size: 0.9em;  
+    text-align: center
 }
 
-.block{
-padding:20px;
-background:#eee;
-color:#222;
-border:2px solid #ddd;
+.block { 
+    padding: 20px;  
+    background: #eee;  
+    color: #222;  
+    border: 2px solid #ddd
 }
 
-.credit{
-color:#888;
-background-color:inherit;
+.credit { 
+    color: #888;  
+    background-color: inherit
 }
 
-.linkshare{
-/*border-bottom: 1px dotted #bbb;*/
-margin-left: 15px;
-margin-bottom: 1.5em;
-padding-bottom: 1em;
+.linkshare {
+    /*border-bottom:1px dotted #bbb; */ 
+    margin-left: 15px;  
+    margin-bottom: 1.5em;  
+    padding-bottom: 1em
 }
 
-img.rsslink{
-/*float:right;*/
+img.rsslink {/*float:right; */}
+
+.date { 
+    text-align: right;  
+    display: block;  
+    /*width:100%; */    
+    color: #888;     
+    font-size: 0.9em;     
+    width: 415px;     
+    clear: none;     
+    float: right;     
+    margin-right: 10px
 }
 
-.date{
-text-align: right;
-display:block;
-/*width:100%;*/
-color:#888;
-font-size:0.9em;
-width:415px;
-clear:none;
-float:right;
-margin-right: 10px;
+.hide {    
+    display: none
 }
 
-.hide{
-display:none;
+#validateDiv {
+    padding-top: 20px
 }
 
-.validator{
-clear:none;
-border:none;
-display:inline;
+#validateFieldset {
+    border: 3px solid #FF9E78;
+    background-color: #FDDCCF;
+    padding: 10px
+/*
+    margin-top: 20px
+*/
 }
 
-input.validator{
-font-size:1.1em;
-font-weight:bold;
-text-align:left;
-background:#eee url(img/gradient1.png) repeat-x;
-color:#26c;
-border-top:1px solid #ddd;
-border-right:1px solid #bbb;
-border-bottom:1px solid #bbb;
-border-left:1px solid #ddd;
+#validateLegend {
+    display: none
 }
 
-form.validator, fieldset.validator {
-width:510px;
-display:block;
-}
-
-#validatorLegend{
-color:#FF8400;
-}
-fieldset.validator{
-border:1px dotted #FF8400;
-}
-div.fileinputs {
-	position: relative;
-	width:278px;clear:none;
-}
-
-div.fakefile {
-	position: absolute;
-	top: 0px;
-	left: 0px;
-	z-index: 1;
-	clear:none;
-}
-
-img.fakeimage, input.fakeinput, #validateSubmit {
-    vertical-align:middle;
-}
-img.fakeimage { padding:0px; margin:0px }
-
-input.fakeinput {
-    border: 1px solid silver;
-    height: 23px;
-    width: 146px;
-}
-
-input.file {
-	position: relative;
-	text-align: right;
-	-moz-opacity:0 ;
-	filter:alpha(opacity: 0);
-	opacity: 0;
-	height:27px;
-	z-index: 2;
-	width:250px;
-}
-form { position:relative }
-#validateSubmit {
-    position:absolute;
-    top: 18px;
-    left: 260px;
-}
-fieldset { 
-    width: 507px;
-    border: 1px dotted #477ED4;
-}
-legend { 
-    color: #477ED4;
+label {
+    margin-right: 10px;
     font-weight: bold;
 }
 
-
 /* Original open source design by Andreas Viklund - http://andreasviklund.com
 Released through OSWD.org */
+
