@@ -53,7 +53,7 @@ function initFileUploads() {
 	fakeFileUpload.appendChild(fakeFileInput);
 	var image = document.createElement('img');
 	image.className = 'fakeimage';
-	image.src='img/browse.png';
+	image.src='/nexml/html/img/browse.png';
 	fakeFileUpload.appendChild(image);
 	var x = document.getElementsByTagName('input');
 	for (var i=0;i<x.length;i++) {
@@ -69,5 +69,5 @@ function initFileUploads() {
 	}
 	var theSubmit = document.getElementById('validateSubmit');
 	theSubmit.type = 'image';
-	theSubmit.src = 'img/validate.png';
+	theSubmit.src = '/nexml/html/img/validate.png';
 }
