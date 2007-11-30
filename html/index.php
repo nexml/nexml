@@ -393,7 +393,7 @@
           subprojects:
         </p>
         <ul>
-          <li>
+          <li class="rss">
           In the first place, we're designing an XML schema. This
           schema (designated as namespace http://www.nexml.org/1.0)
           is documented on our 
@@ -405,7 +405,7 @@
           visit our <a href="/nexml/html/index/tracker">issue tracker</a>
           page.
           </li>
-          <li>
+          <li class="rss">
           Secondly, we're developing java class libraries to aid
           software developers wanting to use nexml in their applications
           These class libraries will support reading of nexml data
@@ -415,7 +415,7 @@
           for this subproject is in the java subfolder on the svn
           repository.
           </li>
-          <li>
+          <li class="rss">
           Third, we're developing perl modules that plug into the 
           IO backend of the Bio::Phylo package on CPAN. Much of the
           validator code on this website runs on these modules. As
