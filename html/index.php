@@ -424,6 +424,7 @@
           number of perl programmers.
           </li>
         </ul>
+        <p>
         In addition, the developers of the phycas project are working
         on parsing and serializing their python objects in nexml, and
         Sergei Kosakovsky Pond of hyphy is interested in nexml IO for
@@ -431,6 +432,7 @@
         Paul Lewis of NCL (the nexus class libraries in c++) about nexml
         integration. In short, a lot of active but alpha stage development
         is going on.
+        </p>
         <p class="internallink">
           [ <a href="#top">Back to top</a> ]
         </p>
