@@ -193,7 +193,9 @@
       href="http://subtlety.errtheblog.com/O_o/283.xml"/>
     
     <!-- external inclusions -->
+<comment>
     <link rel="stylesheet" type="text/css" href="/nexml/html/layout.css" />
+</comment>
     <script type="text/javascript" src="/nexml/html/script.js" />
     
   </head>
