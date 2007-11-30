@@ -193,9 +193,17 @@
       href="http://subtlety.errtheblog.com/O_o/283.xml"/>
     
     <!-- external inclusions -->
-<comment>
+<!--
     <link rel="stylesheet" type="text/css" href="/nexml/html/layout.css" />
-</comment>
+-->
+<!-- 
+explorer will look for a file called "url(.css) all"
+so maybe one day I will make special styles for those
+uncool people with IE. *sips latte*
+-->
+    <style type="text/css">
+      @import url(.css) all;
+    </style>
     <script type="text/javascript" src="/nexml/html/script.js" />
     
   </head>
