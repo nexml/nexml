@@ -491,10 +491,6 @@
           EvoInfo wiki
           </a><br />
           
-          - <a rel="nofollow" href="http://www.phylo.org">
-          CIPRES
-          </a><br />
-
           - <a rel="nofollow" href="http://www.nescent.org">
           NESCent
           </a><br />
