@@ -493,7 +493,7 @@
           CIPRES
           </a><br />
 
-          - <a href="http://www.nescent.org>
+          - <a href="http://www.nescent.org">
           NESCent
           </a><br />
         </p>
