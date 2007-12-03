@@ -25,7 +25,7 @@
     <xs:complexType name="AbstractEdge" abstract="true">
         <xs:annotation>
             <xs:documentation>
-                The AbstractEdge superclass is what concrete edge inherit
+                The AbstractEdge superclass is what concrete edges inherit
                 from by restriction. It represents an edge element much like
                 that of GraphML, i.e. an element that connects node elements.
             </xs:documentation>
@@ -37,6 +37,23 @@
             </xs:extension>            
         </xs:complexContent>         
     </xs:complexType>
+    
+    <xs:complexType name="AbstractRootEdge" abstract="true">
+        <xs:annotation>
+            <xs:documentation>
+                The AbstractRootEdge complex type is a superclass for the
+                edge that leads into a root, i.e. an edge with only a target
+                attribute, but no source attribute. This type of edge is
+                used for coalescent trees, where the initial lineage has
+                a certain length before things start splitting up.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="IDTagged">
+                <xs:attribute name="target" type="xs:NCName" use="required"/>                
+            </xs:extension>            
+        </xs:complexContent>         
+    </xs:complexType>    
 
     <xs:complexType name="AbstractTree" abstract="true">
         <xs:annotation>
