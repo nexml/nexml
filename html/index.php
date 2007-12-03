@@ -492,11 +492,7 @@
           - <a href="http://www.phylo.org">
           CIPRES
           </a><br />
-          
-          - <a href="http://www.nescent.org/">
-          NESCent
-          </a><br />
-          
+          <a href="http://www.nescent.org"><img src="/nexml/html/img/nescent-logo.png"/></a>
         </p>
       </div>
       <div class="clear">
