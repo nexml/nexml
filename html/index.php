@@ -203,6 +203,7 @@
   </head>
   
   <body>
+    <h1 class="hide">nexml: phylogenetic data in xml - <?= $requested_feed ?></h1>
     <div id="thetop">
       <a id="top" name="top"></a>
       <p class="hide">
@@ -274,16 +275,16 @@
         <h3 class="headerstyle"><? echo($rss->channel['TITLE']) ?></h3>
         <div class="linkshare">
             <? $url = curPageURL(); ?>
-            <a class="sharelink" href="http://digg.com/submit?phase=2&amp;url=<?= $url ?>">
+            <a class="sharelink" rel="nofollow" href="http://digg.com/submit?phase=2&amp;url=<?= $url ?>">
                 <img class="sharelink" src="/nexml/html/img/digg.gif" alt="digg"/>
             </a>
-            <a class="sharelink" href="http://reddit.com/submit?url=<?= $url ?>">
+            <a class="sharelink" rel="nofollow" href="http://reddit.com/submit?url=<?= $url ?>">
                 <img class="sharelink" src="/nexml/html/img/reddit.gif" alt="reddit"/>
             </a>
-            <a class="sharelink" href="http://del.icio.us/post?url=<?= $url ?>">
+            <a class="sharelink" rel="nofollow" href="http://del.icio.us/post?url=<?= $url ?>">
                 <img class="sharelink" src="/nexml/html/img/delicious.gif" alt="del.icio.us"/>
             </a>    
-            <a class="sharelink" href="http://www.facebook.com/share.php?u=<?= $url ?>">
+            <a class="sharelink" rel="nofollow" href="http://www.facebook.com/share.php?u=<?= $url ?>">
                 <img class="sharelink" src="/nexml/html/img/facebook.gif" alt="facebook"/>
             </a>              
             <div class="credit date">  &mdash; 
@@ -316,16 +317,16 @@
         </h3>
         <div class="linkshare">
             <? $url = curPageURL(); ?>
-            <a class="sharelink" href="http://digg.com/submit?phase=2&amp;url=<?= $url ?>">
+            <a class="sharelink" rel="nofollow" href="http://digg.com/submit?phase=2&amp;url=<?= $url ?>">
                 <img class="sharelink" src="/nexml/html/img/digg.gif" alt="digg"/>
             </a>
-            <a class="sharelink" href="http://reddit.com/submit?url=<?= $url ?>">
+            <a class="sharelink" rel="nofollow" href="http://reddit.com/submit?url=<?= $url ?>">
                 <img class="sharelink" src="/nexml/html/img/reddit.gif" alt="reddit"/>
             </a>
-            <a class="sharelink" href="http://del.icio.us/post?url=<?= $url ?>">
+            <a class="sharelink" rel="nofollow" href="http://del.icio.us/post?url=<?= $url ?>">
                 <img class="sharelink" src="/nexml/html/img/delicious.gif" alt="del.icio.us"/>
             </a>    
-            <a class="sharelink" href="http://www.facebook.com/share.php?u=<?= $url ?>">
+            <a class="sharelink" rel="nofollow" href="http://www.facebook.com/share.php?u=<?= $url ?>">
                 <img class="sharelink" src="/nexml/html/img/facebook.gif" alt="facebook"/>
             </a>  
             <div class="credit date"> &mdash;
@@ -333,13 +334,13 @@
             </div>
         </div>
         <p>
-          The <a href="http://www.citeulike.org/user/rvosa/article/2011773">
+          The <a rel="nofollow" href="http://www.citeulike.org/user/rvosa/article/2011773">
           NEXUS file format</a> is a commonly used format for 
           phylogenetic data. Unfortunately, over time, the format
           has become overloaded - which has caused various
-          <a href="https://www.nescent.org/wg_evoinfo/NEXUS_Problems">
+          <a rel="nofollow" href="https://www.nescent.org/wg_evoinfo/NEXUS_Problems">
           problems</a>. Meanwhile, new technologies around the
-          <a href="http://www.w3.org/XML/">XML</a> standard have
+          <a rel="nofollow" href="http://www.w3.org/XML/">XML</a> standard have
           emerged. These technologies have the potential to greatly
           simplify, and improve robustness, in the processing of phylogenetic data:
           </p>
@@ -348,19 +349,19 @@
                 <strong>Validation</strong> &mdash; some of the issues hampering
                 interoperability are caused by the fact that no formal
                 specification exists for NEXUS files, and no objective way
-                to validate files. Thanks to <a href="http://www.w3.org/XML/Schema">
+                to validate files. Thanks to <a rel="nofollow" href="http://www.w3.org/XML/Schema">
                 XML Schema</a> we can now define a grammar against which 
                 data files can be validated.
             </li>
             <li class="rss">
                 <strong>Web services</strong> &mdash; a number of different 
-                technologies (such as <a href="http://www.xmlrpc.com/">XML-RPC</a>, 
-                <a href="http://en.wikipedia.org/wiki/Representational_State_Transfer">REST</a> 
-                and <a href="http://www.w3.org/TR/soap/">SOAP</a>) have 
+                technologies (such as <a rel="nofollow" href="http://www.xmlrpc.com/">XML-RPC</a>, 
+                <a rel="nofollow" href="http://en.wikipedia.org/wiki/Representational_State_Transfer">REST</a> 
+                and <a rel="nofollow" href="http://www.w3.org/TR/soap/">SOAP</a>) have 
                 emerged allowing disparate services to be glued together 
                 over the internet. Using such services, researchers can 
                 "farm out" their calculations to dedicated servers, such
-                as those of the <a href="http://www.phylo.org">CIPRES
+                as those of the <a rel="nofollow" href="http://www.phylo.org">CIPRES
                 project</a>.
             </li>
             <li class="rss">
@@ -369,7 +370,7 @@
                 data this poses problems, because the field of phyloinformatics
                 moves very rapidly: new metrics and analysis types are
                 published constantly. 
-                <a href="http://xmldb-org.sourceforge.net/">XML databases</a>
+                <a rel="nofollow" href="http://xmldb-org.sourceforge.net/">XML databases</a>
                 are freed from this constraint, simplifying storage of
                 unusual data types.
             </li>          
@@ -490,11 +491,11 @@
           EvoInfo wiki
           </a><br />
           
-          - <a href="http://www.phylo.org">
+          - <a rel="nofollow" href="http://www.phylo.org">
           CIPRES
           </a><br />
 
-          - <a href="http://www.nescent.org">
+          - <a rel="nofollow" href="http://www.nescent.org">
           NESCent
           </a><br />
         </p>
