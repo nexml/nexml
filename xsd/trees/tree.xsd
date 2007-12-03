@@ -31,7 +31,7 @@
     <xs:complexType name="TreeFloatEdge" abstract="false">
         <xs:annotation>
             <xs:documentation>
-                A concrete edge implementation, with float edge
+                A concrete edge implementation, with float length.
             </xs:documentation>
         </xs:annotation>
         <xs:complexContent>
@@ -40,15 +40,41 @@
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
+    
+    <xs:complexType name="TreeFloatRootEdge" abstract="false">
+        <xs:annotation>
+            <xs:documentation>
+                A concrete root edge implementation, with float length.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="AbstractRootEdge">
+                <xs:attribute name="length" type="xs:float"/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>    
 
     <xs:complexType name="TreeIntEdge" abstract="false">
         <xs:annotation>
             <xs:documentation>
-                A concrete edge implementation, with int edge
+                A concrete edge implementation, with int length.
             </xs:documentation>
         </xs:annotation>
         <xs:complexContent>
             <xs:extension base="TreeEdge">
+                <xs:attribute name="length" type="xs:integer"/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>    
+    
+    <xs:complexType name="TreeIntRootEdge" abstract="false">
+        <xs:annotation>
+            <xs:documentation>
+                A concrete root edge implementation, with int length.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="AbstractRootEdge">
                 <xs:attribute name="length" type="xs:integer"/>
             </xs:extension>
         </xs:complexContent>
@@ -64,6 +90,7 @@
             <xs:restriction base="AbstractTree">
                 <xs:sequence>
                     <xs:element minOccurs="0" maxOccurs="unbounded" name="node" type="TreeNode"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="rootedge" type="TreeFloatRootEdge"/>
                     <xs:element minOccurs="0" maxOccurs="unbounded" name="edge" type="TreeFloatEdge"/>
                 </xs:sequence>
             </xs:restriction>
@@ -80,6 +107,7 @@
             <xs:restriction base="AbstractTree">
                 <xs:sequence>
                     <xs:element minOccurs="0" maxOccurs="unbounded" name="node" type="TreeNode"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="rootedge" type="TreeIntRootEdge"/>
                     <xs:element minOccurs="0" maxOccurs="unbounded" name="edge" type="TreeIntEdge"/>
                 </xs:sequence>
             </xs:restriction>
