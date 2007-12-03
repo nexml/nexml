@@ -167,7 +167,7 @@
     <meta name="keywords" content="nexml, xml, nexus, phylogenetics, phylogenies, trees, dna, rna, nucleotide, standard, continuous, amino, acid, matrix, tree, network, data" />
     <meta name="author" content="Rutger Vos" />
     <meta name="robots" content="index,follow" />
-    <title>nexml - encoding phylogenetic data in xml</title>
+    <title>nexml - encoding phylogenetic data in xml - <?= $requested_feed ?></title>
     
     <!-- RSS feeds -->
     <link
