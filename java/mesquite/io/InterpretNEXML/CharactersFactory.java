@@ -1,5 +1,7 @@
 package mesquite.io.InterpretNEXML;
 
+// $Id$
+
 import java.util.Hashtable;
 import mesquite.categ.lib.CategoricalData;
 import mesquite.cont.lib.ContinuousData;
@@ -9,7 +11,7 @@ import mesquite.lib.duties.CharactersManager;
 import org.nexml.ObjectFactory;
 import org.xml.sax.Attributes;
 
-/*
+/**
  * To parse a nexml characters block, the following (may) need to happen:
  * 
  * - parse out the data type (xsi:type) and translate it to the equivalent
@@ -40,7 +42,6 @@ import org.xml.sax.Attributes;
  * + nex:StandardCells
  * 
  */
-
 class CharactersFactory extends GenericFactory implements ObjectFactory {
 	private CharacterData data;
 	private CharactersManager manager;
@@ -75,25 +76,32 @@ class CharactersFactory extends GenericFactory implements ObjectFactory {
 		log("Instantiated CharactersFactory");
 	}
 	
-	/*
-	 * (non-Javadoc)
+	/**
+	 * Sets raw character data (sequence data) for the current row in the matrix
+	 * @param myCharacters an array of characters
 	 * @see org.nexml.ObjectFactory#setCharacterData(char[])
 	 */
 	public void setCharacterData (char[] myCharacters) {
 		this.characters = myCharacters;
 	}
 	
-	/*
-	 * (non-Javadoc)
+	/**
+	 * Returns the current object
+	 * @return an Object
 	 * @see org.nexml.ObjectFactory#getCurrentObject()
 	 */
 	public Object getCurrentObject () {
 		return null;
 	}	
 	
-	/*
-	 * (non-Javadoc)
+	/**
+	 * Creates a mesquite characters block
+	 * @param namespaceURI the universal resource identifier of the element, typically http://www.nexml.org/1.0
+	 * @param localName    the unqualified (without prefix) name of the element
+	 * @param qName        the fully qualified (with prefix) name of the element
+	 * @param atts         any attributes associated with the element
 	 * @see org.nexml.ObjectFactory#createObject(java.lang.String, java.lang.String, java.lang.String, org.xml.sax.Attributes)
+	 * @see Attributes
 	 */
 	public Object createObject (String namespaceURI, String localName, String qName, Attributes atts) {
 		log("\n--------- ELEMENT --------------");
@@ -128,8 +136,12 @@ class CharactersFactory extends GenericFactory implements ObjectFactory {
 		return null;
 	}	
 	
-	/*
-	 * (non-Javadoc)
+	/**
+	 * Executes when the closing tag for the characters element is encountered.
+	 * @param namespaceURI the universal resource identifier of the element, typically http://www.nexml.org/1.0
+	 * @param localName    the unqualified (without prefix) name of the element
+	 * @param qName        the fully qualified (with prefix) name of the element
+	 * @param atts         any attributes associated with the element
 	 * @see org.nexml.ObjectFactory#objectIsComplete(java.lang.String, java.lang.String, java.lang.String, org.xml.sax.Attributes)
 	 */
 	public void objectIsComplete(String namespaceURI, String localName, String qName, Attributes atts) {
@@ -158,8 +170,9 @@ class CharactersFactory extends GenericFactory implements ObjectFactory {
 		this.characters = null;
 	}	
 	
-	/*
-	 * (non-Javadoc)
+	/**
+	 * Returns an array of local names of elements this factory can process
+	 * @return an array of local element names
 	 * @see org.nexml.ObjectFactory#getElementsToHandle()
 	 */
 	public String[] getElementsToHandle () {
@@ -176,6 +189,14 @@ class CharactersFactory extends GenericFactory implements ObjectFactory {
 		return elements;
 	}	
 	
+	/*
+	 * Private method, is called when the object is completed.
+	 * @param obj   a mesquite CharacterData object
+	 * @param id    value of the nexml id attribute
+	 * @param label value (if any) of the nexml label attribute
+	 * @return a mesquite CharacterData object
+	 * @see CharacterData
+	 */
 	private CharacterData finalizeObject (CharacterData obj, String id, String label) {
 		if ( obj != null ) {
 			obj.setUniqueID(id);
@@ -188,7 +209,7 @@ class CharactersFactory extends GenericFactory implements ObjectFactory {
 	}
 	
 	/*
-	 * Processes &lt;states&gt; element, initializes a new Hashtable for the current state set
+	 * Handles the "states" child element of the "characters" element
 	 */
 	private void handleStatesElement (String namespaceURI, String localName, String qName, Attributes atts) {
 		this.currentStateSetID = atts.getValue("id");

@@ -13,6 +13,8 @@ GNU Lesser General Public License.  (http://www.gnu.org/copyleft/lesser.html)
 package mesquite.io.InterpretNEXML;
 /*~~  */
 
+// $Id$
+
 import java.awt.*;
 
 import mesquite.lib.*;
@@ -24,6 +26,13 @@ import org.nexml.*;
 /** A file interpreter for a NEXML file format.  */
 public class InterpretNEXML extends FileInterpreterI {	
 	/*.................................................................................................................*/
+	/**
+	 * @param arguments
+	 * @param condition
+	 * @param commandrec
+	 * @param hiredByName
+	 * @return boolean
+	 */
 	public boolean startJob(String arguments, Object condition, CommandRecord commandrec, boolean hiredByName) {
 		return true;
 	}
@@ -87,6 +96,11 @@ public class InterpretNEXML extends FileInterpreterI {
 	/* ============================  exporting ============================*/
 	boolean compact = false;
 	/*.................................................................................................................*/
+	/**
+	 * @param dataSelected
+	 * @param taxaSelected
+	 * @return boolean
+	 */
 	public boolean getExportOptions(boolean dataSelected, boolean taxaSelected){
 		MesquiteInteger buttonPressed = new MesquiteInteger(1);
 		ExporterDialog exportDialog = new ExporterDialog(this,containerOfModule(), "Export NEXML Options", buttonPressed);
@@ -102,6 +116,11 @@ public class InterpretNEXML extends FileInterpreterI {
 		return ok;
 	}
 	/*.................................................................................................................*/
+	/**
+	 * @param dataSelected
+	 * @param taxaSelected
+	 * @return boolean
+	 */
 	public boolean getExportOptionsSimple(boolean dataSelected, boolean taxaSelected){   // an example of a simple query, that only proved line delimiter choice; not used here
 		return (ExporterDialog.query(this,containerOfModule(), "Export NEXML Options")==0);
 	}
@@ -134,18 +153,42 @@ class FactoryManager {
 		this.file = myFile;
 	}
 	
+	/**
+	 * Gets the object that creates a mesquite characters object from the
+	 * nested "characters" element structure in nexml.
+	 * @param charTask
+	 * @return CharactersFactory
+	 * @see CharactersFactory
+	 */
 	public CharactersFactory getCharactersFactory (CharactersManager charTask) {
 		return new CharactersFactory(this.project, this.file, charTask);
 	}
 	
+	/**
+	 * Gets the object that creates mesquite taxa from the nested "otus" element.
+	 * @param taxaTask
+	 * @return TaxaFactory
+	 * @see TaxaFactory
+	 */
 	public TaxaFactory getTaxaFactory (TaxaManager taxaTask) {
 		return new TaxaFactory(this.project, this.file, taxaTask);
 	}
 	
+	/**
+	 * Gets the object that creates mesquite trees from the nested "trees" element.
+	 * @param treesTask
+	 * @return TreesFactory
+	 * @see TreesFactory
+	 */
 	public TreesFactory getTreesFactory(TreesManager treesTask) {
 		return new TreesFactory(this.project, this.file, treesTask);
 	}
 	
+	/**
+	 * Gets the object that listens for mesquite objects coming down the stream.
+	 * @return MesquiteObjectListener
+	 * @see MesquiteObjectListener
+	 */
 	public MesquiteObjectListener getMesquiteObjectListener () {
 		return new MesquiteObjectListener(this.project);
 	}
