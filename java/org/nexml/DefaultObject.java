@@ -4,6 +4,18 @@ package org.nexml;
 
 import org.xml.sax.Attributes;
 
+/**
+ * The nexml class libraries implement an extensible system for parsing nexml data
+ * in java. The data is processed as a SAX stream, from which a handler dispatches
+ * elements and their attributes to object factories, which will instantiate objects
+ * based on the contents of the attributes. Typically, these objects would be those
+ * used by a toolkit such as mesquite. However, if no suitable factory was found for
+ * a given element name a simple default object is created which holds the xml data
+ * (element name in local and fully qualified form, namespace, attributes). This
+ * class is the implementation of that simple object.
+ * @author rvosa
+ * @see    Attributes
+ */
 public class DefaultObject {
 	private String namespaceURI;
 	private String localName;
@@ -11,6 +23,13 @@ public class DefaultObject {
 	private Attributes atts;
 	private char[] characters;
 	
+	/**
+	 * Constructs a new DefaultObject from element and attributes of the stream
+	 * @param mynamespaceURI a universal resource identifier, typically http://www.nexml.org/1.0
+	 * @param mylocalName    the local (unqualified, without prefix) name of the element
+	 * @param myqName        the fully qualified (with prefix) name of the element
+	 * @param myatts         the attributes of the element
+	 */
 	public DefaultObject(String mynamespaceURI, String mylocalName, String myqName, Attributes myatts) {		
 		this.namespaceURI = mynamespaceURI;
 		this.localName = mylocalName;
@@ -52,7 +71,7 @@ public class DefaultObject {
 	
 	/**
 	 * Sets the raw character data (e.g. sequence data) for the object
-	 * @param an array of characters
+	 * @param myCharacters an array of characters
 	 */
 	public void setCharacterData(char[] myCharacters) {
 		this.characters = myCharacters;
