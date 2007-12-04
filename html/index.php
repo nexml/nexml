@@ -191,7 +191,7 @@
       rel="alternate"
       type="application/rss+xml"
       title="SVN revision history - RSS 2.0"
-      href="http://subtlety.errtheblog.com/O_o/283.xml"/>
+      href="/nexml.rss"/>
     
     <!-- external inclusions -->
     <link rel="stylesheet" type="text/css" href="/nexml/html/style.css" />
