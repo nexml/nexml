@@ -3,6 +3,14 @@ package org.nexml;
 // $Id$
 
 import org.xml.sax.*;
+
+/**
+ * Defines an interface for element handlers, that is, objects that
+ * dispatch xml elements received from a SAX stream to their respective
+ * factories.
+ * @author rvosa
+ * @see ContentHandler
+ */
 public interface ElementHandler extends ContentHandler {
 	
 	/**
@@ -39,7 +47,7 @@ public interface ElementHandler extends ContentHandler {
 	/**
 	 * Sets the listener which will be notified of any new objects 
 	 * (including "null", potentially) created by factories.
-	 * @param myOl an object listener 
+	 * @param ol an object listener 
 	 */	
 	public void setObjectListener(ObjectListener ol);
 	

@@ -4,6 +4,14 @@ package org.nexml;
 
 import org.xml.sax.Attributes;
 
+/**
+ * A factory is an object that creates other objects, a standard GoF design pattern. In this
+ * interface, the factory creates objects based on the xml data (in particular, local and 
+ * qualified element names, namespace, attributes and raw character data) provided to it by
+ * the ElementHandler. 
+ * @author rvosa
+ * @see    ElementHandler
+ */
 public interface ObjectFactory {
 	
 	/**
@@ -18,7 +26,7 @@ public interface ObjectFactory {
 	
 	/**
 	 * Sets raw character data (e.g. sequence data) for the object currently being constructed.
-	 * @param characters an array of characters
+	 * @param character an array of characters
 	 */	
 	public void setCharacterData (char[] character);
 	
@@ -27,6 +35,8 @@ public interface ObjectFactory {
 	 * @param namespaceURI the universal resource identifier of the element, typically http://www.nexml.org/1.0
 	 * @param localName    the unqualified version of the element name (i.e. without prefix)
 	 * @param qName        the qualified version of the element name (i.e. with prefix)
+	 * @param atts         the attributes associated with the element
+	 * @see   Attributes
 	 */	
 	public void objectIsComplete (String namespaceURI, String localName, String qName, Attributes atts);
 	
