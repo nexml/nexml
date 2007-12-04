@@ -1,10 +1,13 @@
 package org.nexml;
+
+// $Id$
+
 import java.io.*;
 import javax.xml.parsers.*;
 import org.xml.sax.*;
 import org.xml.sax.helpers.XMLReaderFactory;
 
-/*
+/**
  * Welcome to the source of the nexml parser libraries!
  * 
  * This comment block will outline the basic design, giving examples 
@@ -65,38 +68,74 @@ public class NexmlParser {
 		print("created new NexmlParser");
 	}
 	
+	/**
+	 * Initializes the xml reader by having the XMLReaderFactory instantiate one,
+	 * then sets the element handler on the reader
+	 */
 	private void initXMLReader () throws SAXException {
 		this.xr = XMLReaderFactory.createXMLReader();
 		this.xr.setContentHandler(this.handler);
 	}
 	
+	/**
+	 * Gets the ElementHandler
+	 * @return an ElementHandler
+	 */
 	public ElementHandler getHandler() {
 		return this.handler;
 	}
 	
+	/**
+	 * Sets an ElementHandler to process the stream
+	 * @param myHandler an ElementHandler
+	 */
 	public void setHandler(ElementHandler myHandler) {
 		this.handler = myHandler;
 	}
 	
+	/**
+	 * Parses xml from a URL
+	 * @param url a url from which to read xml
+	 * @throws SAXException, IOException
+	 */	
 	public void parse(String url) throws SAXException, IOException {
 		this.xr.parse(url);
 		print("created dom and root element from url " + url);
 	}
 	
+	/**
+	 * Parses xml from a string
+	 * @param xml a string to read
+	 * @throws SAXException, IOException
+	 */
 	public void parseString (String xml) throws SAXException, IOException {
 		Reader reader = new StringReader(xml);
 		this.parse(new InputSource(reader));
 	}
 	
+	/**
+	 * Parses xml from a file
+	 * @param path a file path to read from
+	 * @throws SAXException, IOException
+	 */
 	public void parseFile (String path) throws SAXException, IOException {
 		this.xr.parse(new InputSource(new FileInputStream(new File(path))));
 	}
 	
+	/**
+	 * Parses xml from an InputSource
+	 * @param input an InputSource
+	 * @throws SAXException, IOException
+	 */
 	public void parse(InputSource input) throws SAXException, IOException {
 		this.xr.parse(input);
 		print("created dom and root element from input source " + input);
 	}
 	
+	/**
+	 * Prints messages to standard out 
+	 * @param line a string to print out
+	 */
 	public static void print (String line) {
 		System.out.println(line);
 	}
