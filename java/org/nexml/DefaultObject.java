@@ -2,6 +2,7 @@ package org.nexml;
 
 // $Id$
 
+import java.util.Hashtable;
 import org.xml.sax.Attributes;
 
 /**
@@ -16,12 +17,16 @@ import org.xml.sax.Attributes;
  * @author rvosa
  * @see    Attributes
  */
-public class DefaultObject {
+public class DefaultObject implements NexmlWritable {
 	private String namespaceURI;
 	private String localName;
 	private String qName;
 	private Attributes atts;
 	private char[] characters;
+	private String nex = "http://www.nexml.org/1.0";
+	private Hashtable[] dictionaries;
+	private NexmlWritable[] containedObjects;
+	private NexmlWritable referencedObject;
 	
 	/**
 	 * Constructs a new DefaultObject from element and attributes of the stream
@@ -83,5 +88,52 @@ public class DefaultObject {
 	 */
 	public char[] getCharacterData() {
 		return this.characters;
+	}
+	
+	/**
+	 * Gets the nexml id attribute's value, a unique identifier in
+	 * block scope
+	 * @return an identifier
+	 */
+	public String getId () {
+		return this.atts.getValue( nex, "id" );
+	}
+	
+	/**
+	 * Gets the nexml label attribute's value, a human readable name
+	 * for the element (has no structural implications, may be null)
+	 * @return a label
+	 */
+	public String getLabel() {
+		return this.atts.getValue( nex,"label" );
+	}
+	
+	/**
+	 * Gets the association nexml plist dictionaries as parameterized 
+	 * hash tables
+	 * @return an array of hashtables
+	 */
+	public Hashtable[] getDictionaries() {
+		return this.dictionaries;
+	}
+	
+	/**
+	 * Gets the objects contained by segmented objects. For example,
+	 * if the invocant is a taxa block, this returns an array of
+	 * taxon objects.
+	 * @return an array of NexmlWritable objects
+	 */
+	public NexmlWritable[] getContainedObjects() {
+		return this.containedObjects;
+	}
+	
+	/**
+	 * Gets the referenced object. For example, if the invocant is a
+	 * trees block, which links to a taxa block through its "otus" id 
+	 * reference, this returns that referenced taxa block.
+	 * @return a NexmlWritable object
+	 */
+	public NexmlWritable getReferencedObject(){
+		return this.referencedObject;
 	}
 }
