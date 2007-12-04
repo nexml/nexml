@@ -1,4 +1,7 @@
 package org.nexml;
+
+// $Id$
+
 import java.util.Hashtable;
 import org.xml.sax.Attributes;
 
@@ -14,7 +17,7 @@ public interface NexmlWritable {
 	 * Gets the id attribute for the element.
 	 * @return the nexml id attribute's value
 	 */
-	public String getId();
+	public String getId(); //getUniqueID() in mesquite
 	
 	/**
 	 * Gets the (optional) label attribute for the element.
@@ -48,6 +51,9 @@ public interface NexmlWritable {
 	 * @return a NexmlWritable object
 	 */
 	public NexmlWritable getReferencedObject();
+	
+	
+	// public NexmlWritable[] getABunchOftHings()
 	
 	/**
 	 * Gets the NexmlWritable objects this object contains
