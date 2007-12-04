@@ -491,8 +491,12 @@
           EvoInfo wiki
           </a><br />
           
-          - <a rel="nofollow" href="http://www.nescent.org">
+          - <a href="http://www.nescent.org">
           NESCent
+          </a><br />
+
+          - <a href="http://mesquiteproject.org">
+          Mesquite
           </a><br />
         </p>
       </div>
