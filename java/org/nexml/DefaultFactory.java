@@ -4,6 +4,16 @@ package org.nexml;
 
 import org.xml.sax.Attributes;
 
+/**
+ * In the nexml api factories are objects that create other objects from xml
+ * elements. For example, an object might turn an "otu" element and its attributes
+ * into a mesquite taxon object. The interface for doing this is defined by
+ * ObjectFactory. This class is a concrete implementation of that interface,
+ * used by default, when the user of the nexml class libraries doesn't provide
+ * her own factories. 
+ * @author rvosa
+ * @see    ObjectFactory
+ */
 public class DefaultFactory implements ObjectFactory {
 	private DefaultObject currentObject;
 	
