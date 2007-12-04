@@ -31,7 +31,7 @@ public interface ObjectFactory {
 	public void setCharacterData (char[] character);
 	
 	/**
-	 * Executes when the closing tag for an element is encountered, and the facture completes the object
+	 * Executes when the closing tag for an element is encountered, and the factory completes the object
 	 * @param namespaceURI the universal resource identifier of the element, typically http://www.nexml.org/1.0
 	 * @param localName    the unqualified version of the element name (i.e. without prefix)
 	 * @param qName        the qualified version of the element name (i.e. with prefix)
