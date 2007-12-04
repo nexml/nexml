@@ -1,5 +1,7 @@
 package mesquite.io.InterpretNEXML;
 
+// $Id$
+
 import mesquite.lib.MesquiteFile;
 import mesquite.lib.MesquiteProject;
 import mesquite.lib.Taxa;
@@ -35,8 +37,8 @@ class TaxaFactory extends GenericFactory implements ObjectFactory {
 	 */
 	public String[] getElementsToHandle () {
 		String[] elements = {
-			"taxa",
-			"taxon"
+			"otus",
+			"otu"
 		};
 		return elements;
 	}	
@@ -56,7 +58,7 @@ class TaxaFactory extends GenericFactory implements ObjectFactory {
 	public Object createObject (String namespaceURI, String localName, String qName, Attributes atts) {		
 		String label = atts.getValue("label");
 		String id = atts.getValue("id");
-		if ( localName.equalsIgnoreCase("taxa") ) {
+		if ( localName.equalsIgnoreCase("otus") ) {
 			taxa = this.getProject().createTaxaBlock(0);
 			taxa.setUniqueID(id);
 			if ( label != null ) {
