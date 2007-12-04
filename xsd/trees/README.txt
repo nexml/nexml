@@ -1,2 +1,2 @@
-This directory contains a new, more interface-like implementation of nexml schema.
-It is currently not referenced elsewhere, so don't worry about what's here.
+This directory contains schema fragments for trees and networks of
+various types.
