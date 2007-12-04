@@ -4,6 +4,16 @@ package org.nexml;
 
 import java.util.*;
 
+/**
+ * The ObjectCache stores objects instantiated by the factories and passed
+ * to it by the ElementHandler. It indexes them in various ways, so that 
+ * references between objects can be resolved as the stream is being 
+ * processed. In particular, because the specification is designed such that
+ * referenced objects always precede the objects that refer to them, once a
+ * reference comes along, the object that it refers to can be retrieved from
+ * this cache.
+ * @author rvosa
+ */
 public class ObjectCache {
 	private Hashtable objById;
 	private Hashtable idByObj;
