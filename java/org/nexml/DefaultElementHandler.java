@@ -6,6 +6,17 @@ import java.util.Hashtable;
 import org.xml.sax.*;
 import org.xml.sax.helpers.DefaultHandler;
 
+/**
+ * The element handler is the object that dispatches xml elements
+ * to object factories. For example, it will know that element "otu"
+ * is processed by the OtuFactory, and so it will pass all "otu" elements
+ * encountered on the SAX stream to that factory. The interface for this
+ * behaviour is defined by ElementHandler, this class is a concrete 
+ * implementation thereof.
+ * @author rvosa
+ * @see    ElementHandler
+ * @see    ObjectFactory
+ */
 public class DefaultElementHandler extends DefaultHandler implements ElementHandler {
 	private Hashtable factoryByElement;
 	private ObjectCache cache;
