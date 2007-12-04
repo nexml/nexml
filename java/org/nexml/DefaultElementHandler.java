@@ -19,7 +19,7 @@ import org.xml.sax.helpers.DefaultHandler;
  */
 public class DefaultElementHandler extends DefaultHandler implements ElementHandler {
 	private Hashtable factoryByElement;
-	private ObjectCache cache;
+	private DefaultObjectCache cache;
 	private ObjectListener listener;
 	private char[] characters;
 	private String currentElement;
@@ -93,7 +93,7 @@ public class DefaultElementHandler extends DefaultHandler implements ElementHand
 	 * Starts document processing, is called when the sax stream commences.
 	 */
 	public void startDocument() {
-		this.cache = new ObjectCache();
+		this.cache = new DefaultObjectCache();
 	}	
 	
 	/**
