@@ -14,7 +14,10 @@ import mesquite.lib.Taxa;
 //import org.xml.sax.Attributes;
 
 /**
- * A default factory for mesquite objects.
+ * A default factory for mesquite objects. This is a superclass for concrete
+ * implementations of nexml-to-mesquite objectfactories which keeps track of
+ * things most subclasses should be interested in, such as the current project,
+ * file, element manager and log window.
  */
 public class GenericFactory /*implements ObjectFactory*/ {
 	private static LogWindow log = MesquiteModule.logWindow;

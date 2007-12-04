@@ -31,7 +31,7 @@ class TaxaFactory extends GenericFactory implements ObjectFactory {
 		
 	}
 	
-	/*
+	/* 
 	 * (non-Javadoc)
 	 * @see org.nexml.ObjectFactory#getElementsToHandle()
 	 */

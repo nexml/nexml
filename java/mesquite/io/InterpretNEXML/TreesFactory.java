@@ -13,6 +13,12 @@ import java.util.*;
 import org.nexml.ObjectFactory;
 import org.xml.sax.Attributes;
 
+/**
+ * TreesFactory objects create mesquite tree objects the "trees" nexml element structure.
+ * @author rvosa
+ * @see GenericFactory
+ * @see ObjectFactory
+ */
 public class TreesFactory extends GenericFactory implements ObjectFactory {
 	private TreeVector trees;
 	private Hashtable lengthOfNode;
@@ -51,7 +57,7 @@ public class TreesFactory extends GenericFactory implements ObjectFactory {
 	/*-----------------------------------------*/
 	private void handleTreesElement(String namespaceURI, String localName, String qName, Attributes atts) {
 		log("handling trees element");
-		Taxa taxa = this.getTaxaByID(atts.getValue("taxa"));
+		Taxa taxa = this.getTaxaByID(atts.getValue("otus"));
 		log("associated taxa: " + taxa.getName() );
 		String label = atts.getValue("id");
 		TreesManager tm = (TreesManager)this.getManager();
@@ -77,7 +83,7 @@ public class TreesFactory extends GenericFactory implements ObjectFactory {
 	
 	/*-----------------------------------------*/
 	private void handleNodeElement(String namespaceURI, String localName, String qName, Attributes atts) {
-		String taxonID = atts.getValue("taxon");
+		String taxonID = atts.getValue("otu");
 		String nodeID  = atts.getValue("id");
 		String label   = atts.getValue("label");
 		log("handling node element " + this.nodes.size() + ", id: " + nodeID + ", label: " + label);
