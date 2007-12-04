@@ -242,7 +242,7 @@ class CharactersFactory extends GenericFactory implements ObjectFactory {
 	 */
 	private void handleRowElement (String namespaceURI, String localName, String qName, Attributes atts) {
 		this.currentRowID = atts.getValue("id");
-		String taxonID = atts.getValue("taxon");
+		String taxonID = atts.getValue("otu");
 		this.row++;
 		this.col = 0;
 		log("processed row element " + atts.getValue("id"));
@@ -298,7 +298,7 @@ class CharactersFactory extends GenericFactory implements ObjectFactory {
 		this.col = 0;
 		this.columnCount = 0;		
 		String type = "UNKNOWN";
-		Taxa taxa = this.getTaxaByID(atts.getValue("taxa"));
+		Taxa taxa = this.getTaxaByID(atts.getValue("otus"));
 		for ( int i = 0; i < atts.getLength(); i++ ) {
 			if ( atts.getURI(i).equals("http://www.w3.org/2001/XMLSchema-instance") && atts.getLocalName(i).equals("type") ) {
 				type = atts.getValue(i);	
