@@ -96,7 +96,7 @@ public class DefaultObject implements NexmlWritable {
 	 * @return an identifier
 	 */
 	public String getId () {
-		return this.atts.getValue( nex, "id" );
+		return this.atts.getValue( "id" );
 	}
 	
 	/**
@@ -105,7 +105,7 @@ public class DefaultObject implements NexmlWritable {
 	 * @return a label
 	 */
 	public String getLabel() {
-		return this.atts.getValue( nex,"label" );
+		return this.atts.getValue( "label" );
 	}
 	
 	/**
