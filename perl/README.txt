@@ -1,21 +1,32 @@
-This folder contains the perl code written by Jason Caravas and Rutger Vos 
-during the google summer of code '07 project on phylogenetic xml. The t
-subfolder contains test scripts for Bio::Phylo using the Test::More test
-harness. The lib subfolder contains parsers and unparsers for the
-Bio::Phylo::IO architecture.
+This folder contains a parser backend for Bio::Phylo::IO 
+(http://search.cpan.org/~rvosa/Bio-Phylo). This code was
+initially written by Jason Caravas and Rutger Vos during 
+the google summer of code '07 project on phylogenetic xml
+and is now maintained under the nexml initiative.
+
+The t subfolder contains test scripts for Bio::Phylo using 
+the Test::More test harness. The lib subfolder contains 
+parsers and unparsers for the Bio::Phylo::IO architecture.
 
 ================================================================================
 Installation
 ================================================================================
-The file list below comprises the minimum required to be able to run
+In order to run:
 
 $ perl Makefile.PL && make test
 
-You can obtain the files below by installing cipres and adding 
-$CIPRES_ROOT/lib/perl/lib to your $PERL5LIB environment variable, or by
-installing Bio::Phylo and XML::Twig from CPAN.
+You will need to satisfy several dependencies. The simplest
+way to do this is to run 'install XML::Twig' from the cpan
+shell (or through ppm if you run ActiveState) and 
+'install Bio::Phylo'. Note that the ActiveState *.ppd for
+Bio::Phylo is too old. Fortunately, it doesn't require any
+compiled extensions so on Windows, too, it should work 
+without problems.
 
-File list:
+If all else fails, you will have to reproduce the file list
+below in some other sort of hackish way.
+
+The file list below comprises the minimum required:
 	auto
 	auto/XML
 	auto/XML/Parser
@@ -124,5 +135,4 @@ File list:
 	XML/Parser.pm
 	XML/Twig
 	XML/Twig/XPath.pm
-	XML/Twig/XPath.pm_bak
 	XML/Twig.pm
