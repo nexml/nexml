@@ -15,5 +15,12 @@ public interface ObjectListener {
 	 * Executes when a new object becomes available
 	 * @param obj a newly created object from the stream
 	 */	
-	public void newObjectNotification (Object obj);
+	public void newObjectNotification (NexmlWritable obj);
+	
+	/**
+	 * The listener might store objects it receives in 
+	 * an ObjectCache
+	 * @return an object cache
+	 */
+	public ObjectCache getObjectCache();
 }

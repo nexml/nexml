@@ -14,14 +14,14 @@ public interface ObjectCache {
 	 * @param id a nexml id attribute's value
 	 * @return the object associated with the id
 	 */
-	public abstract Object getObjectById(String id);
+	public abstract NexmlWritable getObjectById(String id);
 
 	/**
 	 * Gets the nexml id attribute's value for the provided object
 	 * @param obj an object for which to look up the id
 	 * @return a string id
 	 */
-	public abstract String getIdByObject(Object obj);
+	public abstract String getIdByObject(NexmlWritable obj);
 
 	/**
 	 * Gets the id reference associated with the provided id. For
@@ -38,6 +38,13 @@ public interface ObjectCache {
 	 * @param id    the id attribute's value
 	 * @param idref the value of the id reference (if any)
 	 */
-	public abstract void setObject(Object obj, String id, String idref);
+	public abstract void setObject(NexmlWritable obj, String id, String idref);
+	
+	/**
+	 * Iterates over objects in the cache
+	 * @param i an index
+	 * @return a NexmlWritable object
+	 */
+	public abstract NexmlWritable getObject(int i);
 
 }

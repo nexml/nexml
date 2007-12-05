@@ -18,7 +18,7 @@ public interface NexmlWritable {
 	 * @return the nexml id attribute's value
 	 */
 	public String getId(); //getUniqueID() in mesquite
-	
+		
 	/**
 	 * Gets the (optional) label attribute for the element.
 	 * @return the nexml label attribute's value

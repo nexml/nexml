@@ -12,12 +12,34 @@ package org.nexml;
  * @see ObjectListener
  */
 public class DefaultObjectListener implements ObjectListener {
+	private ObjectCache theCache;
+	
+	/**
+	 * Constructor that accepts a cache to add objects received at
+	 * notification
+	 * @param cache
+	 */
+	public DefaultObjectListener (ObjectCache cache) {
+		this.theCache = cache;
+	}
+	
+	/**
+	 * Default contructor
+	 */
+	public DefaultObjectListener () {
+		this.theCache = new DefaultObjectCache();
+	}
 	
 	/**
 	 * Executes when a new object becomes available
-	 * @param obja newly created object from the stream
+	 * @param obj newly created object from the stream
 	 */
-	public void newObjectNotification(Object obj) {
+	public void newObjectNotification(NexmlWritable obj) {
 		System.out.println("Received new object: " + obj);
+		this.theCache.setObject(obj, obj.getId(), null);
+	}
+	
+	public ObjectCache getObjectCache() {
+		return this.theCache;
 	}
 }

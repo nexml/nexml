@@ -25,7 +25,7 @@ public class DefaultFactory implements ObjectFactory {
 	 * @param atts         attributes associated with the element
 	 * @return             an Object or "null"
 	 */
-	public Object createObject(String namespaceURI, String localName, String qName, Attributes atts) {
+	public NexmlWritable createObject(String namespaceURI, String localName, String qName, Attributes atts) {
 		this.currentObject = new DefaultObject(namespaceURI, localName, qName, atts);
 		return this.currentObject;
 	}

@@ -19,7 +19,6 @@ import org.xml.sax.helpers.DefaultHandler;
  */
 public class DefaultElementHandler extends DefaultHandler implements ElementHandler {
 	private Hashtable factoryByElement;
-	private DefaultObjectCache cache;
 	private ObjectListener listener;
 	private char[] characters;
 	private String currentElement;
@@ -93,14 +92,14 @@ public class DefaultElementHandler extends DefaultHandler implements ElementHand
 	 * Starts document processing, is called when the sax stream commences.
 	 */
 	public void startDocument() {
-		this.cache = new DefaultObjectCache();
+
 	}	
 	
 	/**
 	 * Ends document processing, is called when the sax stream finishes.
 	 */	
 	public void endDocument(){
-		this.cache = null;
+
 	}	
 	
 	/**
@@ -117,8 +116,7 @@ public class DefaultElementHandler extends DefaultHandler implements ElementHand
 			fac = new DefaultFactory();
 			this.setFactoryForElementName(localName, fac);
 		}
-		Object obj = fac.createObject(namespaceURI, localName, qName, atts);
-		//this.cache.setObject(obj, null, null);
+		NexmlWritable obj = (NexmlWritable)fac.createObject(namespaceURI, localName, qName, atts);
 		this.getObjectListener().newObjectNotification(obj);
 	}	
 	
@@ -148,10 +146,7 @@ public class DefaultElementHandler extends DefaultHandler implements ElementHand
 	 */	
 	public void endElement (String namespaceURI, String localName, String qName) {
 		ObjectFactory fac = this.getFactoryForElementName(this.currentElement);
-		fac.objectIsComplete(namespaceURI, localName, qName, null);		
-		System.out.print("\n" + this.currentElement + ": |");
-		System.out.print(this.characters);
-		System.out.print("|\n");
+		fac.objectIsComplete(namespaceURI, localName, qName, null);
 		this.characters = null;
 	}	
 	
