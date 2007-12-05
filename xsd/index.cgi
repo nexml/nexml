@@ -372,4 +372,5 @@ sub targetNamespace {
 package main;
 use Data::Dumper;
 my $schema = xs::schema->new( $ARGV[0] );
+my $currentFile = $ARGV[1];
 print '<pre>', Dumper( $schema ), '</pre>';
