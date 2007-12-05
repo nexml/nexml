@@ -198,7 +198,7 @@ class FactoryManager {
 		MesquiteObjectListener(MesquiteProject mymp) {
 			this.mp = mymp;
 		}
-		public void newObjectNotification (Object obj) {
+		public void newObjectNotification (NexmlWritable obj) {
 			if ( obj instanceof DefaultObject ) {
 				DefaultObject dobj = (DefaultObject) obj;
 				System.out.println("received object: " + dobj + " (from element: " + dobj.getLocalName() + ")" );
