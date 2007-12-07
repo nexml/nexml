@@ -18,7 +18,11 @@ sub base {
     if ( @_ ) {
         $self->{'base'} = shift;
     }
-    return $self->{'base'};
+    my $base = $self->{'base'};
+    if ( $base ) {
+        $base =~ s/^xs://;
+    }
+    return $base;
 }
 
 sub inheritance {
@@ -37,6 +41,11 @@ sub documentation {
     return $self->{'documentation'};
 }
 
-sub type { ref shift }
+sub type {
+    my $self = shift;
+    my $class = ref $self;
+    $class =~ s/.*://;
+    return $class;
+}
 
 1;
