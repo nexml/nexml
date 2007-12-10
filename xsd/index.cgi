@@ -1,4 +1,9 @@
 #!/usr/bin/perl
+# $Id$
+use CGI::Carp 'fatalsToBrowser';
+BEGIN {
+    use lib '../perl/lib';
+}
 use lib '/Users/rvosa/CIPRES-and-deps/cipres/build/lib/perl/lib';
 use strict;
 use warnings;
