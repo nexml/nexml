@@ -65,68 +65,28 @@ sub htmlify {
 package util::paths;
 use File::Spec;
 
-my %defaults = (
-    'suffix' => {
-        '.pm' => sub { 
-            my $path = shift;
-            $path =~ s|(\w+).pm(#\w+)?$|$1/$2|;
-            return $path;
-        },
-        '.xsd' => sub { 
-            my $path = shift;
-            if ( $path =~ m/#\w+$/ ) {
-                $path =~ s|(\w+).xsd(#\w+)?$|$1/$2|;
-            }
-            else {
-                $path =~ s|(\w+).xsd$|$1/|;
-            }
-            return $path;
-        },        
-    }
-
-);
-
 sub new {
     my $class = shift;
     my %args  = @_;
     my $self  = {
-        'images'   => $args{'-images'},
-        'css'      => $args{'-css'},
-        'js'       => $args{'-js'},
-        'prefix'   => $args{'-prefix'},    # e.g. /Users/rvosa/Documents
-        'protocol' => $args{'-protocol'}, # e.g. http://
-        'hostname' => $args{'-hostname'}, # e.g. www.nexml.org
-        'suffix'   => $defaults{'suffix'},
-        
+        'prefix'  => $args{'-prefix'},    # e.g. /Users/rvosa/Documents
+        'rewrite' => $args{'-rewrite'} || [],
+        'include' => $args{'-include'},
     };
     return bless $self, $class;
 }
 
-sub images {
+sub include {
     my ( $self, $file ) = @_;
-    return File::Spec->canonpath( $self->{'images'} . '/' . $file );
-}
-
-sub home {
-    my ( $self, $file ) = @_;
-    return $self->{'protocol'} . $self->{'hostname'} . '/' . $file;
+    return File::Spec->canonpath( $self->{'include'} . '/' . $file );
 }
 
 sub transform {
     my ( $self, $file ) = @_;
-    $file =~ s/^\Q$self->{'prefix'}\E//;
-    my $suffix;
-    if ( $file =~ qr/(\.\w+)(?:#\w+)?$/ ) {
-        $suffix = $1;
-        if ( UNIVERSAL::isa( $self->{'suffix'}->{$suffix}, 'CODE' ) ) {
-            $file = $self->{'suffix'}->{$suffix}->( $file );
-        }
+    for my $rw ( @{ $self->{'rewrite'} } ) {
+        $file = $rw->( $file );
     }
-    my $path = $self->home( $file );
-    $path =~ s|/+|/|g;
-    $path =~ s|^(\w+):/|$1://|;
-    $path =~ s|^file:/+|file:///|;
-    return $path;
+    return $file;
 }
 
 sub strip {
