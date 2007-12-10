@@ -1,6 +1,9 @@
 <!-- heading with link -->
 <h4 id="<% type.name %>" class="dataType level1">
     <a name="<% type.name %>"></a><% type.name %>
+    <% IF type.abstract == 'true' %>
+    [abstract]
+    <% END %>
 </h4>
 
 <!-- description -->
