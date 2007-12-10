@@ -64,10 +64,11 @@ my $vars = {
 $template->process( 'overview.html', $vars, '/nexml/html/doc/schema-1/index.html' ) || die $template->error();
 
 for my $currentFile ( $schema->files ) {
-
+    my $stripped = $paths->strip( $currentFile );
+    
     $vars->{'currentFile'} = $currentFile;
     $vars->{'title'}       = "nexml schema version 1.0: ~" . $paths->strip( ${currentFile} );
-    $vars->{'mainHeading'} = "Data type definitions in ~" . $paths->strip( ${currentFile} );
+    $vars->{'mainHeading'} = "Schema module <a href=\"${stripped}\">~${stripped}</a>";
     $vars->{'currentURL'}  = 'http://fixme.org';
     $vars->{'currentDate'} = my $time = localtime;
     

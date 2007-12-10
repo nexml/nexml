@@ -1,7 +1,7 @@
 
 <% complexTypes = schema.complexTypeInFile(currentFile) %>
 <% IF complexTypes %>
-    <h3 class="plain">Complex types</h3>
+    <h3 class="headerstyle"><a name="complexTypes"></a>Complex types</h3>
     
     <% FOREACH type = complexTypes %>
     
@@ -57,16 +57,7 @@
 
 <% simpleTypes = schema.simpleTypeInFile(currentFile) %>
 <% IF simpleTypes %>
-    <h3 class="plain">Simple types</h3>
-    
-    <p>
-        In XML schema, <a href="http://www.w3.org/TR/xmlschema-2/#rf-defn">simple types</a>
-        are the primitive types - numbers, strings and so on. Although they can be derived
-        from to create <a href="http://www.w3.org/TR/xmlschema-2/#datatype-dichotomies">lists
-        and unions</a> or to restrict their value space they never have markup, they are 
-        always the value of something - the text within an element or the value of an attribute.
-        The subsections below enumerate the simple types defined in <% svninfo.Name %>.
-    </p>
+    <h3 class="headerstyle"><a name="simpleTypes"></a>Simple types</h3>
     
     <% FOREACH type = simpleTypes %>
     
