@@ -11,7 +11,16 @@ use Cwd;
 # includes we need it (hence it is part of $include),
 # but on the client side (e.g. paths to images in an
 # html page) it needs to be stripped
-my $prefix = '/Users/rvosa/Documents/workspace';
+my $prefix;
+if ( $ENV{'NEXML_HOME'} ) {
+    $prefix = $ENV{'NEXML_HOME'};
+}
+elsif ( -d '/Users/rvosa/Documents/workspace' ) {
+    $prefix = '/Users/rvosa/Documents/workspace';
+}
+else {
+    $prefix = $ENV{'HOME'};
+}
 
 # $include is used to find server side includes, e.g.
 # when we embed javascript or css directly into a page.
