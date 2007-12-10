@@ -2,375 +2,109 @@
 use lib '/Users/rvosa/CIPRES-and-deps/cipres/build/lib/perl/lib';
 use strict;
 use warnings;
-use CGI ':standard';
-use XML::Twig;
+use xs::schema;
+use util 'svninfo';
+use Template;
+use Cwd;
 
-####################################################################################################
-package xs::anyThing;
-sub new { return bless {}, shift }
-sub file {
-    my $self = shift;
-    if ( @_ ) {
-        $self->{'file'} = shift;
-    }
-    return $self->{'file'};
+# $prefix is the path to docroot, so on server-side
+# includes we need it (hence it is part of $include),
+# but on the client side (e.g. paths to images in an
+# html page) it needs to be stripped
+my $prefix = '/Users/rvosa/Documents/workspace';
+
+# $include is used to find server side includes, e.g.
+# when we embed javascript or css directly into a page.
+# on the client side we need to strip $prefix of it.
+my $include = $prefix . '/nexml/html/include';
+
+# the root file of the schema, i.e. nexml.xsd
+my $baseFile = Cwd::realpath( $ARGV[0] );
+
+# the current file we're processing, i.e. a file being
+# included into nexml.xsd, recursively
+my $currentFile = $ARGV[1] ? Cwd::realpath( $ARGV[1] ) : $baseFile;
+
+# a function exported by util.pm, does a `svninfo` and
+# turns the results into a hash so we can put it in a page
+my %svninfo = svninfo($currentFile);
+
+# the schema object,
+my $schema = xs::schema->new( $baseFile );
+
+my $paths = util::paths->new(
+    '-prefix'   => $prefix,
+    '-include'  => $include,
+    '-rewrite'  => [ \&rewrite_xsd ],
+);
+
+my $template = Template->new(
+    'INCLUDE_PATH' => $include,      # or list ref
+    'POST_CHOMP'   => 1,             # cleanup whitespace
+    'PRE_PROCESS'  => 'header.tmpl', # prefix each template
+    'POST_PROCESS' => 'footer.tmpl', # suffix each template
+    'START_TAG'    => '<%',
+    'END_TAG'      => '%>',
+    'OUTPUT_PATH'  => $prefix,
+);
+
+my $vars = {
+    'schema'      => $schema,
+    'currentFile' => $currentFile,
+    'baseFile'    => $baseFile,
+    'svninfo'     => \%svninfo,
+    'title'       => 'nexml schema version 1.0: overview',
+    'mainHeading' => 'Overview',
+    'currentURL'  => 'http://fixme.org',
+    'currentDate' => my $time = localtime,
+    'currentFeed' => undef,
+    'paths'       => $paths,
+};
+
+$template->process( 'overview.html', $vars, '/nexml/html/doc/schema-1/index.html' ) || die $template->error();
+
+for my $currentFile ( $schema->files ) {
+
+    $vars->{'currentFile'} = $currentFile;
+    $vars->{'title'}       = "nexml schema version 1.0: ~" . $paths->strip( ${currentFile} );
+    $vars->{'mainHeading'} = "Data type definitions in ~" . $paths->strip( ${currentFile} );
+    $vars->{'currentURL'}  = 'http://fixme.org';
+    $vars->{'currentDate'} = my $time = localtime;
+    
+    my $outFile = $paths->transform( $currentFile ) . 'index.html';
+    
+    $template->process( 'schema.html', $vars, $outFile ) || die $template->error();
+
 }
 
-sub url {
-    my $self = shift;
-    my $name = $self->name;
-    if ( $name =~ m/^xs:(.*)$/ ) {
-        return 'http://www.w3.org/TR/xmlschema-2/#' . $1;
+# rewrite rule to turn code from which we're creating documentation
+# into relative urls pointing to the generated docs
+sub rewrite_xsd {
+    my $file = shift;
+    
+    # this rule only applies to files with the xsd extension
+    if ( $file =~ m/\.xsd(#.*?)?$/ ) {
+    
+        # first standardize path into full path
+        my $realpath = Cwd::realpath( $file );
+        
+        # strip $prefix to docroot
+        $realpath =~ s/^\Q$prefix\E//;
+        
+        # transform folder path to point to doc path
+        $realpath =~ s|^/nexml/xsd|/nexml/html/doc/schema-1|;
+        
+        # strip file extension, turn file into folder
+        if ( $realpath =~ m|.xsd(#.+?)$| ) {
+            $realpath =~ s|.xsd(#.+?)$|/$1|;
+        }
+        else {
+            $realpath =~ s|.xsd$|/|;
+        }
+        
+        return $realpath;
     }
     else {
-        return $self->file . '#' . $name;
+        return $file;
     }
 }
-
-sub name {
-    my $self = shift;
-    if ( @_ ) {
-        $self->{'name'} = shift;
-    }
-    return $self->{'name'};
-}
-
-####################################################################################################
-package xs::anyType;
-our @ISA=qw(xs::anyThing);
-
-sub abstract {
-    my $self = shift;
-    if ( @_ ) {
-        $self->{'abstract'} = shift;
-    }
-    return $self->{'abstract'};
-}
-
-sub base {
-    my $self = shift;
-    if ( @_ ) {
-        $self->{'base'} = shift;
-    }
-    return $self->{'base'};
-}
-
-sub inheritance {
-    my $self = shift;
-    if ( @_ ) {
-        $self->{'inheritance'} = shift;
-    }
-    return $self->{'inheritance'};
-}
-
-sub documentation {
-    my $self = shift;
-    if ( @_ ) {
-        $self->{'documentation'} = shift;
-    }
-    return $self->{'documentation'};
-}
-
-sub type { ref shift }
-
-####################################################################################################
-package xs::simpleType;
-our @ISA=qw(xs::anyType);
-
-sub explain { 'A simpleType is an atomic type such as a number or a string.' }
-
-sub facets {
-    my $self = shift;
-    if ( @_ ) {
-        $self->{'facets'} = \@_;
-    }
-    return $self->{'facets'} ? @{ $self->{'facets'} } : ();
-}
-
-####################################################################################################
-package xs::complexType;
-our @ISA=qw(xs::anyType);
-
-sub explain { 'A complexType is an element with any attributes and child elements.' }
-
-sub elementPatterns {
-    my $self = shift;
-    if ( @_ ) {
-        $self->{'elementPatterns'} = \@_;
-    }
-    return $self->{'elementPatterns'} ? @{ $self->{'elementPatterns'} } : ();
-}
-
-sub attributes {
-    my $self = shift;
-    if ( @_ ) {
-        $self->{'attributes'} = \@_;
-    }
-    return $self->{'attributes'} ? @{ $self->{'attributes'} } : ();
-}
-
-####################################################################################################
-package xs::attribute;
-our @ISA=qw(xs::anyThing);
-
-sub explain { 'An attribute is a key/value pair such as id="MyID" inside the pointy bits of xml.' }
-
-sub xs::attribute::use {
-    my $self = shift;
-    if ( @_ ) {
-        $self->{'use'} = shift;
-    }
-    return $self->{'use'};
-}
-
-sub type {
-    my $self = shift;
-    if ( @_ ) {
-        $self->{'type'} = shift;
-    }
-    return $self->{'type'};
-}
-
-####################################################################################################
-package xs::elementPattern;
-sub new { return bless {}, shift }
-sub minOccurs {
-    my $self = shift;
-    if ( @_ ) {
-        $self->{'minOccurs'} = shift;
-    }
-    return $self->{'minOccurs'};
-}
-
-sub maxOccurs {
-    my $self = shift;
-    if ( @_ ) {
-        $self->{'maxOccurs'} = shift;
-    }
-    return $self->{'maxOccurs'};
-}
-####################################################################################################
-package xs::recursiveElementPattern;
-our @ISA=qw(xs::elementPattern);
-sub elementPatterns {
-    my $self = shift;
-    if ( @_ ) {
-        $self->{'elementPatterns'} = \@_;
-    }
-    return $self->{'elementPatterns'} ? @{ $self->{'elementPatterns'} } : ();
-}
-####################################################################################################
-package xs::element;
-our @ISA=qw(xs::elementPattern);
-sub explain { 'An element is one of those pointy things.' }
-sub type {
-    my $self = shift;
-    if ( @_ ) {
-        $self->{'type'} = shift;
-    }
-    return $self->{'type'};
-}
-sub name {
-    my $self = shift;
-    if ( @_ ) {
-        $self->{'name'} = shift;
-    }
-    return $self->{'name'};
-}
-####################################################################################################
-package xs::choice;
-our @ISA=qw(xs::recursiveElementPattern);
-sub explain { 'A choice means that out of the items in the list only one may appear.' }
-####################################################################################################
-package xs::sequence;
-our @ISA=qw(xs::recursiveElementPattern);
-sub explain { 'A choice means that out of the items in the list multiple may appear.' }
-####################################################################################################
-package xs::schema;
-use Cwd;
-use Data::Dumper;
-sub new {
-    my $class = shift;
-    my $file  = shift;
-    my $self  = {
-        'files'           => {},
-        'simpleType'      => {},
-        'complexType'     => {},
-        'targetNamespace' => undef,
-        'handlers'        => undef,
-        'currentFile'     => undef,
-    };
-    bless $self, $class;
-    $self->{'handlers'} = {
-        'xs:simpleType'  => sub { _simpleType( @_, $self ) },
-        'xs:complexType' => sub { _complexType( @_, $self ) },
-        'xs:schema'      => sub { _schema( @_, $self ) },
-        'xs:include'     => sub { _include( @_, $self ) },
-    };
-    $self->_parseFile( Cwd::realpath( $file ) );
-    return $self;
-}
-
-sub _parseFile {
-    my ( $self, $file ) = @_;
-    if ( not exists $self->{'files'}->{$file} ) {
-        $self->{'currentFile'} = $file;
-        my $twig = XML::Twig->new(
-            'twig_handlers' => $self->{'handlers'},
-        );
-        $twig->parsefile( $file );
-        $self->{'files'}->{$file} = 1;
-    }
-}
-
-sub _include {
-    my ( $twig, $elt, $self ) = @_;
-    my ( $volume, $directories, $file ) = File::Spec->splitpath( $twig->{'Base'} );
-    my ( $newvol, $newdirs, $newfile  ) = File::Spec->splitpath( $elt->att('schemaLocation') );
-    my $newpath = Cwd::realpath(       # collapse foo/../bar patterns in the following:
-        File::Spec->canonpath(              # make a clean path from the following:
-            File::Spec->catfile(                 # concatenate the following fragments:
-                File::Spec->splitdir( $directories ), # directories to file making the include
-                File::Spec->splitdir( $newdirs ),     # relative path from file making include to called file
-                $newfile                              # the called file
-            )
-        )
-    );
-    $self->_parseFile( $newpath );
-}
-
-sub _schema {
-    my ( $twig, $elt, $self ) = @_;
-    $self->targetNamespace( $elt->att('targetNamespace') );
-}
-
-sub simpleType {
-    my $self = shift;
-    if ( @_ ) {
-        my $name = shift;
-        my $obj  = shift;
-        $self->{'simpleType'}->{$name} = $obj;
-    }
-    return $self->{'simpleType'};
-}
-
-sub _simpleType {
-    my ( $twig, $elt, $self ) = @_;
-    my $st = xs::simpleType->new;
-    $self->_anyType( $twig, $elt, $st );
-    if ( my $list = $elt->first_child( 'xs:list' ) ) {
-        $st->inheritance( 'list' );
-        $st->base( $list->att('itemType') );
-    }
-    elsif ( my $restriction = $elt->first_child( 'xs:restriction' ) ) {
-        my %facets;
-        for my $facet ( $restriction->children ) {
-            my $name = $facet->tag;
-            $name =~ s/^xs://;
-            $facets{$name} = $facet->att('value');
-        }
-        $st->facets( %facets );
-    }
-    $self->simpleType( $st->name => $st );
-}
-
-sub complexType {
-    my $self = shift;
-    if ( @_ ) {
-        my $name = shift;
-        my $obj  = shift;
-        $self->{'complexType'}->{$name} = $obj;
-    }
-    return $self->{'complexType'};
-}
-
-sub _complexType {
-    my ( $twig, $elt, $self ) = @_;
-    my $ct = xs::complexType->new;
-    $self->_anyType( $twig, $elt, $ct );
-    my @attributes;
-    for my $att ( $elt->descendants('xs:attribute') ) {
-        my $attribute = xs::attribute->new;
-        $attribute->name( $att->att('name') );
-        $attribute->type( $att->att('type') );
-        $attribute->use( $att->att('use') );
-        push @attributes, $attribute;
-    }
-    $ct->attributes( @attributes );
-    if ( my $complexContent = $elt->first_child('xs:complexContent') ) {
-        if ( my $restriction = $complexContent->first_child('xs:restriction') ) {
-            $self->_elementPattern( $twig, $restriction, $ct );
-        }
-        elsif ( my $extension = $complexContent->first_child('xs:extension') ) {
-            $self->_elementPattern( $twig, $extension, $ct );
-        }        
-    }
-    $self->complexType( $ct->name => $ct );
-}
-
-sub _elementPattern {
-    my ( $self, $twig, $elt, $ct ) = @_;
-    my @elementPatterns;
-    for my $child ( $elt->children ) {
-        my $elementPattern;
-        for my $tag ( qw(xs:element xs:sequence xs:choice) ) {
-            if ( $child->tag eq $tag ) {
-                my $class = $tag;
-                $class =~ s/:/::/;
-                $elementPattern = $class->new;
-            }
-        }
-        next if not defined $elementPattern;
-        for my $attr ( qw(minOccurs maxOccurs name type) ) {
-            if ( defined( my $value = $child->att($attr) ) ) {
-                $elementPattern->$attr($value);
-            }
-        }
-        if ( $elementPattern->isa('xs::recursiveElementPattern') ) {
-            $self->_elementPattern( $twig, $child, $elementPattern );
-        }
-        push @elementPatterns, $elementPattern;
-    }
-    $ct->elementPatterns( @elementPatterns );
-}
-
-sub _anyType {
-    my ( $self, $twig, $elt, $type ) = @_;
-    my $name = $elt->att('name');
-    $type->name( $name );
-    my $doc = '';
-    for my $annotation ( $elt->children('xs:annotation') ) {
-        for my $documentation ( $annotation->children('xs:documentation') ) {
-            $doc .= $documentation->text;
-        }
-    } 
-    $type->documentation( $doc );    
-    $type->file( Cwd::realpath( $twig->{'Base'} ) );
-    $type->abstract( $elt->att('abstract') || 'false' ); 
-    my $inheritance;
-    if ( my @res = $elt->descendants('xs:restriction') ) {
-        $type->inheritance('restriction');
-        $inheritance = $res[0];
-    }    
-    if ( my @res = $elt->descendants('xs:extension') ) {
-        $type->inheritance('extension');
-        $inheritance = $res[0];
-    }
-    if ( $inheritance ) {
-        $type->base( $inheritance->att('base') );
-    }
-}
-
-sub targetNamespace {
-    my $self = shift;
-    if ( @_ ) {
-        $self->{'targetNamespace'} = shift;
-    }
-    return $self->{'targetNamespace'};
-}
-
-package main;
-use Data::Dumper;
-my $schema = xs::schema->new( $ARGV[0] );
-my $currentFile = $ARGV[1];
-print '<pre>', Dumper( $schema ), '</pre>';
