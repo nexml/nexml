@@ -1,13 +1,17 @@
-<h3 class="headerstyle">See also</h3>
-<p>
-    ~<% paths.strip(currentFile) %> <a href="http://www.w3.org/TR/xmlschema-1/#compound-schema" 
-    title="About the xs:include element">includes</a> the following other files:
-</p>    
-<ul>
-    <% FOREACH file = schema.includesInFile(currentFile) %>
-        <li class="rss"><a href="<% paths.transform(file) %>">~<% paths.strip(file) %></a></li>
-    <% END %>
-</ul>
+<h3 class="headerstyle"><a name="seeAlso"></a>See also</h3>
+
+<% includes = schema.includesInFile(currentFile) %>
+<% IF includes %>
+    <p>
+        ~<% paths.strip(currentFile) %> <a href="http://www.w3.org/TR/xmlschema-1/#compound-schema" 
+        title="About the xs:include element">includes</a> the following other files:
+    </p>    
+    <ul>
+        <% FOREACH file = includes %>
+            <li class="rss"><a href="<% paths.transform(file) %>">~<% paths.strip(file) %></a></li>
+        <% END %>
+    </ul>
+<% END %>
 
 <% includers = schema.filesIncludingFile(currentFile) %>
 <% IF includers %>
