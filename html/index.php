@@ -457,6 +457,11 @@
       <div id="sidebar">
       
         <!-- top-right site navigation menu -->
+        <h2 class="quicklinks">
+          <a id="quicklinks" name="quicklinks"></a>Quick links:
+        </h2>
+          <a class="quicklink" href="/nexml/html/doc/schema-1/">Schema 1.0</a>
+        <br />
         <h2 class="sidelink menuheader">
           <a id="sitemenu" name="sitemenu"></a>Site menu:
         </h2>
