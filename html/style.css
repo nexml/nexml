@@ -263,6 +263,25 @@ label {
     font-weight: bold;
 }
 
+.quicklinks {
+    display: block;     
+    width: 136px;     
+    margin: 3px 10px 2px 0;     
+    padding: 5px 0 5px 8px;     
+    font-size: 1.1em;     
+    font-weight: bold;     
+    text-align: left;
+    border: 3px solid #FF9E78;
+    background-color: #FDDCCF;    
+}
+
+.quicklink {
+    font-weight: bold;
+    color: #FF9E78;
+    display: block;
+    margin-left: 10px;
+}
+
 /* Original open source design by Andreas Viklund - http://andreasviklund.com
 Released through OSWD.org */
 
