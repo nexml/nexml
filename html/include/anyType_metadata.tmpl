@@ -24,7 +24,7 @@
                 <% IF url %>
                     <a href="<% paths.transform(url) %>"><% type.base %></a>
                 <% ELSE %>
-                    <a href="http://www.w3.org/TR/xmlschema-2/#<% type.base %>">
+                    <a href="http://www.w3.org/TR/xmlschema-2/#<% type.base %>" rel="nofollow">
                     xs:<% type.base %></a>
                 <% END %>
             type items.
@@ -39,7 +39,7 @@
                 <% IF url %>
                     <a href="<% paths.transform(url) %>"><% type.base %></a>.
                 <% ELSE %>
-                    <a href="http://www.w3.org/TR/xmlschema-2/#<% type.base %>">
+                    <a href="http://www.w3.org/TR/xmlschema-2/#<% type.base %>" rel="nofollow">
                     xs:<% type.base %></a>.
                 <% END %>
             <% END %>
