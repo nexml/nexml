@@ -76,6 +76,15 @@ my $template = Template->new(
     'OUTPUT_PATH'  => $prefix,
 );
 
+# for dot
+my $dottemplate = Template->new(
+    'INCLUDE_PATH' => $include,      # or list ref
+    'POST_CHOMP'   => 1,             # cleanup whitespace
+    'START_TAG'    => '<%',
+    'END_TAG'      => '%>',
+    'OUTPUT_PATH'  => $prefix,
+);
+
 my $vars = {
     'schema'      => $schema,
     'currentFile' => $currentFile,
@@ -101,8 +110,10 @@ for my $currentFile ( $schema->files ) {
     $vars->{'currentDate'} = my $time = localtime;
     
     my $outFile = $paths->transform( $currentFile ) . 'index.html';
+    my $outDot = $paths->transform( $currentFile ) . 'index.dot';
     
     $template->process( 'schema.html', $vars, $outFile ) || die $template->error();
+    $dottemplate->process( 'dotinheritance.tmpl', $vars, $outDot ) || die $template->error();
 
 }
 
