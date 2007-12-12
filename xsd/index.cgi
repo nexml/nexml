@@ -12,6 +12,16 @@ use util 'svninfo';
 use Template;
 use Cwd;
 
+# unfortunately this has to be hardcoded, we can't
+# use Sys::Hostname::hostname() because we're 
+# generating docs from a cron job (so no CGI vars)
+# and we'd be running on a virtual host anyway
+my $hostname = 'eupoa.local';
+
+# subtree for this part of the site structure, i.e.
+# the schema documentation
+my $subtree = '/nexml/html/doc/schema-1';
+
 # $prefix is the path to docroot, so on server-side
 # includes we need it (hence it is part of $include),
 # but on the client side (e.g. paths to images in an
@@ -43,9 +53,13 @@ my $currentFile = $ARGV[1] ? Cwd::realpath( $ARGV[1] ) : $baseFile;
 # turns the results into a hash so we can put it in a page
 my %svninfo = svninfo($currentFile);
 
-# the schema object,
+# the schema object, creates a representation of the nexml
+# schema which we can place in the templates in an MVC-style
 my $schema = xs::schema->new( $baseFile );
 
+# the paths object is a utility object that translates between
+# server side paths (i.e. relative to system root) and browser 
+# side paths (i.e. relative to docroot)
 my $paths = util::paths->new(
     '-prefix'   => $prefix,
     '-include'  => $include,
@@ -67,23 +81,23 @@ my $vars = {
     'currentFile' => $currentFile,
     'baseFile'    => $baseFile,
     'svninfo'     => \%svninfo,
-    'title'       => 'nexml schema version 1.0: overview',
+    'title'       => 'nexml schema 1.0',
     'mainHeading' => 'Overview',
-    'currentURL'  => 'http://fixme.org',
+    'currentURL'  => 'http://' . $hostname . $subtree,
     'currentDate' => my $time = localtime,
-    'currentFeed' => undef,
+    'currentFeed' => $subtree . '/schema.rss',
     'paths'       => $paths,
 };
 
-$template->process( 'overview.html', $vars, '/nexml/html/doc/schema-1/index.html' ) || die $template->error();
+$template->process( 'overview.html', $vars, $subtree . '/index.html' ) || die $template->error();
 
 for my $currentFile ( $schema->files ) {
     my $stripped = $paths->strip( $currentFile );
     
     $vars->{'currentFile'} = $currentFile;
-    $vars->{'title'}       = "nexml schema version 1.0: ~" . $paths->strip( ${currentFile} );
-    $vars->{'mainHeading'} = "Schema module <a href=\"${stripped}\">~${stripped}</a>";
-    $vars->{'currentURL'}  = 'http://fixme.org';
+    $vars->{'title'}       = "nexml schema 1.0 ~" . $paths->strip( $currentFile );
+    $vars->{'mainHeading'} = "Schema module documentation";
+    $vars->{'currentURL'}  = 'http://' . $hostname . $paths->transform( $currentFile );
     $vars->{'currentDate'} = my $time = localtime;
     
     my $outFile = $paths->transform( $currentFile ) . 'index.html';
@@ -107,7 +121,7 @@ sub rewrite_xsd {
         $realpath =~ s/^\Q$prefix\E//;
         
         # transform folder path to point to doc path
-        $realpath =~ s|^/nexml/xsd|/nexml/html/doc/schema-1|;
+        $realpath =~ s|^/nexml/xsd|$subtree|;
         
         # strip file extension, turn file into folder
         if ( $realpath =~ m|.xsd(#.+?)$| ) {
