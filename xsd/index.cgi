@@ -96,6 +96,7 @@ my $vars = {
     'currentDate' => my $time = localtime,
     'currentFeed' => $subtree . '/schema.rss',
     'paths'       => $paths,
+    'hostName'    => $hostname,
 };
 
 $template->process( 'overview.html', $vars, $subtree . '/index.html' ) || die $template->error();
