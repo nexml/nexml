@@ -7,10 +7,14 @@ thead { font-weight: bold; font-size: 80% }
 
 /* different paddings for type definitions with nested indents */
 td                                          { padding-right: 1em }
-.level1                                     { padding-left:  2em }
 h4.level2, h5.level2                        { padding-left:  4em }
 p.level2, table.level2, div.code, ul.level2 { padding-left:  5em !important }
 ul.nested                                   { padding-left:  2em !important }
+.level1 {  
+    margin-left: 2em;
+    padding-top: 1em;
+    margin-top: 1em
+}
 
 /* recursive substructure lists */
 ul.level2 { list-style-type: none }
@@ -32,5 +36,9 @@ pre.level2 {
     padding: 0px;
     margin-top: 0px;
     margin-bottom: 0px
+}
+
+h4.level1 {
+    border-top: 1px solid silver
 }
 
