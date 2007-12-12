@@ -3,6 +3,19 @@
     xmlns:xs="http://www.w3.org/2001/XMLSchema" 
     targetNamespace="http://www.nexml.org/1.0"
     xmlns="http://www.nexml.org/1.0">
+    <xs:annotation>
+        <xs:documentation>
+            This module defines abstract superclasses for tree components.
+            Nexml defines trees as a sequence of nodes, zero or one root edge
+            and a sequence of edges. There are different concrete instances
+            of edges, namely those with lengths formatted as integers, and
+            lengths formatted as floating point numbers.
+            <br /><br />
+            In addition, there are different types of trees: those where nodes
+            have an in-degree of 1 - true trees - and those with in-degree that
+            can exceed 1 - networks.
+        </xs:documentation>
+    </xs:annotation>
     
     <xs:include schemaLocation="../abstract.xsd"/>
 

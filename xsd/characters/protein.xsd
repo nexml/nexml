@@ -4,7 +4,18 @@
     <xs:include schemaLocation="abstract.xsd"/>
     <xs:import namespace="http://www.w3.org/XML/1998/namespace"
         schemaLocation="http://www.w3.org/2001/xml.xsd"/>
-    
+    <xs:annotation>
+        <xs:documentation>
+            This module defines concrete subclasses for the 
+            <a href="../abstract">abstract</a> character matrix components 
+            that all character matrices must implement. The subclasses
+            defined here apply to amino acid character data. In a verbose notation, 
+            this data is represented as the "state" attribute of the &lt;cell&gt; 
+            element, whose value-space is limited to the IUPAC single character
+            nucleotide symbols. In a compact notation, the same data 
+            is represented as a sequence of tokens (whitespace is allowed but has no meaning).
+        </xs:documentation>
+    </xs:annotation>     
     <xs:simpleType name="AAToken">
         <xs:annotation>
             <xs:documentation>
