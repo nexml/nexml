@@ -177,6 +177,7 @@
     </xs:complexType>
     
     <!-- matrix cell -->
+    <!--
     <xs:complexType abstract="true" name="AbstractCell">
         <xs:annotation>
             <xs:documentation>
@@ -192,9 +193,10 @@
                 <xs:attribute name="def" type="xs:NCName" use="required"/>
             </xs:extension>
         </xs:complexContent>
-    </xs:complexType>
+    </xs:complexType>-->
     
     <!-- matrix cell -->
+    <!--
     <xs:complexType abstract="true" name="AbstractAlignedCell">
         <xs:annotation>
             <xs:documentation>
@@ -210,9 +212,9 @@
                 <xs:attribute name="def" type="xs:nonNegativeInteger" use="required"/>
             </xs:extension>
         </xs:complexContent>
-    </xs:complexType>    
+    </xs:complexType> -->
     
-    <!-- matrix row -->
+    <!-- matrix row --> <!--
     <xs:complexType abstract="true" name="AbstractRow">
         <xs:annotation>
             <xs:documentation>
@@ -225,9 +227,9 @@
                 <xs:sequence/>                
             </xs:extension>
         </xs:complexContent>
-    </xs:complexType>
+    </xs:complexType> -->
     
-    <!-- matrix -->
+    <!-- matrix --> <!--
     <xs:complexType abstract="true" name="AbstractCharacters">
         <xs:annotation>
             <xs:documentation>
@@ -240,6 +242,6 @@
                 <xs:sequence/>
             </xs:extension>
         </xs:complexContent>
-    </xs:complexType>   
+    </xs:complexType>   -->
            
 </xs:schema>

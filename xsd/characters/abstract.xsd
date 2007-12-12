@@ -42,11 +42,11 @@
             </xs:documentation>
         </xs:annotation>
         <xs:complexContent>
-            <xs:restriction base="xs:anyType">
+            <xs:extension base="Base">
                 <xs:sequence minOccurs="0" maxOccurs="0"/>
                 <xs:attribute name="state" use="required" type="xs:NCName"/>
                 <xs:attribute name="mstaxa" use="required" type="Mstaxa"/>
-            </xs:restriction>
+            </xs:extension>
         </xs:complexContent>
     </xs:complexType>
     
@@ -153,10 +153,14 @@
                 AbstractChar elements that specify which AbstractStates apply to which matrix columns.
             </xs:documentation>
         </xs:annotation>
-        <xs:sequence minOccurs="1" maxOccurs="1">
-            <xs:element name="states" minOccurs="0" maxOccurs="unbounded" type="AbstractStates"/>
-            <xs:element name="char" minOccurs="0" maxOccurs="unbounded" type="AbstractChar"/>
-        </xs:sequence>
+        <xs:complexContent>
+            <xs:extension base="Annotated">
+                <xs:sequence minOccurs="1" maxOccurs="1">
+                    <xs:element name="states" minOccurs="0" maxOccurs="unbounded" type="AbstractStates"/>
+                    <xs:element name="char" minOccurs="0" maxOccurs="unbounded" type="AbstractChar"/>
+                </xs:sequence>                
+            </xs:extension>
+        </xs:complexContent>
     </xs:complexType>
 
     <xs:complexType name="AbstractObs" abstract="true">
@@ -232,9 +236,13 @@
                 &lt;matrix&gt; element that contains rows which hold raw character sequences. 
             </xs:documentation>
         </xs:annotation>
-        <xs:sequence minOccurs="1" maxOccurs="1">            
-            <xs:element name="row" minOccurs="1" maxOccurs="unbounded" type="AbstractSeqRow"/> 
-        </xs:sequence>
+        <xs:complexContent>
+            <xs:extension base="Annotated">
+                <xs:sequence minOccurs="1" maxOccurs="1">            
+                    <xs:element name="row" minOccurs="1" maxOccurs="unbounded" type="AbstractSeqRow"/> 
+                </xs:sequence>                
+            </xs:extension>
+        </xs:complexContent>
     </xs:complexType>
     
     <xs:complexType name="AbstractObsMatrix" abstract="true">
@@ -244,9 +252,13 @@
                 &lt;matrix&gt; element that contains rows which hold granular state observations.
             </xs:documentation>
         </xs:annotation>
-        <xs:sequence minOccurs="1" maxOccurs="1">            
-            <xs:element name="row" minOccurs="1" maxOccurs="unbounded" type="AbstractObsRow"/> 
-        </xs:sequence>
+        <xs:complexContent>
+            <xs:extension base="Annotated">
+                <xs:sequence minOccurs="1" maxOccurs="1">            
+                    <xs:element name="row" minOccurs="1" maxOccurs="unbounded" type="AbstractObsRow"/> 
+                </xs:sequence>                
+            </xs:extension>
+        </xs:complexContent>
     </xs:complexType>    
     
     <xs:complexType name="AbstractBlock" abstract="true">

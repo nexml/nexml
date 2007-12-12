@@ -17,6 +17,7 @@
         </xs:documentation>
     </xs:annotation>
     <xs:import namespace="http://www.w3.org/XML/1998/namespace" schemaLocation="http://www.w3.org/2001/xml.xsd"/>
+    <xs:include schemaLocation="../abstract.xsd"/>
     <!-- the following types define attachments for objects -->
     
     <!-- first define complex dict values -->
@@ -48,40 +49,57 @@
     <!-- now the complex structures -->
     
     <!-- dict data structure -->
-    <xs:complexType name="Dict">                        
-        <xs:sequence minOccurs="1" maxOccurs="unbounded">
-            <xs:element name="key" minOccurs="1" maxOccurs="1" type="xs:string"/>
-            <xs:choice minOccurs="1" maxOccurs="1">
-                <xs:element name="base64" type="xs:base64Binary"/>
-                <xs:element name="base64vector" type="Base64Vector"/>
-                <xs:element name="date" type="xs:dateTime"/>
-                <xs:element name="datevector" type="DateVector"/>
-                <xs:element name="boolean" type="xs:boolean"/>
-                <xs:element name="booleanvector" type="BooleanVector"/>
-                <xs:element name="float" type="xs:float"/>
-                <xs:element name="floatvector" type="FloatVector"/>
-                <xs:element name="id" type="xs:ID"/>
-                <xs:element name="idvector" type="IdVector"/>
-                <xs:element name="integer" type="xs:integer"/>
-                <xs:element name="integervector" type="IntegerVector"/>
-                <xs:element name="string" type="xs:string"/>                
-                <xs:element name="stringvector" type="StringVector"/>
-                <xs:element name="url" type="xs:anyURI"/>
-                <xs:element name="urlvector" type="UrlVector"/>
-                <xs:element name="dict" type="Dict"/>                
-                <xs:element name="dictvector" type="DictVector"/>
-                <xs:element name="any" type="xs:anyType" form="unqualified"/>
-            </xs:choice>
-        </xs:sequence>
-        <xs:attribute ref="xml:base" use="optional"/>
-        <xs:attribute ref="xml:lang" use="optional"/>
+    <xs:complexType name="Dict">   
+        <xs:annotation>
+            <xs:documentation>
+                A dictionary; a sequence of key/value pairs, where the value
+                elements are of some type.
+            </xs:documentation>
+        </xs:annotation>  
+        <xs:complexContent>
+            <xs:extension base="Base">
+                <xs:sequence minOccurs="1" maxOccurs="unbounded">
+                    <xs:element name="key" minOccurs="1" maxOccurs="1" type="xs:string"/>
+                    <xs:choice minOccurs="1" maxOccurs="1">
+                        <xs:element name="base64" type="xs:base64Binary"/>
+                        <xs:element name="base64vector" type="Base64Vector"/>
+                        <xs:element name="date" type="xs:dateTime"/>
+                        <xs:element name="datevector" type="DateVector"/>
+                        <xs:element name="boolean" type="xs:boolean"/>
+                        <xs:element name="booleanvector" type="BooleanVector"/>
+                        <xs:element name="float" type="xs:float"/>
+                        <xs:element name="floatvector" type="FloatVector"/>
+                        <xs:element name="id" type="xs:ID"/>
+                        <xs:element name="idvector" type="IdVector"/>
+                        <xs:element name="integer" type="xs:integer"/>
+                        <xs:element name="integervector" type="IntegerVector"/>
+                        <xs:element name="string" type="xs:string"/>                
+                        <xs:element name="stringvector" type="StringVector"/>
+                        <xs:element name="url" type="xs:anyURI"/>
+                        <xs:element name="urlvector" type="UrlVector"/>
+                        <xs:element name="dict" type="Dict"/>                
+                        <xs:element name="dictvector" type="DictVector"/>
+                        <xs:element name="any" type="xs:anyType" form="unqualified"/>
+                    </xs:choice>
+                </xs:sequence>                
+            </xs:extension>
+        </xs:complexContent>                   
     </xs:complexType>
     
     <!-- array data structure -->
     <xs:complexType name="DictVector">
-        <xs:sequence minOccurs="1" maxOccurs="unbounded">
-            <xs:element name="dict" type="Dict"/>
-        </xs:sequence>
+        <xs:annotation>
+            <xs:documentation>
+                A vector of dictionaries.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="Base">
+                <xs:sequence minOccurs="1" maxOccurs="unbounded">
+                    <xs:element name="dict" type="Dict"/>
+                </xs:sequence>                
+            </xs:extension>
+        </xs:complexContent>
     </xs:complexType>
     
 </xs:schema>
