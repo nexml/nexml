@@ -23,7 +23,7 @@ digraph inheritance {
 <% BLOCK print_node %>
     <% name = node.name %>
     <% UNLESS printed_node.$name %>
-        <% url = paths.transform(node.url) %>
+        <% url = 'http://' _ hostName _ paths.transform(node.url) %>
         <% IF node.abstract == 'true' %>
             <% node.name %> [URL="<% url %>",shape=box,color=lightgrey,style=filled];
         <% ELSE %>
