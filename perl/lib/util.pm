@@ -14,7 +14,7 @@ BEGIN {
 sub svninfo {
     my $file = shift;
     my %info;
-    my $info = `svn info ${file}`;
+    my $info = `$ENV{SVN} info ${file}`;
     for my $line ( split /\n/, $info ) {
         if ( $line =~ m/^(.*?): (.*)$/ ) {
             my ( $key, $value ) = ( $1, $2 );
