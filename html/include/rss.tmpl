@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title><% channel.title %></title>
+    <link><% channel.link %></link>
+    <description><% channel.description %></description>
+    <language><% channel.language %></language>
+    <copyright><% channel.copyright %></copyright>
+    <generator><% channel.generator %></generator>
+    <% FOREACH item = channel.items %>
+    <item>
+      <title><% item.title %></title>
+      <pubDate><% item.pubDate %></pubDate>
+      <author><% item.author %></author>
+      <description disable-output-escaping="yes"><% item.description %></description>
+    </item>
+    <% END %>
+  </channel>
+</rss>
