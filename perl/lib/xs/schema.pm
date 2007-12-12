@@ -26,6 +26,7 @@ sub new {
         'files'           => {},
         'simpleType'      => {},
         'complexType'     => {},
+        'documentation'   => {},        
         'targetNamespace' => undef,
         'handlers'        => undef,
         'currentFile'     => undef,
@@ -118,6 +119,20 @@ sub _include {
 sub _schema {
     my ( $twig, $elt, $self ) = @_;
     $self->targetNamespace( $elt->att('targetNamespace') );
+    if ( my $annotation = $elt->first_child('xs:annotation') ) {
+        if ( my $documentation = $annotation->first_child('xs:documentation') ) {
+            $documentation->set_tag('p');       
+            $self->docsInFile( Cwd::realpath( $twig->{'Base'} ) => $documentation->sprint );
+        }
+    }
+}
+
+sub docsInFile {
+    my ( $self, $file, $docs ) = @_; 
+    if ( $docs ) {
+        $self->{'documentation'}->{$file} = $docs;
+    }
+    return $self->{'documentation'}->{$file};
 }
 
 sub simpleType {

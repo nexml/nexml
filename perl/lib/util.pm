@@ -95,4 +95,23 @@ sub strip {
     return $file;
 }
 
+sub breadCrumbs {
+    my ( $self, $url ) = @_;
+    my $root;
+    if ( $url =~ m|^(http://[^/]+/)| ) {
+        $root = $1;
+    }
+    $url =~ s|^\Q$root\E||;
+    my @fragments = split(/\//, $url);
+    my @crumbs = ( { 'name' => '~', 'url' => $root } );
+    for my $i ( 0 .. $#fragments ) {
+        push @crumbs, {
+            'name' => $fragments[$i],
+            'url'  => $root . join( '/', @fragments[ 0 .. $i ] ),
+        };
+    }
+    delete $crumbs[-1]->{'url'};
+    return @crumbs;
+}
+
 1;
