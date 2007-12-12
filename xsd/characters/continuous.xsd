@@ -4,6 +4,18 @@
     targetNamespace="http://www.nexml.org/1.0"
     xmlns="http://www.nexml.org/1.0" 
     xmlns:xml="http://www.w3.org/XML/1998/namespace">
+    <xs:annotation>
+        <xs:documentation>
+            This module defines concrete subclasses for the 
+            <a href="../abstract">abstract</a> character matrix components 
+            that all character matrices must implement. The subclasses
+            defined here apply to continuous-valued character data, such as
+            length or width measurements. In a verbose notation, this data
+            is represented as the "state" attribute of the &lt;cell&gt; 
+            element. In a compact notation, the same data is represented as
+            a sequence of space-separated floating point numbers.
+        </xs:documentation>
+    </xs:annotation>
     
     <xs:include schemaLocation="abstract.xsd"/>
     

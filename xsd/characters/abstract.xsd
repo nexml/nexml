@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.nexml.org/1.0"
     xmlns="http://www.nexml.org/1.0">
+    <xs:annotation>
+        <xs:documentation>
+            This module defines the abstract superclasses for the components
+            that go into character matrices. In nexml instance documents, the
+            &lt;characters&gt; element structure forms the concrete instance of 
+            the complex types defined here. The concrete structure consists of
+            zero or one &lt;format&gt; structures that define allowed states,
+            their symbols and ambiguity mappings, and the matrix columns they
+            apply to. This is then followed by a &lt;matrix&gt; element that
+            contains rows that either consist of granular cells with individual
+            states, or of compact sequences.
+        </xs:documentation>
+    </xs:annotation>
 
     <xs:include schemaLocation="../abstract.xsd"/>
     

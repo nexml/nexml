@@ -8,6 +8,21 @@
     <xs:import namespace="http://www.w3.org/XML/1998/namespace" schemaLocation="http://www.w3.org/2001/xml.xsd"/>
     <xs:import namespace="http://www.w3.org/1999/xlink" schemaLocation="http://www.loc.gov/standards/mets/xlink.xsd"/>
     <xs:include schemaLocation="meta/annotations.xsd"/>
+    <xs:annotation>
+        <xs:documentation>
+            This module defines abstract superclasses. In xml schema, inheritance of complex types
+            is either through extension or through restriction. Extensions in this context means that
+            the child class can have more types of elements appended to the end of its children, and/or
+            more attributes. Restriction means that the child class is more limited than the base class,
+            in that it might have fewer child elements, fewer attributes, or more restricted child 
+            element types.<br /><br />
+            The nexml schema uses inheritance such that abstract superclasses - i.e. those defined in
+            this module - extend each other to form a useful tree of superclasses, from which child
+            classes then derive by restriction. This is done so that for any type there is always an
+            exhaustive abstract superclass, to which parsers should be adapted, so that derived 
+            instances won't have surprising substructures.
+        </xs:documentation>
+    </xs:annotation>
     
     <xs:simpleType name="IDVector">
         <xs:annotation>

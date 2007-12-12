@@ -3,6 +3,18 @@
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
     targetNamespace="http://www.nexml.org/1.0"
     xmlns="http://www.nexml.org/1.0">
+    <xs:annotation>
+        <xs:documentation>
+            This module defines the components of trees, graphs 
+            where edges have an in-degree that of 1. The
+            types defined in this module are concrete implementations
+            that inherit from the abstract types in the <a href="../abstract">
+                abstract trees module</a>.<br /><br /> 
+            Depending on the concrete subclass, edges in trees either
+            have lengths formatted as integers or lengths formatted as
+            floating point numbers.
+        </xs:documentation>
+    </xs:annotation>    
     
     <xs:include schemaLocation="abstract.xsd"/>
     

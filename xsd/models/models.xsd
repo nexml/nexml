@@ -4,6 +4,21 @@
     targetNamespace="http://www.nexml.org/1.0"
     xmlns="http://www.nexml.org/1.0" 
     xmlns:xml="http://www.w3.org/XML/1998/namespace">
+    <xs:annotation>
+        <xs:documentation>
+            This module is highly experimental. It is intended to define
+            the building blocks that go into expressions of substitution
+            models. The module imports types from the 
+            <a href="http://www.w3.org/1998/Math/MathML">MathML</a> expression
+            namespace. The general idea is that a substitution model would
+            first define the character states it operates on (this is done
+            by re-using the &lt;format&gt; element structure from the 
+            <a href="../characters">characters</a> modules). Subsequently,
+            various parameters (rates, frequencies) are defined. These parameters
+            are passed through MathML expressions, the output of which is 
+            referenced in n x n rate matrices.
+        </xs:documentation>
+    </xs:annotation>
     
     <xs:include schemaLocation="../characters/characters.xsd"/>
     <xs:import namespace="http://www.w3.org/1998/Math/MathML" schemaLocation="http://www.w3.org/Math/XMLSchema/mathml2/mathml2.xsd"/>

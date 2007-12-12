@@ -3,6 +3,16 @@
     xmlns:xs="http://www.w3.org/2001/XMLSchema" 
     targetNamespace="http://www.nexml.org/1.0"
     xmlns="http://www.nexml.org/1.0">
+    <xs:annotation>
+        <xs:documentation>
+            This module defines subclasses of the dictionaries
+            defined in the <a href="../annotations">annotations</a>
+            module. The subclasses are used to attach metadata about
+            revision control status of a file (the RCS* types), 
+            <a href="http://dublincore.org/">dublin core</a> metadata
+            and common web formats (XHTML, RSS).            
+        </xs:documentation>
+    </xs:annotation>
     <xs:include schemaLocation="annotations.xsd"/>  
 
     <!-- a simple key/value pair, where key 

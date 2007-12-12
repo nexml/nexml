@@ -4,6 +4,18 @@
     targetNamespace="http://www.nexml.org/1.0"
     xmlns:xml="http://www.w3.org/XML/1998/namespace" 
     xmlns="http://www.nexml.org/1.0">
+    <xs:annotation>
+        <xs:documentation>
+            This module defines annotations that can be attached to
+            (almost) any nexml element. The markup for these annotations
+            is like that of xml-plists, such as are used by iTunes libraries
+            and other Mac OS X configuration files. However, this module
+            extends on that by defining more simple types that can be used
+            as values of the key/value pairs that comprise the annotation.
+            In particular, the additional types are lists of atomic simple
+            types, so that a value can be a list of integers, for example.
+        </xs:documentation>
+    </xs:annotation>
     <xs:import namespace="http://www.w3.org/XML/1998/namespace" schemaLocation="http://www.w3.org/2001/xml.xsd"/>
     <!-- the following types define attachments for objects -->
     
