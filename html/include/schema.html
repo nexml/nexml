@@ -1,7 +1,7 @@
-
+<h3 class="plain">Overview</h3><% schema.docsInFile(currentFile) %>
 <% complexTypes = schema.complexTypeInFile(currentFile) %>
 <% IF complexTypes %>
-    <h3 class="headerstyle"><a name="complexTypes"></a>Complex types</h3>
+    <h3 class="plain"><a name="complexTypes"></a>Complex types</h3>
     
     <% FOREACH type = complexTypes %>
     
@@ -60,7 +60,7 @@
 
 <% simpleTypes = schema.simpleTypeInFile(currentFile) %>
 <% IF simpleTypes %>
-    <h3 class="headerstyle"><a name="simpleTypes"></a>Simple types</h3>
+    <h3 class="plain"><a name="simpleTypes"></a>Simple types</h3>
     
     <% FOREACH type = simpleTypes %>
     
