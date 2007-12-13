@@ -811,7 +811,7 @@ class NexmlWriter(datasets.Writer):
             dest.write(parts + '\n')
 
 def basic_test_trees():
-    source = "/home/jeet/Documents/Codeworks/Portfolios/nexml/examples/trees.xml"
+    source = "/home/jeet/Documents/Codeworks/Portfolios/Python/Projects/Phylogenetics/nexml/examples/trees.xml"
     nexmlr = NexmlReader()
     dataset = nexmlr.get_dataset(source)
     for taxa_block in dataset.taxa_blocks:
@@ -828,7 +828,7 @@ def basic_test_trees():
     print nexmlw.compose_dataset(dataset)
     
 def basic_test_chars():
-    source = "//home/jeet/Documents/Codeworks/Portfolios/Python/Projects/Phylogenetics/nexml/examples/characters.xml"
+    source = "/home/jeet/Documents/Codeworks/Portfolios/Python/Projects/Phylogenetics/nexml/examples/characters.xml"
     nexmlr = NexmlReader()
     dataset = nexmlr.get_dataset(source)
     nexmlw = NexmlWriter()
