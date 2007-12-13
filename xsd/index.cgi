@@ -148,7 +148,7 @@ sub write_image_map {
         my $extension = $filetype;
         $extension =~ s/i//;
         my $outfile = $dir . $graphtype . '/' . $graphtype . '.' . $extension; # /path/to/inclusions.png
-        system( $dot, "-T${filetype}", "-o${prefix}${outfile}", $prefix . $dotFile );
+        system( $dot, '-q5', "-T${filetype}", "-o${prefix}${outfile}", $prefix . $dotFile );
     }  
 }
 
