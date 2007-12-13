@@ -4,7 +4,7 @@
     from template: $Id$    
 */
 digraph inheritance {
-    label="Inheritance tree for complex types in <% paths.strip(currentFile) %>";
+    label="Inheritance tree for complex types in ~<% paths.strip(currentFile) %>";
     <% printed_edge = {} %>
     <% printed_node = {} %>
     <% FOREACH node = schema.complexTypeInFile(currentFile) %>
@@ -24,7 +24,7 @@ digraph inheritance {
 <% BLOCK print_node %>
     <% name = node.name %>
     <% UNLESS printed_node.$name %>
-        <% url = 'http://' _ hostName _ paths.transform(node.url) %>
+        <% url = paths.transform(node.url) %>
         <% IF node.abstract == 'true' %>
             <% node.name %> [URL="<% url %>",shape=box,color=lightgrey,style=filled];
         <% ELSE %>

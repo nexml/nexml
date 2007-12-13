@@ -1,12 +1,18 @@
-<h3 class="plain">Overview</h3><% schema.docsInFile(currentFile) %>
+<h3 class="plain">Description</h3><% schema.docsInFile(currentFile) %>
 <p><strong>Other views</strong> (open in new window):</p>
 <div class="credit linkshare">
-    <a href="inherit.html" target="nexml_inherit">
+    <a href="inheritance/" target="nexml_inheritance">
         <img 
             class="icon" 
             src="<% paths.strip(paths.include('chart_organisation.png')) %>" 
             alt="organisation chart" /> inheritance tree
     </a> |
+    <a href="inclusions/" target="nexml_inclusions">
+        <img 
+            class="icon" 
+            src="<% paths.strip(paths.include('sitemap.png')) %>" 
+            alt="file hierarchy" /> inclusions tree
+    </a> |    
     <a href="<% paths.strip(currentFile) %>" target="nexml_source">
         <img 
             class="icon" 
@@ -16,7 +22,7 @@
 </div>
 <% complexTypes = schema.complexTypeInFile(currentFile) %>
 <% IF complexTypes %>
-    <h3 class="plain"><a name="complexTypes"></a>Complex types</h3>
+    <h3 class="headerstyle"><a name="complexTypes"></a>Complex types</h3>
     
     <% FOREACH type = complexTypes %>
     
@@ -74,7 +80,7 @@
 
 <% simpleTypes = schema.simpleTypeInFile(currentFile) %>
 <% IF simpleTypes %>
-    <h3 class="plain"><a name="simpleTypes"></a>Simple types</h3>
+    <h3 class="headerstyle"><a name="simpleTypes"></a>Simple types</h3>
     
     <% FOREACH type = simpleTypes %>
     
@@ -113,21 +119,21 @@
     <ul class="level2 <% nested _ ' ' _ type.name %>">
     <% FOREACH child = node.children %>    
         <li class="level2 <% nested _ ' ' _ type.name %>">
-        <% IF child.elementName == 'element' %>
-            an <acronym title="<% child.explain %>">element</acronym> called "<% child.name %>", 
-            instance of <a href="<% paths.transform(schema.complexType(child.type).url) %>"><% child.type %></a>            
-            (<% child.minOccurs %>..<% child.maxOccurs %>).
-        <% ELSIF child.elementName == 'sequence' %>
-            a <acronym title="<% child.explain %>">sequence</acronym> of items 
-            (<% child.minOccurs %>..<% child.maxOccurs %>):
-        <% ELSIF child.elementName == 'choice' %>
-            a <acronym title="<% child.explain %>">choice</acronym> between items:
-        <% END %>
+            <% IF child.elementName == 'element' %>
+                an <acronym title="<% child.explain %>">element</acronym> called "<% child.name %>", 
+                instance of <a href="<% paths.transform(schema.complexType(child.type).url) %>"><% child.type %></a>            
+                (<% child.minOccurs %>..<% child.maxOccurs %>).
+            <% ELSIF child.elementName == 'sequence' %>
+                a <acronym title="<% child.explain %>">sequence</acronym> of items 
+                (<% child.minOccurs %>..<% child.maxOccurs %>):
+            <% ELSIF child.elementName == 'choice' %>
+                a <acronym title="<% child.explain %>">choice</acronym> between items:
+            <% END %>    
+            <% children = child.children %>
+            <% IF children %>
+                <% INCLUDE recurse node = child nested = 'nested' %>
+            <% END %>
         </li>        
-        <% children = child.children %>
-        <% IF children %>
-            <% INCLUDE recurse node = child nested = 'nested' %>
-        <% END %>
     <% END %>
     </ul>
 <% END %>
