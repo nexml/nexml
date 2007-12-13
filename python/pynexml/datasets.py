@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 
 ############################################################################
-##  phyloinfo.py
+##  pynexml.py
 ##
 ##  Part of the PhyloInfo phylogenetic data parsing library.
 ##
@@ -30,9 +30,9 @@ trees, models etc.
 import os
 import StringIO
 
-from phyloinfo import taxa
-from phyloinfo import characters
-from phyloinfo import trees
+from pynexml import taxa
+from pynexml import characters
+from pynexml import trees
 
 class Dataset():
     """

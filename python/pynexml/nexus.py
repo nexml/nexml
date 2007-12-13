@@ -32,10 +32,10 @@ import os
 import sys
 import StringIO
 
-from phyloinfo import datasets
-from phyloinfo import taxa
-from phyloinfo import trees
-from phyloinfo import characters
+from pynexml import datasets
+from pynexml import taxa
+from pynexml import trees
+from pynexml import characters
 
 class NexusReader(datasets.Reader):
     """
@@ -514,7 +514,7 @@ class NexusReader(datasets.Reader):
                 pass
 
 if __name__ == "__main__":
-    source = "/home/jeet/Documents/Codeworks/Portfolios/Python/Projects/Phylogenetics/DendroPy/versions/trunk/phyloinfo/tests/files/primate-mtDNA.nex"
+    source = "/home/jeet/Documents/Codeworks/Portfolios/Python/Projects/Phylogenetics/DendroPy/versions/trunk/pynexml/tests/files/primate-mtDNA.nex"
     nexus = NexusReader()
     dataset = nexus.get_dataset(filepath=source)
     import nexml

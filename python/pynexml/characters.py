@@ -29,8 +29,8 @@ as well as all the structural classes that make up a tree.
 
 import re
 
-from phyloinfo import elementary
-from phyloinfo import taxa
+from pynexml import base
+from pynexml import taxa
 
 GAP_CHARS = ['-', '?']
 
