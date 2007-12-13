@@ -4,6 +4,7 @@
     from template: $Id$    
 */
 digraph inheritance {
+    label="Inheritance tree for complex types in <% paths.strip(currentFile) %>";
     <% printed_edge = {} %>
     <% printed_node = {} %>
     <% FOREACH node = schema.complexTypeInFile(currentFile) %>

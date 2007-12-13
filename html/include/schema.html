@@ -1,4 +1,19 @@
 <h3 class="plain">Overview</h3><% schema.docsInFile(currentFile) %>
+<p><strong>Other views</strong> (open in new window):</p>
+<div class="credit linkshare">
+    <a href="inherit.html" target="nexml_inherit">
+        <img 
+            class="icon" 
+            src="<% paths.strip(paths.include('chart_organisation.png')) %>" 
+            alt="organisation chart" /> inheritance tree
+    </a> |
+    <a href="<% paths.strip(currentFile) %>" target="nexml_source">
+        <img 
+            class="icon" 
+            src="<% paths.strip(paths.include('page_white_code_red.png')) %>" 
+            alt="xml schema code" /> schema source
+    </a>     
+</div>
 <% complexTypes = schema.complexTypeInFile(currentFile) %>
 <% IF complexTypes %>
     <h3 class="plain"><a name="complexTypes"></a>Complex types</h3>
@@ -53,9 +68,8 @@
         
         <!-- prettified xml source -->
         <% INCLUDE 'anyType_source.tmpl' %>  
-        
-    <% END %>
-    <p class="internallink">[ <a href="#top">Back to top</a> ]</p>
+        <p class="internallink">[ <a href="#top">Back to top</a> ]</p>
+    <% END %>    
 <% END %>
 
 <% simpleTypes = schema.simpleTypeInFile(currentFile) %>
@@ -90,9 +104,8 @@
         
         <!-- prettified xml source -->
         <% INCLUDE 'anyType_source.tmpl' %>
-    
-    <% END %>
-    <p class="internallink">[ <a href="#top">Back to top</a> ]</p>    
+        <p class="internallink">[ <a href="#top">Back to top</a> ]</p>    
+    <% END %>    
 <% END %>
 
 <!-- subroutine for depth-first recursion in substructure -->

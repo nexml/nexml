@@ -33,14 +33,18 @@
           title="SVN revision history - RSS 2.0"
           href="<% paths.home('nexml.rss') %>"/>        
         
-        <title><% title %></title>
+        <title><% title %></title>        
         <style type="text/css">
-            <% INCLUDE 'style.css' %>        
-            <% INSERT 'schema.css' %>
+            <!--
+                <% INCLUDE 'style.css' %>        
+                <% INSERT 'schema.css' %>
+            -->
         </style>
         <script type="text/javascript">
-            <% INSERT 'functions.js' %>
-            <% INSERT 'schema.js' %>
+            //<![CDATA[
+                <% INSERT 'functions.js' %>
+                <% INSERT 'schema.js' %>
+            //]]>
         </script>
     </head>
     <body>
