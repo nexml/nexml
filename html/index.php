@@ -460,7 +460,7 @@
         <h2 class="quicklinks">
           <a id="quicklinks" name="quicklinks"></a>Quick links:
         </h2>
-          <a class="quicklink" href="/nexml/html/doc/schema-1/nexml">Schema 1.0</a>
+          <a class="quicklink" href="/nexml/html/doc/schema-1/">Schema 1.0</a>
           <a class="quicklink" href="/nexml/examples">Example files</a>
         <br />
         <h2 class="sidelink menuheader">
@@ -517,5 +517,11 @@
         of <a href="http://jokkmokk.biz/" title="ITUS Jokkmokk">Jokkmokk</a>.
       </p>
     </div>
+    <script src="http://www.google-analytics.com/urchin.js" type="text/javascript">
+    </script>
+    <script type="text/javascript">
+      _uacct = "UA-3174308-1";
+      urchinTracker();
+    </script>
   </body>
 </html>
