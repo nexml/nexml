@@ -27,8 +27,8 @@ This module handles the core definition of tree data structure class,
 as well as all the structural classes that make up a tree.
 """
 
-from phyloinfo import elementary
-from phyloinfo import taxa
+from pynexml import base
+from pynexml import taxa
 
 ##############################################################################
 ## TreesBlocks and TreesBlock
@@ -65,7 +65,7 @@ class TreeBlock(list, taxa.TaxaLinked):
 ##############################################################################
 ## Tree
 
-class Tree(elementary.IdTagged):
+class Tree(base.IdTagged):
     """
     Fundamental class that encapsulates minimal functionality and
     attributes need for working with trees.  A Tree contains a
@@ -98,7 +98,7 @@ class Tree(elementary.IdTagged):
         Initializes a Tree object by defining a base node which must
         be of type `Node` or derived from `Node`.
         """
-        elementary.IdTagged.__init__(self, elem_id=elem_id, label=label)
+        base.IdTagged.__init__(self, elem_id=elem_id, label=label)
         self.seed_node = None
         self.weight_type = None
         if seed_node is not None:
@@ -626,7 +626,7 @@ class Node(taxa.TaxonLinked):
 ##############################################################################
 ## Edge
 
-class Edge(elementary.IdTagged):
+class Edge(base.IdTagged):
     """
     An edge on a tree. This class implements only the core
     functionality needed for trees.
@@ -675,7 +675,7 @@ class Edge(elementary.IdTagged):
         Creates an edge from tail_node to head_node.  Modified from
         arbol.
         """
-        elementary.IdTagged.__init__(self, elem_id=elem_id)
+        base.IdTagged.__init__(self, elem_id=elem_id)
         self.__tail_node = None
         self.__head_node = None
         self.__tail_elem_id = None

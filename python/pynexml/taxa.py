@@ -26,9 +26,9 @@
 This module provides classes and methods for managing taxa.
 """
 
-from phyloinfo import elementary
+from pynexml import base
 
-class TaxonLinked(elementary.IdTagged):
+class TaxonLinked(base.IdTagged):
     """
     Provides infrastructure for maintaining link/reference to a Taxon
     object.
@@ -38,7 +38,7 @@ class TaxonLinked(elementary.IdTagged):
         """
         Initializes by calling base class.
         """
-        elementary.IdTagged.__init__(self, elem_id=elem_id, label=label)
+        base.IdTagged.__init__(self, elem_id=elem_id, label=label)
         self.__taxon = taxon
 
     def _get_taxon(self):
@@ -68,7 +68,7 @@ class TaxonLinked(elementary.IdTagged):
 
     taxon = property(_get_taxon, _set_taxon)
 
-class TaxaLinked(elementary.IdTagged):
+class TaxaLinked(base.IdTagged):
     """
     Provides infrastructure for the maintenance of references to taxa
     blocks.
@@ -78,7 +78,7 @@ class TaxaLinked(elementary.IdTagged):
         """
         Initializes by calling base class.
         """
-        elementary.IdTagged.__init__(self, elem_id=elem_id, label=label)
+        base.IdTagged.__init__(self, elem_id=elem_id, label=label)
         self.__taxa_block = taxa_block
 
     def _get_taxa_block(self):
@@ -98,7 +98,7 @@ class TaxaLinked(elementary.IdTagged):
 
     taxa_block = property(_get_taxa_block, _set_taxa_block)
             
-class TaxaBlock(list, elementary.IdTagged):
+class TaxaBlock(list, base.IdTagged):
     """
     Taxon manager.
     """
@@ -108,7 +108,7 @@ class TaxaBlock(list, elementary.IdTagged):
         Inits. Handles keyword arguments: `elem_id` and `label`.
         """
         list.__init__(self, *args)
-        elementary.IdTagged.__init__(self, *args, **kwargs)
+        base.IdTagged.__init__(self, *args, **kwargs)
 
     def __str__(self):
         """
@@ -146,7 +146,7 @@ class TaxaBlock(list, elementary.IdTagged):
             return taxon
         taxon = Taxon(elem_id=elem_id, label=label)
 
-class Taxon(elementary.IdTagged):
+class Taxon(base.IdTagged):
     """
     A taxon associated with a sequence or a node on a tree.
     """
@@ -155,7 +155,7 @@ class Taxon(elementary.IdTagged):
         """
         Initializes by calling base class.
         """
-        elementary.IdTagged.__init__(self, elem_id=elem_id, label=label)
+        base.IdTagged.__init__(self, elem_id=elem_id, label=label)
 
     def __str__(self):
         """

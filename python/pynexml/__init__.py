@@ -28,20 +28,20 @@ import os
 import sys
 import random
 
-__all__ = ["annotable",
-           "chartypes",
-           "charmodels",
-           "charseqs",
-           "dot",
-           "newick",
-           "nexml",
-           "taxa",
-           "trees",
-           "treeio",
-           "xmlparser",
-           ]
+__all__ = [
+    'characters',
+    'datasets',
+    'base',
+    'newick',
+    'nexml',
+    'nexus',
+    'taxa',
+    'trees',
+    'utils',
+    'xmlparser'
+          ]
 
-_NAME = "DendroPy"
+_NAME = "PyNexml"
 _VERSION = "0.1"
 _AUTHOR = "Jeet Sukumaran and Mark T. Holder"
 _COPYRIGHT = "Copyright 2007 Jeet Sukumaran and Mark T. Holder."

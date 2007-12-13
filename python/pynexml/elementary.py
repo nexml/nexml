@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 
 ############################################################################
-## elementary.py
+## base.py
 ##
 ##  Part of the PhyloInfo phylogenetic data parsing library.
 ##  

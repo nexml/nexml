@@ -28,11 +28,11 @@ NEXML format.
 """
 
 import textwrap
-from phyloinfo import datasets
-from phyloinfo import taxa
-from phyloinfo import characters
-from phyloinfo import trees
-from phyloinfo import xmlparser
+from pynexml import datasets
+from pynexml import taxa
+from pynexml import characters
+from pynexml import trees
+from pynexml import xmlparser
 
 def _to_nexml_indent_items(items, indent="", indent_level=0):
     """
@@ -828,7 +828,7 @@ def basic_test_trees():
     print nexmlw.compose_dataset(dataset)
     
 def basic_test_chars():
-    source = "/home/jeet/Documents/Codeworks/Portfolios/nexml/examples/characters.xml"
+    source = "//home/jeet/Documents/Codeworks/Portfolios/Python/Projects/Phylogenetics/nexml/examples/characters.xml"
     nexmlr = NexmlReader()
     dataset = nexmlr.get_dataset(source)
     nexmlw = NexmlWriter()

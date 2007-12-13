@@ -26,8 +26,8 @@
 This module handles the reading and writing of trees in NEWICK format.
 """
 
-from phyloinfo import datasets
-from phyloinfo import trees
+from pynexml import datasets
+from pynexml import trees
 
 class NewickTreeReader():
     """
@@ -324,7 +324,7 @@ class NewickTreeParser(object):
 
 
 if __name__ == "__main__":
-    source = "/home/jeet/Documents/Codeworks/Portfolios/Python/Projects/Phylogenetics/DendroPy/versions/trunk/phyloinfo/tests/files/newick_trees.tre"
+    source = "/home/jeet/Documents/Codeworks/Portfolios/Python/Projects/Phylogenetics/DendroPy/versions/trunk/pynexml/tests/files/newick_trees.tre"
     dataset = datasets.Dataset()
     tree_block = dataset.new_tree_block()
     nw = NewickTreeReader()
