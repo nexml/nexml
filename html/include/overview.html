@@ -102,20 +102,29 @@
     three icon links, which open in a separate window:
 </p>    
 <p class="level1">
-    <img class="icon" src="<% paths.strip(paths.include('chart_organisation.png')) %>" />
+    <img 
+        class="icon" 
+        src="<% paths.strip(paths.include('chart_organisation.png')) %>" 
+        alt="organisation chart" />
     &mdash; links to a graph of the inheritance tree of the complex types on the 
     page, recursing up to the root class (which might be on a different page). 
     Abstract types are shown in grey, concrete types in black. Inheritance by
     extension in blue, by restriction in red. The graph is a clickable image map.
 </p>
 <p class="level1">
-    <img class="icon" src="<% paths.strip(paths.include('sitemap.png')) %>" />
+    <img 
+        class="icon" 
+        src="<% paths.strip(paths.include('sitemap.png')) %>"
+        alt="file hierarchy" />
     &mdash; links to a graph of file inclusions: xml schema files can include
     other files, and these inclusions are displayed here (with the file 
     described on the page shown in black). The graph is a clickable image map.
 </p>    
 <p class="level1">
-    <img class="icon" src="<% paths.strip(paths.include('page_white_code_red.png')) %>" />
+    <img 
+        class="icon" 
+        src="<% paths.strip(paths.include('page_white_code_red.png')) %>"
+        alt="xml schema code" />
     &mdash; links to the xml schema source of the described file.
 </p>
 <p>
