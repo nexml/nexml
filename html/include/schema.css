@@ -43,3 +43,16 @@ h4.level1 {
     border-top: 1px solid silver
 }
 
+h3.typeList, p.typeList {
+    clear: left
+}
+
+ul.typeList {
+    float: left;
+    padding-left: 1em;
+    width: 150px
+}
+
+li.typeList {
+    list-style-type: none
+}
