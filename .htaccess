@@ -5,3 +5,4 @@ ForceType application/x-httpd-perl
 ForceType application/x-httpd-php
 </files>
 AddType application/xml .xsd
+AddType application/x-httpd-imap map
