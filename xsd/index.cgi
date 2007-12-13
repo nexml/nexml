@@ -66,6 +66,7 @@ my $paths = util::paths->new(
     '-rewrite'  => [ \&rewrite_xsd ],
 );
 
+# instantiate T::T object for site html
 my $template = Template->new(
     'INCLUDE_PATH' => $include,      # or list ref
     'POST_CHOMP'   => 1,             # cleanup whitespace
@@ -76,7 +77,7 @@ my $template = Template->new(
     'OUTPUT_PATH'  => $prefix,
 );
 
-# for dot
+# T::T object for dot, so no html/css/js inclusions
 my $dottemplate = Template->new(
     'INCLUDE_PATH' => $include,      # or list ref
     'POST_CHOMP'   => 1,             # cleanup whitespace
@@ -85,6 +86,7 @@ my $dottemplate = Template->new(
     'OUTPUT_PATH'  => $prefix,
 );
 
+# variables to be interpolated in template
 my $vars = {
     'schema'      => $schema,
     'currentFile' => $currentFile,
@@ -99,23 +101,55 @@ my $vars = {
     'hostName'    => $hostname,
 };
 
+# create the root document
 $template->process( 'overview.html', $vars, $subtree . '/index.html' ) || die $template->error();
 
+# iterate over schema *.xsd files
 for my $currentFile ( $schema->files ) {
     my $stripped = $paths->strip( $currentFile );
     
+    # *.xsd file specific variables to be interpolated in template
     $vars->{'currentFile'} = $currentFile;
     $vars->{'title'}       = "nexml schema 1.0 ~" . $paths->strip( $currentFile );
     $vars->{'mainHeading'} = "Schema module documentation";
     $vars->{'currentURL'}  = 'http://' . $hostname . $paths->transform( $currentFile );
     $vars->{'currentDate'} = my $time = localtime;
     
-    my $outFile = $paths->transform( $currentFile ) . 'index.html';
-    my $outDot = $paths->transform( $currentFile ) . 'index.dot';
-    
+    # create the *.xsd specific html file
+    my $outFile = $paths->transform( $currentFile ) . 'index.html';    
     $template->process( 'schema.html', $vars, $outFile ) || die $template->error();
-    $dottemplate->process( 'dotinheritance.tmpl', $vars, $outDot ) || die $template->error();
+    
+    my $dir = $paths->transform( $currentFile );
+    for my $graphtype ( qw(inheritance inclusions) ) {  
+        write_image_map( $dir, $graphtype, $dottemplate, $vars, $prefix );
+    }
+}
 
+sub write_image_map {
+    my ( $dir, $graphtype, $dottemplate, $vars, $prefix ) = @_;
+    $vars->{'graphtype'} = $graphtype; # to put in templates
+    
+    # first generate the dot graph file by expanding the template vars
+    my $templateFile = 'dot' . $graphtype . '.tmpl';   # dotinclusions.tmpl (no path)
+    my $dotFile = $dir . $graphtype . '.dot';          # /path/to/inclusions.dot
+    $dottemplate->process( $templateFile, $vars, $dotFile ) || die $dottemplate->error();
+    
+    # generate the html file that will hold the image map
+    my $htmlFile = $dir . $graphtype . '/index.html'; # /path/to/inclusions.html
+    $dottemplate->process( 'imageMap.tmpl', $vars, $htmlFile ) || die $dottemplate->error();
+    
+    # the dot executable can either be an env var, or we hope to find it on the path
+    my $dot = $ENV{'DOT'} || 'dot';
+    
+    # we generate a *.map file and a *.png
+    for my $filetype ( qw(imap png) ) {
+    
+        # turn type flag into file extension
+        my $extension = $filetype;
+        $extension =~ s/i//;
+        my $outfile = $dir . $graphtype . '/' . $graphtype . '.' . $extension; # /path/to/inclusions.png
+        system( $dot, "-T${filetype}", "-o${prefix}${outfile}", $prefix . $dotFile );
+    }  
 }
 
 # rewrite rule to turn code from which we're creating documentation
