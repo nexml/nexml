@@ -43,3 +43,5 @@ function toggleClassDisplay(theClass) {
         toggleElementDisplay(theElements[i]);
     }
 }
+
+window.name='nexml_site';
