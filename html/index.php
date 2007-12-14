@@ -401,7 +401,7 @@
           is documented on our 
           <a href="https://www.nescent.org/wg_evoinfo/Future_Data_Exchange_Standard">wiki</a>;
           the bleeding edge version is available from <a href="/nexml/html/index/svn">svn</a>;
-          the <a href="/1.0">source code can be browsed</a> on our
+          the <a href="/nexml/xsd">source code can be browsed</a> on our
           site (it's a check out from our repository which is updated
           every five minutes); for bug reports and feature requests please
           visit our <a href="/nexml/html/index/tracker">issue tracker</a>
