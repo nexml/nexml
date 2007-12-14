@@ -41,7 +41,7 @@ my $paths = util::paths->new(
 
 # instantiate T::T object for site html
 my $template = Template->new(
-    'INCLUDE_PATH' => $include,      # or list ref
+    'INCLUDE_PATH' => [ $prefix . $ENV{'SCRIPT_URL'}, $include ], # list ref
     'POST_CHOMP'   => 1,             # cleanup whitespace
 #    'PRE_PROCESS'  => 'header.tmpl', # prefix each template
 #    'POST_PROCESS' => 'footer.tmpl', # suffix each template
@@ -64,5 +64,7 @@ my $vars = {
 
 print $cgi->header;
 $template->process( 'header.tmpl', $vars ) || die $template->error();
-#print '<pre>', Dumper( \%ENV ), '</pre>';
+if ( -e $prefix . $ENV{'SCRIPT_URL'} . 'README.html' ) {
+     $template->process( 'README.html', $vars );
+}
 print '<div class="directoryIndex">';
