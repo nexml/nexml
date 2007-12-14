@@ -1,4 +1,6 @@
 #!/usr/bin/perl
+use lib '../../../lib/lib/perl5/site_perl/5.8.6/darwin-thread-multi-2level/';
+use lib '../../../lib';
 use lib '../../perl/lib';
 use strict;
 use warnings;
