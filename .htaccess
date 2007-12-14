@@ -21,7 +21,7 @@ AddType application/x-httpd-imap map
 
     # plain text files
     AddIcon /nexml/html/include/page_white_text.png LICENSE Doxyfile .txt .diz .nfo .faq .readme .me
-    AddDescription "OSI license" LICENSE
+    AddDescription "Software license" LICENSE
     AddDescription "Documentation generator" Doxyfile
     AddDescription "Plain text file" .txt    
     AddDescription "Plain text info" .diz .nfo .faq .readme .me
