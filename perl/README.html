@@ -1,0 +1,28 @@
+<p>
+This subdirectory contains the nexml parser code for Bio::Phylo.
+Much of this code has been written by Jason Caravas during his
+Google Summer of Code project, and subsequently tweaked by 
+Rutger Vos. To build this, you will need the Bio::Phylo release
+from CPAN (which has two optional prerequisites: SVG.pm for tree
+drawing and Math::Random for simulations) and XML::Twig (which
+requires XML::Parser, which is built on top of expat).
+</p>
+<p>
+The code in this subdirectory is released under the standard
+perl licensing scheme, which is a dual system supplying users
+a choice between the artistic license and the GNU public license.
+</p>
+<p>
+Provided you have the prerequisites, you can build this code
+by issuing:<br/>
+<code>$ perl Makefile.PL</code><br/>
+<code>$ make</code><br/>
+Which places the built code in a 'blib' subdirectory of this
+folder.
+</p>
+<p>To run the test suite (which will fail at this stage of the development), issue:<br/>
+<code>$ make test</code><br/>
+To install (but don't do that just yet, instead point your $PERL5LIB
+to the lib/ folder), issue:<br/>
+<code>$ make install</code><br/>
+</p>
