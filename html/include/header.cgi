@@ -63,4 +63,4 @@ my $vars = {
 print $cgi->header;
 $template->process( 'header.tmpl', $vars ) || die $template->error();
 #print '<pre>', Dumper( \%ENV ), '</pre>';
-print '<div class="directoryIndex"><strong>In this section:</strong>';
+print '<div class="directoryIndex">';
