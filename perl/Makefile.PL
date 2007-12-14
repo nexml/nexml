@@ -1,5 +1,4 @@
-# $Id: Makefile.PL,v 1.1 2005/09/06 17:27:13 rvosa Exp $
-# Subversion: $Rev: 177 $
+# $Id$
 use strict;
 use warnings;
 use ExtUtils::MakeMaker;
