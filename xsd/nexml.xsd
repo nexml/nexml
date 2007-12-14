@@ -6,14 +6,13 @@
   <xs:annotation>
     <xs:documentation>
       This module constitutes in effect the 'main' class of the nexml schema.
-      It defines the complex type for the root <a href="#Nexml">&lt;nex:nexml&gt;</a> element and 
-      a simple type for the schema <a href="#Nexml1_0">"version" attribute</a> of the root element. In 
-      addition, this module includes the main schema modules for <a href="../taxa/taxa">OTUs</a>,
-      <a href="../characters/characters">characters</a>, <a href="../trees/trees">trees</a>,
-      <a href="../meta/meta">metadata</a> and <a href="../models/models">a prototype 
-        schema module for substitution models</a>. The data type definitions in these included
-      schema modules are then used to define element instances in the child substructures
-      of the &lt;nex:nexml&gt; root element.
+      It defines the complex type for the root &lt;<a href="#Nexml">nex:nexml</a>&gt; 
+      element and a simple type for the schema <a href="#Nexml1_0">"version" attribute</a> 
+      of the root element. In addition, this module includes the main schema modules for 
+      <a href="../taxa/taxa">OTUs</a>, <a href="../characters/characters">characters</a>, 
+      <a href="../trees/trees">trees</a> and <a href="../meta/meta">metadata</a>. The data 
+      type definitions in these included schema modules are then used to define element 
+      instances in the child substructures of the &lt;nex:nexml&gt; root element.
     </xs:documentation>
   </xs:annotation>
   
@@ -21,7 +20,7 @@
   <xs:include schemaLocation="characters/characters.xsd"/>
   <xs:include schemaLocation="trees/trees.xsd"/>
   <xs:include schemaLocation="meta/meta.xsd"/>
-  <xs:include schemaLocation="models/models.xsd"/>
+  <!--<xs:include schemaLocation="models/models.xsd"/>-->
   
   <xs:simpleType name="Nexml1_0">
     <xs:annotation>
@@ -55,7 +54,7 @@
                   <xs:field xpath="@id"/>
                 </xs:key>
               </xs:element>
-              <xs:element name="models" type="Models" minOccurs="0" maxOccurs="unbounded"/>
+              <!--<xs:element name="models" type="Models" minOccurs="0" maxOccurs="unbounded"/>-->
             </xs:choice>
           </xs:sequence>     
         </xs:sequence>
