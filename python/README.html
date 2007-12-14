@@ -11,7 +11,7 @@
     $Id$
 -->
 <p>
-    This subdirectory is part of the PhyloInfo phylogenetic data parsing library.
+    This subdirectory is part of the pynexml phylogenetic data parsing library.
 </p>
 <p>
     &copy; 2007 <a href="http://frogweb.org/People.aspx?PersonID=42">Jeet Sukumaran</a> 
@@ -35,10 +35,17 @@
     <a href="http://www.gnu.org/licenses/">http://www.gnu.org/licenses/</a>.
 </p>
 <p>
-    To install the pynexml library, run:
-    <br />
-    <code>$ python setup.py build</code>
+    To install the pynexml library, end-users can run:
     <br />
     <code>$ python setup.py install</code>
+    <br />
+    <br />
+    Developers, who are using the "cutting-edge" code via <code>svn</code> may
+    prefer to use the develop command.  This installs an egg-link to the 
+    path of the <code>nexml/python</code> directory in the appropriate 
+    site-packages directory in your python installation.  Thus, you will not 
+    have to reinstall after every change to the code:
+    <br />
+    <code>$ python setup.py develop</code>
     <br />
 </p>    

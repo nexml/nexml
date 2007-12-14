@@ -7,16 +7,16 @@ ez_setup.use_setuptools()
 
 from setuptools import setup, find_packages, Extension
 
-setup(name = "phyloinfo", 
+setup(name = "pynexml", 
       version = "0.01",
       packages = find_packages(),
       maintainer = "Jeet Sukumaran and Mark Holder", 
       maintainer_email = "jeetsukumaran@frogweb.org mtholder@gmail.com", 
       description = "Phylogenetic stuff", 
-      test_suite = "dendropy.tests",
-      package_data = {
-        "dendropy": ["tests/files/*", "tests/output/*", "*conf"],
-        },
+      #test_suite = "dendropy.tests",
+      #package_data = {
+      #  "dendropy": ["tests/files/*", "tests/output/*", "*conf"],
+      #  },
       classifiers = [
             "Development Status :: 2 - Pre-Alpha",
             "Environment :: Console",
