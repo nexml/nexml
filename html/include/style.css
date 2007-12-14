@@ -288,6 +288,17 @@ acronym {
 	border-bottom: 1px dotted black
 }
 
+hr {
+    border: 0;
+    color: silver;
+    background-color: silver;
+    height: 1px;
+}
+
+div.directoryIndex {
+    padding: 1em;
+}
+
 /* 
 	Original open source design by Andreas Viklund - http://andreasviklund.com 
 	Released through OSWD.org 
