@@ -297,6 +297,8 @@ hr {
 
 div.directoryIndex {
     padding: 1em;
+    font-size: 120% !important;
+//    font-weight: bold
 }
 
 /* 
