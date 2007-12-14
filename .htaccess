@@ -43,8 +43,9 @@ AddType application/x-httpd-imap map
     # XML related files
     AddIcon /nexml/html/include/page_white_code_red.png .xsd 
     AddDescription "XML schema file" .xsd
-    AddIcon /nexml/html/include/page_white_code.png .xml .html .htm .shtml
+    AddIcon /nexml/html/include/page_white_code.png .xml .html .htm .shtml .xsl
     AddDescription "XML instance document" .xml
+    AddDescription "XML style sheet" .xsl    
     AddDescription "HTML document" .html .htm .shtml
     
     # perl related
