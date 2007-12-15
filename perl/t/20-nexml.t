@@ -1,13 +1,18 @@
+BEGIN {
+    if ( not $ENV{'BIO_PHYLO_TEST_NEXML'} ) {
+        use Test::More 'skip_all' => 'env var BIO_PHYLO_TEST_NEXML not set';
+    }
+}
 use strict;
 use warnings;
 use lib '../lib';    # TODO delete me, eventually
 use Bio::Phylo::IO 'parse';
-use Test::More 'no_plan';
 use Bio::Phylo::Util::Logger;
 #Bio::Phylo::Util::Logger->VERBOSE(
 #	-level => 4,
 #	-class => 'Bio::Phylo::Parsers::Nexml'
 #);
+use Test::More 'no_plan';
 use XML::Twig;
 use Data::Dumper;
 
