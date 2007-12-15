@@ -1,138 +1,78 @@
-This folder contains a parser backend for Bio::Phylo::IO 
-(http://search.cpan.org/~rvosa/Bio-Phylo). This code was
-initially written by Jason Caravas and Rutger Vos during 
-the google summer of code '07 project on phylogenetic xml
-and is now maintained under the nexml initiative.
+Bio::Phylo - An object-oriented Perl module 
+for analyzing and manipulating phylogenetic trees. 
 
-The t subfolder contains test scripts for Bio::Phylo using 
-the Test::More test harness. The lib subfolder contains 
-parsers and unparsers for the Bio::Phylo::IO architecture.
+DESCRIPTION
 
-================================================================================
-Installation
-================================================================================
-In order to run:
+Phylogenetics is the branch of evolutionary biology
+that deals with reconstructing and analyzing the 
+tree of life. This distribution provides objects and
+methods to aid in handling and analyzing phylogenetic
+data.
 
-$ perl Makefile.PL && make test
+COMPATABILITY
+ 
+Bio::Phylo installs without problems on most popular,
+current platforms (Win32, OSX, RedHat linux, Solaris).
+For a list of automated test results visit:
 
-You will need to satisfy several dependencies. The simplest
-way to do this is to run 'install XML::Twig' from the cpan
-shell (or through ppm if you run ActiveState) and 
-'install Bio::Phylo'. Note that the ActiveState *.ppd for
-Bio::Phylo is too old. Fortunately, it doesn't require any
-compiled extensions so on Windows, too, it should work 
-without problems.
+http://testers.cpan.org/show/Bio-Phylo.html
 
-If all else fails, you will have to reproduce the file list
-below in some other sort of hackish way.
+INSTALLATION
 
-The file list below comprises the minimum required:
-	auto
-	auto/XML
-	auto/XML/Parser
-	auto/XML/Parser/.packlist
-	auto/XML/Parser/Expat
-	auto/XML/Parser/Expat/Expat.bs
-	auto/XML/Parser/Expat/Expat.bundle
-	auto/XML/Twig
-	auto/XML/Twig/.packlist
-	Bio
-	Bio/Phylo
-	Bio/Phylo/Adaptor
-	Bio/Phylo/Adaptor/Bioperl
-	Bio/Phylo/Adaptor/Bioperl/Datum.pm
-	Bio/Phylo/Adaptor/Bioperl/Matrix.pm
-	Bio/Phylo/Adaptor/Bioperl/Node.pm
-	Bio/Phylo/Adaptor/Bioperl/Tree.pm
-	Bio/Phylo/Adaptor.pm
-	Bio/Phylo/Forest
-	Bio/Phylo/Forest/Node.pm
-	Bio/Phylo/Forest/Tree.pm
-	Bio/Phylo/Forest.pm
-	Bio/Phylo/Generator.pm
-	Bio/Phylo/IO.pm
-	Bio/Phylo/Listable.pm
-	Bio/Phylo/Manual.pod
-	Bio/Phylo/Matrices
-	Bio/Phylo/Matrices/Datatype
-	Bio/Phylo/Matrices/Datatype/Continuous.pm
-	Bio/Phylo/Matrices/Datatype/Custom.pm
-	Bio/Phylo/Matrices/Datatype/Dna.pm
-	Bio/Phylo/Matrices/Datatype/Mixed.pm
-	Bio/Phylo/Matrices/Datatype/Protein.pm
-	Bio/Phylo/Matrices/Datatype/Restriction.pm
-	Bio/Phylo/Matrices/Datatype/Rna.pm
-	Bio/Phylo/Matrices/Datatype/Standard.pm
-	Bio/Phylo/Matrices/Datatype.pm
-	Bio/Phylo/Matrices/Datum.pm
-	Bio/Phylo/Matrices/Matrix.pm
-	Bio/Phylo/Matrices/TypeSafeData.pm
-	Bio/Phylo/Matrices.pm
-	Bio/Phylo/Mediators
-	Bio/Phylo/Mediators/NodeMediator.pm
-	Bio/Phylo/Mediators/TaxaMediator.pm
-	Bio/Phylo/Parsers
-	Bio/Phylo/Parsers/Newick.pm
-	Bio/Phylo/Parsers/Nexus.pm
-	Bio/Phylo/Parsers/Table.pm
-	Bio/Phylo/Parsers/Taxlist.pm
-	Bio/Phylo/Taxa
-	Bio/Phylo/Taxa/TaxaLinker.pm
-	Bio/Phylo/Taxa/Taxon.pm
-	Bio/Phylo/Taxa/TaxonLinker.pm
-	Bio/Phylo/Taxa.pm
-	Bio/Phylo/Treedrawer
-	Bio/Phylo/Treedrawer/Svg.pm
-	Bio/Phylo/Treedrawer.pm
-	Bio/Phylo/Unparsers
-	Bio/Phylo/Unparsers/Mrp.pm
-	Bio/Phylo/Unparsers/Newick.pm
-	Bio/Phylo/Unparsers/Nexus.pm
-	Bio/Phylo/Unparsers/Pagel.pm
-	Bio/Phylo/Util
-	Bio/Phylo/Util/CONSTANT.pm
-	Bio/Phylo/Util/Exceptions.pm
-	Bio/Phylo/Util/IDPool.pm
-	Bio/Phylo/Util/Logger.pm
-	Bio/Phylo/Util/XMLWritable.pm
-	Bio/Phylo.pm
-	ext
-	ext/lib
-	ext/lib/libexpat.1.5.2.dylib
-	ext/lib/libexpat.1.dylib
-	ext/lib/libexpat.dylib
-	ext/lib/libexpat.la
-	XML
-	XML/Parser
-	XML/Parser/Encodings
-	XML/Parser/Encodings/big5.enc
-	XML/Parser/Encodings/euc-kr.enc
-	XML/Parser/Encodings/iso-8859-2.enc
-	XML/Parser/Encodings/iso-8859-3.enc
-	XML/Parser/Encodings/iso-8859-4.enc
-	XML/Parser/Encodings/iso-8859-5.enc
-	XML/Parser/Encodings/iso-8859-7.enc
-	XML/Parser/Encodings/iso-8859-8.enc
-	XML/Parser/Encodings/iso-8859-9.enc
-	XML/Parser/Encodings/Japanese_Encodings.msg
-	XML/Parser/Encodings/README
-	XML/Parser/Encodings/windows-1250.enc
-	XML/Parser/Encodings/windows-1252.enc
-	XML/Parser/Encodings/x-euc-jp-jisx0221.enc
-	XML/Parser/Encodings/x-euc-jp-unicode.enc
-	XML/Parser/Encodings/x-sjis-cp932.enc
-	XML/Parser/Encodings/x-sjis-jdk117.enc
-	XML/Parser/Encodings/x-sjis-jisx0221.enc
-	XML/Parser/Encodings/x-sjis-unicode.enc
-	XML/Parser/Expat.pm
-	XML/Parser/LWPExternEnt.pl
-	XML/Parser/Style
-	XML/Parser/Style/Debug.pm
-	XML/Parser/Style/Objects.pm
-	XML/Parser/Style/Stream.pm
-	XML/Parser/Style/Subs.pm
-	XML/Parser/Style/Tree.pm
-	XML/Parser.pm
-	XML/Twig
-	XML/Twig/XPath.pm
-	XML/Twig.pm
+Bio::Phylo has the following required dependencies:
+	Scalar::Util (core)
+	Test::More (core)
+	IO::String (non-core, but installs everywhere)
+
+And the following optional dependencies:
+	SVG (to draw trees as SVG vector drawings)
+	Math::Random (to simulate trees)
+	XML::Twig (to parse nexml)
+
+These modules are all available from
+http://www.cpan.org, and should install without
+problems on most platforms.
+ 
+To install the Bio::Phylo distribution, run the
+following commands: 
+
+perl Makefile.PL
+make
+make test
+make install
+ 
+(For platform specific information on what 'make'
+command to use, check "perl -V:make". On Win32 this
+usually returns "make='nmake';", which means you'll
+need the 'nmake' utility:
+http://support.microsoft.com/default.aspx?scid=kb;en-us;Q132084)
+
+AUTHOR
+
+Rutger Vos, rvos@interchange.ubc.ca
+
+BUGS
+
+Please report any bugs or feature requests to 
+bug-phylo@rt.cpan.org, or through the web interface 
+at http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Phylo. 
+I will be notified, and then you'll automatically 
+be notified of progress on your bug as I make changes. 
+ 
+ACKNOWLEDGEMENTS
+
+The author would like to thank Jason Stajich for many 
+ideas borrowed from BioPerl (http://www.bioperl.org), 
+and Arne Mooers from the FAB* lab (http://www.sfu.ca/~fabstar) 
+for comments and requests. 
+
+SEE ALSO
+
+Read the manual: perldoc Bio::Phylo::Manual
+
+COPYRIGHT & LICENSE
+
+Copyright 2005-2007 Rutger Vos, All Rights Reserved. 
+This program is free software; you can redistribute 
+it and/or modify it under the same terms as Perl itself.
+

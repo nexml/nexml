@@ -2,6 +2,7 @@
 use strict;
 use warnings;
 use ExtUtils::MakeMaker;
+use File::Find;
 
 check_prereq( 'SVG', 'Math::Random', 'XML::Twig' );
 
