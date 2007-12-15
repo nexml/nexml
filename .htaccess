@@ -20,7 +20,7 @@ AddType application/x-httpd-imap map
     IndexOptions FancyIndexing IconHeight=16 IconWidth=16  NameWidth=20 DescriptionWidth=30 SuppressHTMLPreamble
 
     # plain text files
-    AddIcon /nexml/html/include/page_white_text.png LICENSE Doxyfile .txt .diz .nfo .faq .readme .me COPYING
+    AddIcon /nexml/html/include/page_white_text.png LICENSE Doxyfile .txt .diz .nfo .faq .readme .me COPYING .skip
     AddDescription "Software license" LICENSE COPYING
     AddDescription "Documentation generator" Doxyfile
     AddDescription "Plain text file" .txt    
@@ -55,6 +55,7 @@ AddType application/x-httpd-imap map
     AddDescription "Perl module" .pm
     AddIcon /nexml/html/include/page_white_perltest.png .t
     AddDescription "Perl test" .t
+    AddDescription "Exclude patterns" .skip
     
     # java related
     AddIcon /nexml/html/include/page_white_cup.png .java
