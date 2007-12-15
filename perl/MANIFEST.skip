@@ -24,3 +24,4 @@ Doxyfile
 lib\/Bio\/Tools\/Run\/MrBayes\.pm
 lib\/xs*
 lib\/util*
+README.html
