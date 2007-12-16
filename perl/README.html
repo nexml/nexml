@@ -1,11 +1,21 @@
 <p>
-This subdirectory contains the nexml parser code for Bio::Phylo.
-Much of this code has been written by Jason Caravas during his
-Google Summer of Code project, and subsequently tweaked by 
-Rutger Vos. To build this, you will need the Bio::Phylo release
-from CPAN (which has two optional prerequisites: SVG.pm for tree
-drawing and Math::Random for simulations) and XML::Twig (which
-requires XML::Parser, which is built on top of expat).
+This subdirectory contains a release candidate for Bio::Phylo
+with nexml parser support. Much of the nexml code has been written 
+by Jason Caravas during his Google Summer of Code project, and 
+subsequently tweaked by Rutger Vos. 
+</p>
+<p>
+To build this, you may want to get three optional prerequisites
+from CPAN first:
+</p>
+<ul>
+    <li>SVG.pm</li>
+    <li>IO::String</li>
+    <li>Math::Random</li>
+</ul>
+<p>
+And for the nexml extension you <em>must</em> install XML::Twig
+first.
 </p>
 <p>
 The code in this subdirectory is released under the standard
