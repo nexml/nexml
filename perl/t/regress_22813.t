@@ -1,7 +1,15 @@
-use Bio::Phylo::Treedrawer;
+use Test::More;
+BEGIN {
+    eval { require SVG };
+    if ( $@ ) {
+         plan 'skip_all' => 'SVG not installed';
+    }
+    else {
+        plan 'tests' => 1;
+    }
+}
 use Bio::Phylo::IO;
-use Test::More tests => 1;
-
+require Bio::Phylo::Treedrawer;
 my $treedrawer = Bio::Phylo::Treedrawer->new(
     -width  => 400,
     -height => 600,
