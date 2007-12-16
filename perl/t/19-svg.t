@@ -1,11 +1,19 @@
 # $Id: 19-svg.t 4444 2007-08-21 13:04:36Z rvosa $
+use Test::More;
+BEGIN {
+    eval { require SVG };
+    if ( $@ ) {
+         plan 'skip_all' => 'SVG not installed';
+    }
+    else {
+        plan 'tests' => 13;
+    }
+}
 use strict;
-#use warnings;
 use lib 'lib/';
-use Test::More tests => 13;
 use Bio::Phylo::IO;
-use Bio::Phylo::Treedrawer;
 
+require Bio::Phylo::Treedrawer;
 my $tree = Bio::Phylo::IO->parse( -format => 'newick', -string => '((A:1,B:1)n1:1,C:1)n2:0;' )->first;
 my $treedrawer = Bio::Phylo::Treedrawer->new;
 

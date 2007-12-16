@@ -1,19 +1,19 @@
 # $Id: 04-generator.t 4444 2007-08-21 13:04:36Z rvosa $
+use Test::More;
 BEGIN {
     eval { require Math::Random };
-    if ( defined $@ ) {
-        use Test::More 'skip_all' => 'Math::Random not installed: ' . $@;
+    if ( $@ ) {
+         plan 'skip_all' => 'Math::Random not installed';
+    }
+    else {
+        plan 'tests' => 2;
     }
 }
 use strict;
-#use warnings;
-use Test::More tests => 2;
 use Bio::Phylo;
-use Bio::Phylo::Generator;
+require Bio::Phylo::Generator;
 
 ok( my $gen = new Bio::Phylo::Generator, '1 init' );
-
-#Bio::Phylo::Generator->VERBOSE( -level => 0 );
 
 ok( $gen->gen_rand_pure_birth(
     -model => 'yule',

@@ -1,6 +1,15 @@
-use Test::More tests => 1;
+use Test::More;
+BEGIN {
+    eval { require SVG };
+    if ( $@ ) {
+         plan 'skip_all' => 'SVG not installed';
+    }
+    else {
+        plan 'tests' => 1;
+    }
+}
 use Bio::Phylo::IO 'parse';
-use Bio::Phylo::Treedrawer;
+require Bio::Phylo::Treedrawer;
 
  my $string = '((A:1,B:2)n1:3,C:4)n2:0;';
  my $tree = parse( -format => 'newick', -string => $string )->first;
