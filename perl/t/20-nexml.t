@@ -1,25 +1,23 @@
+use Test::More;
 BEGIN {
     if ( not $ENV{'BIO_PHYLO_TEST_NEXML'} ) {
-        use Test::More 'skip_all' => 'env var BIO_PHYLO_TEST_NEXML not set';
+        plan 'skip_all' => 'env var BIO_PHYLO_TEST_NEXML not set';
+    }
+    else {
+    	Test::More->import('no_plan');
     }
 }
 use strict;
 use warnings;
-use lib '../lib';    # TODO delete me, eventually
 use Bio::Phylo::IO 'parse';
 use Bio::Phylo::Util::Logger;
-#Bio::Phylo::Util::Logger->VERBOSE(
-#	-level => 4,
-#	-class => 'Bio::Phylo::Parsers::Nexml'
-#);
-use Test::More 'no_plan';
 use XML::Twig;
 use Data::Dumper;
 
-my $XML_PATH = '../examples';    # TODO fixme
+my $XML_PATH = $ENV{'BIO_PHYLO_NEXML_EXAMPLES'} || '../examples'; # TODO fixme
 
 # here we just parse a file with only taxon elements
-my $taxa = parse( -format => 'nexml', -file => "$XML_PATH/taxa.xml" )->[0];
+my $taxa = parse( '-format' => 'nexml', '-file' => "$XML_PATH/taxa.xml" )->[0];
 
 # check the ids for the children
 my @ids      = qw(t1 t2 t3 t4 t5);
@@ -29,7 +27,7 @@ for my $i ( 0 .. $#children ) {
 }
 
 # here we parse a file with taxon elements and a trees element
-my $blocks    = parse( -format => 'nexml', -file => "$XML_PATH/trees.xml" );
+my $blocks    = parse( '-format' => 'nexml', '-file' => "$XML_PATH/trees.xml" );
 my $forest    = $blocks->[1];
 my %internals = map { $_ => 1 } qw(n1 n3 n4 n7);
 my %terminals = map { $_ => 1 } qw(n2 n5 n6 n8 n9);

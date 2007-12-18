@@ -14,6 +14,40 @@ use Data::Dumper;
 use vars qw(@ISA $VERSION);
 @ISA = qw(Bio::Phylo::IO);
 
+=head1 NAME
+
+Bio::Phylo::Parsers::Nexml - Parses nexml data. No serviceable parts inside.
+
+=head1 DESCRIPTION
+
+This module parses nexml data. It is called by the L<Bio::Phylo::IO> facade,
+don't call it directly.
+
+=head1 SEE ALSO
+
+=over
+
+=item L<Bio::Phylo::IO>
+
+The newick parser is called by the L<Bio::Phylo::IO> object.
+Look there to learn how to parse nexml (or any other data Bio::Phylo supports).
+
+=item L<Bio::Phylo::Manual>
+
+Also see the manual: L<Bio::Phylo::Manual> and L<http://rutgervos.blogspot.com>.
+
+=item L<http://www.nexml.org>
+
+For more information about the nexml data standard, visit L<http://www.nexml.org>
+
+=back
+
+=head1 REVISION
+
+ $Id$
+
+=cut
+
 # We re-use the core Bio::Phylo version number.
 $VERSION=$Bio::Phylo::VERSION;
 
@@ -214,7 +248,7 @@ sub _process_chars {
 	
 	# create character definitions, if any
 	my ( $def_hash, $def_array ) = ( {}, [] );
-	if ( my $definitions_elt = $matrix_elt->first_child('definitions') ) {
+	if ( my $definitions_elt = $characters_elt->first_child('format') ) {
 		( $def_hash, $def_array ) = $self->_process_definitions( $definitions_elt );
 	}
 	
@@ -336,28 +370,28 @@ sub _process_row {
 
 # here we create a hash keyed on column ids => state ids => state symbols
 sub _process_definitions {
-	my ( $self, $definitions_elt ) = @_;
-	my ( $def_hash, $def_array ) = ( {}, [] );
+	my ( $self, $format_elt ) = @_;
+	my ( $states_hash, $states_array ) = ( {}, [] );
 	
 	# here we iterate over character definitions, i.e. each
 	# $def_elt describes a matrix column
-	for my $def_elt ( $definitions_elt->children('def') ) {
-		my $def_id = $def_elt->att('id');
-		$def_hash->{$def_id} = {};
-		push @$def_array, $def_id;
+	for my $states_elt ( $format_elt->children('states') ) {
+		my $states_id = $states_elt->att('id');
+		$states_hash->{$states_id} = {};
+		push @$states_array, $states_id;
 		
 		# here we iterate of state definitions, i.e. each
 		# $val_elt describes what states that column may occupy
-		for my $val_elt ( $def_elt->children('val') ) {
-			my $val_id = $val_elt->att('id');
-			my $val_sym = $val_elt->att('sym');
+		for my $state_elt ( $states_elt->children('state') ) {
+			my $state_id  = $state_elt->att('id');
+			my $state_sym = $state_elt->att('symbol');
 			
 			# for continuous data, $val_sym is undefined
-			$def_hash->{$def_id}->{$val_id} = $val_sym;
+			$states_hash->{$states_id}->{$state_id} = $state_sym;
 		}
 	}
 	
-	return ( $def_hash, $def_array );
+	return ( $states_hash, $states_array );
 }
 
 sub _process_forest {
