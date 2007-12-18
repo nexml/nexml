@@ -91,6 +91,11 @@ class NewickTreeWriter():
         self.support_as_percentages = False
         self.support_decimals = None
 
+    def store_trees(self, tree_block, dest):
+        """
+        Writes a block of trees to specified destination.
+        """
+
     ### treeio.TreeWriter interface  ###
 
     def write_tree_document(self, trees, dest):
