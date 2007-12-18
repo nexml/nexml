@@ -43,7 +43,6 @@
         </xs:annotation>
         <xs:complexContent>
             <xs:extension base="Base">
-                <xs:sequence minOccurs="0" maxOccurs="0"/>
                 <xs:attribute name="state" use="required" type="xs:NCName"/>
                 <xs:attribute name="mstaxa" use="required" type="Mstaxa"/>
             </xs:extension>
