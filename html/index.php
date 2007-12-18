@@ -475,7 +475,7 @@
         
         <a class="sidelink" href="/nexml/perl/">Perl</a> 
         <span class="hide">|</span>
-        
+        <br />
         <h2 class="sidelink menuheader">
           <a id="sitemenu" name="sitemenu"></a>Goings on:
         </h2>
