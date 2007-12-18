@@ -21,11 +21,11 @@
             </xs:documentation>
         </xs:annotation>
         <xs:complexContent>
-            <xs:restriction base="TaxaLinked">
+            <xs:extension base="TaxaLinked">
                 <xs:sequence minOccurs="1" maxOccurs="1">
                     <xs:element name="tree" type="AbstractTree" minOccurs="1" maxOccurs="unbounded"/>
                 </xs:sequence>
-            </xs:restriction>
+            </xs:extension>
         </xs:complexContent>
     </xs:complexType>    
 </xs:schema>

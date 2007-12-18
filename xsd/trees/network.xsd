@@ -29,7 +29,7 @@
             <xs:extension base="AbstractNode"/>
         </xs:complexContent>
     </xs:complexType>
-    
+    <!--
     <xs:complexType name="NetworkEdge" abstract="false">
         <xs:annotation>
             <xs:documentation>
@@ -40,7 +40,7 @@
             <xs:extension base="AbstractEdge"/>            
         </xs:complexContent>
     </xs:complexType> 
-    
+    -->
     <xs:complexType name="NetworkFloatEdge" abstract="false">
         <xs:annotation>
             <xs:documentation>
@@ -48,9 +48,12 @@
             </xs:documentation>
         </xs:annotation>
         <xs:complexContent>
-            <xs:extension base="NetworkEdge">
+            <xs:restriction base="AbstractEdge">
+                <xs:sequence minOccurs="1" maxOccurs="1">
+                    <xs:element name="dict" type="Dict" minOccurs="0" maxOccurs="unbounded"/>
+                </xs:sequence>                
                 <xs:attribute name="length" type="xs:float"/>
-            </xs:extension>            
+            </xs:restriction>            
         </xs:complexContent>
     </xs:complexType>     
 
@@ -61,9 +64,12 @@
             </xs:documentation>
         </xs:annotation>
         <xs:complexContent>
-            <xs:extension base="NetworkEdge">
+            <xs:restriction base="AbstractEdge">
+                <xs:sequence minOccurs="1" maxOccurs="1">
+                    <xs:element name="dict" type="Dict" minOccurs="0" maxOccurs="unbounded"/>
+                </xs:sequence>                   
                 <xs:attribute name="length" type="xs:integer"/>
-            </xs:extension>            
+            </xs:restriction>            
         </xs:complexContent>
     </xs:complexType>         
             
@@ -75,9 +81,9 @@
         </xs:annotation>
         <xs:complexContent>
             <xs:restriction base="AbstractTree">
-                <xs:sequence>
-                    <xs:element minOccurs="0" maxOccurs="unbounded" name="node" type="NetworkNode"/>
-                    <xs:element minOccurs="0" maxOccurs="unbounded" name="edge" type="NetworkFloatEdge"/>
+                <xs:sequence minOccurs="1" maxOccurs="1">
+                    <xs:element minOccurs="1" maxOccurs="unbounded" name="node" type="NetworkNode"/>
+                    <xs:element minOccurs="1" maxOccurs="unbounded" name="edge" type="NetworkFloatEdge"/>
                 </xs:sequence>
             </xs:restriction>
         </xs:complexContent>
@@ -91,9 +97,9 @@
         </xs:annotation>
         <xs:complexContent>
             <xs:restriction base="AbstractTree">
-                <xs:sequence>
-                    <xs:element minOccurs="0" maxOccurs="unbounded" name="node" type="NetworkNode"/>
-                    <xs:element minOccurs="0" maxOccurs="unbounded" name="edge" type="NetworkIntEdge"/>
+                <xs:sequence minOccurs="1" maxOccurs="1">
+                    <xs:element minOccurs="1" maxOccurs="unbounded" name="node" type="NetworkNode"/>
+                    <xs:element minOccurs="1" maxOccurs="unbounded" name="edge" type="NetworkIntEdge"/>
                 </xs:sequence>
             </xs:restriction>
         </xs:complexContent>

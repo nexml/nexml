@@ -29,7 +29,10 @@
             </xs:documentation>
         </xs:annotation>
         <xs:complexContent>
-            <xs:extension base="OptionalTaxonLinked">
+            <xs:extension base="OptionalTaxonLinked"><!--
+                <xs:sequence minOccurs="1" maxOccurs="1">
+                    <xs:element name="dict" type="Dict" minOccurs="0" maxOccurs="unbounded"/>
+                </xs:sequence>-->
                 <xs:attribute name="root" type="xs:boolean" default="false" use="optional"/>
             </xs:extension>            
         </xs:complexContent>        
@@ -44,9 +47,13 @@
             </xs:documentation>
         </xs:annotation>
         <xs:complexContent>
-            <xs:extension base="IDTagged">
+            <xs:extension base="IDTagged"><!--
+                <xs:sequence minOccurs="1" maxOccurs="1">
+                    <xs:element name="dict" type="Dict" minOccurs="0" maxOccurs="unbounded"/>
+                </xs:sequence> -->               
                 <xs:attribute name="source" type="xs:NCName" use="required"/>
-                <xs:attribute name="target" type="xs:NCName" use="required"/>                
+                <xs:attribute name="target" type="xs:NCName" use="required"/>   
+                <xs:attribute name="length" type="xs:anySimpleType" use="optional"/>             
             </xs:extension>            
         </xs:complexContent>         
     </xs:complexType>
@@ -62,8 +69,12 @@
             </xs:documentation>
         </xs:annotation>
         <xs:complexContent>
-            <xs:extension base="IDTagged">
-                <xs:attribute name="target" type="xs:NCName" use="required"/>                
+            <xs:extension base="IDTagged"><!--
+                <xs:sequence minOccurs="1" maxOccurs="1">
+                    <xs:element name="dict" type="Dict" minOccurs="0" maxOccurs="unbounded"/>
+                </xs:sequence>  -->              
+                <xs:attribute name="target" type="xs:NCName" use="required"/>  
+                <xs:attribute name="length" type="xs:anySimpleType" use="optional"/>              
             </xs:extension>            
         </xs:complexContent>         
     </xs:complexType>    
@@ -79,6 +90,7 @@
             <xs:extension base="IDTagged">
                 <xs:sequence minOccurs="1" maxOccurs="1">
                     <xs:element name="node" type="AbstractNode" minOccurs="1" maxOccurs="unbounded"/>
+                    <xs:element name="rootedge" type="AbstractRootEdge" minOccurs="0" maxOccurs="1"/>
                     <xs:element name="edge" type="AbstractEdge" minOccurs="1" maxOccurs="unbounded"/>
                 </xs:sequence>
             </xs:extension>
