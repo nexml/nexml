@@ -462,7 +462,7 @@
         </h2>
           <a class="quicklink" href="/nexml/html/doc/schema-1/">Schema 1.0</a>
           <a class="quicklink" href="/nexml/examples">Example files</a>  
-		  <a class="quicklink" href="/downloads">Downloads</a>        
+		  <a class="quicklink" href="/nexml/downloads">Downloads</a>        
         <br />
         <h2 class="sidelink menuheader">
           <a id="sitemenu" name="sitemenu"></a>Bindings:
