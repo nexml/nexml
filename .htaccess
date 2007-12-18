@@ -97,6 +97,7 @@ AddType application/x-httpd-imap map
     # python related
     AddIcon /nexml/html/include/page_white_python.png .py
     AddDescription "Python script" .py
+    AddDescription "Python egg" .egg
 
     # c/c++ related
     AddIcon /nexml/html/include/page_white_c.png .c
