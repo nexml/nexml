@@ -461,25 +461,37 @@
           <a id="quicklinks" name="quicklinks"></a>Quick links:
         </h2>
           <a class="quicklink" href="/nexml/html/doc/schema-1/">Schema 1.0</a>
-          <a class="quicklink" href="/nexml/examples">Example files</a>
+          <a class="quicklink" href="/nexml/examples">Example files</a>          
         <br />
         <h2 class="sidelink menuheader">
-          <a id="sitemenu" name="sitemenu"></a>Site menu:
+          <a id="sitemenu" name="sitemenu"></a>Bindings:
         </h2>
-        <a class="sidelink" href="/">Home</a>
-        <span class="hide">|</span> 
         
-        <a class="sidelink" href="/nexml/html/index/wiki">Wiki</a> 
+        <a class="sidelink" href="/nexml/java/">Java</a> 
         <span class="hide">|</span>
         
-        <a class="sidelink" href="/nexml/html/index/mail">Mailing list</a>
+        <a class="sidelink" href="/nexml/python/">Python</a>
         <span class="hide">|</span> 
         
-        <a class="sidelink" href="/nexml/html/index/svn">SVN repository</a> 
+        <a class="sidelink" href="/nexml/perl/">Perl</a> 
+        <span class="hide">|</span>
+        
+        <h2 class="sidelink menuheader">
+          <a id="sitemenu" name="sitemenu"></a>Goings on:
+        </h2>
+        
+        <a class="sidelink" href="/nexml/html/index/wiki/">Wiki</a> 
+        <span class="hide">|</span>
+        
+        <a class="sidelink" href="/nexml/html/index/mail/">Mailing list</a>
+        <span class="hide">|</span> 
+        
+        <a class="sidelink" href="/nexml/html/index/svn/">SVN repository</a> 
         <span class="hide">|</span>
 
-        <a class="sidelink" href="/nexml/html/index/tracker">Issue tracker</a>
+        <a class="sidelink" href="/nexml/html/index/tracker/">Issue tracker</a>
         <span class="hide">|</span>
+           
         
         <a class="hide" href="#top" accesskey="1">Top of page</a>
         
