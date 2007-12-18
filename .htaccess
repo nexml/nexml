@@ -54,7 +54,7 @@ AddType application/x-httpd-imap map
     AddIcon /nexml/html/include/page_white_perlmod.png .pm
     AddDescription "Perl module" .pm
     AddIcon /nexml/html/include/page_white_perltest.png .t
-    AddDescription "Perl test" .t
+    AddDescription "Perl test" .t 
     AddDescription "Exclude patterns" .skip
     
     # java related
