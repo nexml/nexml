@@ -54,7 +54,6 @@ AddType application/x-httpd-imap map
     AddIcon /nexml/html/include/page_white_perlmod.png .pm
     AddDescription "Perl module" .pm
     AddIcon /nexml/html/include/page_white_perltest.png .t
-    AddDescription "Perl test" .t 
     AddDescription "Exclude patterns" .skip
     
     # java related
@@ -76,12 +75,12 @@ AddType application/x-httpd-imap map
     
     # archives
     AddIcon /nexml/html/include/compress.png .bz .bz2 .gz .ace .arj .tar.gz .tgz .rar .Z .z .zip .sit .sitx .tar .hqx
-    AddDescription "GZIP compressed tar archive" .tgz .tar.gz
+    AddDescription "GZIP tar archive" .tgz .tar.gz
     AddDescription "Tar (tape) archive" .tar 
     AddDescription "GZIP compressed document" .Z .z .gz .zip  
     AddDescription "ZIP compressed document" .zip     
-    AddDescription "Highly compressed rar archive" .rar  
-    AddDescription "Highly compressed bzip archive" .bz2 .bz   
+    AddDescription "RAR archive" .rar  
+    AddDescription "BZIP2 archive" .bz2 .bz   
     AddDescription "Stuffit archive" .sit
     AddDescription "StuffitX archive" .sitx
     AddDescription "Ace compressed archive" .ace
@@ -119,6 +118,10 @@ AddType application/x-httpd-imap map
     AddDescription "LaTeX file" .tex
     AddDescription "Core dump" core
     AddDescription "Object file" .o
+
+    # moved down on purpose: seems to override longer *.t* descriptions
+    # if it precedes them.
+    AddDescription "Perl test" .t
 
     AddIconByEncoding (CMP,/nexml/html/include/compress.png) x-compress x-gzip
     AddIconByType (TXT,/nexml/html/include/page_white_text.png) text/**/r />    AddIconByType (IMG,/nexml/html/include/picture.png) image/**/r />    AddIconByType (SND,/icons/small/sound2.gif) audio/**/r />    AddIconByType (VID,/icons/small/movie.gif) video/**/r />
