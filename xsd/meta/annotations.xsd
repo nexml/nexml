@@ -3,7 +3,8 @@
     xmlns:xs="http://www.w3.org/2001/XMLSchema" 
     targetNamespace="http://www.nexml.org/1.0"
     xmlns:xml="http://www.w3.org/XML/1998/namespace" 
-    xmlns="http://www.nexml.org/1.0">
+    xmlns="http://www.nexml.org/1.0"
+    xmlns:xlink="http://www.w3.org/1999/xlink">
     <xs:annotation>
         <xs:documentation>
             This module defines annotations that can be attached to
@@ -16,10 +17,10 @@
             types, so that a value can be a list of integers, for example.
         </xs:documentation>
     </xs:annotation>
-    <!--
-    <xs:import namespace="http://www.w3.org/XML/1998/namespace" schemaLocation="http://www.w3.org/2001/xml.xsd"/>
-    -->
-    <xs:include schemaLocation="../abstract.xsd"/>
+    
+    <xs:import namespace="http://www.w3.org/XML/1998/namespace" schemaLocation="../external/xml.xsd"/>
+    <xs:import namespace="http://www.w3.org/1999/xlink" schemaLocation="../external/xlink.xsd"/>
+
     <!-- the following types define attachments for objects -->
     
     <!-- first define complex dict values -->
@@ -41,14 +42,37 @@
     <xs:simpleType name="UrlVector">
         <xs:list itemType="xs:anyURI"/>
     </xs:simpleType>
-    <xs:simpleType name="IdVector">
-        <xs:list itemType="xs:ID"/>
+    <xs:simpleType name="IDVector">
+        <xs:list itemType="xs:NCName"/>                    
     </xs:simpleType>
     <xs:simpleType name="Base64Vector">
         <xs:list itemType="xs:base64Binary"/>
     </xs:simpleType>
     
     <!-- now the complex structures -->
+    
+    <xs:complexType name="Base" abstract="true">
+        <xs:annotation>
+            <xs:documentation>
+                The base type for all complexType definitions in the nexml schema.
+                This type allows a number of special attributes:
+                <ul>
+                    <li>xml:lang - for languages codes</li>
+                    <li>xml:base - see <a href="http://www.w3.org/TR/xmlbase/">http://www.w3.org/TR/xmlbase/</a></li>
+                    <li>xml:id - see <a href="http://www.w3.org/TR/xml-id/">http://www.w3.org/TR/xml-id/</a></li>
+                    <li>xml:space - for whitespace handling</li>
+                    <li>xlink:href - for links</li>
+                    <li>class - for class membership</li>
+                </ul>
+                Also see http://www.w3.org/2001/xml.xsd for more information on the
+                xml and xlink attributes.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence/>
+        <xs:attributeGroup ref="xml:specialAttrs"/>
+        <xs:attribute ref="xlink:href" use="optional"/>
+        <xs:attribute name="class" type="IDVector" use="optional"/>
+    </xs:complexType>
     
     <!-- dict data structure -->
     <xs:complexType name="Dict">   
@@ -72,7 +96,7 @@
                         <xs:element name="float" type="xs:float"/>
                         <xs:element name="floatvector" type="FloatVector"/>
                         <xs:element name="id" type="xs:ID"/>
-                        <xs:element name="idvector" type="IdVector"/>
+                        <xs:element name="idvector" type="IDVector"/>
                         <xs:element name="integer" type="xs:integer"/>
                         <xs:element name="integervector" type="IntegerVector"/>
                         <xs:element name="string" type="xs:string"/>                
