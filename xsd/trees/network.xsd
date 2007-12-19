@@ -26,7 +26,11 @@
             </xs:documentation>
         </xs:annotation>
         <xs:complexContent>
-            <xs:extension base="AbstractNode"/>
+            <xs:restriction base="AbstractNode">
+                <xs:sequence minOccurs="1" maxOccurs="1">
+                    <xs:element name="dict" type="Dict" minOccurs="0" maxOccurs="unbounded"/>
+                </xs:sequence>
+            </xs:restriction>
         </xs:complexContent>
     </xs:complexType>
     <!--
