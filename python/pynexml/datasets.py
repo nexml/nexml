@@ -56,29 +56,12 @@ class Dataset():
         else:
             self.tree_blocks = tree_blocks
 
-    def append_tree_block(self, tree_block, normalize_taxa=False):
-        """
-        Adds a tree block to the list of the current tree
-        blocks. Checks to see if the taxa_block associated with the
-        tree_block is already referenced in self's list of
-        taxa_blocks (based on elem_id), and adds it the list if not.
-        """
-        if normalize_taxa:
-            self.normalize_taxa_linked(tree_block)
-        self.tree_blocks.append(tree_block)
+        self.taxa_block_factory = taxa.TaxaBlock
+        self.char_block_factory = characters.CharBlock
+        self.tree_block_factory = trees.TreeBlock
+        self.tree_factory = trees.Tree
 
-    def append_char_block(self, char_block, normalize_taxa=False):
-        """
-        Adds a tree block to the list of the current tree
-        blocks. Checks to see if the taxa_block associated with the
-        char_block is already referenced in self's list of
-        taxa_blocks (based on elem_id), and adds it the list if not.
-        """
-        if normalize_taxa:
-            self.normalize_taxa_linked(char_block)
-        self.char_blocks.append(char_block)
-        
-    def normalize_taxa_blocks(self):
+    def normalize_taxa_blockss(self):
         """
         Builds up list of taxon blocks by collecting taxon blocks
         referenced in self's char_blocks and tree_blocks.
@@ -116,34 +99,83 @@ class Dataset():
                 return taxa_block
         return None
 
-    def new_taxa_block(self, elem_id=None, label=None):
+    def new_taxa_block(self, elem_id=None, label=None, taxa_block=None):
         """
-        Adds (and returns) new taxa block object.
+        Adds (and returns) new taxa block object, creating one using
+        the default factory if not given.
         """
-        taxa_block = taxa.TaxaBlock(elem_id=elem_id, label=label)
+        taxa_block = self.taxa_block_factory(elem_id=elem_id, label=label)
         self.taxa_blocks.append(taxa_block)
         return taxa_block
 
-    def new_tree_block(self, elem_id=None, label=None, taxa_block=None):
+    def new_taxa_linked_block(self,
+                              elem_id=None,
+                              label=None,
+                              taxa_block=None,
+                              linked_block=None,
+                              linked_block_factory=None,
+                              normalize_taxa_blocks=True):
         """
-        Adds (and returns) new tree block object.
+        Adds (and returns) a tree block object, creating one using the
+        default factory if not given.
         """
-        if taxa_block is None:
-            taxa_block = self.new_taxa_block()
-        tree_block = trees.TreeBlock(elem_id=elem_id, label=label, taxa_block=taxa_block)
+        if linked_block is None:
+            if linked_block_factory is not None:
+                linked_block = linked_block_factory(elem_id=elem_id, label=label)
+                if taxa_block is not None:
+                    linked_block.taxa_block = taxa_block
+                else:
+                    self.taxa_blocks.append(linked_block.taxa_block)
+            else:
+                raise Exception("Neither object nor method to create object given.")
+        else:
+            if elem_id is not None:
+                linked_block.elem_id = elem_id
+            if label is not None:
+                linked_block.label = label
+        if taxa_block is not None:
+            linked_block.taxa_block = taxa_block
+        if normalize_taxa_blocks:
+            self.normalize_taxa_linked(linked_block)
+        return linked_block
+
+    def new_tree_block(self,
+                       elem_id=None,
+                       label=None,
+                       taxa_block=None,
+                       tree_block=None,
+                       normalize_taxa_blocks=True):
+        """
+        Adds (and returns) a tree block object, creating one using the
+        default factory if not given.
+        """
+        tree_block = self.new_taxa_linked_block(elem_id=elem_id,
+                                                label=label,
+                                                taxa_block=taxa_block,
+                                                linked_block=tree_block,
+                                                linked_block_factory=self.tree_block_factory,
+                                                normalize_taxa_blocks=normalize_taxa_blocks)
         self.tree_blocks.append(tree_block)
         return tree_block
 
-    def new_char_block(self, elem_id=None, label=None, taxa_block=None):
+    def new_char_block(self,
+                       elem_id=None,
+                       label=None,
+                       taxa_block=None,
+                       char_block=None,
+                       normalize_taxa_blocks=True):
         """
-        Adds (and returns) new char block object.
+        Adds (and returns) a char block object, creating one using the
+        default factory if not given if not given.
         """
-        if taxa_block is None:
-            taxa_block = self.new_taxa_block()
-        char_block = characters.CharBlock(elem_id=elem_id, label=label, taxa_block=taxa_block)
+        char_block = self.new_taxa_linked_block(elem_id=elem_id,
+                                                label=label,
+                                                taxa_block=taxa_block,
+                                                linked_block=char_block,
+                                                linked_block_factory=self.char_block_factory,
+                                                normalize_taxa_blocks=normalize_taxa_blocks)
         self.char_blocks.append(char_block)
         return char_block
-
 
 class Reader(object):
     """

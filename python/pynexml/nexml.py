@@ -354,29 +354,32 @@ class _NexmlTreesParser(_NexmlElementParser):
         """
         super(_NexmlTreesParser, self).__init__()
 
-    def parse_trees(self, nxtrees, dataset, trees_idx=None):
+    def parse_trees(self, nxtrees, dataset, trees_idx=None, tree_factory=None):
         """
         Given an XmlElement object representing a NEXML treeblock,
         self.nxtrees (corresponding to a `nex:trees` element), this
         will construct and return a TreeBlock object defined by the
         underlying NEXML. 
         """
-        tree_block = trees.TreeBlock()
-        tree_block.elem_id = nxtrees.get('id', "Trees" + str(trees_idx))
-        tree_block.label = nxtrees.get('label', None)
+        elem_id = nxtrees.get('id', "Trees" + str(trees_idx))
+        label = nxtrees.get('label', None)
         taxa_id = nxtrees.get('otus', None)
         if taxa_id is None:
             raise Exception("Taxa block not specified for trees block \"%s\"" % tree_block.elem_id)
         taxa_block = dataset.find_taxa_block(elem_id = taxa_id)
         if not taxa_block:
             raise Exception("Taxa block \"%s\" not found" % taxa_id)
-        tree_block.taxa_block = taxa_block
+        taxa_block = taxa_block
+        tree_block = dataset.new_tree_block(elem_id=elem_id, label=label, taxa_block=taxa_block)
         tree_counter = 0
         for tree_element in nxtrees.getiterator('tree'):
             tree_counter = tree_counter + 1
-            treeobj = trees.Tree()
-            treeobj.elem_id = tree_element.get('id', tree_counter)
-            treeobj.label = tree_element.get('label', '')
+            elem_id = tree_element.get('id', tree_counter)
+            label = tree_element.get('label', '')
+            if tree_factory is not None:
+                treeobj = tree_factory(elem_id=elem_id, label=label)
+            else:
+                treeobj = dataset.tree_factory(elem_id=elem_id, label=label)
             tree_type_attr = tree_element.get('{http://www.w3.org/2001/XMLSchema-instance}type')
             treeobj.weight_type = _from_nexml_tree_weight_type(tree_type_attr)
             nodes = self.parse_nodes(tree_element, tree_block.taxa_block)
@@ -424,7 +427,6 @@ class _NexmlTreesParser(_NexmlElementParser):
             else:
                 raise Exception("Structural error: tree_block must be acyclic.")
             tree_block.append(treeobj)
-        dataset.append_tree_block(tree_block)
 
     def parse_nodes(self, tree_element, taxa_block):
         """

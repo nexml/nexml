@@ -46,22 +46,6 @@ class TreeBlock(list, taxa.TaxaLinked):
         list.__init__(self, *args)
         taxa.TaxaLinked.__init__(self, *args, **kwargs)
 
-    def _get_taxon_list(self):
-        """
-        Returns list of taxa across all trees.
-        """
-
-#     def compose_taxa_block(self):
-#         """
-#         Returns TaxaBlock with all taxa in current tree.
-#         """
-#         taxa_block = taxa.TaxaBlock()
-#         for tree in self:
-#             for node in tree.postorder_node_iter():
-#                 if hasattr(node, taxon):
-#                     taxa_block[taxon.taxon_id] = taxon
-#         return taxa_block
-
 ##############################################################################
 ## Tree
 
