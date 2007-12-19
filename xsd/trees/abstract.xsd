@@ -97,6 +97,23 @@
         </xs:complexContent>
     </xs:complexType>
     
+    <xs:complexType name="AbstractNetwork" abstract="true">
+        <xs:annotation>
+            <xs:documentation>
+                The AbstractNetwork superclass is what a concrete network inherits
+                from.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="IDTagged">
+                <xs:sequence minOccurs="1" maxOccurs="1">
+                    <xs:element name="node" type="AbstractNode" minOccurs="1" maxOccurs="unbounded"/>
+                    <xs:element name="edge" type="AbstractEdge" minOccurs="1" maxOccurs="unbounded"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>    
+    
     <xs:complexType name="AbstractTrees" abstract="true">
         <xs:annotation>
             <xs:documentation>
@@ -107,7 +124,10 @@
         <xs:complexContent>
             <xs:extension base="IDTagged">
                 <xs:sequence minOccurs="1" maxOccurs="1">
-                    <xs:element name="tree" type="AbstractTree" minOccurs="1" maxOccurs="unbounded"/>
+                    <xs:choice minOccurs="0" maxOccurs="unbounded">
+                        <xs:element name="network" type="AbstractNetwork" minOccurs="1" maxOccurs="unbounded"/>
+                        <xs:element name="tree" type="AbstractTree" minOccurs="1" maxOccurs="unbounded"/>                            
+                    </xs:choice>                    
                 </xs:sequence>
             </xs:extension>
         </xs:complexContent>

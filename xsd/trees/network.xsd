@@ -80,7 +80,7 @@
             </xs:documentation>
         </xs:annotation>
         <xs:complexContent>
-            <xs:restriction base="AbstractTree">
+            <xs:restriction base="AbstractNetwork">
                 <xs:sequence minOccurs="1" maxOccurs="1">
                     <xs:element minOccurs="1" maxOccurs="unbounded" name="node" type="NetworkNode"/>
                     <xs:element minOccurs="1" maxOccurs="unbounded" name="edge" type="NetworkFloatEdge"/>
@@ -96,7 +96,7 @@
             </xs:documentation>
         </xs:annotation>
         <xs:complexContent>
-            <xs:restriction base="AbstractTree">
+            <xs:restriction base="AbstractNetwork">
                 <xs:sequence minOccurs="1" maxOccurs="1">
                     <xs:element minOccurs="1" maxOccurs="unbounded" name="node" type="NetworkNode"/>
                     <xs:element minOccurs="1" maxOccurs="unbounded" name="edge" type="NetworkIntEdge"/>
