@@ -5,8 +5,7 @@
     xmlns:xlink="http://www.w3.org/1999/xlink"
     targetNamespace="http://www.nexml.org/1.0"
     xmlns="http://www.nexml.org/1.0">
-    <xs:import namespace="http://www.w3.org/XML/1998/namespace" schemaLocation="external/xml.xsd"/>
-    <xs:import namespace="http://www.w3.org/1999/xlink" schemaLocation="external/xlink.xsd"/>
+    
     <xs:include schemaLocation="meta/annotations.xsd"/>
     <xs:annotation>
         <xs:documentation>
@@ -23,39 +22,6 @@
             instances won't have surprising substructures.
         </xs:documentation>
     </xs:annotation>
-    
-    <xs:simpleType name="IDVector">
-        <xs:annotation>
-            <xs:documentation>
-                This simple type is used to specify a list of names of classes (i.e. sets) to which the
-                element that holds this attribute belongs to.
-            </xs:documentation>
-        </xs:annotation>
-        <xs:list itemType="xs:NCName"/>                    
-    </xs:simpleType>
-    
-    <xs:complexType name="Base" abstract="true">
-        <xs:annotation>
-            <xs:documentation>
-                The base type for all complexType definitions in the nexml schema.
-                This type allows a number of special attributes:
-                <ul>
-                    <li>xml:lang - for languages codes</li>
-                    <li>xml:base - see <a href="http://www.w3.org/TR/xmlbase/">http://www.w3.org/TR/xmlbase/</a></li>
-                    <li>xml:id - see <a href="http://www.w3.org/TR/xml-id/">http://www.w3.org/TR/xml-id/</a></li>
-                    <li>xml:space - for whitespace handling</li>
-                    <li>xlink:href - for links</li>
-                    <li>class - for class membership</li>
-                </ul>
-                Also see http://www.w3.org/2001/xml.xsd for more information on the
-                xml and xlink attributes.
-            </xs:documentation>
-        </xs:annotation>
-        <xs:sequence/>
-        <xs:attributeGroup ref="xml:specialAttrs"/>
-        <xs:attribute ref="xlink:href" use="optional"/>
-        <xs:attribute name="class" type="IDVector" use="optional"/>
-    </xs:complexType>
     
     <!-- a labelled element that encloses a key/value dictionary -->
     <xs:complexType name="Annotated" abstract="true">
@@ -188,74 +154,6 @@
         <xs:complexContent>
             <xs:extension base="IDTagged"/>            
         </xs:complexContent>
-    </xs:complexType>
-    
-    <!-- matrix cell -->
-    <!--
-    <xs:complexType abstract="true" name="AbstractCell">
-        <xs:annotation>
-            <xs:documentation>
-                The AbstractCell complexType is a super class for
-                character matrix cells, which can be annotated using
-                key/value structures of type Dict, and which are
-                linked to a character definition using the def attribute
-                id reference.
-            </xs:documentation>
-        </xs:annotation>  
-        <xs:complexContent>
-            <xs:extension base="Labelled">
-                <xs:attribute name="def" type="xs:NCName" use="required"/>
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>-->
-    
-    <!-- matrix cell -->
-    <!--
-    <xs:complexType abstract="true" name="AbstractAlignedCell">
-        <xs:annotation>
-            <xs:documentation>
-                The AbstractAlignedCell complexType is a super class for
-                character matrix cells, which can be annotated using
-                key/value structures of type Dict, and which have
-                their alignment position specified using the def
-                attribute of type xs:nonNegativeInteger.
-            </xs:documentation>
-        </xs:annotation>         
-        <xs:complexContent>
-            <xs:extension base="Labelled">
-                <xs:attribute name="def" type="xs:nonNegativeInteger" use="required"/>
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType> -->
-    
-    <!-- matrix row --> <!--
-    <xs:complexType abstract="true" name="AbstractRow">
-        <xs:annotation>
-            <xs:documentation>
-                The AbstractRow complexType is a super class for
-                character matrix rows.
-            </xs:documentation>
-        </xs:annotation>         
-        <xs:complexContent>
-            <xs:extension base="TaxonLinked">
-                <xs:sequence/>                
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType> -->
-    
-    <!-- matrix --> <!--
-    <xs:complexType abstract="true" name="AbstractCharacters">
-        <xs:annotation>
-            <xs:documentation>
-                The AbstractCharacters complexType is a super class for
-                character matrices.
-            </xs:documentation>
-        </xs:annotation>         
-        <xs:complexContent>
-            <xs:extension base="TaxaLinked">
-                <xs:sequence/>
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>   -->
+    </xs:complexType>  
            
 </xs:schema>
