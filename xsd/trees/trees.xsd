@@ -23,7 +23,10 @@
         <xs:complexContent>
             <xs:extension base="TaxaLinked">
                 <xs:sequence minOccurs="1" maxOccurs="1">
-                    <xs:element name="tree" type="AbstractTree" minOccurs="1" maxOccurs="unbounded"/>
+                    <xs:choice minOccurs="0" maxOccurs="unbounded">
+                        <xs:element name="network" type="AbstractNetwork" minOccurs="1" maxOccurs="unbounded"/>
+                        <xs:element name="tree" type="AbstractTree" minOccurs="1" maxOccurs="unbounded"/>                            
+                    </xs:choice> 
                 </xs:sequence>
             </xs:extension>
         </xs:complexContent>
