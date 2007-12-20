@@ -16,19 +16,19 @@ use Cwd;
 # use Sys::Hostname::hostname() because we're 
 # generating docs from a cron job (so no CGI vars)
 # and we'd be running on a virtual host anyway
-my $hostname = $ENV{'NEXML_HOSTNAME'} || 'eupoa.local';
+my $hostname = $ENV{'SERVER_NAME'} || 'eupoa.local';
 
 # subtree for this part of the site structure, i.e.
 # the schema documentation
-my $subtree = $ENV{'NEXML_SUBTREE'} || '/nexml/html/doc/schema-1';
+my $subtree = $ENV{'SCRIPT_URL'} || '/nexml/html/doc/schema-1';
 
 # $prefix is the path to docroot, so on server-side
 # includes we need it (hence it is part of $include),
 # but on the client side (e.g. paths to images in an
 # html page) it needs to be stripped
 my $prefix;
-if ( $ENV{'NEXML_HOME'} ) {
-    $prefix = $ENV{'NEXML_HOME'};
+if ( $ENV{'DOCUMENT_ROOT'} ) {
+    $prefix = $ENV{'DOCUMENT_ROOT'};
 }
 elsif ( -d '/Users/rvosa/Documents/workspace' ) {
     $prefix = '/Users/rvosa/Documents/workspace';

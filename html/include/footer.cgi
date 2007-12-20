@@ -18,7 +18,7 @@ my $hostname = $ENV{'SERVER_NAME'};
 
 # subtree for this part of the site structure, 
 # we can obtain this from the CGI environment
-my $subtree = $ENV{'REQUEST_URI'};
+my $subtree = $ENV{'SCRIPT_URL'};
 
 # $prefix is the path to docroot, so on server-side
 # includes we need it (hence it is part of $include),
@@ -52,7 +52,7 @@ my $template = Template->new(
 
 # variables to be interpolated in template
 my $vars = {
-    'title'       => 'nexml - index of ' . $ENV{'REQUEST_URI'},
+    'title'       => 'nexml - index of ' . $ENV{'SCRIPT_URL'},
     'mainHeading' => 'In this section:',
     'currentURL'  => 'http://' . $hostname . $subtree,
     'currentDate' => my $time = localtime,
