@@ -5,10 +5,10 @@
 <ul>
     <% FOREACH item = root.children('item') %>
     <li class="rss">
-        <strong><% escaper.escape(item.first_child('title').text) %></strong>
-        <small class="credit"> by <% escaper.escape(item.first_child('author').text) %> on 
+        <strong><% encoder.encode_entities(item.first_child('title').text) %></strong>
+        <small class="credit"> by <% encoder.encode_entities(item.first_child('author').text) %> on 
             <% item.first_child('pubDate').text %>                                                        
-            [<a class="rss" href="<% escaper.escape(item.first_child('link').text) %>">link</a>]
+            [<a class="rss" href="<% encoder.encode_entities(item.first_child('link').text) %>">link</a>]
         </small>
     </li>
     <% END %>
