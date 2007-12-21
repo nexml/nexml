@@ -525,8 +525,9 @@
     </div>
     <div id="footer">
       <p>
+        Site implementation and technology:
         &copy; <?= date("Y") ?> <a href="http://rutgervos.blogspot.com" class="credit">Rutger Vos</a>. 
-        Design by <a href="http://andreasviklund.com/" class="credit">Andreas Viklund</a> 
+        Site design: &copy; <a href="http://andreasviklund.com/" class="credit">Andreas Viklund</a> 
         of <a href="http://jokkmokk.biz/" title="ITUS Jokkmokk">Jokkmokk</a>.
       </p>
     </div>
