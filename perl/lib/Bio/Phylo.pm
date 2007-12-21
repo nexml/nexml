@@ -835,6 +835,8 @@ Invocant destructor.
 
 =cut
 
+{
+    no warnings 'recursion';
     sub DESTROY {
         my $self = shift;
 
@@ -872,6 +874,7 @@ Invocant destructor.
         # done cleaning up, id can be reclaimed
         Bio::Phylo::Util::IDPool->_reclaim($self);
     }
+}
 
     # starting from $class, push all superclasses (+$class)
     # into @$isa, %$seen is just a helper
