@@ -840,6 +840,8 @@ Clones invocant.
 
 =cut
 
+{
+	no warnings 'recursion';
 	sub _cleanup {
 		my $self = shift;
 		my $id = $$self;
@@ -847,6 +849,7 @@ Clones invocant.
 			delete $field->{$id};
 		}
 	}
+}
 
 =back
 
