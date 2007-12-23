@@ -61,7 +61,7 @@ class Dataset():
         self.tree_block_factory = trees.TreeBlock
         self.tree_factory = trees.Tree
 
-    def normalize_taxa_blockss(self):
+    def normalize_taxa_blocks(self):
         """
         Builds up list of taxon blocks by collecting taxon blocks
         referenced in self's char_blocks and tree_blocks.
