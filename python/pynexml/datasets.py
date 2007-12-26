@@ -190,7 +190,7 @@ class Reader(object):
         # 0 = ignore all errors; 1 = print warning; 2 = raise exception
         self.error_level=0
 
-    def get_dataset(self, filepath=None, fileobj=None, text=None):
+    def get_dataset(self, filepath=None, fileobj=None, text=None. dataset=None):
         """
         Instantiates and returns a Dataset object from a filepath, a
         file descriptor or direct text source respectively.
@@ -198,44 +198,55 @@ class Reader(object):
         if filepath:
             filepath = os.path.expandvars(os.path.expanduser(filepath))
             filedesc = open(filepath, 'r')
-            return self.read_dataset(filedesc)
+            return self.read_dataset(filedesc, dataset)
         elif fileobj:
-            return self.read_dataset(fileobj)
+            return self.read_dataset(fileobj, dataset)
         elif text:
             dataset_text = StringIO.StringIO()
-            return self.read_dataset(dataset_text)
+            return self.read_dataset(dataset_text. dataset)
         else:
             raise Exception("Source of dataset must be specified")
 
-    def get_matrices(self, filepath=None, fileobj=None, text=None):
+    def get_matrices(self, filepath=None, fileobj=None, text=None, char_block_factory=None):
         """
         Instantiates and returns a list of CharMatrix objects from a filepath, a
         file descriptor or direct text source respectively.
         """
-        dataset = self.get_dataset(filepath=filepath, fileobj=fileobj, text=text)
+        dataset = Dataset()        
+        if char_block_factory is not None:
+            dataset.char_block_factory = char_block_factory
+        dataset = self.get_dataset(filepath=filepath, fileobj=fileobj, text=text, dataset=dataset)
         return dataset.char_blocks
 
-    def get_taxa(self, filepath=None, fileobj=None, text=None):
+    def get_taxa(self, filepath=None, fileobj=None, text=None, taxa_block_factory=None):
         """
         Instantiates and returns a list of TaxaBlock objects from a
         filepath, a file descriptor or direct text source
         respectively.
         """
-        dataset = self.get_dataset(filepath=filepath, fileobj=fileobj, text=text)
+        dataset = Dataset()        
+        if taxa_block_factory is not None:
+            dataset.taxa_block_factory = taxa_block_factory
+        dataset = self.get_dataset(filepath=filepath, fileobj=fileobj, text=text, dataset=dataset)
         return dataset.taxa_blocks
 
-    def get_trees(self, filepath=None, fileobj=None, text=None):
+    def get_trees(self, filepath=None, fileobj=None, text=None, tree_block_factory=None, tree_factory=None):
         """
         Instantiates and returns a list of Tree objects from a
         filepath, a file descriptor or direct text source
         respectively.
         """
-        dataset = self.get_dataset(filepath=filepath, fileobj=fileobj, text=text)
+        dataset = Dataset()        
+        if tree_block_factory is not None:
+            dataset.tree_block_factory = tree_block_factory
+        if tree_factory is not None:
+            dataset.tree_factory = tree_factory
+        dataset = self.get_dataset(filepath=filepath, fileobj=fileobj, text=text, dataset=dataset)
         return dataset.tree_blocks
            
     ### Following methods must be implemented by deriving classes  ###
 
-    def read_dataset(self, fileobj):
+    def read_dataset(self, fileobj, dataset=None):
         """
         Implementing classes should instantiate and return a Dataset
         object based on contents read from the file descriptor object

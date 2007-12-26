@@ -218,23 +218,25 @@ class NexmlReader(datasets.Reader):
 
     ## Implementation of the datasets.Reader interface ##
 
-    def read_dataset(self, fileobj):
+    def read_dataset(self, fileobj, dataset=None):
         """
         Instantiates and returns a DataSet object based on the
         NEXML-formatted contents read from the file descriptor object
-        `fileobj`.
+        `fileobj`. If `dataset` is given, its factory methods will be
+        used to instantiate objects.
         """
         xmldoc = xmlparser.XmlDocument(filesrc=fileobj)
-        return self.parse_dataset(xmldoc)
+        return self.parse_dataset(xmldoc, dataset)
 
     ## Following methods are class-specific ###
 
-    def parse_dataset(self, xml_doc):
+    def parse_dataset(self, xml_doc, dataset):
         """
         Given an XMLDocument, parses the XmlElement representation of
         taxon sets, character matrices, and trees into a DataSet object.
         """
-        dataset = datasets.Dataset()
+        if dataset is None:
+            dataset = datasets.Dataset()
         self.parse_taxa_blocks(xml_doc, dataset)
         self.parse_char_blocks(xml_doc, dataset)
         self.parse_tree_blocks(xml_doc, dataset)
