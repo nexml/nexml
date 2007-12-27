@@ -81,9 +81,9 @@ def is_python_at_least(version):
     else:
         return False
 
-_user_cfg_dir = os.path.expanduser("~/.dendropy")
+_user_cfg_dir = os.path.expanduser("~/.pynexml")
 
-def get_dendropy_cfg_file(file_name):
+def get_pynexml_cfg_file(file_name):
     """Looks for file_name in _user_cfg_dir, if it is not found there then
     the package directory is checked.
     
@@ -104,15 +104,15 @@ def get_dendropy_cfg_file(file_name):
 # set to True by the first call to get_logger()
 _logger_initialized = False 
 def get_logger(s):
-    """Wrapper around logging.getLogger that make sure that the dendropy
+    """Wrapper around logging.getLogger that make sure that the pynexml
     logging configuration file is read (or a default is applied)
     """
     global _logger_initialized
     import logging
     if not _logger_initialized:
         import logging.config
-        filename = "logging_dendropy.conf"
-        full_path = get_dendropy_cfg_file(filename)
+        filename = "logging_pynexml.conf"
+        full_path = get_pynexml_cfg_file(filename)
         specified_path_failed = False
         if full_path and os.path.exists(full_path):
             try:
