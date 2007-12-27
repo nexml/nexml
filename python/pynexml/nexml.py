@@ -473,6 +473,15 @@ class _NexmlTreesParser(_NexmlElementParser):
             edge.head_node_id = rootedge.get('target', None)
             edge.elem_id = rootedge.get('id', 'e' + str(id(edge)))
             edge_weight_str = weight_type(rootedge.get('length', '0.0'))
+            edge_weight = None
+            try:
+                edge_weight = weight_type(edge_weight_str)
+            except:
+                msg = 'Edge %d ("%s") `length` attribute is not a %s' \
+                      % (edge_counter, edge.elem_id, str(weight_type))
+                raise Exception(msg)
+            edge.weight = edge_weight
+            self.parse_annotations(annotated=edge, nxelement=nxedge)            
             return edge
         else:
             return None
