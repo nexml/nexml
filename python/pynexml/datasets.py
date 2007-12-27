@@ -34,7 +34,7 @@ from pynexml import taxa
 from pynexml import characters
 from pynexml import trees
 
-class Dataset():
+class Dataset(object):
     """
     Top-level data structure.
     """
@@ -60,6 +60,8 @@ class Dataset():
         self.char_block_factory = characters.CharBlock
         self.tree_block_factory = trees.TreeBlock
         self.tree_factory = trees.Tree
+        self.edge_factory = trees.Edge
+        self.node_factory = trees.Node
 
     def normalize_taxa_blocks(self):
         """
@@ -190,7 +192,7 @@ class Reader(object):
         # 0 = ignore all errors; 1 = print warning; 2 = raise exception
         self.error_level=0
 
-    def get_dataset(self, filepath=None, fileobj=None, text=None. dataset=None):
+    def get_dataset(self, filepath=None, fileobj=None, text=None, dataset=None):
         """
         Instantiates and returns a Dataset object from a filepath, a
         file descriptor or direct text source respectively.
