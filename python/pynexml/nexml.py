@@ -481,7 +481,7 @@ class _NexmlTreesParser(_NexmlElementParser):
                       % (edge_counter, edge.elem_id, str(weight_type))
                 raise Exception(msg)
             edge.weight = edge_weight
-            self.parse_annotations(annotated=edge, nxelement=nxedge)            
+            self.parse_annotations(annotated=edge, nxelement=rootedge)            
             return edge
         else:
             return None
