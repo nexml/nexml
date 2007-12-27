@@ -25,11 +25,4 @@
 pynexml testing suite
 """
 
-import os
-
-def test_source_path(filename):
-    return os.path.join('sources', filename)
-    
-def test_target_path(filename):
-    return os.path.join('output', filename)
 
