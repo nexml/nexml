@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!-- 
+	For an explanation of the structure of the root element 
+	and the taxa element refer to the file taxa.xml.
+-->
+<nex:nexml 
+	version="1.0" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:xml="http://www.w3.org/XML/1998/namespace"
+	xsi:schemaLocation="http://www.nexml.org/1.0 ../xsd/nexml.xsd"
+	xmlns:nex="http://www.nexml.org/1.0">
+	<otus id="tax1" label="RootTaxaBlock">
+		<dict>
+			<key>description</key>
+			<string>Taxa Block 1</string>
+			<key>favorite_foods</key>
+			<string>deep-fried pizza</string>
+			<key>nested_dict</key>
+			<dict>
+				<key>nested_1-1_key</key>
+				<string>nested_1-1_value</string>
+				<key>nested_1-2_key</key>
+				<string>nested_1-2_value</string>
+			</dict>				
+		</dict>	
+		<otu id="t1" label="Taxon 1">
+			<dict>
+				<key>description</key>
+				<string>Taxon 1 from Taxa Block 1</string>
+				<key>color</key>
+				<string>red</string>
+			</dict>
+		</otu>
+		<otu id="t2" label="Taxon 2">
+			<dict>
+				<key>description</key>
+				<string>Taxon 2 from Taxa Block 1</string>
+				<key>color</key>
+				<string>blue</string>
+			</dict>
+		</otu>
+		<otu id="t3" label="Taxon 3">
+			<dict>
+				<key>description</key>
+				<string>Taxon 3 from Taxa Block 1</string>
+				<key>color</key>
+				<string>green</string>
+			</dict>
+		</otu>
+		<otu id="t4" label="Taxon 4">
+			<dict>
+				<key>description</key>
+				<string>Taxon 4 from Taxa Block 1</string>
+				<key>color</key>
+				<string>yellow</string>
+			</dict>
+		</otu>
+		<otu id="t5" label="Taxon 5">
+			<dict>
+				<key>description</key>
+				<string>Taxon 5 from Taxa Block 1</string>
+				<key>color</key>
+				<string>black</string>
+			</dict>
+		</otu>
+	</otus>
+	<otus id="tax2" label="RootTaxaBlock">
+		<dict>
+			<key>description</key>
+			<string>Taxa Block 2</string>
+			<key>tax2_dict_key</key>
+			<string>tax2_dict_value</string>
+			<key>nested_dict2</key>
+			<dict>
+				<key>nested_2-1_key</key>
+				<string>nested_2-1_value</string>
+				<key>nested_2-2_key</key>
+				<string>nested_2-2_value</string>
+			</dict>				
+		</dict>		
+		<otu id="ta" label="Taxon A">
+			<dict>
+				<key>description</key>
+				<string>Taxon A from Taxa Block 2</string>
+				<key>color</key>
+				<string>red</string>
+			</dict>
+		</otu>
+		<otu id="tb" label="Taxon B">
+			<dict>
+				<key>description</key>
+				<string>Taxon B from Taxa Block 2</string>
+				<key>color</key>
+				<string>red</string>
+			</dict>
+		</otu>			
+		<otu id="tc" label="Taxon C">
+			<dict>
+				<key>description</key>
+				<string>Taxon C from Taxa Block 2</string>
+				<key>color</key>
+				<string>red</string>
+			</dict>
+		</otu>			
+		<otu id="td" label="Taxon D">
+			<dict>
+				<key>description</key>
+				<string>Taxon D from Taxa Block 2</string>
+				<key>color</key>
+				<string>red</string>
+			</dict>
+		</otu>			
+		<otu id="te" label="Taxon E">
+			<dict>
+				<key>description</key>
+				<string>Taxon E from Taxa Block 2</string>
+				<key>color</key>
+				<string>red</string>
+			</dict>
+		</otu>			
+	</otus>	
+	<trees otus="tax1" id="Trees" label="TreesBlockFromXML">
+		<!--
+			A tree with float edges. 
+		-->
+		<tree id="tree1" xsi:type="nex:FloatTree" label="tree1">
+			<node id="n1" label="n1" root="true"/>
+			<node id="n2" label="n2" otu="t1"/>
+			<node id="n3" label="n3"/>
+			<node id="n4" label="n4">
+				<dict>
+					<key>has_tag</key>
+					<boolean>true</boolean>
+				</dict>
+			</node>
+			<node id="n5" label="n5" otu="t3"/>
+			<node id="n6" label="n6" otu="t2"/>
+			<node id="n7" label="n7"/>
+			<node id="n8" label="n8" otu="t5"/>
+			<node id="n9" label="n9" otu="t4"/>
+			<rootedge id="re" target="n1" length="1.2">
+				<dict>
+					<key>pop_size</key>
+					<integer>40000</integer>
+				</dict>
+			</rootedge>
+			<edge source="n1" target="n3" id="e1" length="0.34534">
+				<dict>
+					<key>pop_size</key>
+					<integer>20000</integer>
+				</dict>
+			</edge>
+			<edge source="n1" target="n2" id="e2" length="0.4353">
+				<dict>
+					<key>pop_size</key>
+					<integer>20000</integer>
+				</dict>
+			</edge>				
+			<edge source="n3" target="n4" id="e3" length="0.324">
+				<dict>
+					<key>pop_size</key>
+					<integer>20000</integer>
+				</dict>
+			</edge>				
+			<edge source="n3" target="n7" id="e4" length="0.3247">
+				<dict>
+					<key>pop_size</key>
+					<integer>20000</integer>
+				</dict>
+			</edge>				
+			<edge source="n4" target="n5" id="e5" length="0.234">
+				<dict>
+					<key>pop_size</key>
+					<integer>20000</integer>
+				</dict>
+			</edge>				
+			<edge source="n4" target="n6" id="e6" length="0.3243">
+				<dict>
+					<key>pop_size</key>
+					<integer>20000</integer>
+				</dict>
+			</edge>				
+			<edge source="n7" target="n8" id="e7" length="0.32443">
+				<dict>
+					<key>pop_size</key>
+					<integer>20000</integer>
+				</dict>
+			</edge>				
+			<edge source="n7" target="n9" id="e8" length="0.2342">
+				<dict>
+					<key>pop_size</key>
+					<integer>20000</integer>
+				</dict>
+			</edge>				
+		</tree>
+		<!--  
+			A tree with int edges.
+		-->
+		<tree id="tree2" xsi:type="nex:IntTree" label="tree2">
+			<node id="n1" label="n1"/>
+			<node id="n2" label="n2" otu="t1"/>
+			<node id="n3" label="n3"/>
+			<node id="n4" label="n4">
+				<dict>
+					<key>has_tag</key>
+					<boolean>true</boolean>
+				</dict>
+			</node>
+			<node id="n5" label="n5" otu="t3"/>
+			<node id="n6" label="n6" otu="t2"/>
+			<node id="n7" label="n7"/>
+			<node id="n8" label="n8" otu="t5"/>
+			<node id="n9" label="n9" otu="t4"/>
+			<edge source="n1" target="n3" id="e1" length="1"/>			
+			<edge source="n1" target="n2" id="e2" length="2"/>
+			<edge source="n3" target="n4" id="e3" length="3"/>
+			<edge source="n3" target="n7" id="e4" length="1"/>
+			<edge source="n4" target="n5" id="e5" length="2"/>
+			<edge source="n4" target="n6" id="e6" length="1"/>
+			<edge source="n7" target="n8" id="e7" length="1"/>
+			<edge source="n7" target="n9" id="e8" length="1"/>
+		</tree>	
+		<!--  
+			A network with int edges.
+		-->
+		<network id="tree3" xsi:type="nex:IntNetwork" label="tree2">
+			<node id="n1" label="n1"/>
+			<node id="n2" label="n2" otu="t1"/>
+			<node id="n3" label="n3"/>
+			<node id="n4" label="n4"/>
+			<node id="n5" label="n5" otu="t3"/>
+			<node id="n6" label="n6" otu="t2"/>
+			<node id="n7" label="n7"/>
+			<node id="n8" label="n8" otu="t5"/>
+			<node id="n9" label="n9" otu="t4"/>
+			<edge source="n1" target="n3" id="e1" length="1"/>			
+			<edge source="n1" target="n2" id="e2" length="2"/>
+			<edge source="n3" target="n4" id="e3" length="3"/>
+			<edge source="n3" target="n7" id="e4" length="1"/>
+			<edge source="n4" target="n5" id="e5" length="2"/>
+			<edge source="n4" target="n6" id="e6" length="1"/>
+			<edge source="n7" target="n6" id="e7" length="1"/> <!-- extra edge -->
+			<edge source="n7" target="n8" id="e7" length="1"/>
+			<edge source="n7" target="n9" id="e8" length="1"/>
+		</network>				
+	</trees>
+</nex:nexml>

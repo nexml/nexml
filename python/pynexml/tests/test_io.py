@@ -3,7 +3,7 @@
 ############################################################################
 ##  test_io.py
 ##
-##  Part of the DendroPy phylogenetic tree manipulation library.
+##  Part of the PyNexml phylogenetic tree manipulation library.
 ##
 ##  Copyright 2007 Jeet Sukumaran and Mark T. Holder.
 ##
@@ -23,18 +23,16 @@
 ############################################################################
 
 """
-This module implements i/o tests of the DendroPy
+This module implements i/o tests of the PyNexml
 library using the unittest harness.
 """
 
 import os
 import unittest
 from pynexml import nexml
-from pynexml import newick
-from pynexml import trees
-from dendropy.tests import test_conf
-from dendropy import get_logger
-_LOG = get_logger("tests.test_tree_io")
+from pynexml.tests import test_conf
+from pynexml import get_logger
+_LOG = get_logger("tests.test_io")
 
 class TreeIOTest(unittest.TestCase):
     """

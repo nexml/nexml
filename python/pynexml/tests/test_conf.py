@@ -3,7 +3,7 @@
 ############################################################################
 ##  testconf.py
 ##
-##  Part of the DendroPy phylogenetic tree manipulation library.
+##  Part of the PyNexml phylogenetic tree manipulation library.
 ##
 ##  Copyright 2007 Jeet Sukumaran and Mark T. Holder.
 ##
@@ -29,7 +29,7 @@ This module provides configuration utilities for the testing suite.
 import unittest
 import os
 from pynexml import get_logger
-_LOG = get_logger("dendro.tests.test_conf")
+_LOG = get_logger("tests.test_conf")
 
 import os
 
