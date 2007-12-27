@@ -384,8 +384,8 @@ class _NexmlTreesParser(_NexmlElementParser):
                 treeobj = dataset.tree_factory(elem_id=elem_id, label=label)
             tree_type_attr = tree_element.get('{http://www.w3.org/2001/XMLSchema-instance}type')
             treeobj.weight_type = _from_nexml_tree_weight_type(tree_type_attr)
-            nodes = self.parse_nodes(tree_element, tree_block.taxa_block)
-            edges = self.parse_edges(tree_element, weight_type=treeobj.weight_type)
+            nodes = self.parse_nodes(tree_element, taxa_block=tree_block.taxa_block, node_factory=dataset.node_factory)
+            edges = self.parse_edges(tree_element, weight_type=treeobj.weight_type, edge_factory=dataset.edge_factory)
             for edge in edges.values():
                 # EDGE-ON-ROOT:
                 # allow "blank" tail nodes: so we only enforce
@@ -427,10 +427,21 @@ class _NexmlTreesParser(_NexmlElementParser):
                 for node in parentless:
                     treeobj.seed_node.add_child(node)
             else:
-                raise Exception("Structural error: tree_block must be acyclic.")
+                raise Exception("Structural error: tree must be acyclic.")
+                
+            rootedge = self.parse_root_edge(tree_element, weight_type=treeobj.weight_type, edge_factory=dataset.edge_factory)
+            if rootedge:
+                if rootedge.head_node_id not in nodes:
+                    msg = 'Edge "%s" specifies a non-defined ' \
+                          'target node ("%s")' % (edge.elem_id,
+                                                  edge.head_node_id)
+                    raise Exception(msg)
+                else:
+                    nodes[rootedge.head_node_id].edge = rootedge
+                    ### should we make this node the seed node by rerooting the tree here? ###
             tree_block.append(treeobj)
 
-    def parse_nodes(self, tree_element, taxa_block):
+    def parse_nodes(self, tree_element, taxa_block, node_factory):
         """
         Given an XmlElement representation of a NEXML tree element,
         (`nex:tree`) this will return a dictionary of DendroPy Node
@@ -440,8 +451,8 @@ class _NexmlTreesParser(_NexmlElementParser):
         nodes = {}
         for nxnode in tree_element.getiterator('node'):
             node_id = nxnode.get('id', None)
-            nodes[node_id] = trees.Node(elem_id=node_id)
-            nodes[node_id].node_id = node_id
+            nodes[node_id] = node_factory()
+            nodes[node_id].elem_id = node_id
             nodes[node_id].label = nxnode.get('label', None)
             taxon_id = nxnode.get('otu', None)
             if taxon_id is not None:
@@ -451,8 +462,22 @@ class _NexmlTreesParser(_NexmlElementParser):
                 nodes[node_id].taxon = taxon
             self.parse_annotations(annotated=nodes[node_id], nxelement=nxnode)
         return nodes
+        
+    def parse_root_edge(self, tree_element, weight_type, edge_factory):
+        """
+        Returns the edge subtending the root node, or None if not defined.
+        """
+        rootedge = tree_element.find('rootedge')
+        if rootedge:
+            edge = edge_factory()
+            edge.head_node_id = rootedge.get('target', None)
+            edge.elem_id = rootedge.get('id', 'e' + str(id(edge)))
+            edge_weight_str = weight_type(rootedge.get('length', '0.0'))
+            return edge
+        else:
+            return None
 
-    def parse_edges(self, tree_element, weight_type=float):
+    def parse_edges(self, tree_element, weight_type, edge_factory):
         """
         Given an XmlElement representation of a NEXML tree element
         this will return a dictionary of DendroPy Edge objects created with
@@ -462,21 +487,19 @@ class _NexmlTreesParser(_NexmlElementParser):
         Edge are not set, but the tail_node_id and head_node_id are.
         """
         edges = {}
-        edge_counter = 0
+        edge_counter = 0        
         for nxedge in tree_element.getiterator('edge'):
-            edge = trees.Edge()
+            edge = edge_factory()
             edge_counter = edge_counter + 1
             edge.tail_node_id = nxedge.get('source', None)
             edge.head_node_id = nxedge.get('target', None)
             edge.elem_id = nxedge.get('id', 'e' + str(edge_counter))
             edge_weight_str = weight_type(nxedge.get('length', '0.0'))
 
-            # EDGE-ON-ROOT:
-            # disabled to allow edges on roots
-#             if not edge.tail_node_id:
-#                 msg = 'Edge %d ("%s") does not have a source' \
-#                       % (edge_counter, edge.elem_id)
-#                 raise Exception(msg)
+            if not edge.tail_node_id:
+                msg = 'Edge %d ("%s") does not have a source' \
+                      % (edge_counter, edge.elem_id)
+                raise Exception(msg)
 
             if not edge.head_node_id:
                 msg = 'Edge %d ("%s") does not have a target' \
@@ -772,19 +795,14 @@ class NexmlWriter(datasets.Writer):
         """
         Writes out a NEXML edge element.
         """
-
-        # EDGE-ON-ROOT:
-        # only enfore head_node: allow for blank tail_nodes to accomodate
         if edge.head_node:
             parts = []
-            parts.append('<edge')
             if edge.tail_elem_id != None:
+                parts.append('<edge')
                 parts.append('source="%s"' % edge.tail_elem_id)
             else:
                 # EDGE-ON-ROOT:
-                # results in non-compliant nexml but is the only way
-                # to preserve the edge subtending a root
-                parts.append('source=""') 
+                parts.append('<rootedge') 
             if edge.head_elem_id != None:
                 parts.append('target="%s"' % edge.head_elem_id)
             if hasattr(edge, 'elem_id') and edge.elem_id:
@@ -815,7 +833,7 @@ class NexmlWriter(datasets.Writer):
             dest.write(parts + '\n')
 
 def basic_test_trees():
-    source = "/home/jeet/Documents/Codeworks/Portfolios/Python/Projects/Phylogenetics/nexml/examples/trees.xml"
+    source = "tests/sources/comprehensive.xml"
     nexmlr = NexmlReader()
     dataset = nexmlr.get_dataset(source)
     for taxa_block in dataset.taxa_blocks:
@@ -832,7 +850,7 @@ def basic_test_trees():
     print nexmlw.compose_dataset(dataset)
     
 def basic_test_chars():
-    source = "/home/jeet/Documents/Codeworks/Portfolios/Python/Projects/Phylogenetics/nexml/examples/characters.xml"
+    source = "tests/sources/comprehensive.xml"
     nexmlr = NexmlReader()
     dataset = nexmlr.get_dataset(source)
     nexmlw = NexmlWriter()
