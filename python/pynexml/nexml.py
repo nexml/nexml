@@ -417,7 +417,7 @@ class _NexmlTreesParser(_NexmlElementParser):
             for node in nodes.values():
                 if node.parent_node == None:
                     parentless.append(node)
-            print [node.elem_id for node in parentless]
+                    
             # If one parentless node found, this is the root: we use
             # it as the tree head node. If multiple parentless nodes
             # are found, then we add them all as children of the
@@ -849,12 +849,18 @@ class NexmlWriter(datasets.Writer):
             dest.write(parts + '\n')
 
 def basic_test():
-#     source = "tests/sources/comprehensive.xml"
-#     target = "tests/output/comprehensive_parsed.xml"
-    source = "tests/sources/simpletree.xml"
-    target = "tests/output/simpletree_parsed.xml"
+    source = "tests/sources/comprehensive.xml"
+
     nexmlr = NexmlReader()
-    dataset = nexmlr.get_dataset(source)
+    nexmlr.tree_factory = 
+    d = nexmlr.parse(source)
+
+
+
+
+    target = "tests/output/comprehensive_parsed.xml"
+    nexmlr = NexmlReader(source)
+    dataset = nexmlr.get_dataset(source, dataset=dataset)
     for taxa_block in dataset.taxa_blocks:
         print taxa_block
     for tree_block in dataset.tree_blocks:
