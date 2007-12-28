@@ -34,6 +34,9 @@ from pynexml import taxa
 
 GAP_CHARS = ['-', '?']
 
+_charToBits = { "A": 1}
+_bitsToChar = " ACMGRSVTWYHKDBN"
+
 def map_to_iupac_ambiguity_code(states):
     """
     Given a sequence of characters, maps ambiguities given the form of
@@ -41,21 +44,29 @@ def map_to_iupac_ambiguity_code(states):
     """
     if len(states) == 1:
         return states[0]
-    states = [state.upper() for state in states]
-    if states.count('A') and states.count('C') and states.count('G') and (states.count('T') or states.count('U')):
-        return 'N'
-    if states.count('A') and states.count('C') and states.count('G'):
-        return 'V'
-    if states.count('A') and states.count('C') and (states.count('T') or states.count('U')):
-        return 'H'
-    if states.count('A') and states.count('G') and (states.count('T') or states.count('U')):
-        return 'D'
+    b = 0
+    for state in states:
+        b |= _charToBits[state]
+    return _bitsToChar[b]
+    
+    
+    if states.count('A'):
+        if and states.count('C') and states.count('G') and (states.count('T') or states.count('U')):
+            return 'N'
+        if states.count('C') and states.count('G'):
+            return 'V'
+        if states.count('C') and (states.count('T') or states.count('U')):
+            return 'H'
+        if states.count('G') and (states.count('T') or states.count('U')):
+            return 'D'
+        if states.count('C'):
+            return 'M'
+        if states.count('G'):
+            return 'R'
     if states.count('C') and states.count('G') and (states.count('T') or states.count('U')):
         return 'B'
-    if states.count('A') and states.count('C'):
-        return 'M'
-    if states.count('A') and states.count('G'):
-        return 'R'
+        
+    ### In phycrat check and change ### C-> A
     if states.count('C') and (states.count('T') or states.count('U')):
         return 'W'    
     if states.count('C') and states.count('G'):
