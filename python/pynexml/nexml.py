@@ -84,6 +84,8 @@ def _to_nexml_dict_value(value, type_hint=None, indent="", indent_level=0):
         value_type = _to_nexml_dict_value_type(value)
     else:
         value_type = type_hint
+    if value_type == 'boolean':
+        value = str(value==True).lower()
     if isinstance(value, list):
         value_str = "%s<%s>%s</%s>" % (main_indent,
                                        value_type,
@@ -743,7 +745,6 @@ class NexmlWriter(datasets.Writer):
             parts.append('id="%s"' % ("Tree" + str(id(tree))))
         if hasattr(tree, 'label') and tree.label:
             parts.append('label="%s"' % tree.label)
-        parts.append('xsi:type="nex:Tree"')
         if hasattr(tree, 'weight_type'):
             parts.append('xsi:type="%s"' % _to_nexml_tree_weight_type(tree.weight_type))
         else:
@@ -762,13 +763,14 @@ class NexmlWriter(datasets.Writer):
         Writes the opening tag for a nexml element.
         """
         parts = []
+        parts.append('<?xml version="1.0" encoding="ISO-8859-1"?>')
         parts.append('<nex:nexml')
         parts.append('%sversion="1.0"' % (self.indent * (indent_level+1)))
         parts.append('%sxmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"' \
                      % (self.indent * (indent_level+1)))
         parts.append('%sxmlns:xml="http://www.w3.org/XML/1998/namespace"' \
                      % (self.indent * (indent_level+1)))
-        parts.append('%sxsi:schemaLocation="http://www.nexml.org/1.0"'
+        parts.append('%sxsi:schemaLocation="http://www.nexml.org/1.0 nexml.xsd"'
                      % (self.indent * (indent_level+1)))
         parts.append('%sxmlns:nex="http://www.nexml.org/1.0">\n'
                      % (self.indent * (indent_level+1)))
@@ -807,11 +809,13 @@ class NexmlWriter(datasets.Writer):
         if edge.head_node:
             parts = []
             if edge.tail_elem_id != None:
-                parts.append('<edge')
+                tag = "edge"
+                parts.append('<%s' % tag)
                 parts.append('source="%s"' % edge.tail_elem_id)
             else:
                 # EDGE-ON-ROOT:
-                parts.append('<rootedge') 
+                tag = "rootedge"
+                parts.append('<%s' % tag) 
             if edge.head_elem_id != None:
                 parts.append('target="%s"' % edge.head_elem_id)
             if hasattr(edge, 'elem_id') and edge.elem_id:
@@ -827,7 +831,7 @@ class NexmlWriter(datasets.Writer):
                     dest.write('>\n')
                     self.write_annotations(edge, dest,
                                            indent_level=indent_level+1)
-                    dest.write('%s</edge>\n' % (self.indent * indent_level))
+                    dest.write('%s</%s>\n' % ((self.indent * indent_level), tag))
                 else:
                     dest.write(' />\n')
 
@@ -841,8 +845,9 @@ class NexmlWriter(datasets.Writer):
             parts = '\n'.join(parts)
             dest.write(parts + '\n')
 
-def basic_test_trees():
+def basic_test():
     source = "tests/sources/comprehensive.xml"
+    target = "tests/output/comprehensive_parsed.xml"
     nexmlr = NexmlReader()
     dataset = nexmlr.get_dataset(source)
     for taxa_block in dataset.taxa_blocks:
@@ -857,15 +862,9 @@ def basic_test_trees():
     print
     print
     print nexmlw.compose_dataset(dataset)
+    output = open(target, 'w')
+    nexmlw.store_dataset(dataset=dataset, destination=output)
     
-def basic_test_chars():
-    source = "tests/sources/comprehensive.xml"
-    nexmlr = NexmlReader()
-    dataset = nexmlr.get_dataset(source)
-    nexmlw = NexmlWriter()
-    print nexmlw.compose_dataset(dataset)
-
 if __name__ == "__main__":
-    basic_test_chars()
-    basic_test_trees()
+    basic_test()
     
