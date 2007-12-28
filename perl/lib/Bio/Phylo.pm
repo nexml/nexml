@@ -876,8 +876,8 @@ Invocant destructor.
     }
 }
 
-    # starting from $class, push all superclasses (+$class)
-    # into @$isa, %$seen is just a helper
+    # starting from $class, push all superclasses (+$class) into @$isa, 
+    # %$seen is just a helper to avoid getting stuck in cycles
     sub _recurse_isa {
         my ( $class, $isa, $seen ) = @_;
         if ( not $seen->{$class} ) {

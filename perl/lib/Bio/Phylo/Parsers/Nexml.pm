@@ -2,14 +2,9 @@ package Bio::Phylo::Parsers::Nexml;
 use strict;
 use XML::Twig;
 use Bio::Phylo::IO;
-use Bio::Phylo::Taxa;
-use Bio::Phylo::Taxa::Taxon;
-use Bio::Phylo::Matrices::Datum;
-use Bio::Phylo::Matrices::Matrix;
-use Bio::Phylo::Forest;
-use Bio::Phylo::Forest::Node;
-use Bio::Phylo::Forest::Tree;
 use Bio::Phylo::Util::Exceptions 'throw';
+use Bio::Phylo::Factory;
+use UNIVERSAL 'isa';
 use Data::Dumper;
 use vars qw(@ISA $VERSION);
 @ISA = qw(Bio::Phylo::IO);
@@ -47,6 +42,9 @@ For more information about the nexml data standard, visit L<http://www.nexml.org
  $Id$
 
 =cut
+
+# The factory object, to instantiate Bio::Phylo objects
+my $factory = Bio::Phylo::Factory->new;
 
 # We re-use the core Bio::Phylo version number.
 $VERSION=$Bio::Phylo::VERSION;
@@ -87,7 +85,7 @@ my %CLASS = (
 # be specified using named arguments, e.g. -type => 'dna'
 sub _obj_from_elt {
 	my ( $self, $elt, $class, %args ) = @_;
-	my $obj   = $class->new(%args);
+	my $obj   = $factory->create( $class => %args );
 	my $id    = $elt->att('id');
 	my $label = $elt->att('label');
 	$obj->set_name( $id );
@@ -100,16 +98,10 @@ sub _obj_from_elt {
 	return ( $obj, $id );
 }
 
-# gets the current line we're looking at, for informational purposes only
-sub _line {
-	shift->{'_twig'}->parser->current_line
-}
-
 sub _pos {
 	my $self = shift;
 	my $t = $self->{'_twig'};
-	my @pos = ( $t->current_line, $t->current_column, $t->current_byte );
-	return join ':', @pos;
+	join ':', ( $t->current_line, $t->current_column, $t->current_byte );
 }
 
 # again, nice 'n' generic: we provide an element, which must have an
@@ -117,7 +109,7 @@ sub _pos {
 # attribute value of the containing element. Because $self->{_otus}
 # collects a hash of hashes keyed on otus_idref => otu_idref we can
 # then fetch the appropriate taxon
-sub _set_taxon_for_obj {
+sub _set_otu_for_obj {
 	my ( $self, $elt, $obj, $taxa_idref ) = @_;
 	if ( my $taxon_idref = $elt->att('otu') ) {
 		if ( my $taxon_obj = $self->{'_taxon_in_taxa'}->{$taxa_idref}->{$taxon_idref} ) {
@@ -136,7 +128,7 @@ sub _set_taxon_for_obj {
 }
 
 # same thing, but for taxa objects
-sub _set_taxa_for_obj {
+sub _set_otus_for_obj {
 	my ( $self, $elt, $obj ) = @_;
 	my $taxa_idref = $elt->att('otus');
 	$obj->set_taxa( $self->{'_taxa'}->{$taxa_idref} );
@@ -158,24 +150,38 @@ sub _new {
 		'_taxa'          => {}, # we want to find the right taxon to link to
 		'_taxon_in_taxa' => {},
 	}, $class;
-	$logger->debug("created nexml parser object");
 
 	# the handlers need to hold a reference to the parser object $self, so that
 	# the handler methods (e.g. _process_otus) have access to $self and
 	# they can store processed blocks
 	my $handlers = {
-		'otus'      =>  sub { &_process_taxa(   @_, $self ) },
+		'otus'       =>  sub { &_process_otus(   @_, $self ) },
 		'characters' => sub { &_process_chars(  @_, $self ) },
 		'trees'      => sub { &_process_forest( @_, $self ) },
 		'#PI'        => \&_process_pi,
 	};
-	$logger->debug("created xml handlers");
 
 	# here we put the two together, i.e. create the actual XML::Twig object
 	# with its handlers, and create a reference to it in the parser object
 	$self->{'_twig'} = XML::Twig->new( 'TwigHandlers' => $handlers );
-	$logger->debug("instantiated xml parser");
 	return $self;
+}
+
+sub _init {
+	my $self = shift;
+	if ( isa( $self, 'HASH' ) ) {
+		$self->{'_blocks'}        = [];
+		$self->{'_taxa'}          = {};
+		$self->{'_taxon_in_taxa'} = {};
+		return $self;
+	}
+	else {
+		return {
+			'_blocks'        => [],
+			'_taxa'          => {}, # we want to find the right taxon to link to
+			'_taxon_in_taxa' => {},
+		};
+	}
 }
 
 # the official interface for Bio::Phylo::IO parser subclasses requires a
@@ -217,7 +223,7 @@ sub _process_pi {
 	throw 'API' => 'pi', 'line' => $twig->parser->current_line;
 }
 
-sub _process_taxa {
+sub _process_otus {
 	my ( $twig, $taxa_elt, $self ) = @_;
 	my ( $taxa_obj, $taxa_id ) = $self->_obj_from_elt( $taxa_elt, $CLASS{Taxa} );
 	$logger->debug("Taxa id: $taxa_id");
@@ -240,7 +246,7 @@ sub _process_chars {
 	$type =~ s/^nex:(.*?)(?:Cells|Seqs)/$1/;
 	my %args = ( '-type' => $type );
 	my ( $matrix_obj, $matrix_id ) = $self->_obj_from_elt( $characters_elt, $CLASS{Matrix}, %args );
-	my $taxa_idref = $self->_set_taxa_for_obj( $characters_elt, $matrix_obj );
+	my $taxa_idref = $self->_set_otus_for_obj( $characters_elt, $matrix_obj );
 	
 	# TODO do we really need the <matrix/> container?
 	# rows are actually stored inside the <matrix/> element
@@ -280,7 +286,7 @@ sub _process_chars {
 		}
 		$logger->debug($self->_pos . " set char: '@chars'");
 		$row_obj->set_char(\@chars);		
-		$self->_set_taxon_for_obj( $row_elt, $row_obj, $taxa_idref );
+		$self->_set_otu_for_obj( $row_elt, $row_obj, $taxa_idref );
 		
 		$matrix_obj->insert($row_obj);	
 	}
@@ -399,7 +405,7 @@ sub _process_forest {
 
 	# instantiate forest object, set id, taxa and name	
 	my ( $forest_obj, $forest_id ) = $self->_obj_from_elt( $trees_elt, $CLASS{Forest} );
-	my $taxa_idref = $self->_set_taxa_for_obj( $trees_elt, $forest_obj );
+	my $taxa_idref = $self->_set_otus_for_obj( $trees_elt, $forest_obj );
 	
 	# loop over tree elements
 	for my $tree_elt ( $trees_elt->children('tree') ) {
@@ -439,7 +445,7 @@ sub _process_listtree {
 	for my $node_elt ( $tree_elt->children('node') ) {
 		my ( $node_obj, $node_id ) = $self->_obj_from_elt( $node_elt, $CLASS{Node} );
 		$node_by_id{$node_id} = $node_obj;
-		$self->_set_taxon_for_obj( $node_elt, $node_obj, $taxa_idref );
+		$self->_set_otu_for_obj( $node_elt, $node_obj, $taxa_idref );
 		$tree_obj->insert( $node_obj );
 	}
 	
@@ -502,7 +508,7 @@ sub _process_listnode {
 	
 	# link to taxon
 	if ( $node_elt->tag eq 'terminal' ) {
-		$self->_set_taxon_for_obj( $node_elt, $node_obj, $taxa_idref );
+		$self->_set_otu_for_obj( $node_elt, $node_obj, $taxa_idref );
 	}
 
 	# always test for defined-ness on branch lengths! could be 0

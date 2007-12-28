@@ -2,7 +2,7 @@
 # $Id$
 BEGIN {
     unshift @INC, 'perl/lib';
-    unshift @INC, '../phylo/lib'; # i.e. the latest Bio::Phylo on CIPRES svn, in framework/perl
+    unshift @INC, '../perl/lib';
 }
 use strict;
 use warnings;
@@ -14,7 +14,8 @@ use File::Spec;
 use HTML::Entities;
 use IO::Handle;
 use Scalar::Util 'blessed';
-
+use Template;
+use util;
 use Bio::Phylo::IO 'parse';
 use Bio::Phylo::Util::Logger;
 use Bio::Phylo::Util::Exceptions 'throw';
@@ -128,7 +129,59 @@ else {
 
 ####################################################################################################
 # WRITE RESULTS
+# $prefix is the path to docroot, so on server-side
+# includes we need it (hence it is part of $include),
+# but on the client side (e.g. paths to images in an
+# html page) it needs to be stripped
+my $prefix;
+if ( $ENV{'DOCUMENT_ROOT'} ) {
+    $prefix = $ENV{'DOCUMENT_ROOT'};
+}
+elsif ( -d '/Users/rvosa/Documents/workspace' ) {
+    $prefix = '/Users/rvosa/Documents/workspace';
+}
+else {
+    $prefix = $ENV{'HOME'};
+}
 
+# $include is used to find server side includes, e.g.
+# when we embed javascript or css directly into a page.
+# on the client side we need to strip $prefix of it.
+my $include = $prefix . '/nexml/html/include';
+my $template = Template->new(
+    'INCLUDE_PATH' => $include,      # or list ref
+    'POST_CHOMP'   => 1,             # cleanup whitespace
+    'PRE_PROCESS'  => 'header.tmpl', # prefix each template
+    'POST_PROCESS' => 'footer.tmpl', # suffix each template
+    'START_TAG'    => '<%',
+    'END_TAG'      => '%>',
+    'OUTPUT_PATH'  => $prefix,
+);
+# the paths object is a utility object that translates between
+# server side paths (i.e. relative to system root) and browser 
+# side paths (i.e. relative to docroot)
+my $paths = util::paths->new(
+    '-prefix'   => $prefix,
+    '-include'  => $include,
+);
+# unfortunately this has to be hardcoded, we can't
+# use Sys::Hostname::hostname() because we're 
+# generating docs from a cron job (so no CGI vars)
+# and we'd be running on a virtual host anyway
+my $hostname = $ENV{'SERVER_NAME'} || 'eupoa.local';
+# variables to be interpolated in template
+my $vars = {
+    'currentFile' => $file,
+    'title'       => "nexml - validation: $code",
+    'mainHeading' => 'Results',
+    'currentURL'  => 'http://' . $hostname . $ENV{'SCRIPT_URL'},
+    'currentDate' => my $time = localtime,
+    'paths'       => $paths,
+    'hostName'    => $hostname,
+};
+
+# create the root document
+$template->process( 'overview.html', $vars ) || die $template->error();
 print header('text/html', $code); # response code (201 or 400) here as second arg
 print start_html(
     '-title' => $title,
