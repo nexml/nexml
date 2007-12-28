@@ -195,7 +195,7 @@ class Tree(base.IdTagged):
         Returns preorder iterator over tree edges.
         """
         for node in self.seed_node.preorder_iter(self.seed_node):
-            if filter_fn is None or filter_fn(node.edge):
+            if node.edge and (filter_fn is None or filter_fn(node.edge)):
                 yield node.edge
 
     def postorder_edge_iter(self, filter_fn=None):
@@ -203,7 +203,7 @@ class Tree(base.IdTagged):
         Returns postorder iterator over tree edges.
         """
         for node in self.seed_node.postorder_iter(self.seed_node):
-            if filter_fn is None or filter_fn(node.edge):
+            if node.edge and (filter_fn is None or filter_fn(node.edge)):
                 yield node.edge
 
     def level_order_edge_iter(self, filter_fn=None):
@@ -211,7 +211,7 @@ class Tree(base.IdTagged):
         Returns level-order iterator over tree edges.
         """
         for node in self.seed_node.level_order_iter(self.seed_node):
-            if filter_fn is None or filter_fn(node.edge):
+            if node.edge and (filter_fn is None or filter_fn(node.edge)):
                 yield node.edge
 
 ##############################################################################
@@ -664,6 +664,7 @@ class Edge(base.IdTagged):
         self.__head_node = None
         self.__tail_elem_id = None
         self.__head_elem_id = None
+        self.rootedge = False
 
         self.elem_id = elem_id
         if head_node is not None:
