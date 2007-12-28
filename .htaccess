@@ -20,9 +20,10 @@ AddType application/x-httpd-imap map
     IndexOptions FancyIndexing IconHeight=16 IconWidth=16  NameWidth=20 DescriptionWidth=30 SuppressHTMLPreamble
 
     # plain text files
-    AddIcon /nexml/html/include/page_white_text.png LICENSE Doxyfile .txt .diz .nfo .faq .readme .me COPYING .skip
+    AddIcon /nexml/html/include/page_white_text.png LICENSE Doxyfile .txt .diz .nfo .faq .readme .me COPYING .skip makefile Makefile
     AddDescription "Software license" LICENSE COPYING
     AddDescription "Documentation generator" Doxyfile
+    AddDescription "Make file" makefile Makefile
     AddDescription "Plain text file" .txt    
     AddDescription "Plain text info" .diz .nfo .faq .readme .me
     
@@ -100,11 +101,11 @@ AddType application/x-httpd-imap map
 
     # c/c++ related
     AddIcon /nexml/html/include/page_white_c.png .c
-    AddIcon /nexml/html/include/page_white_cplusplus.png .cpp
+    AddIcon /nexml/html/include/page_white_cplusplus.png .cpp .cxx
     AddIcon /nexml/html/include/page_white_h.png .h
     AddDescription "C/C++ header file" .h
     AddDescription "C code" .c 
-    AddDescription "C++ code" .cpp
+    AddDescription "C++ code" .cpp .cxx
 
     # files without icons
     AddDescription "DocType Definition" .dtd
