@@ -417,7 +417,7 @@ class _NexmlTreesParser(_NexmlElementParser):
             for node in nodes.values():
                 if node.parent_node == None:
                     parentless.append(node)
-
+            print [node.elem_id for node in parentless]
             # If one parentless node found, this is the root: we use
             # it as the tree head node. If multiple parentless nodes
             # are found, then we add them all as children of the
@@ -441,6 +441,8 @@ class _NexmlTreesParser(_NexmlElementParser):
                 else:
                     nodes[rootedge.head_node_id].edge = rootedge
                     ### should we make this node the seed node by rerooting the tree here? ###
+            else:
+                treeobj.seed_node.edge = None
             tree_block.append(treeobj)
 
     def parse_nodes(self, tree_element, taxa_block, node_factory):
@@ -475,6 +477,7 @@ class _NexmlTreesParser(_NexmlElementParser):
             edge.head_node_id = rootedge.get('target', None)
             edge.elem_id = rootedge.get('id', 'e' + str(id(edge)))
             edge_weight_str = weight_type(rootedge.get('length', '0.0'))
+            edge.rootedge = True
             edge_weight = None
             try:
                 edge_weight = weight_type(edge_weight_str)
@@ -806,7 +809,7 @@ class NexmlWriter(datasets.Writer):
         """
         Writes out a NEXML edge element.
         """
-        if edge.head_node:
+        if edge and edge.head_node:
             parts = []
             if edge.tail_elem_id != None:
                 tag = "edge"
@@ -846,8 +849,10 @@ class NexmlWriter(datasets.Writer):
             dest.write(parts + '\n')
 
 def basic_test():
-    source = "tests/sources/comprehensive.xml"
-    target = "tests/output/comprehensive_parsed.xml"
+#     source = "tests/sources/comprehensive.xml"
+#     target = "tests/output/comprehensive_parsed.xml"
+    source = "tests/sources/simpletree.xml"
+    target = "tests/output/simpletree_parsed.xml"
     nexmlr = NexmlReader()
     dataset = nexmlr.get_dataset(source)
     for taxa_block in dataset.taxa_blocks:
@@ -861,7 +866,7 @@ def basic_test():
     nexmlw = NexmlWriter()
     print
     print
-    print nexmlw.compose_dataset(dataset)
+    #print nexmlw.compose_dataset(dataset)
     output = open(target, 'w')
     nexmlw.store_dataset(dataset=dataset, destination=output)
     
