@@ -49,7 +49,11 @@
                 <% INSERT 'schema.js' %>
             //]]>
         </script>
-        <link rel="shortcut icon" href="<% favicon %>" />
+        <% IF favicon %>
+            <link rel="shortcut icon" href="<% favicon %>" />
+        <% ELSE %>
+            <link rel="shortcut icon" href="<% paths.strip(paths.include('favicon.ico')) %>" />
+        <% END %>
     </head>
     <body>
     
