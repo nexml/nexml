@@ -75,10 +75,10 @@ if ( $@ ) {
     	( $error, $line ) = ( $@, 1 );
     }
     push @logmessages, make_log_message( 'fatal', $error, $line );
-    $title .= ': INVALID';
+    $title .= ': FAIL';
 }
 else {
-	$title .= ': VALID';
+	$title .= ': SUCCESS';
 }
 
 ####################################################################################################
