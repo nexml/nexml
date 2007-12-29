@@ -147,12 +147,12 @@ AddType application/x-httpd-imap map
     # it as plaintext if found.
     #
 
-    ReadmeName /nexml/html/include/footer.cgi
+    ReadmeName /nexml/site/bin/footer.cgi
     #HeaderName header
 
     # you can specify the full name, if you like..
 
-    HeaderName /nexml/html/include/header.cgi
+    HeaderName /nexml/site/bin/header.cgi
 
     # better yet, specify a single fixed location. This will cover *all* the subdirectories
     # affected by this .htaccess, and saves you duplicating the same file over and over..
