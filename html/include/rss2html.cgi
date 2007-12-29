@@ -116,7 +116,7 @@ for my $feed_name ( keys %{ $feed_id } ) {
         if ( not $@ ) {
             $vars->{'root'} = $twig->root->first_child('channel');
             $vars->{'currentFeed'} = $feed_url;
-            $vars->{'currentURL'} = $baseURL . '/' . $feed_name . '/';
+            $vars->{'currentURL'} = $baseURL . $feed_name . '/';
 
             $template->process( 'rss2html.tmpl', $vars, $outfile ) 
             || warn $template->error(); # serialize failed
