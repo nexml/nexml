@@ -1,5 +1,5 @@
 #!/usr/bin/perl
-# $Id$
+# $Id: index.cgi 337 2007-12-29 22:45:20Z rvos $
 use CGI::Carp 'fatalsToBrowser';
 BEGIN {
     use lib '../perl/lib';
