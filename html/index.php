@@ -240,7 +240,7 @@
         <!-- validate form -->   
         <div id="validateDiv">
         <form 
-            action="http://nexml-dev.nescent.org/nexml/validator" 
+            action="/nexml/validator" 
             enctype="multipart/form-data" 
             method="post" 
             id="validateForm">
