@@ -242,4 +242,85 @@ Also see the website: L<http://www.nexml.org>
 
 =cut
 
+package util::siteFactory;
+use vars '$AUTOLOAD';
+use File::Spec::Functions;
+use Template;
+
+my %defaults = (
+	'hostname' => $ENV{'SERVER_NAME'},
+	'prefix'   => $ENV{'DOCUMENT_ROOT'},
+	'subtree'  => $ENV{'SCRIPT_URL'},
+	'include'  => catdir( $ENV{'DOCUMENT_ROOT'}, 'nexml', 'html', 'include' ),
+);
+
+sub new {
+	my $class  = shift;
+	my %fields = ( %defaults, @_ );
+	my $self   = \%fields;
+	return bless $self, $class; 
+}
+
+sub create_path_handler {
+	my $self = shift;
+	return util::paths->new(
+	    '-prefix'  => $self->prefix,
+	    '-include' => $self->include,
+	);
+}
+
+sub create_plain_template {
+	my $self = shift;
+	my %template_defaults = (     
+		'INCLUDE_PATH' => $self->include,      # or list ref
+	    'POST_CHOMP'   => 1,             # cleanup whitespace
+	#    'PRE_PROCESS'  => 'header.tmpl', # prefix each template
+	#    'POST_PROCESS' => 'footer.tmpl', # suffix each template
+	    'START_TAG'    => '<%',
+	    'END_TAG'      => '%>',
+	    'OUTPUT_PATH'  => $self->prefix,
+    );	
+    my %template_args = ( %template_defaults, @_ );
+    return Template->new( %template_args );
+}
+
+sub create_site_template {
+	my $self = shift;
+	my %defaults = (
+		'PRE_PROCESS'  => 'header.tmpl',
+		'POST_PROCESS' => 'footer.tmpl',	
+	);
+	my %args = ( %defaults, @_ );
+	return $self->create_plain_template( %args );
+}
+
+sub create_template_vars {
+	my $self = shift;
+	my %default_vars = (
+	    'currentURL'  => 'http://' . $self->hostname . $self->subtree,
+	    'currentDate' => my $time = localtime,
+	    'paths'       => $self->create_path_handler,
+	    'hostName'    => $self->hostname,		
+	);
+	my %args = ( %default_vars, @_ );
+	return \%args;
+}
+
+sub AUTOLOAD {
+	my $self = shift;
+	my $method = $AUTOLOAD;
+	$method =~ s/.*://;
+	if ( $method =~ qr/^[A-Z]+$/ or exists $self->{$method} ) {
+		if ( exists $self->{$method} ) {
+			if ( @_ ) {
+				$self->{$method} = shift;
+			}
+			return $self->{$method};
+		}
+	}
+	else {
+		die "No such method: $AUTOLOAD";
+	}
+}
+
 1;
