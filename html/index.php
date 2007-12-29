@@ -490,7 +490,7 @@
         <a class="sidelink" href="/mail/">Mailing list</a>
         <span class="hide">|</span> 
         
-        <a class="sidelink" href="/svn/">SVN repository</a> 
+        <a class="sidelink" href="/code/">SVN repository</a> 
         <span class="hide">|</span>
 
         <a class="sidelink" href="/tracker/">Issue tracker</a>
