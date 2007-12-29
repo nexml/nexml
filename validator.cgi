@@ -1,6 +1,7 @@
 #!/usr/bin/perl
 # $Id$
 BEGIN {
+	use lib $ENV{'DOCUMENT_ROOT'} . '/lib/lib/perl5/site_perl/5.8.6/darwin-thread-multi-2level/';
     unshift @INC, $ENV{'DOCUMENT_ROOT'} . '/nexml/perl/lib';
     unshift @INC, $ENV{'DOCUMENT_ROOT'} . '/nexml/site/lib';
     unshift @INC, '/Users/rvosa/CIPRES-and-deps/cipres/build/lib/perl/lib';
