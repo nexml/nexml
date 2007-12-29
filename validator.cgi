@@ -135,7 +135,7 @@ my $vars = {
     'logmessages' => \@logmessages,
     'lines'       => \@lines,
     'styleSheets' => [ 'validator.css' ],
-    'favicon'     => $paths->strip( $paths->include( $title =~ qr/INVALID/ ? 'cross.png' : 'tick.png' ) ),
+    'favicon'     => $paths->strip( $paths->include( $title =~ qr/FAIL/ ? 'cross.png' : 'tick.png' ) ),
     'encoder'     => util::encoder->new,    
 };
 
