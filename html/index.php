@@ -199,7 +199,7 @@
     <!-- don't use shortcut, expand closing tag!
     Thanks, policywatcher! http://carroll.org.uk/archives/2005/01/17/xhtml-script-tag-in-internet-explorer -->
     <script type="text/javascript" src="/nexml/html/script.js" ></script>
-    
+    <link rel="shortcut icon" href="/nexml/html/include/favicon.ico" />
   </head>
   
   <body>
