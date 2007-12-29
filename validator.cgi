@@ -1,8 +1,9 @@
 #!/usr/bin/perl
 # $Id$
 BEGIN {
-    unshift @INC, 'perl/lib';
-    unshift @INC, '../perl/lib';
+    unshift @INC, $ENV{'DOCUMENT_ROOT'} . '/nexml/perl/lib';
+    unshift @INC, $ENV{'DOCUMENT_ROOT'} . '/nexml/site/lib';
+    unshift @INC, '/Users/rvosa/CIPRES-and-deps/cipres/build/lib/perl/lib';
 }
 use strict;
 use warnings;
@@ -21,50 +22,11 @@ use Bio::Phylo::Util::Logger;
 use Bio::Phylo::Util::Exceptions 'throw';
 
 my $q = CGI->new; # the CGI object, parses request parameters, generates response markup
-my $logger = Bio::Phylo::Util::Logger->new; # the logger, transmits messages from Bio::Phylo
+my $logger = get_logger(); # the logger, transmits messages from Bio::Phylo
 my @logmessages; # will hold marked up logging messages
 my $code = '201 Created'; # will hold code as per http://users.sdsc.edu/~lcchan/rest-api-table1.html
 my @lines; # will hold lines in the file
-my $title = 'nexml validation results'; # will say "valid" or "invalid"
-
-####################################################################################################
-# LOGGER CONFIGURATION
-
-# set logger to transmit messages at all levels
-$logger->VERBOSE( 
-    '-level' => 4, 
-    '-class' => 'Bio::Phylo::Parsers::Nexml' 
-);
-
-# closure to turn log messages into html
-my $make_html_msg = sub {
-    my ( $level, $msg, $line ) = @_;
-    my $link = defined $line ? ' at line ' . a( { '-href' => '#line' . $line }, $line ) : '';
-    return pre(
-        { '-class' => lc( $level ) },
-        encode_entities( $msg ) . $link
-    );
-};
-
-# attach a listener that passes log messages thru make_html_msg closure and pushes onto stack
-$logger->set_listeners(
-    sub {
-        # check Bio::Phylo::Util::Logger for details on this argument stack
-        my ( $log_string, $method, $subroutine, $filename, $line, $msg ) = @_;
-        
-        # these will hold line, column and byte location of xml parser 
-        my ( $xline, $xcol, $xbyte );
-        
-        # log messages are prefixed with 1:2:3 for line 1, col 2, byte 3
-        if ( $msg =~ m/^(\d+):(\d+):(\d+)\b/ ) {
-            ( $xline, $xcol, $xbyte ) = ( $1, $2, $3 );
-            $msg =~ s/^(\d+:\d+:\d+)\s*//;
-        }
-        
-        # appends <pre class="info">$msg at line <a href="#line12">12</a></pre>
-        push @logmessages, $make_html_msg->( $method, $msg, $xline );
-    }
-);
+my $title = 'nexml'; # will say "valid" or "invalid"
 
 ####################################################################################################
 # PARSING
@@ -74,17 +36,8 @@ if ( not defined $file ) {
 	$@ = 'No file specified';
 }
 else {
-	if ( fileno( $file ) ) {
-		@lines = <$file>;
-	}
-	else {
-		open my $fh, '<', $file or die "Can't open file to validate: $!";
-		@lines = <$fh>;
-		close $fh;
-	}
-	my ( $fh, $filename ) = File::Temp::tempfile;
-	$fh->print( @lines );
-	$fh->close;
+	my $filename;
+	( $filename, @lines ) = read_file( $file );
 	
 	eval { 
 		close STDERR;
@@ -101,7 +54,7 @@ else {
 					throw( 'API' => $msg, 'line' => $line );
 				}
 				else {
-					push @logmessages, $make_html_msg->( $level, $msg, $line );
+					push @logmessages, make_log_message( $level, $msg, $line );
 				}
 			}			
 		}
@@ -120,7 +73,7 @@ if ( $@ ) {
     else {
     	( $error, $line ) = ( $@, 1 );
     }
-    push @logmessages, $make_html_msg->( 'fatal', $error, $line );
+    push @logmessages, make_log_message( 'fatal', $error, $line );
     $title .= ': INVALID';
 }
 else {
@@ -172,44 +125,22 @@ my $hostname = $ENV{'SERVER_NAME'} || 'eupoa.local';
 # variables to be interpolated in template
 my $vars = {
     'currentFile' => $file,
-    'title'       => "nexml - validation: $code",
-    'mainHeading' => 'Results',
+    'title'       => $title,
+    'mainHeading' => $title,
     'currentURL'  => 'http://' . $hostname . $ENV{'SCRIPT_URL'},
     'currentDate' => my $time = localtime,
     'paths'       => $paths,
     'hostName'    => $hostname,
+    'logmessages' => \@logmessages,
+    'lines'       => \@lines,
+    'styleSheets' => [ 'validator.css' ],
+    'favicon'     => $paths->strip( $paths->include( $title =~ qr/INVALID/ ? 'cross.png' : 'tick.png' ) ),
+    'encoder'     => util::encoder->new,    
 };
 
 # create the root document
-$template->process( 'overview.html', $vars ) || die $template->error();
 print header('text/html', $code); # response code (201 or 400) here as second arg
-print start_html(
-    '-title' => $title,
-    '-style' => { 
-        '-src'  => 'style.css',
-        '-type' => 'text/css',
-    },
-    '-script' => { 
-        '-type' => 'text/javascript',
-        '-src'  => 'script.js', 
-    },
-);
-my @links;
-for ( qw(debug info warn error fatal) ) {
-    push @links, a( { '-href' => "javascript:toggle('$_')", '-class' => $_, }, $_ );
-}
-print 'Show: ', join ' | ', @links;
-print @logmessages;
-my $i = 0;
-print table(
-    map {
-        Tr(
-            td( pre( a( { '-name' => 'line' . ++$i, '-class' => 'line' }, $i ) ) ),
-            td( pre( encode_entities( $_ ) ) )
-        )
-    } @lines
-);
-print end_html;
+$template->process( 'validator.tmpl', $vars ) || die $template->error();
 
 =head1 SUBROUTINES
 
@@ -266,6 +197,99 @@ sub make_java_cmd {
 		'validator.XmlValidator',
 	);
 	return @cmd;
+}
+
+=item read_file()
+
+ Type    : Subroutine
+ Title   : read_file
+ Usage   : my @lines = read_file( $file );
+ Function: Reads $file into an array @lines
+ Returns : Contents of $file, split on @lines
+ Args    : $file is either a name or a handle
+
+=cut
+
+sub read_file {
+	my $file = shift;
+	my @lines;
+	if ( fileno( $file ) ) {
+		@lines = <$file>;
+	}
+	else {
+		open my $fh, '<', $file or die "Can't open file to validate: $!";
+		@lines = <$fh>;
+		close $fh;
+	}
+	my ( $fh, $filename ) = File::Temp::tempfile;
+	$fh->print( @lines );
+	$fh->close;
+	return $filename, @lines;
+}
+
+=item make_log_message()
+
+ Type    : Subroutine
+ Title   : make_log_message
+ Usage   : my %msg = %{ make_log_message( $level, $msg, $line ) };
+ Function: Makes a logmessage hash
+ Returns : A hash keyed on 'level', 'msg' and 'line';
+ Args    : $level = log level ('DEBUG', 'INFO' etc.)
+ 		   $msg = the log message
+ 		   $line = line the message applies to (if any)
+
+=cut
+
+sub make_log_message {
+    my ( $level, $msg, $line ) = @_;
+    return {
+    	'level' => lc($level),
+    	'msg'   => $msg,
+    	'line'  => $line,
+    };
+}
+
+=item get_logger()
+
+ Type    : Subroutine
+ Title   : get_logger
+ Usage   : my $logger = get_logger();
+ Function: Makes a logger object
+ Returns : A logger object
+ Args    : None
+
+=cut
+
+sub get_logger {
+	my $logger = Bio::Phylo::Util::Logger->new;
+	
+	# set logger to transmit messages at all levels
+	$logger->VERBOSE( 
+		'-level' => 4, 
+		'-class' => 'Bio::Phylo::Parsers::Nexml' 
+	);
+	
+	# attach a listener that passes log messages thru make_html_msg closure and pushes onto stack
+	$logger->set_listeners(
+		sub {
+			# check Bio::Phylo::Util::Logger for details on this argument stack
+			my ( $log_string, $method, $subroutine, $filename, $line, $msg ) = @_;
+			
+			# these will hold line, column and byte location of xml parser 
+			my ( $xline, $xcol, $xbyte );
+			
+			# log messages are prefixed with 1:2:3 for line 1, col 2, byte 3
+			if ( $msg =~ m/^(\d+):(\d+):(\d+)\b/ ) {
+				( $xline, $xcol, $xbyte ) = ( $1, $2, $3 );
+				$msg =~ s/^(\d+:\d+:\d+)\s*//;
+			}
+			
+			# appends <pre class="info">$msg at line <a href="#line12">12</a></pre>
+			push @logmessages, make_log_message( $method, $msg, $xline );
+		}
+	);
+	return $logger;
+
 }
 
 =back

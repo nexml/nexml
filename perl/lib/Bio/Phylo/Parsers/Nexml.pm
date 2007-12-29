@@ -94,7 +94,8 @@ sub _obj_from_elt {
 		my $dict_hash = $self->_process_dictionary( $dict_elt );
 		$obj->set_generic( 'dict' => $dict_hash );
 	}
-	$logger->debug($self->_pos . " created object of class $class with xml id $id");
+	my $tag = $elt->tag;
+	$logger->debug($self->_pos . " processed <$tag id=\"$id\"/>");
 	return ( $obj, $id );
 }
 
@@ -226,7 +227,6 @@ sub _process_pi {
 sub _process_otus {
 	my ( $twig, $taxa_elt, $self ) = @_;
 	my ( $taxa_obj, $taxa_id ) = $self->_obj_from_elt( $taxa_elt, $CLASS{Taxa} );
-	$logger->debug("Taxa id: $taxa_id");
 	push @{ $self->{'_blocks'} }, $taxa_obj;
 	$self->{'_taxa'}->{$taxa_id} = $taxa_obj;
 	$self->{'_taxon_in_taxa'}->{$taxa_id} = {};
@@ -235,6 +235,7 @@ sub _process_otus {
 		$self->{'_taxon_in_taxa'}->{$taxa_id}->{$taxon_id} = $taxon_obj;
 		$taxa_obj->insert( $taxon_obj );
 	}
+	$logger->info($self->_pos . " Processed block id: $taxa_id");	
 }
 
 sub _process_chars {

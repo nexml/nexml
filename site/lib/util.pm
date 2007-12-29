@@ -11,6 +11,21 @@ BEGIN {
     %EXPORT_TAGS = ( 'all' => [ @EXPORT_OK ] );
 }
 
+=head1 SUBROUTINES
+
+=over
+
+=item svninfo()
+
+ Title:    svninfo()
+ Type:     Function
+ Usage:    my %info = svninfo($file);
+ Returns:  A hash keyed in the names of `svn info $file` fields
+ Comments: Requires either env var $SVN with path to subversion
+           executable, or if undefined, svn on $PATH
+
+=cut
+
 sub svninfo {
     my $file = shift;
     my %info;
@@ -25,6 +40,16 @@ sub svninfo {
     }
     return %info;
 }
+
+=item include()
+
+ Title:    include()
+ Type:     Function
+ Usage:    my @contents = include(@files);
+ Returns:  Includes raw contents of @files
+ Comments: 
+
+=cut
 
 sub include {
     my @contents;
@@ -42,6 +67,16 @@ sub include {
     }
     return @contents;
 }
+
+=item htmlify()
+
+ Title:    htmlify()
+ Type:     Function
+ Usage:    my @contents = htmlify(@files);
+ Returns:  Includes html'ified contents of @files
+ Comments: 
+
+=cut
 
 sub htmlify {
     my @contents;
@@ -66,6 +101,20 @@ sub htmlify {
 package util::paths;
 use File::Spec;
 
+=back
+
+=head1 NAME
+
+util::paths - website related path transformations
+
+=head1 METHODS
+
+=over
+
+=item new()
+
+=cut
+
 sub new {
     my $class = shift;
     my %args  = @_;
@@ -77,10 +126,18 @@ sub new {
     return bless $self, $class;
 }
 
+=item include()
+
+=cut
+
 sub include {
     my ( $self, $file ) = @_;
     return File::Spec->canonpath( $self->{'include'} . '/' . $file );
 }
+
+=item transform()
+
+=cut
 
 sub transform {
     my ( $self, $file ) = @_;
@@ -90,11 +147,19 @@ sub transform {
     return $file;
 }
 
+=item strip()
+
+=cut
+
 sub strip {
     my ( $self, $file ) = @_;
     $file =~ s/^\Q$self->{'prefix'}\E//;
     return $file;
 }
+
+=item breadCrumbs()
+
+=cut
 
 sub breadCrumbs {
     my ( $self, $url ) = @_;
@@ -105,12 +170,10 @@ sub breadCrumbs {
     $url =~ s|^\Q$root\E||;
     my @fragments = split(/\//, $url);
     my @crumbs = ( { 'name' => '~', 'url' => '/' } );
-#    my @crumbs = ( { 'name' => '~', 'url' => $root } );
     for my $i ( 0 .. $#fragments ) {
         push @crumbs, {
             'name' => $fragments[$i],
             'url'  => '/' . join( '/', @fragments[ 0 .. $i ] ),
-#            'url'  => $root . join( '/', @fragments[ 0 .. $i ] ),
         };
     }
     delete $crumbs[-1]->{'url'};
@@ -120,9 +183,63 @@ sub breadCrumbs {
 package util::encoder;
 use URI::Escape ();
 use HTML::Entities ();
+
+=back
+
+=head1 NAME
+
+util::encoder - website related string transformations
+
+=head1 METHODS
+
+=over
+
+=item new()
+
+=cut
+
 sub new { return bless {}, shift }
-sub util::encoder::uri_escape      { URI::Escape::uri_escape(pop)         }
-sub util::encoder::uri_unescape    { URI::Escape::uri_unescape(pop)       }
+
+=item uri_escape()
+
+=cut
+
+sub util::encoder::uri_escape { URI::Escape::uri_escape(pop) }
+
+=item uri_unescape()
+
+=cut
+
+sub util::encoder::uri_unescape { URI::Escape::uri_unescape(pop) }
+
+=item encode_entities()
+
+=cut
+
 sub util::encoder::encode_entities { HTML::Entities::encode_entities(pop) }
+
+=item decode_entities()
+
+=cut
+
 sub util::encoder::decode_entities { HTML::Entities::decode_entities(pop) }
+
+=item chomp()
+
+=cut
+
+sub util::encode::chomp { CORE::chomp($_[1]) }
+
+=back
+
+=head1 SEE ALSO
+
+Also see the website: L<http://www.nexml.org>
+
+=head1 REVISION
+
+ $Id: Phylo.pm 4786 2007-11-28 07:31:19Z rvosa $
+
+=cut
+
 1;

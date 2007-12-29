@@ -38,6 +38,9 @@
             <!--
                 <% INCLUDE 'style.css' %>        
                 <% INSERT 'schema.css' %>
+                <% FOREACH css = styleSheets %>
+                    <% INCLUDE $css %>
+                <% END %>
             -->
         </style>
         <script type="text/javascript">
@@ -46,6 +49,7 @@
                 <% INSERT 'schema.js' %>
             //]]>
         </script>
+        <link rel="shortcut icon" href="<% favicon %>" />
     </head>
     <body>
     
