@@ -484,16 +484,16 @@
           <a id="sitemenu" name="sitemenu"></a>Goings on:
         </h2>
         
-        <a class="sidelink" href="/nexml/html/index/wiki/">Wiki</a> 
+        <a class="sidelink" href="/wiki/">Wiki</a> 
         <span class="hide">|</span>
         
-        <a class="sidelink" href="/nexml/html/index/mail/">Mailing list</a>
+        <a class="sidelink" href="/mail/">Mailing list</a>
         <span class="hide">|</span> 
         
-        <a class="sidelink" href="/nexml/html/index/svn/">SVN repository</a> 
+        <a class="sidelink" href="/svn/">SVN repository</a> 
         <span class="hide">|</span>
 
-        <a class="sidelink" href="/nexml/html/index/tracker/">Issue tracker</a>
+        <a class="sidelink" href="/tracker/">Issue tracker</a>
         <span class="hide">|</span>
            
         
