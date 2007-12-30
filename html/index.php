@@ -400,7 +400,7 @@
           schema (designated as namespace http://www.nexml.org/1.0)
           is documented on our 
           <a href="https://www.nescent.org/wg_evoinfo/Future_Data_Exchange_Standard">wiki</a>;
-          the bleeding edge version is available from <a href="/nexml/html/index/svn">svn</a>;
+          the bleeding edge version is available from <a href="/code">svn</a>;
           the <a href="/nexml/xsd">source code can be browsed</a> on our
           site (it's a check out from our repository which is updated
           every five minutes); for bug reports and feature requests please
