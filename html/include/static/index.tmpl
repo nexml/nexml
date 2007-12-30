@@ -1,0 +1,118 @@
+<!-- TITLE: nexml - phylogenetic data as xml -->
+<!-- HEADING: Overview -->
+<p>
+    The <a rel="nofollow" href="http://www.citeulike.org/user/rvosa/article/2011773">
+    NEXUS file format</a> is a commonly used format for 
+    phylogenetic data. Unfortunately, over time, the format
+    has become overloaded - which has caused various
+    <a rel="nofollow" href="https://www.nescent.org/wg_evoinfo/NEXUS_Problems">
+    problems</a>. Meanwhile, new technologies around the
+    <a rel="nofollow" href="http://www.w3.org/XML/">XML</a> standard have
+    emerged. These technologies have the potential to greatly
+    simplify, and improve robustness, in the processing of phylogenetic data:
+</p>
+<ul>
+<li class="rss">
+    <strong>Validation</strong> &mdash; some of the issues hampering
+    interoperability are caused by the fact that no formal
+    specification exists for NEXUS files, and no objective way
+    to validate files. Thanks to <a rel="nofollow" href="http://www.w3.org/XML/Schema">
+    XML Schema</a> we can now define a grammar against which 
+    data files can be validated.
+</li>
+<li class="rss">
+    <strong>Web services</strong> &mdash; a number of different 
+    technologies (such as <a rel="nofollow" href="http://www.xmlrpc.com/">XML-RPC</a>, 
+    <a rel="nofollow" href="http://en.wikipedia.org/wiki/Representational_State_Transfer">REST</a> 
+    and <a rel="nofollow" href="http://www.w3.org/TR/soap/">SOAP</a>) have 
+    emerged allowing disparate services to be glued together 
+    over the internet. Using such services, researchers can 
+    "farm out" their calculations to dedicated servers, such
+    as those of the <a rel="nofollow" href="http://www.phylo.org">CIPRES
+    project</a>.
+</li>
+<li class="rss">
+    <strong>Native XML databases</strong> &mdash; relational
+    databases are based on a fixed schema. For phylogenetic
+    data this poses problems, because the field of phyloinformatics
+    moves very rapidly: new metrics and analysis types are
+    published constantly. 
+    <a rel="nofollow" href="http://xmldb-org.sourceforge.net/">XML databases</a>
+    are freed from this constraint, simplifying storage of
+    unusual data types.
+</li>          
+</ul>
+<p>
+    Therefore, a group of developers of phylogenetic software have 
+    come together as part of the <a href="http://www.nescent.org">
+    NESCent</a> working group for <a href="https://www.nescent.org/wg_evoinfo">
+    evolutionary informatics</a> to develop a 
+    <a href="https://www.nescent.org/wg_evoinfo/Future_Data_Exchange_Standard">
+    new data exchange standard</a> based on these technologies.
+</p>
+<p class="internallink">
+
+  [ <a href="#top">Back to top</a> ]
+</p>
+<h3 class="headerstyle">
+    What are we doing about it?
+</h3>
+<p>
+    Nexml development is being undertaken in a number of
+    subprojects:
+</p>
+<ul>
+    <li class="rss">
+        In the first place, we're designing an XML schema. This
+        schema (designated as namespace http://www.nexml.org/1.0)
+        is documented on our 
+        <a href="https://www.nescent.org/wg_evoinfo/Future_Data_Exchange_Standard">wiki</a>;
+        the bleeding edge version is available from <a href="/code">svn</a>;
+        the <a href="/nexml/xsd">source code can be browsed</a> on our
+        site (it's a check out from our repository which is updated
+        every five minutes); for bug reports and feature requests please
+        visit our <a href="/nexml/html/index/tracker">issue tracker</a>
+        page.
+    </li>
+    <li class="rss">
+        Secondly, we're developing java class libraries to aid
+        software developers wanting to use nexml in their applications
+        These class libraries will support reading of nexml data
+        through a SAX API (to facilitate large data sets or data
+        streams) and writing through a set of simple interfaces objects
+        need to implement in order to become xml writable. The code
+        for this subproject is in the java subfolder on the svn
+        repository.
+    </li>
+    <li class="rss">
+        Third, we're developing perl modules that plug into the 
+        IO backend of the Bio::Phylo package on CPAN. Much of the
+        validator code on this website runs on these modules. As
+        Bio::Phylo is (developing to become) compatible with BioPerl
+        and Bio::NEXUS, this will make nexml IO available to a large
+        number of perl programmers.
+    </li>
+</ul>
+<p>
+    In addition, the developers of the phycas project are working
+    on parsing and serializing their python objects in nexml, and
+    Sergei Kosakovsky Pond of hyphy is interested in nexml IO for
+    that project. We've also had (very tentative) conversations with
+    Paul Lewis of NCL (the nexus class libraries in c++) about nexml
+    integration. In short, a lot of active but alpha stage development
+    is going on.
+</p>
+<p class="internallink">
+  [ <a href="#top">Back to top</a> ]
+</p>
+<h3 class="headerstyle">
+  Get involved!
+</h3>
+<p>
+  If you are interested in being involved in the nexml project
+  in any way, please do! 
+  <!-- more goes here -->
+</p>
+<p class="internallink">
+  [ <a href="#top">Back to top</a> ]
+</p>                
