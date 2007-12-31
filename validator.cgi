@@ -2,7 +2,7 @@
 # $Id$
 BEGIN {
     use Config;
-    $ENV{ $Config{'ldlibpthname'} } = $ENV{ $Config{'ldlibpthname'} } . $Config{'path_sep'} . $ENV{'DOCUMENT_ROOT'} . '/expat/lib';
+    $ENV{ $Config{'ldlibpthname'} } = $ENV{'DOCUMENT_ROOT'} . '/expat/lib';
 }
 BEGIN {
     use lib $ENV{'DOCUMENT_ROOT'} . '/lib/lib/perl5/site_perl/5.8.6/darwin-thread-multi-2level/';
