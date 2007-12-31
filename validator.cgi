@@ -33,6 +33,7 @@ my @logmessages; # will hold marked up logging messages
 my $code = '201 Created'; # will hold code as per http://users.sdsc.edu/~lcchan/rest-api-table1.html
 my @lines; # will hold lines in the file
 my $title = 'nexml'; # will say "valid" or "invalid"
+my $fac = util::siteFactory->new;
 
 ####################################################################################################
 # PARSING
@@ -88,64 +89,30 @@ else {
 
 ####################################################################################################
 # WRITE RESULTS
-# $prefix is the path to docroot, so on server-side
-# includes we need it (hence it is part of $include),
-# but on the client side (e.g. paths to images in an
-# html page) it needs to be stripped
-my $prefix;
-if ( $ENV{'DOCUMENT_ROOT'} ) {
-    $prefix = $ENV{'DOCUMENT_ROOT'};
-}
-elsif ( -d '/Users/rvosa/Documents/workspace' ) {
-    $prefix = '/Users/rvosa/Documents/workspace';
-}
-else {
-    $prefix = $ENV{'HOME'};
-}
 
-# $include is used to find server side includes, e.g.
-# when we embed javascript or css directly into a page.
-# on the client side we need to strip $prefix of it.
-my $include = $prefix . '/nexml/html/include';
-my $template = Template->new(
-    'INCLUDE_PATH' => $include,      # or list ref
-    'POST_CHOMP'   => 1,             # cleanup whitespace
-    'PRE_PROCESS'  => 'header.tmpl', # prefix each template
-    'POST_PROCESS' => 'footer.tmpl', # suffix each template
-    'START_TAG'    => '<%',
-    'END_TAG'      => '%>',
-    'OUTPUT_PATH'  => $prefix,
-);
+# Template::Toolkit object to write results
+my $template = $fac->create_site_template;
+
 # the paths object is a utility object that translates between
 # server side paths (i.e. relative to system root) and browser 
 # side paths (i.e. relative to docroot)
-my $paths = util::paths->new(
-    '-prefix'   => $prefix,
-    '-include'  => $include,
-);
-# unfortunately this has to be hardcoded, we can't
-# use Sys::Hostname::hostname() because we're 
-# generating docs from a cron job (so no CGI vars)
-# and we'd be running on a virtual host anyway
-my $hostname = $ENV{'SERVER_NAME'} || 'eupoa.local';
-# variables to be interpolated in template
-my $vars = {
+my $paths = $fac->create_path_handler;
+
+# extended template variables
+my $vars = $fac->create_template_vars(
     'currentFile' => $file,
     'title'       => $title,
     'mainHeading' => $title,
-    'currentURL'  => 'http://' . $hostname . $ENV{'SCRIPT_URL'},
-    'currentDate' => my $time = localtime,
-    'paths'       => $paths,
-    'hostName'    => $hostname,
     'logmessages' => \@logmessages,
     'lines'       => \@lines,
     'styleSheets' => [ 'validator.css' ],
     'favicon'     => $paths->strip( $paths->include( $title =~ qr/FAIL/ ? 'cross.png' : 'tick.png' ) ),
-    'encoder'     => util::encoder->new,    
-};
+);
 
-# create the root document
+# write http header
 print header('text/html', $code); # response code (201 or 400) here as second arg
+
+# write results
 $template->process( 'validator.tmpl', $vars ) || die $template->error();
 
 =head1 SUBROUTINES

@@ -300,7 +300,8 @@ sub create_template_vars {
 	    'currentURL'  => 'http://' . $self->hostname . $self->subtree,
 	    'currentDate' => my $time = localtime,
 	    'paths'       => $self->create_path_handler,
-	    'hostName'    => $self->hostname,		
+	    'hostName'    => $self->hostname,
+	    'encoder'     => util::encoder->new,
 	);
 	my %args = ( %default_vars, @_ );
 	return \%args;
