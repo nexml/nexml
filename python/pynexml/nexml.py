@@ -249,7 +249,7 @@ class NexmlReader(datasets.Reader):
         Given an XMLDocument, parses the XmlElement representation of
         taxon sets into a TaxaBlocks objects.
         """
-        nxt = _NexmlTaxaParser()
+        nxt = _NexmlTaxaParser(self.taxa_block_factory, self.taxon_factory)
         for taxa_element in xml_doc.getiterator('otus'):
             taxa_block = nxt.parse_taxa(taxa_element, dataset) 
         
@@ -258,7 +258,7 @@ class NexmlReader(datasets.Reader):
         Given an XMLDocument, parses the XmlElement representation of
         character sequences into a list of CharacterMatrix objects.
         """
-        nxc = _NexmlCharBlockParser()
+        nxc = _NexmlCharBlockParser(self.char_block_factory)
         for char_block_element in xml_doc.getiterator('characters'):
             nxc.parse_char_block(char_block_element, dataset)
 
@@ -268,7 +268,7 @@ class NexmlReader(datasets.Reader):
         representations of a set of NEXML treeblocks (`nex:trees`) and
         returns a TreesBlocks object corresponding to the NEXML.
         """
-        nxt = _NexmlTreesParser()
+        nxt = _NexmlTreesParser(self.tree_block_factory, self.tree_factory, self.node_factory, self.edge_factory)
         for trees_idx, trees_element in enumerate(xml_doc.getiterator('trees')):
             nxt.parse_trees(trees_element, dataset, trees_idx)
 
@@ -352,13 +352,29 @@ class _NexmlTreesParser(_NexmlElementParser):
     Parses an XmlElement representation of NEXML format tree blocks.
     """
 
-    def __init__(self):
+    def __init__(self, tree_block_factory=None, tree_factory=None, node_factory=None, edge_factory=None):
         """
         Must be given tree factory to create trees.
         """
         super(_NexmlTreesParser, self).__init__()
+        if tree_block_factory is None:
+            self.tree_block_factory = trees.TreeBlock
+        else:
+            self.tree_block_factory = tree_block_factory
+        if tree_factory is None:
+            self.tree_factory = trees.Tree
+        else:
+            self.tree_factory = tree_factory
+        if node_factory is None:
+            self.node_factory = trees.Node
+        else:
+            self.node_factory = node_factory
+        if edge_factory is None:
+            self.edge_factory = trees.TreeBlock
+        else:
+            self.edge_factory = edge_factory
 
-    def parse_trees(self, nxtrees, dataset, trees_idx=None, tree_factory=None):
+    def parse_trees(self, nxtrees, dataset, trees_idx=None):
         """
         Given an XmlElement object representing a NEXML treeblock,
         self.nxtrees (corresponding to a `nex:trees` element), this
@@ -374,20 +390,18 @@ class _NexmlTreesParser(_NexmlElementParser):
         if not taxa_block:
             raise Exception("Taxa block \"%s\" not found" % taxa_id)
         taxa_block = taxa_block
-        tree_block = dataset.new_tree_block(elem_id=elem_id, label=label, taxa_block=taxa_block)
+        tree_block = dataset.new_tree_block(taxa_block=taxa_block, 
+                                            tree_block=self.tree_block_factory(elem_id=elem_id, label=label))
         tree_counter = 0
         for tree_element in nxtrees.getiterator('tree'):
             tree_counter = tree_counter + 1
             elem_id = tree_element.get('id', tree_counter)
             label = tree_element.get('label', '')
-            if tree_factory is not None:
-                treeobj = tree_factory(elem_id=elem_id, label=label)
-            else:
-                treeobj = dataset.tree_factory(elem_id=elem_id, label=label)
+            treeobj = self.tree_factory(elem_id=elem_id, label=label)
             tree_type_attr = tree_element.get('{http://www.w3.org/2001/XMLSchema-instance}type')
             treeobj.weight_type = _from_nexml_tree_weight_type(tree_type_attr)
-            nodes = self.parse_nodes(tree_element, taxa_block=tree_block.taxa_block, node_factory=dataset.node_factory)
-            edges = self.parse_edges(tree_element, weight_type=treeobj.weight_type, edge_factory=dataset.edge_factory)
+            nodes = self.parse_nodes(tree_element, taxa_block=tree_block.taxa_block, node_factory=self.node_factory)
+            edges = self.parse_edges(tree_element, weight_type=treeobj.weight_type, edge_factory=self.edge_factory)
             for edge in edges.values():
                 # EDGE-ON-ROOT:
                 # allow "blank" tail nodes: so we only enforce
@@ -431,7 +445,7 @@ class _NexmlTreesParser(_NexmlElementParser):
             else:
                 raise Exception("Structural error: tree must be acyclic.")
                 
-            rootedge = self.parse_root_edge(tree_element, weight_type=treeobj.weight_type, edge_factory=dataset.edge_factory)
+            rootedge = self.parse_root_edge(tree_element, weight_type=treeobj.weight_type, edge_factory=self.edge_factory)
             if rootedge:
                 if rootedge.head_node_id not in nodes:
                     msg = 'Edge "%s" specifies a non-defined ' \
@@ -536,11 +550,19 @@ class _NexmlTaxaParser(_NexmlElementParser):
     Parses an XmlElement representation of NEXML taxa blocks.
     """
 
-    def __init__(self):
+    def __init__(self, taxa_block_factory=None, taxon_factory=None):
         """
         Does nothing too useful right now.
         """
         super(_NexmlTaxaParser, self).__init__()
+        if taxa_block_factory is None:
+            self.taxa_block_factory = taxa.TaxaBlock
+        else:
+            self.taxa_block_factory = taxa_block_factory   
+        if taxon_factory is None:
+            self.taxon_factory = taxa.Taxon
+        else:
+            self.taxon_factory = taxon_factory             
 
     def parse_taxa(self, nxtaxa, dataset):
         """
@@ -549,9 +571,9 @@ class _NexmlTaxaParser(_NexmlElementParser):
         """
         elem_id = nxtaxa.get('id', None)
         label = nxtaxa.get('label', None)
-        taxa_block = taxa.TaxaBlock(elem_id=elem_id, label=label)
+        taxa_block = self.taxa_block_factory(elem_id=elem_id, label=label)
         for idx, nxtaxon in enumerate(nxtaxa.getiterator('otu')):
-            taxon = taxa.Taxon(nxtaxon.get('id', "s" + str(idx) ), nxtaxon.get('label', "Taxon" + str(idx)))
+            taxon = self.taxon_factory(nxtaxon.get('id', "s" + str(idx) ), nxtaxon.get('label', "Taxon" + str(idx)))
             self.parse_annotations(annotated=taxon, nxelement=nxtaxon)
             taxa_block.append(taxon)
         dataset.taxa_blocks.append(taxa_block)
@@ -561,11 +583,15 @@ class _NexmlCharBlockParser(_NexmlElementParser):
     Parses an XmlElement representation of NEXML taxa blocks.
     """
 
-    def __init__(self):
+    def __init__(self, char_block_factory=None):
         """
         Does nothing too useful right now.
         """
         super(_NexmlCharBlockParser, self).__init__()
+        if char_block_factory is None:
+            self.char_block_factory = characters.CharBlock()
+        else:
+            self.char_block_factory = char_block_factory         
 
     def parse_char_block(self, nxchars, dataset):
         """
@@ -574,7 +600,7 @@ class _NexmlCharBlockParser(_NexmlElementParser):
         """
         elem_id = nxchars.get('id', None)
         label = nxchars.get('label', None)
-        char_block = characters.CharBlock(elem_id=elem_id, label=label)
+        char_block = self.char_block_factory(elem_id=elem_id, label=label)
         char_block.elem_id = elem_id
         char_block.label = label        
         taxa_id = nxchars.get('otus', None)
@@ -850,17 +876,11 @@ class NexmlWriter(datasets.Writer):
 
 def basic_test():
     source = "tests/sources/comprehensive.xml"
-
     nexmlr = NexmlReader()
-    nexmlr.tree_factory = 
-    d = nexmlr.parse(source)
-
-
-
-
+    d = nexmlr.get_dataset(source)
     target = "tests/output/comprehensive_parsed.xml"
-    nexmlr = NexmlReader(source)
-    dataset = nexmlr.get_dataset(source, dataset=dataset)
+    nexmlr = NexmlReader()
+    dataset = nexmlr.get_dataset(source)
     for taxa_block in dataset.taxa_blocks:
         print taxa_block
     for tree_block in dataset.tree_blocks:

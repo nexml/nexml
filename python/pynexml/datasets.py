@@ -56,13 +56,6 @@ class Dataset(object):
         else:
             self.tree_blocks = tree_blocks
 
-        self.taxa_block_factory = taxa.TaxaBlock
-        self.char_block_factory = characters.CharBlock
-        self.tree_block_factory = trees.TreeBlock
-        self.tree_factory = trees.Tree
-        self.edge_factory = trees.Edge
-        self.node_factory = trees.Node
-
     def normalize_taxa_blocks(self):
         """
         Builds up list of taxon blocks by collecting taxon blocks
@@ -146,6 +139,7 @@ class Dataset(object):
                        label=None,
                        taxa_block=None,
                        tree_block=None,
+                       tree_block_factory=None,
                        normalize_taxa_blocks=True):
         """
         Adds (and returns) a tree block object, creating one using the
@@ -155,7 +149,7 @@ class Dataset(object):
                                                 label=label,
                                                 taxa_block=taxa_block,
                                                 linked_block=tree_block,
-                                                linked_block_factory=self.tree_block_factory,
+                                                linked_block_factory=tree_block_factory,
                                                 normalize_taxa_blocks=normalize_taxa_blocks)
         self.tree_blocks.append(tree_block)
         return tree_block
@@ -165,6 +159,7 @@ class Dataset(object):
                        label=None,
                        taxa_block=None,
                        char_block=None,
+                       char_block_factory=None,
                        normalize_taxa_blocks=True):
         """
         Adds (and returns) a char block object, creating one using the
@@ -174,7 +169,7 @@ class Dataset(object):
                                                 label=label,
                                                 taxa_block=taxa_block,
                                                 linked_block=char_block,
-                                                linked_block_factory=self.char_block_factory,
+                                                linked_block_factory=char_block_factory,
                                                 normalize_taxa_blocks=normalize_taxa_blocks)
         self.char_blocks.append(char_block)
         return char_block
@@ -191,6 +186,13 @@ class Reader(object):
         """
         # 0 = ignore all errors; 1 = print warning; 2 = raise exception
         self.error_level=0
+        self.taxa_block_factory = taxa.TaxaBlock
+        self.taxon_factory = taxa.Taxon
+        self.char_block_factory = characters.CharBlock
+        self.tree_block_factory = trees.TreeBlock
+        self.tree_factory = trees.Tree
+        self.edge_factory = trees.Edge
+        self.node_factory = trees.Node
 
     def get_dataset(self, filepath=None, fileobj=None, text=None, dataset=None):
         """
