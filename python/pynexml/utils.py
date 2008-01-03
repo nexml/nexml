@@ -3,7 +3,7 @@
 ############################################################################
 ##  xmlparser.py
 ##
-##  Part of the PhyloInfo phylogenetic data parsing library.
+##  Part of the PyNexml phylogenetic data parsing library.
 ##
 ##  Copyright 2007 Jeet Sukumaran and Mark T. Holder.
 ##
