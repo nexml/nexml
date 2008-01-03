@@ -94,12 +94,16 @@ class Dataset(object):
                 return taxa_block
         return None
 
-    def new_taxa_block(self, elem_id=None, label=None, taxa_block=None):
+    def new_taxa_block(self, elem_id=None, label=None, taxa_block=None, taxa_block_factory=None):
         """
         Adds (and returns) new taxa block object, creating one using
         the default factory if not given.
         """
-        taxa_block = self.taxa_block_factory(elem_id=elem_id, label=label)
+        if taxa_block is None:
+            if taxa_block_factory is None:
+                taxa_block = taxa.TaxaBlock(elem_id=elem_id, label=label)
+            else:
+                taxa_block = taxa_block_factory(elem_id=elem_id, label=label)
         self.taxa_blocks.append(taxa_block)
         return taxa_block
 
@@ -145,6 +149,8 @@ class Dataset(object):
         Adds (and returns) a tree block object, creating one using the
         default factory if not given.
         """
+        if tree_block is None and tree_block_factory is None:
+            tree_block_factory = trees.TreeBlock
         tree_block = self.new_taxa_linked_block(elem_id=elem_id,
                                                 label=label,
                                                 taxa_block=taxa_block,
@@ -165,6 +171,8 @@ class Dataset(object):
         Adds (and returns) a char block object, creating one using the
         default factory if not given if not given.
         """
+        if char_block is None and char_block_factory is None:
+            char_block_factory = characters.CharBlock        
         char_block = self.new_taxa_linked_block(elem_id=elem_id,
                                                 label=label,
                                                 taxa_block=taxa_block,
