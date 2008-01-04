@@ -145,6 +145,13 @@ class TaxaBlock(list, base.IdTagged):
             self.append(taxon)
             return taxon
         taxon = Taxon(elem_id=elem_id, label=label)
+        
+    def taxon_bitmask(self, taxon):
+        """
+        Returns unique bitmask of given taxon. Will raise index error if
+        taxon does not exist.
+        """
+        return pow(2, self.index(taxon))
 
 class Taxon(base.IdTagged):
     """

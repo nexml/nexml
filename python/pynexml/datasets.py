@@ -94,7 +94,7 @@ class Dataset(object):
                 return taxa_block
         return None
 
-    def new_taxa_block(self, elem_id=None, label=None, taxa_block=None, taxa_block_factory=None):
+    def add_taxa_block(self, elem_id=None, label=None, taxa_block=None, taxa_block_factory=None):
         """
         Adds (and returns) new taxa block object, creating one using
         the default factory if not given.
@@ -107,7 +107,7 @@ class Dataset(object):
         self.taxa_blocks.append(taxa_block)
         return taxa_block
 
-    def new_taxa_linked_block(self,
+    def add_taxa_linked_block(self,
                               elem_id=None,
                               label=None,
                               taxa_block=None,
@@ -138,7 +138,7 @@ class Dataset(object):
             self.normalize_taxa_linked(linked_block)
         return linked_block
 
-    def new_tree_block(self,
+    def add_tree_block(self,
                        elem_id=None,
                        label=None,
                        taxa_block=None,
@@ -151,7 +151,7 @@ class Dataset(object):
         """
         if tree_block is None and tree_block_factory is None:
             tree_block_factory = trees.TreeBlock
-        tree_block = self.new_taxa_linked_block(elem_id=elem_id,
+        tree_block = self.add_taxa_linked_block(elem_id=elem_id,
                                                 label=label,
                                                 taxa_block=taxa_block,
                                                 linked_block=tree_block,
@@ -160,7 +160,7 @@ class Dataset(object):
         self.tree_blocks.append(tree_block)
         return tree_block
 
-    def new_char_block(self,
+    def add_char_block(self,
                        elem_id=None,
                        label=None,
                        taxa_block=None,
@@ -173,7 +173,7 @@ class Dataset(object):
         """
         if char_block is None and char_block_factory is None:
             char_block_factory = characters.CharBlock        
-        char_block = self.new_taxa_linked_block(elem_id=elem_id,
+        char_block = self.add_taxa_linked_block(elem_id=elem_id,
                                                 label=label,
                                                 taxa_block=taxa_block,
                                                 linked_block=char_block,

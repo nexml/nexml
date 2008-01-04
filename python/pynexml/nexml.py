@@ -390,7 +390,7 @@ class _NexmlTreesParser(_NexmlElementParser):
         if not taxa_block:
             raise Exception("Taxa block \"%s\" not found" % taxa_id)
         taxa_block = taxa_block
-        tree_block = dataset.new_tree_block(taxa_block=taxa_block, 
+        tree_block = dataset.add_tree_block(taxa_block=taxa_block, 
                                             tree_block=self.tree_block_factory(elem_id=elem_id, label=label))
         tree_counter = 0
         for tree_element in nxtrees.getiterator('tree'):
@@ -883,6 +883,10 @@ def basic_test():
     dataset = nexmlr.get_dataset(source)
     for taxa_block in dataset.taxa_blocks:
         print taxa_block
+    for char_block in dataset.char_blocks:
+        print "\n***" + char_block.elem_id + "/" + char_block.label + "***"
+        for seq in char_block:
+            print seq, '   ', char_block[seq]
     for tree_block in dataset.tree_blocks:
         print "\n***" + tree_block.elem_id + "/" + tree_block.label + "***"
         for tree in tree_block:

@@ -60,9 +60,6 @@ You should have received a copy of the GNU General Public License along
 with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
-# Global random number generator
-GLOBAL_RNG = random.Random()
-
 def python_version():
     """
     Returns Python version as float.
