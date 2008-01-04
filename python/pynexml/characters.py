@@ -155,6 +155,12 @@ class CharSequence(taxa.TaxonLinked):
             return len(self.state_indexes)
         else:
             return 0
+            
+    def __str__(self):
+        """
+        Returns state names.
+        """
+        return ''.join(self.state_names)
 
     def _get_state_names(self):
         """
