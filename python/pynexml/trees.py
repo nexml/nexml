@@ -213,6 +213,20 @@ class Tree(base.IdTagged):
         for node in self.seed_node.level_order_iter(self.seed_node):
             if node.edge and (filter_fn is None or filter_fn(node.edge)):
                 yield node.edge
+                
+    ## Edge iterators ##
+    
+    def infer_taxa_block(self):
+        """
+        Returns a new TaxaBlock object populated with taxa from this
+        tree.
+        """
+        taxa_block = taxa.TaxaBlock()
+        for node in self.postorder_node_iter():
+            if node.taxon and (node.taxon not in taxa_block):
+                taxa_block.append(node.taxon)
+        taxa_block.sort()
+        return taxa_block
 
 ##############################################################################
 ## Node
