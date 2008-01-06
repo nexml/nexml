@@ -132,22 +132,22 @@ def _to_nexml_chartype(chartype):
         return "nex:RnaSeqs"
     return None
 
-def _to_nexml_tree_weight_type(weight_type):
+def _to_nexml_tree_length_type(length_type):
     """
     Returns attribute string for nexml tree type depending on whether
-    `weight_type` is an int or a float.
+    `length_type` is an int or a float.
     """
-    if weight_type == int:
+    if length_type == int:
         return "nex:IntTree"
-    elif weight_type == float:
+    elif length_type == float:
         return "nex:FloatTree"
     else:
-        raise Exception('Unrecognized value class %s' % weight_type)
+        raise Exception('Unrecognized value class %s' % length_type)
 
-def _from_nexml_tree_weight_type(type_attr):
+def _from_nexml_tree_length_type(type_attr):
     """
     Given an attribute string read from a nexml tree element, returns
-    the python class of the edge weight attribute.
+    the python class of the edge length attribute.
     """
     if type_attr == "nex:IntTree":
         return int
@@ -399,9 +399,9 @@ class _NexmlTreesParser(_NexmlElementParser):
             label = tree_element.get('label', '')
             treeobj = self.tree_factory(elem_id=elem_id, label=label)
             tree_type_attr = tree_element.get('{http://www.w3.org/2001/XMLSchema-instance}type')
-            treeobj.weight_type = _from_nexml_tree_weight_type(tree_type_attr)
+            treeobj.length_type = _from_nexml_tree_length_type(tree_type_attr)
             nodes = self.parse_nodes(tree_element, taxa_block=tree_block.taxa_block, node_factory=self.node_factory)
-            edges = self.parse_edges(tree_element, weight_type=treeobj.weight_type, edge_factory=self.edge_factory)
+            edges = self.parse_edges(tree_element, length_type=treeobj.length_type, edge_factory=self.edge_factory)
             for edge in edges.values():
                 # EDGE-ON-ROOT:
                 # allow "blank" tail nodes: so we only enforce
@@ -445,7 +445,7 @@ class _NexmlTreesParser(_NexmlElementParser):
             else:
                 raise Exception("Structural error: tree must be acyclic.")
                 
-            rootedge = self.parse_root_edge(tree_element, weight_type=treeobj.weight_type, edge_factory=self.edge_factory)
+            rootedge = self.parse_root_edge(tree_element, length_type=treeobj.length_type, edge_factory=self.edge_factory)
             if rootedge:
                 if rootedge.head_node_id not in nodes:
                     msg = 'Edge "%s" specifies a non-defined ' \
@@ -481,7 +481,7 @@ class _NexmlTreesParser(_NexmlElementParser):
             self.parse_annotations(annotated=nodes[node_id], nxelement=nxnode)
         return nodes
         
-    def parse_root_edge(self, tree_element, weight_type, edge_factory):
+    def parse_root_edge(self, tree_element, length_type, edge_factory):
         """
         Returns the edge subtending the root node, or None if not defined.
         """
@@ -490,22 +490,22 @@ class _NexmlTreesParser(_NexmlElementParser):
             edge = edge_factory()
             edge.head_node_id = rootedge.get('target', None)
             edge.elem_id = rootedge.get('id', 'e' + str(id(edge)))
-            edge_weight_str = weight_type(rootedge.get('length', '0.0'))
+            edge_length_str = length_type(rootedge.get('length', '0.0'))
             edge.rootedge = True
-            edge_weight = None
+            edge_length = None
             try:
-                edge_weight = weight_type(edge_weight_str)
+                edge_length = length_type(edge_length_str)
             except:
                 msg = 'Edge %d ("%s") `length` attribute is not a %s' \
-                      % (edge_counter, edge.elem_id, str(weight_type))
+                      % (edge_counter, edge.elem_id, str(length_type))
                 raise Exception(msg)
-            edge.weight = edge_weight
+            edge.length = edge_length
             self.parse_annotations(annotated=edge, nxelement=rootedge)            
             return edge
         else:
             return None
 
-    def parse_edges(self, tree_element, weight_type, edge_factory):
+    def parse_edges(self, tree_element, length_type, edge_factory):
         """
         Given an XmlElement representation of a NEXML tree element
         this will return a dictionary of DendroPy Edge objects created with
@@ -522,7 +522,7 @@ class _NexmlTreesParser(_NexmlElementParser):
             edge.tail_node_id = nxedge.get('source', None)
             edge.head_node_id = nxedge.get('target', None)
             edge.elem_id = nxedge.get('id', 'e' + str(edge_counter))
-            edge_weight_str = weight_type(nxedge.get('length', '0.0'))
+            edge_length_str = length_type(nxedge.get('length', '0.0'))
 
             if not edge.tail_node_id:
                 msg = 'Edge %d ("%s") does not have a source' \
@@ -533,14 +533,14 @@ class _NexmlTreesParser(_NexmlElementParser):
                 msg = 'Edge %d ("%s") does not have a target' \
                       % (edge_counter, edge.elem_id)
                 raise Exception(msg)
-            edge_weight = None
+            edge_length = None
             try:
-                edge_weight = weight_type(edge_weight_str)
+                edge_length = length_type(edge_length_str)
             except:
                 msg = 'Edge %d ("%s") `length` attribute is not a %s' \
-                      % (edge_counter, edge.elem_id, str(weight_type))
+                      % (edge_counter, edge.elem_id, str(length_type))
                 raise Exception(msg)
-            edge.weight = edge_weight
+            edge.length = edge_length
             self.parse_annotations(annotated=edge, nxelement=nxedge)            
             edges[edge.elem_id] = edge
         return edges
@@ -774,8 +774,8 @@ class NexmlWriter(datasets.Writer):
             parts.append('id="%s"' % ("Tree" + str(id(tree))))
         if hasattr(tree, 'label') and tree.label:
             parts.append('label="%s"' % tree.label)
-        if hasattr(tree, 'weight_type'):
-            parts.append('xsi:type="%s"' % _to_nexml_tree_weight_type(tree.weight_type))
+        if hasattr(tree, 'length_type') and tree.length_type:
+            parts.append('xsi:type="%s"' % _to_nexml_tree_length_type(tree.length_type))
         else:
             parts.append('xsi:type="nex:FloatTree"')
         parts = ' '.join(parts)
@@ -849,8 +849,8 @@ class NexmlWriter(datasets.Writer):
                 parts.append('target="%s"' % edge.head_elem_id)
             if hasattr(edge, 'elem_id') and edge.elem_id:
                 parts.append('id="%s"' % edge.elem_id)
-            if hasattr(edge, 'weight') and edge.weight != None:
-                parts.append('length="%s"' % edge.weight)
+            if hasattr(edge, 'length') and edge.length != None:
+                parts.append('length="%s"' % edge.length)
 
             # only write if we have more than just the 'edge' and '/' bit
             if len(parts) > 2:

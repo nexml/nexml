@@ -190,7 +190,7 @@ class RoundTripper(TreeIOTest):
           the:
               - parent node id must be the same
               - the edge id must be the same
-              - the edge weight must be the same
+              - the edge length must be the same
               - the label must be the same
               - the taxon must be the same
               - the number of children must be the same
@@ -236,10 +236,10 @@ class RoundTripper(TreeIOTest):
 
             if node1.edge:
                 self.failUnlessEqual(node1.edge.edge_id, node2.edge.edge_id)
-                if node1.edge.weight is not None:
-                    self.failUnlessAlmostEqual(node1.edge.weight, node2.edge.weight)
+                if node1.edge.length is not None:
+                    self.failUnlessAlmostEqual(node1.edge.length, node2.edge.length)
                 else:
-                    self.failUnlessEqual(node1.edge.weight, node2.edge.weight)
+                    self.failUnlessEqual(node1.edge.length, node2.edge.length)
             else:
                 # if one is None, so should the other be
                 self.failUnlessEqual(node1.edge, node2.edge)
@@ -273,7 +273,7 @@ class RoundTripper(TreeIOTest):
           the:
               - parent node id must be the same
               - child node id must be the same
-              - the edge weight must be the same
+              - the edge length must be the same
               - the label must be the same
               - the taxon must be the same
               - the number of children must be the same
@@ -322,11 +322,11 @@ class RoundTripper(TreeIOTest):
                 # if one is None, so should the other be
                 self.failUnlessEqual(edge1.head_node, edge2.head_node)
 
-            if edge1.weight is not None:
-                self.failUnlessAlmostEqual(edge1.weight, edge2.weight)
+            if edge1.length is not None:
+                self.failUnlessAlmostEqual(edge1.length, edge2.length)
             else:
                 # if one is None, so should the other be
-                self.failUnlessEqual(edge1.weight, edge2.weight)
+                self.failUnlessEqual(edge1.length, edge2.length)
 
 class NexmlNexmlRoundTripper(RoundTripper):
     """
