@@ -84,7 +84,7 @@ class Tree(base.IdTagged):
         """
         base.IdTagged.__init__(self, elem_id=elem_id, label=label)
         self.seed_node = None
-        self.weight_type = None
+        self.length_type = None
         if seed_node is not None:
             self.seed_node = seed_node
         else:
@@ -434,29 +434,29 @@ class Node(taxa.TaxonLinked):
         
     next_sib = property(_get_next_sib, _set_next_sib)
 
-    def add_child(self, node, edge_weight=None):
+    def add_child(self, node, edge_length=None):
         """
         Adds a child node to this node. Results in the parent_node and
         containing_tree of the node being attached set to this node.
-        If `edge_weight` is given, then the new child's edge weight is
+        If `edge_length` is given, then the new child's edge length is
         set to this. Returns node that was just attached.
         """
         node.parent_node = self
         node.edge.tail_node = self
-        if edge_weight != None:
-            node.edge.weight = edge_weight
+        if edge_length != None:
+            node.edge.length = edge_length
         if len(self.__child_nodes) > 0:
             self.__child_nodes[-1].next_sib = node
         self.__child_nodes.append(node)
         return node
 
-    def new_child(self, elem_id, edge_weight=None):
+    def new_child(self, elem_id, edge_length=None):
         """
         Convenience class to create and add a new child to this node.
         """
         node = self.__class__()
         node.elem_id = elem_id
-        return self.add_child(node, edge_weight)
+        return self.add_child(node, edge_length)
 
     def remove_child(self, node):
         """
@@ -479,32 +479,32 @@ class Node(taxa.TaxonLinked):
 
     def height(self):
         """
-        Sum of edge weights from root. Right now, 'root' is taken to
+        Sum of edge lengths from root. Right now, 'root' is taken to
         be a node with no parent node.
         """
-        if self.parent_node and self.edge.weight != None:
+        if self.parent_node and self.edge.length != None:
             if self.parent_node.height == None:
-                return float(self.edge.weight)
+                return float(self.edge.length)
             else:
-                height = float(self.edge.weight)
+                height = float(self.edge.length)
                 par_node = self.parent_node
                 # The root is identified when a node with no
                 # parent is encountered. If we want to use some
                 # other criteria (e.g., where a is_root property
                 # is True), we modify it here.
                 while par_node:
-                    if par_node.edge.weight != None:
-                        height = height + float(par_node.edge.weight)
+                    if par_node.edge.length != None:
+                        height = height + float(par_node.edge.length)
                     par_node = par_node.parent_node
                 return height                    
-        elif not self.parent_node and self.edge.weight != None:
-            return float(self.edge.weight)
-        elif self.parent_node and self.edge.weight == None:
+        elif not self.parent_node and self.edge.length != None:
+            return float(self.edge.length)
+        elif self.parent_node and self.edge.length == None:
             # what do we do here: parent node exists, but my
-            # weight does not?
-            return float(self.parent_node.edge.weight)
-        elif not self.parent_node and self.edge.weight == None:
-            # no parent node, and no edge weight
+            # length does not?
+            return float(self.parent_node.edge.length)
+        elif not self.parent_node and self.edge.length == None:
+            # no parent node, and no edge length
             return 0.0
         else:
             # WTF????
@@ -521,14 +521,14 @@ class Node(taxa.TaxonLinked):
     
     def depth(self):
         """
-        Sum of edge weights from tip to node. If tree is not ultrametric
-        (i.e., descendent edges have different weights), then count the
-        maximum of edge weights.
+        Sum of edge lengths from tip to node. If tree is not ultrametric
+        (i.e., descendent edges have different lengths), then count the
+        maximum of edge lengths.
         """
         if not self.__child_nodes:
             return 0.0
         else:
-            max_depth = max([(ch.depth() + ch.edge.weight) \
+            max_depth = max([(ch.depth() + ch.edge.length) \
                                    for ch in self.__child_nodes])
             return float(max_depth)
 
@@ -668,7 +668,7 @@ class Edge(base.IdTagged):
                  elem_id=None,
                  head_node=None,
                  tail_node=None,
-                 weight=None):
+                 length=None):
         """
         Creates an edge from tail_node to head_node.  Modified from
         arbol.
@@ -687,7 +687,7 @@ class Edge(base.IdTagged):
             self._set_tail_node(tail_node)
         elif self.head_node:
             self._set_tail_node(self.head_node.parent_node)
-        self.weight = weight
+        self.length = length
 
     def _get_tail_node(self):
         """
