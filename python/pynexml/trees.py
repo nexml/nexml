@@ -45,6 +45,19 @@ class TreeBlock(list, taxa.TaxaLinked):
         """
         list.__init__(self, *args)
         taxa.TaxaLinked.__init__(self, *args, **kwargs)
+        
+    def normalize_taxa(self):
+        """
+        Rebuilds taxa block from scratch.
+        """
+        taxa_block = taxa.TaxaBlock()
+        for tree in self:
+            for node in tree.postorder_node_iter():
+                if node.taxon:
+                    node.taxon = taxa_block.find_taxon(label=node.taxon.label, update=True)                    
+        taxa_block.sort()
+        self.taxa_block = taxa_block
+        return taxa_block        
 
 ##############################################################################
 ## Tree

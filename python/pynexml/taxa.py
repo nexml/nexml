@@ -25,7 +25,7 @@
 """
 This module provides classes and methods for managing taxa.
 """
-
+import sys
 from pynexml import base
 
 class TaxonLinked(base.IdTagged):
@@ -144,15 +144,19 @@ class TaxaBlock(list, base.IdTagged):
             taxon = Taxon(elem_id=elem_id, label=label)
             self.append(taxon)
             return taxon
-        taxon = Taxon(elem_id=elem_id, label=label)
         
     def taxon_bitmask(self, taxon):
         """
         Returns unique bitmask of given taxon. Will raise index error if
         taxon does not exist.
         """
-        return pow(2, self.index(taxon))
-
+        try:
+            return pow(2, self.index(taxon))
+        except ValueError:
+            raise ValueError("Taxon with ID '%s' and label '%s' not found" 
+                             % (str(taxon.elem_id), str(taxon.label)))
+            
+            
 class Taxon(base.IdTagged):
     """
     A taxon associated with a sequence or a node on a tree.
