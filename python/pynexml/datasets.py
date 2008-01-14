@@ -187,6 +187,22 @@ class Reader(object):
     Interface for instantiation of Dataset objects from various
     formats, to be implemented by derived classes.
     """
+    
+    def get_file_handle(filepath=None, fileobj=None, text=None):
+    	"""
+    	Opens and returns a file descriptor/handle based on the 
+    	given parameters.
+    	"""
+        if filepath:
+            filepath = os.path.expandvars(os.path.expanduser(filepath))
+            return open(filepath, 'r')            
+        elif fileobj:
+            return fileobj
+        elif text:
+            return StringIO.StringIO(text)
+        else:
+            raise Exception("Source of dataset must be specified")    	
+    get_file_handle = staticmethod(get_file_handle)
 
     def __init__(self):
         """
@@ -207,17 +223,8 @@ class Reader(object):
         Instantiates and returns a Dataset object from a filepath, a
         file descriptor or direct text source respectively.
         """
-        if filepath:
-            filepath = os.path.expandvars(os.path.expanduser(filepath))
-            filedesc = open(filepath, 'r')
-            return self.read_dataset(filedesc, dataset)
-        elif fileobj:
-            return self.read_dataset(fileobj, dataset)
-        elif text:
-            dataset_text = StringIO.StringIO()
-            return self.read_dataset(dataset_text. dataset)
-        else:
-            raise Exception("Source of dataset must be specified")
+        filedesc = self.get_file_handle(filepath=filepath, fileobj=fileobj, text=text)
+        return self.read_dataset(filedesc, dataset)
 
     def get_matrices(self, filepath=None, fileobj=None, text=None, char_block_factory=None):
         """
