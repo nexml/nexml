@@ -23,8 +23,8 @@
 ############################################################################
 
 """
-This module handles the core definition of tree data structure class,
-as well as all the structural classes that make up a tree.
+This module handles the core definitions of character data types, as well as 
+specializations to handle nucleotide, etc. character types.
 """
 
 import re
