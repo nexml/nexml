@@ -56,6 +56,12 @@ class DiscreteCharacterSymbol(object):
                  symbol_string=symbol_string,
                  symbol_mappings=symbol_mappings)
                  
+    def __str__(self):
+        return self.symbol_string
+        
+    def __repr__(self):
+        return str([self.symbol_id, self.symbol_string, [str(sym) for sym in self.symbol_mappings]])
+                 
     def set(self, symbol_id, symbol_string, symbol_mappings=None):
         self.symbol_id = symbol_id
         self.symbol_string = symbol_string
@@ -127,3 +133,5 @@ class CharacterBlock(dict, taxa.TaxaLinked):
 
 if __name__ == "__main__":
     dna = DnaCharacterType()
+    for s in dna:
+        print repr(s)
