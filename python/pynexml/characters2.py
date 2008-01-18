@@ -93,22 +93,21 @@ class DiscreteCharacterType(list):
     def symbol_mappings(self):
         return [sym.symbol_mappings for sym in self]        
         
-    def parse_string_token(self, token):
+    def parse_token(self, token):
         if len(token) == 1:
             ### TODO: catch index exception and rethrow with
             ### meaningful message
             idx = self.symbol_strings().index(token)
             return self[idx]
         else:
-            idxs = []
+            symbol_set = set()
             for subtoken in token:
-                idx.append(self.parse_string_token(subtoken))
-            symbol_set = set([sym[idx]  for idx in idxs])
+                symbol_set.add(self.parse_token(subtoken))
             for symbol in self:
                 if symbol_set == symbol.symbol_mappings:
                     return symbol
             ### here, maybe create new symbol mapping corresponding to symbol set?? ###
-            raise Exception("No symbol corresponding to '%s' found" % token)
+            raise IndexError("No symbol corresponding to '%s' found" % token)
                 
     
 class DnaCharacterType(DiscreteCharacterType):
@@ -162,3 +161,11 @@ if __name__ == "__main__":
     dna = DnaCharacterType()
     for s in dna:
         print repr(s)
+    print
+    print
+    input = "\n"
+    while input:
+        input = raw_input("Enter symbol(s): ")
+        if input:
+            input = input.upper()
+            print repr(dna.parse_token(input))
