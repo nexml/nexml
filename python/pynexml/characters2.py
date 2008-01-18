@@ -66,9 +66,9 @@ class DiscreteCharacterSymbol(object):
         self.symbol_id = symbol_id
         self.symbol_string = symbol_string
         if symbol_mappings is not None:
-            self.symbol_mappings = symbol_mappings
+            self.symbol_mappings = set(symbol_mappings)
         else:
-            self.symbol_mappings = [self]    
+            self.symbol_mappings = set([self])
 
 class DiscreteCharacterType(list):
     """
@@ -82,7 +82,34 @@ class DiscreteCharacterType(list):
         return [sym for sym in self if sym.symbol_id in ids]
         
     def symbols_by_string(self, str):
-        return [sym for sym in self if sym.symbol_string in str]        
+        return [sym for sym in self if sym.symbol_string in str]
+        
+    def symbol_ids(self):
+        return [sym.symbol_id for sym in self]
+        
+    def symbol_strings(self):
+        return [sym.symbol_string for sym in self]
+        
+    def symbol_mappings(self):
+        return [sym.symbol_mappings for sym in self]        
+        
+    def parse_string_token(self, token):
+        if len(token) == 1:
+            ### TODO: catch index exception and rethrow with
+            ### meaningful message
+            idx = self.symbol_strings().index(token)
+            return self[idx]
+        else:
+            idxs = []
+            for subtoken in token:
+                idx.append(self.parse_string_token(subtoken))
+            symbol_set = set([sym[idx]  for idx in idxs])
+            for symbol in self:
+                if symbol_set == symbol.symbol_mappings:
+                    return symbol
+            ### here, maybe create new symbol mapping corresponding to symbol set?? ###
+            raise Exception("No symbol corresponding to '%s' found" % token)
+                
     
 class DnaCharacterType(DiscreteCharacterType):
     
