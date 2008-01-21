@@ -13,6 +13,49 @@ my %class = (
     'tree'   => 'Bio::Phylo::Forest::Tree',
 );
 
+=head1 NAME
+
+Bio::Phylo::Factory - Object to instantiate other objects.
+
+=head1 SYNOPSIS
+
+ use Bio::Phylo::Factory;
+ my $fac = Bio::Phylo::Factory->new;
+ my $node = $fac->create_node( '-name' => 'node1' );
+
+ # prints 'Bio::Phylo::Forest::Node'
+ print ref $node;
+
+=head1 DESCRIPTION
+
+The factory module is used to create other objects without having to 'use' 
+their classes.
+
+=head1 METHODS
+
+=head2 CONSTRUCTOR
+
+=over
+
+=item new()
+
+Factory constructor.
+
+ Type    : Constructor
+ Title   : new
+ Usage   : my $fac = Bio::Phylo::Factory->new;
+ Function: Initializes a Bio::Phylo::Factory object.
+ Returns : A Bio::Phylo::Factory object.
+ Args    : (optional) a hash keyed on short names, with
+           class names for values. For example, 
+           'node' => 'Bio::Phylo::Forest::Node', which 
+           will allow you to subsequently call $fac->create_node,
+           which will return a Bio::Phylo::Forest::Node object.
+           (Note that this example is enabled by default, so you
+           don't need to specify it.)
+
+=cut
+
 sub new { 
     my $class = shift;
     if ( @_ ) {
@@ -25,6 +68,24 @@ sub new {
     }
     bless \$class, $class;
 }
+
+=back
+
+=head2 FACTORY METHODS
+
+=over
+
+=item create($class, %args)
+
+ Type    : Factory methods
+ Title   : create
+ Usage   : my $foo = $fac->create('Foo::Class');
+ Function: Creates an instance of $class, with constructor arguments %args
+ Returns : A Bio::Phylo::Forest object.
+ Args    : $class, a class name (required),
+           %args, constructor arguments (optional)
+
+=cut
 
 sub create {
     my $self  = shift;
@@ -54,6 +115,24 @@ sub AUTOLOAD {
         return;
     }
     else {
-        throw 'Bio::Phylo::Util::Exceptions::UnknownMethod' => "No such method: $method";
+        throw 'UnknownMethod' => "No such method: $method";
     }
 }
+
+=back
+
+=head1 SEE ALSO
+
+=over
+
+=item L<Bio::Phylo::Manual>
+
+Also see the manual: L<Bio::Phylo::Manual> and L<http://rutgervos.blogspot.com>.
+
+=back
+
+=head1 REVISION
+
+ $Id: Generator.pm 4786 2007-11-28 07:31:19Z rvosa $
+
+=cut
