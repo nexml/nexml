@@ -136,3 +136,5 @@ Also see the manual: L<Bio::Phylo::Manual> and L<http://rutgervos.blogspot.com>.
  $Id: Generator.pm 4786 2007-11-28 07:31:19Z rvosa $
 
 =cut
+
+1;
