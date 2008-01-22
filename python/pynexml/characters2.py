@@ -57,7 +57,7 @@ class DiscreteCharacterSymbol(object):
                  symbol_mappings=symbol_mappings)
                  
     def __str__(self):
-        return self.symbol_string
+        return str(self.symbol_string)
         
     def __repr__(self):
         return str([self.symbol_id, self.symbol_string, [str(sym) for sym in self.symbol_mappings]])
@@ -70,7 +70,7 @@ class DiscreteCharacterSymbol(object):
         else:
             self.symbol_mappings = set([self])
 
-class DiscreteCharacterType(list):
+class DiscreteCharacterSymbols(list):
     """
     Discrete character mapper.
     """
@@ -110,16 +110,17 @@ class DiscreteCharacterType(list):
             raise IndexError("No symbol corresponding to '%s' found" % token)
                 
     
-class DnaCharacterType(DiscreteCharacterType):
+class DnaCharacterSymbols(DiscreteCharacterSymbols):
     
     def __init__(self):
-        DiscreteCharacterType.__init__(self)
+        DiscreteCharacterSymbols.__init__(self)
         self.append(DiscreteCharacterSymbol("A", "A"))
         self.append(DiscreteCharacterSymbol("C", "C"))     
         self.append(DiscreteCharacterSymbol("G", "G"))
         self.append(DiscreteCharacterSymbol("T", "T"))
         self.append(DiscreteCharacterSymbol("GAP", "-")) 
-        self.append(DiscreteCharacterSymbol("MISSING", "?"))
+        self.append(DiscreteCharacterSymbol("MISSING", "?",
+                                            self.symbols_by_string(['A', 'C', 'G', 'T', '-'])))
         self.append(DiscreteCharacterSymbol("N", "N",
                                             self.symbols_by_string(['A', 'C', 'G', 'T'])))
         self.append(DiscreteCharacterSymbol("M", "M", 
@@ -158,7 +159,7 @@ class CharacterBlock(dict, taxa.TaxaLinked):
 
 
 if __name__ == "__main__":
-    dna = DnaCharacterType()
+    dna = DnaCharacterSymbols()
     for s in dna:
         print repr(s)
     print
