@@ -5,7 +5,6 @@ use strict;
 use Bio::Phylo::Taxa::TaxonLinker;
 use Bio::Phylo::Util::Exceptions 'throw';
 use Bio::Phylo::Matrices::TypeSafeData;
-use Bio::Phylo::Adaptor;
 use Bio::Phylo::Util::CONSTANT qw(:objecttypes looks_like_number looks_like_hash);
 use UNIVERSAL qw(isa can);
 @ISA = qw(
@@ -91,9 +90,7 @@ Datum object constructor.
 
         # go up inheritance tree, eventually get an ID
         my $self = $class->SUPER::new(@_);
-
-        # adapt (or not, if $Bio::Phylo::COMPAT is not set)
-        return Bio::Phylo::Adaptor->new($self);
+        return $self;
     }
 
 =back
