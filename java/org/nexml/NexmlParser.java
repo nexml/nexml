@@ -103,6 +103,44 @@ public class NexmlParser {
 	}
 	
 	/**
+	 * Sets an error handler for the XMLReader
+	 * @param myErrorHandler an ErrorHandler
+	 */
+	public void setErrorHandler(ErrorHandler myErrorHandler){
+	    xr.setErrorHandler(myErrorHandler);
+	}
+	
+	/**
+	 * Gets the error handler 
+	 * @return an ErrorHandler
+	 */
+	public ErrorHandler getErrorHandler(){
+	    return xr.getErrorHandler();
+	}
+	
+	/**
+	 * Sets a feature in the XMLReader
+     * @param name The feature name, which is a fully-qualified URI.
+     * @param value The requested value of the feature (true or false).
+	 * @throws SAXNotSupportedException If the reader doesn't support the feature
+	 * @throws SAXNotRecognizedException If the reader can't set the feature to value
+	 */
+	public void setFeature(String name, boolean value) throws SAXNotRecognizedException, SAXNotSupportedException{
+	    xr.setFeature(name, value);
+	}
+
+	/**
+	 * Gets the state of a feature in the XMLReader
+	 * @param name The feature name, which is a fully-qualified URI.
+	 * @return a boolean value reflecting the state of the feature in the XMLReader
+	 * @throws SAXNotRecognizedException If the reader doesn't support the feature
+	 * @throws SAXNotSupportedException If the reader can't retrieve a value for the feature
+	 */
+	public boolean getFeature(String name) throws SAXNotRecognizedException, SAXNotSupportedException{
+	    return xr.getFeature(name);
+	}
+	
+	/**
 	 * Parses xml from a URL
 	 * @param url a url from which to read xml
 	 * @throws SAXException
