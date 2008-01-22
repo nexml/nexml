@@ -93,7 +93,7 @@ class DiscreteCharacterSymbols(list):
     def symbol_mappings(self):
         return [sym.symbol_mappings for sym in self]        
         
-    def parse_token(self, token):
+    def string_to_symbol(self, token):
         if len(token) == 1:
             ### TODO: catch index exception and rethrow with
             ### meaningful message
@@ -106,7 +106,6 @@ class DiscreteCharacterSymbols(list):
             for symbol in self:
                 if symbol_set == symbol.symbol_mappings:
                     return symbol
-            ### here, maybe create new symbol mapping corresponding to symbol set?? ###
             raise IndexError("No symbol corresponding to '%s' found" % token)
                 
     
@@ -169,4 +168,4 @@ if __name__ == "__main__":
         input = raw_input("Enter symbol(s): ")
         if input:
             input = input.upper()
-            print repr(dna.parse_token(input))
+            print repr(dna.string_to_symbol(input))
