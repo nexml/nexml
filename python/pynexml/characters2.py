@@ -102,7 +102,7 @@ class DiscreteCharacterSymbols(list):
         else:
             symbol_set = set()
             for subtoken in token:
-                symbol_set.add(self.parse_token(subtoken))
+                symbol_set.add(self.string_to_symbol(subtoken))
             for symbol in self:
                 if symbol_set == symbol.symbol_mappings:
                     return symbol
@@ -110,7 +110,7 @@ class DiscreteCharacterSymbols(list):
                 
     
 class DnaCharacterSymbols(DiscreteCharacterSymbols):
-    
+
     def __init__(self):
         DiscreteCharacterSymbols.__init__(self)
         self.append(DiscreteCharacterSymbol("A", "A"))
@@ -143,6 +143,13 @@ class DnaCharacterSymbols(DiscreteCharacterSymbols):
         self.append(DiscreteCharacterSymbol("B", "B", 
                                             self.symbols_by_string(['C', 'G', 'T'])))                                               
 
+
+class DiscreteCharacterStates(object):
+
+    def __init__(self, symbols=None):
+        self.symbol_list = symbols
+
+    
 
 class CharacterBlock(dict, taxa.TaxaLinked):
     """
