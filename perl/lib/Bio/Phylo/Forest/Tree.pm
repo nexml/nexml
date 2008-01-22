@@ -4,7 +4,6 @@ use strict;
 use Bio::Phylo::Listable;
 use Bio::Phylo::Forest::Node;
 use Bio::Phylo::IO qw(unparse);
-use Bio::Phylo::Adaptor;
 use Bio::Phylo::Util::Exceptions 'throw';
 use Bio::Phylo::Util::CONSTANT qw(_TREE_ _FOREST_ looks_like_number looks_like_hash);
 use Scalar::Util qw(blessed);
@@ -90,9 +89,7 @@ Tree constructor.
 
 		# go up inheritance tree, eventually get an ID
 		my $self = $class->SUPER::new(@_);			
-
-		# adapt (or not, if $Bio::Phylo::COMPAT is not set)
-		return Bio::Phylo::Adaptor->new($self);
+		return $self;
 	}
 
 =item new_from_bioperl()

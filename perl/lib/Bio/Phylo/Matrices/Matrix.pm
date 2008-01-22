@@ -165,9 +165,7 @@ Matrix constructor.
 
 		# go up inheritance tree, eventually get an ID
 		my $self = $class->SUPER::new(@_);
-
-		# adapt (or not, if $Bio::Phylo::COMPAT is not set)
-		return Bio::Phylo::Adaptor->new($self);
+		return $self;
 	}
 
 =back
