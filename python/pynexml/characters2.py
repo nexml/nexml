@@ -65,7 +65,7 @@ class DiscreteCharacterState(base.IdTagged):
                  label=None,
                  symbol=None, 
                  token=None, 
-                 multistate=DiscreteCharacterState.SINGLE_STATE, 
+                 multistate=SINGLE_STATE, 
                  member_states=None):
         base.IdTagged.__init__(self, elem_id=elem_id, label=label)
         self.symbol = symbol
@@ -73,16 +73,24 @@ class DiscreteCharacterState(base.IdTagged):
         self.multistate = multistate
         self.member_states = member_states
         
+    def __str__(self):
+        return str(self.symbol)
+        
+    def __repr__(self):
+        return str([self.elem_id, 
+                    self.symbol, 
+                    str(self.fundamental_symbols())])
+        
     def fundamental_states(self):
         """
         Returns value of self in terms of a set of fundamental states (i.e.,
         set of single states) that correspond to this state.
         """
         if self.member_states is None:
-            return set(self)
+            return set([self])
         else:
             states = set()
-            for state in member_states:
+            for state in self.member_states:
                 states.update(state.fundamental_states())
             return states
                  
@@ -110,81 +118,100 @@ class DiscreteCharacterStateList(list):
     """
     
     def __init__(self, *args, **kwargs):
-        list.__init__(self, *args)    
-    
-    def state_by_symbol(self, symbol):
-        """
-        Returns a DiscreteCharacterState object corresponding to the given symbol.
-        """
+        list.__init__(self, *args)
+        
+    def get_state(self, attr_name, value):
+#         attr_name = None
+#         value = None
+#         if elem_id is not None:
+#             attr_name = 'elem_id'
+#             value = elem_id
+#         elif symbol is not None:
+#             attr_name = 'symbol'
+#             value = symbol
+#         elif token is not None:
+#             attr_name = 'token'
+#             value = token
+#         else:
+#             raise Exception("Must specify id, symbol or token")
         for state in self:
-            if state.symbol == symbol:
+            if getattr(state, attr_name) == value:
                 return state
-                
+        raise Exception("State with %s value of '%s' not defined" % (attr_name, str(value)))
     
-class DnaCharacterSymbols(DiscreteCharacterSymbols):
+    def get_states(self, elem_ids=None, symbols=None, tokens=None):
+        if elem_ids is not None:
+            attr_name = 'elem_id'
+            values = elem_ids
+        elif symbols is not None:
+            attr_name = 'symbol'
+            values = symbols
+        elif tokens is not None:
+            attr_name = 'token'
+            values = tokens
+        else:
+            raise Exception("Must specify id, symbol or token")    
+        states = []
+        for value in values:
+            states.append(self.get_state(attr_name=attr_name, value=value))
+        return states
+    
+class DnaCharacterStateList(DiscreteCharacterStateList):
 
     def __init__(self):
-        DiscreteCharacterSymbols.__init__(self)
-        self.append(DiscreteCharacterSymbol("A", "A"))
-        self.append(DiscreteCharacterSymbol("C", "C"))     
-        self.append(DiscreteCharacterSymbol("G", "G"))
-        self.append(DiscreteCharacterSymbol("T", "T"))
-        self.append(DiscreteCharacterSymbol("GAP", "-")) 
-        self.append(DiscreteCharacterSymbol("MISSING", "?",
-                                            self.symbols_by_string(['A', 'C', 'G', 'T', '-'])))
-        self.append(DiscreteCharacterSymbol("N", "N",
-                                            self.symbols_by_string(['A', 'C', 'G', 'T'])))
-        self.append(DiscreteCharacterSymbol("M", "M", 
-                                            self.symbols_by_string(['A', 'C'])))                                            
-        self.append(DiscreteCharacterSymbol("R", "R", 
-                                            self.symbols_by_string(['A', 'G'])))
-        self.append(DiscreteCharacterSymbol("W", "W",
-                                            self.symbols_by_string(['A', 'T'])))
-        self.append(DiscreteCharacterSymbol("S", "S", 
-                                            self.symbols_by_string(['C', 'G'])))                                            
-        self.append(DiscreteCharacterSymbol("Y", "Y", 
-                                            self.symbols_by_string(['C', 'T'])))   
-        self.append(DiscreteCharacterSymbol("K", "K", 
-                                            self.symbols_by_string(['G', 'T'])))                                            
-        self.append(DiscreteCharacterSymbol("V", "V", 
-                                            self.symbols_by_string(['A', 'C', 'G'])))
-        self.append(DiscreteCharacterSymbol("H", "H",
-                                            self.symbols_by_string(['A', 'C', 'T'])))
-        self.append(DiscreteCharacterSymbol("D", "D", 
-                                            self.symbols_by_string(['A', 'G', 'T'])))                                            
-        self.append(DiscreteCharacterSymbol("B", "B", 
-                                            self.symbols_by_string(['C', 'G', 'T'])))                                               
-
-
-class DiscreteCharacterStates(object):
-
-    def __init__(self, symbols=None):
-        self.symbol_list = symbols
-
-    
-
-class CharacterBlock(dict, taxa.TaxaLinked):
-    """
-    Character block manager.
-    """
-
-    def __init__(self, *args, **kwargs):
-        """
-        Inits. Handles keyword arguments: `elem_id`, `label`, and `taxa_block` and `chartype`.
-        """
-        dict.__init__(self, *args)
-        taxa.TaxaLinked.__init__(self, *args, **kwargs)
+        DiscreteCharacterStateList.__init__(self)
+        self.append(DiscreteCharacterState(symbol="A"))
+        self.append(DiscreteCharacterState(symbol="C"))     
+        self.append(DiscreteCharacterState(symbol="G"))
+        self.append(DiscreteCharacterState(symbol="T"))
+        self.append(DiscreteCharacterState(symbol="-")) 
+        self.append(DiscreteCharacterState(symbol="?",
+                                           multistate=DiscreteCharacterState.AMBIGUOUS_STATE,
+                                           member_states=self.get_states(symbols=['A', 'C', 'G', 'T', '-'])))
+        self.append(DiscreteCharacterState(symbol="N",
+                                           multistate=DiscreteCharacterState.AMBIGUOUS_STATE,
+                                           member_states=self.get_states(symbols=['A', 'C', 'G', 'T'])))
+        self.append(DiscreteCharacterState(symbol="M", 
+                                           multistate=DiscreteCharacterState.AMBIGUOUS_STATE,
+                                           member_states=self.get_states(symbols=['A', 'C'])))                                            
+        self.append(DiscreteCharacterState(symbol="R", 
+                                           multistate=DiscreteCharacterState.AMBIGUOUS_STATE,
+                                           member_states=self.get_states(symbols=['A', 'G'])))
+        self.append(DiscreteCharacterState(symbol="W",
+                                           multistate=DiscreteCharacterState.AMBIGUOUS_STATE,
+                                           member_states=self.get_states(symbols=['A', 'T'])))
+        self.append(DiscreteCharacterState(symbol="S", 
+                                           multistate=DiscreteCharacterState.AMBIGUOUS_STATE,
+                                           member_states=self.get_states(symbols=['C', 'G'])))                                            
+        self.append(DiscreteCharacterState(symbol="Y", 
+                                           multistate=DiscreteCharacterState.AMBIGUOUS_STATE,
+                                           member_states=self.get_states(symbols=['C', 'T'])))   
+        self.append(DiscreteCharacterState(symbol="K", 
+                                           multistate=DiscreteCharacterState.AMBIGUOUS_STATE,
+                                           member_states=self.get_states(symbols=['G', 'T'])))                                            
+        self.append(DiscreteCharacterState(symbol="V", 
+                                           multistate=DiscreteCharacterState.AMBIGUOUS_STATE,
+                                           member_states=self.get_states(symbols=['A', 'C', 'G'])))
+        self.append(DiscreteCharacterState(symbol="H",
+                                           multistate=DiscreteCharacterState.AMBIGUOUS_STATE,
+                                           member_states=self.get_states(symbols=['A', 'C', 'T'])))
+        self.append(DiscreteCharacterState(symbol="D", 
+                                           multistate=DiscreteCharacterState.AMBIGUOUS_STATE,
+                                           member_states=self.get_states(symbols=['A', 'G', 'T'])))                                            
+        self.append(DiscreteCharacterState(symbol="B", 
+                                           multistate=DiscreteCharacterState.AMBIGUOUS_STATE,
+                                           member_states=self.get_states(symbols=['C', 'G', 'T'])))                                               
 
 
 if __name__ == "__main__":
-    dna = DnaCharacterSymbols()
+    dna = DnaCharacterStateList()
     for s in dna:
         print repr(s)
     print
     print
-    input = "\n"
-    while input:
-        input = raw_input("Enter symbol(s): ")
-        if input:
-            input = input.upper()
-            print repr(dna.string_to_symbol(input))
+#     input = "\n"
+#     while input:
+#         input = raw_input("Enter symbol(s): ")
+#         if input:
+#             input = input.upper()
+#             print repr(dna.string_to_symbol(input))
