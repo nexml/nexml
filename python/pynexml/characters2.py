@@ -152,7 +152,9 @@ class DiscreteCharacterStateList(list):
     
     def get_states(self, elem_ids=None, symbols=None, tokens=None):
         """
-        Returns list of states with ids/symbols/tokens as requested.
+        Returns list of states with ids/symbols/tokens equal to values
+        given in a list of ids/symbols/tokens (exact matches, one-to-one
+        correspondence between state and attribute value in list).
         """
         if elem_ids is not None:
             attr_name = 'elem_id'
@@ -164,14 +166,37 @@ class DiscreteCharacterStateList(list):
             attr_name = 'token'
             values = tokens
         else:
-            raise Exception("Must specify id, symbol or token")    
+            raise Exception("Must specify ids, symbols or tokens")    
         states = []
         for value in values:
             states.append(self.get_state(attr_name=attr_name, value=value))
         return states
-        
     
-    
+    def match_state(self, elem_ids=None, symbols=None, tokens=None):
+        """
+        Returns SINGLE state that has ids/symbols/tokens as member states.
+        """
+        if elem_ids is not None:
+            attr_name = 'fundamental_ids'
+            values = elem_ids
+        elif symbols is not None:
+            attr_name = 'fundamental_symbols'
+            values = symbols
+        elif tokens is not None:
+            attr_name = 'fundamental_tokens'
+            values = tokens
+        else:
+            raise Exception("Must specify ids, symbols or tokens")  
+        if isinstance(values, list):
+            values = set(values)
+        elif isinstance(values, str):
+            values = set([ch for ch in values])
+
+        for state in self:
+            if getattr(state, attr_name) == values:
+                return state
+        return None
+           
 class DnaCharacterStateList(DiscreteCharacterStateList):
 
     def __init__(self):
@@ -225,9 +250,9 @@ if __name__ == "__main__":
         print repr(s)
     print
     print
-#     input = "\n"
-#     while input:
-#         input = raw_input("Enter symbol(s): ")
-#         if input:
-#             input = input.upper()
-#             print repr(dna.string_to_symbol(input))
+    input = "\n"
+    while input:
+        input = raw_input("Enter symbol(s): ")
+        if input:
+            input = input.upper()
+            print repr(dna.match_state(symbols=input))
