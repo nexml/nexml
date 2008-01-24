@@ -4,7 +4,7 @@ BEGIN {
         plan 'skip_all' => 'env var BIO_PHYLO_TEST_NEXML not set';
     }
     else {
-    	Test::More->import('no_plan');
+    		Test::More->import('no_plan');
     }
 }
 use strict;
