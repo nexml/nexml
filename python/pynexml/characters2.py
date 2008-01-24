@@ -79,7 +79,7 @@ class DiscreteCharacterState(base.IdTagged):
     def __repr__(self):
         return str([self.elem_id, 
                     self.symbol, 
-                    str(self._get_fundamental_symbols())])
+                    '[' + (', '.join(self._get_fundamental_symbols())) + ']'])
         
     def _get_fundamental_states(self):
         """
