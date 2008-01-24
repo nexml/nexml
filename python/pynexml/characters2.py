@@ -129,6 +129,9 @@ class DiscreteCharacterStateList(list):
         list.__init__(self, *args)
         
     def get_state(self, attr_name, value):
+        """
+        Returns state in self in which attr_name equals value.
+        """
 #         attr_name = None
 #         value = None
 #         if elem_id is not None:
@@ -148,6 +151,9 @@ class DiscreteCharacterStateList(list):
         raise Exception("State with %s value of '%s' not defined" % (attr_name, str(value)))
     
     def get_states(self, elem_ids=None, symbols=None, tokens=None):
+        """
+        Returns list of states with ids/symbols/tokens as requested.
+        """
         if elem_ids is not None:
             attr_name = 'elem_id'
             values = elem_ids
@@ -163,6 +169,8 @@ class DiscreteCharacterStateList(list):
         for value in values:
             states.append(self.get_state(attr_name=attr_name, value=value))
         return states
+        
+    
     
 class DnaCharacterStateList(DiscreteCharacterStateList):
 
