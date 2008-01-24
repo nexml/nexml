@@ -79,11 +79,11 @@ class DiscreteCharacterState(base.IdTagged):
     def __repr__(self):
         return str([self.elem_id, 
                     self.symbol, 
-                    str(self.fundamental_symbols())])
+                    str(self._get_fundamental_symbols())])
         
-    def fundamental_states(self):
+    def _get_fundamental_states(self):
         """
-        Returns value of self in terms of a set of fundamental states (i.e.,
+        Returns value of self in terms of a set of _get_fundamental states (i.e.,
         set of single states) that correspond to this state.
         """
         if self.member_states is None:
@@ -91,27 +91,35 @@ class DiscreteCharacterState(base.IdTagged):
         else:
             states = set()
             for state in self.member_states:
-                states.update(state.fundamental_states())
+                states.update(state._get_fundamental_states())
             return states
+            
+    fundamental_states = property(_get_fundamental_states)          
                  
-    def fundamental_ids(self):
+    def _get_fundamental_ids(self):
         """
-        Returns set of id's of all fundamental states to which this state maps.
+        Returns set of id's of all _get_fundamental states to which this state maps.
         """
-        return set([state.elem_id for state in self.fundamental_states()])
+        return set([state.elem_id for state in self._get_fundamental_states()])
         
-    def fundamental_symbols(self):
-        """
-        Returns set of symbols of all fundamental states to which this state maps.
-        """
-        return set([state.symbol for state in self.fundamental_states() if state.symbol])  
+    fundamental_ids = property(_get_fundamental_ids)          
         
-    def fundamental_tokens(self):
+    def _get_fundamental_symbols(self):
         """
-        Returns set of tokens of all fundamental states to which this state maps.
+        Returns set of symbols of all _get_fundamental states to which this state maps.
         """
-        return set([state.token for state in self.fundamental_states() if state.token])        
+        return set([state.symbol for state in self._get_fundamental_states() if state.symbol]) 
         
+    fundamental_symbols = property(_get_fundamental_symbols)
+        
+    def _get_fundamental_tokens(self):
+        """
+        Returns set of tokens of all _get_fundamental states to which this state maps.
+        """
+        return set([state.token for state in self._get_fundamental_states() if state.token])        
+        
+    fundamental_tokens = property(_get_fundamental_tokens)   
+             
 class DiscreteCharacterStateList(list):
     """
     A list of states available for a particular character type/format.
