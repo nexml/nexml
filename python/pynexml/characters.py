@@ -48,7 +48,7 @@ specializations to handle nucleotide, etc. character types.
 from pynexml import base
 from pynexml import taxa
 
-class DiscreteCharacterState(base.IdTagged):
+class DiscreteCharacterStateDefinition(base.IdTagged):
     """
     A character state definition, which can either be a fundamental state or
     a mapping to a set of other character states (for polymorphic or ambiguous
@@ -120,13 +120,14 @@ class DiscreteCharacterState(base.IdTagged):
         
     fundamental_tokens = property(_get_fundamental_tokens)   
              
-class DiscreteCharacterStateList(list):
+class DiscreteCharacterStateSet(base.IdTagged, set):
     """
-    A list of states available for a particular character type/format.
+    A set of states available for a particular character type/format.
     """
     
-    def __init__(self, *args, **kwargs):
-        list.__init__(self, *args)
+    def __init__(self, elem_id=None, label=None):
+        base.IdTagged.__init__(self, elem_id=elem_id, label=label)  
+        set.__init__(self)
         
     def get_state(self, attr_name, value):
         """
@@ -197,10 +198,10 @@ class DiscreteCharacterStateList(list):
                 return state
         return None
            
-class DnaCharacterStateList(DiscreteCharacterStateList):
+class DnaCharacterStateSet(DiscreteCharacterStateSet):
 
-    def __init__(self):
-        DiscreteCharacterStateList.__init__(self)
+    def __init__(self, elem_id=None, label=None):
+        DiscreteCharacterStateSet.__init__(self, elem_id=elem_id, label=label)
         self.append(DiscreteCharacterState(symbol="A"))
         self.append(DiscreteCharacterState(symbol="C"))     
         self.append(DiscreteCharacterState(symbol="G"))
@@ -241,11 +242,65 @@ class DnaCharacterStateList(DiscreteCharacterStateList):
                                            member_states=self.get_states(symbols=['A', 'G', 'T'])))                                            
         self.append(DiscreteCharacterState(symbol="B", 
                                            multistate=DiscreteCharacterState.AMBIGUOUS_STATE,
-                                           member_states=self.get_states(symbols=['C', 'G', 'T'])))                                               
+                                           member_states=self.get_states(symbols=['C', 'G', 'T'])))
 
+class ColumnDataType(base.IdTagged):
+    """                                                                                                                                                                                                                                                                                                                                                                           
+    A character format or type of a particular column: i.e., maps
+    a particular set of character state definitions to a column in a character matrix.
+    """
+  
+    def __init__(self, elem_id=None,label=None, character_state_set=None):
+        base.IdTagged.__init__(self, elem_id=elem_id, label=label)
+        self.character_state_set = character_state_set
+        
+class DataTypes(object):
+    """
+    Used by a CharacterBlock to manage mappings of cell values (either individually or
+    on a column-by-column basis) to character sets.
+    """
+    
+    def __init__(self):
+        self.state_sets = {}
+        self.column_data_types = {}
+        
+    def get_data_type(self, col_id):
+        """
+        Returns the data type for a particular column.
+        """
+        for cdt in self.column_data_type:
+            if cdt.elem_id == col_id:
+                return cdt
+        raise Exception("Column definition with id \"%s\" not found." % col_id)
+        
+        
+class DnaDataType(DataTypes):
+    """
+    Specialization of the genereal DataTypes manager for DNA data.
+    """
+    
+    def __init__(self):
+        DataTypes.__init__(self)
+        dna_state_set = DnaCharacterStateSet()
+        self.state_sets.append(dna_state_set)
+    
+        
+class CharactersBlock(dict, taxa.TaxaLinked):
+    """
+    Character sequences manager.
+    """
+
+    def __init__(self, *args, **kwargs):
+        """
+        Inits. Handles keyword arguments: `elem_id`, `label` and `taxa_block`.
+        """
+        dict.__init__(self, *args)
+        taxa.TaxaLinked.__init__(self, *args, **kwargs)
+        
+        
 
 if __name__ == "__main__":
-    dna = DnaCharacterStateList()
+    dna = DnaCharacterStates()
     for s in dna:
         print repr(s)
     print
