@@ -27,350 +27,232 @@ This module handles the core definitions of character data types, as well as
 specializations to handle nucleotide, etc. character types.
 """
 
-import re
+#                [    [0],                // A
+#                     [1],                // C
+#                     [2],                // G
+#                     [3],                // T
+#                     [-1, 0, 1, 2, 3],   // ?
+#                     [0, 1, 2, 3],       // N or X
+#                     [0, 1],             // M
+#                     [0, 2],             // R
+#                     [0, 3],             // W
+#                     [1, 2],             // S
+#                     [1, 3],             // Y
+#                     [2, 3],             // K
+#                     [0, 1, 2],          // V
+#                     [0, 1, 3],          // H
+#                     [0, 2, 3],          // D
+#                     [1, 2, 3],          // B
+#                 ]        
 
 from pynexml import base
 from pynexml import taxa
 
-GAP_CHARS = ['-', '?']
-
-_charToBits = { "A": 1}
-_bitsToChar = " ACMGRSVTWYHKDBN"
-
-def map_to_iupac_ambiguity_code(states):
+class DiscreteCharacterState(base.IdTagged):
     """
-    Given a sequence of characters, maps ambiguities given the form of
-    `AG` to IUPAC codes (e.g., `AC -> R').
+    A character state definition, which can either be a fundamental state or
+    a mapping to a set of other character states (for polymorphic or ambiguous
+    characters).
     """
-    if len(states) == 1:
-        return states[0]
-    b = 0
-    for state in states:
-        b |= _charToBits[state]
-    return _bitsToChar[b]
-
-def parse_sequence_iupac_ambiguities(seq):
-    """
-    Given a sequence of characters, with ambiguities denoted by
-    `{<STATES>}`, this returns a sequence of characters with the
-    ambiguities mapped to the IUPAC codes.
-    """
-    if isinstance(seq, list):
-      as_list = True
-      seq = ''.join(seq)
-    else:
-      as_list = False
-    result = ""
-    pattern = re.compile('{(.*?)}')
-    pos = 0
-    match = pattern.search(seq, pos)
-    if match:
-        while match:
-          if pos > 0:
-            result = result + seq[pos-1:match.start()]
-          else:
-            result = result + seq[pos:match.start()]
-          result = result + map_to_ambiguity_code(match.group(1))
-          pos = match.end() + 1
-          if pos < len(seq) - 1:
-            match = pattern.search(seq, pos)
-          else:
-            match = None
-        result = result + seq[pos-1:]
-    else:
-      return seq
-    if as_list:
-      return [char for char in result]
-    else:
-      return result
-
-class CharacterType(object):
-    def __init__(self, state_list, pad_char='-'):
-        """
-        Initializes state list, and optional padding character.
-        """
-        self.state_list = state_list
-        self.pad_char = pad_char
-
-    def map_state_names(self, state_names):
-        """
-        Given a state name, returns index.
-        """
-        return [self.state_list.index(state_name) for state_name in state_names]
-
-    def map_state_indexes(self, state_indexes):
-        """
-        Given a state index, returns its name.
-        """
-        return [self.state_list[idx] for idx in state_indexes]
+    
+    # multistate enums
+    SINGLE_STATE = 0
+    AMBIGUOUS_STATE = 1
+    POLYMORPHIC_STATE = 2
+    
+    def __init__(self, 
+                 elem_id=None, 
+                 label=None,
+                 symbol=None, 
+                 token=None, 
+                 multistate=SINGLE_STATE, 
+                 member_states=None):
+        base.IdTagged.__init__(self, elem_id=elem_id, label=label)
+        self.symbol = symbol
+        self.token = token
+        self.multistate = multistate
+        self.member_states = member_states
         
-RNA_CHARTYPE = CharacterType(state_list="ACGU?NXMRWSYKVHDB-", pad_char='-')
-DNA_CHARTYPE = CharacterType(state_list="ACGT?NXMRWSYKVHDB-", pad_char='-')
-INFSITES_CHARTYPE = CharacterType(state_list="10", pad_char='0')
-
-class CharBlock(dict, taxa.TaxaLinked):
-    """
-    Character manager.
-    """
-
-    def __init__(self, *args, **kwargs):
-        """
-        Inits. Handles keyword arguments: `elem_id`, `label`, and `taxa_block` and `chartype`.
-        """
-        dict.__init__(self, *args)
-        taxa.TaxaLinked.__init__(self, *args, **kwargs)
-        if 'chartype' in kwargs:
-            self.chartype = kwargs['chartype']
-
-    def new_sequence(self, taxon, elem_id=None, state_indexes=None, state_names=None):
-        """
-        Adds a new sequence of the correct character type.
-        """
-        seq = CharSequence(chartype=self.chartype, elem_id=elem_id, state_indexes=state_indexes, state_names=state_names, taxon=taxon)
-        self[taxon] = seq
-        return seq
-
-class CharSequence(taxa.TaxonLinked):
-    """
-    A sequence of (biological) characters.
-    """
-
-    def __init__(self, chartype, elem_id=None, state_indexes=None, state_names=None, taxon=None):
-        """
-        Inits. Handles keyword arguments: `elem_id` and `label`.
-        """
-        taxa.TaxonLinked.__init__(self, elem_id=elem_id, taxon=taxon)        
-        self.chartype = chartype        
-        self.state_indexes = []
-        if state_indexes:
-            self.state_indexes = state_indexes
-        elif state_names:
-            self.state_names = state_names
-        
-    def __len__(self):
-        """
-        Returns length of state_indexes.
-        """
-        if self.state_indexes:
-            return len(self.state_indexes)
-        else:
-            return 0
-            
     def __str__(self):
-        """
-        Returns state names.
-        """
-        return ''.join(self.state_names)
-
-    def _get_state_names(self):
-        """
-        Returns mapping of character states to their value
-        representation (as a list).
-        """
-        return [self.chartype.state_list[idx] for idx in self.state_indexes]
-
-    def _set_state_names(self, values):
-        """
-        Sets the character states based on the given character value
-        representations.
-        """
-        ## TODO: must handle ambiguous and unrecognized characters        
-        self.state_indexes = [self.chartype.state_list.index(char) for char in values]
-
-    state_names = property(_get_state_names, _set_state_names)
-
-    def extend(self, names=None, indexes=None):
-        """
-        Extends a sequence by adding given states.
-        """
-        if names:
-            ## TODO: must handle ambiguous and unrecognized characters
-            indexes = [self.chartype.state_list.index(char) for char in names]
-        self.state_indexes.extend(indexes)
-
-class NucBaseFrequencies(object):
-    """
-    Convenience class to track nucleotide base frequencies. Probably
-    will abstract out generalizable methods to a base class later on.
-    """
-
-    ## STATIC METHODS ##
-
-    def count_freqs(seq, ignore_gaps=False):
-        """
-        Counts occurrences of bases in given charsequence, and returns a
-        BaseFrequencies object corresponding to counts. Does not
-        handle ambiguities.
-        """
-        if isinstance(seq, list):
-            charseq = seq
-        else:
-            # assume Sequence object
-            charseq = seq.state_names
-        state_list = DNA_CHARTYPE.state_list
-        counts = [0 for i in range(len(state_list))]
-        for char in charseq:
-            try:
-                ind = state_list.index(char)
-                counts[ind] += 1
-            except:
-                if char not in GAP_CHARS:
-                    raise
-        if ignore_gaps:
-            total = sum(counts)
-        else:
-            total = len(charseq)
-        freqs = [float(count)/total for count in counts[:-1]]
-        return NucBaseFrequencies(freqs)
-
-    count_freqs = staticmethod(count_freqs)
-
-    ## INSTANCE METHODS ##
-    
-    def __init__(self, freqs=None):
-        """
-        Initializes lists.
-        """
-        if freqs is not None:
-            self.freqs = freqs
-        else:
-            self.freqs = [0.25, 0.25, 0.25, 0.25]
-        if len(self.freqs) < 4:
-            self.freqs.append(1.0 - sum(self.freqs))
-
-    def _get_A(self):
-        """
-        Returns frequency of base A.
-        """
-        return self.freqs[0]
-
-    A = property(_get_A)
-
-    def _get_C(self):
-        """
-        Returns frequency of base C.
-        """
-        return self.freqs[1]
-
-    C = property(_get_C)
-
-    def _get_G(self):
-        """
-        Returns frequency of base G.
-        """
-        return self.freqs[2]
-
-    G = property(_get_G)
-
-    def _get_T(self):
-        """
-        Returns frequency of base T.
-        """
-        return self.freqs[3]
-
-    T = property(_get_T)
-
-    def _get_R(self):
-        """
-        Returns frequency of purine bases (A, G).
-        """
-        return self.A + self.G
-
-    R = property(_get_R)
-
-    def _get_Y(self):
-        """
-        Returns frequency of pyramidine bases (C, T).
-        """
-        return self.C + self.T
-
-    Y = property(_get_Y)
-            
-class InfiniteSitesSequence(CharSequence):
-    """
-    An infinite sites sequence.
-    """
-    
-    def __init__(self, state_indexes=None, global_mutation_index=None):
-        """
-        Initializes object.
-        """
-        self.mutated_positions = []
-        if global_mutation_index is not None:
-            self.global_mutation_index = global_mutation_index
-        else:
-            self.global_mutation_index = []
-        super(InfiniteSitesSequence, self).__init__(chartype=INFSITES_CHARTYPE, state_indexes=state_indexes)
-
-    def _get_state_indexes(self):
-        """
-        Composes list of state_indexes based on mutated positions.
-        """
-        state_indexes = []
-        if self.global_mutation_index:
-            maxpos = max(self.global_mutation_index)
-        else:
-            maxpos = 0
-        for pos in range(maxpos + 1):
-            if pos in self.mutated_positions:
-                state_indexes.append(1)
-            else:
-                state_indexes.append(0)
-        return state_indexes
-
-    def _set_state_indexes(self, state_indexes):
-        """
-        Constructs list of mutated positions based on list of
-        state_indexes.
-        """
-        self.mutated_positions = []
-        for idx, char in enumerate(state_indexes):
-            if char == 1:
-                self.mutated_positions.append(idx)
-
-    state_indexes = property(_get_state_indexes, _set_state_indexes)
-
-    def _get_state_names(self):
-        """
-        Returns mapping of character states to their value
-        representation (as a list).
-        """
-        return [str(char) for char in self._get_state_indexes()]
-
-    def _set_state_names(self, values):
-        """
-        Sets the character states based on the given character value
-        representations.
-        """
-        self._set_state_indexes(values)
-
-    state_names = property(_get_state_names, _set_state_names)
-
+        return str(self.symbol)
         
-class DnaSequence(CharSequence):
+    def __repr__(self):
+        return str([self.elem_id, 
+                    self.symbol, 
+                    '[' + (', '.join(self._get_fundamental_symbols())) + ']'])
+        
+    def _get_fundamental_states(self):
+        """
+        Returns value of self in terms of a set of _get_fundamental states (i.e.,
+        set of single states) that correspond to this state.
+        """
+        if self.member_states is None:
+            return set([self])
+        else:
+            states = set()
+            for state in self.member_states:
+                states.update(state._get_fundamental_states())
+            return states
+            
+    fundamental_states = property(_get_fundamental_states)          
+                 
+    def _get_fundamental_ids(self):
+        """
+        Returns set of id's of all _get_fundamental states to which this state maps.
+        """
+        return set([state.elem_id for state in self._get_fundamental_states()])
+        
+    fundamental_ids = property(_get_fundamental_ids)          
+        
+    def _get_fundamental_symbols(self):
+        """
+        Returns set of symbols of all _get_fundamental states to which this state maps.
+        """
+        return set([state.symbol for state in self._get_fundamental_states() if state.symbol]) 
+        
+    fundamental_symbols = property(_get_fundamental_symbols)
+        
+    def _get_fundamental_tokens(self):
+        """
+        Returns set of tokens of all _get_fundamental states to which this state maps.
+        """
+        return set([state.token for state in self._get_fundamental_states() if state.token])        
+        
+    fundamental_tokens = property(_get_fundamental_tokens)   
+             
+class DiscreteCharacterStateList(list):
     """
-    A sequence of nucleotides.
+    A list of states available for a particular character type/format.
     """
+    
+    def __init__(self, *args, **kwargs):
+        list.__init__(self, *args)
+        
+    def get_state(self, attr_name, value):
+        """
+        Returns state in self in which attr_name equals value.
+        """
+#         attr_name = None
+#         value = None
+#         if elem_id is not None:
+#             attr_name = 'elem_id'
+#             value = elem_id
+#         elif symbol is not None:
+#             attr_name = 'symbol'
+#             value = symbol
+#         elif token is not None:
+#             attr_name = 'token'
+#             value = token
+#         else:
+#             raise Exception("Must specify id, symbol or token")
+        for state in self:
+            if getattr(state, attr_name) == value:
+                return state
+        raise Exception("State with %s value of '%s' not defined" % (attr_name, str(value)))
+    
+    def get_states(self, elem_ids=None, symbols=None, tokens=None):
+        """
+        Returns list of states with ids/symbols/tokens equal to values
+        given in a list of ids/symbols/tokens (exact matches, one-to-one
+        correspondence between state and attribute value in list).
+        """
+        if elem_ids is not None:
+            attr_name = 'elem_id'
+            values = elem_ids
+        elif symbols is not None:
+            attr_name = 'symbol'
+            values = symbols
+        elif tokens is not None:
+            attr_name = 'token'
+            values = tokens
+        else:
+            raise Exception("Must specify ids, symbols or tokens")    
+        states = []
+        for value in values:
+            states.append(self.get_state(attr_name=attr_name, value=value))
+        return states
+    
+    def match_state(self, elem_ids=None, symbols=None, tokens=None):
+        """
+        Returns SINGLE state that has ids/symbols/tokens as member states.
+        """
+        if elem_ids is not None:
+            attr_name = 'fundamental_ids'
+            values = elem_ids
+        elif symbols is not None:
+            attr_name = 'fundamental_symbols'
+            values = symbols
+        elif tokens is not None:
+            attr_name = 'fundamental_tokens'
+            values = tokens
+        else:
+            raise Exception("Must specify ids, symbols or tokens")  
+        if isinstance(values, list):
+            values = set(values)
+        elif isinstance(values, str):
+            values = set([ch for ch in values])
 
-    def __init__(self, state_indexes=None):
-        """
-        Initializes object.
-        """
-        super(NucleotideSequence, self).__init__(chartype=DNA_CHARTYPE,
-                                                 state_indexes=state_indexes)        
+        for state in self:
+            if getattr(state, attr_name) == values:
+                return state
+        return None
+           
+class DnaCharacterStateList(DiscreteCharacterStateList):
 
-    def _get_state_names(self):
-        """
-        Returns mapping of character states to their value
-        representation (as a list).
-        """
-        return [self.chartype.state_list[idx] for idx in self.state_indexes]
+    def __init__(self):
+        DiscreteCharacterStateList.__init__(self)
+        self.append(DiscreteCharacterState(symbol="A"))
+        self.append(DiscreteCharacterState(symbol="C"))     
+        self.append(DiscreteCharacterState(symbol="G"))
+        self.append(DiscreteCharacterState(symbol="T"))
+        self.append(DiscreteCharacterState(symbol="-")) 
+        self.append(DiscreteCharacterState(symbol="?",
+                                           multistate=DiscreteCharacterState.AMBIGUOUS_STATE,
+                                           member_states=self.get_states(symbols=['A', 'C', 'G', 'T', '-'])))
+        self.append(DiscreteCharacterState(symbol="N",
+                                           multistate=DiscreteCharacterState.AMBIGUOUS_STATE,
+                                           member_states=self.get_states(symbols=['A', 'C', 'G', 'T'])))
+        self.append(DiscreteCharacterState(symbol="M", 
+                                           multistate=DiscreteCharacterState.AMBIGUOUS_STATE,
+                                           member_states=self.get_states(symbols=['A', 'C'])))                                            
+        self.append(DiscreteCharacterState(symbol="R", 
+                                           multistate=DiscreteCharacterState.AMBIGUOUS_STATE,
+                                           member_states=self.get_states(symbols=['A', 'G'])))
+        self.append(DiscreteCharacterState(symbol="W",
+                                           multistate=DiscreteCharacterState.AMBIGUOUS_STATE,
+                                           member_states=self.get_states(symbols=['A', 'T'])))
+        self.append(DiscreteCharacterState(symbol="S", 
+                                           multistate=DiscreteCharacterState.AMBIGUOUS_STATE,
+                                           member_states=self.get_states(symbols=['C', 'G'])))                                            
+        self.append(DiscreteCharacterState(symbol="Y", 
+                                           multistate=DiscreteCharacterState.AMBIGUOUS_STATE,
+                                           member_states=self.get_states(symbols=['C', 'T'])))   
+        self.append(DiscreteCharacterState(symbol="K", 
+                                           multistate=DiscreteCharacterState.AMBIGUOUS_STATE,
+                                           member_states=self.get_states(symbols=['G', 'T'])))                                            
+        self.append(DiscreteCharacterState(symbol="V", 
+                                           multistate=DiscreteCharacterState.AMBIGUOUS_STATE,
+                                           member_states=self.get_states(symbols=['A', 'C', 'G'])))
+        self.append(DiscreteCharacterState(symbol="H",
+                                           multistate=DiscreteCharacterState.AMBIGUOUS_STATE,
+                                           member_states=self.get_states(symbols=['A', 'C', 'T'])))
+        self.append(DiscreteCharacterState(symbol="D", 
+                                           multistate=DiscreteCharacterState.AMBIGUOUS_STATE,
+                                           member_states=self.get_states(symbols=['A', 'G', 'T'])))                                            
+        self.append(DiscreteCharacterState(symbol="B", 
+                                           multistate=DiscreteCharacterState.AMBIGUOUS_STATE,
+                                           member_states=self.get_states(symbols=['C', 'G', 'T'])))                                               
 
-    def _set_state_names(self, values):
-        """
-        Sets the character states based on the given character value
-        representations.
-        """
-        self.state_indexes = [self.chartype.state_list.index(char) for char in values]
 
-    state_names = property(_get_state_names, _set_state_names)
+if __name__ == "__main__":
+    dna = DnaCharacterStateList()
+    for s in dna:
+        print repr(s)
+    print
+    print
+    input = "\n"
+    while input:
+        input = raw_input("Enter symbol(s): ")
+        if input:
+            input = input.upper()
+            print repr(dna.match_state(symbols=input))
