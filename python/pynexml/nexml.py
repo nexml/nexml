@@ -591,7 +591,15 @@ class _NexmlCharBlockParser(_NexmlElementParser):
         if char_block_factory is None:
             self.char_block_factory = characters.CharBlock()
         else:
-            self.char_block_factory = char_block_factory         
+            self.char_block_factory = char_block_factory
+            
+    def parse_character_format_definition(self, nxformat, char_block):
+        """
+        Given an XmlElement representing a nexml characters format element,
+        this parses the character state definition and the character column
+        type mappings.
+        """
+        
 
     def parse_char_block(self, nxchars, dataset):
         """
