@@ -91,7 +91,7 @@
         <xs:complexContent>
             <xs:restriction base="AbstractFormat">
                 <xs:sequence minOccurs="1" maxOccurs="1">
-                    <xs:element name="states" type="StandardStates" minOccurs="1" maxOccurs="unbounded"/>
+                    <xs:element name="states" type="StandardStates" minOccurs="1" maxOccurs="1"/>
                     <xs:element name="char" type="StandardChar" minOccurs="1" maxOccurs="unbounded"/>
                 </xs:sequence>
             </xs:restriction>
