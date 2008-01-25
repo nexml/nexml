@@ -127,13 +127,15 @@ for my $block (@$blocks) {
 		if ( exists $raw_matrices->{$type} ) {
 			my @chars = $rows->[$i]->get_char;
 			for my $j ( 0 .. $#chars ) {
+				my $value_in_matrix_object = $chars[$j];
+				my $value_in_raw_array = $raw_matrices->{$type}->[$i]->[$j];				
 				if ( ($type eq 'CONTINUOUS') || ($type eq 'STANDARD') ){
-					ok($chars[$j] == $raw_matrices->{$type}->[$i]->[$j],
-						"value in right cell" );
+					ok( $value_in_matrix_object == $value_in_raw_array,
+						"value in numerical cell (obj: $value_in_matrix_object raw: $value_in_raw_array)" );
 				}
 				else {
-					ok($chars[$j] eq $raw_matrices->{$type}->[$i]->[$j],
-						"value in right cell" );
+					ok( lc( $value_in_matrix_object ) eq lc( $value_in_raw_array ),
+						"value in symbol cell (obj: $value_in_matrix_object raw: $value_in_raw_array)" );
 
 				}
 			}

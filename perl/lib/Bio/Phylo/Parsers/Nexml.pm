@@ -258,9 +258,6 @@ sub _handle_chars {
 	my ( $matrix_obj, $matrix_id ) = $self->_obj_from_elt( $characters_elt, 'matrix', %args );
 	my $taxa_idref = $self->_set_otus_for_obj( $characters_elt, $matrix_obj );
 
-	# rows are actually stored inside the <matrix/> element
-	my $matrix_elt = $characters_elt->first_child('matrix');
-
 	# create character definitions, if any
 	my ( $def_hash, $def_array ) = ( {}, [] );
 	if ( my $definitions_elt = $characters_elt->first_child('format') ) {
@@ -268,6 +265,8 @@ sub _handle_chars {
 	}
 
 	# create row objects
+	# rows are actually stored inside the <matrix/> element
+	my $matrix_elt = $characters_elt->first_child('matrix');
 	my ( $row_obj, $chars_hash );
 	for my $row_elt ( $matrix_elt->children('row') ) {
 		( $row_obj, $chars_hash ) = $self->_process_row( $row_elt, $def_hash, $def_array, %args );
@@ -284,7 +283,7 @@ sub _handle_chars {
 			}
 		}
 		else {
-			my $highest_pos_for_this_row = ( sort { $a <=> $b } keys %{$chars_hash} )[-1];
+			my $highest_pos_for_this_row = ( sort { $a <=> $b } keys %{ $chars_hash } )[-1];
 			my $missing = $row_obj->get_missing;
 			for my $i ( 0 .. $highest_pos_for_this_row ) {
 				if ( exists $chars_hash->{$i} ) {
@@ -298,10 +297,57 @@ sub _handle_chars {
 		$logger->debug( $self->_pos . " set char: '@chars'" );
 		$row_obj->set_char( \@chars );
 		$self->_set_otu_for_obj( $row_elt, $row_obj, $taxa_idref );
-
 		$matrix_obj->insert($row_obj);
 	}
 	push @{ $self->{'_blocks'} }, $matrix_obj;
+}
+
+# here we create a hash keyed on column ids => state ids => state symbols
+sub _process_definitions {
+	my ( $self, $format_elt ) = @_;
+	my ( $states_hash, $chars_hash, $states_array ) = ( {}, {}, [] );
+
+	# here we iterate over state set definitions, i.e. each
+	# $states_elt <states/> describes a set of mappings
+	for my $states_elt ( $format_elt->children('states') ) {
+		my $states_id = $states_elt->att('id');
+		$states_hash->{$states_id} = {};		
+
+		# here we iterate of state definitions, i.e. each
+		# $state_elt <state/> describes what symbol that state has,
+		# TODO and possible ambiguity mappings
+		for my $state_elt ( $states_elt->children('state') ) {
+			my $state_id  = $state_elt->att('id');
+			my $state_sym = $state_elt->att('symbol');
+
+			# for continuous data, $state_sym is undefined
+			$states_hash->{$states_id}->{$state_id} = $state_sym;
+		}
+	}
+	
+	# finally, we iterate over column definitions which may
+	# reuse state sets.
+	for my $char_elt ( $format_elt->children('char') ) {
+		my $char_id = $char_elt->att('id');
+		my $states_idref = $char_elt->att('states');	
+		
+		# $states_idref can be false (which in this case is always
+		# the same as undefined, because xml id's cannot be integers,
+		# so an id of "0" is impossible). This would be the case if
+		# the characters element is for continuous characters, which
+		# can have column definitions, but not state sets (which would
+		# have to be of infinite size).
+		if ( $states_idref ) {
+			$chars_hash->{$char_id} = $states_hash->{$states_idref};
+		}
+		
+		# in order to keep characters ordered (including in sparse 
+		# matrices) we can't just use a hash, need an array as
+		# well
+		push @$states_array, $char_id;
+	}
+
+	return ( $chars_hash, $states_array );
 }
 
 sub _process_row {
@@ -362,10 +408,10 @@ sub _process_seqs {
 	if ( my $seq_string = $row_elt->first_child_text('seq') ) {
 		if ( $type =~ m/^(DNA|RNA|PROTEIN|RESTRICTION)/i ) {    
 			$seq_string =~ s/\s//g;
-			my @seq_list = split //, $seq_string;			  
+			@seq_list = split //, $seq_string;			  
 		}
 		else {
-			my @seq_list = split /\s+/, $seq_string;
+			@seq_list = split /\s+/, $seq_string;
 		}
 		for my $i ( 0 .. $#seq_list ) {    
 			$chars_hash->{$i} = $seq_list[$i];
@@ -375,37 +421,7 @@ sub _process_seqs {
 	return $chars_hash;		
 }
 
-# here we create a hash keyed on column ids => state ids => state symbols
-sub _process_definitions {
-	my ( $self,        $format_elt )   = @_;
-	my ( $states_hash, $chars_hash, $states_array ) = ( {}, {}, [] );
 
-	# here we iterate over character definitions, i.e. each
-	# $def_elt describes a matrix column
-	for my $states_elt ( $format_elt->children('states') ) {
-		my $states_id = $states_elt->att('id');
-		$states_hash->{$states_id} = {};
-		push @$states_array, $states_id;
-
-		# here we iterate of state definitions, i.e. each
-		# $val_elt describes what states that column may occupy
-		for my $state_elt ( $states_elt->children('state') ) {
-			my $state_id  = $state_elt->att('id');
-			my $state_sym = $state_elt->att('symbol');
-
-			# for continuous data, $val_sym is undefined
-			$states_hash->{$states_id}->{$state_id} = $state_sym;
-		}
-	}
-
-	for my $char_elt ( $format_elt->children('char') ) {
-		my $char_id = $char_elt->att('id');
-		my $states_idref = $char_elt->att('states');
-		$chars_hash->{$char_id} = $states_hash->{$states_idref};
-	}
-
-	return ( $chars_hash, $states_array );
-}
 
 sub _handle_forest {
 	my ( $twig, $trees_elt, $self ) = @_;
@@ -468,8 +484,7 @@ sub _process_listtree {
 		# referential integrity check for target
 		if ( not exists $node_by_id{$node_id} ) {
 			throw(
-				'API' =>
-				  "no target '$node_id' for edge '$edge_id' in tree '$tree_id'",
+				'API'  => "no target '$node_id' for edge '$edge_id' in tree '$tree_id'",
 				'line' => $self->{'_twig'}->parser->current_line
 			);
 		}
