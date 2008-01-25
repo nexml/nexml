@@ -54,6 +54,13 @@ $VERSION = $Bio::Phylo::VERSION;
 # them in a separate logging object.
 my $logger = Bio::Phylo::Util::Logger->new;
 
+# helper method to add parser reading position to log messages
+sub _pos {
+	my $self = shift;
+	my $t    = $self->{'_twig'};
+	join ':', ( $t->current_line, $t->current_column, $t->current_byte );
+}
+
 # nice 'n' generic: we provide an element and a class,
 # from the class we instantiate a new object, we set
 # the element id in the generic slot of the object.
@@ -86,14 +93,6 @@ sub _obj_from_elt {
 	return ( $obj, $id );
 }
 
-sub _pos {
-	my $self = shift;
-	my $t    = $self->{'_twig'};
-	join ':', ( $t->current_line, $t->current_column, $t->current_byte );
-}
-
-
-
 # this is the constructor that gets called by Bio::Phylo::IO,
 # here we create the object instance that will process the file/string
 sub _new {
@@ -117,6 +116,9 @@ sub _new {
 	return $self;
 }
 
+# initialize/reset parser object, called
+# by the constructor (_new), and at the
+# end of each parser call
 sub _init {
 	my $hash = shift;
 	$hash->{'_blocks'}        = [];
@@ -376,7 +378,7 @@ sub _process_seqs {
 # here we create a hash keyed on column ids => state ids => state symbols
 sub _process_definitions {
 	my ( $self,        $format_elt )   = @_;
-	my ( $states_hash, $states_array ) = ( {}, [] );
+	my ( $states_hash, $chars_hash, $states_array ) = ( {}, {}, [] );
 
 	# here we iterate over character definitions, i.e. each
 	# $def_elt describes a matrix column
@@ -396,7 +398,13 @@ sub _process_definitions {
 		}
 	}
 
-	return ( $states_hash, $states_array );
+	for my $char_elt ( $format_elt->children('char') ) {
+		my $char_id = $char_elt->att('id');
+		my $states_idref = $char_elt->att('states');
+		$chars_hash->{$char_id} = $states_hash->{$states_idref};
+	}
+
+	return ( $chars_hash, $states_array );
 }
 
 sub _handle_forest {
