@@ -1,5 +1,7 @@
 #!/bin/sh
-XSD_HOME=~/xsd-3.1.0.a6-i686-macosx
+# http://codesynthesis.com/products/xsd/download.xhtml
+XSD_HOME=~/xsd-3.1.0.b1-i686-macosx
+# http://xerces.apache.org/xerces-c/download.cgi
 XERCES_HOME=~/xerces-c_2_8_0-x86-macosx-gcc_4_0
 XSDBIN=$XSD_HOME/bin/xsd
 XSDINC=$XSD_HOME/libxsd/
