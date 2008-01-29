@@ -48,7 +48,7 @@ specializations to handle nucleotide, etc. character types.
 from pynexml import base
 from pynexml import taxa
 
-class DiscreteCharacterStateDefinition(base.IdTagged):
+class DiscreteStateAlphabetElement(base.IdTagged):
     """
     A character state definition, which can either be a fundamental state or
     a mapping to a set of other character states (for polymorphic or ambiguous
@@ -120,7 +120,7 @@ class DiscreteCharacterStateDefinition(base.IdTagged):
         
     fundamental_tokens = property(_get_fundamental_tokens)   
              
-class DiscreteCharacterStateSet(base.IdTagged, set):
+class DiscreteStateAlphabetSet(base.IdTagged, set):
     """
     A set of states available for a particular character type/format.
     """
@@ -198,96 +198,66 @@ class DiscreteCharacterStateSet(base.IdTagged, set):
                 return state
         return None
            
-class DnaCharacterStateSet(DiscreteCharacterStateSet):
+class DnaStateAlphabetSet(DiscreteStateAlphabetSet):
 
     def __init__(self, elem_id=None, label=None):
-        DiscreteCharacterStateSet.__init__(self, elem_id=elem_id, label=label)
-        self.append(DiscreteCharacterState(symbol="A"))
-        self.append(DiscreteCharacterState(symbol="C"))     
-        self.append(DiscreteCharacterState(symbol="G"))
-        self.append(DiscreteCharacterState(symbol="T"))
-        self.append(DiscreteCharacterState(symbol="-")) 
-        self.append(DiscreteCharacterState(symbol="?",
-                                           multistate=DiscreteCharacterState.AMBIGUOUS_STATE,
+        DiscreteStateAlphabetSet.__init__(self, elem_id=elem_id, label=label)
+        self.append(DiscreteStateAlphabetElement(symbol="A"))
+        self.append(DiscreteStateAlphabetElement(symbol="C"))     
+        self.append(DiscreteStateAlphabetElement(symbol="G"))
+        self.append(DiscreteStateAlphabetElement(symbol="T"))
+        self.append(DiscreteStateAlphabetElement(symbol="-")) 
+        self.append(DiscreteStateAlphabetElement(symbol="?",
+                                           multistate=DiscreteStateAlphabetElement.AMBIGUOUS_STATE,
                                            member_states=self.get_states(symbols=['A', 'C', 'G', 'T', '-'])))
-        self.append(DiscreteCharacterState(symbol="N",
-                                           multistate=DiscreteCharacterState.AMBIGUOUS_STATE,
+        self.append(DiscreteStateAlphabetElement(symbol="N",
+                                           multistate=DiscreteStateAlphabetElement.AMBIGUOUS_STATE,
                                            member_states=self.get_states(symbols=['A', 'C', 'G', 'T'])))
-        self.append(DiscreteCharacterState(symbol="M", 
-                                           multistate=DiscreteCharacterState.AMBIGUOUS_STATE,
+        self.append(DiscreteStateAlphabetElement(symbol="M", 
+                                           multistate=DiscreteStateAlphabetElement.AMBIGUOUS_STATE,
                                            member_states=self.get_states(symbols=['A', 'C'])))                                            
-        self.append(DiscreteCharacterState(symbol="R", 
-                                           multistate=DiscreteCharacterState.AMBIGUOUS_STATE,
+        self.append(DiscreteStateAlphabetElement(symbol="R", 
+                                           multistate=DiscreteStateAlphabetElement.AMBIGUOUS_STATE,
                                            member_states=self.get_states(symbols=['A', 'G'])))
-        self.append(DiscreteCharacterState(symbol="W",
-                                           multistate=DiscreteCharacterState.AMBIGUOUS_STATE,
+        self.append(DiscreteStateAlphabetElement(symbol="W",
+                                           multistate=DiscreteStateAlphabetElement.AMBIGUOUS_STATE,
                                            member_states=self.get_states(symbols=['A', 'T'])))
-        self.append(DiscreteCharacterState(symbol="S", 
-                                           multistate=DiscreteCharacterState.AMBIGUOUS_STATE,
+        self.append(DiscreteStateAlphabetElement(symbol="S", 
+                                           multistate=DiscreteStateAlphabetElement.AMBIGUOUS_STATE,
                                            member_states=self.get_states(symbols=['C', 'G'])))                                            
-        self.append(DiscreteCharacterState(symbol="Y", 
-                                           multistate=DiscreteCharacterState.AMBIGUOUS_STATE,
+        self.append(DiscreteStateAlphabetElement(symbol="Y", 
+                                           multistate=DiscreteStateAlphabetElement.AMBIGUOUS_STATE,
                                            member_states=self.get_states(symbols=['C', 'T'])))   
-        self.append(DiscreteCharacterState(symbol="K", 
-                                           multistate=DiscreteCharacterState.AMBIGUOUS_STATE,
+        self.append(DiscreteStateAlphabetElement(symbol="K", 
+                                           multistate=DiscreteStateAlphabetElement.AMBIGUOUS_STATE,
                                            member_states=self.get_states(symbols=['G', 'T'])))                                            
-        self.append(DiscreteCharacterState(symbol="V", 
-                                           multistate=DiscreteCharacterState.AMBIGUOUS_STATE,
+        self.append(DiscreteStateAlphabetElement(symbol="V", 
+                                           multistate=DiscreteStateAlphabetElement.AMBIGUOUS_STATE,
                                            member_states=self.get_states(symbols=['A', 'C', 'G'])))
-        self.append(DiscreteCharacterState(symbol="H",
-                                           multistate=DiscreteCharacterState.AMBIGUOUS_STATE,
+        self.append(DiscreteStateAlphabetElement(symbol="H",
+                                           multistate=DiscreteStateAlphabetElement.AMBIGUOUS_STATE,
                                            member_states=self.get_states(symbols=['A', 'C', 'T'])))
-        self.append(DiscreteCharacterState(symbol="D", 
-                                           multistate=DiscreteCharacterState.AMBIGUOUS_STATE,
+        self.append(DiscreteStateAlphabetElement(symbol="D", 
+                                           multistate=DiscreteStateAlphabetElement.AMBIGUOUS_STATE,
                                            member_states=self.get_states(symbols=['A', 'G', 'T'])))                                            
-        self.append(DiscreteCharacterState(symbol="B", 
-                                           multistate=DiscreteCharacterState.AMBIGUOUS_STATE,
+        self.append(DiscreteStateAlphabetElement(symbol="B", 
+                                           multistate=DiscreteStateAlphabetElement.AMBIGUOUS_STATE,
                                            member_states=self.get_states(symbols=['C', 'G', 'T'])))
 
-class ColumnDataType(base.IdTagged):
+class Character(base.IdTagged):
     """                                                                                                                                                                                                                                                                                                                                                                           
     A character format or type of a particular column: i.e., maps
     a particular set of character state definitions to a column in a character matrix.
     """
   
-    def __init__(self, elem_id=None,label=None, character_state_set=None):
+    def __init__(self, elem_id=None,label=None, state_alphabet_set=None):
         base.IdTagged.__init__(self, elem_id=elem_id, label=label)
-        self.character_state_set = character_state_set
-        
-class DataTypes(object):
-    """
-    Used by a CharacterBlock to manage mappings of cell values (either individually or
-    on a column-by-column basis) to character sets.
-    """
-    
-    def __init__(self):
-        self.state_sets = {}
-        self.column_data_types = {}
-        
-    def get_data_type(self, col_id):
-        """
-        Returns the data type for a particular column.
-        """
-        for cdt in self.column_data_type:
-            if cdt.elem_id == col_id:
-                return cdt
-        raise Exception("Column definition with id \"%s\" not found." % col_id)
-        
-        
-class DnaDataType(DataTypes):
-    """
-    Specialization of the genereal DataTypes manager for DNA data.
-    """
-    
-    def __init__(self):
-        DataTypes.__init__(self)
-        dna_state_set = DnaCharacterStateSet()
-        self.state_sets.append(dna_state_set)
-    
-        
+        self.state_alphabet_set = state_alphabet_set
+                
+       
 class CharactersBlock(dict, taxa.TaxaLinked):
     """
-    Character sequences manager.
+    Character data container/manager manager.
     """
 
     def __init__(self, *args, **kwargs):
@@ -296,11 +266,24 @@ class CharactersBlock(dict, taxa.TaxaLinked):
         """
         dict.__init__(self, *args)
         taxa.TaxaLinked.__init__(self, *args, **kwargs)
-        
+        self.state_alphabet_sets = []
+        self.characters = []
+
+class DnaCharactersBlock(CharactersBlock):
+    """
+    DNA nucleotide data.
+    """
+    
+    def __init__(self, *args, **kwargs):
+        """
+        Inits. Handles keyword arguments: `elem_id`, `label` and `taxa_block`.
+        """
+        CharactersBlock(*args, **kwargs)
+        self.state_alphabet_sets.append(DnaStateAlphabetSet())
         
 
 if __name__ == "__main__":
-    dna = DnaCharacterStates()
+    dna = DnaStateAlphabets()
     for s in dna:
         print repr(s)
     print
