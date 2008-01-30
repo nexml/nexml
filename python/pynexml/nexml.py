@@ -693,6 +693,7 @@ class _NexmlCharBlockParser(_NexmlElementParser):
             self.parse_characters_format(nxformat, char_block)
 
         matrix = nxchars.find('matrix')
+        self.parse_annotations(annotated=matrix, nxelement=nxtaxon)
         if char_block.characters:
             columns = char_block.characters_id_map()
             column_ids = [char.elem_id for char in char_block.characters]
