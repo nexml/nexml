@@ -154,25 +154,6 @@ def _from_nexml_tree_length_type(type_attr):
     else:
         return float
 
-def _from_nexml_chartype(chartype):
-    """
-    Returns Phyloplex characters type corresponding to nexml chartype.
-    """
-    if chartype == "nex:RestrictionSeqs":
-        return None
-    if chartype == "nex:StandardCells":
-        return None
-    if chartype == "nex:ContinuousCells":
-        return None
-    if chartype == "nex:DnaSeqs":
-        return characters.DNA_CHARTYPE
-    if chartype == "nex:RnaSeqs":
-        return characters.RNA_CHARTYPE
-    if chartype == "nex:ContinuousSeqs":
-        return None
-    if chartype == "nex:StandardSeqs":
-        return None
-    
 def _from_nexml_dict_value(value, value_type):
     """
     A text representation of a value of type `type`, where `type`
@@ -606,6 +587,22 @@ class _NexmlCharBlockParser(_NexmlElementParser):
         Given an XmlElement representing a nexml characters block, this
         instantiates and returns a corresponding DendroPy CharacterMatrix object.
         """
+        nx_chartype = nxchars.get('{http://www.w3.org/2001/XMLSchema-instance}type', None)
+        if nx_chartype.startswith('nex:Dna'):
+            char_block = characters.DnaCharactersBlock()
+        elif nx_chartype.startswith('nex:Rna'):
+            char_block = characters.RnaCharactersBlock()
+        elif nx_chartype.startswith('nex:Protein'):
+            char_block = characters.ProteinCharactersBlock()            
+        elif nx_chartype.startswith('nex:Restriction'):
+            char_block = characters.RestrictionSitesCharactersBlock()
+        elif nx_chartype.startswith('nex:Standard'):
+            char_block = characters.DiscreteCharactersBlock()
+        elif nx_chartype.startsiwth('nex:Continuous'):
+            char_block = characters.ContinuousCharactersBlock()
+        else:
+            raise NotImplementedError()
+            
         elem_id = nxchars.get('id', None)
         label = nxchars.get('label', None)
         char_block = self.char_block_factory(elem_id=elem_id, label=label)
@@ -618,7 +615,7 @@ class _NexmlCharBlockParser(_NexmlElementParser):
         if not taxa_block:
             raise Exception("Taxa block \"%s\" not found" % taxa_id)
         char_block.taxa_block = taxa_block
-        nx_chartype = nxchars.get('{http://www.w3.org/2001/XMLSchema-instance}type', None)
+
         chartype = _from_nexml_chartype(nx_chartype)
         if chartype is None:
             ## handle unknown character formats here ##
