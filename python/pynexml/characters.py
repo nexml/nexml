@@ -48,7 +48,7 @@ specializations to handle nucleotide, etc. character types.
 from pynexml import base
 from pynexml import taxa
 
-class DiscreteStateAlphabetElement(base.IdTagged):
+class StateAlphabetElement(base.IdTagged):
     """
     A character state definition, which can either be a fundamental state or
     a mapping to a set of other character states (for polymorphic or ambiguous
@@ -120,7 +120,7 @@ class DiscreteStateAlphabetElement(base.IdTagged):
         
     fundamental_tokens = property(_get_fundamental_tokens)   
              
-class DiscreteStateAlphabetSet(base.IdTagged, set):
+class StateAlphabetSet(base.IdTagged, set):
     """
     A set of states available for a particular character type/format.
     """
@@ -197,161 +197,169 @@ class DiscreteStateAlphabetSet(base.IdTagged, set):
             if getattr(state, attr_name) == values:
                 return state
         return None
+    
+    def id_map(self):
+        """
+        Returns dictionary of element id's to state objects.
+        """
+        map = {}
+        for state in self:
+            map[state.elem_id] = state
+        return map
            
-class DnaStateAlphabetSet(DiscreteStateAlphabetSet):
+class DnaStateAlphabetSet(StateAlphabetSet):
 
     def __init__(self, elem_id=None, label=None):
-        DiscreteStateAlphabetSet.__init__(self, elem_id=elem_id, label=label)
-        self.append(DiscreteStateAlphabetElement(symbol="A"))
-        self.append(DiscreteStateAlphabetElement(symbol="C"))     
-        self.append(DiscreteStateAlphabetElement(symbol="G"))
-        self.append(DiscreteStateAlphabetElement(symbol="T"))
-        self.append(DiscreteStateAlphabetElement(symbol="-")) 
-        self.append(DiscreteStateAlphabetElement(symbol="?",
-                                           multistate=DiscreteStateAlphabetElement.AMBIGUOUS_STATE,
+        StateAlphabetSet.__init__(self, elem_id=elem_id, label=label)
+        self.append(StateAlphabetElement(symbol="A"))
+        self.append(StateAlphabetElement(symbol="C"))     
+        self.append(StateAlphabetElement(symbol="G"))
+        self.append(StateAlphabetElement(symbol="T"))
+        self.append(StateAlphabetElement(symbol="-")) 
+        self.append(StateAlphabetElement(symbol="?",
+                                           multistate=StateAlphabetElement.AMBIGUOUS_STATE,
                                            member_states=self.get_states(symbols=['A', 'C', 'G', 'T', '-'])))
-        self.append(DiscreteStateAlphabetElement(symbol="N",
-                                           multistate=DiscreteStateAlphabetElement.AMBIGUOUS_STATE,
+        self.append(StateAlphabetElement(symbol="N",
+                                           multistate=StateAlphabetElement.AMBIGUOUS_STATE,
                                            member_states=self.get_states(symbols=['A', 'C', 'G', 'T'])))
-        self.append(DiscreteStateAlphabetElement(symbol="M", 
-                                           multistate=DiscreteStateAlphabetElement.AMBIGUOUS_STATE,
+        self.append(StateAlphabetElement(symbol="M", 
+                                           multistate=StateAlphabetElement.AMBIGUOUS_STATE,
                                            member_states=self.get_states(symbols=['A', 'C'])))                                            
-        self.append(DiscreteStateAlphabetElement(symbol="R", 
-                                           multistate=DiscreteStateAlphabetElement.AMBIGUOUS_STATE,
+        self.append(StateAlphabetElement(symbol="R", 
+                                           multistate=StateAlphabetElement.AMBIGUOUS_STATE,
                                            member_states=self.get_states(symbols=['A', 'G'])))
-        self.append(DiscreteStateAlphabetElement(symbol="W",
-                                           multistate=DiscreteStateAlphabetElement.AMBIGUOUS_STATE,
+        self.append(StateAlphabetElement(symbol="W",
+                                           multistate=StateAlphabetElement.AMBIGUOUS_STATE,
                                            member_states=self.get_states(symbols=['A', 'T'])))
-        self.append(DiscreteStateAlphabetElement(symbol="S", 
-                                           multistate=DiscreteStateAlphabetElement.AMBIGUOUS_STATE,
+        self.append(StateAlphabetElement(symbol="S", 
+                                           multistate=StateAlphabetElement.AMBIGUOUS_STATE,
                                            member_states=self.get_states(symbols=['C', 'G'])))                                            
-        self.append(DiscreteStateAlphabetElement(symbol="Y", 
-                                           multistate=DiscreteStateAlphabetElement.AMBIGUOUS_STATE,
+        self.append(StateAlphabetElement(symbol="Y", 
+                                           multistate=StateAlphabetElement.AMBIGUOUS_STATE,
                                            member_states=self.get_states(symbols=['C', 'T'])))   
-        self.append(DiscreteStateAlphabetElement(symbol="K", 
-                                           multistate=DiscreteStateAlphabetElement.AMBIGUOUS_STATE,
+        self.append(StateAlphabetElement(symbol="K", 
+                                           multistate=StateAlphabetElement.AMBIGUOUS_STATE,
                                            member_states=self.get_states(symbols=['G', 'T'])))                                            
-        self.append(DiscreteStateAlphabetElement(symbol="V", 
-                                           multistate=DiscreteStateAlphabetElement.AMBIGUOUS_STATE,
+        self.append(StateAlphabetElement(symbol="V", 
+                                           multistate=StateAlphabetElement.AMBIGUOUS_STATE,
                                            member_states=self.get_states(symbols=['A', 'C', 'G'])))
-        self.append(DiscreteStateAlphabetElement(symbol="H",
-                                           multistate=DiscreteStateAlphabetElement.AMBIGUOUS_STATE,
+        self.append(StateAlphabetElement(symbol="H",
+                                           multistate=StateAlphabetElement.AMBIGUOUS_STATE,
                                            member_states=self.get_states(symbols=['A', 'C', 'T'])))
-        self.append(DiscreteStateAlphabetElement(symbol="D", 
-                                           multistate=DiscreteStateAlphabetElement.AMBIGUOUS_STATE,
+        self.append(StateAlphabetElement(symbol="D", 
+                                           multistate=StateAlphabetElement.AMBIGUOUS_STATE,
                                            member_states=self.get_states(symbols=['A', 'G', 'T'])))                                            
-        self.append(DiscreteStateAlphabetElement(symbol="B", 
-                                           multistate=DiscreteStateAlphabetElement.AMBIGUOUS_STATE,
+        self.append(StateAlphabetElement(symbol="B", 
+                                           multistate=StateAlphabetElement.AMBIGUOUS_STATE,
                                            member_states=self.get_states(symbols=['C', 'G', 'T'])))
 
-class RnaStateAlphabetSet(DiscreteStateAlphabetSet):
+class RnaStateAlphabetSet(StateAlphabetSet):
 
     def __init__(self, elem_id=None, label=None):
-        DiscreteStateAlphabetSet.__init__(self, elem_id=elem_id, label=label)
-        self.append(DiscreteStateAlphabetElement(symbol="A"))
-        self.append(DiscreteStateAlphabetElement(symbol="C"))     
-        self.append(DiscreteStateAlphabetElement(symbol="G"))
-        self.append(DiscreteStateAlphabetElement(symbol="U"))
-        self.append(DiscreteStateAlphabetElement(symbol="-")) 
-        self.append(DiscreteStateAlphabetElement(symbol="?",
-                                           multistate=DiscreteStateAlphabetElement.AMBIGUOUS_STATE,
+        StateAlphabetSet.__init__(self, elem_id=elem_id, label=label)
+        self.append(StateAlphabetElement(symbol="A"))
+        self.append(StateAlphabetElement(symbol="C"))     
+        self.append(StateAlphabetElement(symbol="G"))
+        self.append(StateAlphabetElement(symbol="U"))
+        self.append(StateAlphabetElement(symbol="-")) 
+        self.append(StateAlphabetElement(symbol="?",
+                                           multistate=StateAlphabetElement.AMBIGUOUS_STATE,
                                            member_states=self.get_states(symbols=['A', 'C', 'G', 'U', '-'])))
-        self.append(DiscreteStateAlphabetElement(symbol="N",
-                                           multistate=DiscreteStateAlphabetElement.AMBIGUOUS_STATE,
+        self.append(StateAlphabetElement(symbol="N",
+                                           multistate=StateAlphabetElement.AMBIGUOUS_STATE,
                                            member_states=self.get_states(symbols=['A', 'C', 'G', 'U'])))
-        self.append(DiscreteStateAlphabetElement(symbol="M", 
-                                           multistate=DiscreteStateAlphabetElement.AMBIGUOUS_STATE,
+        self.append(StateAlphabetElement(symbol="M", 
+                                           multistate=StateAlphabetElement.AMBIGUOUS_STATE,
                                            member_states=self.get_states(symbols=['A', 'C'])))                                            
-        self.append(DiscreteStateAlphabetElement(symbol="R", 
-                                           multistate=DiscreteStateAlphabetElement.AMBIGUOUS_STATE,
+        self.append(StateAlphabetElement(symbol="R", 
+                                           multistate=StateAlphabetElement.AMBIGUOUS_STATE,
                                            member_states=self.get_states(symbols=['A', 'G'])))
-        self.append(DiscreteStateAlphabetElement(symbol="W",
-                                           multistate=DiscreteStateAlphabetElement.AMBIGUOUS_STATE,
+        self.append(StateAlphabetElement(symbol="W",
+                                           multistate=StateAlphabetElement.AMBIGUOUS_STATE,
                                            member_states=self.get_states(symbols=['A', 'U'])))
-        self.append(DiscreteStateAlphabetElement(symbol="S", 
-                                           multistate=DiscreteStateAlphabetElement.AMBIGUOUS_STATE,
+        self.append(StateAlphabetElement(symbol="S", 
+                                           multistate=StateAlphabetElement.AMBIGUOUS_STATE,
                                            member_states=self.get_states(symbols=['C', 'G'])))                                            
-        self.append(DiscreteStateAlphabetElement(symbol="Y", 
-                                           multistate=DiscreteStateAlphabetElement.AMBIGUOUS_STATE,
+        self.append(StateAlphabetElement(symbol="Y", 
+                                           multistate=StateAlphabetElement.AMBIGUOUS_STATE,
                                            member_states=self.get_states(symbols=['C', 'U'])))   
-        self.append(DiscreteStateAlphabetElement(symbol="K", 
-                                           multistate=DiscreteStateAlphabetElement.AMBIGUOUS_STATE,
+        self.append(StateAlphabetElement(symbol="K", 
+                                           multistate=StateAlphabetElement.AMBIGUOUS_STATE,
                                            member_states=self.get_states(symbols=['G', 'U'])))                                            
-        self.append(DiscreteStateAlphabetElement(symbol="V", 
-                                           multistate=DiscreteStateAlphabetElement.AMBIGUOUS_STATE,
+        self.append(StateAlphabetElement(symbol="V", 
+                                           multistate=StateAlphabetElement.AMBIGUOUS_STATE,
                                            member_states=self.get_states(symbols=['A', 'C', 'G'])))
-        self.append(DiscreteStateAlphabetElement(symbol="H",
-                                           multistate=DiscreteStateAlphabetElement.AMBIGUOUS_STATE,
+        self.append(StateAlphabetElement(symbol="H",
+                                           multistate=StateAlphabetElement.AMBIGUOUS_STATE,
                                            member_states=self.get_states(symbols=['A', 'C', 'U'])))
-        self.append(DiscreteStateAlphabetElement(symbol="D", 
-                                           multistate=DiscreteStateAlphabetElement.AMBIGUOUS_STATE,
+        self.append(StateAlphabetElement(symbol="D", 
+                                           multistate=StateAlphabetElement.AMBIGUOUS_STATE,
                                            member_states=self.get_states(symbols=['A', 'G', 'U'])))                                            
-        self.append(DiscreteStateAlphabetElement(symbol="B", 
-                                           multistate=DiscreteStateAlphabetElement.AMBIGUOUS_STATE,
+        self.append(StateAlphabetElement(symbol="B", 
+                                           multistate=StateAlphabetElement.AMBIGUOUS_STATE,
                                            member_states=self.get_states(symbols=['C', 'G', 'U'])))
 
 
-class ProteinStateAlphabetSet(DiscreteStateAlphabetSet):
+class ProteinStateAlphabetSet(StateAlphabetSet):
 
     def __init__(self, elem_id=None, label=None):
-        DiscreteStateAlphabetSet.__init__(self, elem_id=elem_id, label=label)
-        self.append(DiscreteStateAlphabetElement(symbol="A"))
-        self.append(DiscreteStateAlphabetElement(symbol="C"))
-        self.append(DiscreteStateAlphabetElement(symbol="D"))
-        self.append(DiscreteStateAlphabetElement(symbol="E"))
-        self.append(DiscreteStateAlphabetElement(symbol="F"))
-        self.append(DiscreteStateAlphabetElement(symbol="G"))
-        self.append(DiscreteStateAlphabetElement(symbol="H"))
-        self.append(DiscreteStateAlphabetElement(symbol="I"))
-        self.append(DiscreteStateAlphabetElement(symbol="K"))
-        self.append(DiscreteStateAlphabetElement(symbol="L"))
-        self.append(DiscreteStateAlphabetElement(symbol="M"))
-        self.append(DiscreteStateAlphabetElement(symbol="N"))
-        self.append(DiscreteStateAlphabetElement(symbol="P"))
-        self.append(DiscreteStateAlphabetElement(symbol="Q"))
-        self.append(DiscreteStateAlphabetElement(symbol="R"))
-        self.append(DiscreteStateAlphabetElement(symbol="S"))
-        self.append(DiscreteStateAlphabetElement(symbol="T"))
-        self.append(DiscreteStateAlphabetElement(symbol="U"))
-        self.append(DiscreteStateAlphabetElement(symbol="V"))
-        self.append(DiscreteStateAlphabetElement(symbol="W"))
-        self.append(DiscreteStateAlphabetElement(symbol="Y"))
-        self.append(DiscreteStateAlphabetElement(symbol="-"))        
-        self.append(DiscreteStateAlphabetElement(symbol="B", 
-                                           multistate=DiscreteStateAlphabetElement.AMBIGUOUS_STATE,
+        StateAlphabetSet.__init__(self, elem_id=elem_id, label=label)
+        self.append(StateAlphabetElement(symbol="A"))
+        self.append(StateAlphabetElement(symbol="C"))
+        self.append(StateAlphabetElement(symbol="D"))
+        self.append(StateAlphabetElement(symbol="E"))
+        self.append(StateAlphabetElement(symbol="F"))
+        self.append(StateAlphabetElement(symbol="G"))
+        self.append(StateAlphabetElement(symbol="H"))
+        self.append(StateAlphabetElement(symbol="I"))
+        self.append(StateAlphabetElement(symbol="K"))
+        self.append(StateAlphabetElement(symbol="L"))
+        self.append(StateAlphabetElement(symbol="M"))
+        self.append(StateAlphabetElement(symbol="N"))
+        self.append(StateAlphabetElement(symbol="P"))
+        self.append(StateAlphabetElement(symbol="Q"))
+        self.append(StateAlphabetElement(symbol="R"))
+        self.append(StateAlphabetElement(symbol="S"))
+        self.append(StateAlphabetElement(symbol="T"))
+        self.append(StateAlphabetElement(symbol="U"))
+        self.append(StateAlphabetElement(symbol="V"))
+        self.append(StateAlphabetElement(symbol="W"))
+        self.append(StateAlphabetElement(symbol="Y"))
+        self.append(StateAlphabetElement(symbol="-"))        
+        self.append(StateAlphabetElement(symbol="B", 
+                                           multistate=StateAlphabetElement.AMBIGUOUS_STATE,
                                            member_states=self.get_states(symbols=['D', 'N'])))     
-        self.append(DiscreteStateAlphabetElement(symbol="Z", 
-                                           multistate=DiscreteStateAlphabetElement.AMBIGUOUS_STATE,
+        self.append(StateAlphabetElement(symbol="Z", 
+                                           multistate=StateAlphabetElement.AMBIGUOUS_STATE,
                                            member_states=self.get_states(symbols=['E', 'Q'])))
-        self.append(DiscreteStateAlphabetElement(symbol="X", 
-                                           multistate=DiscreteStateAlphabetElement.AMBIGUOUS_STATE,
+        self.append(StateAlphabetElement(symbol="X", 
+                                           multistate=StateAlphabetElement.AMBIGUOUS_STATE,
                                            member_states=self.get_states(symbols=['A', 'C', 'D', 'E',
                                            'F', 'G', 'H', 'I', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S',
                                            'T', 'U', 'V', 'W', 'Y'])))   
-        self.append(DiscreteStateAlphabetElement(symbol="?", 
-                                           multistate=DiscreteStateAlphabetElement.AMBIGUOUS_STATE,
+        self.append(StateAlphabetElement(symbol="?", 
+                                           multistate=StateAlphabetElement.AMBIGUOUS_STATE,
                                            member_states=self.get_states(symbols=['A', 'C', 'D', 'E',
                                            'F', 'G', 'H', 'I', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S',
                                            'T', 'U', 'V', 'W', 'Y', '-'])))                                              
 
-class BinaryStateAlphabetSet(DiscreteStateAlphabetSet):
+class BinaryStateAlphabetSet(StateAlphabetSet):
 
     def __init__(self, elem_id=None, label=None, allow_gaps=True, allow_missing=True):
-        DiscreteStateAlphabetSet.__init__(self, elem_id=elem_id, label=label)
-        self.append(DiscreteStateAlphabetElement(symbol="0"))
-        self.append(DiscreteStateAlphabetElement(symbol="1"))
+        StateAlphabetSet.__init__(self, elem_id=elem_id, label=label)
+        self.append(StateAlphabetElement(symbol="0"))
+        self.append(StateAlphabetElement(symbol="1"))
         if allow_gaps:
-            self.append(DiscreteStateAlphabetElement(symbol="-")) 
+            self.append(StateAlphabetElement(symbol="-")) 
             if allow_missing:
-                self.append(DiscreteStateAlphabetElement(symbol="?", 
-                                                   multistate=DiscreteStateAlphabetElement.AMBIGUOUS_STATE,
+                self.append(StateAlphabetElement(symbol="?", 
+                                                   multistate=StateAlphabetElement.AMBIGUOUS_STATE,
                                                    member_states=self.get_states(symbols=['0', '1', '-'])))
         elif allow_missing:
-            self.append(DiscreteStateAlphabetElement(symbol="?", 
-                                               multistate=DiscreteStateAlphabetElement.AMBIGUOUS_STATE,
+            self.append(StateAlphabetElement(symbol="?", 
+                                               multistate=StateAlphabetElement.AMBIGUOUS_STATE,
                                                member_states=self.get_states(symbols=['0', '1'])))
-            
-            
+                        
 class RestrictionSitesStateAlphabetSet(BinaryStateAlphabetSet):
 
     def __init__(self, elem_id=None, label=None):
@@ -370,7 +378,41 @@ class Character(base.IdTagged):
   
     def __init__(self, elem_id=None,label=None, state_alphabet_set=None):
         base.IdTagged.__init__(self, elem_id=elem_id, label=label)
+        self.__state_alphabet_set = None
+        self.state_id_map = None
         self.state_alphabet_set = state_alphabet_set
+        
+    def _set_state_alphabet_set(self, value):
+        self.__state_alphabet_set = value
+        if self.__state_alphabet_set is not None:
+            self.state_id_map = self.__state_alphabet_set.state_id_map()
+            
+    def _get_state_alphabet_set(self):
+        return self.__state_alphabet_set
+        
+    state_alphabet_set = property(_get_state_alphabet_set, _set_state_alphabet_set)
+      
+
+class CharacterValues(list, taxa.TaxaLinked):
+    """
+    Character data vector for a single taxon.
+    """
+
+    def __init__(self, *args, **kwargs):
+        """
+        Inits. Handles keyword arguments: `elem_id`, `label` and `taxa_block`.
+        """
+        list.__init__(self, *args)
+        taxa.TaxaLinked.__init__(self, *args, **kwargs)
+        
+    def set_cell_by_index(self, column_index, value):
+        """
+        Sets the value of a cell at a particular position.
+        """
+        while len(self) <= column_index:
+            self.append(None)
+        self[column_index] = value
+        
                        
 class CharactersBlock(dict, taxa.TaxaLinked):
     """
@@ -384,7 +426,18 @@ class CharactersBlock(dict, taxa.TaxaLinked):
         dict.__init__(self, *args)
         taxa.TaxaLinked.__init__(self, *args, **kwargs)
         self.characters = []
+        
+    def characters_id_map(self):
+        """
+        Returns dictionary of element id to corresponding
+        character definition.
+        """
+        map = {}
+        for char in self.characters:
+            map[char.elem_id] = char
+        
 
+        
 class ContinuousCharactersBlock(CharactersBlock):
     """
     Character data container/manager manager.

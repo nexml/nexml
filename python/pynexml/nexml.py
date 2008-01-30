@@ -574,13 +574,85 @@ class _NexmlCharBlockParser(_NexmlElementParser):
         else:
             self.char_block_factory = char_block_factory
             
-    def parse_character_format_definition(self, nxformat, char_block):
+    def parse_ambiguous_state(self, nxambiguous, state_alphabet_set):
         """
-        Given an XmlElement representing a nexml characters format element,
-        this parses the character state definition and the character column
-        type mappings.
+        Parses an XmlElement represent an ambiguous discrete character state,
+        ("uncertain_state_set")
+        and returns a corresponding StateAlphabetElement object.
+        """
+        state = characters.StateAlphabetElement(elem_id=nxambiguous.get('id', None),
+                                                label=nxambiguous.get('label', None),
+                                                symbol=nxambiguous.get('symbol', None),
+                                                token=nxambiguous.get('token', None))
+        state.member_states = []                                                    
+        for nxmember in nxambiguous.getiterator('member'):
+            member_state_id = nxmember.get('state', None)
+            member_state = state_alphabet_set.get_state('elem_id', member_state_id)
+            state.member_states.append(member_state)   
+        return state
+            
+    def parse_polymorphic_state(self, nxstate, state_alphabet_set):
+        """
+        Parses an XmlElement represent a polymorphic discrete character state, 
+        ("polymorphic_state_set")
+        and returns a corresponding StateAlphabetElement object.
+        """
+        state = characters.StateAlphabetElement(elem_id=nxpolymorphic.get('id', None),
+                                                label=nxpolymorphic.get('label', None),
+                                                symbol=nxpolymorphic.get('symbol', None),
+                                                token=nxpolymorphic.get('token', None))
+        state.member_states = []                                                    
+        for nxmember in nxpolymorphic.getiterator('member'):
+            member_state_id = nxmember.get('state', None)
+            member_state = state_alphabet_set.get_state('elem_id', member_state_id)
+            state.member_states.append(member_state)
+        for nxambiguous in nxpolymorphic.getiterator('uncertain_state_set'):
+            state.member_states.append(self.parse_ambiguous_state(nxambiguous, state_alphabet_set))
+        
+        return state
+                  
+    def parse_state_alphabet_set(self, nxstates):
+        """
+        Given an XmlElement representing a nexml definition of (discrete or standard) states 
+        ("states"), this returns a corresponding StateAlphabetSet object.
         """
         
+        state_alphabet_set = characters.StateAlphabetSet(elem_id=nxstates.get('id', None),
+                                                         label=nxstates.get('label', None))
+        for nxstate in nxstates.getiterator('state'):
+            state = characters.StateAlphabetElement(elem_id=nxstate.get('id', None),
+                                                    label=nxstate.get('label', None),
+                                                    symbol=nxstate.get('symbol', None),
+                                                    token=nxstate.get('token', None))        
+            state_alphabet_set.add(state)
+        for nxstate in nxstates.getiterator('uncertain_state'):
+            state.alphabet_set.add(self.parse_ambiguous_state(nxstate, state_alphabet_set))
+        for nxstate in nxstates.getiterator('polymorphic_state'):
+            state.alphabet_set.add(self.parse_polymorphic_state(nxstate, state_alphabet_set))        
+        return state_alphabet_set
+            
+    def parse_characters_format(self, nxformat, char_block):
+        """
+        Given an XmlElement format element ("format"), this parses the 
+        state definitions (if any) and characters (column definitions, if any),
+        and populates the given char_block accordingly.
+        """
+        if nxformat is not None:
+            for nxstates in nxformat.getiterator('states'):
+                char_block.state_alphabet_sets.append(self.parse_state_alphabet_set(nxstates))
+            for nxchars in nxformat.getiterator('char'):
+                char = characters.Character(elem_id=nxchars.get('id', None))
+                char_state_set_id = nxchars.get('state')
+                if char_state_set_id is not None:
+                    state_alphabet_set = None
+                    for state_sets in char_block.state_alphabet_set:
+                        if state_sets.elem_id == char_state_set_id:
+                            state_alphabet_set = state_sets
+                            break
+                    if state_alphabet_set is None:
+                        raise Exception("State set '%s' no defined" % char_state_set_id)
+                    char.state_alphabet_set = state_alphabet_set
+                char_block.characters.append(char)
 
     def parse_char_block(self, nxchars, dataset):
         """
@@ -615,7 +687,64 @@ class _NexmlCharBlockParser(_NexmlElementParser):
         if not taxa_block:
             raise Exception("Taxa block \"%s\" not found" % taxa_id)
         char_block.taxa_block = taxa_block
+        
+        nxformat = nxchars.find('format')
+        if nxformat is not None:
+            self.parse_characters_format(nxformat, char_block)
 
+        matrix = nxchars.find('matrix')
+        if char_block.characters:
+            columns = char_block.characters_id_map()
+            column_ids = [char.elem_id for char in char_block.characters]
+        else:
+            columns = {}
+            column_ids = [] 
+        for row in matrix.getiterator('row'):
+            elem_id = row.get('id', None)
+            taxon_id = row.get('otu', None)
+            taxon = taxa_block.find_taxon(elem_id=taxon_id, update=False)
+            if not taxon:
+                raise Exception('Taxon with id "%s" not defined in taxa block "%s"' % (taxon_id, taxa.elem_id))                   
+                
+            character_values = characters.CharacterValues(elem_id=elem_id, taxon=taxon)
+            if isinstance(char_block, characters.ContinuousCharactersBlock):
+                if nx_chartype.endswith('Seqs'):
+                    seq = row.findtext('seq')
+                    if seq is not None:
+                        seq = seq.replace('\n\r', ' ').replace('\r\n', ' ').replace('\n', ' ').replace('\r',' ')
+                        for char in seq.split(' '):
+                            char = char.strip()
+                            if char:
+                                character_values.append(float(char))
+                else:
+                    for cell in row.getiterator('cell'):
+                        elem_id = cell.get('char', None)
+                        idx = column_ids.index(elem_id)
+#                         column = columns[elem_id]
+#                         state = column.state_id_map[cell.get('state', None)]
+                        value = float(cell.get('state'))
+                        character_values.set_cell_by_index(idx, value)                      
+            else:
+                if nx_chartype.endswith('Seqs'):
+                    seq = row.findtext('seq')
+                    if seq is not None:
+                        seq = seq.replace('\n\r', ' ').replace('\r\n', ' ').replace('\n', ' ').replace('\r',' ')
+                        for char in seq.split(' '):
+                            char = char.strip()
+                            if char:
+                                character_values.append(float(char))
+                else:
+                    for cell in row.getiterator('cell'):
+                        elem_id = cell.get('char', None)
+                        idx = column_ids.index(elem_id)
+#                         column = columns[elem_id]
+#                         state = column.state_id_map[cell.get('state', None)]
+                        value = float(cell.get('state'))
+                        character_values.set_cell_by_index(idx, value)
+            char_block[taxon] = character_values 
+            
+            
+            
         chartype = _from_nexml_chartype(nx_chartype)
         if chartype is None:
             ## handle unknown character formats here ##
