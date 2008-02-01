@@ -495,6 +495,7 @@ class CharactersBlock(taxa.TaxaLinked):
         map = {}
         for char in self.characters:
             map[char.elem_id] = char
+        return map
             
 class ContinuousCharactersBlock(CharactersBlock):
     """
