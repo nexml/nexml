@@ -591,7 +591,7 @@ class _NexmlCharBlockParser(_NexmlElementParser):
             state.member_states.append(member_state)   
         return state
             
-    def parse_polymorphic_state(self, nxstate, state_alphabet_set):
+    def parse_polymorphic_state(self, nxpolymorphic, state_alphabet_set):
         """
         Parses an XmlElement represent a polymorphic discrete character state, 
         ("polymorphic_state_set")
@@ -625,10 +625,10 @@ class _NexmlCharBlockParser(_NexmlElementParser):
                                                     symbol=nxstate.get('symbol', None),
                                                     token=nxstate.get('token', None))        
             state_alphabet_set.add(state)
-        for nxstate in nxstates.getiterator('uncertain_state'):
-            state.alphabet_set.add(self.parse_ambiguous_state(nxstate, state_alphabet_set))
-        for nxstate in nxstates.getiterator('polymorphic_state'):
-            state.alphabet_set.add(self.parse_polymorphic_state(nxstate, state_alphabet_set))        
+        for nxstate in nxstates.getiterator('uncertain_state_set'):
+            state_alphabet_set.add(self.parse_ambiguous_state(nxstate, state_alphabet_set))
+        for nxstate in nxstates.getiterator('polymorphic_state_set'):
+            state_alphabet_set.add(self.parse_polymorphic_state(nxstate, state_alphabet_set))        
         return state_alphabet_set
             
     def parse_characters_format(self, nxformat, char_block):
@@ -642,10 +642,10 @@ class _NexmlCharBlockParser(_NexmlElementParser):
                 char_block.state_alphabet_sets.append(self.parse_state_alphabet_set(nxstates))
             for nxchars in nxformat.getiterator('char'):
                 char = characters.Character(elem_id=nxchars.get('id', None))
-                char_state_set_id = nxchars.get('state')
+                char_state_set_id = nxchars.get('states')
                 if char_state_set_id is not None:
                     state_alphabet_set = None
-                    for state_sets in char_block.state_alphabet_set:
+                    for state_sets in char_block.state_alphabet_sets:
                         if state_sets.elem_id == char_state_set_id:
                             state_alphabet_set = state_sets
                             break
@@ -670,7 +670,7 @@ class _NexmlCharBlockParser(_NexmlElementParser):
             char_block = characters.RestrictionSitesCharactersBlock()
         elif nxchartype.startswith('nex:Standard'):
             char_block = characters.DiscreteCharactersBlock()
-        elif nxchartype.startsiwth('nex:Continuous'):
+        elif nxchartype.startswith('nex:Continuous'):
             char_block = characters.ContinuousCharactersBlock()
         else:
             raise NotImplementedError()
@@ -723,7 +723,7 @@ class _NexmlCharBlockParser(_NexmlElementParser):
                                 character_vector.append(characters.CharacterDataCell(value=float(char)))
                 else:
                     for nxcell in nxrow.getiterator('cell'):
-                        column_id = cell.get('char', None)
+                        column_id = nxcell.get('char', None)
                         pos_idx = column_ids.index(column_id)
 #                         column = id_column_map[column_id]
 #                         state = column.state_id_map[cell.get('state', None)]
@@ -745,12 +745,12 @@ class _NexmlCharBlockParser(_NexmlElementParser):
                 else:
                     id_state_maps = {}
                     for nxcell in nxrow.getiterator('cell'):
-                        column_id = cell.get('char', None)
+                        column_id = nxcell.get('char', None)
                         column = id_column_map[column_id]
                         pos_idx = column_ids.index(column_id)
-                        if column.state_alphabet_set not in id_state_maps:
-                            id_state_maps[column.state_alphabet_set] = column.state_alphabet_set.is_state_map()
-                        state = id_state_maps[column.state_alphabet_set][nxcell.get('state')]
+                        if column_id not in id_state_maps:
+                            id_state_maps[column_id] = column.state_alphabet_set.id_state_map()
+                        state = id_state_maps[column_id][nxcell.get('state')]
                         cell = characters.CharacterDataCell(value=state)
                         self.parse_annotations(annotated=cell, nxelement=nxcell)                        
                         character_vector.set_cell_by_index(pos_idx, cell)
@@ -996,24 +996,30 @@ class NexmlWriter(datasets.Writer):
             dest.write(parts + '\n')
 
 def basic_test():
-    source = "tests/sources/comprehensive.xml"
+    source = "tests/sources/standardchars.xml"
     nexmlr = NexmlReader()
     d = nexmlr.get_dataset(source)
-    target = "tests/output/comprehensive_parsed.xml"
     nexmlr = NexmlReader()
     dataset = nexmlr.get_dataset(source)
     for taxa_block in dataset.taxa_blocks:
         print taxa_block
     for char_block in dataset.char_blocks:
         print "\n***" + char_block.elem_id + "/" + char_block.label + "***"
+        
+        print "States:"
+        for state in char_block.state_alphabet_sets[0]:
+            print state.symbol, ':', state.fundamental_symbols
+        
         for seq in char_block.matrix:
             print seq, '   ', str(char_block[seq])
-    for tree_block in dataset.tree_blocks:
-        print "\n***" + tree_block.elem_id + "/" + tree_block.label + "***"
-        for tree in tree_block:
-            print
-            for node in tree.preorder_node_iter():
-                print node, ' ',
+#     for tree_block in dataset.tree_blocks:
+#         print "\n***" + tree_block.elem_id + "/" + tree_block.label + "***"
+#         for tree in tree_block:
+#             print
+#             for node in tree.preorder_node_iter():
+#                 print node, ' ',
+                
+#     target = "tests/output/comprehensive_parsed.xml"                
 #     nexmlw = NexmlWriter()
 #     print
 #     print
