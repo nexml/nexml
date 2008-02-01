@@ -659,18 +659,18 @@ class _NexmlCharBlockParser(_NexmlElementParser):
         Given an XmlElement representing a nexml characters block, this
         instantiates and returns a corresponding DendroPy CharacterMatrix object.
         """
-        nx_chartype = nxchars.get('{http://www.w3.org/2001/XMLSchema-instance}type', None)
-        if nx_chartype.startswith('nex:Dna'):
+        nxchartype = nxchars.get('{http://www.w3.org/2001/XMLSchema-instance}type', None)
+        if nxchartype.startswith('nex:Dna'):
             char_block = characters.DnaCharactersBlock()
-        elif nx_chartype.startswith('nex:Rna'):
+        elif nxchartype.startswith('nex:Rna'):
             char_block = characters.RnaCharactersBlock()
-        elif nx_chartype.startswith('nex:Protein'):
+        elif nxchartype.startswith('nex:Protein'):
             char_block = characters.ProteinCharactersBlock()            
-        elif nx_chartype.startswith('nex:Restriction'):
+        elif nxchartype.startswith('nex:Restriction'):
             char_block = characters.RestrictionSitesCharactersBlock()
-        elif nx_chartype.startswith('nex:Standard'):
+        elif nxchartype.startswith('nex:Standard'):
             char_block = characters.DiscreteCharactersBlock()
-        elif nx_chartype.startsiwth('nex:Continuous'):
+        elif nxchartype.startsiwth('nex:Continuous'):
             char_block = characters.ContinuousCharactersBlock()
         else:
             raise NotImplementedError()
@@ -679,7 +679,7 @@ class _NexmlCharBlockParser(_NexmlElementParser):
         label = nxchars.get('label', None)
         char_block = self.char_block_factory(elem_id=elem_id, label=label)
         char_block.elem_id = elem_id
-        char_block.label = label        
+        char_block.label = label   
         taxa_id = nxchars.get('otus', None)
         if taxa_id is None:
             raise Exception("Taxa block not specified for trees block \"%s\"" % char_block.elem_id)
@@ -687,66 +687,72 @@ class _NexmlCharBlockParser(_NexmlElementParser):
         if not taxa_block:
             raise Exception("Taxa block \"%s\" not found" % taxa_id)
         char_block.taxa_block = taxa_block
+        self.parse_annotations(annotated=char_block, nxelement=nxchar)                
         
         nxformat = nxchars.find('format')
         if nxformat is not None:
             self.parse_characters_format(nxformat, char_block)
-
+            
         matrix = nxchars.find('matrix')
-        self.parse_annotations(annotated=matrix, nxelement=nxtaxon)
+        self.parse_annotations(annotated=char_block.matrix, nxelement=matrix)
+        
         if char_block.characters:
             columns = char_block.characters_id_map()
             column_ids = [char.elem_id for char in char_block.characters]
         else:
             columns = {}
             column_ids = [] 
-        for row in matrix.getiterator('row'):
-            elem_id = row.get('id', None)
-            taxon_id = row.get('otu', None)
+            
+        for nxrow in matrix.getiterator('row'):
+            row_id = nxrow.get('id', None)
+            taxon_id = nxrow.get('otu', None)
             taxon = taxa_block.find_taxon(elem_id=taxon_id, update=False)
             if not taxon:
                 raise Exception('Taxon with id "%s" not defined in taxa block "%s"' % (taxon_id, taxa.elem_id))                   
                 
-            character_values = characters.CharacterValues(elem_id=elem_id, taxon=taxon)
+            character_vector = characters.CharacterDataVector(elem_id=row_id)
+            self.parse_annotations(annotated=character_vector, nxelement=nxrow)
+            
             if isinstance(char_block, characters.ContinuousCharactersBlock):
-                if nx_chartype.endswith('Seqs'):
-                    seq = row.findtext('seq')
+                if nxchartype.endswith('Seqs'):
+                    seq = nxrow.findtext('seq')
                     if seq is not None:
                         seq = seq.replace('\n\r', ' ').replace('\r\n', ' ').replace('\n', ' ').replace('\r',' ')
                         for char in seq.split(' '):
                             char = char.strip()
                             if char:
-                                character_values.append(float(char))
+                                character_vector.append(characters.CharacterDataCell(value=float(char)))
                 else:
-                    for cell in row.getiterator('cell'):
+                    for nxcell in nxrow.getiterator('cell'):
                         elem_id = cell.get('char', None)
                         idx = column_ids.index(elem_id)
 #                         column = columns[elem_id]
 #                         state = column.state_id_map[cell.get('state', None)]
-                        value = float(cell.get('state'))
-                        character_values.set_cell_by_index(idx, value)                      
+                        cell = characters.CharacterDataCell(value=float(nxcell.get('state')))
+                        self.parse_annotations(annotated=cell, nxelement=nxrow)                        
+                        character_vector.set_cell_by_index(idx, cell)
             else:
-                if nx_chartype.endswith('Seqs'):
-                    seq = row.findtext('seq')
+                if nxchartype.endswith('Seqs'):
+                    seq = nxrow.findtext('seq')
                     if seq is not None:
-                        seq = seq.replace('\n\r', ' ').replace('\r\n', ' ').replace('\n', ' ').replace('\r',' ')
-                        for char in seq.split(' '):
-                            char = char.strip()
-                            if char:
-                                character_values.append(float(char))
+                        seq = seq.replace(' ', '').replace('\r', '').replace('\n', '')
+                        for char in seq:
+                            character_vector.append(characters.CharacterDataCell(value=float(char)))
                 else:
-                    for cell in row.getiterator('cell'):
+                    for nxcell in nxrow.getiterator('cell'):
                         elem_id = cell.get('char', None)
                         idx = column_ids.index(elem_id)
 #                         column = columns[elem_id]
 #                         state = column.state_id_map[cell.get('state', None)]
-                        value = float(cell.get('state'))
-                        character_values.set_cell_by_index(idx, value)
-            char_block[taxon] = character_values 
+                        cell = characters.CharacterDataCell(value=float(nxcell.get('state')))
+                        self.parse_annotations(annotated=cell, nxelement=nxrow)                        
+                        character_vector.set_cell_by_index(idx, cell)
+
+            char_block[taxon] = character_vector 
             
             
             
-        chartype = _from_nexml_chartype(nx_chartype)
+        chartype = _from_nexml_chartype(nxchartype)
         if chartype is None:
             ## handle unknown character formats here ##
             pass
