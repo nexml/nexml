@@ -386,6 +386,8 @@ class Character(base.IdTagged):
         self.__state_alphabet_set = value
         if self.__state_alphabet_set is not None:
             self.state_id_map = self.__state_alphabet_set.state_id_map()
+        else:
+            self.state_id_map = None
             
     def _get_state_alphabet_set(self):
         return self.__state_alphabet_set
@@ -393,28 +395,43 @@ class Character(base.IdTagged):
     state_alphabet_set = property(_get_state_alphabet_set, _set_state_alphabet_set)
       
 
-class CharacterValues(list, taxa.TaxaLinked):
+class CharacterDataCell(base.Annotated):
+    """                                                                                                                                                                                                                                                                                                                                                                           
+    A container for the state / state value for a particular cell in a matrix.
     """
-    Character data vector for a single taxon.
+  
+    def __init__(self, value=None):
+        base.Annotated.__init__(self)
+        self.value = value
+        
+class CharacterDataVector(list, base.Annotated):
+    """
+    A list of character data values.
     """
 
-    def __init__(self, *args, **kwargs):
-        """
-        Inits. Handles keyword arguments: `elem_id`, `label` and `taxa_block`.
-        """
-        list.__init__(self, *args)
-        taxa.TaxaLinked.__init__(self, *args, **kwargs)
+    def __init__(self):
+        list.__init__(self)
+        base.Annotated.__init__(self)
         
     def set_cell_by_index(self, column_index, value):
         """
         Sets the value of a cell at a particular position.
-        """
+        """        
         while len(self) <= column_index:
             self.append(None)
-        self[column_index] = value
-        
+        self[column_index] = value            
+
+class CharacterDataMatrix(dict, base.Annotated):
+    """
+    An annotable dictionary with Taxon objects as keys and 
+    CharacterDataVectors objects as values.
+    """
+
+    def __init__(self):
+        dict.__init__(self)
+        base.Annotated.__init__(self)
                        
-class CharactersBlock(dict, taxa.TaxaLinked):
+class CharactersBlock(taxa.TaxaLinked):
     """
     Character data container/manager manager.
     """
@@ -425,7 +442,26 @@ class CharactersBlock(dict, taxa.TaxaLinked):
         """
         dict.__init__(self, *args)
         taxa.TaxaLinked.__init__(self, *args, **kwargs)
+        self.matrix = CharacterDataMatrix()
         self.characters = []
+        
+    def __getitem__(self, key):
+        """
+        Dictionary interface implementation for direct access to matrix.
+        """
+        return self.matrix[key]
+        
+    def __setitem__(self, key, value):
+        """
+        Dictionary interface implementation for direct access to matrix.
+        """
+        self.matrix[key] = value
+                
+    def __contains__(self, key):
+        """
+        Dictionary interface implementation for direct access to matrix.
+        """
+        return key in self.matrix
         
     def characters_id_map(self):
         """
@@ -435,9 +471,7 @@ class CharactersBlock(dict, taxa.TaxaLinked):
         map = {}
         for char in self.characters:
             map[char.elem_id] = char
-        
-
-        
+            
 class ContinuousCharactersBlock(CharactersBlock):
     """
     Character data container/manager manager.
@@ -460,7 +494,8 @@ class DiscreteCharactersBlock(CharactersBlock):
         """
         CharactersBlock.__init__(*args, **kwargs)
         self.state_alphabet_sets = []
-
+        self.default_state_alphabet_set = None
+                
 class DnaCharactersBlock(DiscreteCharactersBlock):
     """
     DNA nucleotide data.
@@ -471,7 +506,8 @@ class DnaCharactersBlock(DiscreteCharactersBlock):
         Inits. Handles keyword arguments: `elem_id`, `label` and `taxa_block`.
         """
         DiscreteCharactersBlock.__init__(*args, **kwargs)
-        self.state_alphabet_sets.append(DnaStateAlphabetSet())
+        self.default_state_alphabet_set = DnaStateAlphabetSet()
+        self.state_alphabet_sets.append(self.default_state_alphabet_set)         
 
 class RnaCharactersBlock(DiscreteCharactersBlock):
     """
@@ -483,7 +519,8 @@ class RnaCharactersBlock(DiscreteCharactersBlock):
         Inits. Handles keyword arguments: `elem_id`, `label` and `taxa_block`.
         """
         DiscreteCharactersBlock.__init__(*args, **kwargs)
-        self.state_alphabet_sets.append(RnaStateAlphabetSet())      
+        self.default_state_alphabet_set = RnaStateAlphabetSet()
+        self.state_alphabet_sets.append(self.default_state_alphabet_set)      
         
 class ProteinCharactersBlock(DiscreteCharactersBlock):
     """
@@ -493,9 +530,10 @@ class ProteinCharactersBlock(DiscreteCharactersBlock):
     def __init__(self, *args, **kwargs):
         """
         Inits. Handles keyword arguments: `elem_id`, `label` and `taxa_block`.
-        """
+        """        
         DiscreteCharactersBlock.__init__(*args, **kwargs)
-        self.state_alphabet_sets.append(ProteinStateAlphabetSet())         
+        self.default_state_alphabet_set = ProteinStateAlphabetSet()
+        self.state_alphabet_sets.append(self.default_state_alphabet_set)               
         
 class RestrictionSitesCharactersBlock(DiscreteCharactersBlock):
     """
@@ -507,7 +545,8 @@ class RestrictionSitesCharactersBlock(DiscreteCharactersBlock):
         Inits. Handles keyword arguments: `elem_id`, `label` and `taxa_block`.
         """
         DiscreteCharactersBlock.__init__(*args, **kwargs)
-        self.state_alphabet_sets.append(RestrictionSitesStateAlphabetSet())         
+        self.default_state_alphabet_set = RestrictionSitesStateAlphabetSet()
+        self.state_alphabet_sets.append(self.default_state_alphabet_set)                
 
 if __name__ == "__main__":
     dna = DnaStateAlphabets()
