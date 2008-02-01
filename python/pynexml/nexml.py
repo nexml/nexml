@@ -239,7 +239,7 @@ class NexmlReader(datasets.Reader):
         Given an XMLDocument, parses the XmlElement representation of
         character sequences into a list of CharacterMatrix objects.
         """
-        nxc = _NexmlCharBlockParser(self.char_block_factory)
+        nxc = _NexmlCharBlockParser()
         for char_block_element in xml_doc.getiterator('characters'):
             nxc.parse_char_block(char_block_element, dataset)
 
@@ -564,15 +564,15 @@ class _NexmlCharBlockParser(_NexmlElementParser):
     Parses an XmlElement representation of NEXML taxa blocks.
     """
 
-    def __init__(self, char_block_factory=None):
+    def __init__(self):
         """
         Does nothing too useful right now.
         """
         super(_NexmlCharBlockParser, self).__init__()
-        if char_block_factory is None:
-            self.char_block_factory = characters.CharBlock()
-        else:
-            self.char_block_factory = char_block_factory
+#         if char_block_factory is None:
+#             self.char_block_factory = characters.CharBlock()
+#         else:
+#             self.char_block_factory = char_block_factory
             
     def parse_ambiguous_state(self, nxambiguous, state_alphabet_set):
         """
@@ -677,7 +677,6 @@ class _NexmlCharBlockParser(_NexmlElementParser):
             
         elem_id = nxchars.get('id', None)
         label = nxchars.get('label', None)
-        char_block = self.char_block_factory(elem_id=elem_id, label=label)
         char_block.elem_id = elem_id
         char_block.label = label   
         taxa_id = nxchars.get('otus', None)
@@ -687,7 +686,7 @@ class _NexmlCharBlockParser(_NexmlElementParser):
         if not taxa_block:
             raise Exception("Taxa block \"%s\" not found" % taxa_id)
         char_block.taxa_block = taxa_block
-        self.parse_annotations(annotated=char_block, nxelement=nxchar)                
+        self.parse_annotations(annotated=char_block, nxelement=nxchars)                
         
         nxformat = nxchars.find('format')
         if nxformat is not None:
@@ -697,10 +696,10 @@ class _NexmlCharBlockParser(_NexmlElementParser):
         self.parse_annotations(annotated=char_block.matrix, nxelement=matrix)
         
         if char_block.characters:
-            columns = char_block.characters_id_map()
+            id_column_map = char_block.id_characters_map()
             column_ids = [char.elem_id for char in char_block.characters]
         else:
-            columns = {}
+            id_column_map = {}
             column_ids = [] 
             
         for nxrow in matrix.getiterator('row'):
@@ -724,60 +723,41 @@ class _NexmlCharBlockParser(_NexmlElementParser):
                                 character_vector.append(characters.CharacterDataCell(value=float(char)))
                 else:
                     for nxcell in nxrow.getiterator('cell'):
-                        elem_id = cell.get('char', None)
-                        idx = column_ids.index(elem_id)
-#                         column = columns[elem_id]
+                        column_id = cell.get('char', None)
+                        pos_idx = column_ids.index(column_id)
+#                         column = id_column_map[column_id]
 #                         state = column.state_id_map[cell.get('state', None)]
                         cell = characters.CharacterDataCell(value=float(nxcell.get('state')))
-                        self.parse_annotations(annotated=cell, nxelement=nxrow)                        
-                        character_vector.set_cell_by_index(idx, cell)
+                        self.parse_annotations(annotated=cell, nxelement=nxcell)                        
+                        character_vector.set_cell_by_index(pos_idx, cell)
             else:
                 if nxchartype.endswith('Seqs'):
+                    symbol_state_map = char_block.default_state_alphabet_set.symbol_state_map()
                     seq = nxrow.findtext('seq')
                     if seq is not None:
-                        seq = seq.replace(' ', '').replace('\r', '').replace('\n', '')
+                        seq = seq.replace(' ', '').replace('\n', '').replace('\r', '')
                         for char in seq:
-                            character_vector.append(characters.CharacterDataCell(value=float(char)))
+                            if char in symbol_state_map:
+                                state = symbol_state_map[char]
+                            else:
+                                raise NameError('State with symbol "%s" in sequence "%s" not defined' % (char, seq))
+                            character_vector.append(characters.CharacterDataCell(value=state))
                 else:
+                    id_state_maps = {}
                     for nxcell in nxrow.getiterator('cell'):
-                        elem_id = cell.get('char', None)
-                        idx = column_ids.index(elem_id)
-#                         column = columns[elem_id]
-#                         state = column.state_id_map[cell.get('state', None)]
-                        cell = characters.CharacterDataCell(value=float(nxcell.get('state')))
-                        self.parse_annotations(annotated=cell, nxelement=nxrow)                        
-                        character_vector.set_cell_by_index(idx, cell)
+                        column_id = cell.get('char', None)
+                        column = id_column_map[column_id]
+                        pos_idx = column_ids.index(column_id)
+                        if column.state_alphabet_set not in id_state_maps:
+                            id_state_maps[column.state_alphabet_set] = column.state_alphabet_set.is_state_map()
+                        state = id_state_maps[column.state_alphabet_set][nxcell.get('state')]
+                        cell = characters.CharacterDataCell(value=state)
+                        self.parse_annotations(annotated=cell, nxelement=nxcell)                        
+                        character_vector.set_cell_by_index(pos_idx, cell)
 
             char_block[taxon] = character_vector 
-            
-            
-            
-        chartype = _from_nexml_chartype(nxchartype)
-        if chartype is None:
-            ## handle unknown character formats here ##
-            pass
-        else:
-            char_block.chartype = chartype
-            matrices = [matrix for matrix in nxchars.getiterator('matrix')]
-            matrix = nxchars.find('matrix')
-            for row in matrix.getiterator('row'):
-                elem_id = row.get('id', None)
-                taxon_id = row.get('otu', None)
-                taxon = taxa_block.find_taxon(elem_id=taxon_id, update=False)
-                if not taxon:
-                    raise Exception('Taxon with id "%s" not defined in taxa block "%s"' % (taxon_id, taxa.elem_id))                
-                seq = row.findtext('seq')
-                if seq is not None:
-                    seq = seq.replace(' ', '').replace('\n', '').replace('\r','')
-                    state_names = [seqchar for seqchar in seq]
-                else:
-                    state_names = []
-                char_seq = characters.CharSequence(chartype=chartype)
-                char_seq.elem_id = elem_id
-                char_seq.state_names = state_names
-                char_seq.taxon = taxon
-                char_block[taxon] = char_seq
-            dataset.char_blocks.append(char_block)
+
+        dataset.char_blocks.append(char_block)
                 
 class NexmlWriter(datasets.Writer):
     """
@@ -1026,20 +1006,20 @@ def basic_test():
         print taxa_block
     for char_block in dataset.char_blocks:
         print "\n***" + char_block.elem_id + "/" + char_block.label + "***"
-        for seq in char_block:
-            print seq, '   ', char_block[seq]
+        for seq in char_block.matrix:
+            print seq, '   ', str(char_block[seq])
     for tree_block in dataset.tree_blocks:
         print "\n***" + tree_block.elem_id + "/" + tree_block.label + "***"
         for tree in tree_block:
             print
             for node in tree.preorder_node_iter():
                 print node, ' ',
-    nexmlw = NexmlWriter()
-    print
-    print
-    #print nexmlw.compose_dataset(dataset)
-    output = open(target, 'w')
-    nexmlw.store_dataset(dataset=dataset, destination=output)
+#     nexmlw = NexmlWriter()
+#     print
+#     print
+#     #print nexmlw.compose_dataset(dataset)
+#     output = open(target, 'w')
+#     nexmlw.store_dataset(dataset=dataset, destination=output)
     
 if __name__ == "__main__":
     basic_test()

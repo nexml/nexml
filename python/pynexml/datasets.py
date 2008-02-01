@@ -212,7 +212,7 @@ class Reader(object):
         self.error_level=0
         self.taxa_block_factory = taxa.TaxaBlock
         self.taxon_factory = taxa.Taxon
-        self.char_block_factory = characters.CharBlock
+        #self.char_block_factory = characters.CharBlock
         self.tree_block_factory = trees.TreeBlock
         self.tree_factory = trees.Tree
         self.edge_factory = trees.Edge
