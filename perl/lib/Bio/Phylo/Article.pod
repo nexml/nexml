@@ -1,0 +1,289 @@
+=head1 Bio::Phylo - phylogenetic analysis using perl
+
+I<Rutger A. Vos>
+
+I<Department of Zoology, University of British Columbia, 
+Vancouver, British Columbia, V6T 1Z4, Canada>
+
+=head2 Abstract
+
+=head3 Summary:
+
+=head3 Availability:
+
+The software is released under the dual GPL/Artistic licensing
+scheme and is freely available from L<http://search.cpan.org/~rvosa/Bio-Phylo/>.
+
+=head3 Contact:
+
+C<rvos@interchange.ubc.ca>
+
+=head2 Introduction
+
+=head2 Relation to other projects
+
+=head2 Implementation
+
+=head3 The Bio::Phylo object model
+
+The following sections discuss the nested objects that model
+phylogenetic information and entities.
+
+=head4 The L<Bio::Phylo> root object.
+
+The Bio::Phylo object is never used directly. However, all
+other objects inherit from it, which means that all objects
+have getters and setters for their name, description, score.
+They can all return a globally unique ID, log messages, and
+keep track of more administrative things such as the version
+number of the release.
+
+=head4 The Bio::Phylo::Forest::* namespace
+
+According to Bio::Phylo, there is a Forest (which is
+modelled by the Bio::Phylo::Forest object), which contains
+Bio::Phylo::Forest::Tree objects, which contain
+Bio::Phylo::Forest::Node objects.
+
+=head4 The L<Bio::Phylo::Forest::Node> object
+
+A node 'knows' a couple
+of things: its name, its branch length (i.e. the length
+of the branch connecting it and its parent), who its
+parent is, its next sister (on its right), its previous
+sister (on the left), its first daughter and its last
+daughter. Also, a taxon can be specified that the node
+refers to (this makes most sense when the node is terminal).
+These properties can be retrieved and modified by methods
+classified as ACCESSORS and MUTATORS.
+
+From this set of properties follows a number of
+things which must be either true or false. For example,
+if a node has no children it is a terminal node. By asking
+a node whether it "is_terminal", it replies either with
+true (i.e. 1) or false (undef). Methods such as this
+are classified as TESTS.
+
+Likewise, based on the properties of an individual
+node we can perform a query to retrieve nodes related
+to it. For example, by asking the node to
+"get_ancestors" it returns a list of its ancestors,
+being all the nodes and the path from its parent to,
+and including, the root. These methods are QUERIES.
+
+Lastly, some CALCULATIONS can be performed by the
+node. By asking the node to "calc_path_to_root" it
+calculates the sum of the lengths of the branches
+connecting it and the root. Of course, in order to make
+all this possible, a node has to exist, so it needs to
+be constructed. The CONSTRUCTOR is the Bio::Phylo::Node->new()
+method.
+
+Once a node has served its purpose it
+can be destroyed. For this purpose there is a
+DESTRUCTOR, which cleans up once we're done with the
+node. However, in most cases you don't have to worry
+about constructing and destroying nodes as this is handled
+by Bio::Phylo and perl for you.
+
+For a detailed description of all the node methods,
+their arguments and return values, consult the node
+documentation, which, after install, can be viewed by
+issuing the "perldoc Bio::Phylo::Forest::Node" command.
+
+=head4 The L<Bio::Phylo::Forest::Tree> object
+
+A tree knows very
+little. All it really holds is a set of nodes, which
+are there because of TREE POPULATION, i.e. the process
+of inserting nodes in the tree. The tree can be queried
+in a number of ways, for example, we can ask the tree
+to "get_entities", to which the tree replies with a list
+of all the nodes it holds. Be advised that this doesn't
+mean that the nodes are connected in a meaningful way,
+if at all. The tree doesn't care, the nodes are
+supposed to know who their parents, sisters, and
+daughters are. But, we can still get, for example, all
+the terminal nodes (i.e. the tips) in the tree by
+retrieving all the nodes in the tree and asking each
+one of them whether it "is_terminal", discarding the
+ones that aren't.
+
+Based on the set of nodes the tree holds it can
+perform calculations, such as "calc_tree_length", which
+simply means that the tree iterates over all its nodes,
+summing their branch lengths, and returning the total.
+
+The tree object also has a constructor and a
+destructor, but normally you don't have to worry about
+that. All the tree methods can be viewed by issuing the
+"perldoc Bio::Phylo::Forest::Tree" command.
+
+=head4 The L<Bio::Phylo::Forest> object
+
+The object containing all others is the Forest object. It
+serves merely as a container to hold multiple trees, which
+are inserted in the Forest object using the "insert()" method,
+and retrieved using the "get_entities" method. More information
+can be found in the Bio::Phylo::Forest perldoc page.
+
+=head4 The Bio::Phylo::Matrices::* namespace
+
+Objects in the Bio::Phylo::Matrices namespace are used to handle
+comparative data, as single observations, and in larger container
+objects.
+
+=head4 The L<Bio::Phylo::Matrices::Datum> object
+
+The datum object holds observations of a predefined type,
+such as molecular data, or continuous character states. The
+Datum object can be linked to a taxon object, to specify which OTU
+the observation refers to.
+
+=head4 The L<Bio::Phylo::Matrices::Matrix> object
+
+The matrix object is used to aggregate datum objects into a larger,
+iterator object, which can be accessed using the methods of the
+Bio::Phylo::Listable class.
+
+=head4 The L<Bio::Phylo::Matrices> object
+
+The top level opject in the Bio::Phylo::Matrices namespace is used
+to contain multiple matrix or alignment objects, again implementing an
+iterator interface.
+
+=head4 The Bio::Phylo::Taxa::* namespace
+
+Sets of taxa are modelled by the Bio::Phylo::Taxa object. It is
+a container that holds Bio::Phylo::Taxa::Taxon objects. The taxon
+objects at present provide no other functionality than to serve
+as a means of crossreferencing nodes in trees, and datum or sequence
+objects. This, however, is a very important feature. In order to 
+be able to write, for example, files formatted for Mark Pagel's
+Discrete, Continuous and Multistate programs a taxa object, a 
+matrix and a tree object must be crossreferenced.
+
+=head4 The L<Bio::Phylo::Taxa> object
+
+The taxa object is analogous to a taxa block as implemented by
+Mesquite (L<http://mesquiteproject.org>). Multiple matrix objects
+and forests can be linked to a single taxa object, using 
+C<$taxa->set_matrix( $matrix )>. Conversely,
+the relationship from matrix to taxa and from forest to taxa is a 
+one-to-one relationship.
+
+=head4 The L<Bio::Phylo::Taxa::Taxon> object
+
+Just as forests can be linked to taxa objects, so too can 
+indidividual node and datum objects be linked to individual taxon
+objects. Again, the taxon can hold references to multiple nodes
+or multiple datum objects, but conversely there is a one-to-one
+relationship. There is a constraint on these relationships:
+a node can only refer to a taxon that belongs to a taxa object
+that the forest object that contains the node references:
+
+    
+
+       YES!
+  ______________    
+ |FOREST        |  The taxon and node objects can
+ |  __________  |  link to each other, because
+ | |TREE      | |  their containers do also.
+ | |  ______  | |  
+ | | |NODE  | | |  
+ | | |______| | |  
+ | |_____^____| |                 
+ |_______|______|              NO!       
+      ^  |               ______________  
+  ____|__|__            |FOREST 'B'    |  The taxon object 
+ |TAXA   |  |           |  __________  |  cannot reference
+ |  _____|  |           | |TREE      | |  forest 'A' while
+ | |TAXON | |           | |  ______  | |  its container 
+ | |______| |           | | |NODE  | | |  references forest
+ |__________|           | | |______| | |  'B'. 
+                        | |__________| |  
+                        |______________|    ______________   
+                             ^             |FOREST 'A'    |   
+                         ____|_____        |  __________  |  
+                        |TAXA      |       | |TREE      | |  
+                        |  ______  |       | |  ______  | |  
+                        | |TAXON |------------>|NODE  | | |  
+                        | |______| |       | | |______| | |  
+                        |__________|       | |__________| |  
+                                           |______________|        
+       
+
+
+Trying to set the links in the example on the right will result in
+errors: C<"Attempt to link X to taxon from wrong block">. 
+So what happens if a taxon already links to a node in forest 
+'A', and you link its enclosing taxa block to forest 'B'? The 
+links at the taxon and node level will be removed, and the 
+link between forest and taxa object will be enforced, yielding 
+the warning C<"Reset X references from node objects to taxa 
+outside taxa block">.
+
+=head3 Encapsulation
+
+Unlike most other implementations of tree structures (or any
+other perl objects) the Bio::Phylo objects are truly encapsulated:
+Most perl objects are hash references, so in most cases you can
+do C<$obj->{'key'} = 'value'>. Not so for Bio::Phylo. The objects
+are implemented as 'InsideOut' objects. How they work exactly
+is outside of the scope of this document, but the upshot as that
+the state of an object can only be changed through its methods. 
+This is a feature that helps keep the code base maintainable as
+this project grows. Also, the way it is implemented is more 
+memory-efficient and faster than the standard approach. The 
+encapsulation forces users of this module to use the documented
+interfaces of the objects. This, however, is a good thing: as long
+as the interfaces stay the same, any code using Bio::Phylo will
+continue to work, regardless of the implementation under the
+surface.
+
+=head3 'Is-a' relationships: Inheritance
+
+The objects in Bio::Phylo are related in various ways. Some objects
+inherit from superclasses. Hence the object I<is a> special
+case of the superclass. This has important implications for the API:
+the documentation for each class only lists the methods defined locally
+in that class, not the methods of the superclasses. Therefore, many
+objects can do much more than would seem from their local POD. Always
+inspect the "SEE ALSO" section of any class's documentation to see if
+there are superclasses where more functionality might be defined.
+
+=head3 'Has-a' relationships
+
+Some objects contain other objects. For example, a
+L<Bio::Phylo::Forest::Tree> contains L<Bio::Phylo::Forest::Node>
+objects, a matrix object holds datum objects, and so on.
+The container objects all behave like L<Bio::Phylo::Listable>
+objects: you can iterate over them (also recursively).
+The contains / container relationships implemented by
+Bio::Phylo are shown below:
+
+=head3 CONTAINERS
+
+      ______________     ________________
+     |FOREST        |   |MATRICES        |
+     |  __________  |   |  __________    |
+     | |TREE      | |   | |MATRIX    |   |
+     | |  ______  | |   | |  ______  |   |
+     | | |NODE  | | |   | | |DATUM | |   |
+     | | |______| | |   | | |______| |   |
+     | |__________| |   | |__________|   |
+     |______________|   |________________|
+                        
+      __________        
+     |TAXA      |      
+     |  ______  |     
+     | |TAXON | |     
+     | |______| |    
+     |__________| 
+
+
+
+
+=head2 Acknowledgements
+
+=head2 References
