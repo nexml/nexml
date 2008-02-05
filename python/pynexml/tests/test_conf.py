@@ -34,10 +34,10 @@ _LOG = get_logger("tests.test_conf")
 import os
 
 def test_source_path(filename):
-    return os.path.join('sources', filename)
+    return os.path.join(os.path.join(os.path.dirname(__file__),'sources'), filename)
     
 def test_target_path(filename):
-    return os.path.join('output', filename)
+    return os.path.join(os.path.join(os.path.dirname(__file__),'output'), filename)
         
 class TestConf(unittest.TestCase):
     def test_log(self):
