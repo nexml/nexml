@@ -96,17 +96,17 @@ class NexmlTest(unittest.TestCase):
 
 
 
-def additional_tests():
-    "returns all tests in this file as suite"
-    return unittest.TestLoader().loadTestsFromTestCase(NexmlTest)
+# def additional_tests():
+#     "returns all tests in this file as suite"
+#     return unittest.TestLoader().loadTestsFromTestCase(NexmlTest)
 
 
 # pylint: disable-msg=C0103
-def getTestSuite():
-    """Alias to the additional_tests().  This is unittest-style.
-    `additional_tests` is used by setuptools.
-    """
-    return additional_tests()
+# def getTestSuite():
+#     """Alias to the additional_tests().  This is unittest-style.
+#     `additional_tests` is used by setuptools.
+#     """
+#     return additional_tests()
 
 if __name__ == "__main__":
     unittest.main()

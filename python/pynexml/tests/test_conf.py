@@ -39,32 +39,32 @@ def test_source_path(filename):
 def test_target_path(filename):
     return os.path.join(os.path.join(os.path.dirname(__file__),'output'), filename)
         
-class TestConf(unittest.TestCase):
-    def test_log(self):
-        _LOG.debug("This is test of logging at the debug level")
-        _LOG.info("This is test of logging at the info level")
-        _LOG.warning("This is test of logging at the warning level")
-        _LOG.error("This is test of logging at the error level")
-        _LOG.critical("This is test of logging at the critical level")
+# class TestConf(unittest.TestCase):
+#     def test_log(self):
+#         _LOG.debug("This is test of logging at the debug level")
+#         _LOG.info("This is test of logging at the info level")
+#         _LOG.warning("This is test of logging at the warning level")
+#         _LOG.error("This is test of logging at the error level")
+#         _LOG.critical("This is test of logging at the critical level")
 
-class DummyLogger(object):
-    def debug(self, msg):
-        print msg
+# class DummyLogger(object):
+#     def debug(self, msg):
+#         print msg
+# 
+# class TestConf(unittest.TestCase):
+#     def test_log(self):
+#         _LOG.debug("This is test of logging at the debug level")
+#         _LOG.info("This is test of logging at the info level")
+#         _LOG.warning("This is test of logging at the warning level")
+#         _LOG.error("This is test of logging at the error level")
+#         _LOG.critical("This is test of logging at the critical level")
 
-class TestConf(unittest.TestCase):
-    def test_log(self):
-        _LOG.debug("This is test of logging at the debug level")
-        _LOG.info("This is test of logging at the info level")
-        _LOG.warning("This is test of logging at the warning level")
-        _LOG.error("This is test of logging at the error level")
-        _LOG.critical("This is test of logging at the critical level")
-
-class DummyLogger(object):
-    def debug(self, msg):
-        print msg
-
-def additional_tests():
-    return unittest.TestLoader().loadTestsFromTestCase(TestConf)
+# class DummyLogger(object):
+#     def debug(self, msg):
+#         print msg
+# 
+# def additional_tests():
+#     return unittest.TestLoader().loadTestsFromTestCase(TestConf)
 
 if __name__ == "__main__":
     unittest.main()
