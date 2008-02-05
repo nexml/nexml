@@ -13,10 +13,10 @@ setup(name = "pynexml",
       maintainer = "Jeet Sukumaran and Mark Holder", 
       maintainer_email = "jeetsukumaran@frogweb.org mtholder@gmail.com", 
       description = "Phylogenetic stuff", 
-      #test_suite = "dendropy.tests",
-      #package_data = {
-      #  "dendropy": ["tests/files/*", "tests/output/*", "*conf"],
-      #  },
+      test_suite = "pynexml.tests",
+      package_data = {
+      "pynexml": ["tests/sources/*", "tests/output/*", "*conf"],
+      },
       classifiers = [
             "Development Status :: 2 - Pre-Alpha",
             "Environment :: Console",

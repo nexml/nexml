@@ -29,12 +29,11 @@ import sys
 import random
 
 __all__ = [
+	'base',
     'characters',
     'datasets',
-    'base',
     'newick',
     'nexml',
-    'nexus',
     'taxa',
     'trees',
     'utils',
