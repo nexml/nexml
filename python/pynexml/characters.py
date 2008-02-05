@@ -485,8 +485,122 @@ class CharactersBlock(taxa.TaxaLinked):
         """
         Dictionary interface implementation for direct access to matrix.
         """
-        return key in self.matrix
+        return key in self.matrix        
+                
+    def iterkeys(self):
+        """
+        Dictionary interface implementation for direct access to matrix.
+        """
+        for key in self.matrix:
+            yield(key)
+    
+    def itervalues(self):
+        """
+        Dictionary interface implementation for direct access to matrix.
+        """
+        for value in self.matrix.values():
+            yield(value)
+    
+    def iteritems(self):
+        """
+        Returns an iterator over self's values.
+        """
+        for key, value in self.matrix.iteritems():
+            yield (key, value)
+
+    def items(self):
+        """
+        Returns key, value pairs in key-order.
+        """
+        return [(key, self.matrix[key]) for key in self.matrix.iterkeys()]
+
+    def values(self):
+        """
+        Returns list of key, value pairs.
+        """
+        return [v for v in self.matrix.itervalues()]
+    
+    def __iter__(self):
+        """
+        Returns an iterator over self's ordered keys.
+        """
+        return self.matrix.iterkeys()
+    
+    def __delitem__(self, key):
+        """
+        Remove item with specified key.
+        """
+        super(dict, self.matrix).__delitem__(key)                
+
+    def __contains__(self, key):
+        """
+        Returns true if has key, regardless of case.
+        """
+        return super(dict, self.matrix).__contains__(key)
+
+    def pop(self, key, alt_val=None):
+        """
+        a.pop(k[, x]):  a[k] if k in a, else x (and remove k)
+        """
+        if key in self.matrix:
+            val = self.matrix[key]
+            self.matrix.__delitem__(key)
+            return val
+        else:
+            return alt_val
         
+    def popitem(self):
+        """
+        a.popitem()  remove and last (key, value) pair
+        """
+        key = self.matrix[-1]
+        item = (key, self.matrix[key])
+        self.matrix.__delitem__(key)
+        return item
+
+    def index(self, key):
+        """
+        Return the index of (caseless) key.
+        Raise KeyError if not found.
+        """
+        count = 0
+        for k in self.matrix.keys():
+            if k == key:
+                return count
+            count = count + 1
+        raise KeyError(key)
+
+    def keys(self):
+        """
+        Returns a copy of the ordered list of keys.
+        """
+        return list(self.matrix.keys())
+
+    def clear(self):
+        """
+        Deletes all items from the dictionary.
+        """
+        self.matrix.clear()
+
+    def has_key(self, key):
+        """
+        Returns true if has key, regardless of case.
+        """
+        return key in self.matrix
+
+    def get(self, key, def_val=None):
+        """
+        Gets an item by its key, returning default if key not present.
+        """
+        return super(dict, self.matrix).get(key, def_val)
+
+    def setdefault(self, key, def_val=None):
+        """
+        Sets the default value to return if key not present.
+        """
+        return super(dict, self.matrix).setdefault(key, def_val)
+
+      
     def id_characters_map(self):
         """
         Returns dictionary of element id to corresponding
@@ -520,6 +634,18 @@ class DiscreteCharactersBlock(CharactersBlock):
         CharactersBlock.__init__(self, *args, **kwargs)
         self.state_alphabet_sets = []
         self.default_state_alphabet_set = None
+        
+class StandardCharactersBlock(DiscreteCharactersBlock):
+    """
+    `standard` data.
+    """
+    
+    def __init__(self, *args, **kwargs):
+        """
+        Inits. Handles keyword arguments: `elem_id`, `label` and `taxa_block`.
+        """
+        DiscreteCharactersBlock.__init__(self, *args, **kwargs)
+         
                 
 class DnaCharactersBlock(DiscreteCharactersBlock):
     """

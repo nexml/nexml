@@ -669,7 +669,7 @@ class _NexmlCharBlockParser(_NexmlElementParser):
         elif nxchartype.startswith('nex:Restriction'):
             char_block = characters.RestrictionSitesCharactersBlock()
         elif nxchartype.startswith('nex:Standard'):
-            char_block = characters.DiscreteCharactersBlock()
+            char_block = characters.StandardCharactersBlock()
         elif nxchartype.startswith('nex:Continuous'):
             char_block = characters.ContinuousCharactersBlock()
         else:
@@ -997,8 +997,6 @@ class NexmlWriter(datasets.Writer):
 
 def basic_test():
     source = "tests/sources/standardchars.xml"
-    nexmlr = NexmlReader()
-    d = nexmlr.get_dataset(source)
     nexmlr = NexmlReader()
     dataset = nexmlr.get_dataset(source)
     for taxa_block in dataset.taxa_blocks:

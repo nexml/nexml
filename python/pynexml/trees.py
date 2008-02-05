@@ -633,6 +633,42 @@ class Node(taxa.TaxonLinked):
         edge = self.edge.new_edge()
         edge.elem_id = elem_id
         return edge
+     
+    ### FOR DEBUGGING ### 
+    def compose_newick(self):
+        """
+        This returns the Node as a NEWICK
+        statement according to the given formatting rules.
+        """
+        statement = ''
+        children = self.children()
+        if children:
+            subnodes = [child.compose_newick() for child in children]
+            statement = '(' + ','.join(subnodes) + ')'
+            
+        if hasattr(self, 'taxon') and self.taxon:
+            tag = self.taxon.label
+        elif hasattr(self, 'label') and self.label:
+            tag = self.label
+        elif len(self.children()) == 0:
+            tag = self.elem_id
+        else:
+            tag = ""
+        if tag.count(' '):
+            if not (tag.startswith("\'") and tag.endswith("\'")) \
+               and not (tag.startswith("\"") and tag.endswith("\"")):
+                tag = "'" + tag + "'"
+        
+        statement = statement + tag
+
+        if self.edge and self.edge.length != None:
+            try:
+                statement =  "%s:%f" \
+                            % (statement, float(self.edge.length))
+            except ValueError:
+                statement =  "%s:%s" \
+                            % (statement, self.edge.length)
+        return statement       
 
 ##############################################################################
 ## Edge
