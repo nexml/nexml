@@ -25,4 +25,45 @@
 pynexml testing suite
 """
 
+__all__ = [
+          "test_conf",
+          "test_io",
+          ]
+import unittest
+from pynexml import get_logger
+_LOG = get_logger("tests.__init__")
+# pylint: disable-msg=C0111,W0401,W0611
+
+def even_more_tests(all_suites):
+    "finds test from module introspection"
+    if __name__ != "__main__":
+         return 
+    #commented out
+    for i in __all__:
+        module = __import__("pynexml.tests.%s" % i)
+        _LOG.debug(i)
+        tests_mod = getattr(module, "tests")
+        sub_test_mod = getattr(tests_mod, i)
+        suite = sub_test_mod.additional_tests()
+        if suite:
+            all_suites.append(suite)
+
+def additional_tests():
+    """Creates a unittest.TestSuite from all of the modules in `pynexml.tests`
+
+    \todo uncommenting even_more_tests line results in test from "setup.py test"
+        being run 3 times each.  I don't know why. (even with it commented out
+        they are being run twice
+    """
+    all_suites = []
+    #even_more_tests(all_suites)
+    return unittest.TestSuite(all_suites)
+
+def test_all():
+    "Runs all of the unittests in `pynexml.tests`"
+    runner = unittest.TextTestRunner()
+    runner.run(additional_tests())
+
+if __name__ == "__main__":
+    test_all()
 

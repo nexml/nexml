@@ -98,8 +98,7 @@ class NexmlTest(unittest.TestCase):
 
 def additional_tests():
     "returns all tests in this file as suite"
-    pass
-#     return unittest.TestLoader().loadTestsFromTestCase(TreeIOTest)
+    return unittest.TestLoader().loadTestsFromTestCase(NexmlTest)
 
 
 # pylint: disable-msg=C0103
