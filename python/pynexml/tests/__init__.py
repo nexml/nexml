@@ -48,21 +48,21 @@ def even_more_tests(all_suites):
         if suite:
             all_suites.append(suite)
 
-def additional_tests():
-    """Creates a unittest.TestSuite from all of the modules in `pynexml.tests`
+# def additional_tests():
+#     """Creates a unittest.TestSuite from all of the modules in `pynexml.tests`
+# 
+#     \todo uncommenting even_more_tests line results in test from "setup.py test"
+#         being run 3 times each.  I don't know why. (even with it commented out
+#         they are being run twice
+#     """
+#     all_suites = []
+#     #even_more_tests(all_suites)
+#     return unittest.TestSuite(all_suites)
 
-    \todo uncommenting even_more_tests line results in test from "setup.py test"
-        being run 3 times each.  I don't know why. (even with it commented out
-        they are being run twice
-    """
-    all_suites = []
-    #even_more_tests(all_suites)
-    return unittest.TestSuite(all_suites)
-
-def test_all():
-    "Runs all of the unittests in `pynexml.tests`"
-    runner = unittest.TextTestRunner()
-    runner.run(additional_tests())
+# def test_all():
+#     "Runs all of the unittests in `pynexml.tests`"
+#     runner = unittest.TextTestRunner()
+#     runner.run(additional_tests())
 
 if __name__ == "__main__":
     test_all()
