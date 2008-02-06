@@ -468,6 +468,7 @@ class CharactersBlock(taxa.TaxaLinked):
         taxa.TaxaLinked.__init__(self, *args, **kwargs)
         self.matrix = CharacterDataMatrix()
         self.characters = []
+        self.markup_as_sequences = True
         
     def __getitem__(self, key):
         """

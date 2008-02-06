@@ -28,6 +28,7 @@ NEXML format.
 """
 
 import textwrap
+from pynexml import base
 from pynexml import datasets
 from pynexml import taxa
 from pynexml import characters
@@ -304,8 +305,8 @@ class _NexmlElementParser(object):
             an_key = xml_key.text
             an_value = None
             if xml_value.tag == 'dict':
-                subannotable = annotable.Annotable()
-                self.parse_dict(annotable, xml_value)
+                subannotable = base.Annotated()
+                self.parse_dict(subannotable, xml_value)
                 an_value = subannotable
             elif xml_value.tag.count('vector'):
                 an_value = []
@@ -373,6 +374,7 @@ class _NexmlTreesParser(_NexmlElementParser):
         taxa_block = taxa_block
         tree_block = dataset.add_tree_block(taxa_block=taxa_block, 
                                             tree_block=self.tree_block_factory(elem_id=elem_id, label=label))
+        self.parse_annotations(annotated=tree_block, nxelement=nxtrees)                                            
         tree_counter = 0
         for tree_element in nxtrees.getiterator('tree'):
             tree_counter = tree_counter + 1
@@ -381,6 +383,7 @@ class _NexmlTreesParser(_NexmlElementParser):
             treeobj = self.tree_factory(elem_id=elem_id, label=label)
             tree_type_attr = tree_element.get('{http://www.w3.org/2001/XMLSchema-instance}type')
             treeobj.length_type = _from_nexml_tree_length_type(tree_type_attr)
+            self.parse_annotations(annotated=treeobj, nxelement=tree_element)
             nodes = self.parse_nodes(tree_element, taxa_block=tree_block.taxa_block, node_factory=self.node_factory)
             edges = self.parse_edges(tree_element, length_type=treeobj.length_type, edge_factory=self.edge_factory)
             for edge in edges.values():
@@ -553,6 +556,7 @@ class _NexmlTaxaParser(_NexmlElementParser):
         elem_id = nxtaxa.get('id', None)
         label = nxtaxa.get('label', None)
         taxa_block = self.taxa_block_factory(elem_id=elem_id, label=label)
+        self.parse_annotations(annotated=taxa_block, nxelement=nxtaxa) 
         for idx, nxtaxon in enumerate(nxtaxa.getiterator('otu')):
             taxon = self.taxon_factory(nxtaxon.get('id', "s" + str(idx) ), nxtaxon.get('label', "Taxon" + str(idx)))
             self.parse_annotations(annotated=taxon, nxelement=nxtaxon)
@@ -714,6 +718,7 @@ class _NexmlCharBlockParser(_NexmlElementParser):
             
             if isinstance(char_block, characters.ContinuousCharactersBlock):
                 if nxchartype.endswith('Seqs'):
+                    char_block.markup_as_sequences = True
                     seq = nxrow.findtext('seq')
                     if seq is not None:
                         seq = seq.replace('\n\r', ' ').replace('\r\n', ' ').replace('\n', ' ').replace('\r',' ')
@@ -722,6 +727,7 @@ class _NexmlCharBlockParser(_NexmlElementParser):
                             if char:
                                 character_vector.append(characters.CharacterDataCell(value=float(char)))
                 else:
+                    char_block.markup_as_sequences = False                
                     for nxcell in nxrow.getiterator('cell'):
                         column_id = nxcell.get('char', None)
                         pos_idx = column_ids.index(column_id)
@@ -732,6 +738,7 @@ class _NexmlCharBlockParser(_NexmlElementParser):
                         character_vector.set_cell_by_index(pos_idx, cell)
             else:
                 if nxchartype.endswith('Seqs'):
+                    char_block.markup_as_sequences = True                
                     symbol_state_map = char_block.default_state_alphabet_set.symbol_state_map()
                     seq = nxrow.findtext('seq')
                     if seq is not None:
@@ -743,6 +750,7 @@ class _NexmlCharBlockParser(_NexmlElementParser):
                                 raise NameError('State with symbol "%s" in sequence "%s" not defined' % (char, seq))
                             character_vector.append(characters.CharacterDataCell(value=state))
                 else:
+                    char_block.markup_as_sequences = False                
                     id_state_maps = {}
                     for nxcell in nxrow.getiterator('cell'):
                         column_id = nxcell.get('char', None)
@@ -785,7 +793,7 @@ class NexmlWriter(datasets.Writer):
         self.write_to_nexml_close(dest, indent_level=0)
 
     ### class-specific  ###
-
+            
     def write_taxa_blocks(self, taxa_blocks, dest, indent_level=1):
         """
         Writes out TaxaBlocks.
@@ -801,6 +809,11 @@ class NexmlWriter(datasets.Writer):
             if taxa_block.label:
                 parts.append('label="%s"' % taxa_block.label)
             dest.write("<%s>\n" % ' '.join(parts))
+            
+            # annotate
+            if isinstance(taxa_block, base.Annotated) and taxa_block.has_annotations():
+                self.write_annotations(taxa_block, dest, indent_level=indent_level+1)
+                
             for taxon in taxa_block:
                 dest.write(self.indent * (indent_level+1))
                 parts = []
@@ -811,7 +824,13 @@ class NexmlWriter(datasets.Writer):
                     raise Exception("Taxon without ID")
                 if taxon.label:
                     parts.append('label="%s"' % taxon.label)
-                dest.write("<%s />\n" % ' '.join(parts))
+                if isinstance(taxon, base.Annotated) and taxon.has_annotations():
+                    dest.write("<%s>\n" % ' '.join(parts))
+                    self.write_annotations(taxon, dest, indent_level=indent_level+2)
+                    dest.write(self.indent * (indent_level+1))
+                    dest.write("</otu>\n")
+                else:   
+                    dest.write("<%s />\n" % ' '.join(parts))
             dest.write(self.indent * indent_level)                
             dest.write('</otus>\n')
 
@@ -831,6 +850,11 @@ class NexmlWriter(datasets.Writer):
                 parts.append('label="%s"' % tree_block.label)
             parts.append('otus="%s"' % tree_block.taxa_block.elem_id)
             dest.write("<%s>\n" % ' '.join(parts))
+            
+            # annotate
+            if isinstance(tree_block, base.Annotated) and tree_block.has_annotations():
+                self.write_annotations(tree_block, dest, indent_level=indent_level+1)            
+            
             for tree in tree_block:
                 self.write_tree(tree=tree, dest=dest, indent_level=2)
             dest.write(self.indent * indent_level)                
@@ -850,35 +874,60 @@ class NexmlWriter(datasets.Writer):
                 raise Exception("Character block without ID")
             if char_block.label:
                 parts.append('label="%s"' % char_block.label)
-            parts.append('otus="%s"' % char_block.taxa_block.elem_id)                
-            parts.append('xsi:type="%s"' % str(_to_nexml_chartype(char_block.chartype)))
+            parts.append('otus="%s"' % char_block.taxa_block.elem_id)        
+            
+            
+            xsi_type = None
+            if isinstance(char_block, characters.DnaCharactersBlock):
+                xsi_type = 'nex:Dna'
+            elif isinstance(char_block, characters.RnaCharactersBlock):
+                xsi_type = 'nex:Rna'            
+            elif isinstance(char_block, characters.ProteinCharactersBlock):
+                xsi_type = 'nex:Protein'       
+            elif isinstance(char_block, characters.RestrictionSitesCharactersBlock):
+                xsi_type = 'nex:Restriction'      
+            elif isinstance(char_block, characters.StandardCharactersBlock):
+                xsi_type = 'nex:Standard'  
+            elif isinstance(char_block, characters.ContinuousCharactersBlock):
+                xsi_type = 'nex:Continuous'                  
+            else:
+                raise Exception("Unrecognized character block data type.")
+                
+            if char_block.markup_as_sequences:
+                xsi_type = xsi_type + 'Seqs'
+            else:
+                xsi_type = xsi_type + 'Cells'
+            
+            parts.append('xsi:type="%s"' % xsi_type)
+            
+            
             dest.write("<%s>\n" % ' '.join(parts))
-            dest.write(self.indent * (indent_level+1))
-            dest.write("<matrix>\n")            
-            for row in char_block.values():
-                dest.write(self.indent*(indent_level+2))
-                parts = []
-                parts.append('row')
-                if row.elem_id is not None:
-                    parts.append('id="%s"' % row.elem_id)
-                else:
-                    raise Exception("Row without ID")
-                if row.taxon:
-                    parts.append('otu="%s"' % row.taxon.elem_id)
-                dest.write("<%s>\n" % ' '.join(parts))
-
-                ### actual sequences get written here ###
-                seqlines = textwrap.fill(''.join(row.state_names),
-                                       width=70,
-                                       initial_indent=self.indent*(indent_level+3) + "<seq>",
-                                       subsequent_indent=self.indent*(indent_level+4),
-                                       break_long_words=True)
-                seqlines = seqlines + "</seq>\n"
-                dest.write(seqlines)
-                dest.write(self.indent * (indent_level+2))
-                dest.write('</row>\n')
-            dest.write(self.indent * (indent_level+1))
-            dest.write("</matrix>\n")
+#             dest.write(self.indent * (indent_level+1))
+#             dest.write("<matrix>\n")            
+#             for taxon, row in char_block.items():
+#                 dest.write(self.indent*(indent_level+2))
+#                 parts = []
+#                 parts.append('row')
+#                 if row.elem_id is not None:
+#                     parts.append('id="%s"' % row.elem_id)
+#                 else:
+#                     raise Exception("Row without ID")
+#                 if taxon:
+#                     parts.append('otu="%s"' % taxon.elem_id)
+#                 dest.write("<%s>\n" % ' '.join(parts))
+# 
+#                 ### actual sequences get written here ###
+#                 seqlines = textwrap.fill(''.join(row.state_names),
+#                                        width=70,
+#                                        initial_indent=self.indent*(indent_level+3) + "<seq>",
+#                                        subsequent_indent=self.indent*(indent_level+4),
+#                                        break_long_words=True)
+#                 seqlines = seqlines + "</seq>\n"
+#                 dest.write(seqlines)
+#                 dest.write(self.indent * (indent_level+2))
+#                 dest.write('</row>\n')
+#             dest.write(self.indent * (indent_level+1))
+#             dest.write("</matrix>\n")
             dest.write(self.indent * indent_level)                
             dest.write('</characters>\n')
         
@@ -901,7 +950,11 @@ class NexmlWriter(datasets.Writer):
             parts.append('xsi:type="nex:FloatTree"')
         parts = ' '.join(parts)
         dest.write('%s<%s>\n'
-                   % (self.indent * indent_level, parts))        
+                   % (self.indent * indent_level, parts))   
+        # annotate
+        if isinstance(tree, base.Annotated) and tree.has_annotations():
+            self.write_annotations(tree, dest, indent_level=indent_level+1)  
+            
         for node in tree.preorder_node_iter():
             self.write_node(node=node, dest=dest, indent_level=indent_level+1)
         for edge in tree.preorder_edge_iter():
@@ -996,34 +1049,16 @@ class NexmlWriter(datasets.Writer):
             dest.write(parts + '\n')
 
 def basic_test():
-    source = "tests/sources/standardchars.xml"
+    source = "tests/sources/comprehensive.xml"
     nexmlr = NexmlReader()
-    dataset = nexmlr.get_dataset(source)
-    for taxa_block in dataset.taxa_blocks:
-        print taxa_block
-    for char_block in dataset.char_blocks:
-        print "\n***" + char_block.elem_id + "/" + char_block.label + "***"
-        
-        print "States:"
-        for state in char_block.state_alphabet_sets[0]:
-            print state.symbol, ':', state.fundamental_symbols
-        
-        for seq in char_block.matrix:
-            print seq, '   ', str(char_block[seq])
-#     for tree_block in dataset.tree_blocks:
-#         print "\n***" + tree_block.elem_id + "/" + tree_block.label + "***"
-#         for tree in tree_block:
-#             print
-#             for node in tree.preorder_node_iter():
-#                 print node, ' ',
-                
-#     target = "tests/output/comprehensive_parsed.xml"                
-#     nexmlw = NexmlWriter()
-#     print
-#     print
-#     #print nexmlw.compose_dataset(dataset)
-#     output = open(target, 'w')
-#     nexmlw.store_dataset(dataset=dataset, destination=output)
+    dataset = nexmlr.get_dataset(source)                
+    target = "tests/output/parsed.xml"                
+    nexmlw = NexmlWriter()
+    print
+    print
+    #print nexmlw.compose_dataset(dataset)
+    output = open(target, 'w')
+    nexmlw.store_dataset(dataset=dataset, destination=output)
     
 if __name__ == "__main__":
     basic_test()
