@@ -876,58 +876,115 @@ class NexmlWriter(datasets.Writer):
                 parts.append('label="%s"' % char_block.label)
             parts.append('otus="%s"' % char_block.taxa_block.elem_id)        
             
-            
-            xsi_type = None
             if isinstance(char_block, characters.DnaCharactersBlock):
-                xsi_type = 'nex:Dna'
+                xsi_datatype = 'nex:Dna'
             elif isinstance(char_block, characters.RnaCharactersBlock):
-                xsi_type = 'nex:Rna'            
+                xsi_datatype = 'nex:Rna'            
             elif isinstance(char_block, characters.ProteinCharactersBlock):
-                xsi_type = 'nex:Protein'       
+                xsi_datatype = 'nex:Protein'       
             elif isinstance(char_block, characters.RestrictionSitesCharactersBlock):
-                xsi_type = 'nex:Restriction'      
+                xsi_datatype = 'nex:Restriction'      
             elif isinstance(char_block, characters.StandardCharactersBlock):
-                xsi_type = 'nex:Standard'  
+                xsi_datatype = 'nex:Standard'  
             elif isinstance(char_block, characters.ContinuousCharactersBlock):
-                xsi_type = 'nex:Continuous'                  
+                xsi_datatype = 'nex:Continuous'                  
             else:
                 raise Exception("Unrecognized character block data type.")
                 
             if char_block.markup_as_sequences:
-                xsi_type = xsi_type + 'Seqs'
+                xsi_markup = 'Seqs'
             else:
-                xsi_type = xsi_type + 'Cells'
+                xsi_markup = 'Cells'
+                
+            xsi_type = xsi_datatype + xsi_markup
             
             parts.append('xsi:type="%s"' % xsi_type)
             
             
             dest.write("<%s>\n" % ' '.join(parts))
-#             dest.write(self.indent * (indent_level+1))
-#             dest.write("<matrix>\n")            
-#             for taxon, row in char_block.items():
-#                 dest.write(self.indent*(indent_level+2))
-#                 parts = []
-#                 parts.append('row')
-#                 if row.elem_id is not None:
-#                     parts.append('id="%s"' % row.elem_id)
-#                 else:
-#                     raise Exception("Row without ID")
-#                 if taxon:
-#                     parts.append('otu="%s"' % taxon.elem_id)
-#                 dest.write("<%s>\n" % ' '.join(parts))
-# 
-#                 ### actual sequences get written here ###
-#                 seqlines = textwrap.fill(''.join(row.state_names),
-#                                        width=70,
-#                                        initial_indent=self.indent*(indent_level+3) + "<seq>",
-#                                        subsequent_indent=self.indent*(indent_level+4),
-#                                        break_long_words=True)
-#                 seqlines = seqlines + "</seq>\n"
-#                 dest.write(seqlines)
-#                 dest.write(self.indent * (indent_level+2))
-#                 dest.write('</row>\n')
-#             dest.write(self.indent * (indent_level+1))
-#             dest.write("</matrix>\n")
+            
+            # annotate
+            if isinstance(char_block, base.Annotated) and char_block.has_annotations():
+                self.write_annotations(char_block, dest, indent_level=indent_level+1)            
+            
+            
+            
+            
+            state_alphabets = []
+            if isinstance(char_block, characters.StandardCharactersBlock):
+                ### EXPRESS STATE ALPHABET SET XML ###
+                ### ... which should be made a list, so that we preserve ###
+                ###     order of state definitions! ###
+                pass
+            
+            column_characters = []
+            if char_block.characters:
+                ### EXPRESS CHARACTERS XML ###
+                pass
+                
+            if state_alphabets or column_characters:
+                dest.write("%s<format>\n" * (self.indent*(indent_level+1)))
+                if state_alphabets:
+                    ### WRITE IT! ###
+                    pass
+                if column_characters:
+                    ### WRITE IT! ###
+                    pass
+                dest.write("%s</format>\n" * (self.indent*(indent_level+1)))
+            
+           
+            dest.write("%s<matrix>\n" % (self.indent * (indent_level+1)))
+            
+            if isinstance(char_block.matrix, base.Annotated) and char_block.matrix.has_annotations():
+                self.write_annotations(char_block.matrix, dest, indent_level=indent_level+1)            
+            
+            for taxon, row in char_block.matrix.items():
+                dest.write(self.indent*(indent_level+2))
+                parts = []
+                parts.append('row')
+                if row.elem_id is not None:
+                    parts.append('id="%s"' % row.elem_id)
+                else:
+                    raise Exception("Row without ID")
+                if taxon:
+                    parts.append('otu="%s"' % taxon.elem_id)
+                dest.write("<%s>\n" % ' '.join(parts))
+                
+                if isinstance(row, base.Annotated) and row.has_annotations():
+                    self.write_annotations(row, dest, indent_level=indent_level+3)            
+                
+
+                if char_block.markup_as_sequences:
+                    ### actual sequences get written here ###
+                    if isinstance(char_block, characters.DnaCharactersBlock) \
+                        or isinstance(char_block, characters.RnaCharactersBlock) \
+                        or isinstance(char_block, characters.ProteinCharactersBlock) \
+                        or isinstance(char_block, characters.RestrictionSitesCharactersBlock):
+                        separator = ''
+                    else:
+                        separator = ' '
+                    
+                    seqlines = textwrap.fill(separator.join([str(c) for c in row]),
+                                           width=70,
+                                           initial_indent=self.indent*(indent_level+3) + "<seq>",
+                                           subsequent_indent=self.indent*(indent_level+4),
+                                           break_long_words=True)
+                    seqlines = seqlines + "</seq>\n"                
+                    dest.write(seqlines)
+                else:
+                    pass
+
+
+
+                dest.write(self.indent * (indent_level+2))
+                dest.write('</row>\n')
+                
+            
+            dest.write("%s</matrix>\n" % (self.indent * (indent_level+1)))
+            
+       
+
+
             dest.write(self.indent * indent_level)                
             dest.write('</characters>\n')
         

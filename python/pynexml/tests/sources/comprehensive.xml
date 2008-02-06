@@ -385,8 +385,20 @@
         parsers might otherwise complain) but have no meaning.
     -->
     <characters otus="taxa1" id="c3" xsi:type="nex:DnaSeqs" label="DNA sequences">
+            <dict>
+                <key>description</key>
+                <string>hello, and how do you do?</string>
+            </dict>    
         <matrix>
+            <dict>
+                <key>description</key>
+                <string>this is a matrix</string>
+            </dict>            
             <row otu="t1" id="r1">
+				<dict>
+					<key>description</key>
+					<string>this is a row in a matrix</string>
+				</dict>             
                 <seq>A C G C T C G C A T C G C A T C G C G A</seq>
             </row>
             <row otu="t2" id="r2">
