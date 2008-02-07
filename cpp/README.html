@@ -8,13 +8,13 @@
 <h3 class="plain">Prerequisites</h3>
 <p>
 	<ul>
-		<li><strong><a href="http://xerces.apache.org/xerces-c/">xerces-c</a></strong>: we need
+		<li class="rss"><strong><a href="http://xerces.apache.org/xerces-c/">xerces-c</a></strong>: we need
 			to include its headers during compiling and libxerces during linking.
 			For example, if <code>XERCES_HOME=~/xerces-c_2_8_0-x86-macosx-gcc_4_0</code>,
 			compile with <code>-I$XERCES_HOME/include</code> and link with 
 			<code>-L$XERCES_HOME/lib -lxerces-c</code>.
 		</li>
-		<li>
+		<li class="rss">
 			The <a href="http://www.codesynthesis.com/products/xsd/download.xhtml">3.1.0 release of CodeSynthesis xsd</a>. 
 			We need the <code>xsd</code> executable to generated source and 
 			headers from schema files, and we need to include the headers in the
@@ -22,7 +22,7 @@
 			then generate code using the executable <code>$XSD_HOME/bin/xsd</code>
 			and compile with <code>-I$XSD_HOME/libxsd</code>.
 		</li>
-		<li>GCC: I (RAV) use the g++ from gcc version 4.0.1 (Apple Computer, Inc. build 5367),
+		<li class="rss">GCC: I (RAV) use the g++ from gcc version 4.0.1 (Apple Computer, Inc. build 5367),
 		I assume any recent version is fine
 		</li>
 	</ul>
