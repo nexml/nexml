@@ -432,13 +432,13 @@ class CharacterDataVector(list, base.IdTagged):
         list.__init__(self)
         base.IdTagged.__init__(self, elem_id=elem_id, label=label)
         
-    def set_cell_by_index(self, column_index, value):
+    def set_cell_by_index(self, column_index, cell):
         """
-        Sets the value of a cell at a particular position.
+        Sets the cell of a cell at a particular position.
         """        
         while len(self) <= column_index:
             self.append(None)
-        self[column_index] = value            
+        self[column_index] = cell            
         
     def __str__(self):
         if self:
