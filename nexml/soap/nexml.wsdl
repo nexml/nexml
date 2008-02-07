@@ -1,0 +1,40 @@
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+    xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+    xmlns:schema="http://www.nexml.org/1.0"
+    xmlns:tns="http://www.nexml.org/1.0/definitions"
+    targetNamespace="http://www.nexml.org/1.0/definitions">
+    <wsdl:types>
+        <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+            <xsd:import namespace="http://www.nexml.org/1.0"                      
+                schemaLocation="../xsd/nexml.xsd"/>
+        </xsd:schema>
+    </wsdl:types>
+    
+    <wsdl:message name="NexmlRequest">                                                 
+        <wsdl:part element="schema:nexml" name="NexmlRequest"/>               
+    </wsdl:message>
+    
+    <wsdl:portType name="NexmlSoap">                                                 
+        <wsdl:operation name="Test">
+            <wsdl:input message="tns:NexmlRequest" name="NexmlRequest"/>             
+        </wsdl:operation>
+    </wsdl:portType>
+    
+    <wsdl:binding name="NexmlSoapBinding" type="tns:NexmlSoap">                  
+        <soap:binding style="document"                                                   
+            transport="http://schemas.xmlsoap.org/soap/http"/>                           
+        <wsdl:operation name="Test">
+            <soap:operation soapAction="http://www.nexml.org/1.0#nexml"/>           
+            <wsdl:input name="NexmlRequest">
+                <soap:body use="literal"/>                                               
+            </wsdl:input>
+        </wsdl:operation>
+    </wsdl:binding>
+    
+    <wsdl:service name="NexmlSoapService">
+        <wsdl:port binding="tns:NexmlSoapBinding" name="NexmlSoapPort">          
+            <soap:address location="http://localhost/cgi-bin/soap.pl"/>             
+        </wsdl:port>
+    </wsdl:service>
+    
+</wsdl:definitions>
