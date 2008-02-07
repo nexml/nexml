@@ -386,7 +386,7 @@ class InfiniteSitesStateAlphabet(BinaryStateAlphabet):
     def __init__(self, elem_id=None, label=None):
         BinaryStateAlphabet.__init__(self, elem_id=elem_id, label=label)
                 
-class Character(base.IdTagged):
+class ColumnType(base.IdTagged):
     """                                                                                                                                                                                                                                                                                                                                                                           
     A character format or type of a particular column: i.e., maps
     a particular set of character state definitions to a column in a character matrix.
@@ -415,10 +415,10 @@ class CharacterDataCell(base.Annotated):
     A container for the state / state value for a particular cell in a matrix.
     """
   
-    def __init__(self, value=None, column_definition=None):
+    def __init__(self, value=None, column_type=None):
         base.Annotated.__init__(self)
         self.value = value
-        self.column_definition = column_definition 
+        self.column_type = column_type 
         
     def __str__(self):
         return str(self.value)
@@ -467,7 +467,7 @@ class CharactersBlock(taxa.TaxaLinked):
         """
         taxa.TaxaLinked.__init__(self, *args, **kwargs)
         self.matrix = CharacterDataMatrix()
-        self.characters = []
+        self.column_types = []
         self.markup_as_sequences = True
         
     def __getitem__(self, key):
@@ -602,13 +602,13 @@ class CharactersBlock(taxa.TaxaLinked):
         return super(dict, self.matrix).setdefault(key, def_val)
 
       
-    def id_characters_map(self):
+    def id_column_map(self):
         """
         Returns dictionary of element id to corresponding
         character definition.
         """
         map = {}
-        for char in self.characters:
+        for char in self.column_types:
             map[char.elem_id] = char
         return map
             
