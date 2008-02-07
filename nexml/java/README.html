@@ -1,13 +1,37 @@
 <p>
-	This subdirectory contains java classes for nexml parsing,
-	a mesquite extension that uses these classes (for mesquite's
-	"import" facility) and a Xerces-J based validator. The validator
-	is based on code written by Terri Liebowitz of the San Diego
-	Supercomputing Center, and modified by Mark Holder. The parser
-	classes and mesquite bindings were written by Rutger Vos.
+	This subdirectory contains java classes for nexml parsing.
+	Specifically, the directory structure is as follows:
+	<ul>
+		<li>
+			<code>org/</code> contains SAX parser classes, for
+			stream-based handling of nexml data. The entry point
+			for figuring out how these work is <code>org/nexml/NexmlParser.java</code>,
+			which contains javadoc comments to explain the design.
+			Written and maintained by Peter Midford and Rutger Vos.
+		</li>
+		<li>
+			<code>mesquite/</code> contains classes for 
+			<a href="http://mesquiteproject.org">mesquite</a>. 
+			These classes use the SAX parser, and so function
+			to illustrate how to use it in an application.
+			Written and maintained by Rutger Vos with some help
+			from Wayne Maddison.
+		</li>
+		<li>
+			<code>validator/</code> contains a 
+			<a href="http://xerces.apache.org/xerces-j/">Xerces-J</a>-based
+			validator written by Terri Liebowitz of the San Diego
+			Supercomputing Center, with modifications by Mark Holder.
+			It is used to validate nexml instance documents against
+			the schema (or, indeed, any xml instance document against
+			any schema).
+		</li>
+	</ul>
 </p>
 <p>
 	In addition to these classes, the nexml website also provides
 	nexmlbeans.jar, a set of bindings created using 
 	<a href="http://xmlbeans.apache.org/">Apache XML beans 2.3.0</a>
+	in the <a href="http://www.nexml.org/nexml/downloads">downloads</a>
+	section.
 </p>
