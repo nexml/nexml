@@ -578,7 +578,7 @@ class _NexmlCharBlockParser(_NexmlElementParser):
 #         else:
 #             self.char_block_factory = char_block_factory
             
-    def parse_ambiguous_state(self, nxambiguous, state_alphabet_set):
+    def parse_ambiguous_state(self, nxambiguous, state_alphabet):
         """
         Parses an XmlElement represent an ambiguous discrete character state,
         ("uncertain_state_set")
@@ -591,11 +591,11 @@ class _NexmlCharBlockParser(_NexmlElementParser):
         state.member_states = []                                                    
         for nxmember in nxambiguous.getiterator('member'):
             member_state_id = nxmember.get('state', None)
-            member_state = state_alphabet_set.get_state('elem_id', member_state_id)
+            member_state = state_alphabet.get_state('elem_id', member_state_id)
             state.member_states.append(member_state)   
         return state
             
-    def parse_polymorphic_state(self, nxpolymorphic, state_alphabet_set):
+    def parse_polymorphic_state(self, nxpolymorphic, state_alphabet):
         """
         Parses an XmlElement represent a polymorphic discrete character state, 
         ("polymorphic_state_set")
@@ -608,32 +608,32 @@ class _NexmlCharBlockParser(_NexmlElementParser):
         state.member_states = []                                                    
         for nxmember in nxpolymorphic.getiterator('member'):
             member_state_id = nxmember.get('state', None)
-            member_state = state_alphabet_set.get_state('elem_id', member_state_id)
+            member_state = state_alphabet.get_state('elem_id', member_state_id)
             state.member_states.append(member_state)
         for nxambiguous in nxpolymorphic.getiterator('uncertain_state_set'):
-            state.member_states.append(self.parse_ambiguous_state(nxambiguous, state_alphabet_set))
+            state.member_states.append(self.parse_ambiguous_state(nxambiguous, state_alphabet))
         
         return state
                   
-    def parse_state_alphabet_set(self, nxstates):
+    def parse_state_alphabet(self, nxstates):
         """
         Given an XmlElement representing a nexml definition of (discrete or standard) states 
-        ("states"), this returns a corresponding StateAlphabetSet object.
+        ("states"), this returns a corresponding StateAlphabet object.
         """
         
-        state_alphabet_set = characters.StateAlphabetSet(elem_id=nxstates.get('id', None),
+        state_alphabet = characters.StateAlphabet(elem_id=nxstates.get('id', None),
                                                          label=nxstates.get('label', None))
         for nxstate in nxstates.getiterator('state'):
             state = characters.StateAlphabetElement(elem_id=nxstate.get('id', None),
                                                     label=nxstate.get('label', None),
                                                     symbol=nxstate.get('symbol', None),
                                                     token=nxstate.get('token', None))        
-            state_alphabet_set.add(state)
+            state_alphabet.append(state)
         for nxstate in nxstates.getiterator('uncertain_state_set'):
-            state_alphabet_set.add(self.parse_ambiguous_state(nxstate, state_alphabet_set))
+            state_alphabet.append(self.parse_ambiguous_state(nxstate, state_alphabet))
         for nxstate in nxstates.getiterator('polymorphic_state_set'):
-            state_alphabet_set.add(self.parse_polymorphic_state(nxstate, state_alphabet_set))        
-        return state_alphabet_set
+            state_alphabet.append(self.parse_polymorphic_state(nxstate, state_alphabet))        
+        return state_alphabet
             
     def parse_characters_format(self, nxformat, char_block):
         """
@@ -643,19 +643,19 @@ class _NexmlCharBlockParser(_NexmlElementParser):
         """
         if nxformat is not None:
             for nxstates in nxformat.getiterator('states'):
-                char_block.state_alphabet_sets.append(self.parse_state_alphabet_set(nxstates))
+                char_block.state_alphabets.append(self.parse_state_alphabet(nxstates))
             for nxchars in nxformat.getiterator('char'):
                 char = characters.Character(elem_id=nxchars.get('id', None))
                 char_state_set_id = nxchars.get('states')
                 if char_state_set_id is not None:
-                    state_alphabet_set = None
-                    for state_sets in char_block.state_alphabet_sets:
+                    state_alphabet = None
+                    for state_sets in char_block.state_alphabets:
                         if state_sets.elem_id == char_state_set_id:
-                            state_alphabet_set = state_sets
+                            state_alphabet = state_sets
                             break
-                    if state_alphabet_set is None:
+                    if state_alphabet is None:
                         raise Exception("State set '%s' no defined" % char_state_set_id)
-                    char.state_alphabet_set = state_alphabet_set
+                    char.state_alphabet = state_alphabet
                 char_block.characters.append(char)
 
     def parse_char_block(self, nxchars, dataset):
@@ -733,13 +733,13 @@ class _NexmlCharBlockParser(_NexmlElementParser):
                         pos_idx = column_ids.index(column_id)
 #                         column = id_column_map[column_id]
 #                         state = column.state_id_map[cell.get('state', None)]
-                        cell = characters.CharacterDataCell(value=float(nxcell.get('state')))
+                        cell = characters.CharacterDataCell(value=float(nxcell.get('state')), column_definition=id_column_map[column_id])
                         self.parse_annotations(annotated=cell, nxelement=nxcell)                        
                         character_vector.set_cell_by_index(pos_idx, cell)
             else:
                 if nxchartype.endswith('Seqs'):
                     char_block.markup_as_sequences = True                
-                    symbol_state_map = char_block.default_state_alphabet_set.symbol_state_map()
+                    symbol_state_map = char_block.default_state_alphabet.symbol_state_map()
                     seq = nxrow.findtext('seq')
                     if seq is not None:
                         seq = seq.replace(' ', '').replace('\n', '').replace('\r', '')
@@ -757,9 +757,9 @@ class _NexmlCharBlockParser(_NexmlElementParser):
                         column = id_column_map[column_id]
                         pos_idx = column_ids.index(column_id)
                         if column_id not in id_state_maps:
-                            id_state_maps[column_id] = column.state_alphabet_set.id_state_map()
+                            id_state_maps[column_id] = column.state_alphabet.id_state_map()
                         state = id_state_maps[column_id][nxcell.get('state')]
-                        cell = characters.CharacterDataCell(value=state)
+                        cell = characters.CharacterDataCell(value=state, column_definition=column)
                         self.parse_annotations(annotated=cell, nxelement=nxcell)                        
                         character_vector.set_cell_by_index(pos_idx, cell)
 
@@ -971,8 +971,8 @@ class NexmlWriter(datasets.Writer):
                                            break_long_words=True)
                     seqlines = seqlines + "</seq>\n"                
                     dest.write(seqlines)
-                else:
-                    pass
+                else:                    
+                    pass                        
 
 
 
