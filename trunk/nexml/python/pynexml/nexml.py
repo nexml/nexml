@@ -645,7 +645,7 @@ class _NexmlCharBlockParser(_NexmlElementParser):
             for nxstates in nxformat.getiterator('states'):
                 char_block.state_alphabets.append(self.parse_state_alphabet(nxstates))
             for nxchars in nxformat.getiterator('char'):
-                char = characters.Character(elem_id=nxchars.get('id', None))
+                col = characters.ColumnType(elem_id=nxchars.get('id', None))
                 char_state_set_id = nxchars.get('states')
                 if char_state_set_id is not None:
                     state_alphabet = None
@@ -655,8 +655,8 @@ class _NexmlCharBlockParser(_NexmlElementParser):
                             break
                     if state_alphabet is None:
                         raise Exception("State set '%s' no defined" % char_state_set_id)
-                    char.state_alphabet = state_alphabet
-                char_block.characters.append(char)
+                    col.state_alphabet = state_alphabet
+                char_block.column_types.append(col)
 
     def parse_char_block(self, nxchars, dataset):
         """
@@ -699,9 +699,9 @@ class _NexmlCharBlockParser(_NexmlElementParser):
         matrix = nxchars.find('matrix')
         self.parse_annotations(annotated=char_block.matrix, nxelement=matrix)
         
-        if char_block.characters:
-            id_column_map = char_block.id_characters_map()
-            column_ids = [char.elem_id for char in char_block.characters]
+        if char_block.column_types:
+            id_column_map = char_block.id_column_map()
+            column_ids = [char.elem_id for char in char_block.column_types]
         else:
             id_column_map = {}
             column_ids = [] 
@@ -733,7 +733,7 @@ class _NexmlCharBlockParser(_NexmlElementParser):
                         pos_idx = column_ids.index(column_id)
 #                         column = id_column_map[column_id]
 #                         state = column.state_id_map[cell.get('state', None)]
-                        cell = characters.CharacterDataCell(value=float(nxcell.get('state')), column_definition=id_column_map[column_id])
+                        cell = characters.CharacterDataCell(value=float(nxcell.get('state')), column_type=id_column_map[column_id])
                         self.parse_annotations(annotated=cell, nxelement=nxcell)                        
                         character_vector.set_cell_by_index(pos_idx, cell)
             else:
@@ -759,7 +759,7 @@ class _NexmlCharBlockParser(_NexmlElementParser):
                         if column_id not in id_state_maps:
                             id_state_maps[column_id] = column.state_alphabet.id_state_map()
                         state = id_state_maps[column_id][nxcell.get('state')]
-                        cell = characters.CharacterDataCell(value=state, column_definition=column)
+                        cell = characters.CharacterDataCell(value=state, column_type=column)
                         self.parse_annotations(annotated=cell, nxelement=nxcell)                        
                         character_vector.set_cell_by_index(pos_idx, cell)
 
@@ -912,22 +912,20 @@ class NexmlWriter(datasets.Writer):
             
             state_alphabets = []
             if isinstance(char_block, characters.StandardCharactersBlock):
-                ### EXPRESS STATE ALPHABET SET XML ###
-                ### ... which should be made a list, so that we preserve ###
-                ###     order of state definitions! ###
+                ### EXPRESS STATE ALPHABET SET XML: compose xml lines ###
                 pass
             
-            column_characters = []
-            if char_block.characters:
-                ### EXPRESS CHARACTERS XML ###
+            column_types = []
+            if char_block.column_types:
+                ### EXPRESS CHARACTERS XML: compose xml lines ###
                 pass
                 
-            if state_alphabets or column_characters:
+            if state_alphabets or column_types:
                 dest.write("%s<format>\n" * (self.indent*(indent_level+1)))
                 if state_alphabets:
                     ### WRITE IT! ###
                     pass
-                if column_characters:
+                if column_types:
                     ### WRITE IT! ###
                     pass
                 dest.write("%s</format>\n" * (self.indent*(indent_level+1)))
@@ -961,30 +959,36 @@ class NexmlWriter(datasets.Writer):
                         or isinstance(char_block, characters.ProteinCharactersBlock) \
                         or isinstance(char_block, characters.RestrictionSitesCharactersBlock):
                         separator = ''
+                        break_long_words = True
                     else:
+                        # Standard or Continuous
                         separator = ' '
+                        break_long_words = False
                     
                     seqlines = textwrap.fill(separator.join([str(c) for c in row]),
                                            width=70,
                                            initial_indent=self.indent*(indent_level+3) + "<seq>",
                                            subsequent_indent=self.indent*(indent_level+4),
-                                           break_long_words=True)
+                                           break_long_words=break_long_words)
                     seqlines = seqlines + "</seq>\n"                
                     dest.write(seqlines)
                 else:                    
-                    pass                        
-
-
-
+                    for cell in row:
+                        parts = []
+                        parts.append('%s<cell' % (self.indent*(indent_level+3)))
+                        if cell.column_type is not None:
+                            parts.append('char="%s"' % cell.column_type.elem_id)
+                        parts.append('state="%s"' % str(cell))
+                        dest.write(' '.join(parts))
+                        if isinstance(cell, base.Annotated) and cell.has_annotations():
+                            dest.write('>\n')
+                            self.write_annotations(cell, dest, indent_level=indent_level+4)            
+                            dest.write('%s</cell>' % (self.indent*(indent_level+3)))
+                        else:
+                            dest.write('/>\n')
                 dest.write(self.indent * (indent_level+2))
                 dest.write('</row>\n')
-                
-            
             dest.write("%s</matrix>\n" % (self.indent * (indent_level+1)))
-            
-       
-
-
             dest.write(self.indent * indent_level)                
             dest.write('</characters>\n')
         
