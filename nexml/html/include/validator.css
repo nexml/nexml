@@ -1,0 +1,21 @@
+/* inclusions for validation service */
+
+li.debug {    
+    list-style-image: url('<% paths.strip(paths.include("bug.png")) %>'); 
+}
+
+li.info {
+   list-style-image: url('<% paths.strip(paths.include("lightbulb.png")) %>'); 
+}
+
+li.warn {
+   list-style-image: url('<% paths.strip(paths.include("error.png")) %>'); 
+}
+
+li.error {
+   list-style-image: url('<% paths.strip(paths.include("exclamation.png")) %>'); 
+}
+
+li.fatal {
+   list-style-image: url('<% paths.strip(paths.include("bomb.png")) %>'); 
+}

@@ -1,0 +1,117 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <head>
+        <!-- site meta data -->  
+        <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+        <meta name="description" content="Nexml is a file format for encoding phylogenetic data using xml." />
+        <meta name="keywords" content="nexml, xml, nexus, phylogenetics, phylogenies, trees, dna, rna, nucleotide, standard, continuous, amino, acid, matrix, tree, network, data" />
+        <meta name="author" content="Rutger Vos" />
+        <meta name="robots" content="index,follow" />
+        <meta name="verify-v1" content="rtW0xb5pOfIPc63Qi8LvHmqYqUSq+/aynzeNXo2CIls=" />
+        
+        <!-- RSS feeds -->
+        <link
+          rel="alternate"
+          type="application/rss+xml"
+          title="nexml-discuss mailing list - RSS 2.0"
+          href="http://mailbucket.org/nexml_discuss.xml"/>
+        <link 
+          rel="alternate" 
+          type="application/rss+xml" 
+          title="SourceForge project summary - RSS 2.0" 
+          href="http://sourceforge.net/export/rss2_projsummary.php?group_id=209571"/>
+        <link
+          rel="alternate"
+          type="application/rss+xml" 
+          title="Wiki changes - RSS 2.0"
+          href="https://www.nescent.org/wg/evoinfo/index.php?title=Future_Data_Exchange_Standard&amp;action=history&amp;feed=rss"/>
+    
+        <link
+          rel="alternate"
+          type="application/rss+xml"
+          title="SVN revision history - RSS 2.0"
+          href="<% paths.home('nexml.rss') %>"/>        
+        
+        <title><% title %></title>        
+        <style type="text/css">
+            <!--
+                <% INCLUDE 'style.css' %>        
+                <% INSERT 'schema.css' %>
+                <% FOREACH css = styleSheets %>
+                    <% INCLUDE $css %>
+                <% END %>
+            -->
+        </style>
+        <script type="text/javascript">
+            //<![CDATA[
+                <% INSERT 'functions.js' %>
+                <% INSERT 'schema.js' %>
+            //]]>
+        </script>
+        <% IF favicon %>
+            <link rel="shortcut icon" href="<% favicon %>" />
+        <% ELSE %>
+            <link rel="shortcut icon" href="<% paths.strip(paths.include('favicon.ico')) %>" />
+        <% END %>
+    </head>
+    <body>
+    
+    <!-- This heading is only here for text browsers without css -->
+    <h1 class="hide"><% title %></h1>
+    
+    <div id="thetop">
+      <a id="top" name="top"></a>
+      <p class="hide">
+        Skip to: 
+        <a href="#sitemenu" accesskey="2">Site menu</a> |
+        <a href="#maincontent" accesskey="3">Main content</a>
+      </p>
+    </div>
+    
+    <div id="container">
+      <div id="main">
+
+        <!-- main banner in the top-left -->
+        <div id="logo">       
+          <h1>
+            [<a href="/" accesskey="4">nexml</a>]
+          </h1><span id="tagline">phylogenetic data in xml</span>
+
+        </div>
+        
+        <!-- site blurb in the top-middle -->
+        <div id="intro">
+          <h2>
+            <a id="maincontent" name="maincontent"></a>
+            The future data exchange standard is here!
+          </h2>
+          <p>
+            nexml is an exchange standard for representing 
+            phylogenetic data &mdash; inspired by the commonly used 
+            NEXUS format, but more robust and easier to process.
+          </p>
+        </div>
+        <div class="clear"></div>    
+        
+        <!-- validate form -->   
+        <div id="validateDiv">
+            <form 
+                action="/nexml/validator" 
+                enctype="multipart/form-data" 
+                method="post" 
+                id="validateForm">
+                <fieldset id="validateFieldset">
+                    <legend class="hide">Validate nexml data</legend>
+                    <label for="validateUpload">Select file to validate</label>
+                    <input type="file" name="file" id="validateUpload"/>
+                    <input type="submit" id="validateSubmit" value="Validate"/>
+                </fieldset>
+            </form>          
+        </div>   
+        
+        <!-- main heading of this page -->
+        <h3 class="headerstyle"><% mainHeading %></h3>
+        
+        <% INCLUDE 'breadCrumbs.tmpl' %>      
+        

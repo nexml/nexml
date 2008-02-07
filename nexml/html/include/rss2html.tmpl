@@ -1,0 +1,15 @@
+<h3 class="plain"><% root.first_child('title').text %></h3>
+<p>
+    <% root.first_child('description').text %>
+</p>
+<ul>
+    <% FOREACH item = root.children('item') %>
+    <li class="rss">
+        <strong><% encoder.encode_entities(item.first_child('title').text) %></strong>
+        <small class="credit"> by <% encoder.encode_entities(item.first_child('author').text) %> on 
+            <% item.first_child('pubDate').text %>                                                        
+            [<a class="rss" href="<% encoder.encode_entities(item.first_child('link').text) %>">link</a>]
+        </small>
+    </li>
+    <% END %>
+</ul>
