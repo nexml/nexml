@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<models id="model">
+    <!-- $Id: $ -->
+    <!-- This is a sketch of how substitution models might be 
+        expressed in xml. This is the result of work done in 
+        Lawrence, KS, in Fall 2007 -->
+    <model id="MyModel">
+        <states id="states2" xsi:type="nex:DNAStates"> <!-- error here is okay -->
+            <state id="A" symbol="A"/>                
+            <state id="C" symbol="C"/>                
+            <state id="G" symbol="G"/>                
+            <state id="T" symbol="T"/>                
+        </states>
+        <parameters id="parameters1">
+            <!-- here would be declared different subclasses of parameters
+                (e.g. frequencies, probabilities) to be referenced later -->
+            <param id="x" xsi:type="nex:Float"/>
+            <!--    
+                parameters may also come in groups, and be referenced jointly                      
+                <paramgroup id="pg1" sum="1">
+                    <param xsi:type="nex:Float" id="a"/>
+                    <param xsi:type="nex:Float" id="b"/>
+                    <param xsi:type="nex:Float" id="c"/>
+                    <param xsi:type="nex:Float" id="d"/>
+                </paramgroup>
+            -->
+        </parameters>
+        <expressions>
+            <!-- expression will refer to parameters by id,
+                and will be marked up using mathml -->
+            <!-- 
+                the idea here is that parameters are piped
+                through various expressions which constrain
+                them in various ways, e.g. sum-to-one for a
+                parameter group 
+            -->
+            <expr id="e1"> <!-- expr. can be referenced later by id -->
+                <lambda>
+                    <nex:arg param="x"/> <!-- referenced input param -->
+                    <apply>
+                        <floor/>
+                        <cn>0</cn>
+                        <ceiling/>
+                        <cn>1</cn>
+                    </apply>
+                </lambda>
+            </expr>
+        </expressions>
+        <frequencies id="f1">
+            <!-- output of expressions is used here -->
+            <freq expr="e1" id="f2" state="A"/>
+            <freq expr="e1" id="f3" state="C"/>
+            <freq expr="e1" id="f4" state="G"/>
+            <freq expr="e1" id="f5" state="T"/>                
+        </frequencies>
+        <rmatrix scalable="true" id="rmatrix1">
+            <!-- ref to default sparse matrix value -->
+            <from state="A">
+                <!-- TODO also allow vectors of ID references -->
+                <to state="A" expr="e1"/>                    
+                <to state="C" expr="e1"/>                    
+                <to state="G" expr="e1"/>                    
+                <to state="T" expr="e1"/>
+            </from>
+            <from state="C">
+                <to state="A" expr="e1"/>                    
+                <to state="C" expr="e1"/>                    
+                <to state="G" expr="e1"/>                    
+                <to state="T" expr="e1"/>
+            </from>
+            <from state="G">
+                <to state="A" expr="e1"/>                    
+                <to state="C" expr="e1"/>                    
+                <to state="G" expr="e1"/>                    
+                <to state="T" expr="e1"/>
+            </from>
+            <from state="T">
+                <to state="A" expr="e1"/>                    
+                <to state="C" expr="e1"/>                    
+                <to state="G" expr="e1"/>                    
+                <to state="T" expr="e1"/>
+            </from>                                                
+        </rmatrix>
+        <!-- TODO additional params here, mean rate element? multipliers 
+            can reference elements (freq, rmatrix) in containing model,
+            can nest recursively 
+        -->
+        <!--
+            <mixture>
+            <model>
+            <parameters>
+            </parameters>
+            <multiplier rmatrix="rmatrix1" param="p1"/>
+            </model>
+            </mixture>
+        -->
+    </model>
+</models>
