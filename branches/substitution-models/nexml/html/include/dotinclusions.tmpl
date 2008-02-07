@@ -1,0 +1,19 @@
+/*
+    this graphviz graph documents the nexml file inclusion tree
+    (with focus on <% currentFile %>). Graph generated on <% currentDate %>
+    from template: $Id: dotinheritance.tmpl 221 2007-12-13 02:31:30Z rvos $    
+*/
+digraph inclusions {
+    label="File inclusion tree";
+    <% FOREACH file = schema.files %>
+        <% url = paths.transform(file) %>
+        <% IF file == currentFile %>
+            "~<% paths.strip(file) %>" [URL="<% url %>",shape=box];
+        <% ELSE %>
+            "~<% paths.strip(file) %>" [URL="<% url %>",shape=box,color=lightgrey,style=filled];        
+        <% END %>        
+        <% FOREACH include = schema.includesInFile(file) %>
+            "~<% paths.strip(include) %>" -> "~<% paths.strip(file) %>";
+        <% END %>
+    <% END %>
+}

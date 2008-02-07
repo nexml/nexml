@@ -1,0 +1,58 @@
+
+/* Inclusions for schema documentation */
+
+/* styles for attribute and facet tables */
+table { font-size: 1em }
+thead { font-weight: bold; font-size: 80% }
+
+/* different paddings for type definitions with nested indents */
+td                                          { padding-right: 1em }
+h4.level2, h5.level2                        { padding-left:  4em }
+p.level2, table.level2, div.code, ul.level2 { padding-left:  5em !important }
+ul.nested                                   { padding-left:  2em !important }
+.level1 {  
+    margin-left: 2em;
+    padding-top: 1em;
+    margin-top: 1em
+}
+
+/* recursive substructure lists */
+ul.level2 { list-style-type: none }
+
+/* styles for pretty xml code */
+span.eltName  { color: maroon }
+span.attrName { color: red    }
+span.attrVal  { color: navy   }
+span.xmlToken { color: blue   }
+
+div.code { 
+    width: 470px; 
+    overflow: auto;
+    padding-top: 0px;
+    padding-bottom: 1em;
+    margin-bottom: 1em;
+}
+
+pre.level2 {
+    padding: 0px;
+    margin-top: 0px;
+    margin-bottom: 0px
+}
+
+h4.level1 {
+    border-top: 1px solid silver
+}
+
+h3.typeList, p.typeList {
+    clear: left
+}
+
+ul.typeList {
+    float: left;
+    padding-left: 1em;
+    width: 150px
+}
+
+li.typeList {
+    list-style-type: none
+}

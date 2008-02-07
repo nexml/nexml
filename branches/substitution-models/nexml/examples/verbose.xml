@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<nex:nexml 
+	version="1.0" 
+	generator="eclipse"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.nexml.org/1.0 ../xsd/nexml.xsd" 
+	xmlns:nex="http://www.nexml.org/1.0">
+	<dict xsi:type="nex:XHTML">
+		<key>xhtml</key>
+		<any xmlns:h="http://www.w3.org/1999/xhtml">
+			<h:h1>Embedded XHTML</h:h1>
+			<h:p>
+				Free form documentation can be added to a document using XHTML,
+				the nex:XHTML dictionary subclass facilitates this.
+			</h:p>
+		</any>
+	</dict>
+	<dict xsi:type="nex:DC">
+		<key>dublincore</key>
+		<any xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/">
+			<dc:title>nexml</dc:title>
+			<dcterms:alternative> 
+				NEXML: Future Data Exchange Standard For Phylogenetics 
+			</dcterms:alternative>
+			<dc:subject>nexus, phylogenetics</dc:subject>
+			<dc:description> 
+				This subclass of the &lt;any&gt; shows embedding of Dublin Core
+				metadata.
+			</dc:description>
+			<dc:publisher> 
+				National Evolutionary Synthesis Center (NESCent) 
+			</dc:publisher>
+		</any>
+	</dict>
+	<dict>
+		<key>RCS</key>
+		<dictvector>
+			<dict xsi:type="nex:RCSDate">
+				<key>date</key>
+				<string>$Date: 2007-09-13 10:31:03 -0500 (Thu, 13 Sep 2007) $</string>
+			</dict>
+			<dict xsi:type="nex:RCSRev">
+				<key>rev</key>
+				<string>$Rev: 176 $</string>
+			</dict>
+			<dict xsi:type="nex:RCSAuthor">
+				<key>author</key>
+				<string>$Author: rutgeraldo $</string>
+			</dict>
+			<dict xsi:type="nex:RCSURL">
+				<key>url</key>
+				<string>$URL: https://nexml07gsoc.googlecode.com/svn/trunk/examples/verbose.xml $</string>
+			</dict>
+			<dict xsi:type="nex:RCSId">
+				<key>id</key>
+				<string>$Id: verbose.xml 176 2007-09-13 15:31:03Z rutgeraldo $</string>
+			</dict>
+			<dict xsi:type="nex:RCSHeader">
+				<key>header</key>
+				<string>$Header: $</string>
+			</dict>
+		</dictvector>
+	</dict>
+	<dict xsi:type="nex:RSS">
+		<key>rss</key>
+		<any>
+			<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+				xmlns="http://purl.org/rss/1.0/"
+				xmlns:taxo="http://purl.org/rss/1.0/modules/taxonomy/"
+				xmlns:dc="http://purl.org/dc/elements/1.1/"
+				xmlns:syn="http://purl.org/rss/1.0/modules/syndication/"
+				xmlns:admin="http://webns.net/mvcb/">
+				<channel rdf:about="http://search.cpan.org/">
+					<title>search.cpan.org</title>
+					<link>http://search.cpan.org/</link>
+					<description>The CPAN search site</description>
+					<dc:date>2007-07-30T17:41+00:00</dc:date>
+					<syn:updatePeriod>hourly</syn:updatePeriod>
+					<syn:updateFrequency>1</syn:updateFrequency>
+					<syn:updateBase>1901-01-01T00:00+00:00</syn:updateBase>
+					<items>
+						<rdf:Seq>
+							<rdf:li
+								rdf:resource="http://search.cpan.org/~rjbs/Perl-Critic-Tics-0.002/"/>
+							<rdf:li
+								rdf:resource="http://search.cpan.org/~fxfx/Integrator-Module-Build-1.054/"
+							/>
+						</rdf:Seq>
+					</items>
+					<image rdf:resource="http://search.cpan.org/s/img/cpanrdf.jpg"/>
+				</channel>
+				<image rdf:about="http://search.cpan.org/s/img/cpanrdf.jpg">
+					<title>search.cpan.org</title>
+					<url>http://search.cpan.org/s/img/cpanrdf.jpg</url>
+					<link>http://search.cpan.org</link>
+				</image>
+				<item rdf:about="http://search.cpan.org/~rjbs/Perl-Critic-Tics-0.002/">
+					<title>Perl-Critic-Tics-0.002</title>
+					<link>http://search.cpan.org/~rjbs/Perl-Critic-Tics-0.002/</link>
+					<description>policies for things that make me wince </description>
+					<dc:creator>Ricardo SIGNES</dc:creator>
+					<dc:date>2007-07-30T15:21+00:00</dc:date>
+				</item>
+			</rdf:RDF>
+		</any>
+	</dict>
+</nex:nexml>

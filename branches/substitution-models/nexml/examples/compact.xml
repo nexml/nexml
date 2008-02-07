@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<nex:nexml 
+	version="1.0" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.nexml.org/1.0 ../xsd/nexml.xsd"
+	xmlns:nex="http://www.nexml.org/1.0">
+	<dict xsi:type="nex:RCSId">
+		<key>id</key>
+		<string>$Id$</string>
+	</dict>
+	<otus id="tax1">
+		<otu id="t1"/>
+		<otu id="t2"/>
+		<otu id="t3"/>
+		<otu id="t4"/>
+		<otu id="t5"/>
+	</otus>
+	<characters otus="tax1" id="m1" xsi:type="nex:DnaSeqs">
+		<matrix>
+			<row id="r1" otu="t1">
+				<seq>AACATATCTC</seq>
+			</row>
+			<row id="r2" otu="t2">
+				<seq>ATACCAGCAT</seq>
+			</row>
+			<row id="r3" otu="t3">
+				<seq>GAGGGTATGG</seq>
+			</row>
+			<row id="r4" otu="t4">
+				<seq>GGTCTTAGAG</seq>
+			</row>
+			<row id="r5" otu="t5">
+				<seq>CGTCACAGTG</seq>
+			</row>
+		</matrix>
+	</characters>
+	<characters otus="tax1" id="m2" xsi:type="nex:StandardSeqs">
+		<matrix>
+			<row id="r1" otu="t1">
+				<seq>1 2</seq>
+			</row>
+			<row id="r2" otu="t2">
+				<seq>2 2</seq>
+			</row>
+			<row id="r3" otu="t3">
+				<seq>3 4</seq>
+			</row>
+			<row id="r4" otu="t4">
+				<seq>2 3</seq>
+			</row>
+			<row id="r5" otu="t5">
+				<seq>4 1</seq>
+			</row>
+		</matrix>
+	</characters>
+	<characters otus="tax1" id="m3" xsi:type="nex:ContinuousSeqs">
+		<matrix>
+			<row id="r1" otu="t1">
+				<seq>-1.545414144070023 -2.3905621575431044 -2.9610221833467265 0.7868662069161243
+					0.22968509237534918</seq>
+			</row>
+			<row id="r2" otu="t2">
+				<seq>-1.6259836379710066 3.649352410850134 1.778885099660406 -1.2580877968480846
+					0.22335354995610862</seq>
+			</row>
+			<row id="r3" otu="t3">
+				<seq>-1.5798979984134964 2.9548251411133157 1.522005675256233 -0.8642016921755289
+					-0.938129801832388</seq>
+			</row>
+			<row id="r4" otu="t4">
+				<seq>2.7436692306788086 -0.7151148143399818 4.592207937774776 -0.6898841440534845
+					0.5769509574453064</seq>
+			</row>
+			<row id="r5" otu="t5">
+				<seq>3.1060827493657683 -1.0453787389160105 2.67416332763427 -1.4045634106692808
+					0.019890469925520196</seq>
+			</row>
+		</matrix>
+	</characters>
+	<characters otus="tax1" id="m4" xsi:type="nex:RestrictionSeqs">
+		<matrix>
+			<row id="r1" otu="t1">
+				<seq>00</seq>
+			</row>
+			<row id="r2" otu="t2">
+				<seq>01</seq>
+			</row>
+			<row id="r3" otu="t3">
+				<seq>11</seq>
+			</row>
+			<row id="r4" otu="t4">
+				<seq>10</seq>
+			</row>
+			<row id="r5" otu="t5">
+				<seq>00</seq>
+			</row>
+		</matrix>
+	</characters>
+	<characters otus="tax1" id="m5" xsi:type="nex:ProteinSeqs">
+		<matrix>
+			<row id="r1" otu="t1">
+				<seq>AB</seq>
+			</row>
+			<row id="r2" otu="t2">
+				<seq>CD</seq>
+			</row>
+			<row id="r3" otu="t3">
+				<seq>EF</seq>
+			</row>
+			<row id="r4" otu="t4">
+				<seq>GH</seq>
+			</row>
+			<row id="r5" otu="t5">
+				<seq>IK</seq>
+			</row>
+		</matrix>
+	</characters>
+</nex:nexml>

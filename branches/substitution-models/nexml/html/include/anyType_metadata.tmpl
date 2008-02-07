@@ -1,0 +1,55 @@
+<!-- heading with link -->
+<h4 id="<% type.name %>" class="dataType level1">
+    <a name="<% type.name %>"></a><% type.name %>
+    <% IF type.abstract == 'true' %>
+    [abstract]
+    <% END %>
+</h4>
+
+<!-- description -->
+<% description = type.documentation %>
+<% IF description %>    
+    <h5 class="level2 <% type.name %>">Description</h5>    
+    <p class="level2 <% type.name %>"><% description %></p>
+<% END %>
+
+<!-- inheritance -->
+<% inheritance = type.inheritance %>
+<% IF inheritance %>
+    <h5 class="level2 <% type.name %>">Inheritance</h5>
+    <% IF type.inheritance == 'list' %>
+        <p class="level2 <% type.name %>">        
+            <% type.name %> defines a new type by making a list of 
+                <% url = schema.simpleType(type.base).url %>
+                <% IF url %>
+                    <a href="<% paths.transform(url) %>"><% type.base %></a>
+                <% ELSE %>
+                    <a href="http://www.w3.org/TR/xmlschema-2/#<% type.base %>" rel="nofollow">
+                    xs:<% type.base %></a>
+                <% END %>
+            type items.
+        </p>
+    <% ELSE %>        
+        <p class="level2 <% type.name %>">
+            <% type.name %> <% inheritance == 'extension' ? 'extends' : 'restricts' %>
+            <% IF type.type == 'complexType' %>
+                <a href="<% paths.transform(schema.complexType(type.base).url) %>"><% type.base %></a>.
+            <% ELSIF type.type == 'simpleType' %>
+                <% url = schema.simpleType(type.base).url %>
+                <% IF url %>
+                    <a href="<% paths.transform(url) %>"><% type.base %></a>.
+                <% ELSE %>
+                    <a href="http://www.w3.org/TR/xmlschema-2/#<% type.base %>" rel="nofollow">
+                    xs:<% type.base %></a>.
+                <% END %>
+            <% END %>
+    <% END %>
+    <% subClasses = schema.inheritsFromType(type) %>
+    <% IF subClasses %>
+        In turn, this type is inherited from by
+        <% FOREACH subClass = subClasses %>
+            <a href="<% paths.transform(subClass.url) %>"><% subClass.name %></a>,
+        <% END %>
+    <% END %>
+    </p>    
+<% END %>

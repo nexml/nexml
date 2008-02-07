@@ -1,0 +1,204 @@
+<h3 class="plain typeList"><a name="intro"></a>nexml 1.0 schema documentation</h3>
+<p>
+    <strong>On this page:</strong>
+    <a href="#roadmap">Documentation roadmap</a> |
+    <a href="#complex">Complex type index</a> |
+    <a href="#simple">Simple type index</a>
+</p>
+<p>
+    The design of the nexml schema is guided by a handful of simple principles.
+    Having some understanding of what these are will help you make the most of
+    the documentation. You will want to find out how inheritance is used in the
+    schema and how to traverse the inheritance tree, how nexml elements are
+    nested, and how the schema is modularized into files. By reading this section, 
+    you will learn the organization of the schema files and the type definitions 
+    in them so you will be able to find what you need quickly.
+</p>
+<p>
+    <img style="float:right; margin-left: 1em" src="http://farm1.static.flickr.com/153/434873145_1a1ba5c0e7_m.jpg" alt="A photo of a Russian Doll" />
+    <strong>Babushka</strong> &mdash; Xml schemas generally are designed following 
+    one of three patterns. If you sit down and design a schema for a rigid 
+    format where things only ever have one place, you might start by writing the 
+    type definition of the root element. Inside that type definition you would 
+    define which child elements are allowed, and inside them you would define their 
+    children and so on. 
+</p>    
+<p>    
+    The end result would be a schema that mirrors the 
+    instance documents you had in mind - one big nested structure. This is 
+    known as the "Russian Doll" pattern. The downside of this approach is that you 
+    can't break your schema down into different files or reuse type definitions so it
+    is not a very practical approach for large schemas. This is <em>not</em> 
+    how nexml is designed.
+</p>
+<p>
+    <img style="float:left; margin-right: 1em" src="http://farm1.static.flickr.com/68/202460831_7eff36af23_m.jpg" alt="A photo of a Baloney sandwich" />
+    <strong>Bologna</strong> &mdash; The second approach is the very opposite of 
+    the first. You might take this approach if what you are building is a loosely 
+    coupled collection of snippets, for example because each of them is a type of 
+    small message you send to a web service. Following this design you would write 
+    your schema as a library of type definitions and elements. 
+</p>    
+<p>     
+    Although this is useful for messaging protocols and the like, it's not very 
+    practical for complex structured data because every type can be the root element 
+    and there isn't an obvious superstructure. Phylogenetic data like that 
+    contained in NEXUS files consists of blocks of fundamentally different types that
+    relate to each other in different ways. To make sense of these relationships
+    and process and query them efficiently things need to be in predictable locations 
+    within documents (or streams, records, or messages). The nexml schema is therefore
+    also <em>not</em> designed following this "Salami Slice" pattern.
+</p>
+<p>
+    <img style="float:right; margin-left: 1em" src="http://farm1.static.flickr.com/128/407906927_ebb76cc2b6_m.jpg" alt="A photo of Venetian blinds" />
+    <strong>Venice</strong> &mdash; The third approach is an intermediate of the 
+    two. Types are defined as a library of snippets just like the Salami Slice 
+    pattern and exist as reusable, named, things - but they indicate what other 
+    named types their immediate children can be. 
+</p>    
+<p>    
+    Taken as a whole, such a design has a superstructure where one type slides 
+    into another, and that into another, like the lattices in blinds: the "Venetian 
+    Blinds" pattern, which is how nexml is designed. The basic units in the nexml
+    schema are <a href="http://www.w3.org/TR/xmlschema-1/#Complex_Type_Definitions">complexType</a>
+    definitions. These definitions consist of a clump of
+    <a href="http://www.w3.org/TR/xmlschema-1/#cElement_Declarations">element
+    declarations</a> (the allowed children within the type) and
+    <a href="http://www.w3.org/TR/xmlschema-1/#cAttribute_Declarations">attribute
+    declarations</a> which jointly define the structure of an element that is
+    an instance of that complexType. Elsewhere, this type definition is then used
+    to specify allowed named instances of it in other type definitions.
+</p>
+<p>
+    <strong>has-a</strong> &mdash; Assuming a finite non-recursive 
+    set of these definitions there must be a "top lattice" - the 
+    <a href="<% paths.transform(schema.complexType('Nexml').url) %>"><em>Nexml 
+    complexType</em></a>. Starting from this top level type 
+    we can then navigate the schema by traversing the path of types allowed
+    within other types. The way the documentation shows this is by listing,
+    where applicable, the immediate substructures of the complex type. For
+    example, the Nexml type allows one or more child elements of type Taxa,
+    which in instance documents are implemented by elements called "otus".
+    If we follow the link to the Taxa complex type we can have a look at what
+    child elements are allowed in the "otus" element and follow the links to
+    their type definitions and so on.
+</p>
+<p>
+    <strong>is-a</strong> &mdash; Because the nexml schema is 
+    designed in a modular way with named types, their type definitions can be
+    reused and extended to derive other types. This is done extensively in the
+    schema, and you can explore this inheritance tree by following the links
+    in the <em>Inheritance</em> subsection of each type definition, which 
+    specifies what superclass the type was derived from (and how, namely through
+    restriction or extension) and what other types derive from this type.   
+</p>
+<p class="internallink">[ <a href="#top">Back to top</a> ]</p> 
+<h3 class="headerstyle typeList"><a name="roadmap"></a>Documentation roadmap</h3>
+<p>
+    Each page of the documentation describes the types from a single schema
+    file, which form a logical unit - such as all types that have to do with DNA.
+    At the top of the page is a brief description taken from the root 
+    &lt;xs:annotation/&gt; element of the schema file. This section closes with
+    three icon links, which open in a separate window:
+</p>    
+<p class="level1">
+    <img 
+        class="icon" 
+        src="<% paths.strip(paths.include('chart_organisation.png')) %>" 
+        alt="organisation chart" />
+    &mdash; links to a graph of the inheritance tree of the complex types on the 
+    page, recursing up to the root class (which might be on a different page). 
+    Abstract types are shown in grey, concrete types in black. Inheritance by
+    extension in blue, by restriction in red. The graph is a clickable image map.
+</p>
+<p class="level1">
+    <img 
+        class="icon" 
+        src="<% paths.strip(paths.include('sitemap.png')) %>"
+        alt="file hierarchy" />
+    &mdash; links to a graph of file inclusions: xml schema files can include
+    other files, and these inclusions are displayed here (with the file 
+    described on the page shown in black). The graph is a clickable image map.
+</p>    
+<p class="level1">
+    <img 
+        class="icon" 
+        src="<% paths.strip(paths.include('page_white_code_red.png')) %>"
+        alt="xml schema code" />
+    &mdash; links to the xml schema source of the described file.
+</p>
+<p>
+    The remainder of the page consists of type definitions, with for each type:
+</p>
+<h5 class="level1">Description</h5>
+<p class="level1">    
+    A brief description of the type.
+</p>
+<h5 class="level1">Inheritance</h5>
+<p class="level1">    
+    Describes how the type is derived
+    (extension or restriction). Links to the parent class of the type, and
+    child classes (if any).
+</p>
+<h5 class="level1">Attributes</h5>
+<p class="level1">        
+    Lists the attributes that may occur on
+    element instances of the type; their name, data type of the value, and
+    their usage (required/optional/forbidden). Only applies to complex types.
+</p>
+<h5 class="level1">Facets</h5> 
+<p class="level1"> 
+    Lists constraining facets. For example, 
+    a regular expression that a string must match, or the lower and upper bounds
+    for a number. Only applies to simple types.
+</p>
+<h5 class="level1">Substructures</h5> 
+<p class="level1">     
+    Lists the immediate child elements,
+    sequences and choices.
+</p>
+<h5 class="level1">Definition source</h5>
+<p class="level1"> 
+    The raw code of the type definition.
+</p>
+<p class="internallink">[ <a href="#top">Back to top</a> ]</p> 
+<h3 class="headerstyle typeList"><a name="complex"></a>Complex type index</h3>
+<% types = schema.complexType %>
+<% INCLUDE print_types %>
+<p class="internallink typeList">[ <a href="#top">Back to top</a> ]</p> 
+<h3 class="headerstyle typeList"><a name="simple"></a>Simple type index</h3>
+<% types = schema.simpleType %>  
+<% INCLUDE print_types %>
+<p class="internallink typeList">[ <a href="#top">Back to top</a> ]</p> 
+
+<% BLOCK print_types %>
+    <% size = types.size %>
+    <% counter = 0 %>
+    <% min = 0 %>
+    <% max = size / 3 %>    
+    <% INCLUDE print_list %>
+    <% min = max %>
+    <% max = max * 2 %>
+    <% INCLUDE print_list %>
+    <% min = max %>
+    <% max = size %>
+    <% INCLUDE print_list %> 
+<% END %>
+
+<% BLOCK print_list %>
+    <ul class="typeList">        
+        <% FOREACH type = types %>
+            <% IF counter < max %>
+                <% IF counter > min %>
+                    <% thisType = types.$counter %>
+                    <li class="typeList">
+                        <a href="<% paths.transform(thisType.url) %>">
+                            <% thisType.name %>
+                        </a>            
+                    </li>
+                <% END %>
+                <% counter = counter + 1 %>
+            <% END %>
+        <% END %>
+    </ul>
+<% END %>    
