@@ -859,7 +859,28 @@ class NexmlWriter(datasets.Writer):
                 self.write_tree(tree=tree, dest=dest, indent_level=2)
             dest.write(self.indent * indent_level)                
             dest.write('</trees>\n')
-                            
+
+    def compose_state_definition(self, state, indent_level):
+        """
+        Writes out state definition.
+        """
+        parts = []
+        if state.multistate == characters.StateAlphabetElement.SINGLE_STATE:
+            parts.append('%s<state id="%s" symbol="%s" />' 
+                                % (self.indent * indent_level, state.elem_id, state.symbol))
+        else:
+            if state.multistate == characters.StateAlphabetElement.AMBIGUOUS_STATE:
+                tag = "uncertain_state"
+            else:
+                tag = "polymorphic_state"
+                
+            parts.append('%s<%s id="%s" symbol="%s">' 
+                            % (self.indent * indent_level, tag, state.elem_id, state.symbol) 
+            for member in state.member_states:
+                parts.extend(self.compose_state_definition(member, indent_level+1))'
+            parts.append("</%s>" % tag)
+        return parts        
+                                    
     def write_char_blocks(self, char_blocks, dest, indent_level=1):
         """
         Writes out character matrices.
@@ -874,8 +895,7 @@ class NexmlWriter(datasets.Writer):
                 raise Exception("Character block without ID")
             if char_block.label:
                 parts.append('label="%s"' % char_block.label)
-            parts.append('otus="%s"' % char_block.taxa_block.elem_id)        
-            
+            parts.append('otus="%s"' % char_block.taxa_block.elem_id)                    
             if isinstance(char_block, characters.DnaCharactersBlock):
                 xsi_datatype = 'nex:Dna'
             elif isinstance(char_block, characters.RnaCharactersBlock):
@@ -889,38 +909,34 @@ class NexmlWriter(datasets.Writer):
             elif isinstance(char_block, characters.ContinuousCharactersBlock):
                 xsi_datatype = 'nex:Continuous'                  
             else:
-                raise Exception("Unrecognized character block data type.")
-                
+                raise Exception("Unrecognized character block data type.")                
             if char_block.markup_as_sequences:
                 xsi_markup = 'Seqs'
             else:
-                xsi_markup = 'Cells'
-                
-            xsi_type = xsi_datatype + xsi_markup
-            
-            parts.append('xsi:type="%s"' % xsi_type)
-            
-            
+                xsi_markup = 'Cells'                
+            xsi_type = xsi_datatype + xsi_markup            
+            parts.append('xsi:type="%s"' % xsi_type)                        
             dest.write("<%s>\n" % ' '.join(parts))
             
             # annotate
             if isinstance(char_block, base.Annotated) and char_block.has_annotations():
                 self.write_annotations(char_block, dest, indent_level=indent_level+1)            
-            
-            
-            
-            
-            state_alphabets = []
+                                              
+            state_alphabet_parts = []
             if isinstance(char_block, characters.StandardCharactersBlock):
-                ### EXPRESS STATE ALPHABET SET XML: compose xml lines ###
-                pass
+                for state_alphabet in char_block.state_alphabets:
+                    state_alphabet_parts.append('%s<states id="%s">' 
+                        % (self.indent * (indent_level+2), tate_alphabet.elem_id)
+                    for state in state_alphabet:
+                        state_alphabet_parts.extend(self.write_state_definition(state, indent_level+3))
+                    state_alphabet_parts.append('</states>')
             
-            column_types = []
+            column_types_parts = []
             if char_block.column_types:
                 ### EXPRESS CHARACTERS XML: compose xml lines ###
                 pass
                 
-            if state_alphabets or column_types:
+            if state_alphabet_parts or column_types_parts:
                 dest.write("%s<format>\n" * (self.indent*(indent_level+1)))
                 if state_alphabets:
                     ### WRITE IT! ###
