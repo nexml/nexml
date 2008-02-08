@@ -137,6 +137,9 @@ Node constructor.
 			delete $args{'-nhx'};
 			$args{'-generic'} = $hash;
 		}
+		if ( not exists $args{'-tag'} ) {
+			$args{'-tag'} = 'node';
+		}
 
 		# go up inheritance tree, eventually get an ID
 		my $self = $class->SUPER::new(%args);
@@ -1984,37 +1987,52 @@ Serializes invocant to xml.
  Type    : Serializer
  Title   : to_xml
  Usage   : my $xml = $obj->to_xml;
- Function: Turns the invocant object into an XML string.
+ Function: Turns the invocant object (and its descendants )into an XML string.
  Returns : SCALAR
  Args    : NONE
 
 =cut
 
 	sub to_xml {
-		my $self  = shift;
-		my $class = ref $self;
-		$class =~ s/^.*:([^:]+)$/$1/g;
-		$class = lc($class);
-		my $xml     = '<' . $class . ' id="' . $class . $self->get_id . '">';
-		my $generic = $self->get_generic;
-		my ( $name, $score, $desc ) =
-		  ( $self->get_name, $self->get_score, $self->get_desc );
-		$xml .= '<name>' . $name . '</name>'    if $name;
-		$xml .= '<score>' . $score . '</score>' if $score;
-		$xml .= '<desc>' . $desc . '</desc>'    if $desc;
-
-		if ( $generic and ref $generic eq 'HASH' ) {
-			$xml .= '<generic>';
-			$xml .= "<prop><key>$_</key><val>$generic->{$_}</val></prop>\n"
-			  for keys %$generic;
-			$xml .= '</generic>';
+		my $self = shift;
+		my @nodes = ( $self, @{ $self->get_descendants } );
+		my $xml = '';
+		
+		# first write out the node elements
+		for my $node ( @nodes ) {
+			my $id    = $node->get_xml_id;
+			my $tag   = $node->get_tag;
+			my $label = $node->get_name;
+			if ( $label ) {
+				$xml .= "\n" . sprintf('<%s id="%s" label="%s"/>', $tag, $id, $label);
+			}
+			else {
+				$xml .= "\n" . sprintf('<%s id="%s"/>', $tag, $id);
+			}
 		}
-		$xml .= '<branchlength>' . $self->get_branch_length . '</branchlength>'
-		  if defined $self->get_branch_length;
-		$xml .= '<parent idref="' . $class . $self->get_parent->get_id . '" />'
-		  if $self->get_parent;
-		$xml .= '</' . $class . '>';
-		return $xml;
+		
+		# then the rootedge?
+		if ( my $length = shift(@nodes)->get_branch_length ) {
+			my $target = $self->get_xml_id;
+			my $id = "edge" . $self->get_id;
+			$xml .= "\n" . sprintf('<rootedge target="%s" id="%s" length="%s"/>', $target, $id, $length);
+		}
+		
+		# then the subtended edges
+		for my $node ( @nodes ) {
+			my $source = $node->get_parent->get_xml_id;
+			my $target = $node->get_xml_id;
+			my $id     = "edge" . $node->get_id;
+			my $length = $node->get_branch_length;
+			if ( defined $length ) {
+				$xml .= "\n" . sprintf('<edge source="%s" target="%s" id="%s" length="%s"/>', $source, $target, $id, $length);
+			}
+			else {
+				$xml .= "\n" . sprintf('<edge source="%s" target="%s" id="%s"/>', $source, $target, $id);
+			}
+		}
+		
+		return $xml;		
 	}
 
 =item to_newick()
@@ -2144,7 +2162,8 @@ Serializes subtree subtended by invocant to newick string.
 =cut
 
 	sub _cleanup {
-		my $id = shift;
+		my $self = shift;
+		my $id = $self->get_id;
 		for my $field (@fields) {
 			delete $field->{$id};
 		}
