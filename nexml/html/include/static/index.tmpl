@@ -15,21 +15,25 @@
 <li class="rss">
     <strong>Validation</strong> &mdash; some of the issues hampering
     interoperability are caused by the fact that no formal
-    specification exists for NEXUS files, and no objective way
-    to validate files. Thanks to <a rel="nofollow" href="http://www.w3.org/XML/Schema">
+    specification exists for NEXUS and other flat files, and no objective way
+    to validate them. Thanks to <a rel="nofollow" href="http://www.w3.org/XML/Schema">
     XML Schema</a> we can now define a grammar against which 
-    data files can be validated.
+    data files can be validated syntactically, and with the wider
+    <a rel="nofollow" href="https://www.nescent.org/wg_evoinfo/">
+    EvoInfo working group</a> we are developing an ontology against
+    which data can be validated semantically.
 </li>
 <li class="rss">
     <strong>Web services</strong> &mdash; a number of different 
     technologies (such as <a rel="nofollow" href="http://www.xmlrpc.com/">XML-RPC</a>, 
     <a rel="nofollow" href="http://en.wikipedia.org/wiki/Representational_State_Transfer">REST</a> 
     and <a rel="nofollow" href="http://www.w3.org/TR/soap/">SOAP</a>) have 
-    emerged allowing disparate services to be glued together 
+    emerged allowing disparate, xml-based services to be glued together 
     over the internet. Using such services, researchers can 
     "farm out" their calculations to dedicated servers, such
     as those of the <a rel="nofollow" href="http://www.phylo.org">CIPRES
-    project</a>.
+    project</a>. The wider plan is to integrate such services in
+    an <a href="https://www.nescent.org/wg_evoinfo/General_Ontology">ontology</a>-mediated architecture.
 </li>
 <li class="rss">
     <strong>Native XML databases</strong> &mdash; relational
@@ -110,9 +114,30 @@
 </h3>
 <p>
   If you are interested in being involved in the nexml project
-  in any way, please do! 
-  <!-- more goes here -->
+  in any way, please do! Here are some ways to get involved:
 </p>
+<ul>
+	<li class="rss">
+		<strong>Get informed</strong> &mdash; information about the nexml
+		project is distributed over the <a href="http://www.nescent.org/wg_evoinfo/Future_Data_Exchange_Standard">wiki</a>
+		(for an overview of vision, plans, implementation), 
+		<a href="http://www.nexml.org/nexml/html/doc/schema-1/">documentation</a>
+		(for formal description of the schema) and the
+		<a href="https://lists.sourceforge.net/lists/listinfo/nexml-discuss">mailing list</a>
+		(for immediate plans and discussion).
+	</li>
+	<li class="rss">
+		<strong>Try it out</strong> &mdash; the download section of the 
+		website has nightly builds of bindings for various languages.
+		Using these, you can manipulate and create nexml data in
+		mesquite, Bio::Phylo and pynexml.
+	</li>
+	<li class="rss">
+		<strong>Contribute</strong> &mdash; if you are a programmer interested
+		in extending nexml support, please contact us through the mailing
+		list to get commit support for the subversion repository.
+	</li>
+</ul>
 <p class="internallink">
   [ <a href="#top">Back to top</a> ]
 </p>                
