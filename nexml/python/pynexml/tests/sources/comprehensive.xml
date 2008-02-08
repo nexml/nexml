@@ -516,10 +516,22 @@
                 a shorthand token. 
             -->
             <states id="states1">
-                <state id="s1" symbol="1"/>                
-                <state id="s2" symbol="2"/>                
-                <state id="s3" symbol="3"/>                
-                <state id="s4" symbol="4" />                              
+              <state id="s1" symbol="1" />
+              <state id="s2" symbol="2" />
+              <state id="s3" symbol="3" />
+              <state id="s4" symbol="4" />
+              <state id="s5" symbol="5" />
+              <state id="s6" symbol="6" />
+              <state id="s7" symbol="7" />
+              <uncertain_state id="s8" symbol="8">
+                <member state="s4" />
+                <member state="s5" />
+              </uncertain_state>
+              <polymorphic_state id="s9" symbol="9">
+                <member state="s1" />
+                <member state="s2" />
+                <member state="s8" />
+              </polymorphic_state>
             </states>
             <!--
                 The matrix in this example contains two columns, both
