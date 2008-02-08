@@ -25,25 +25,7 @@
 """
 This module handles the core definitions of character data types, as well as 
 specializations to handle nucleotide, etc. character types.
-"""
-
-#                [    [0],                // A
-#                     [1],                // C
-#                     [2],                // G
-#                     [3],                // T
-#                     [-1, 0, 1, 2, 3],   // ?
-#                     [0, 1, 2, 3],       // N or X
-#                     [0, 1],             // M
-#                     [0, 2],             // R
-#                     [0, 3],             // W
-#                     [1, 2],             // S
-#                     [1, 3],             // Y
-#                     [2, 3],             // K
-#                     [0, 1, 2],          // V
-#                     [0, 1, 3],          // H
-#                     [0, 2, 3],          // D
-#                     [1, 2, 3],          // B
-#                 ]        
+"""     
 
 from pynexml import base
 from pynexml import taxa
