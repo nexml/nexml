@@ -55,6 +55,7 @@ class NexmlTest(unittest.TestCase):
     	log_message("- Reading '%s'" % source_path)
     	nexml_reader = nexml.NexmlReader()
     	dataset = nexml_reader.get_dataset(source_path)
+
     	log_message("  File read with: %d taxa blocks; %d character blocks; %d tree blocks" 
     		% (len(dataset.taxa_blocks), 
     		   len(dataset.char_blocks), 
@@ -93,20 +94,10 @@ class NexmlTest(unittest.TestCase):
     		for tree in tree_block:
     			log_message(tree.seed_node.compose_newick())
      			
-
-
-
-# def additional_tests():
-#     "returns all tests in this file as suite"
-#     return unittest.TestLoader().loadTestsFromTestCase(NexmlTest)
-
-
-# pylint: disable-msg=C0103
-# def getTestSuite():
-#     """Alias to the additional_tests().  This is unittest-style.
-#     `additional_tests` is used by setuptools.
-#     """
-#     return additional_tests()
+        nexml_writer = nexml.NexmlWriter() 
+        print
+        print
+        print nexml_writer.compose_dataset(dataset)
 
 if __name__ == "__main__":
     unittest.main()
