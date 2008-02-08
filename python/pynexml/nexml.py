@@ -593,6 +593,7 @@ class _NexmlCharBlockParser(_NexmlElementParser):
             member_state_id = nxmember.get('state', None)
             member_state = state_alphabet.get_state('elem_id', member_state_id)
             state.member_states.append(member_state)   
+        state.multistate = characters.StateAlphabetElement.AMBIGUOUS_STATE    
         return state
             
     def parse_polymorphic_state(self, nxpolymorphic, state_alphabet):
@@ -610,9 +611,9 @@ class _NexmlCharBlockParser(_NexmlElementParser):
             member_state_id = nxmember.get('state', None)
             member_state = state_alphabet.get_state('elem_id', member_state_id)
             state.member_states.append(member_state)
-        for nxambiguous in nxpolymorphic.getiterator('uncertain_state_set'):
+        for nxambiguous in nxpolymorphic.getiterator('uncertain_state'):
             state.member_states.append(self.parse_ambiguous_state(nxambiguous, state_alphabet))
-        
+        state.multistate = characters.StateAlphabetElement.POLYMORPHIC_STATE
         return state
                   
     def parse_state_alphabet(self, nxstates):
@@ -629,9 +630,9 @@ class _NexmlCharBlockParser(_NexmlElementParser):
                                                     symbol=nxstate.get('symbol', None),
                                                     token=nxstate.get('token', None))        
             state_alphabet.append(state)
-        for nxstate in nxstates.getiterator('uncertain_state_set'):
+        for nxstate in nxstates.getiterator('uncertain_state'):
             state_alphabet.append(self.parse_ambiguous_state(nxstate, state_alphabet))
-        for nxstate in nxstates.getiterator('polymorphic_state_set'):
+        for nxstate in nxstates.getiterator('polymorphic_state'):
             state_alphabet.append(self.parse_polymorphic_state(nxstate, state_alphabet))        
         return state_alphabet
             
@@ -875,10 +876,10 @@ class NexmlWriter(datasets.Writer):
                 tag = "polymorphic_state"
                 
             parts.append('%s<%s id="%s" symbol="%s">' 
-                            % (self.indent * indent_level, tag, state.elem_id, state.symbol) 
+                            % (self.indent * indent_level, tag, state.elem_id, state.symbol))
             for member in state.member_states:
-                parts.extend(self.compose_state_definition(member, indent_level+1))'
-            parts.append("</%s>" % tag)
+                parts.extend(self.compose_state_definition(member, indent_level+1))
+            parts.append("%s</%s>" % ((self.indent * indent_level), tag))
         return parts        
                                     
     def write_char_blocks(self, char_blocks, dest, indent_level=1):
@@ -921,15 +922,14 @@ class NexmlWriter(datasets.Writer):
             # annotate
             if isinstance(char_block, base.Annotated) and char_block.has_annotations():
                 self.write_annotations(char_block, dest, indent_level=indent_level+1)            
-                                              
             state_alphabet_parts = []
             if isinstance(char_block, characters.StandardCharactersBlock):
                 for state_alphabet in char_block.state_alphabets:
                     state_alphabet_parts.append('%s<states id="%s">' 
-                        % (self.indent * (indent_level+2), tate_alphabet.elem_id)
+                        % (self.indent * (indent_level+2), state_alphabet.elem_id))
                     for state in state_alphabet:
-                        state_alphabet_parts.extend(self.write_state_definition(state, indent_level+3))
-                    state_alphabet_parts.append('</states>')
+                        state_alphabet_parts.extend(self.compose_state_definition(state, indent_level+3))
+                    state_alphabet_parts.append('%s</states>\n' % (self.indent * (indent_level+2)))
             
             column_types_parts = []
             if char_block.column_types:
@@ -937,14 +937,13 @@ class NexmlWriter(datasets.Writer):
                 pass
                 
             if state_alphabet_parts or column_types_parts:
-                dest.write("%s<format>\n" * (self.indent*(indent_level+1)))
-                if state_alphabets:
+                dest.write("%s<format>\n" % (self.indent*(indent_level+1)))
+                if state_alphabet_parts:
+                    dest.write('\n'.join(state_alphabet_parts))
+                if column_types_parts:
                     ### WRITE IT! ###
                     pass
-                if column_types:
-                    ### WRITE IT! ###
-                    pass
-                dest.write("%s</format>\n" * (self.indent*(indent_level+1)))
+                dest.write("%s</format>\n" % (self.indent*(indent_level+1)))
             
            
             dest.write("%s<matrix>\n" % (self.indent * (indent_level+1)))
