@@ -115,19 +115,6 @@ class StateAlphabet(base.IdTagged, list):
         """
         Returns state in self in which attr_name equals value.
         """
-#         attr_name = None
-#         value = None
-#         if elem_id is not None:
-#             attr_name = 'elem_id'
-#             value = elem_id
-#         elif symbol is not None:
-#             attr_name = 'symbol'
-#             value = symbol
-#         elif token is not None:
-#             attr_name = 'token'
-#             value = token
-#         else:
-#             raise Exception("Must specify id, symbol or token")
         for state in self:
             if getattr(state, attr_name) == value:
                 return state
