@@ -929,19 +929,24 @@ class NexmlWriter(datasets.Writer):
                         % (self.indent * (indent_level+2), state_alphabet.elem_id))
                     for state in state_alphabet:
                         state_alphabet_parts.extend(self.compose_state_definition(state, indent_level+3))
-                    state_alphabet_parts.append('%s</states>\n' % (self.indent * (indent_level+2)))
+                    state_alphabet_parts.append('%s</states>' % (self.indent * (indent_level+2)))
             
             column_types_parts = []
             if char_block.column_types:
-                ### EXPRESS CHARACTERS XML: compose xml lines ###
-                pass
+                for column in char_block.column_types:
+                    if column.state_alphabet:
+                        column_state = 'states="%s" ' % column.state_alphabet.elem_id
+                    else:
+                        column_state = ' '
+                    column_types_parts.append('%s<char id="%s"%s/>' 
+                        % ((self.indent*(indent_level+1)), column.elem_id, column_state))
                 
             if state_alphabet_parts or column_types_parts:
                 dest.write("%s<format>\n" % (self.indent*(indent_level+1)))
                 if state_alphabet_parts:
-                    dest.write('\n'.join(state_alphabet_parts))
+                    dest.write(('\n'.join(state_alphabet_parts)) + '\n')
                 if column_types_parts:
-                    ### WRITE IT! ###
+                    dest.write(('\n'.join(column_types_parts)) + '\n')
                     pass
                 dest.write("%s</format>\n" % (self.indent*(indent_level+1)))
             
