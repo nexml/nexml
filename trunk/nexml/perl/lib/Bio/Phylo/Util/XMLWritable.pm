@@ -2,10 +2,18 @@
 package Bio::Phylo::Util::XMLWritable;
 use strict;
 use Bio::Phylo;
+use Bio::Phylo::Util::Exceptions 'throw';
 use vars '@ISA';
 @ISA=qw(Bio::Phylo);
 
 my $logger = __PACKAGE__->get_logger;
+
+my @fields = \( 
+	my ( 
+		%tag, 
+		%id,
+    ) 
+);
 
 =head1 NAME
 
@@ -25,6 +33,115 @@ override.
 
 =head1 METHODS
 
+=head2 MUTATORS
+
+=over
+
+=item set_tag()
+
+This method is usually only used internally, to define or alter the
+name of the tag into which the object is serialized. For example,
+for a Bio::Phylo::Forest::Node object, this method would be called 
+with the 'node' argument, so that the object is serialized into an
+xml element structure called <node/>
+
+ Type    : Mutator
+ Title   : set_tag
+ Usage   : $obj->set_tag('node');
+ Function: Sets the tag name
+ Returns : $self
+ Args    : A tag name (must be a valid xml element name)
+
+=cut
+
+	sub set_tag {
+		my ( $self, $tag ) = @_;
+		if ( $tag =~ qr/^[a-zA-Z]+$/ ) {
+			$tag{ $self->get_id } = $tag;
+			return $self;
+		}
+		else {
+			throw 'BadString' => "'$tag' is not valid for xml";
+		}
+	}
+
+=item set_xml_id()
+
+This method is usually only used internally, to store the xml id
+of an object as it is parsed out of a nexml file - this is for
+the purpose of round-tripping nexml info sets.
+
+ Type    : Mutator
+ Title   : set_xml_id
+ Usage   : $obj->set_xml_id('node345');
+ Function: Sets the xml id
+ Returns : $self
+ Args    : An xml id (must be a valid xml NCName)
+
+=cut
+
+	sub set_xml_id {
+		my ( $self, $id ) = @_;
+		if ( $id =~ qr/^[a-zA-Z][a-zA-Z0-9]*$/ ) {
+			$id{ $self->get_id } = $id;
+			return $self;
+		}
+		else {
+			throw 'BadString' => "'$id' is not a valid xml NCName";
+		}
+	}
+
+=back
+
+=head2 ACCESSORS
+
+=over
+
+=item get_tag()
+
+Retrieves tag name for the element.
+
+ Type    : Accessor
+ Title   : get_tag
+ Usage   : my $tag = $obj->get_tag;
+ Function: Gets the xml tag name for the object;
+ Returns : A tag name
+ Args    : None.
+
+=cut
+
+	sub get_tag {
+		my $self = shift;
+		return $tag{ $self->get_id };
+	}
+
+=item get_xml_id()
+
+Retrieves xml id for the element.
+
+ Type    : Accessor
+ Title   : get_xml_id
+ Usage   : my $id = $obj->get_xml_id;
+ Function: Gets the xml id for the object;
+ Returns : An xml id
+ Args    : None.
+
+=cut
+
+	sub get_xml_id {
+		my $self = shift;
+		if ( my $id = $id{ $self->get_id } ) {
+			return $id;
+		}		
+		else {
+			return $self->get_tag . $self->get_id;
+		}
+	}
+
+=back
+
+=head2 SERIALIZER
+
 =over
 
 =item to_xml()
@@ -38,6 +155,35 @@ Serializes invocant to XML.
  Returns : An xml string
  Args    : None
 
+=cut
+
+	sub to_xml {
+	    my $self = shift;
+	    my ( $tag, $id, $label ) = ( $self->get_tag, $self->get_xml_id, $self->get_name );
+	    my $xml = '';
+	    if ( $label ) {
+			$xml = sprintf( '<%s id="%s" label="%s">', $tag, $id, $label );
+	    }
+	    else {
+	    	$xml = sprintf( '<%s id="%s">', $tag, $id );
+	    }
+		if ( $self->can('get_entities') ) {
+			for my $ent ( @{ $self->get_entities } ) {
+				$xml .= $ent->to_xml;
+			}
+		}
+		$xml .= sprintf( "\n</%s>\n", $tag );
+		return $xml;
+	}
+
+	sub _cleanup { 
+    	my $self = shift;
+		my $id = $self->get_id;
+		for my $field (@fields) {
+			delete $field->{$id};
+		} 
+	}
+
 =back
 
 =head1 SEE ALSO
@@ -49,121 +195,5 @@ Also see the manual: L<Bio::Phylo::Manual> and L<http://rutgervos.blogspot.com>.
  $Id: XMLWritable.pm 4786 2007-11-28 07:31:19Z rvosa $
 
 =cut
-
-sub to_xml {
-    my $self = shift;
-    my @methods;
-    my ( $class, $isa, $seen ) = ( ref $self, [], {} );
-    _recurse_isa( $class, $isa, $seen );
-    {
-        no strict 'refs';
-        for my $package ( @{ $isa } ) {
-            my %symtable = %{"${package}::"};            
-            for my $method ( keys %symtable ) {
-                if ( $method =~ m/^get_(.+)$/ && exists $symtable{"set_$1"} ) {
-                    push @methods, $method;
-                }
-            }
-        }
-        use strict;
-    }
-    $class =~ s/.*:://;
-    $class = lc $class;
-    my $xml = sprintf("<%s id=\"n%s\">\n", $class, $self->get_id);
-    push @methods, 'get_entities' if $self->isa('Bio::Phylo::Listable');
-    @methods = keys %{ { map { $_ => 1 } @methods } };
-    for my $method ( sort { $a cmp $b } @methods ) {
-        my $result = $self->$method;
-        if ( defined $result ) {
-            $method =~ s/get_//;
-            if ( not ref $result ) {
-                $xml .= sprintf("<%s>%s</%s>\n", $method, $result, $method);
-            }
-            else {
-                if ( UNIVERSAL::can( $result, 'to_xml' ) ) {
-                    $xml .= $result->to_xml;
-                }
-                elsif ( UNIVERSAL::isa( $result, 'HASH' ) && %{ $result } ) {
-                    $xml .= "<$method>" . _hash_to_xml( $result ) . "</$method>\n";
-                }
-                elsif ( UNIVERSAL::isa( $result, 'ARRAY' ) && @{ $result } ) {
-                    $xml .= "<$method>" . _array_to_xml( $result ) . "</$method>\n";
-                }
-            }
-        }
-    }
-    $xml .= sprintf("</%s>\n", $class);
-}
-
-sub _array_to_xml {
-    my $list = shift;
-    my $xml = "<list>\n";
-    for my $elt ( @{ $list } ) {
-        $xml .= "<item>\n";
-            if ( not ref $elt ) {
-                $xml .= $elt;
-            }
-            else {
-                if ( UNIVERSAL::can( $elt, 'to_xml' ) ) {
-                    $xml .= $elt->to_xml;
-                }
-                elsif ( UNIVERSAL::isa( $elt, 'HASH' ) ) {
-                    $xml .= _hash_to_xml( $elt );
-                }
-                elsif ( UNIVERSAL::isa( $elt, 'ARRAY' ) ) {
-                    $xml .= _array_to_xml( $elt );
-                }
-            }
-        $xml .= "</item>\n";
-    }
-    $xml .= "</list>\n";
-    return $xml;
-}
-
-sub _hash_to_xml {
-    my $hash = shift;
-    my $xml = "<dict>\n";
-    for my $key ( sort { $a cmp $b } keys %{ $hash } ) {
-        $xml .= "<entry>\n<key>$key</key>\n";
-        my $val = $hash->{$key};
-        if ( not ref $val ) {
-            $xml .= "<val>$val</val>\n";
-        }
-        else {
-            if ( UNIVERSAL::can( $val, 'to_xml' ) ) {
-                $xml .= "<val>" . $val->to_xml . "</val>\n";
-            }
-            elsif ( UNIVERSAL::isa( $val, 'HASH' ) ) {
-                $xml .= "<val>" . _hash_to_xml( $val ) . "</val>\n";
-            }
-            elsif ( UNIVERSAL::isa( $val, 'ARRAY' ) ) {
-                $xml .= "<val>" . _array_to_xml( $val ) . "</val>\n";
-            }
-        }
-        $xml .= "</entry>\n";
-    }
-    $xml .= "</dict>\n";
-    return $xml;
-}
-
-sub _recurse_isa {
-    my ( $class, $isa, $seen ) = @_;
-    if ( not $seen->{$class} ) {
-        $seen->{$class} = 1;
-        push @{ $isa }, $class;
-        my @isa;
-        {
-            no strict 'refs';
-            @isa   = @{"${class}::ISA"};
-            use strict;
-        }
-        _recurse_isa( $_, $isa, $seen ) for @isa;
-    }
-}
-
-sub _cleanup { 
-    my $self = shift;
-    #$logger->debug("cleaning up '$self'"); 
-}
 
 1;

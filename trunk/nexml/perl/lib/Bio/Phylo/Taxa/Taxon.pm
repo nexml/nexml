@@ -104,7 +104,7 @@ Taxon constructor.
         $logger->info("constructor called for '$class'");
         
         # go up inheritance tree, eventually get an ID
-        return $class->SUPER::new( @_ );
+        return $class->SUPER::new( '-tag' => 'otu', @_ );
     }
 
 =back

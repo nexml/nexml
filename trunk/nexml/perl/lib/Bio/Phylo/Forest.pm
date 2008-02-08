@@ -68,21 +68,21 @@ Forest constructor.
 
 =cut
 
-#	sub new {
-#
-#		# could be child class
-#		my $class = shift;
-#
-#		# notify user
-#		$logger->info("constructor called for '$class'");
-#
-#		# recurse up inheritance tree, get ID
-#		my $self = $class->SUPER::new(@_);
-#
-#		# local fields would be set here
-#
-#		return $self;
-#	}
+	sub new {
+
+		# could be child class
+		my $class = shift;
+
+		# notify user
+		$logger->info("constructor called for '$class'");
+
+		# recurse up inheritance tree, get ID
+		my $self = $class->SUPER::new( '-tag' => 'trees', @_ );
+
+		# local fields would be set here
+
+		return $self;
+	}
 
 =back
 
