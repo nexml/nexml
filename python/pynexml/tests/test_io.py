@@ -98,6 +98,12 @@ class NexmlTest(unittest.TestCase):
         print
         print
         print nexml_writer.compose_dataset(dataset)
+        print
+        print
+        log_message("          File size: %d bytes." % os.stat(source_path).st_size)
+        log_message("File read/load time: %s seconds." % nexml_reader.load_time)
+        log_message(" Content parse time: %s seconds." % nexml_reader.parse_time)
+        log_message("   Total time taken: %s seconds." % (nexml_reader.parse_time + nexml_reader.load_time) )
 
 if __name__ == "__main__":
     unittest.main()

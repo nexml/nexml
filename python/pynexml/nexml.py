@@ -27,6 +27,7 @@ This module wraps routines needed for reading and writing trees in
 NEXML format.
 """
 
+import time
 import textwrap
 from pynexml import base
 from pynexml import datasets
@@ -199,6 +200,8 @@ class NexmlReader(datasets.Reader):
         object.
         """
         datasets.Reader.__init__(self)
+        self.load_time = None
+        self.parse_time = None
 
     ## Implementation of the datasets.Reader interface ##
 
@@ -209,8 +212,13 @@ class NexmlReader(datasets.Reader):
         `fileobj`. If `dataset` is given, its factory methods will be
         used to instantiate objects.
         """
+        start = time.clock()
         xmldoc = xmlparser.XmlDocument(filesrc=fileobj)
-        return self.parse_dataset(xmldoc, dataset)
+        self.load_time = time.clock() - start
+        start = time.clock()
+        dataset = self.parse_dataset(xmldoc, dataset)
+        self.parse_time = time.clock() - start
+        return dataset
 
     ## Following methods are class-specific ###
 
