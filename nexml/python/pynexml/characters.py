@@ -392,14 +392,14 @@ class CharacterDataCell(base.Annotated):
     def __str__(self):
         return str(self.value)
         
-class CharacterDataVector(list, base.IdTagged):
+class CharacterDataVector(list, taxa.TaxonLinked):
     """
     A list of character data values.
     """
 
-    def __init__(self, elem_id=None, label=None):
+    def __init__(self, elem_id=None, label=None, taxon=None):
         list.__init__(self)
-        base.IdTagged.__init__(self, elem_id=elem_id, label=label)
+        taxa.TaxonLinked.__init__(self, elem_id=elem_id, label=label, taxon=taxon)
         
     def set_cell_by_index(self, column_index, cell):
         """
@@ -506,7 +506,7 @@ class CharactersBlock(taxa.TaxaLinked):
         """
         Returns true if has key, regardless of case.
         """
-        return super(dict, self.matrix).__contains__(key)
+        return dict(self.matrix).__contains__(key)
 
     def pop(self, key, alt_val=None):
         """

@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 
 ############################################################################
-##  pynexml.py
+##  datasets.py
 ##
 ##  Part of the PyNexml phylogenetic data parsing library.
 ##
