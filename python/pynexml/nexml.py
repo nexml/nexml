@@ -717,12 +717,13 @@ class _NexmlCharBlockParser(_NexmlElementParser):
             
         for nxrow in matrix.getiterator('row'):
             row_id = nxrow.get('id', None)
+            label = nxrow.get('label', None)
             taxon_id = nxrow.get('otu', None)
             taxon = taxa_block.find_taxon(elem_id=taxon_id, update=False)
             if not taxon:
                 raise Exception('Taxon with id "%s" not defined in taxa block "%s"' % (taxon_id, taxa.elem_id))                   
                 
-            character_vector = characters.CharacterDataVector(elem_id=row_id)
+            character_vector = characters.CharacterDataVector(elem_id=row_id, label=label, taxon=taxon)
             self.parse_annotations(annotated=character_vector, nxelement=nxrow)
             
             if isinstance(char_block, characters.ContinuousCharactersBlock):
