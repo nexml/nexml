@@ -164,7 +164,7 @@ Matrix constructor.
 		$logger->info("constructor called for '$class'");
 
 		# go up inheritance tree, eventually get an ID
-		my $self = $class->SUPER::new(@_);
+		my $self = $class->SUPER::new( '-tag' => 'characters', @_ );
 		return $self;
 	}
 
@@ -519,25 +519,25 @@ Creates bootstrapped clone.
 
 =cut
 
-sub bootstrap {
-	my $self = shift;
-	my $clone = $self->clone;
-	my $nchar = $clone->get_nchar;
-	my @indices;
-	push @indices, int(rand($nchar)) for ( 1 .. $nchar );
-	@indices = sort { $a <=> $b } @indices;
-	for my $row ( @{ $clone->get_entities } ) {
-		my @anno = @{ $row->get_annotations };	
-		my @char = @{ $row->get_entities };
-		my @resampled = @char[@indices];
-		$row->set_char(@resampled);
-		if ( @anno ) {
-			my @re_anno = @anno[@indices];
-			$row->set_annotations(@re_anno);
+	sub bootstrap {
+		my $self = shift;
+		my $clone = $self->clone;
+		my $nchar = $clone->get_nchar;
+		my @indices;
+		push @indices, int(rand($nchar)) for ( 1 .. $nchar );
+		@indices = sort { $a <=> $b } @indices;
+		for my $row ( @{ $clone->get_entities } ) {
+			my @anno = @{ $row->get_annotations };	
+			my @char = @{ $row->get_entities };
+			my @resampled = @char[@indices];
+			$row->set_char(@resampled);
+			if ( @anno ) {
+				my @re_anno = @anno[@indices];
+				$row->set_annotations(@re_anno);
+			}
 		}
+		return $clone;
 	}
-	return $clone;
-}
 
 =item clone()
 
@@ -563,6 +563,158 @@ Clones invocant.
 		return $self->SUPER::clone(%subs);
 	
 	} 
+
+=item to_xml()
+
+Serializes matrix to nexml format.
+
+ Type    : Format convertor
+ Title   : to_xml
+ Usage   : my $data_block = $matrix->to_xml;
+ Function: Converts matrix object into a nexml element structure.
+ Returns : Nexml block (SCALAR).
+ Args    : The following options are available:
+ 	       
+ 	       # if set, writes "RESPECTCASE" token
+ 	       -respectcase => 1
+ 	       
+ 	       # if set, writes "GAPMODE=(NEWSTATE or MISSING)" token
+ 	       -gapmode => 1
+ 	       
+ 	       # if set, writes "MSTAXA=(POLYMORPH or UNCERTAIN)" token
+ 	       -polymorphism => 1
+ 	       
+		   # by default, names for sequences are derived from $datum->get_name, if 
+		   # 'internal' is specified, uses $datum->get_internal_name, if 'taxon'
+		   # uses $datum->get_taxon->get_name, if 'taxon_internal' uses 
+		   # $datum->get_taxon->get_internal_name, if $key, uses $datum->get_generic($key)
+		   -tipnames => one of (internal|taxon|taxon_internal|$key)
+
+=cut
+
+	sub to_xml {
+		my $self = shift;
+		my $type = $self->get_type;
+		my $xsi_type = 'nex:' . ucfirst($type) . 'Cells';
+		$self->set_attributes( 'xsi:type' => $xsi_type );
+		if ( my $taxa = $self->get_taxa ) {
+			$self->set_attributes( 'otus' => $taxa->get_xml_id );
+		}
+		my $xml = $self->get_xml_tag;
+		$xml .= "\n<format>";
+		my ( $state_set, $states_id, $id_for_state ) = $self->_write_state_sets;
+		$xml .= $state_set;
+		$xml .= $self->_write_char_labels( $states_id );
+		$xml .= "\n</format>";
+		$xml .= "\n<matrix>";
+		for my $row ( @{ $self->get_entities } ) {
+			my ( $row_id, $row_label ) = ( $row->get_xml_id, $row->get_name );
+			my $otu_id;
+			if ( my $taxon = $row->get_taxon ) {
+				$otu_id = $taxon->get_xml_id;
+			}
+			if ( $otu_id ) {
+				$row->set_attributes( 'otu' => $otu_id );
+			}
+			$xml .= "\n" . $row->get_xml_tag;
+			$xml .= $self->_write_matrix_row($row, $id_for_state) . "</row>";
+		}
+		$xml .= "\n</matrix>";
+		$xml .= "\n" . sprintf( '</%s>', $self->get_tag );
+		return $xml;
+	}
+	
+	sub _write_matrix_row {
+		my ( $self, $row, $id_for_state ) = @_;
+		my $xml = '';
+		my @char = $row->get_char;
+		my ( $missing, $gap ) = ( $row->get_missing, $row->get_gap );
+		for my $i ( 0 .. $#char ) {
+			 my $c = $char[$i];
+			 my $char_id = 'c' . ($i+1); 
+			 if ( $missing eq $c or $gap eq $c ) {
+			 	
+			 }
+			 else {
+			 	my $state_id;
+			 	if ( exists $id_for_state->{$c} ) {
+			 		$state_id = $id_for_state->{$c};
+			 	}
+			 	else {
+			 		$state_id = $c;
+			 	}
+			 	$xml .= sprintf('<cell char="%s" state="%s"/>', $char_id, $state_id);
+			 }
+		}
+		return $xml;
+	}
+	
+	sub _write_state_sets {
+		my ( $self ) = @_;
+		my $id_for_state = {};
+		my $states_id;
+		my $xml = '';
+		if ( my $lookup = $self->get_type_object->get_lookup ) {
+			$states_id = 'states1';
+			$xml .= "\n<states id=\"states1\">";
+			my $state_counter = 1;
+			for my $state ( keys %{ $lookup } ) {
+				my $state_id = 's' . $state_counter++;
+				$id_for_state->{ $state } = $state_id;
+			}
+			for my $state ( keys %{ $lookup } ) {
+				my $state_id = $id_for_state->{ $state };
+				my @mapping = @{ $lookup->{$state} };
+				
+				# has ambiguity mappings
+				if ( scalar @mapping > 1 ) {
+					$xml .= "\n" . sprintf('<state id="%s" symbol="%s">', $state_id, $state);
+					for my $map ( @mapping ) {
+						$xml .= "\n" . sprintf( '<mapping state="%s" mstaxa="uncertainty"/>', $id_for_state->{ $state } );
+					}
+					$xml .= "\n</state>";
+				}
+				
+				# no ambiguity
+				else {
+					$xml .= "\n" . sprintf('<state id="%s" symbol="%s"/>', $state_id, $state);
+				}
+			}
+			$xml .= "\n</states>";
+		}	
+		return $xml, $states_id, $id_for_state;	
+	}
+	
+	sub _write_char_labels {
+		my ( $self, $states_id ) = @_;
+		my $xml = '';
+		my $labels = $self->get_charlabels;
+		for my $i ( 1 .. $self->get_nchar ) {
+			my $char_id = 'c' . $i;
+			my $label   = $labels->[ $i - 1 ];
+			
+			# have state definitions (categorical data)
+			if ( $states_id ) {
+				if ( $label ) {
+					$xml .= "\n" . sprintf('<char id="%s" label="%s" states="%s"/>', $char_id, $label, $states_id);
+				}
+				else {
+					$xml .= "\n" . sprintf('<char id="%s" states="%s"/>', $char_id, $states_id);
+				}
+			}
+			
+			# must be continuous characters (because no state definitions)
+			else {
+				if ( $label ) {
+					$xml .= "\n" . sprintf('<char id="%s" label="%s"/>', $char_id, $label);
+				}
+				else {
+					$xml .= "\n" . sprintf('<char id="%s"/>', $char_id);
+				}
+			}
+		}	
+		return $xml;	
+	}
 
 =item to_nexus()
 
@@ -625,7 +777,7 @@ Serializes matrix to nexus format.
 			  if $self->get_taxa;
 		}
 
-	 # dimensions token line - data block defines NTAX, characters block doesn't
+	 	# dimensions token line - data block defines NTAX, characters block doesn't
 		if ( $args{'-data_block'} ) {
 			$string .= "\tDIMENSIONS NTAX=" . $self->get_ntax() . ' ';
 			$string .= 'NCHAR=' . $nchar . ";\n";
