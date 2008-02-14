@@ -1,8 +1,13 @@
-<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+<wsdl:description     
     xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
     xmlns:schema="http://www.nexml.org/1.0"
     xmlns:tns="http://www.nexml.org/1.0/definitions"
-    targetNamespace="http://www.nexml.org/1.0/definitions">
+    targetNamespace="http://www.nexml.org/1.0/definitions"
+    xmlns:wsdl="http://www.w3.org/ns/wsdl"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:whttp="http://www.w3.org/ns/wsdl/http"
+    xmlns:wsoap="http://www.w3.org/ns/wsdl/soap"
+    xsi:schemaLocation="http://www.w3.org/ns/wsdl http://www.w3.org/2007/06/wsdl/wsdl20.xsd">
     <wsdl:types>
         <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
             <xsd:import namespace="http://www.nexml.org/1.0"                      
@@ -10,31 +15,59 @@
         </xsd:schema>
     </wsdl:types>
     
-    <wsdl:message name="NexmlRequest">                                                 
-        <wsdl:part element="schema:nexml" name="NexmlRequest"/>               
-    </wsdl:message>
-    
-    <wsdl:portType name="NexmlSoap">                                                 
-        <wsdl:operation name="Test">
-            <wsdl:input message="tns:NexmlRequest" name="NexmlRequest"/>             
+    <!-- Abstract interfaces -->
+    <wsdl:interface name="RESTfulInterface">
+        <wsdl:fault name="ClientError" element="tns:response"/>
+        <wsdl:fault name="ServerError" element="tns:response"/>
+        <wsdl:fault name="Redirection" element="tns:response"/>
+        <wsdl:operation name="Get" pattern="http://www.w3.org/ns/wsdl/in-out">
+            <wsdl:input messageLabel="GetMsg" element="tns:request"/>
+            <wsdl:output messageLabel="SuccessfulMsg" element="tns:response"/>
         </wsdl:operation>
-    </wsdl:portType>
-    
-    <wsdl:binding name="NexmlSoapBinding" type="tns:NexmlSoap">                  
-        <soap:binding style="document"                                                   
-            transport="http://schemas.xmlsoap.org/soap/http"/>                           
-        <wsdl:operation name="Test">
-            <soap:operation soapAction="http://www.nexml.org/1.0#nexml"/>           
-            <wsdl:input name="NexmlRequest">
-                <soap:body use="literal"/>                                               
-            </wsdl:input>
+        <wsdl:operation name="Post" pattern="http://www.w3.org/ns/wsdl/in-out">
+            <wsdl:input messageLabel="PostMsg" element="tns:request"/>
+            <wsdl:output messageLabel="SuccessfulMsg" element="tns:response"/>
         </wsdl:operation>
+        <wsdl:operation name="Put" pattern="http://www.w3.org/ns/wsdl/in-out">
+            <wsdl:input messageLabel="PutMsg" element="tns:request"/>
+            <wsdl:output messageLabel="SuccessfulMsg" element="tns:response"/>
+        </wsdl:operation>
+        <wsdl:operation name="Delete" pattern="http://www.w3.org/ns/wsdl/in-out">
+            <wsdl:input messageLabel="DeleteMsg" element="tns:request"/>
+            <wsdl:output messageLabel="SuccessfulMsg" element="tns:response"/>
+        </wsdl:operation>
+    </wsdl:interface>
+    
+    <!-- Concrete Binding Over HTTP -->
+    <wsdl:binding name="RESTfulInterfaceHttpBinding" interface="tns:RESTfulInterface" 
+        type="http://www.w3.org/ns/wsdl/http">
+        <wsdl:operation ref="tns:Get" whttp:method="GET"/>
+        <wsdl:operation ref="tns:Post" whttp:method="POST" 
+            whttp:inputSerialization="application/x-www-form-urlencoded"/>
+        <wsdl:operation ref="tns:Put" whttp:method="PUT" 
+            whttp:inputSerialization="application/x-www-form-urlencoded"/>
+        <wsdl:operation ref="tns:Delete" whttp:method="DELETE"/>
+    </wsdl:binding>    
+    
+    <!-- Concrete Binding with SOAP-->
+    <wsdl:binding name="RESTfulInterfaceSoapBinding" interface="tns:RESTfulInterface" 
+        type="http://www.w3.org/ns/wsdl/soap" 
+        wsoap:protocol="http://www.w3.org/2003/05/soap/bindings/HTTP/"
+        wsoap:mepDefault="http://www.w3.org/2003/05/soap/mep/request-response">
+        <wsdl:operation ref="tns:Get" />
+        <wsdl:operation ref="tns:Post" />
+        <wsdl:operation ref="tns:Put" />
+        <wsdl:operation ref="tns:Delete" />
     </wsdl:binding>
-    
-    <wsdl:service name="NexmlSoapService">
-        <wsdl:port binding="tns:NexmlSoapBinding" name="NexmlSoapPort">          
-            <soap:address location="http://localhost/cgi-bin/soap.pl"/>             
-        </wsdl:port>
+        
+    <!-- Web Service offering endpoints for both the bindings-->
+    <wsdl:service name="RESTfulService" interface="tns:RESTfulInterface">
+        <wsdl:endpoint name="RESTfulServiceRestEndpoint" 
+            binding="tns:RESTfulInterfaceHttpBinding" 
+            address="http://www.example.com/rest/"/>
+        <wsdl:endpoint name="RESTfulServiceSoapEndpoint" 
+            binding="tns:RESTfulInterfaceSoapBinding" 
+            address="http://www.example.com/soap/"/>
     </wsdl:service>
     
-</wsdl:definitions>
+</wsdl:description>
