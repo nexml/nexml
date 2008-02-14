@@ -1,73 +1,77 @@
-<wsdl:description     
-    xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
-    xmlns:schema="http://www.nexml.org/1.0"
+<?xml version="1.0" encoding="UTF-8"?>
+<description     
+    xmlns="http://www.w3.org/ns/wsdl"
     xmlns:tns="http://www.nexml.org/1.0/definitions"
-    targetNamespace="http://www.nexml.org/1.0/definitions"
-    xmlns:wsdl="http://www.w3.org/ns/wsdl"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:whttp="http://www.w3.org/ns/wsdl/http"
     xmlns:wsoap="http://www.w3.org/ns/wsdl/soap"
+    targetNamespace="http://www.nexml.org/1.0/definitions"        
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:nex="http://www.nexml.org/1.0"     
     xsi:schemaLocation="http://www.w3.org/ns/wsdl http://www.w3.org/2007/06/wsdl/wsdl20.xsd">
-    <wsdl:types>
-        <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-            <xsd:import namespace="http://www.nexml.org/1.0"                      
-                schemaLocation="../xsd/nexml.xsd"/>
-        </xsd:schema>
-    </wsdl:types>
+    
+    <!-- Type definitions -->
+    <types>
+        <xs:schema 
+            xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+            targetNamespace="http://www.nexml.org/1.0">
+            <xs:include schemaLocation="http://www.nexml.org/nexml/xsd/nexml.xsd"/>
+            <xs:element name="tree" type="nex:FloatTree"/>            
+        </xs:schema>
+    </types>
     
     <!-- Abstract interfaces -->
-    <wsdl:interface name="RESTfulInterface">
-        <wsdl:fault name="ClientError" element="tns:response"/>
-        <wsdl:fault name="ServerError" element="tns:response"/>
-        <wsdl:fault name="Redirection" element="tns:response"/>
-        <wsdl:operation name="Get" pattern="http://www.w3.org/ns/wsdl/in-out">
-            <wsdl:input messageLabel="GetMsg" element="tns:request"/>
-            <wsdl:output messageLabel="SuccessfulMsg" element="tns:response"/>
-        </wsdl:operation>
-        <wsdl:operation name="Post" pattern="http://www.w3.org/ns/wsdl/in-out">
-            <wsdl:input messageLabel="PostMsg" element="tns:request"/>
-            <wsdl:output messageLabel="SuccessfulMsg" element="tns:response"/>
-        </wsdl:operation>
-        <wsdl:operation name="Put" pattern="http://www.w3.org/ns/wsdl/in-out">
-            <wsdl:input messageLabel="PutMsg" element="tns:request"/>
-            <wsdl:output messageLabel="SuccessfulMsg" element="tns:response"/>
-        </wsdl:operation>
-        <wsdl:operation name="Delete" pattern="http://www.w3.org/ns/wsdl/in-out">
-            <wsdl:input messageLabel="DeleteMsg" element="tns:request"/>
-            <wsdl:output messageLabel="SuccessfulMsg" element="tns:response"/>
-        </wsdl:operation>
-    </wsdl:interface>
+    <interface name="RESTfulInterface">
+        <fault name="ClientError" element="tns:response"/>
+        <fault name="ServerError" element="tns:response"/>
+        <fault name="Redirection" element="tns:response"/>
+        <operation name="Get" pattern="http://www.w3.org/ns/wsdl/in-out">
+            <input messageLabel="GetMsg" element="tns:request"/>
+            <output messageLabel="SuccessfulMsg" element="tns:response"/>
+        </operation>
+        <operation name="Post" pattern="http://www.w3.org/ns/wsdl/in-out">
+            <input messageLabel="PostMsg" element="tns:request"/>
+            <output messageLabel="SuccessfulMsg" element="tns:response"/>
+        </operation>
+        <operation name="Put" pattern="http://www.w3.org/ns/wsdl/in-out">
+            <input messageLabel="PutMsg" element="tns:request"/>
+            <output messageLabel="SuccessfulMsg" element="tns:response"/>
+        </operation>
+        <operation name="Delete" pattern="http://www.w3.org/ns/wsdl/in-out">
+            <input messageLabel="DeleteMsg" element="tns:request"/>
+            <output messageLabel="SuccessfulMsg" element="tns:response"/>
+        </operation>
+    </interface>
     
     <!-- Concrete Binding Over HTTP -->
-    <wsdl:binding name="RESTfulInterfaceHttpBinding" interface="tns:RESTfulInterface" 
+    <binding name="RESTfulInterfaceHttpBinding" interface="tns:RESTfulInterface" 
         type="http://www.w3.org/ns/wsdl/http">
-        <wsdl:operation ref="tns:Get" whttp:method="GET"/>
-        <wsdl:operation ref="tns:Post" whttp:method="POST" 
+        <operation ref="tns:Get" whttp:method="GET"/>
+        <operation ref="tns:Post" whttp:method="POST" 
             whttp:inputSerialization="application/x-www-form-urlencoded"/>
-        <wsdl:operation ref="tns:Put" whttp:method="PUT" 
+        <operation ref="tns:Put" whttp:method="PUT" 
             whttp:inputSerialization="application/x-www-form-urlencoded"/>
-        <wsdl:operation ref="tns:Delete" whttp:method="DELETE"/>
-    </wsdl:binding>    
+        <operation ref="tns:Delete" whttp:method="DELETE"/>
+    </binding>    
     
     <!-- Concrete Binding with SOAP-->
-    <wsdl:binding name="RESTfulInterfaceSoapBinding" interface="tns:RESTfulInterface" 
+    <binding name="RESTfulInterfaceSoapBinding" interface="tns:RESTfulInterface" 
         type="http://www.w3.org/ns/wsdl/soap" 
         wsoap:protocol="http://www.w3.org/2003/05/soap/bindings/HTTP/"
         wsoap:mepDefault="http://www.w3.org/2003/05/soap/mep/request-response">
-        <wsdl:operation ref="tns:Get" />
-        <wsdl:operation ref="tns:Post" />
-        <wsdl:operation ref="tns:Put" />
-        <wsdl:operation ref="tns:Delete" />
-    </wsdl:binding>
+        <operation ref="tns:Get" />
+        <operation ref="tns:Post" />
+        <operation ref="tns:Put" />
+        <operation ref="tns:Delete" />
+    </binding>
         
     <!-- Web Service offering endpoints for both the bindings-->
-    <wsdl:service name="RESTfulService" interface="tns:RESTfulInterface">
-        <wsdl:endpoint name="RESTfulServiceRestEndpoint" 
+    <service name="RESTfulService" interface="tns:RESTfulInterface">
+        <endpoint name="RESTfulServiceRestEndpoint" 
             binding="tns:RESTfulInterfaceHttpBinding" 
             address="http://www.example.com/rest/"/>
-        <wsdl:endpoint name="RESTfulServiceSoapEndpoint" 
+        <endpoint name="RESTfulServiceSoapEndpoint" 
             binding="tns:RESTfulInterfaceSoapBinding" 
             address="http://www.example.com/soap/"/>
-    </wsdl:service>
+    </service>
     
-</wsdl:description>
+</description>
