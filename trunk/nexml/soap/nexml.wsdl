@@ -6,13 +6,13 @@
     xmlns:wsoap="http://www.w3.org/ns/wsdl/soap"
     targetNamespace="http://www.nexml.org/1.0/definitions"        
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:nex="http://www.nexml.org/1.0"     
+    xmlns:nex="http://www.nexml.org/1.0"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"     
     xsi:schemaLocation="http://www.w3.org/ns/wsdl http://www.w3.org/2007/06/wsdl/wsdl20.xsd">
     
     <!-- Type definitions -->
     <types>
-        <import 
-            xmlns="http://www.w3.org/2001/XMLSchema" 
+        <xs:import             
             schemaLocation="http://www.nexml.org/nexml/xsd/nexml.xsd"
             namespace="http://www.nexml.org/1.0"/>
     </types>
