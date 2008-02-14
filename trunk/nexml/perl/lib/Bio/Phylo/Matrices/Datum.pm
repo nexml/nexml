@@ -89,7 +89,7 @@ Datum object constructor.
         $logger->info("constructor called for '$class'");
 
         # go up inheritance tree, eventually get an ID
-        my $self = $class->SUPER::new(@_);
+        my $self = $class->SUPER::new( '-tag' => 'row', @_ );
         return $self;
     }
 
