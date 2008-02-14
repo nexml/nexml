@@ -4,6 +4,7 @@ use strict;
 use Bio::Phylo;
 use Bio::Phylo::Util::Exceptions 'throw';
 use vars '@ISA';
+use UNIVERSAL 'isa';
 @ISA=qw(Bio::Phylo);
 
 my $logger = __PACKAGE__->get_logger;
@@ -12,6 +13,7 @@ my @fields = \(
 	my ( 
 		%tag, 
 		%id,
+		%attributes,
     ) 
 );
 
@@ -65,6 +67,44 @@ xml element structure called <node/>
 		}
 	}
 
+=item set_attributes()
+
+Assigns attributes for the element.
+
+ Type    : Mutator
+ Title   : set_attributes
+ Usage   : $obj->set_attributes( 'foo' => 'bar' )
+ Function: Sets the xml attributes for the object;
+ Returns : $self
+ Args    : key/value pairs or a hash ref
+
+=cut
+
+	sub set_attributes {
+		my $self = shift;
+		my %attrs;
+		if ( scalar @_ == 1 and isa($_[0], 'HASH') ) {
+			%attrs = %{ $_[0] };
+		}
+		elsif ( scalar @_ % 2 == 0 ) {
+			%attrs = @_;	
+		}
+		else {
+			throw 'OddHash' => 'Arguments are not even key/value pairs';	
+		}		
+		if ( my $hash = $attributes{ $self->get_id } ) {
+			for my $key ( keys %attrs ) {
+				$hash->{$key} = $attrs{$key};
+			}
+			$attributes{ $self->get_id } = $hash;
+		}
+		else {
+			$attributes{ $self->get_id } = \%attrs;
+		}
+		return $self;
+	}
+
+
 =item set_xml_id()
 
 This method is usually only used internally, to store the xml id
@@ -115,6 +155,56 @@ Retrieves tag name for the element.
 		return $tag{ $self->get_id };
 	}
 
+=item get_xml_tag()
+
+Retrieves tag string
+
+ Type    : Accessor
+ Title   : get_xml_tag
+ Usage   : my $str = $obj->get_xml_tag;
+ Function: Gets the xml tag for the object;
+ Returns : A tag, i.e. pointy brackets
+ Args    : Optional: a true value, to close an empty tag
+
+=cut
+
+	sub get_xml_tag {
+		my $self = shift;
+		my %attrs = %{ $self->get_attributes };
+		my $tag = $self->get_tag;
+		my $xml = '<' . $tag;
+		for my $key ( keys %attrs ) {
+			$xml .= ' ' . $key . '="' . $attrs{$key} . '"';
+		}
+		$xml .= shift(@_) ? '/>' : '>';
+		return $xml;
+	}
+
+=item get_attributes()
+
+Retrieves attributes for the element.
+
+ Type    : Accessor
+ Title   : get_attributes
+ Usage   : my %attrs = %{ $obj->get_attributes };
+ Function: Gets the xml attributes for the object;
+ Returns : A hash reference
+ Args    : None.
+
+=cut
+
+	sub get_attributes {
+		my $self = shift;
+		my $attrs = $attributes{ $self->get_id } || {};
+		if ( not exists $attrs->{'label'} and my $label = $self->get_name ) {
+			$attrs->{'label'} = $label;
+		}
+		if ( not exists $attrs->{'id'} ) {
+			$attrs->{'id'} = $self->get_xml_id;
+		}
+		return $attrs;
+	}
+
 =item get_xml_id()
 
 Retrieves xml id for the element.
@@ -159,22 +249,15 @@ Serializes invocant to XML.
 
 	sub to_xml {
 	    my $self = shift;
-	    my ( $tag, $id, $label ) = ( $self->get_tag, $self->get_xml_id, $self->get_name );
-	    my $xml = '';
-	    if ( $label ) {
-			$xml = sprintf( '<%s id="%s" label="%s">', $tag, $id, $label );
-	    }
-	    else {
-	    	$xml = sprintf( '<%s id="%s">', $tag, $id );
-	    }
+	    my $xml = $self->get_xml_tag;
 		if ( $self->can('get_entities') ) {
 			for my $ent ( @{ $self->get_entities } ) {
 				$xml .= $ent->to_xml;
 			}
 		}
-		$xml .= sprintf( "\n</%s>\n", $tag );
+		$xml .= "\n" . sprintf( "</%s>", $self->get_tag );
 		return $xml;
-	}
+	}		
 
 	sub _cleanup { 
     	my $self = shift;

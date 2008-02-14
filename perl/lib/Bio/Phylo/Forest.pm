@@ -8,6 +8,7 @@ use Bio::Phylo::Taxa::TaxaLinker;
 use Bio::Phylo::Taxa::Taxon;
 use Bio::Phylo::Util::CONSTANT qw(_NONE_ _FOREST_);
 use Bio::Phylo::Util::Exceptions 'throw';
+use Bio::Phylo::Factory;
 use vars qw(@ISA);
 
 =begin comment
@@ -24,6 +25,7 @@ This class has no internal state, no cleanup is necessary.
 {
 
 	my $logger             = __PACKAGE__->get_logger;
+	my $factory            = Bio::Phylo::Factory->new;
 	my $CONSTANT_TYPE      = _FOREST_;
 	my $CONTAINER_CONSTANT = _NONE_;
 
@@ -182,10 +184,8 @@ Validates taxon links of nodes in invocant's trees.
 			for my $tip ( keys %tips ) {
 				$logger->debug("linking tip $tip");
 				if ( not exists $taxa{$tip} ) {
-					$logger->debug(
-						"no taxon object for $tip yet, instantiating");
-					$taxa->insert( $taxa{$tip} =
-						  Bio::Phylo::Taxa::Taxon->new( '-name' => $tip ) );
+					$logger->debug("no taxon object for $tip yet, instantiating");
+					$taxa->insert( $taxa{$tip} = $factory->create_taxon( '-name' => $tip ) );
 				}
 				$tips{$tip}->set_taxon( $taxa{$tip} );
 			}
@@ -222,12 +222,12 @@ Creates a taxa block from the objects contents if none exists yet.
 		}
 		else {
 			my %taxa;
-			my $taxa = Bio::Phylo::Taxa->new;
+			my $taxa = $factory->create_taxa;
 			for my $tree ( @{ $self->get_entities } ) {
 				for my $tip ( @{ $tree->get_terminals } ) {
 					my $name = $tip->get_internal_name;
 					if ( not $taxa{$name} ) {
-						$taxa{$name} = Bio::Phylo::Taxa::Taxon->new( '-name' => $name );
+						$taxa{$name} = $factory->create_taxon( '-name' => $name );
 					}
 				}
 			}

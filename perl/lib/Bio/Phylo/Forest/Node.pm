@@ -2003,11 +2003,25 @@ Serializes invocant to xml.
 			my $id    = $node->get_xml_id;
 			my $tag   = $node->get_tag;
 			my $label = $node->get_name;
+			my $otu_id;
+			if ( my $taxon = $node->get_taxon ) {
+				$otu_id = $taxon->get_xml_id;
+			}
 			if ( $label ) {
-				$xml .= "\n" . sprintf('<%s id="%s" label="%s"/>', $tag, $id, $label);
+				if ( $otu_id ) {
+					$xml .= "\n" . sprintf('<%s id="%s" label="%s" otu="%s"/>', $tag, $id, $label, $otu_id);
+				}
+				else {
+					$xml .= "\n" . sprintf('<%s id="%s" label="%s"/>', $tag, $id, $label);
+				}
 			}
 			else {
-				$xml .= "\n" . sprintf('<%s id="%s"/>', $tag, $id);
+				if ( $otu_id ) {
+					$xml .= "\n" . sprintf('<%s id="%s" otu="%s"/>', $tag, $id, $otu_id);
+				}
+				else {
+					$xml .= "\n" . sprintf('<%s id="%s"/>', $tag, $id);
+				}
 			}
 		}
 		
