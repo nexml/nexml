@@ -180,6 +180,45 @@ Retrieves tag string
 		return $xml;
 	}
 
+=item get_root_open_tag()
+
+Retrieves tag string
+
+ Type    : Accessor
+ Title   : get_root_open_tag
+ Usage   : my $str = $obj->get_root_open_tag;
+ Function: Gets the nexml root tag
+ Returns : A tag, i.e. pointy brackets
+ Args    : 
+
+=cut
+
+	sub get_root_open_tag {
+return '<nex:nexml 
+	version="1.0" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:xml="http://www.w3.org/XML/1998/namespace"
+	xsi:schemaLocation="http://www.nexml.org/1.0 http://www.nexml.org/1.0/nexml.xsd"
+	xmlns:nex="http://www.nexml.org/1.0">';
+	}
+
+=item get_root_close_tag()
+
+Retrieves tag string
+
+ Type    : Accessor
+ Title   : get_root_close_tag
+ Usage   : my $str = $obj->get_root_close_tag;
+ Function: Gets the nexml root tag
+ Returns : A tag, i.e. pointy brackets
+ Args    : 
+
+=cut
+
+	sub get_root_close_tag {
+return '</nex:nexml>';
+	}
+
 =item get_attributes()
 
 Retrieves attributes for the element.
@@ -190,6 +229,8 @@ Retrieves attributes for the element.
  Function: Gets the xml attributes for the object;
  Returns : A hash reference
  Args    : None.
+ Comments: throws ObjectMismatch if no linked taxa object 
+           can be found
 
 =cut
 
@@ -201,6 +242,22 @@ Retrieves attributes for the element.
 		}
 		if ( not exists $attrs->{'id'} ) {
 			$attrs->{'id'} = $self->get_xml_id;
+		}
+		if ( $self->isa('Bio::Phylo::Taxa::TaxaLinker') ) {
+			if ( my $taxa = $self->get_taxa ) {
+				$attrs->{'otus'} = $taxa->get_xml_id;
+			}
+			else {
+				throw 'ObjectMismatch' => "$self can link to a taxa element, but doesn't";
+			}
+		}
+		if ( $self->isa('Bio::Phylo::Taxa::TaxonLinker') ) {
+			if ( my $taxon = $self->get_taxon ) {
+				$attrs->{'otu'} = $taxon->get_xml_id;
+			}
+			else {
+				$logger->info("No linked taxon found");
+			}
 		}
 		return $attrs;
 	}

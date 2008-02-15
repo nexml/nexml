@@ -597,9 +597,6 @@ Serializes matrix to nexml format.
 		my $type = $self->get_type;
 		my $xsi_type = 'nex:' . ucfirst($type) . 'Cells';
 		$self->set_attributes( 'xsi:type' => $xsi_type );
-		if ( my $taxa = $self->get_taxa ) {
-			$self->set_attributes( 'otus' => $taxa->get_xml_id );
-		}
 		my $xml = $self->get_xml_tag;
 		$xml .= "\n<format>";
 		my ( $state_set, $states_id, $id_for_state ) = $self->_write_state_sets;

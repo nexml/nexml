@@ -2000,29 +2000,14 @@ Serializes invocant to xml.
 		
 		# first write out the node elements
 		for my $node ( @nodes ) {
-			my $id    = $node->get_xml_id;
-			my $tag   = $node->get_tag;
-			my $label = $node->get_name;
-			my $otu_id;
 			if ( my $taxon = $node->get_taxon ) {
-				$otu_id = $taxon->get_xml_id;
+				$node->set_attributes( 'otu' => $taxon->get_xml_id );
 			}
-			if ( $label ) {
-				if ( $otu_id ) {
-					$xml .= "\n" . sprintf('<%s id="%s" label="%s" otu="%s"/>', $tag, $id, $label, $otu_id);
-				}
-				else {
-					$xml .= "\n" . sprintf('<%s id="%s" label="%s"/>', $tag, $id, $label);
-				}
+			if ( $node->is_root ) {
+				$node->set_attributes( 'root' => 'true' );
 			}
-			else {
-				if ( $otu_id ) {
-					$xml .= "\n" . sprintf('<%s id="%s" otu="%s"/>', $tag, $id, $otu_id);
-				}
-				else {
-					$xml .= "\n" . sprintf('<%s id="%s"/>', $tag, $id);
-				}
-			}
+			$xml .= "\n" . $node->get_xml_tag(1);
+			
 		}
 		
 		# then the rootedge?
