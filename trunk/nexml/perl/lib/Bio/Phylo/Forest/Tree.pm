@@ -2047,19 +2047,11 @@ Serializes invocant to xml.
 
 	sub to_xml {
 		my $self = shift;
-	    my ( $tag,           $id,               $label,         )= 
-	       ( $self->get_tag, $self->get_xml_id, $self->get_name );
-		my $xml = '';
-		if ( $label ) {
-			$xml .= sprintf( "\n<%s id=\"%s\" label=\"%s\">", $tag, $id, $label );
-		}
-		else {
-			$xml .= sprintf( "\n<%s id=\"%s\">", $tag, $id );
-		}
+		my $xml = $self->get_xml_tag;
 		if ( my $root = $self->get_root ) {
 			$xml .= $root->to_xml;
 		}
-		$xml .= sprintf( "\n</%s>", $tag );
+		$xml .= sprintf( "\n</%s>", $self->get_tag );
 		return $xml;		
 	}
 
