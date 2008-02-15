@@ -2,16 +2,13 @@
 package Bio::Phylo::Matrices::Matrix;
 use vars '@ISA';
 use strict;
-use Bio::Phylo::Listable;
-use Bio::Phylo::Taxa;
+use Bio::Phylo::Factory;
 use Bio::Phylo::Taxa::TaxaLinker;
-use Bio::Phylo::Taxa::Taxon;
 use Bio::Phylo::IO qw(unparse);
 use Bio::Phylo::Util::CONSTANT qw(:objecttypes);
-use Bio::Phylo::Util::Exceptions 'throw';
+use Bio::Phylo::Util::Exceptions qw(throw);
 use Bio::Phylo::Matrices::TypeSafeData;
-use Bio::Phylo::Matrices::Datum;
-use UNIVERSAL 'isa';
+use UNIVERSAL qw(isa);
 @ISA = qw(
   Bio::Phylo::Matrices::TypeSafeData
   Bio::Phylo::Taxa::TaxaLinker
@@ -20,6 +17,7 @@ use UNIVERSAL 'isa';
 	my $CONSTANT_TYPE      = _MATRIX_;
 	my $CONSTANT_CONTAINER = _MATRICES_;
 	my $logger             = __PACKAGE__->get_logger;
+	my $factory            = Bio::Phylo::Factory->new;
 	my @inside_out_arrays  = \(
 		my (
 			%type,  
@@ -299,7 +297,7 @@ Set contents using two-dimensional array argument.
 				for my $row ( @{$raw} ) {
 					if ( defined $row ) {
 						if ( isa( $row, 'ARRAY' ) ) {
-							my $matrixrow = Bio::Phylo::Matrices::Datum->new(
+							my $matrixrow = $factory->create_datum(
 								'-type_object' => $self->get_type_object,
 								'-name'        => $row->[0],
 								'-char' => join( ' ', @$row[ 1 .. $#{$row} ] ),
@@ -606,15 +604,11 @@ Serializes matrix to nexml format.
 		$xml .= "\n<matrix>";
 		for my $row ( @{ $self->get_entities } ) {
 			my ( $row_id, $row_label ) = ( $row->get_xml_id, $row->get_name );
-			my $otu_id;
 			if ( my $taxon = $row->get_taxon ) {
-				$otu_id = $taxon->get_xml_id;
-			}
-			if ( $otu_id ) {
-				$row->set_attributes( 'otu' => $otu_id );
+				$row->set_attributes( 'otu' => $taxon->get_xml_id );
 			}
 			$xml .= "\n" . $row->get_xml_tag;
-			$xml .= $self->_write_matrix_row($row, $id_for_state) . "</row>";
+			$xml .= $self->_write_matrix_row( $row, $id_for_state ) . "</row>";
 		}
 		$xml .= "\n</matrix>";
 		$xml .= "\n" . sprintf( '</%s>', $self->get_tag );
@@ -956,7 +950,7 @@ Validates taxa associations.
 					$row->set_taxon( $taxa{$name} );
 				}
 				else {
-					my $taxon = Bio::Phylo::Taxa::Taxon->new( -name => $name );
+					my $taxon = $factory->create_taxon( -name => $name );
 					$taxa{$name} = $taxon;
 					$taxa->insert($taxon);
 					$row->set_taxon($taxon);
@@ -993,11 +987,11 @@ Creates a taxa block from the objects contents if none exists yet.
 		}
 		else {
 			my %taxa;
-			my $taxa = Bio::Phylo::Taxa->new;
+			my $taxa = $factory->create_taxa;
 			for my $row ( @{ $self->get_entities } ) {
 				my $name = $row->get_internal_name;
 				if ( not $taxa{$name} ) {
-					$taxa{$name} = Bio::Phylo::Taxa::Taxon->new( '-name' => $name );
+					$taxa{$name} = $factory->create_taxon( '-name' => $name );
 				}
 			}
 			$taxa->insert( map { $taxa{$_} } sort { $a cmp $b } keys %taxa );
