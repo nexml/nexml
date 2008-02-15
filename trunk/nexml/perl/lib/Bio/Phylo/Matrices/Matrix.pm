@@ -634,8 +634,8 @@ Serializes matrix to nexml format.
 			 }
 			 else {
 			 	my $state_id;
-			 	if ( exists $id_for_state->{$c} ) {
-			 		$state_id = $id_for_state->{$c};
+			 	if ( exists $id_for_state->{uc $c} ) {
+			 		$state_id = $id_for_state->{uc $c};
 			 	}
 			 	else {
 			 		$state_id = $c;
@@ -655,11 +655,12 @@ Serializes matrix to nexml format.
 			$states_id = 'states1';
 			$xml .= "\n<states id=\"states1\">";
 			my $state_counter = 1;
-			for my $state ( keys %{ $lookup } ) {
+			my @states = map { $_->[0] } sort { $a->[1] <=> $b->[1] } map { [ $_, scalar @{ $lookup->{$_} } ] } keys %{ $lookup };
+			for my $state ( @states ) {
 				my $state_id = 's' . $state_counter++;
 				$id_for_state->{ $state } = $state_id;
 			}
-			for my $state ( keys %{ $lookup } ) {
+			for my $state ( @states ) {
 				my $state_id = $id_for_state->{ $state };
 				my @mapping = @{ $lookup->{$state} };
 				
@@ -667,7 +668,7 @@ Serializes matrix to nexml format.
 				if ( scalar @mapping > 1 ) {
 					$xml .= "\n" . sprintf('<state id="%s" symbol="%s">', $state_id, $state);
 					for my $map ( @mapping ) {
-						$xml .= "\n" . sprintf( '<mapping state="%s" mstaxa="uncertainty"/>', $id_for_state->{ $state } );
+						$xml .= "\n" . sprintf( '<mapping state="%s" mstaxa="uncertainty"/>', $id_for_state->{ $map } );
 					}
 					$xml .= "\n</state>";
 				}

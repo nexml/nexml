@@ -288,7 +288,7 @@ Taxon destructor.
         my $self = shift;
         
         # notify user
-        $logger->debug("destructor called for '$self'");
+        #$logger->debug("destructor called for '$self'");
         
         # recurse up inheritance tree for cleanup
         $self->SUPER::DESTROY;
