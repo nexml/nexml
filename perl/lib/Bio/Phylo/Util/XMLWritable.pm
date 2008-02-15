@@ -243,7 +243,7 @@ Retrieves attributes for the element.
 		if ( not exists $attrs->{'id'} ) {
 			$attrs->{'id'} = $self->get_xml_id;
 		}
-		if ( $self->isa('Bio::Phylo::Taxa::TaxaLinker') ) {
+		if ( $self->can('get_taxa') ) {
 			if ( my $taxa = $self->get_taxa ) {
 				$attrs->{'otus'} = $taxa->get_xml_id;
 			}
@@ -251,7 +251,7 @@ Retrieves attributes for the element.
 				throw 'ObjectMismatch' => "$self can link to a taxa element, but doesn't";
 			}
 		}
-		if ( $self->isa('Bio::Phylo::Taxa::TaxonLinker') ) {
+		if ( $self->can('get_taxon') ) {
 			if ( my $taxon = $self->get_taxon ) {
 				$attrs->{'otu'} = $taxon->get_xml_id;
 			}

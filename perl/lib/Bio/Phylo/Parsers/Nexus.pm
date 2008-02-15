@@ -1,15 +1,11 @@
 # $Id: Nexus.pm 4786 2007-11-28 07:31:19Z rvosa $
 package Bio::Phylo::Parsers::Nexus;
 use strict;
-use Bio::Phylo::Taxa;
-use Bio::Phylo::Taxa::Taxon;
-use Bio::Phylo::Forest;
-use Bio::Phylo::Matrices::Datum;
-use Bio::Phylo::Matrices::Matrix;
+use Bio::Phylo::Factory;
 use Bio::Phylo::IO qw(parse);
 use Bio::Phylo::Util::CONSTANT qw(:objecttypes);
-use Bio::Phylo::Util::Exceptions 'throw';
-use UNIVERSAL 'isa';
+use Bio::Phylo::Util::Exceptions qw(throw);
+use UNIVERSAL qw(isa);
 use IO::String;
 use vars qw(@ISA);
 
@@ -21,14 +17,8 @@ use vars qw(@ISA);
 # create logger
 my $logger = Bio::Phylo->get_logger;
 
-# mapping for _make_obj
-my %class_map = (
-	'Taxa'   => 'Bio::Phylo::Taxa',
-	'Taxon'  => 'Bio::Phylo::Taxa::Taxon',
-	'Forest' => 'Bio::Phylo::Forest',
-	'Datum'  => 'Bio::Phylo::Matrices::Datum',
-	'Matrix' => 'Bio::Phylo::Matrices::Matrix',
-);
+# create factory
+my $factory = Bio::Phylo::Factory->new;
 
 my $TAXA = _TAXA_;
 
@@ -555,10 +545,7 @@ sub _begin {
 sub _taxa {
     my $self = shift;
     if ( $self->{'_begin'} ) {
-        my $taxa = _make_obj( 'Taxa' );
-        my $name = ref $taxa;
-        $name =~ s/::/./g;
-        $taxa->set_name( $name . '.' . $taxa->get_id );
+        my $taxa = $factory->create_taxa;
         push @{ $self->{'_context'} }, $taxa;
         $logger->info( "starting taxa block" );
         $self->{'_begin'} = 0;
@@ -659,10 +646,7 @@ sub _datatype {
     my $self = shift;
     if ( defined $_[0] and $_[0] !~ m/^(?:DATATYPE|=)/i ) {
         my $datatype = shift;
-        my $matrix = _make_obj( 'Matrix', '-type' => $datatype );
-        my $name = ref $matrix;
-        $name =~ s/::/./g;
-        $matrix->set_name( $name . '.' . $matrix->get_id );
+        my $matrix = $factory->create_matrix( '-type' => $datatype ); 
         push @{ $self->{'_context'} }, $matrix;
         $logger->info( "datatype: $datatype" );
     }
@@ -780,7 +764,7 @@ sub _matrix {
                     }
                 }
                 if ( not $taxon ) {
-                    $taxon = _make_obj( 'Taxon', '-name' => $row );
+                    $taxon = $factory->create_taxon( '-name' => $row );
                     $taxa->insert($taxon);
                 }
             }
@@ -797,13 +781,10 @@ sub _matrix {
 
                 # create new taxa block
                 if ( not $taxa ) {
-                    $taxa = _make_obj( 'Taxa' );
-                    my $name = ref $taxa;
-                    $name =~ s/::/./g;
-                    $taxa->set_name( $name . '.' . $taxa->get_id );
+                    $taxa = $factory->create_taxa;
                     my $current = pop( @{ $self->{'_context'} } );
                     push @{ $self->{'_context'} }, $taxa, $current;
-                    $taxon = _make_obj( 'Taxon', '-name' => $row );
+                    $taxon = $factory->create_taxon( '-name' => $row );
                     $taxa->insert($taxon);
 
                 }
@@ -826,10 +807,10 @@ sub _matrix {
             my @logarray = @{ $self->{'_matrix'}->{ $row } };
             my $logstring = join ' ', @logarray;
             $logger->info("Setting seq: $logstring");
-            my $datum = _make_obj( 'Datum', 
+            my $datum = $factory->create_datum(
             	'-type'  => $self->_current->get_type,
             	'-name'  => $row, 
-            	'-taxon' => $taxon,
+            	'-taxon' => $taxon,            
             );
             $datum->set_char( \@logarray );
 
@@ -863,11 +844,6 @@ sub _matrix {
 
 sub _bad_format {
 	throw 'BadFormat' => shift;
-}
-
-sub _make_obj {
-	my $class = shift;
-	return $class_map{$class}->new(@_);
 }
 
 sub _current { shift->{'_context'}->[-1] }
@@ -943,6 +919,24 @@ sub _end {
         }
         $self->{'_trees'} = '';
         $self->{'_treenames'} = [];
+        
+        # get the most recently seen taxa block, link against that
+        if ( not $forest->get_taxa ) {
+        	for ( my $i = $#{ $self->{'_context'} }; $i >= 0; $i-- ) {
+        		my $block = $self->{'_context'}->[$i];
+        		if ( $block->_type == _TAXA_ ) {
+        			$forest->set_taxa($block);
+        		}
+        	}
+        }
+        
+        # still not found? create one
+        if ( not $forest->get_taxa ) {
+        	my $taxa = $forest->make_taxa;
+        	push @{ $self->{'_context'} }, $taxa;
+        	
+        }
+        
         push @{ $self->{'_context'} }, $forest;
     }
 }
@@ -964,7 +958,7 @@ sub _semicolon {
     }
     elsif ( uc $self->{'_previous'} eq 'TAXLABELS' ) {
         foreach my $name ( @{ $self->{'_taxlabels'} } ) {
-            my $taxon = _make_obj( 'Taxon', '-name' => $name );
+            my $taxon = $factory->create_taxon( '-name' => $name );
             $self->_current->insert($taxon);
         }
         if ( $self->_current->get_ntax != $self->{'_ntax'} ) {
