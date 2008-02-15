@@ -5,7 +5,7 @@ use Bio::Phylo::Util::Exceptions 'throw';
 use Bio::Phylo::Util::CONSTANT 'looks_like_hash';
 use strict;
 use vars '@ISA';
-@ISA = qw(Bio::Phylo);
+@ISA = qw(Bio::Phylo::Util::XMLWritable);
 
 {
  
@@ -66,7 +66,7 @@ Datatype constructor.
             $type = 'Dna';
         }
         my $typeclass = __PACKAGE__ . '::' . $type;
-        my $self      = __PACKAGE__->SUPER::new; 
+        my $self      = __PACKAGE__->SUPER::new( '-tag' => 'states' ); 
         eval "require $typeclass";
         if ( $@ ) {
         	throw 'BadFormat' => "'$type' is not a valid datatype";
@@ -244,6 +244,38 @@ Gets data type as string.
         my $type = ref shift;
         $type =~ s/.*:://;
         return $type;
+    }
+
+=item get_ids_for_states()
+
+Gets state-to-id mapping
+
+ Type    : Accessor
+ Title   : get_ids_for_states
+ Usage   : my %ids = %{ $obj->get_ids_for_states };
+ Function: Returns the object's datatype
+ Returns : A hash reference, keyed on state, with UID values
+ Args    : None
+
+=cut
+    
+    sub get_ids_for_states {
+    	my $self = shift;
+    	if ( my $lookup = $self->get_lookup ) {
+    		my $i = 1;
+    		my $ids_for_states = {};
+    		my @states = map { $_->[0] } 
+    		            sort { $a->[1] <=> $b->[1] } 
+    		             map { [ $_, scalar @{ $lookup->{$_} } ] } 
+    		           keys %{ $lookup };
+    		for my $state ( @states ) {
+    			$ids_for_states->{$state} = $i++;
+    		}
+    		return $ids_for_states;
+    	}
+    	else {
+    		return {};
+    	}
     }
 
 =item get_lookup()
