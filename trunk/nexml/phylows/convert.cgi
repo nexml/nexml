@@ -61,12 +61,16 @@ if ( blessed $blocks ) {
 	
 }
 else {
+	my %args;
+	if ( $q->param('mode') eq 'compact' ) {
+		$args{'-compact'} = 1;
+	}
 	my $xml = '';
 	$xml .= $blocks->[0]->get_root_open_tag;
 	for my $block ( @{ $blocks } ) {
 		my $tmp;
 		eval {
-			$tmp = $block->to_xml;
+			$tmp = $block->to_xml(%args);
 		};
 		if ( $@ ) {
 			#print $@;
@@ -77,7 +81,6 @@ else {
 	} 
 	$xml .= $blocks->[0]->get_root_close_tag;
 	print $xml; 
-	#print $open, map { print $_->to_xml } @$blocks, $close;
 }
 
 =head1 SUBROUTINES
