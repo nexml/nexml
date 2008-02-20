@@ -571,22 +571,7 @@ Serializes matrix to nexml format.
  Usage   : my $data_block = $matrix->to_xml;
  Function: Converts matrix object into a nexml element structure.
  Returns : Nexml block (SCALAR).
- Args    : The following options are available:
- 	       
- 	       # if set, writes "RESPECTCASE" token
- 	       -respectcase => 1
- 	       
- 	       # if set, writes "GAPMODE=(NEWSTATE or MISSING)" token
- 	       -gapmode => 1
- 	       
- 	       # if set, writes "MSTAXA=(POLYMORPH or UNCERTAIN)" token
- 	       -polymorphism => 1
- 	       
-		   # by default, names for sequences are derived from $datum->get_name, if 
-		   # 'internal' is specified, uses $datum->get_internal_name, if 'taxon'
-		   # uses $datum->get_taxon->get_name, if 'taxon_internal' uses 
-		   # $datum->get_taxon->get_internal_name, if $key, uses $datum->get_generic($key)
-		   -tipnames => one of (internal|taxon|taxon_internal|$key)
+ Args    : NONE
 
 =cut
 
@@ -597,84 +582,24 @@ Serializes matrix to nexml format.
 		$self->set_attributes( 'xsi:type' => $xsi_type );
 		my $xml = $self->get_xml_tag;
 		$xml .= "\n<format>";
-		my ( $state_set, $states_id, $id_for_state ) = $self->_write_state_sets;
-		$xml .= $state_set;
-		$xml .= $self->_write_char_labels( $states_id );
+		my $to = $self->get_type_object;
+		$xml .= $to->to_xml;
+		$xml .= $self->_write_char_labels( $to->get_xml_id );
 		$xml .= "\n</format>";
 		$xml .= "\n<matrix>";
+		my @char_ids;
+		for ( 0 .. $self->get_nchar ) {
+			push @char_ids, 'c' . ($_+1);
+		}
 		for my $row ( @{ $self->get_entities } ) {
-			my ( $row_id, $row_label ) = ( $row->get_xml_id, $row->get_name );
-			if ( my $taxon = $row->get_taxon ) {
-				$row->set_attributes( 'otu' => $taxon->get_xml_id );
-			}
-			$xml .= "\n" . $row->get_xml_tag;
-			$xml .= $self->_write_matrix_row( $row, $id_for_state ) . "</row>";
+			$xml .= "\n" . $row->to_xml(
+				'-states' => $to->get_ids_for_states(1),
+				'-chars'  => \@char_ids,
+			);
 		}
 		$xml .= "\n</matrix>";
 		$xml .= "\n" . sprintf( '</%s>', $self->get_tag );
 		return $xml;
-	}
-	
-	sub _write_matrix_row {
-		my ( $self, $row, $id_for_state ) = @_;
-		my $xml = '';
-		my @char = $row->get_char;
-		my ( $missing, $gap ) = ( $row->get_missing, $row->get_gap );
-		for my $i ( 0 .. $#char ) {
-			 my $c = $char[$i];
-			 my $char_id = 'c' . ($i+1); 
-			 if ( $missing eq $c or $gap eq $c ) {
-			 	
-			 }
-			 else {
-			 	my $state_id;
-			 	if ( exists $id_for_state->{uc $c} ) {
-			 		$state_id = $id_for_state->{uc $c};
-			 	}
-			 	else {
-			 		$state_id = $c;
-			 	}
-			 	$xml .= sprintf('<cell char="%s" state="%s"/>', $char_id, $state_id);
-			 }
-		}
-		return $xml;
-	}
-	
-	sub _write_state_sets {
-		my ( $self ) = @_;
-		my $id_for_state = {};
-		my $states_id;
-		my $xml = '';
-		if ( my $lookup = $self->get_type_object->get_lookup ) {
-			$states_id = 'states1';
-			$xml .= "\n<states id=\"states1\">";
-			$id_for_state = $self->get_type_object->get_ids_for_states;
-			my @states = sort { $id_for_state->{$a} <=> $id_for_state->{$b} } keys %{ $id_for_state };
-			for my $state ( @states ) {
-				my $state_id = $id_for_state->{ $state };
-				$id_for_state->{ $state } = 's' . $state_id;
-			}
-			for my $state ( @states ) {
-				my $state_id = $id_for_state->{ $state };
-				my @mapping = @{ $lookup->{$state} };
-				
-				# has ambiguity mappings
-				if ( scalar @mapping > 1 ) {
-					$xml .= "\n" . sprintf('<state id="%s" symbol="%s">', $state_id, $state);
-					for my $map ( @mapping ) {
-						$xml .= "\n" . sprintf( '<mapping state="%s" mstaxa="uncertainty"/>', $id_for_state->{ $map } );
-					}
-					$xml .= "\n</state>";
-				}
-				
-				# no ambiguity
-				else {
-					$xml .= "\n" . sprintf('<state id="%s" symbol="%s"/>', $state_id, $state);
-				}
-			}
-			$xml .= "\n</states>";
-		}	
-		return $xml, $states_id, $id_for_state;	
 	}
 	
 	sub _write_char_labels {

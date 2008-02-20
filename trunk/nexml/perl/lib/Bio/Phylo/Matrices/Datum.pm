@@ -731,6 +731,52 @@ Clones invocant.
 	
 	}
 
+=item to_xml()
+
+Serializes datum to nexml format.
+
+ Type    : Format convertor
+ Title   : to_xml
+ Usage   : my $xml = $datum->to_xml;
+ Function: Converts datum object into a nexml element structure.
+ Returns : Nexml block (SCALAR).
+ Args    : NONE
+
+=cut
+
+	sub to_xml {
+		my $self = shift;
+		my %args = looks_like_hash @_;
+		my $char_ids = $args{'-chars'};
+		my $state_ids = $args{'-states'};
+		if ( my $taxon = $self->get_taxon ) {
+			$self->set_attributes( 'otu' => $taxon->get_xml_id );
+		}
+		my @char = $self->get_char;
+		my ( $missing, $gap ) = ( $self->get_missing, $self->get_gap );
+		my $xml = $self->get_xml_tag;
+		for my $i ( 0 .. $#char ) {
+			if ( $missing ne $char[$i] and $gap ne $char[$i] ) {
+				my ( $c, $s );
+				if ( $char_ids and $char_ids->[$i] ) {
+					$c = $char_ids->[$i];
+				}
+				else {
+					$c = $i;
+				}
+				if ( $state_ids and $state_ids->{uc $char[$i]} ) {
+					$s = $state_ids->{uc $char[$i]};
+				}
+				else {
+					$s = uc $char[$i];
+				}
+				$xml .= sprintf('<cell char="%s" state="%s" />', $c, $s);
+			}
+		}
+		$xml .= sprintf('</%s>', $self->get_tag);
+		return $xml;
+	}
+
 =item copy_atts()
 
  Not implemented!
