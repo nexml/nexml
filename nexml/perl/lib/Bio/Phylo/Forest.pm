@@ -176,18 +176,25 @@ Validates taxon links of nodes in invocant's trees.
 
 		# is linked
 		if ( my $taxa = $self->get_taxa ) {
-			my %tips =
-			  map { $_->get_internal_name => $_ }
-			  map { @{ $_->get_terminals } } @{ $self->get_entities };
+			my %tips;
+			for my $tip ( map { @{ $_->get_terminals } } @{ $self->get_entities } ) {
+				my $name = $tip->get_internal_name;
+				if ( not $tips{$name} ) {
+					$tips{$name} = [];
+				}
+				push @{ $tips{$name} }, $tip;
+			}
 			my %taxa =
 			  map { $_->get_internal_name => $_ } @{ $taxa->get_entities };
-			for my $tip ( keys %tips ) {
-				$logger->debug("linking tip $tip");
-				if ( not exists $taxa{$tip} ) {
-					$logger->debug("no taxon object for $tip yet, instantiating");
-					$taxa->insert( $taxa{$tip} = $factory->create_taxon( '-name' => $tip ) );
+			for my $name ( keys %tips ) {
+				$logger->debug("linking tip $name");
+				if ( not exists $taxa{$name} ) {
+					$logger->debug("no taxon object for $name yet, instantiating");
+					$taxa->insert( $taxa{$name} = $factory->create_taxon( '-name' => $name ) );
 				}
-				$tips{$tip}->set_taxon( $taxa{$tip} );
+				for my $tip ( @{ $tips{$name} } ) {
+					$tip->set_taxon( $taxa{$name} );
+				}
 			}
 		}
 
