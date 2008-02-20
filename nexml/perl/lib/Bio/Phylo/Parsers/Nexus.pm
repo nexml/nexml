@@ -22,6 +22,69 @@ my $factory = Bio::Phylo::Factory->new;
 
 my $TAXA = _TAXA_;
 
+# this is a dispatch table whose sub references are invoked
+# during parsing. the keys match the tokens upon which the
+# respective subs are called. Underscored (private) fields are for parsing
+# context. The fields of this table comprise the default state of the
+# parser object.
+my %defaults = (
+	'_lines'           => undef,
+	'_current'         => undef,
+	'_previous'        => undef,
+	'_begin'           => undef,
+	'_ntax'            => undef,
+	'_nchar'           => undef,
+	'_gap'             => undef,
+	'_missing'         => undef,
+	'_i'               => undef,
+	'_tree'            => undef,
+	'_trees'           => undef,
+	'_treename'        => undef,
+	'_treestart'       => undef,
+	'_row'             => undef,
+	'_matrixtype'      => undef,
+	'_found'           => 0,
+	'_linemode'        => 0,
+	'_taxlabels'       => [],
+	'_tokens'          => [],
+	'_context'         => [],
+	'_translate'       => [],
+	'_symbols'         => [],
+	'_charlabels'      => [],
+	'_statelabels'     => [],
+	'_tmpstatelabels'  => [],
+	'_comments'        => [],
+	'_treenames'       => [],
+	'_matrix'          => {},
+	'begin'            => \&_begin,
+	'taxa'             => \&_taxa,
+	'title'            => \&_title,
+	'dimensions'       => \&_dimensions,
+	'ntax'             => \&_ntax,
+	'taxlabels'        => \&_taxlabels,
+	'data'             => \&_data,
+	'characters'       => \&_characters,
+	'nchar'            => \&_nchar,
+	'format'           => \&_format,
+	'datatype'         => \&_datatype,
+	'gap'              => \&_gap,
+	'missing'          => \&_missing,
+	'charlabels'       => \&_charlabels,
+	'statelabels'      => \&_statelabels,
+	'symbols'          => \&_symbols,
+	'items'            => \&_items,
+	'matrix'           => \&_matrix,
+	'trees'            => \&_trees,
+	'translate'        => \&_translate,
+	'tree'             => \&_tree,
+	'utree'            => \&_tree,
+	'end'              => \&_end,
+	'endblock'         => \&_end,        
+	'#nexus'           => \&_nexus,
+	'link'             => \&_link,
+	';'                => \&_semicolon,
+);
+
 =head1 NAME
 
 Bio::Phylo::Parsers::Nexus - Parses nexus files. No serviceable parts inside.
@@ -51,64 +114,23 @@ and matrices objects. Nexus comments are stripped, private nexus blocks (and the
 =cut
 
 sub _new {
-    my $class = shift;
-
-    # this is a dispatch table whose sub references are invoked
-    # during parsing. the keys match the tokens upon which the
-    # respective subs are called. Underscored (private) fields are for parsing
-    # context.
-    my $self = {
-        '_current'         => undef,
-        '_previous'        => undef,
-        '_begin'           => undef,
-        '_ntax'            => undef,
-        '_nchar'           => undef,
-        '_gap'             => undef,
-        '_missing'         => undef,
-        '_i'               => undef,
-        '_tree'            => undef,
-        '_trees'           => undef,
-        '_treename'        => undef,
-        '_treestart'       => undef,
-        '_row'             => undef,
-        '_matrixtype'      => undef,
-        '_found'           => 0,
-        '_linemode'        => 0,
-        '_tokens'          => [],
-        '_context'         => [],
-        '_translate'       => [],
-        '_symbols'         => [],
-        '_charlabels'      => [],
-        '_comments'        => [],
-        '_treenames'       => [],
-        '_matrix'          => {},
-        'begin'            => \&_begin,
-        'taxa'             => \&_taxa,
-        'title'            => \&_title,
-        'dimensions'       => \&_dimensions,
-        'ntax'             => \&_ntax,
-        'taxlabels'        => \&_taxlabels,
-        'data'             => \&_data,
-        'characters'       => \&_characters,
-        'nchar'            => \&_nchar,
-        'format'           => \&_format,
-        'datatype'         => \&_datatype,
-        'gap'              => \&_gap,
-        'missing'          => \&_missing,
-        'charlabels'       => \&_charlabels,
-        'symbols'          => \&_symbols,
-        'items'            => \&_items,
-        'matrix'           => \&_matrix,
-        'trees'            => \&_trees,
-        'translate'        => \&_translate,
-        'tree'             => \&_tree,
-        'utree'            => \&_tree,
-        'end'              => \&_end,
-        'endblock'         => \&_end,        
-        '#nexus'           => \&_nexus,
-        'link'             => \&_link,
-        ';'                => \&_semicolon,
-    };
+    my $class = shift;    
+    
+    # initialize object, note we have to 
+    # force data type references to be empty
+    my $self = {};
+    for my $key ( keys %defaults ) {
+    	if ( isa( $defaults{$key}, 'ARRAY' ) ) {
+    		$self->{$key} = [];
+    	}
+    	elsif ( isa( $defaults{$key}, 'HASH') ) {
+    		$self->{$key} = {};
+    	}
+    	else {
+    		$self->{$key} = $defaults{$key};
+    	}
+    }
+    
     if ( ref $class ) {
         %$class = %$self;
     }
@@ -467,56 +489,20 @@ sub _post_process {
     }
     my $blocks = $self->{'_context'};
     
+    # initialize object, note we have to 
+    # force data type references to be empty    
     @{ $taxa } = ();
-    $self->{'_current'}         = undef;
-    $self->{'_previous'}        = undef;
-    $self->{'_begin'}           = undef;
-    $self->{'_ntax'}            = undef;
-    $self->{'_nchar'}           = undef;
-    $self->{'_gap'}             = undef;
-    $self->{'_missing'}         = undef;
-    $self->{'_i'}               = undef;
-    $self->{'_tree'}            = undef;
-    $self->{'_trees'}           = undef;
-    $self->{'_treename'}        = undef;
-    $self->{'_treestart'}       = undef;
-    $self->{'_row'}             = undef;
-    $self->{'_matrixtype'}      = undef;
-    $self->{'_found'}           = 0;
-    $self->{'_linemode'}        = 0;
-    $self->{'_tokens'}          = [];
-    $self->{'_context'}         = [];
-    $self->{'_translate'}       = [];
-    $self->{'_symbols'}         = [];
-    $self->{'_charlabels'}      = [];
-    $self->{'_comments'}        = [];
-    $self->{'_treenames'}       = [];
-    $self->{'_matrix'}          = {};
-    $self->{'begin'}            = \&_begin;
-    $self->{'taxa'}             = \&_taxa;
-    $self->{'title'}            = \&_title;
-    $self->{'dimensions'}       = \&_dimensions;
-    $self->{'ntax'}             = \&_ntax;
-    $self->{'taxlabels'}        = \&_taxlabels;
-    $self->{'data'}             = \&_data;
-    $self->{'characters'}       = \&_characters;
-    $self->{'nchar'}            = \&_nchar;
-    $self->{'format'}           = \&_format;
-    $self->{'datatype'}         = \&_datatype;
-    $self->{'gap'}              = \&_gap;
-    $self->{'missing'}          = \&_missing;
-    $self->{'charlabels'}       = \&_charlabels;
-    $self->{'symbols'}          = \&_symbols;
-    $self->{'items'}            = \&_items;
-    $self->{'matrix'}           = \&_matrix;
-    $self->{'trees'}            = \&_trees;
-    $self->{'translate'}        = \&_translate;
-    $self->{'tree'}             = \&_tree;
-    $self->{'utree'}            = \&_tree;
-    $self->{'end'}              = \&_end;
-    $self->{'#nexus'}           = \&_nexus;
-    $self->{'link'}             = \&_link;
-    $self->{';'}                = \&_semicolon;
+    for my $key ( keys %defaults ) {
+    	if ( isa( $defaults{$key}, 'ARRAY' ) ) {
+    		$self->{$key} = [];
+    	}
+    	elsif ( isa( $defaults{$key}, 'HASH') ) {
+    		$self->{$key} = {};
+    	}
+    	else {
+    		$self->{$key} = $defaults{$key};
+    	}
+    }    
     
     return $blocks;
 }
@@ -649,8 +635,6 @@ sub _datatype {
     if ( defined $_[0] and $_[0] !~ m/^(?:DATATYPE|=)/i ) {
         my $datatype = shift;
         $self->_current->set_type($datatype);
-        #my $matrix = $factory->create_matrix( '-type' => $datatype ); 
-        #push @{ $self->{'_context'} }, $matrix;
         $logger->info( "datatype: $datatype" );
     }
 }
@@ -695,6 +679,22 @@ sub _charlabels {
     }
 }
 
+sub _statelabels {
+	my $self = shift;
+	my $token = shift;
+	if ( defined $token and uc $token ne 'STATELABELS' ) {
+		if ( $token eq ',' ) {
+			my $tmpstatelabels = $self->{'_tmpstatelabels'};
+			my $index = shift @{$tmpstatelabels};
+			$self->{'_statelabels'}->[$index - 1] = $tmpstatelabels;			
+			$self->{'_tmpstatelabels'} = [];
+		}
+		else {
+			push @{ $self->{'_tmpstatelabels'} }, $token;
+		}
+	}
+}
+
 sub _matrix {
     my $self  = shift;
     my $token = shift;
@@ -705,6 +705,11 @@ sub _matrix {
                 $self->{'_charlabels'}
             );
         }
+        if ( @{ $self->{'_statelabels'} } ) {
+            $self->_current->set_statelabels(
+                $self->{'_statelabels'}
+            );
+        }        
     }
 
     # first token: 'MATRIX'
@@ -716,13 +721,13 @@ sub _matrix {
     elsif ( isa($token, 'ARRAY') and not grep { /^;$/ } @{ $token } ) {
         my $name;
         for my $i ( 0 .. $#{ $token } ) {
-            if ( not $name and $token->[$i] !~ qr/^\[/ ) {
+            if ( not $name and $token->[$i] !~ qr|^\[| ) {
                 $name = $token->[$i];
                 if ( not exists $self->{'_matrix'}->{$name} ) {
                     $self->{'_matrix'}->{$name} = [];
                 }
             }
-            elsif ( $name and $token->[$i] !~ qr/^\[/ ) {
+            elsif ( $name and $token->[$i] !~ qr|^\[| ) {
                 if ( $self->{'_matrixtype'} =~ m/^continuous$/i ) {
                     push @{ $self->{'_matrix'}->{$name} }, map { split(/\s+/, $_) } $token->[$i];
                 }
@@ -739,12 +744,12 @@ sub _matrix {
         my $name;
         for my $i ( 0 .. $#{ $token } ) {
             last if $token->[$i] eq ';';
-            if ( not $name and $token->[$i] !~ qr/^\[/ ) {
+            if ( not $name and $token->[$i] !~ qr|^\[| ) {
                 $name = $token->[$i];
                 $self->{'_matrix'}->{$name} = [] if not $self->{'_matrix'}->{$name};
                 next;
             }
-            elsif ( $name and $token->[$i] !~ qr/^\[/ ) {
+            elsif ( $name and $token->[$i] !~ qr|^\[| ) {
                 if ( $self->{'_matrixtype'} =~ m/^continuous$/i ) {
                     push @{ $self->{'_matrix'}->{$name} }, map { split(/\s+/, $_) } $token->[$i];
                 }
@@ -956,9 +961,10 @@ sub _semicolon {
     my $self = shift;
     if ( uc $self->{'_previous'} eq 'MATRIX' ) {
         $self->{'_matrixtype'} = undef;
-        $self->{'_matrix'}     = {};
-        $self->{'_charlabels'} = [];
-        $self->{'_linemode'}   = 0;
+        $self->{'_matrix'}      = {};
+        $self->{'_charlabels'}  = [];
+        $self->{'_statelabels'} = [];
+        $self->{'_linemode'}    = 0;
         if ( not $self->_current->get_ntax ) {
             my $taxon = {};
             foreach my $row ( @{ $self->_current->get_entities } ) {
@@ -992,6 +998,12 @@ sub _semicolon {
         if ( @{ $self->{'_charlabels'} } ) {
             my $logcharlabels = join( ' ', @{ $self->{'_charlabels'} } );
             $logger->info( "charlabels: $logcharlabels" );
+        }
+    }
+    elsif ( uc $self->{'_previous'} eq 'STATELABELS' ) {
+        if ( @{ $self->{'_statelabels'} } ) {
+            my $logstatelabels = join( ' ', @{ $self->{'_statelabels'} } );
+            $logger->info( "statelabels: $logstatelabels" );
         }
     }
 }
