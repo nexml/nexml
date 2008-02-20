@@ -38,12 +38,13 @@ else {
 		$blocks = parse( 
 			'-file'   => $filename, 
 			'-format' => $q->param('informat') 
-		);
-	};
+		);		
+	};	
 }
 
 # create output
 if ( $@ ) {
+    warn $@;
     if ( blessed $@ ) {
     	( $error, $line ) = ( $@->error, $@->line );
     }
