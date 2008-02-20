@@ -309,10 +309,10 @@ Serializes invocant to XML.
 	    my $xml = $self->get_xml_tag;
 		if ( $self->can('get_entities') ) {
 			for my $ent ( @{ $self->get_entities } ) {
-				$xml .= $ent->to_xml;
+				$xml .= "\n" . $ent->to_xml;
 			}
 		}
-		$xml .= "\n" . sprintf( "</%s>", $self->get_tag );
+		$xml .= sprintf( "</%s>", $self->get_tag );
 		return $xml;
 	}		
 

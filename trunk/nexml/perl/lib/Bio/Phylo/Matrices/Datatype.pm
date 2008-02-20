@@ -264,10 +264,24 @@ Gets state-to-id mapping
     	if ( my $lookup = $self->get_lookup ) {
     		my $i = 1;
     		my $ids_for_states = {};
-    		my @states = map { $_->[0] } 
-    		            sort { $a->[1] <=> $b->[1] } 
-    		             map { [ $_, scalar @{ $lookup->{$_} } ] } 
-    		           keys %{ $lookup };
+    		my ( @states, @tmp_cats ); 
+    		my @tmp = sort { $a->[1] <=> $b->[1] } 
+    		           map { [ $_, scalar @{ $lookup->{$_} } ] } 
+    		         keys %{ $lookup };
+    		for my $state ( @tmp ) {
+    			my $count = $state->[1];
+    			my $sym   = $state->[0];
+    			if ( not $tmp_cats[$count] ) {
+    				$tmp_cats[$count] = [];
+    			}
+    			push @{ $tmp_cats[$count] }, $sym;
+    		}
+    		for my $cat ( @tmp_cats ) {
+    			if ( $cat ) {
+    				my @sorted = sort { $a cmp $b } @{ $cat };
+    				push @states, @sorted;
+    			}
+    		}
     		for my $state ( @states ) {
     			$ids_for_states->{$state} = $i++;
     		}
@@ -530,6 +544,29 @@ Joins argument array ref of characters following appropriate rules.
             delete $field->{$id};
         }
     }
+
+=back
+
+=head2 SERIALIZERS
+
+=over
+
+=item to_xml()
+
+Writes data type definitions to xml
+
+ Type    : Serializer
+ Title   : to_xml
+ Usage   : my $xml = $obj->to_xml
+ Function: Writes data type definitions to xml
+ Returns : An xml string representation of data type definition
+ Args    : None
+
+=cut
+
+	sub to_xml {
+		my $self = shift;	
+	}
 
 =back
 
