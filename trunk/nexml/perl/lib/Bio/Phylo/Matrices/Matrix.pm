@@ -581,19 +581,35 @@ Serializes matrix to nexml format.
 		my $xsi_type = 'nex:' . ucfirst($type) . 'Cells';
 		$self->set_attributes( 'xsi:type' => $xsi_type );
 		my $xml = $self->get_xml_tag;
+		
+		# the format block
 		$xml .= "\n<format>";
 		my $to = $self->get_type_object;
+		my $ids_for_states = $to->get_ids_for_states(1);
+		
+		# write state definitions
 		$xml .= $to->to_xml;
-		$xml .= $self->_write_char_labels( $to->get_xml_id );
+		
+		# write column definitions
+		if ( %{ $ids_for_states } ) {
+			$xml .= $self->_write_char_labels( $to->get_xml_id );
+		}
+		else {
+			$xml .= $self->_write_char_labels();
+		}
 		$xml .= "\n</format>";
+		
+		# the matrix block
 		$xml .= "\n<matrix>";
 		my @char_ids;
 		for ( 0 .. $self->get_nchar ) {
 			push @char_ids, 'c' . ($_+1);
 		}
+		
+		# write rows
 		for my $row ( @{ $self->get_entities } ) {
 			$xml .= "\n" . $row->to_xml(
-				'-states' => $to->get_ids_for_states(1),
+				'-states' => $ids_for_states,
 				'-chars'  => \@char_ids,
 			);
 		}
