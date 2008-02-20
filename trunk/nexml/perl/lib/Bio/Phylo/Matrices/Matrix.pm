@@ -22,6 +22,7 @@ use UNIVERSAL qw(isa);
 		my (
 			%type,  
 			%charlabels,
+			%statelabels,
 			%gapmode,
 			%matchchar,
 			%polymorphism,
@@ -171,6 +172,47 @@ Matrix constructor.
 =head2 MUTATORS
 
 =over
+
+=item set_statelabels()
+
+Sets argument state labels.
+
+ Type    : Mutator
+ Title   : set_statelabels
+ Usage   : $matrix->set_statelabels( [ [ 'state1', 'state2' ] ] );
+ Function: Assigns state labels.
+ Returns : $self
+ Args    : ARRAY, or nothing (to reset);
+           The array is two-dimensional, 
+           the first index is to indicate
+           the column the labels apply to,
+           the second dimension the states
+           (sorted numerically or alphabetically,
+           depending on what's appropriate)
+
+=cut
+
+	sub set_statelabels {
+		my ( $self, $statelabels ) = @_;
+		
+		# it's an array ref, but what about its contents?
+		if ( isa( $statelabels, 'ARRAY' ) ) {
+			for my $col ( @{$statelabels} ) {
+				if ( not isa( $col, 'ARRAY') ) {
+					throw 'BadArgs' => "statelabels must be a two dimensional array ref";
+				}
+			}
+		}
+
+		# it's defined but not an array ref
+		elsif ( defined $statelabels && ! isa( $statelabels, 'ARRAY' ) ) {
+			throw 'BadArgs' => "statelabels must be a two dimensional array ref";
+		}
+
+		# it's either a valid array ref, or nothing, i.e. a reset
+		$statelabels{$$self} = $statelabels || [];
+		return $self;		
+	}
 
 =item set_charlabels()
 
@@ -345,6 +387,21 @@ Defines matrix case sensitivity interpretation.
 
 =over
 
+=item get_statelabels()
+
+Retrieves state labels.
+
+ Type    : Accessor
+ Title   : get_statelabels
+ Usage   : my @statelabels = @{ $matrix->get_statelabels };
+ Function: Retrieves state labels.
+ Returns : ARRAY
+ Args    : None.
+
+=cut
+
+	sub get_statelabels { $statelabels{ ${ $_[0] } } || [] }
+
 =item get_charlabels()
 
 Retrieves character labels.
@@ -518,7 +575,7 @@ Creates bootstrapped clone.
 =cut
 
 	sub bootstrap {
-		my $self = shift;
+		my $self = shift;		
 		my $clone = $self->clone;
 		my $nchar = $clone->get_nchar;
 		my @indices;
@@ -533,6 +590,11 @@ Creates bootstrapped clone.
 				my @re_anno = @anno[@indices];
 				$row->set_annotations(@re_anno);
 			}
+		}
+		my @labels = @{ $clone->get_charlabels };
+		if ( @labels ) {
+			my @re_labels = @labels[@indices];
+			$clone->set_charlabels(\@re_labels);
 		}
 		return $clone;
 	}

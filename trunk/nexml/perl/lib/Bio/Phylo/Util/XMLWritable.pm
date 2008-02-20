@@ -194,8 +194,11 @@ Retrieves tag string
 =cut
 
 	sub get_root_open_tag {
-return '<nex:nexml 
+		my $class = __PACKAGE__;
+		my $version = $Bio::Phylo::VERSION;
+return qq'<nex:nexml 
 	version="1.0" 
+	generator="$class v.$version" 
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:xml="http://www.w3.org/XML/1998/namespace"
 	xsi:schemaLocation="http://www.nexml.org/1.0 http://www.nexml.org/1.0/nexml.xsd"
