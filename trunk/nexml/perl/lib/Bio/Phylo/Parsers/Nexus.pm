@@ -820,7 +820,7 @@ sub _matrix {
             	'-name'  => $row, 
             	'-taxon' => $taxon,            
             );
-            $datum->set_char( \@logarray );
+            $datum->set_char( \@logarray ); # XXX polymorphism
 
             # insert new datum in matrix
             $self->_current->insert( $datum );
