@@ -617,6 +617,7 @@ sub _data {
     my $self = shift;
     if ( $self->{'_begin'} ) {
         $self->{'_begin'} = 0;
+        push @{ $self->{'_context'} }, $factory->create_matrix;
         $logger->info( "starting data block" );
     }
 }
@@ -625,6 +626,7 @@ sub _characters {
     my $self = shift;
     if ( $self->{'_begin'} ) {
         $self->{'_begin'} = 0;
+        push @{ $self->{'_context'} }, $factory->create_matrix;
         $logger->info( "starting characters block" );
     }
 }
@@ -646,8 +648,9 @@ sub _datatype {
     my $self = shift;
     if ( defined $_[0] and $_[0] !~ m/^(?:DATATYPE|=)/i ) {
         my $datatype = shift;
-        my $matrix = $factory->create_matrix( '-type' => $datatype ); 
-        push @{ $self->{'_context'} }, $matrix;
+        $self->_current->set_type($datatype);
+        #my $matrix = $factory->create_matrix( '-type' => $datatype ); 
+        #push @{ $self->{'_context'} }, $matrix;
         $logger->info( "datatype: $datatype" );
     }
 }
@@ -808,7 +811,7 @@ sub _matrix {
             my $logstring = join ' ', @logarray;
             $logger->info("Setting seq: $logstring");
             my $datum = $factory->create_datum(
-            	'-type'  => $self->_current->get_type,
+            	'-type_object' => $self->_current->get_type_object,
             	'-name'  => $row, 
             	'-taxon' => $taxon,            
             );
@@ -854,6 +857,7 @@ sub _trees {
         $self->{'_begin'}     = 0;
         $self->{'_trees'}     = '';
         $self->{'_treenames'} = [];
+        push @{ $self->{'_context'} }, $factory->create_forest;
         $logger->info( "starting trees block" );
     }
 }
@@ -913,7 +917,12 @@ sub _end {
     my $self = shift;
     $self->{'_translate'} = [];
     if ( uc $self->{'_previous'} eq ';' and $self->{'_trees'} ) {
-        my $forest = parse( '-format' => 'newick', '-string' => $self->{'_trees'} );
+        my $forest = $self->_current;
+        my $trees = parse( '-format' => 'newick', '-string' => $self->{'_trees'} );
+        for my $tree ( @{ $trees->get_entities } ) {
+        	$forest->insert($tree);
+        }
+        
         for my $i ( 0 .. $#{ $self->{'_treenames'} } ) {
             $forest->get_by_index($i)->set_name( $self->{'_treenames'}->[$i] );
         }
@@ -929,15 +938,17 @@ sub _end {
         		}
         	}
         }
+        else {
+        	$forest->check_taxa;
+        }
         
         # still not found? create one
         if ( not $forest->get_taxa ) {
         	my $taxa = $forest->make_taxa;
-        	push @{ $self->{'_context'} }, $taxa;
-        	
+        	push @{ $self->{'_context'} }, $taxa;        	
         }
         
-        push @{ $self->{'_context'} }, $forest;
+        #push @{ $self->{'_context'} }, $forest;
     }
 }
 
