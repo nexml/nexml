@@ -648,11 +648,11 @@ Serializes matrix to nexml format.
 		if ( my $lookup = $self->get_type_object->get_lookup ) {
 			$states_id = 'states1';
 			$xml .= "\n<states id=\"states1\">";
-			my $state_counter = 1;
-			my @states = map { $_->[0] } sort { $a->[1] <=> $b->[1] } map { [ $_, scalar @{ $lookup->{$_} } ] } keys %{ $lookup };
+			$id_for_state = $self->get_type_object->get_ids_for_states;
+			my @states = sort { $id_for_state->{$a} <=> $id_for_state->{$b} } keys %{ $id_for_state };
 			for my $state ( @states ) {
-				my $state_id = 's' . $state_counter++;
-				$id_for_state->{ $state } = $state_id;
+				my $state_id = $id_for_state->{ $state };
+				$id_for_state->{ $state } = 's' . $state_id;
 			}
 			for my $state ( @states ) {
 				my $state_id = $id_for_state->{ $state };
