@@ -1,6 +1,5 @@
 package Bio::Phylo::Parsers::Nexml;
 use strict;
-use XML::Twig;
 use Bio::Phylo::IO;
 use Bio::Phylo::Util::Exceptions 'throw';
 use Bio::Phylo::Factory;
@@ -8,6 +7,11 @@ use UNIVERSAL 'isa';
 use Data::Dumper;
 use vars qw(@ISA $VERSION);
 @ISA = qw(Bio::Phylo::IO);
+
+eval { require XML::Twig };
+if ( $@ ) {
+	throw 'ExtensionError' => "Error loading the XML::Twig extension: $@";
+}
 
 =head1 NAME
 

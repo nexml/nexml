@@ -1,6 +1,6 @@
 # $Id: Datatype.pm 4786 2007-11-28 07:31:19Z rvosa $
 package Bio::Phylo::Matrices::Datatype;
-use Bio::Phylo;
+use Bio::Phylo::Util::XMLWritable;
 use Bio::Phylo::Util::Exceptions 'throw';
 use Bio::Phylo::Util::CONSTANT 'looks_like_hash';
 use strict;
@@ -283,7 +283,8 @@ Gets state-to-id mapping
     			}
     		}
     		for my $state ( @states ) {
-    			$ids_for_states->{$state} = $i++;
+    			my $id = $i++;
+    			$ids_for_states->{$state} = $_[0] ? "s${id}" : $id;
     		}
     		return $ids_for_states;
     	}
@@ -566,6 +567,36 @@ Writes data type definitions to xml
 
 	sub to_xml {
 		my $self = shift;	
+		my $xml = '';
+		if ( my $lookup = $self->get_lookup ) {
+			$xml .= "\n" . $self->get_xml_tag;
+			my $id_for_state = $self->get_ids_for_states;
+			my @states = sort { $id_for_state->{$a} <=> $id_for_state->{$b} } keys %{ $id_for_state };
+			for my $state ( @states ) {
+				my $state_id = $id_for_state->{ $state };
+				$id_for_state->{ $state } = 's' . $state_id;
+			}
+			for my $state ( @states ) {
+				my $state_id = $id_for_state->{ $state };
+				my @mapping = @{ $lookup->{$state} };
+				
+				# has ambiguity mappings
+				if ( scalar @mapping > 1 ) {
+					$xml .= "\n" . sprintf('<state id="%s" symbol="%s">', $state_id, $state);
+					for my $map ( @mapping ) {
+						$xml .= "\n" . sprintf( '<mapping state="%s" mstaxa="uncertainty"/>', $id_for_state->{ $map } );
+					}
+					$xml .= "\n</state>";
+				}
+				
+				# no ambiguity
+				else {
+					$xml .= "\n" . sprintf('<state id="%s" symbol="%s"/>', $state_id, $state);
+				}
+			}
+			$xml .= "\n</states>";
+		}	
+		return $xml;	
 	}
 
 =back
