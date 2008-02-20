@@ -11,9 +11,11 @@
         <fieldset>
 			<input type="file" name="file"/>
 			<select name="informat">
-			  <option value ="nexus">Nexus</option>
-			  <option value ="newick">Newick</option>
-			</select>												
+			  <option value="nexus">Nexus</option>
+			  <option value="newick">Newick</option>
+			</select>	
+			<input type="radio" name="mode" value="compact"/> Compact
+			<input type="radio" name="mode" value="verbose" checked="checked"/> Verbose
             <input type="submit" id="validateSubmit" value="Submit"/>
         </fieldset>
 	  </form> 
