@@ -755,24 +755,33 @@ Serializes datum to nexml format.
 		my @char = $self->get_char;
 		my ( $missing, $gap ) = ( $self->get_missing, $self->get_gap );
 		my $xml = $self->get_xml_tag;
-		for my $i ( 0 .. $#char ) {
-			if ( $missing ne $char[$i] and $gap ne $char[$i] ) {
-				my ( $c, $s );
-				if ( $char_ids and $char_ids->[$i] ) {
-					$c = $char_ids->[$i];
+		
+		if ( not $args{'-compact'} ) {
+			for my $i ( 0 .. $#char ) {
+				if ( $missing ne $char[$i] and $gap ne $char[$i] ) {
+					my ( $c, $s );
+					if ( $char_ids and $char_ids->[$i] ) {
+						$c = $char_ids->[$i];
+					}
+					else {
+						$c = $i;
+					}
+					if ( $state_ids and $state_ids->{uc $char[$i]} ) {
+						$s = $state_ids->{uc $char[$i]};
+					}
+					else {
+						$s = uc $char[$i];
+					}
+					$xml .= sprintf('<cell char="%s" state="%s" />', $c, $s);
 				}
-				else {
-					$c = $i;
-				}
-				if ( $state_ids and $state_ids->{uc $char[$i]} ) {
-					$s = $state_ids->{uc $char[$i]};
-				}
-				else {
-					$s = uc $char[$i];
-				}
-				$xml .= sprintf('<cell char="%s" state="%s" />', $c, $s);
 			}
 		}
+		else {
+			my @tmp = map { uc $_ } @char;
+			my $seq = $self->get_type_object->join(\@tmp);
+			$xml .= '<seq>' . $seq . '</seq>';	
+		}
+		
 		$xml .= sprintf('</%s>', $self->get_tag);
 		return $xml;
 	}

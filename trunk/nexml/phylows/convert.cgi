@@ -73,7 +73,7 @@ else {
 			$tmp = $block->to_xml(%args);
 		};
 		if ( $@ ) {
-			#print $@;
+			warn $@;
 		}
 		else {
 			$xml .= $tmp;

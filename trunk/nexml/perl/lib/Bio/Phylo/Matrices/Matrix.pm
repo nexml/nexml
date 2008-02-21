@@ -639,27 +639,35 @@ Serializes matrix to nexml format.
 
 	sub to_xml {
 		my $self = shift;
+		my ( %args, $ids_for_states );
+		if ( @_ ) {
+			%args = @_;
+		}
 		my $type = $self->get_type;
 		my $xsi_type = 'nex:' . ucfirst($type) . 'Cells';
 		$self->set_attributes( 'xsi:type' => $xsi_type );
 		my $xml = $self->get_xml_tag;
 		
-		# the format block
-		$xml .= "\n<format>";
-		my $to = $self->get_type_object;
-		my $ids_for_states = $to->get_ids_for_states(1);
-		
-		# write state definitions
-		$xml .= $to->to_xml;
-		
-		# write column definitions
-		if ( %{ $ids_for_states } ) {
-			$xml .= $self->_write_char_labels( $to->get_xml_id );
+		# skip <format/> block in compact mode
+		if ( not $args{'-compact'} ) {
+			
+			# the format block
+			$xml .= "\n<format>";
+			my $to = $self->get_type_object;
+			$ids_for_states = $to->get_ids_for_states(1);
+			
+			# write state definitions
+			$xml .= $to->to_xml;
+			
+			# write column definitions
+			if ( %{ $ids_for_states } ) {
+				$xml .= $self->_write_char_labels( $to->get_xml_id );
+			}
+			else {
+				$xml .= $self->_write_char_labels();
+			}
+			$xml .= "\n</format>";
 		}
-		else {
-			$xml .= $self->_write_char_labels();
-		}
-		$xml .= "\n</format>";
 		
 		# the matrix block
 		$xml .= "\n<matrix>";
@@ -673,6 +681,7 @@ Serializes matrix to nexml format.
 			$xml .= "\n" . $row->to_xml(
 				'-states' => $ids_for_states,
 				'-chars'  => \@char_ids,
+				%args,
 			);
 		}
 		$xml .= "\n</matrix>";
