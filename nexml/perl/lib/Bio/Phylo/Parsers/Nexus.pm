@@ -24,6 +24,8 @@ my $TAXA = _TAXA_;
 
 # useful regular expressions
 my $COMMENT = qr|^\[|; # crude, only checks first char, use after tokenizing!
+my $QUOTES_OR_BRACKETS = qr/[\[\]'"]/mox; # catch all for opening/closing square brackets and quotes
+my $OPENING_QUOTE_OR_BRACKET = qr/^(.*?)([\['"].*)$/mox; # capturing regex for opening sq. br. & q.
 
 # this is a dispatch table whose sub references are invoked
 # during parsing. the keys match the tokens upon which the
@@ -308,9 +310,7 @@ sub _tokenize {
     $logger->info( "going to split lines on tokens" );
     my ( $extract, $INSIDE_QUOTE, $continue ) = ( '', 0, 0 );
     my ( @tokens, @split );
-
-    my $QUOTES_OR_BRACKETS       = qr/[\[\]'"]/mox;
-    my $OPENING_QUOTE_OR_BRACKET = qr/^(.*?)([\['"].*)$/mox;
+        
     my $CLOSING_BRACKET_MIDLINE  = qr/^.*?(\])(.*)$/mox;
     my $CONTEXT_QB_AT_START      = qr/^([\['"])(.*)$/mox;
 
@@ -742,6 +742,16 @@ sub _add_tokens_to_row {
 	}
 }
 
+sub _find_last_seen_taxa_block {
+	my $self = shift;
+    for ( my $i = $#{ $self->{'_context'} }; $i >= 0 ; $i-- ) {
+    	if ( $self->{'_context'}->[$i]->_type == $TAXA ) {
+        	return $self->{'_context'}->[$i];
+     	}
+    }
+    return;	
+}
+
 sub _matrix {
     my $self  = shift;
     my $token = shift;
@@ -767,7 +777,9 @@ sub _matrix {
 		return;
     }
     
-    # the last row of the matrix
+    # the last row of the matrix, after adding tokens to row,
+    # instantiate & populate datum objects, link against taxa
+    # objects
     elsif ( isa($token, 'ARRAY') and grep { /^;$/ } @{ $token } ) {
 		$self->_add_tokens_to_row($token);
 
@@ -777,12 +789,7 @@ sub _matrix {
 
             # find / create matching taxon, matrix is linked
             if ( my $taxa = $self->_current->get_taxa ) {
-                FINDTAXON: for ( @{ $taxa->get_entities } ) {
-                    if ( $_->get_name eq $row ) {
-                        $taxon = $_;
-                        last FINDTAXON;
-                    }
-                }
+            	$taxon = $taxa->get_by_name($row); 
                 if ( not $taxon ) {
                     $taxon = $factory->create_taxon( '-name' => $row );
                     $taxa->insert($taxon);
@@ -791,13 +798,7 @@ sub _matrix {
 
             # find / create taxa, matrix is not linked
             else {
-                my $taxa;
-                FINDTAXA: for ( my $i = $#{ $self->{'_context'} } ; $i >= 0 ; $i-- ) {
-                    if ( $self->{'_context'}->[$i]->_type == $TAXA ) {
-                        $taxa = $self->{'_context'}->[$i];
-                        last FINDTAXA;
-                    }
-                }
+                my $taxa = $self->_find_last_seen_taxa_block;
 
                 # create new taxa block
                 if ( not $taxa ) {
@@ -809,12 +810,7 @@ sub _matrix {
 
                 }
                 else {
-                    FINDINNEW: for ( @{ $taxa->get_entities } ) {
-                        if ( $_->get_name eq $row ) {
-                            $taxon = $_;
-                            last FINDINNEW;
-                        }
-                    }
+                	$taxon = $taxa->get_by_name($row); 
                 }
 
                 # link current block to taxa
@@ -824,27 +820,17 @@ sub _matrix {
             }
             
             # create new datum
-            my @logarray = @{ $self->{'_matrix'}->{ $row } };
-            my $logstring = join ' ', @logarray;
-            $logger->info("Setting seq: $logstring");
             my $datum = $factory->create_datum(
             	'-type_object' => $self->_current->get_type_object,
-            	'-name'  => $row, 
-            	'-taxon' => $taxon,            
+            	'-name'        => $row, 
+            	'-taxon'       => $taxon,            
             );
-            $datum->set_char( \@logarray ); # XXX polymorphism
+            $datum->set_char( $self->{'_matrix'}->{ $row } ); # XXX polymorphism
 
             # insert new datum in matrix
             $self->_current->insert( $datum );
-			$logger->info( sprintf("parsed %s characters for taxon '$row'", $datum->get_length ) );
-			if ( $self->{'_matrixtype'} =~ qr/^continuous$/i ) {
-				my $logchars = join( ' ', @{ $self->{'_matrix'}->{$row} } );
-				$logger->info( "characters: $logchars" );
-			}
-			else {
-				my $logchars = join( '', @{ $self->{'_matrix'}->{$row} } );
-				$logger->info( "characters: $logchars" );
-			}
+            my ( $length, $seq ) = ( $datum->get_length, $datum->get_char );
+            $logger->info("parsed $length characters for ${row}: $seq");
         }        
 
         # Let's avoid these!
@@ -852,12 +838,13 @@ sub _matrix {
             my ( $obs, $exp ) = ( $self->_current->get_nchar, $self->{'_nchar'} );
             _bad_format( "Observed and expected nchar mismatch: $obs vs. $exp" );
         }
-        elsif ( $self->_current->get_ntax != $self->{'_ntax'} ) {
+        elsif ( defined $self->{'_ntax'} and $self->_current->get_ntax != $self->{'_ntax'} ) {
             my ( $obs, $exp ) = ( $self->_current->get_ntax, $self->{'_ntax'} );
             _bad_format( "Observed and expected ntax mismatch: $obs vs. $exp" );
         }
 
 		# XXX matrix clean up here
+		$self->{'_ntax'}            = undef;
 		$self->{'_nchar'}           = undef;
 		$self->{'_matrixtype'}      = undef;
 		$self->{'_matrix'}          = {};
@@ -969,7 +956,6 @@ sub _end {
         	push @{ $self->{'_context'} }, $taxa;        	
         }
         
-        #push @{ $self->{'_context'} }, $forest;
     }
 }
 
@@ -1003,6 +989,9 @@ sub _semicolon {
                 )
             );
         }
+        
+        # XXX taxa cleanup here
+        $self->{'_ntax'}      = undef;
         $self->{'_taxlabels'} = [];
     }
     elsif ( uc $self->{'_previous'} eq 'SYMBOLS' ) {
