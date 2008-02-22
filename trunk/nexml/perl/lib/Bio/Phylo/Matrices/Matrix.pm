@@ -633,7 +633,8 @@ Serializes matrix to nexml format.
  Usage   : my $data_block = $matrix->to_xml;
  Function: Converts matrix object into a nexml element structure.
  Returns : Nexml block (SCALAR).
- Args    : NONE
+ Args    : Optional:
+ 		   -compact => 1 (for compact representation of matrix)
 
 =cut
 
@@ -644,7 +645,8 @@ Serializes matrix to nexml format.
 			%args = @_;
 		}
 		my $type = $self->get_type;
-		my $xsi_type = 'nex:' . ucfirst($type) . 'Cells';
+		my $verbosity = $args{'-compact'} ? 'Seqs' : 'Cells';
+		my $xsi_type = 'nex:' . ucfirst($type) . $verbosity;
 		$self->set_attributes( 'xsi:type' => $xsi_type );
 		my $xml = $self->get_xml_tag;
 		
