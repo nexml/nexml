@@ -22,6 +22,9 @@ my $factory = Bio::Phylo::Factory->new;
 
 my $TAXA = _TAXA_;
 
+# useful regular expressions
+my $COMMENT = qr|^\[|; # crude, only checks first char, use after tokenizing!
+
 # this is a dispatch table whose sub references are invoked
 # during parsing. the keys match the tokens upon which the
 # respective subs are called. Underscored (private) fields are for parsing
@@ -55,6 +58,7 @@ my %defaults = (
 	'_tmpstatelabels'  => [],
 	'_comments'        => [],
 	'_treenames'       => [],
+	'_matrixrowlabels' => [],
 	'_matrix'          => {},
 	'begin'            => \&_begin,
 	'taxa'             => \&_taxa,
@@ -695,9 +699,9 @@ sub _statelabels {
 	}
 }
 
-sub _matrix {
-    my $self  = shift;
-    my $token = shift;
+# for data type, character labels, state labels
+sub _add_matrix_metadata {
+	my $self = shift;
     if ( not defined $self->{'_matrixtype'} ) {
         $self->{'_matrixtype'} = $self->_current->get_type;
         if ( @{ $self->{'_charlabels'} } ) {
@@ -711,56 +715,64 @@ sub _matrix {
             );
         }        
     }
+    return $self;	
+}
 
-    # first token: 'MATRIX'
+sub _add_tokens_to_row {
+	my ( $self, $tokens ) = @_;
+	my $rowname;
+	for my $token ( @{ $tokens } ) {
+		last if $token eq ';';
+		if ( not $rowname and $token !~ $COMMENT ) {
+			$rowname = $token;
+			if ( not exists $self->{'_matrix'}->{$rowname} ) {
+				$self->{'_matrix'}->{$rowname} = [];
+				push @{ $self->{'_matrixrowlabels'} }, $rowname;
+			}
+		}
+		elsif ( $rowname and $token !~ $COMMENT ) {
+			my $row = $self->{'_matrix'}->{$rowname};
+			if ( $self->{'_matrixtype'} =~ m/^continuous$/i ) {
+				push @{ $row }, split( /\s+/, $token );
+			}
+			else {
+				push @{ $row }, split( //, $token );
+			}
+		}
+	}
+}
+
+sub _matrix {
+    my $self  = shift;
+    my $token = shift;
+    $self->_add_matrix_metadata;
+
+    # first token: 'MATRIX', i.e. we're just starting to parse
+    # the actual matrix. Here we need to switch to "linemode",
+    # so that subsequently tokens will be array references (all
+    # the tokens on a line). This is so that we can handle
+    # interleaved matrices, which unfortunately need line breaks
+    # in them.
     if ( not isa($token, 'ARRAY') and uc($token) eq 'MATRIX' ) {
         $self->{'_linemode'} = 1;
         $logger->info( "starting matrix" );
         return;
     }
+    
+    # a row inside the matrix, after adding tokens to row, nothing
+    # else to do 
     elsif ( isa($token, 'ARRAY') and not grep { /^;$/ } @{ $token } ) {
-        my $name;
-        for my $i ( 0 .. $#{ $token } ) {
-            if ( not $name and $token->[$i] !~ qr|^\[| ) {
-                $name = $token->[$i];
-                if ( not exists $self->{'_matrix'}->{$name} ) {
-                    $self->{'_matrix'}->{$name} = [];
-                }
-            }
-            elsif ( $name and $token->[$i] !~ qr|^\[| ) {
-                if ( $self->{'_matrixtype'} =~ m/^continuous$/i ) {
-                    push @{ $self->{'_matrix'}->{$name} }, map { split(/\s+/, $_) } $token->[$i];
-                }
-                else {
-                    push @{ $self->{'_matrix'}->{$name} }, map { split(//, $_) } $token->[$i];
-                }
-            }
-            else {
-                next;
-            }
-        }
+		$self->_add_tokens_to_row($token);
+		$logger->info( "adding tokens to row" );
+		return;
     }
+    
+    # the last row of the matrix
     elsif ( isa($token, 'ARRAY') and grep { /^;$/ } @{ $token } ) {
-        my $name;
-        for my $i ( 0 .. $#{ $token } ) {
-            last if $token->[$i] eq ';';
-            if ( not $name and $token->[$i] !~ qr|^\[| ) {
-                $name = $token->[$i];
-                $self->{'_matrix'}->{$name} = [] if not $self->{'_matrix'}->{$name};
-                next;
-            }
-            elsif ( $name and $token->[$i] !~ qr|^\[| ) {
-                if ( $self->{'_matrixtype'} =~ m/^continuous$/i ) {
-                    push @{ $self->{'_matrix'}->{$name} }, map { split(/\s+/, $_) } $token->[$i];
-                }
-                else {
-                    push @{ $self->{'_matrix'}->{$name} }, map { split(//, $_) } $token->[$i];
-                }
-            }
-        }
+		$self->_add_tokens_to_row($token);
 
         # link to taxa
-        for my $row ( keys %{ $self->{'_matrix'} } ) {
+        for my $row ( @{ $self->{'_matrixrowlabels'} } ) {
             my $taxon;
 
             # find / create matching taxon, matrix is linked
@@ -833,8 +845,7 @@ sub _matrix {
 				my $logchars = join( '', @{ $self->{'_matrix'}->{$row} } );
 				$logger->info( "characters: $logchars" );
 			}
-        }
-        $self->{'_matrix'} = {};
+        }        
 
         # Let's avoid these!
         if ( $self->_current->get_nchar != $self->{'_nchar'} ) {
@@ -846,7 +857,12 @@ sub _matrix {
             _bad_format( "Observed and expected ntax mismatch: $obs vs. $exp" );
         }
 
-        $self->{'_linemode'} = 0;
+		# XXX matrix clean up here
+		$self->{'_nchar'}           = undef;
+		$self->{'_matrixtype'}      = undef;
+		$self->{'_matrix'}          = {};
+		$self->{'_matrixrowlabels'} = [];
+        $self->{'_linemode'}        = 0;
     }
 }
 
