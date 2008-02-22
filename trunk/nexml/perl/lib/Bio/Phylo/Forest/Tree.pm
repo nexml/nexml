@@ -2047,6 +2047,14 @@ Serializes invocant to xml.
 
 	sub to_xml {
 		my $self = shift;
+		my $xsi_type = 'nex:IntTree';
+		for my $node ( @{ $self->get_entities } ) {
+			my $length = $node->get_branch_length;
+			if ( defined $length and $length !~ /^[+-]?\d+$/ ) {
+				$xsi_type = 'nex:FloatTree';
+			}
+		}
+		$self->set_attributes( 'xsi:type' => $xsi_type );
 		my $xml = $self->get_xml_tag;
 		if ( my $root = $self->get_root ) {
 			$xml .= $root->to_xml;
