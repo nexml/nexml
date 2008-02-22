@@ -613,6 +613,32 @@ Gets elements that meet numerical rule from invocant container.
 		return \@results;
 	}
 
+=item get_by_name()
+
+Gets first element that has argument name
+
+ Type    : Visitor predicate
+ Title   : get_by_name
+ Usage   : my $found = $obj->get_by_name('foo');
+ Function: Retrieves the first contained object
+           in the current Bio::Phylo::Listable 
+           object whose name is 'foo'
+ Returns : A Bio::Phylo::* object.
+ Args    : A name (string)
+
+=cut
+
+	sub get_by_name {
+		my ( $self, $name ) = @_;
+		if ( not defined $name or ref $name ) {
+			throw 'BadString' => "Can't search on name '$name'";
+		}
+		for my $obj ( @{ $self->get_entities } ) {
+			return $obj if $name eq $obj->get_name;
+		}
+		return;
+	}
+
 =item get_by_regular_expression()
 
 Gets elements that match regular expression from invocant container.
