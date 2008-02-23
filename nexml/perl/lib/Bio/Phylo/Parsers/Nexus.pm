@@ -752,6 +752,88 @@ sub _find_last_seen_taxa_block {
     return;	
 }
 
+sub _set_taxon {
+	my ( $self, $obj, $taxa ) = @_;
+	
+	# first case: a taxon by $obj's name already exists
+	if ( my $taxon = $taxa->get_by_name($obj->get_name) ) {
+		$obj->set_taxon($taxon);
+		return $self;
+	}
+	
+	# second case: no taxon by $obj's name exists yet
+	else {
+		my $taxon = $factory->create_taxon( '-name' => $obj->get_name );
+		$taxa->insert($taxon);
+		$obj->set_taxon($taxon);
+		return $self;
+	}	
+}
+
+sub _resolve_taxon {
+	my ( $self, $obj ) = @_;
+	my $container = $self->_current;
+	
+	# first case: the object is actually already
+	# linked to a taxon
+	if ( my $taxon = $obj->get_taxon ) {
+		return $self;
+	}
+	
+	# second case: the container is already linked
+	# to a taxa block, but the object isn't
+	if ( my $taxa = $container->get_taxa ) {		
+		$self->_set_taxon( $obj, $taxa );		
+	}
+	
+	# third case: the container isn't explicitly linked,
+	# but a taxa block has been seen
+	if ( my $taxa = $self->_find_last_seen_taxa_block ) {
+		$container->set_taxa($taxa);		
+		$self->_set_taxon( $obj, $taxa );		
+	}
+	
+	# final case: no taxa block exists
+	else {
+		my $taxa = $container->make_taxa;
+		pop @{ $self->{'_context'} };
+		push @{ $self->{'_context'} }, $taxa, $container;		
+		$self->_set_taxon( $obj, $taxa );		
+	}
+}
+
+sub _resolve_ambig {
+	my ( $self, $datum, $chars ) = @_;
+	my %brackets = (
+		'(' => ')',
+		'{' => '}',
+	);
+	my $to = $datum->get_type_object;
+	my @resolved;
+	my $in_set = 0;
+	my @set;
+	my $close;
+	for my $c ( @{ $chars } ) {
+		if ( not $in_set and not exists $brackets{$c} ) {
+			push @resolved, $c;
+		}
+		elsif ( not $in_set and exists $brackets{$c} ) {
+			$in_set++;
+			$close = $brackets{$c};
+		}
+		elsif ( $in_set and $c ne $close ) {
+			push @set, $c;
+		}
+		elsif ( $in_set and $c eq $close ) {
+			push @resolved, $to->get_symbol_for_states(@set);
+			@set = ();
+			$in_set = 0;
+			$close = undef;
+		}
+	}
+	return \@resolved;
+}
+
 sub _matrix {
     my $self  = shift;
     my $token = shift;
@@ -785,50 +867,20 @@ sub _matrix {
 
         # link to taxa
         for my $row ( @{ $self->{'_matrixrowlabels'} } ) {
-            my $taxon;
-
-            # find / create matching taxon, matrix is linked
-            if ( my $taxa = $self->_current->get_taxa ) {
-            	$taxon = $taxa->get_by_name($row); 
-                if ( not $taxon ) {
-                    $taxon = $factory->create_taxon( '-name' => $row );
-                    $taxa->insert($taxon);
-                }
-            }
-
-            # find / create taxa, matrix is not linked
-            else {
-                my $taxa = $self->_find_last_seen_taxa_block;
-
-                # create new taxa block
-                if ( not $taxa ) {
-                    $taxa = $factory->create_taxa;
-                    my $current = pop( @{ $self->{'_context'} } );
-                    push @{ $self->{'_context'} }, $taxa, $current;
-                    $taxon = $factory->create_taxon( '-name' => $row );
-                    $taxa->insert($taxon);
-
-                }
-                else {
-                	$taxon = $taxa->get_by_name($row); 
-                }
-
-                # link current block to taxa
-                if ( not $self->_current->get_taxa ) {
-                    $self->_current->set_taxa($taxa);
-                }
-            }
-            
+        	            
             # create new datum
             my $datum = $factory->create_datum(
             	'-type_object' => $self->_current->get_type_object,
-            	'-name'        => $row, 
-            	'-taxon'       => $taxon,            
+            	'-name'        => $row,       
             );
-            $datum->set_char( $self->{'_matrix'}->{ $row } ); # XXX polymorphism
+            my $char = $self->_resolve_ambig( $datum, $self->{'_matrix'}->{ $row } );
+            $datum->set_char( $char );
 
             # insert new datum in matrix
             $self->_current->insert( $datum );
+            
+            # link to taxon
+            $self->_resolve_taxon( $datum );
             my ( $length, $seq ) = ( $datum->get_length, $datum->get_char );
             $logger->info("parsed $length characters for ${row}: $seq");
         }        
@@ -838,6 +890,9 @@ sub _matrix {
             my ( $obs, $exp ) = ( $self->_current->get_nchar, $self->{'_nchar'} );
             _bad_format( "Observed and expected nchar mismatch: $obs vs. $exp" );
         }
+        
+        # ntax is only defined for "data" blocks (which have ntax token),
+        # not for "characters" blocks (which should match up with taxa block)
         elsif ( defined $self->{'_ntax'} and $self->_current->get_ntax != $self->{'_ntax'} ) {
             my ( $obs, $exp ) = ( $self->_current->get_ntax, $self->{'_ntax'} );
             _bad_format( "Observed and expected ntax mismatch: $obs vs. $exp" );
@@ -915,6 +970,8 @@ sub _tree {
         $logger->info( "tree: $logtreename string: $logtree" );
         $self->{'_trees'} .= $translated . ';';
         push @{ $self->{'_treenames'} }, $self->{'_treename'};
+        
+        # XXX tree cleanup here
         $self->{'_treestart'} = 0;
         $self->{'_tree'}      = undef;
         $self->{'_treename'}  = undef;
@@ -931,30 +988,21 @@ sub _end {
         	$forest->insert($tree);
         }
         
+        # set tree names
         for my $i ( 0 .. $#{ $self->{'_treenames'} } ) {
             $forest->get_by_index($i)->set_name( $self->{'_treenames'}->[$i] );
         }
-        $self->{'_trees'} = '';
-        $self->{'_treenames'} = [];
         
-        # get the most recently seen taxa block, link against that
-        if ( not $forest->get_taxa ) {
-        	for ( my $i = $#{ $self->{'_context'} }; $i >= 0; $i-- ) {
-        		my $block = $self->{'_context'}->[$i];
-        		if ( $block->_type == _TAXA_ ) {
-        			$forest->set_taxa($block);
-        		}
+        # link tips to taxa
+        for my $tree ( @{ $forest->get_entities } ) {
+        	for my $tip ( @{ $tree->get_terminals } ) {
+        		$self->_resolve_taxon($tip);
         	}
-        }
-        else {
-        	$forest->check_taxa;
-        }
+        }   
         
-        # still not found? create one
-        if ( not $forest->get_taxa ) {
-        	my $taxa = $forest->make_taxa;
-        	push @{ $self->{'_context'} }, $taxa;        	
-        }
+        # XXX trees cleanup here
+        $self->{'_trees'} = '';
+        $self->{'_treenames'} = [];             
         
     }
 }
