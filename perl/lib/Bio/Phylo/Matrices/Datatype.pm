@@ -293,6 +293,74 @@ Gets state-to-id mapping
     	}
     }
 
+=item get_symbol_for_states()
+
+Gets ambiguity symbol for a set of states
+
+ Type    : Accessor
+ Title   : get_symbol_for_states
+ Usage   : my $state = $obj->get_symbol_for_states('A','C');
+ Function: Returns the ambiguity symbol for a set of states
+ Returns : A symbol (SCALAR)
+ Args    : A set of symbols
+ Comments: If no symbol exists in the lookup
+           table for the given set of states,
+           a new - numerical - one is created
+
+=cut
+
+	sub get_symbol_for_states {
+		my $self = shift;
+		my @syms = @_;
+		my $lookup = $self->get_lookup;
+		if ( $lookup ) {
+			my @lookup_syms = keys %{ $lookup };
+			SYM: for my $sym ( @lookup_syms ) {
+				my @states = @{ $lookup->{$sym} };
+				if ( scalar @syms == scalar @states ) {
+					my $seen_all = 0;
+					for my $i ( 0 .. $#syms ) {
+						my $seen = 0;
+						for my $j ( 0 .. $#states ) {
+							if ( $syms[$i] eq $states[$j] ) {
+								$seen++;
+								$seen_all++;
+							}
+						}
+						next SYM if not $seen;
+					}
+					# found existing symbol
+					return $sym if $seen_all == scalar @syms;
+				}
+			}
+			# create new symbol
+			my $sym;
+			
+			if ( $self->get_type !~ /standard/i ) {
+				my $sym = 0;
+				while ( exists $lookup->{$sym} ) {
+					$sym++;
+				}
+			}
+			else {
+				LETTER: for my $char ( 'A' .. 'Z' ) {
+					if ( not exists $lookup->{$char} ) {
+						$sym = $char;
+						last LETTER;
+					}
+				}
+			}
+			
+			$lookup->{$sym} = \@syms;
+			$self->set_lookup($lookup);
+			return $sym;
+		}
+		else {
+			$logger->info("No lookup table!");
+			return;
+		}
+	}
+
 =item get_lookup()
 
 Gets state lookup table.
