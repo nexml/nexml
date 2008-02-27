@@ -154,7 +154,7 @@ class TaxaBlock(list, base.IdTagged):
             return pow(2, self.index(taxon))
         except ValueError:
             raise ValueError("Taxon with ID '%s' and label '%s' not found" 
-                             % (str(taxon.elem_id), str(taxon.label)))
+                             % (str(taxon.elem_id), str(taxon.label)))                             
             
             
 class Taxon(base.IdTagged):
