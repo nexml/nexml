@@ -740,7 +740,9 @@ Serializes datum to nexml format.
  Usage   : my $xml = $datum->to_xml;
  Function: Converts datum object into a nexml element structure.
  Returns : Nexml block (SCALAR).
- Args    : NONE
+ Args    : -chars   => [] # optional, an array ref of character IDs
+           -states  => {} # optional, a hash ref of state IDs
+           -symbols => {} # optional, a hash ref of symbols
 
 =cut
 
