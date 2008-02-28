@@ -636,6 +636,8 @@ Writes data type definitions to xml
 	sub to_xml {
 		my $self = shift;	
 		my $xml = '';
+		my $normalized = {};
+		$normalized = shift if @_;
 		if ( my $lookup = $self->get_lookup ) {
 			$xml .= "\n" . $self->get_xml_tag;
 			my $id_for_state = $self->get_ids_for_states;
@@ -647,10 +649,11 @@ Writes data type definitions to xml
 			for my $state ( @states ) {
 				my $state_id = $id_for_state->{ $state };
 				my @mapping = @{ $lookup->{$state} };
+				my $symbol = exists $normalized->{$state} ? $normalized->{$state} : $state;
 				
 				# has ambiguity mappings
 				if ( scalar @mapping > 1 ) {
-					$xml .= "\n" . sprintf('<state id="%s" symbol="%s">', $state_id, $state);
+					$xml .= "\n" . sprintf('<state id="%s" symbol="%s">', $state_id, $symbol);
 					for my $map ( @mapping ) {
 						$xml .= "\n" . sprintf( '<mapping state="%s" mstaxa="uncertainty"/>', $id_for_state->{ $map } );
 					}
@@ -659,7 +662,7 @@ Writes data type definitions to xml
 				
 				# no ambiguity
 				else {
-					$xml .= "\n" . sprintf('<state id="%s" symbol="%s"/>', $state_id, $state);
+					$xml .= "\n" . sprintf('<state id="%s" symbol="%s"/>', $state_id, $symbol);
 				}
 			}
 			$xml .= "\n</states>";

@@ -639,7 +639,7 @@ Serializes matrix to nexml format.
 =cut
 
 	sub to_xml {
-		my $self = shift;
+		my $self = shift;		
 		my ( %args, $ids_for_states );
 		if ( @_ ) {
 			%args = @_;
@@ -649,6 +649,7 @@ Serializes matrix to nexml format.
 		my $xsi_type = 'nex:' . ucfirst($type) . $verbosity;
 		$self->set_attributes( 'xsi:type' => $xsi_type );
 		my $xml = $self->get_xml_tag;
+		my $normalized = $self->_normalize_symbols;
 		
 		# skip <format/> block in compact mode
 		if ( not $args{'-compact'} ) {
@@ -659,7 +660,7 @@ Serializes matrix to nexml format.
 			$ids_for_states = $to->get_ids_for_states(1);
 			
 			# write state definitions
-			$xml .= $to->to_xml;
+			$xml .= $to->to_xml($normalized);
 			
 			# write column definitions
 			if ( %{ $ids_for_states } ) {
@@ -681,14 +682,36 @@ Serializes matrix to nexml format.
 		# write rows
 		for my $row ( @{ $self->get_entities } ) {
 			$xml .= "\n" . $row->to_xml(
-				'-states' => $ids_for_states,
-				'-chars'  => \@char_ids,
+				'-states'  => $ids_for_states,
+				'-chars'   => \@char_ids,
+				'-symbols' => $normalized,
 				%args,
 			);
 		}
 		$xml .= "\n</matrix>";
 		$xml .= "\n" . sprintf( '</%s>', $self->get_tag );
 		return $xml;
+	}
+	
+	sub _normalize_symbols {
+		my $self = shift;
+		if ( $self->get_type =~ /^standard$/i ) {
+			my $to = $self->get_type_object;
+			my $lookup = $self->get_lookup;
+			my @states = keys %{ $lookup };
+			if ( my @letters = sort { $a cmp $b } grep { /[a-z]/i } @states ) {
+				my @numbers  = sort { $a <=> $b } grep { /^\d+$/ } @states;
+				my $i = $numbers[-1];
+				my %map = map { $_ => ++$i } @letters;	
+				return \%map;			
+			}
+			else {
+				return {};
+			}			
+		}
+		else {
+			return {};
+		}
 	}
 	
 	sub _write_char_labels {
@@ -931,6 +954,37 @@ Validates the object's contents.
 		for my $row ( @{ $self->get_entities } ) {
 			$row->validate;
 		}
+	}
+
+=item compress_lookup()
+
+Removes unused states from lookup table
+
+ Type    : Method
+ Title   : validate
+ Usage   : $obj->compress_lookup
+ Function: Removes unused states from lookup table
+ Returns : $self
+ Args    : None
+
+=cut
+
+	sub compress_lookup {
+		my $self = shift;
+		my $to = $self->get_type_object;
+		my $lookup = $to->get_lookup;
+		my %seen;
+		for my $row ( @{ $self->get_entities } ) {
+			my @char = $row->get_char;
+			$seen{$_}++ for (@char);
+		}
+		for my $state ( keys %{ $lookup } ) {
+			if ( not exists $seen{$state} ) {
+				delete $lookup->{$state};
+			}
+		}
+		$to->set_lookup($lookup);
+		return $self;
 	}
 
 =item check_taxa()
