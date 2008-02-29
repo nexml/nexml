@@ -46,7 +46,7 @@ class TreeBlock(list, taxa.TaxaLinked):
         list.__init__(self, *args)
         taxa.TaxaLinked.__init__(self, *args, **kwargs)
         
-    def normalize_taxa(self, taxa_block=None):
+    def normalize_taxa(self, taxa_block=None, update=True):
         """
         Rebuilds taxa block from scratch, or assigns taxon objects from
         given taxa_block based on labels.
@@ -56,7 +56,7 @@ class TreeBlock(list, taxa.TaxaLinked):
         for tree in self:
             for node in tree.postorder_node_iter():
                 if node.taxon:
-                    node.taxon = taxa_block.find_taxon(label=node.taxon.label, update=True)                    
+                    node.taxon = taxa_block.find_taxon(label=node.taxon.label, update=update)                    
         taxa_block.sort()
         self.taxa_block = taxa_block
         return taxa_block        
@@ -229,7 +229,7 @@ class Tree(base.IdTagged):
             if node.edge and (filter_fn is None or filter_fn(node.edge)):
                 yield node.edge
                 
-    ## Edge iterators ##
+    ## Taxa ##
     
     def infer_taxa_block(self):
         """
@@ -242,7 +242,17 @@ class Tree(base.IdTagged):
                 taxa_block.append(node.taxon)
         taxa_block.sort()
         return taxa_block
-
+        
+    def normalize_taxa(self, taxa_block, update_taxa_block=True):
+        """
+        Reassigns tree taxa objects to corresponding taxa objects in
+        given taxa_block, with identity of taxa objects determined by
+        labels.
+        """
+        for node in self.postorder_node_iter():
+            if node.taxon:
+                node.taxon = taxa_block.find_taxon(label=node.taxon.label, update=update_taxa_block)                    
+        
 ##############################################################################
 ## Node
 
