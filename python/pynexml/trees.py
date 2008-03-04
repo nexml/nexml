@@ -252,6 +252,10 @@ class Tree(base.IdTagged):
         for node in self.postorder_node_iter():
             if node.taxon:
                 node.taxon = taxa_block.find_taxon(label=node.taxon.label, update=update_taxa_block)                    
+                
+    ## for debugging ##
+    def compose_newick(self):
+        return self.seed_node.compose_newick()
         
 ##############################################################################
 ## Node
