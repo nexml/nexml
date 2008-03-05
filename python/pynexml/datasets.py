@@ -150,7 +150,7 @@ class Dataset(object):
         default factory if not given.
         """
         if tree_block is None and tree_block_factory is None:
-            tree_block_factory = trees.TreeBlock
+            tree_block_factory = trees.TreesBlock
         tree_block = self.add_taxa_linked_block(elem_id=elem_id,
                                                 label=label,
                                                 taxa_block=taxa_block,
@@ -213,7 +213,7 @@ class Reader(object):
         self.taxa_block_factory = taxa.TaxaBlock
         self.taxon_factory = taxa.Taxon
         #self.char_block_factory = characters.CharBlock
-        self.tree_block_factory = trees.TreeBlock
+        self.tree_block_factory = trees.TreesBlock
         self.tree_factory = trees.Tree
         self.edge_factory = trees.Edge
         self.node_factory = trees.Node

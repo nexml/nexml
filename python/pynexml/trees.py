@@ -34,7 +34,7 @@ from pynexml import taxa
 ## TreesBlocks and TreesBlock
 
 
-class TreeBlock(list, taxa.TaxaLinked):
+class TreesBlock(list, taxa.TaxaLinked):
     """
     Tree manager.
     """
