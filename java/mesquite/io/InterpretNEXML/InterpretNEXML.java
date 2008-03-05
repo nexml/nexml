@@ -198,6 +198,12 @@ class FactoryManager {
 		MesquiteObjectListener(MesquiteProject mymp) {
 			this.mp = mymp;
 		}
+		
+
+	    /**
+	     * Executes when a new object becomes available
+	     * @param obj newly created object from the stream
+	     */
 		public void newObjectNotification (NexmlWritable obj) {
 			if ( obj instanceof DefaultObject ) {
 				DefaultObject dobj = (DefaultObject) obj;
@@ -206,7 +212,16 @@ class FactoryManager {
 			else {
 				System.out.println("received object: " + obj);
 			}
-		}		
+		}
+
+
+		/**
+		 * A stub since this implementation doesn't store anything yet
+		 */
+        public ObjectCache getObjectCache() {
+            // TODO Auto-generated method stub
+            return null;
+        }		
 	}
 
 }

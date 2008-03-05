@@ -24,7 +24,7 @@ public class DefaultObjectListener implements ObjectListener {
 	}
 	
 	/**
-	 * Default contructor
+	 * Default constructor
 	 */
 	public DefaultObjectListener () {
 		this.theCache = new DefaultObjectCache();
@@ -39,6 +39,10 @@ public class DefaultObjectListener implements ObjectListener {
 		this.theCache.setObject(obj, obj.getId(), null);
 	}
 	
+	/**
+	 * Gets the object cache
+	 * @return the object cache
+	 */
 	public ObjectCache getObjectCache() {
 		return this.theCache;
 	}
