@@ -348,7 +348,7 @@ class _NexmlTreesParser(_NexmlElementParser):
         """
         super(_NexmlTreesParser, self).__init__()
         if tree_block_factory is None:
-            self.tree_block_factory = trees.TreeBlock
+            self.tree_block_factory = trees.TreesBlock
         else:
             self.tree_block_factory = tree_block_factory
         if tree_factory is None:
@@ -360,7 +360,7 @@ class _NexmlTreesParser(_NexmlElementParser):
         else:
             self.node_factory = node_factory
         if edge_factory is None:
-            self.edge_factory = trees.TreeBlock
+            self.edge_factory = trees.TreesBlock
         else:
             self.edge_factory = edge_factory
 
@@ -368,7 +368,7 @@ class _NexmlTreesParser(_NexmlElementParser):
         """
         Given an XmlElement object representing a NEXML treeblock,
         self.nxtrees (corresponding to a `nex:trees` element), this
-        will construct and return a TreeBlock object defined by the
+        will construct and return a TreesBlock object defined by the
         underlying NEXML. 
         """
         elem_id = nxtrees.get('id', "Trees" + str(trees_idx))
@@ -846,7 +846,7 @@ class NexmlWriter(datasets.Writer):
 
     def write_tree_blocks(self, tree_blocks, dest, indent_level=1):
         """
-        Writes out TreeBlocks.
+        Writes out TreesBlocks.
         """
         for idx, tree_block in enumerate(tree_blocks):
             dest.write(self.indent * indent_level)
