@@ -149,7 +149,7 @@ public class TreesFactory extends GenericFactory implements ObjectFactory {
 		if ( localName.equals("tree") ) {			
 			
 			// fetch last tree we instantiated earlier
-			MesquiteTree tree = this.trees.getTree( this.trees.size() - 1 );
+			MesquiteTree tree = (MesquiteTree)(this.trees.getTree( this.trees.size() - 1 ));
 			
 			// calculate number of tips
 			int numParents = this.parentOfNode.values().size();
