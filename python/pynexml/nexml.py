@@ -231,7 +231,7 @@ class NexmlReader(datasets.Reader):
             dataset = datasets.Dataset()
         self.parse_taxa_blocks(xml_doc, dataset)
         self.parse_char_blocks(xml_doc, dataset)
-        self.parse_tree_blocks(xml_doc, dataset)
+        self.parse_trees_blocks(xml_doc, dataset)
         return dataset
         
     def parse_taxa_blocks(self, xml_doc, dataset):
@@ -252,13 +252,13 @@ class NexmlReader(datasets.Reader):
         for char_block_element in xml_doc.getiterator('characters'):
             nxc.parse_char_block(char_block_element, dataset)
 
-    def parse_tree_blocks(self, xml_doc, dataset):
+    def parse_trees_blocks(self, xml_doc, dataset):
         """
         Given an XmlDocument object, parses the XmlElement structural
         representations of a set of NEXML treeblocks (`nex:trees`) and
         returns a TreesBlocks object corresponding to the NEXML.
         """
-        nxt = _NexmlTreesParser(self.tree_block_factory, self.tree_factory, self.node_factory, self.edge_factory)
+        nxt = _NexmlTreesParser(self.trees_block_factory, self.tree_factory, self.node_factory, self.edge_factory)
         for trees_idx, trees_element in enumerate(xml_doc.getiterator('trees')):
             nxt.parse_trees(trees_element, dataset, trees_idx)
 
@@ -342,15 +342,15 @@ class _NexmlTreesParser(_NexmlElementParser):
     Parses an XmlElement representation of NEXML format tree blocks.
     """
 
-    def __init__(self, tree_block_factory=None, tree_factory=None, node_factory=None, edge_factory=None):
+    def __init__(self, trees_block_factory=None, tree_factory=None, node_factory=None, edge_factory=None):
         """
         Must be given tree factory to create trees.
         """
         super(_NexmlTreesParser, self).__init__()
-        if tree_block_factory is None:
-            self.tree_block_factory = trees.TreesBlock
+        if trees_block_factory is None:
+            self.trees_block_factory = trees.TreesBlock
         else:
-            self.tree_block_factory = tree_block_factory
+            self.trees_block_factory = trees_block_factory
         if tree_factory is None:
             self.tree_factory = trees.Tree
         else:
@@ -375,14 +375,14 @@ class _NexmlTreesParser(_NexmlElementParser):
         label = nxtrees.get('label', None)
         taxa_id = nxtrees.get('otus', None)
         if taxa_id is None:
-            raise Exception("Taxa block not specified for trees block \"%s\"" % tree_block.elem_id)
+            raise Exception("Taxa block not specified for trees block \"%s\"" % trees_block.elem_id)
         taxa_block = dataset.find_taxa_block(elem_id = taxa_id)
         if not taxa_block:
             raise Exception("Taxa block \"%s\" not found" % taxa_id)
         taxa_block = taxa_block
-        tree_block = dataset.add_tree_block(taxa_block=taxa_block, 
-                                            tree_block=self.tree_block_factory(elem_id=elem_id, label=label))
-        self.parse_annotations(annotated=tree_block, nxelement=nxtrees)                                            
+        trees_block = dataset.add_trees_block(taxa_block=taxa_block, 
+                                            trees_block=self.trees_block_factory(elem_id=elem_id, label=label))
+        self.parse_annotations(annotated=trees_block, nxelement=nxtrees)                                            
         tree_counter = 0
         for tree_element in nxtrees.getiterator('tree'):
             tree_counter = tree_counter + 1
@@ -392,7 +392,7 @@ class _NexmlTreesParser(_NexmlElementParser):
             tree_type_attr = tree_element.get('{http://www.w3.org/2001/XMLSchema-instance}type')
             treeobj.length_type = _from_nexml_tree_length_type(tree_type_attr)
             self.parse_annotations(annotated=treeobj, nxelement=tree_element)
-            nodes = self.parse_nodes(tree_element, taxa_block=tree_block.taxa_block, node_factory=self.node_factory)
+            nodes = self.parse_nodes(tree_element, taxa_block=trees_block.taxa_block, node_factory=self.node_factory)
             edges = self.parse_edges(tree_element, length_type=treeobj.length_type, edge_factory=self.edge_factory)
             for edge in edges.values():
                 # EDGE-ON-ROOT:
@@ -449,7 +449,7 @@ class _NexmlTreesParser(_NexmlElementParser):
                     ### should we make this node the seed node by rerooting the tree here? ###
             else:
                 treeobj.seed_node.edge = None
-            tree_block.append(treeobj)
+            trees_block.append(treeobj)
 
     def parse_nodes(self, tree_element, taxa_block, node_factory):
         """
@@ -799,7 +799,7 @@ class NexmlWriter(datasets.Writer):
         self.write_to_nexml_open(dest, indent_level=0)
         self.write_taxa_blocks(taxa_blocks=dataset.taxa_blocks, dest=dest)
         self.write_char_blocks(char_blocks=dataset.char_blocks, dest=dest)
-        self.write_tree_blocks(tree_blocks=dataset.tree_blocks, dest=dest)
+        self.write_trees_blocks(trees_blocks=dataset.trees_blocks, dest=dest)
         self.write_to_nexml_close(dest, indent_level=0)
 
     ### class-specific  ###
@@ -844,28 +844,28 @@ class NexmlWriter(datasets.Writer):
             dest.write(self.indent * indent_level)                
             dest.write('</otus>\n')
 
-    def write_tree_blocks(self, tree_blocks, dest, indent_level=1):
+    def write_trees_blocks(self, trees_blocks, dest, indent_level=1):
         """
         Writes out TreesBlocks.
         """
-        for idx, tree_block in enumerate(tree_blocks):
+        for idx, trees_block in enumerate(trees_blocks):
             dest.write(self.indent * indent_level)
             parts = []
             parts.append('trees')
-            if tree_block.elem_id is not None:
-                parts.append('id="%s"' % tree_block.elem_id)
+            if trees_block.elem_id is not None:
+                parts.append('id="%s"' % trees_block.elem_id)
             else:
                 raise Exception("Tree block given without ID")
-            if tree_block.label:
-                parts.append('label="%s"' % tree_block.label)
-            parts.append('otus="%s"' % tree_block.taxa_block.elem_id)
+            if trees_block.label:
+                parts.append('label="%s"' % trees_block.label)
+            parts.append('otus="%s"' % trees_block.taxa_block.elem_id)
             dest.write("<%s>\n" % ' '.join(parts))
             
             # annotate
-            if isinstance(tree_block, base.Annotated) and tree_block.has_annotations():
-                self.write_annotations(tree_block, dest, indent_level=indent_level+1)            
+            if isinstance(trees_block, base.Annotated) and trees_block.has_annotations():
+                self.write_annotations(trees_block, dest, indent_level=indent_level+1)            
             
-            for tree in tree_block:
+            for tree in trees_block:
                 self.write_tree(tree=tree, dest=dest, indent_level=2)
             dest.write(self.indent * indent_level)                
             dest.write('</trees>\n')

@@ -39,7 +39,7 @@ class Dataset(object):
     Top-level data structure.
     """
 
-    def __init__(self, taxa_blocks=None, char_blocks=None, tree_blocks=None):
+    def __init__(self, taxa_blocks=None, char_blocks=None, trees_blocks=None):
         """
         Instantiates collections of taxa, blocks, trees, and models.
         """
@@ -51,25 +51,25 @@ class Dataset(object):
             self.char_blocks = []
         else:
             self.char_blocks = char_blocks
-        if tree_blocks is None:
-            self.tree_blocks = []
+        if trees_blocks is None:
+            self.trees_blocks = []
         else:
-            self.tree_blocks = tree_blocks
+            self.trees_blocks = trees_blocks
 
     def normalize_taxa_blocks(self):
         """
         Builds up list of taxon blocks by collecting taxon blocks
-        referenced in self's char_blocks and tree_blocks.
+        referenced in self's char_blocks and trees_blocks.
         """
         self.taxa_blocks = []
         for matrix in self.char_blocks:
             self.normalize_taxa_linked(matrix)
-        for tree_block in self.tree_blocks:
-            self.normalize_taxa_linked(tree_block)
+        for trees_block in self.trees_blocks:
+            self.normalize_taxa_linked(trees_block)
 
     def normalize_taxa_linked(self, taxa_linked):
         """
-        `taxa_linked` is a tree_block or char_block or some other
+        `taxa_linked` is a trees_block or char_block or some other
         object with a `taxa_block` attribute that points to a
         TaxaBlock object. This searches the current collection of
         taxon blocks to see if the referred taxon block exists, as
@@ -138,27 +138,27 @@ class Dataset(object):
             self.normalize_taxa_linked(linked_block)
         return linked_block
 
-    def add_tree_block(self,
+    def add_trees_block(self,
                        elem_id=None,
                        label=None,
                        taxa_block=None,
-                       tree_block=None,
-                       tree_block_factory=None,
+                       trees_block=None,
+                       trees_block_factory=None,
                        normalize_taxa_blocks=True):
         """
         Adds (and returns) a tree block object, creating one using the
         default factory if not given.
         """
-        if tree_block is None and tree_block_factory is None:
-            tree_block_factory = trees.TreesBlock
-        tree_block = self.add_taxa_linked_block(elem_id=elem_id,
+        if trees_block is None and trees_block_factory is None:
+            trees_block_factory = trees.TreesBlock
+        trees_block = self.add_taxa_linked_block(elem_id=elem_id,
                                                 label=label,
                                                 taxa_block=taxa_block,
-                                                linked_block=tree_block,
-                                                linked_block_factory=tree_block_factory,
+                                                linked_block=trees_block,
+                                                linked_block_factory=trees_block_factory,
                                                 normalize_taxa_blocks=normalize_taxa_blocks)
-        self.tree_blocks.append(tree_block)
-        return tree_block
+        self.trees_blocks.append(trees_block)
+        return trees_block
 
     def add_char_block(self,
                        elem_id=None,
@@ -213,7 +213,7 @@ class Reader(object):
         self.taxa_block_factory = taxa.TaxaBlock
         self.taxon_factory = taxa.Taxon
         #self.char_block_factory = characters.CharBlock
-        self.tree_block_factory = trees.TreesBlock
+        self.trees_block_factory = trees.TreesBlock
         self.tree_factory = trees.Tree
         self.edge_factory = trees.Edge
         self.node_factory = trees.Node
@@ -249,19 +249,19 @@ class Reader(object):
         dataset = self.get_dataset(filepath=filepath, fileobj=fileobj, text=text, dataset=dataset)
         return dataset.taxa_blocks
 
-    def get_trees(self, filepath=None, fileobj=None, text=None, tree_block_factory=None, tree_factory=None):
+    def get_trees(self, filepath=None, fileobj=None, text=None, trees_block_factory=None, tree_factory=None):
         """
         Instantiates and returns a list of Tree objects from a
         filepath, a file descriptor or direct text source
         respectively.
         """
         dataset = Dataset()        
-        if tree_block_factory is not None:
-            dataset.tree_block_factory = tree_block_factory
+        if trees_block_factory is not None:
+            dataset.trees_block_factory = trees_block_factory
         if tree_factory is not None:
             dataset.tree_factory = tree_factory
         dataset = self.get_dataset(filepath=filepath, fileobj=fileobj, text=text, dataset=dataset)
-        return dataset.tree_blocks
+        return dataset.trees_blocks
            
     ### Following methods must be implemented by deriving classes  ###
 

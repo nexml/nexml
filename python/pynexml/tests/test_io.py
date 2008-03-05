@@ -59,7 +59,7 @@ class NexmlTest(unittest.TestCase):
     	log_message("  File read with: %d taxa blocks; %d character blocks; %d tree blocks" 
     		% (len(dataset.taxa_blocks), 
     		   len(dataset.char_blocks), 
-    		   len(dataset.tree_blocks)))
+    		   len(dataset.trees_blocks)))
     		   
     	log_message("-- Taxa Blocks")
     	for block_idx, taxa_block in enumerate(dataset.taxa_blocks):
@@ -85,13 +85,13 @@ class NexmlTest(unittest.TestCase):
     			print taxon, char_block[taxon]
     			
     	log_message("-- Trees Blocks")
-    	for block_idx, tree_block in enumerate(dataset.tree_blocks):
+    	for block_idx, trees_block in enumerate(dataset.trees_blocks):
     		log_message("--- Trees Block %d of %d: [%s] '%s'" 
     			% (block_idx+1, 
-    			   len(dataset.tree_blocks), 
-    			   tree_block.elem_id,
-    			   tree_block.label))
-    		for tree in tree_block:
+    			   len(dataset.trees_blocks), 
+    			   trees_block.elem_id,
+    			   trees_block.label))
+    		for tree in trees_block:
     			log_message(tree.seed_node.compose_newick())
      			
         nexml_writer = nexml.NexmlWriter() 
