@@ -1,0 +1,42 @@
+<p>
+This file contains brief developer instructions for using the (as yet incomplete) nexmlbeans-based 
+parser for Mesquite.
+</p>
+
+<p>
+After checking out the project, setup Ant or your IDE to build mesquite.nexml.* and org.nexml.*, but
+exclude mesquite.io.* (that contains the Sax parser, which is currently incomplete).  You will also
+need to include all 7 jar files in the jars folder.  Don't forget to specify an output folder,
+Mesquite_Folder is a suggested name.
+</p>
+
+<p>
+Edit or create the classpaths.xml file in your ~/Mesquite_Support_Files folder.  Add the 7 jar files 
+and the output folder to the classpaths list.  For example:
+</p>
+
+
+&lt;?xml version="1.0"?&gt;<br>
+&lt;mesquite&gt;<br>
+	&lt;classpath&gt/Users/peter/Projects/workspace/Nexmlbeans Project/jars/jsr173_1.0_api.jar&lt/classpath&gt;<br>
+	&lt;classpath&gt/Users/peter/Projects/workspace/Nexmlbeans Project/jars/nexmlbeans.jar&lt/classpath&gt;<br>
+	&lt;classpath&gt/Users/peter/Projects/workspace/Nexmlbeans Project/jars/resolver.jar&lt/classpath&gt;<br>
+	&lt;classpath&gt/Users/peter/Projects/workspace/Nexmlbeans Project/jars/xbean_xpath.jar&lt/classpath&gt;<br>
+	&lt;classpath&gt/Users/peter/Projects/workspace/Nexmlbeans Project/jars/xbean.jar&lt/classpath&gt;<br>
+	&lt;classpath&gt/Users/peter/Projects/workspace/Nexmlbeans Project/jars/xmlbeans-qname.jar&lt/classpath&gt;<br>
+	&lt;classpath&gt/Users/peter/Projects/workspace/Nexmlbeans Project/jars/xmlpublic.jar&lt/classpath&gt;<br>
+	&lt;classpath&gt/Users/peter/Projects/workspace/Nexmlbeans Project/Mesquite_Folder&lt/classpath&gt;<br>
+&lt;/mesquite&gt;<br>
+
+<br>
+<p>
+Replace "/Users/peter/Project/workspace/Nexmlbeans Project" with the appropriate path.
+</p>
+
+<p>
+Now start Mesquite and check the log window to verify that Mesquite properly read the classpaths file.  Note that
+this does not guarantee that the jar files were properly loaded - Mesquite does not immediately report problems with
+loading the jar files.  Use the open dialog to open a Nexml file and when the list of interpreters appears, the
+Nexml interpreter should appear at the bottom of the list.  If the file does not load or incompletely loads, check the
+Mesquite log - problems with class loading frequently indicate problems with the jar files.  Other problems may be
+bugs with the Nexml parser or simply that your file has elements which the parser doesn't handle yet.
