@@ -13,16 +13,21 @@ GNU Lesser General Public License.  (http://www.gnu.org/copyleft/lesser.html)
 package mesquite.nexml.beans.InterpretNEXML;
 /*~~  */
 
-// $Id: InterpretNEXML.java 178 2007-12-05 01:10:50Z rvos $
+//$Id: InterpretNEXML.java 472 2008-03-05 20:00:35Z pmidford $
+
 
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 
+import mesquite.Mesquite;
 import mesquite.categ.lib.CategoricalData;
 import mesquite.categ.lib.DNAData;
 import mesquite.categ.lib.RNAData;
 import mesquite.cont.lib.ContinuousData;
+import mesquite.cont.lib.ContinuousState;
 import mesquite.lib.CommandRecord;
 import mesquite.lib.MesquiteFile;
 import mesquite.lib.MesquiteMessage;
@@ -33,14 +38,18 @@ import mesquite.lib.duties.CharactersManager;
 import mesquite.lib.duties.FileInterpreterI;
 import mesquite.lib.duties.TaxaManager;
 
+import org.apache.xmlbeans.XmlAnySimpleType;
 import org.apache.xmlbeans.XmlException;
+
 import org.nexml.x10.AbstractBlock;
 import org.nexml.x10.AbstractCells;
 import org.nexml.x10.AbstractChar;
 import org.nexml.x10.AbstractFormat;
 import org.nexml.x10.AbstractSeqMatrix;
+import org.nexml.x10.AbstractSeqRow;
 import org.nexml.x10.AbstractSeqs;
 import org.nexml.x10.ContinuousCells;
+import org.nexml.x10.ContinuousSeq;
 import org.nexml.x10.ContinuousSeqs;
 import org.nexml.x10.DnaCells;
 import org.nexml.x10.DnaSeqs;
@@ -53,11 +62,6 @@ import org.nexml.x10.RestrictionSeqs;
 import org.nexml.x10.RnaCells;
 import org.nexml.x10.RnaSeqs;
 import org.nexml.x10.Taxa;
-import org.nexml.x10.impl.ContinuousCellsImpl;
-import org.nexml.x10.impl.ContinuousSeqImpl;
-import org.nexml.x10.impl.DnaSeqsImpl;
-import org.nexml.x10.impl.RestrictionSeqsImpl;
-import org.nexml.x10.impl.RnaSeqsImpl;
 import org.nexml.x10.impl.StandardCellsImpl;
 import org.nexml.x10.impl.StandardSeqsImpl;
 
@@ -65,6 +69,7 @@ import org.nexml.x10.impl.StandardSeqsImpl;
 public class InterpretNEXML extends FileInterpreterI {  
 
     private HashMap taxaById;  //It would be nice to upgrade these to generics someday
+    private HashMap taxonMapByTaxaId;
     private HashMap stateMapById;
     private HashMap stateSetByCharacter;
     /*.................................................................................................................*/
@@ -80,6 +85,7 @@ public class InterpretNEXML extends FileInterpreterI {
     /*.................................................................................................................*/
     public boolean startJob(String arguments, Object condition, boolean hiredByName) {
         taxaById = new HashMap();
+        taxonMapByTaxaId = new HashMap();
         stateMapById = new HashMap();
         stateSetByCharacter = new HashMap();
         return true;
@@ -160,10 +166,8 @@ public class InterpretNEXML extends FileInterpreterI {
     
     private void processOTUBlocks(Nexml n,MesquiteFile file){
         Taxa[] o = n.getOtusArray();
-        
         if (o != null && o.length > 0){
             TaxaManager taxaTask = (TaxaManager)findElementManager(mesquite.lib.Taxa.class);
-
             for(int taxaCount = 0;taxaCount < o.length; taxaCount++){
                 Taxa currentBlock = o[taxaCount];
                 int taxaInBlock = currentBlock.getOtuArray().length;
@@ -171,16 +175,18 @@ public class InterpretNEXML extends FileInterpreterI {
                 if (taxa !=null){
                     taxa.addToFile(file, getProject(), taxaTask);
                     taxaById.put(currentBlock.getId(), taxa);
+                    HashMap myTaxonMap = new HashMap();
+                    taxonMapByTaxaId.put(currentBlock.getId(), myTaxonMap);
                     for(int taxaCounter = 0;taxaCounter<taxaInBlock;taxaCounter++){
                         mesquite.lib.Taxon t = taxa.getTaxon(taxaCounter);
                         if (t!=null) {
                             t.setName(currentBlock.getOtuArray(taxaCounter).getLabel());
+                            myTaxonMap.put(currentBlock.getOtuArray(taxaCounter).getId(), t);
                         }
                     }
                 }
             }
         }
-        
     }
     
     
@@ -223,64 +229,62 @@ public class InterpretNEXML extends FileInterpreterI {
             for(int charBlockCount = 0; charBlockCount< c.length;charBlockCount++){
                 AbstractBlock currentBlock = c[charBlockCount];
                 String linkedTaxaId = currentBlock.getOtus();
-                mesquite.lib.Taxa linkedTaxa = (mesquite.lib.Taxa)taxaById.get(linkedTaxaId);
+                if (taxaById.get(linkedTaxaId) == null){                
+                    MesquiteMessage.warnProgrammer("Character block " + currentBlock.getId() + " links to taxa block with label " + linkedTaxaId + " which could not be found");
+                    return;
+                }
                 mesquite.lib.characters.CharacterData data = null;
-                if (linkedTaxa != null){
-                    if (currentBlock instanceof AbstractSeqs){
-                        if (currentBlock instanceof ContinuousSeqs){
-                            data = addContinuousSeqCharBlock(charTask,linkedTaxa,currentBlock);
-                        }
-                        else if (currentBlock instanceof DnaSeqs){
-                            data = addDNASeqCharBlock(charTask,linkedTaxa,currentBlock);
-                        }
-                        else if (currentBlock instanceof ProteinSeqs){
-                            data = addProteinSeqCharBlock(charTask,linkedTaxa,currentBlock);
-                        }
-                        else if (currentBlock instanceof RestrictionSeqs){
-                            MesquiteMessage.warnUser("Restriction data not recognized by mesquite in block " + currentBlock.getId());                       
-                        }
-                        else if (currentBlock instanceof RnaSeqs){
-                            data = addRNASeqCharBlock(charTask,linkedTaxa,currentBlock);
-                        }
-                        else if (currentBlock instanceof StandardSeqsImpl){
-                            data = addStandardSeqCharBlock(charTask,linkedTaxa,currentBlock);
-                        } 
-                        else 
-                            MesquiteMessage.warnProgrammer("Unrecognized character matrix type " + currentBlock.getClass() + " in block " + currentBlock.getId());
+                if (currentBlock instanceof AbstractSeqs){
+                    if (currentBlock instanceof ContinuousSeqs){
+                        data = addContinuousSeqCharBlock(charTask,linkedTaxaId,currentBlock);
                     }
-                    else if (currentBlock instanceof AbstractCells){
-                        if (currentBlock instanceof ContinuousCells){
-                            data = addContinuousCellCharBlock(charTask,linkedTaxa,currentBlock);
-                        }
-                        else if (currentBlock instanceof DnaCells){
-                            data = addDNACellCharBlock(charTask,linkedTaxa,currentBlock);
-                        }
-                        else if (currentBlock instanceof ProteinCells){
-                            data = addProteinCellCharBlock(charTask,linkedTaxa,currentBlock);
-                        }
-                        else if (currentBlock instanceof RestrictionCells){
-                            MesquiteMessage.warnUser("Restriction data not recognized by mesquite in block " + currentBlock.getId());                       
-                        }
-                        else if (currentBlock instanceof RnaCells){
-                            data = addRNASeqCharBlock(charTask,linkedTaxa,currentBlock);
-                        }
-                        else if (currentBlock instanceof StandardCellsImpl){
-                            data = addStandardCellCharBlock(charTask,linkedTaxa,currentBlock);
-                        }
-                        else
-                            MesquiteMessage.warnProgrammer("Unrecognized character matrix type " + currentBlock.getClass() + " in block " + currentBlock.getId());
+                    else if (currentBlock instanceof DnaSeqs){
+                        data = addDNASeqCharBlock(charTask,linkedTaxaId,currentBlock);
+                    }
+                    else if (currentBlock instanceof ProteinSeqs){
+                        data = addProteinSeqCharBlock(charTask,linkedTaxaId,currentBlock);
+                    }
+                    else if (currentBlock instanceof RestrictionSeqs){
+                        MesquiteMessage.warnUser("Restriction data not recognized by mesquite in block " + currentBlock.getId());                       
+                    }
+                    else if (currentBlock instanceof RnaSeqs){
+                        data = addRNASeqCharBlock(charTask,linkedTaxaId,currentBlock);
+                    }
+                    else if (currentBlock instanceof StandardSeqsImpl){
+                        data = addStandardSeqCharBlock(charTask,linkedTaxaId,currentBlock);
+                    } 
+                    else 
+                        MesquiteMessage.warnProgrammer("Unrecognized character matrix type " + currentBlock.getClass() + " in block " + currentBlock.getId());
+                }
+                else if (currentBlock instanceof AbstractCells){
+                    if (currentBlock instanceof ContinuousCells){
+                        data = addContinuousCellCharBlock(charTask,linkedTaxaId,currentBlock);
+                    }
+                    else if (currentBlock instanceof DnaCells){
+                        data = addDNACellCharBlock(charTask,linkedTaxaId,currentBlock);
+                    }
+                    else if (currentBlock instanceof ProteinCells){
+                        data = addProteinCellCharBlock(charTask,linkedTaxaId,currentBlock);
+                    }
+                    else if (currentBlock instanceof RestrictionCells){
+                        MesquiteMessage.warnUser("Restriction data not recognized by mesquite in block " + currentBlock.getId());                       
+                    }
+                    else if (currentBlock instanceof RnaCells){
+                        data = addRNASeqCharBlock(charTask,linkedTaxaId,currentBlock);
+                    }
+                    else if (currentBlock instanceof StandardCellsImpl){
+                        data = addStandardCellCharBlock(charTask,linkedTaxaId,currentBlock);
                     }
                     else
                         MesquiteMessage.warnProgrammer("Unrecognized character matrix type " + currentBlock.getClass() + " in block " + currentBlock.getId());
-                    if (data != null){
-                        data.setName(currentBlock.getLabel());
-                        data.addToFile(file, getProject(), null);
-                    }
+                }
+                else
+                    MesquiteMessage.warnProgrammer("Unrecognized character matrix type " + currentBlock.getClass() + " in block " + currentBlock.getId());
+                if (data != null){
+                    data.setName(currentBlock.getLabel());
+                    data.addToFile(file, getProject(), null);
+                }
 
-                }
-                else{
-                    MesquiteMessage.warnProgrammer("Character block " + currentBlock.getId() + " links to taxa block with label " + linkedTaxaId + " which could not be found");
-                }
             }
         }
     }
@@ -288,68 +292,104 @@ public class InterpretNEXML extends FileInterpreterI {
 
     
 
-//    private void addRestrictionSeqCharBlock(CharactersManager charTask, mesquite.lib.Taxa linkedTaxa, AbstractBlock currentBlock, MesquiteFile file){
-//        mesquite.lib.characters.CharacterData data = charTask.newCharacterData(linkedTaxa, 0, ContinuousData.DATATYPENAME);  // Make this type sensitive
-//        data.setName(currentBlock.getLabel());
-//        data.addToFile(file, getProject(), null);
-//    }
-    
-    private mesquite.lib.characters.CharacterData addStandardCellCharBlock(CharactersManager charTask, mesquite.lib.Taxa linkedTaxa, AbstractBlock currentBlock){
-        mesquite.lib.characters.CharacterData data = charTask.newCharacterData(linkedTaxa, 0, CategoricalData.DATATYPENAME);  // Make this type sensitive
-        return data;
-    }
-
-    private mesquite.lib.characters.CharacterData addContinuousCellCharBlock(CharactersManager charTask, mesquite.lib.Taxa linkedTaxa, AbstractBlock currentBlock){
-        mesquite.lib.characters.CharacterData data = charTask.newCharacterData(linkedTaxa, 0, ContinuousData.DATATYPENAME);  // Make this type sensitive
-        return data;
-    }
-
-    private mesquite.lib.characters.CharacterData addDNASeqCharBlock(CharactersManager charTask, mesquite.lib.Taxa linkedTaxa, AbstractBlock currentBlock){
-        mesquite.lib.characters.CharacterData data = charTask.newCharacterData(linkedTaxa, 0, DNAData.DATATYPENAME);  // Make this type sensitive
-        return data;
-    }
-
-    private mesquite.lib.characters.CharacterData addDNACellCharBlock(CharactersManager charTask, mesquite.lib.Taxa linkedTaxa, AbstractBlock currentBlock){
-        mesquite.lib.characters.CharacterData data = charTask.newCharacterData(linkedTaxa, 0, DNAData.DATATYPENAME);  // Make this type sensitive
-        return data;
-    }
-
-
-    private mesquite.lib.characters.CharacterData addProteinSeqCharBlock(CharactersManager charTask, mesquite.lib.Taxa linkedTaxa, AbstractBlock currentBlock){
-        mesquite.lib.characters.CharacterData data = charTask.newCharacterData(linkedTaxa, 0, DNAData.DATATYPENAME);  // Make this type sensitive
-        return data;
-    }
-
-    private mesquite.lib.characters.CharacterData addProteinCellCharBlock(CharactersManager charTask, mesquite.lib.Taxa linkedTaxa, AbstractBlock currentBlock){
-        mesquite.lib.characters.CharacterData data = charTask.newCharacterData(linkedTaxa, 0, DNAData.DATATYPENAME);  // Make this type sensitive
-        return data;
-    }
-
-
-    private mesquite.lib.characters.CharacterData addRNASeqCharBlock(CharactersManager charTask, mesquite.lib.Taxa linkedTaxa, AbstractBlock currentBlock){
-        mesquite.lib.characters.CharacterData data = charTask.newCharacterData(linkedTaxa, 0, DNAData.DATATYPENAME);  //TODO so how to make this RNA specific?
-        return data;
-    }
-
-    private mesquite.lib.characters.CharacterData addRNACellCharBlock(CharactersManager charTask, mesquite.lib.Taxa linkedTaxa, AbstractBlock currentBlock){
-        mesquite.lib.characters.CharacterData data = charTask.newCharacterData(linkedTaxa, 0, DNAData.DATATYPENAME);  //TODO so how to make this RNA specific?
-        return data;
-    }
-
-    
-    private mesquite.lib.characters.CharacterData addContinuousSeqCharBlock(CharactersManager charTask, mesquite.lib.Taxa linkedTaxa, AbstractBlock currentBlock){
-        mesquite.lib.characters.CharacterData data = charTask.newCharacterData(linkedTaxa, 0, ContinuousData.DATATYPENAME);  // Make this type sensitive
+    private mesquite.lib.characters.CharacterData addStandardCellCharBlock(CharactersManager charTask, String linkedTaxaId, AbstractBlock currentBlock){
+        mesquite.lib.Taxa linkedTaxa = (mesquite.lib.Taxa)taxaById.get(linkedTaxaId);
         AbstractFormat f = null;
-        AbstractSeqMatrix m = ((AbstractSeqs)currentBlock).getMatrix();
-        AbstractChar chars [];
+        AbstractChar chars [] = null;
         if (currentBlock.isSetFormat()){
             f = currentBlock.getFormat();
             chars = f.getCharArray();
         }
+        if (chars != null){
+            for(int i= 0;i<chars.length;i++){
+            }
+        }
+        mesquite.lib.characters.CharacterData data = charTask.newCharacterData(linkedTaxa, 0, CategoricalData.DATATYPENAME);  // Make this type sensitive
         return data;
     }
 
-    private mesquite.lib.characters.CharacterData addStandardSeqCharBlock(CharactersManager charTask, mesquite.lib.Taxa linkedTaxa, AbstractBlock currentBlock){
+    private mesquite.lib.characters.CharacterData addContinuousCellCharBlock(CharactersManager charTask, String linkedTaxaId, AbstractBlock currentBlock){
+        mesquite.lib.Taxa linkedTaxa = (mesquite.lib.Taxa)taxaById.get(linkedTaxaId);
+        mesquite.lib.characters.CharacterData data = charTask.newCharacterData(linkedTaxa, 0, ContinuousData.DATATYPENAME);  // Make this type sensitive
+        return data;
+    }
+
+    private mesquite.lib.characters.CharacterData addDNASeqCharBlock(CharactersManager charTask, String linkedTaxaId, AbstractBlock currentBlock){
+        mesquite.lib.Taxa linkedTaxa = (mesquite.lib.Taxa)taxaById.get(linkedTaxaId);
+        mesquite.lib.characters.CharacterData data = charTask.newCharacterData(linkedTaxa, 0, DNAData.DATATYPENAME);  // Make this type sensitive
+        return data;
+    }
+
+    private mesquite.lib.characters.CharacterData addDNACellCharBlock(CharactersManager charTask, String linkedTaxaId, AbstractBlock currentBlock){
+        mesquite.lib.Taxa linkedTaxa = (mesquite.lib.Taxa)taxaById.get(linkedTaxaId);
+        mesquite.lib.characters.CharacterData data = charTask.newCharacterData(linkedTaxa, 0, DNAData.DATATYPENAME);  // Make this type sensitive
+        return data;
+    }
+
+
+    private mesquite.lib.characters.CharacterData addProteinSeqCharBlock(CharactersManager charTask, String linkedTaxaId, AbstractBlock currentBlock){
+        mesquite.lib.Taxa linkedTaxa = (mesquite.lib.Taxa)taxaById.get(linkedTaxaId);
+        mesquite.lib.characters.CharacterData data = charTask.newCharacterData(linkedTaxa, 0, DNAData.DATATYPENAME);  // Make this type sensitive
+        return data;
+    }
+
+    private mesquite.lib.characters.CharacterData addProteinCellCharBlock(CharactersManager charTask, String linkedTaxaId, AbstractBlock currentBlock){
+        mesquite.lib.Taxa linkedTaxa = (mesquite.lib.Taxa)taxaById.get(linkedTaxaId);
+        mesquite.lib.characters.CharacterData data = charTask.newCharacterData(linkedTaxa, 0, DNAData.DATATYPENAME);  // Make this type sensitive
+        return data;
+    }
+
+
+    private mesquite.lib.characters.CharacterData addRNASeqCharBlock(CharactersManager charTask, String linkedTaxaId, AbstractBlock currentBlock){
+        mesquite.lib.Taxa linkedTaxa = (mesquite.lib.Taxa)taxaById.get(linkedTaxaId);
+        mesquite.lib.characters.CharacterData data = charTask.newCharacterData(linkedTaxa, 0, DNAData.DATATYPENAME);  //TODO so how to make this RNA specific?
+        return data;
+    }
+
+    private mesquite.lib.characters.CharacterData addRNACellCharBlock(CharactersManager charTask, String linkedTaxaId, AbstractBlock currentBlock){
+        mesquite.lib.Taxa linkedTaxa = (mesquite.lib.Taxa)taxaById.get(linkedTaxaId);
+        mesquite.lib.characters.CharacterData data = charTask.newCharacterData(linkedTaxa, 0, DNAData.DATATYPENAME);  //TODO so how to make this RNA specific?
+        return data;
+    }
+
+    
+    private mesquite.lib.characters.CharacterData addContinuousSeqCharBlock(CharactersManager charTask, String linkedTaxaId, AbstractBlock currentBlock){
+        mesquite.lib.Taxa linkedTaxa = (mesquite.lib.Taxa)taxaById.get(linkedTaxaId);
+        mesquite.lib.characters.CharacterData data = charTask.newCharacterData(linkedTaxa, 0, ContinuousData.DATATYPENAME);  // Make this type sensitive
+        AbstractSeqMatrix matrix = ((AbstractSeqs)currentBlock).getMatrix();
+        AbstractSeqRow [] rows = matrix.getRowArray();
+        for (int i= 0; i< rows.length;i++){
+            AbstractSeqRow curRow = rows[i];
+            String curOtu = curRow.getOtu(); 
+            HashMap linkedTaxonMap = (HashMap)taxonMapByTaxaId.get(linkedTaxaId);
+            mesquite.lib.Taxon t = (mesquite.lib.Taxon)linkedTaxonMap.get(curOtu);
+            int it = linkedTaxa.whichTaxonNumber(t);  //TODO how to handle -1 returns?
+            XmlAnySimpleType x = curRow.getSeq();
+            if (x instanceof ContinuousSeq){
+                ContinuousSeq curSeq = (ContinuousSeq)x;
+                List seqList = curSeq.getListValue();
+                int ic = 0;
+                Iterator elementItr = seqList.iterator();
+                while (elementItr.hasNext()){
+                    Float element = (Float)elementItr.next();
+                    ContinuousState elementState = new ContinuousState(element.doubleValue());
+                    elementState.setNumItems(1);
+                    if (data.getNumChars() <= ic) {
+                        data.addCharacters(data.getNumChars()-1, 1, false);   // add a character if needed
+                    }
+                    data.setState(ic,it,elementState);
+                    ic++;
+                }
+            }
+            else{
+                MesquiteMessage.println("Expected a ContinuousSeq, but got " + x);
+            }
+        }
+        return data;
+    }
+
+    private mesquite.lib.characters.CharacterData addStandardSeqCharBlock(CharactersManager charTask, String linkedTaxaId, AbstractBlock currentBlock){
+        mesquite.lib.Taxa linkedTaxa = (mesquite.lib.Taxa)taxaById.get(linkedTaxaId);
         mesquite.lib.characters.CharacterData data = charTask.newCharacterData(linkedTaxa, 0, CategoricalData.DATATYPENAME);  // Make this type sensitive
         return data;
     }
