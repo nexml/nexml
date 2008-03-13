@@ -256,6 +256,26 @@ class Tree(base.IdTagged):
     ## for debugging ##
     def compose_newick(self):
         return self.seed_node.compose_newick()
+                
+    ## basic tree manipulation ##
+    def deroot(self):
+        if self.seed_node:
+            children = self.seed_node.children()
+            if children and len(children) == 2:
+                if len(children[0].children()) >= 2:
+                    new_child = children[0]
+                    new_seed = children[1]
+                else: #lif len(children[1].children()) >= 2:
+                    new_child = children[1]
+                    new_seed = children[0]
+                new_edge_length = 0.0
+                if new_child.edge.length:
+                    new_edge_length += new_child.edge.length
+                if new_seed.edge.length:
+                    new_edge_length += new_seed.edge.length
+                    new_seed.edge = None
+                self.seed_node = new_seed
+                self.seed_node.add_child(new_child)
         
 ##############################################################################
 ## Node
