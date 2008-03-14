@@ -674,7 +674,20 @@ class RestrictionSitesCharactersBlock(DiscreteCharactersBlock):
         """
         DiscreteCharactersBlock.__init__(self, *args, **kwargs)
         self.default_state_alphabet = RESTRICTION_SITES_STATE_ALPHABET
-        self.state_alphabets.append(self.default_state_alphabet)                
+        self.state_alphabets.append(self.default_state_alphabet)         
+        
+class InfiniteSitesCharactersBlock(DiscreteCharactersBlock):
+    """
+    Infinite sites data.
+    """
+    
+    def __init__(self, *args, **kwargs):
+        """
+        Inits. Handles keyword arguments: `elem_id`, `label` and `taxa_block`.
+        """
+        DiscreteCharactersBlock.__init__(self, *args, **kwargs)
+        self.default_state_alphabet = INFINITE_SITES_STATE_ALPHABET
+        self.state_alphabets.append(self.default_state_alphabet)         
 
 if __name__ == "__main__":
     dna = DnaStateAlphabets()
