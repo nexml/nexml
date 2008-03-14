@@ -30,6 +30,7 @@ specializations to handle nucleotide, etc. character types.
 from pynexml import base
 from pynexml import taxa
 
+
 class StateAlphabetElement(base.IdTagged):
     """
     A character state definition, which can either be a fundamental state or
@@ -237,7 +238,7 @@ class DnaStateAlphabet(StateAlphabet):
         self.append(StateAlphabetElement(symbol="B", 
                                            multistate=StateAlphabetElement.AMBIGUOUS_STATE,
                                            member_states=self.get_states(symbols=['C', 'G', 'T'])))
-
+                                           
 class RnaStateAlphabet(StateAlphabet):
 
     def __init__(self, elem_id=None, label=None):
@@ -284,7 +285,6 @@ class RnaStateAlphabet(StateAlphabet):
                                            multistate=StateAlphabetElement.AMBIGUOUS_STATE,
                                            member_states=self.get_states(symbols=['C', 'G', 'U'])))
 
-
 class ProteinStateAlphabet(StateAlphabet):
 
     def __init__(self, elem_id=None, label=None):
@@ -326,7 +326,7 @@ class ProteinStateAlphabet(StateAlphabet):
                                            multistate=StateAlphabetElement.AMBIGUOUS_STATE,
                                            member_states=self.get_states(symbols=['A', 'C', 'D', 'E',
                                            'F', 'G', 'H', 'I', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S',
-                                           'T', 'U', 'V', 'W', 'Y', '-'])))                                              
+                                           'T', 'U', 'V', 'W', 'Y', '-'])))            
 
 class BinaryStateAlphabet(StateAlphabet):
 
@@ -348,12 +348,20 @@ class BinaryStateAlphabet(StateAlphabet):
 class RestrictionSitesStateAlphabet(BinaryStateAlphabet):
 
     def __init__(self, elem_id=None, label=None):
-        BinaryStateAlphabet.__init__(self, elem_id=elem_id, label=label)            
-
+        BinaryStateAlphabet.__init__(self, elem_id=elem_id, label=label)    
+        
 class InfiniteSitesStateAlphabet(BinaryStateAlphabet):
 
     def __init__(self, elem_id=None, label=None):
         BinaryStateAlphabet.__init__(self, elem_id=elem_id, label=label)
+
+### GLOBAL STATE ALPHABETS ###                                       
+
+DNA_STATE_ALPHABET = DnaStateAlphabet()                                           
+RNA_STATE_ALPHABET = RnaStateAlphabet() 
+PROTEIN_STATE_ALPHABET = ProteinStateAlphabet()                                            
+RESTRICTION_SITES_STATE_ALPHABET = RestrictionSitesStateAlphabet()         
+INFINITE_SITES_STATE_ALPHABET = InfiniteSitesStateAlphabet()
                 
 class ColumnType(base.IdTagged):
     """                                                                                                                                                                                                                                                                                                                                                                           
@@ -626,7 +634,7 @@ class DnaCharactersBlock(DiscreteCharactersBlock):
         Inits. Handles keyword arguments: `elem_id`, `label` and `taxa_block`.
         """
         DiscreteCharactersBlock.__init__(self, *args, **kwargs)
-        self.default_state_alphabet = DnaStateAlphabet()
+        self.default_state_alphabet = DNA_STATE_ALPHABET
         self.state_alphabets.append(self.default_state_alphabet)         
 
 class RnaCharactersBlock(DiscreteCharactersBlock):
@@ -639,7 +647,7 @@ class RnaCharactersBlock(DiscreteCharactersBlock):
         Inits. Handles keyword arguments: `elem_id`, `label` and `taxa_block`.
         """
         DiscreteCharactersBlock.__init__(self, *args, **kwargs)
-        self.default_state_alphabet = RnaStateAlphabet()
+        self.default_state_alphabet = RNA_STATE_ALPHABET
         self.state_alphabets.append(self.default_state_alphabet)      
         
 class ProteinCharactersBlock(DiscreteCharactersBlock):
@@ -652,7 +660,7 @@ class ProteinCharactersBlock(DiscreteCharactersBlock):
         Inits. Handles keyword arguments: `elem_id`, `label` and `taxa_block`.
         """        
         DiscreteCharactersBlock.__init__(self, *args, **kwargs)
-        self.default_state_alphabet = ProteinStateAlphabet()
+        self.default_state_alphabet = PROTEIN_STATE_AKLPHABET
         self.state_alphabets.append(self.default_state_alphabet)               
         
 class RestrictionSitesCharactersBlock(DiscreteCharactersBlock):
@@ -665,7 +673,7 @@ class RestrictionSitesCharactersBlock(DiscreteCharactersBlock):
         Inits. Handles keyword arguments: `elem_id`, `label` and `taxa_block`.
         """
         DiscreteCharactersBlock.__init__(self, *args, **kwargs)
-        self.default_state_alphabet = RestrictionSitesStateAlphabet()
+        self.default_state_alphabet = RESTRICTION_SITES_STATE_ALPHABET
         self.state_alphabets.append(self.default_state_alphabet)                
 
 if __name__ == "__main__":
