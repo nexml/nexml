@@ -612,7 +612,25 @@ class DiscreteCharactersBlock(CharactersBlock):
         CharactersBlock.__init__(self, *args, **kwargs)
         self.state_alphabets = []
         self.default_state_alphabet = None
+        self.__default_symbol_state_map = None
         
+    def _get_default_symbol_state_map(self):
+        if self.__default_symbol_state_map is None and self.default_state_alphabet is not None:
+            self.__default_symbol_state_map = self.default_state_alphabet.symbol_state_map()
+        return self.__default_symbol_state_map
+    
+    default_symbol_state_map = property(_get_default_symbol_state_map)
+                           
+    def add_characters(self, taxon, sequence):
+        if taxon not in self:
+            self[taxon] = CharacterDataVector(taxon=taxon)
+        for value in sequence:
+            if isinstance(value, str):
+                symbol = value
+            else:
+                symbol = str(value)
+            self[taxon].append(CharacterDataCell(value=self.default_symbol_state_map[symbol]))
+                    
 class StandardCharactersBlock(DiscreteCharactersBlock):
     """
     `standard` data.

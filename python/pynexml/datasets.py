@@ -172,7 +172,7 @@ class Dataset(object):
         default factory if not given if not given.
         """
         if char_block is None and char_block_factory is None:
-            char_block_factory = characters.CharBlock        
+            char_block_factory = characters.CharactersBlock        
         char_block = self.add_taxa_linked_block(elem_id=elem_id,
                                                 label=label,
                                                 taxa_block=taxa_block,

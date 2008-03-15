@@ -28,6 +28,18 @@ This module provides classes and methods for managing taxa.
 import sys
 from pynexml import base
 
+
+_HEX_CODE_TO_BINARY = {'a': '1010', 'c': '1100', 'b': '1011', 'e': '1110', 'd': '1101', 'f': '1111', '1': '0001', '0': '0000', '3': '0011', '2': '0010', '5': '0101', '4': '0100', '7': '0111', '6': '0110', '9': '1001', '8': '1000'}
+
+def int_to_bitstring(n):
+    global _HEX_CODE_TO_BINARY
+    assert n >= 0
+    if n == 0:
+        return "0"
+    h = hex(n)
+    b = "".join([_HEX_CODE_TO_BINARY[i] for i in h[2:]])
+    return b[b.find("1"):] 
+
 class TaxonLinked(base.IdTagged):
     """
     Provides infrastructure for maintaining link/reference to a Taxon
@@ -144,6 +156,12 @@ class TaxaBlock(list, base.IdTagged):
             taxon = Taxon(elem_id=elem_id, label=label)
             self.append(taxon)
             return taxon
+            
+    def all_taxa_bitmask(self):
+        """
+        Returns mask of all taxa.
+        """
+        return pow(2, len(self)) - 1
         
     def taxon_bitmask(self, taxon):
         """
@@ -154,9 +172,14 @@ class TaxaBlock(list, base.IdTagged):
             return pow(2, self.index(taxon))
         except ValueError:
             raise ValueError("Taxon with ID '%s' and label '%s' not found" 
-                             % (str(taxon.elem_id), str(taxon.label)))                             
-            
-            
+                             % (str(taxon.elem_id), str(taxon.label)))        
+                             
+    def split_bitmask_string(self, split_bitmask):
+        """
+        Returns bitstring representation of split_bitmask.
+        """
+        return "%s" % int_to_bitstring(split_bitmask).rjust(len(self), "0")
+                                
 class Taxon(base.IdTagged):
     """
     A taxon associated with a sequence or a node on a tree.
