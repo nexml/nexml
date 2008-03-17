@@ -18,60 +18,11 @@
     </xs:annotation>
     
     <xs:include schemaLocation="abstract.xsd"/>
-    <!--
-    <xs:import 
-        namespace="http://www.w3.org/XML/1998/namespace" 
-        schemaLocation="http://www.w3.org/2001/xml.xsd"/>-->
+
     
     <xs:simpleType name="ContinuousToken">
         <xs:restriction base="xs:float"/>
     </xs:simpleType>   
-     
-    <!--
-        The following type definitions have to do with states and ambiguity mapping,
-        which should be omitted for continuous data.
-        
-    <xs:complexType name="ContinuousMapping">
-        <xs:annotation>
-            <xs:documentation>A standard character ambiguity mapping.</xs:documentation>
-        </xs:annotation>
-        <xs:complexContent>
-            <xs:restriction base="AbstractMapping"/>            
-        </xs:complexContent>
-    </xs:complexType>
-    
-    <xs:complexType name="ContinuousState">
-        <xs:annotation>
-            <xs:documentation> This is a concrete implementation of the state element, which requires
-                a symbol element, in this case restricted to integers, and optional mapping
-                elements to refer to other states. </xs:documentation>
-        </xs:annotation>
-        <xs:complexContent>
-            <xs:restriction base="AbstractState">
-                <xs:sequence minOccurs="1" maxOccurs="1">
-                    <xs:element name="dict" minOccurs="0" maxOccurs="unbounded" type="Dict"/>
-                    <xs:element name="symbol" type="ContinuousToken" minOccurs="1" maxOccurs="1"/>
-                    <xs:element name="mapping" type="ContinuousMapping" minOccurs="0" maxOccurs="unbounded"/>
-                </xs:sequence>
-            </xs:restriction>
-        </xs:complexContent>
-    </xs:complexType>
-    
-    <xs:complexType name="ContinuousStates">
-        <xs:annotation>
-            <xs:documentation>
-                A container for a set of states.
-            </xs:documentation>
-        </xs:annotation>
-        <xs:complexContent>
-            <xs:restriction base="AbstractStates">
-                <xs:sequence minOccurs="1" maxOccurs="1">
-                    <xs:element name="dict" minOccurs="0" maxOccurs="unbounded" type="Dict"/>
-                    <xs:element name="state" type="ContinuousState" minOccurs="0" maxOccurs="unbounded"/>
-                </xs:sequence>
-            </xs:restriction>
-        </xs:complexContent>        
-    </xs:complexType> -->
     
     <xs:complexType name="ContinuousChar">
         <xs:annotation>

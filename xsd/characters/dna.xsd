@@ -3,9 +3,6 @@
     xmlns="http://www.nexml.org/1.0" xmlns:xml="http://www.w3.org/XML/1998/namespace">
     <xs:include schemaLocation="abstract.xsd"/>
     
-    <!--
-    <xs:import namespace="http://www.w3.org/XML/1998/namespace"
-        schemaLocation="http://www.w3.org/2001/xml.xsd"/>-->
     <xs:annotation>
         <xs:documentation>
             This module defines concrete subclasses for the 
@@ -57,7 +54,6 @@
             <xs:restriction base="AbstractState">
                 <xs:sequence minOccurs="1" maxOccurs="1">
                     <xs:element name="dict" minOccurs="0" maxOccurs="unbounded" type="Dict"/>
-                    <!--<xs:element name="symbol" type="DNAToken" minOccurs="1" maxOccurs="1"/>-->
                     <xs:element name="mapping" type="DNAMapping" minOccurs="0" maxOccurs="unbounded"/>
                 </xs:sequence>
             </xs:restriction>

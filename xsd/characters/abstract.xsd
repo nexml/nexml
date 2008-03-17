@@ -17,25 +17,12 @@
 
     <xs:include schemaLocation="../abstract.xsd"/>
     
-    <xs:simpleType name="Mstaxa">
-        <xs:annotation>
-            <xs:documentation>
-                This simple type is used as an attribute value in the mapping element
-                to indicate where multi-state taxa are due to uncertainty (value 
-                "uncertain") or true polymorphism.
-            </xs:documentation>
-        </xs:annotation>
-        <xs:restriction base="xs:string">
-            <xs:pattern value="uncertain|polymorphism"/>
-        </xs:restriction>
-    </xs:simpleType>
-    
     <xs:complexType name="AbstractMapping" abstract="true">
         <xs:annotation>
             <xs:documentation>
                 The AbstractMapping type is the superclass for an ambiguity mapping. In an instance
-                document, a subclass of this type will look like &lt;mapping state="st1"/&gt;, i.e.
-                an element called "mapping" with an attribute called "state" whose value is an
+                document, a subclass of this type will look like &lt;member state="st1"/&gt;, i.e.
+                an element called "member" with an attribute called "state" whose value is an
                 id reference that refers to an element that subclasses AbstractState. The purpose
                 of AbstractMapping is to specify which other states may be implied, e.g. a nucleotide
                 symbol "N" would have mappings to "A", "C", "G" and "T". 
@@ -44,7 +31,6 @@
         <xs:complexContent>
             <xs:extension base="Base">
                 <xs:attribute name="state" use="required" type="xs:NCName"/>
-                <xs:attribute name="mstaxa" use="required" type="Mstaxa"/>
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
@@ -74,12 +60,47 @@
         <xs:complexContent>
             <xs:extension base="IDTagged">
                 <xs:sequence minOccurs="1" maxOccurs="1">
-                    <xs:element name="mapping" type="AbstractMapping" minOccurs="0" maxOccurs="unbounded"/>
                 </xs:sequence>
-                <xs:attribute name="symbol" type="xs:string" use="required"/>
+                <xs:attribute name="symbol" type="xs:anySimpleType" use="required"/>
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
+    
+    <xs:complexType name="AbstractUncertainStateSet" abstract="true">
+        <xs:annotation>
+            <xs:documentation> 
+                The AbstractState type is the superclass for a state definition.
+                The element encloses a required AbstractSymbol element that in restricted concrete
+                subclasses must be of a sensible type such as a single IUPAC character. It may
+                enclose zero or more AbstractMapping elements to resolve ambiguities.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="AbstractState">
+                <xs:sequence minOccurs="1" maxOccurs="1">
+                    <xs:element name="member" type="AbstractMapping" minOccurs="0" maxOccurs="unbounded"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>    
+    
+    <xs:complexType name="AbstractPolymorphicStateSet" abstract="true">
+        <xs:annotation>
+            <xs:documentation> 
+                The AbstractState type is the superclass for a state definition.
+                The element encloses a required AbstractSymbol element that in restricted concrete
+                subclasses must be of a sensible type such as a single IUPAC character. It may
+                enclose zero or more AbstractMapping elements to resolve ambiguities.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="AbstractUncertainStateSet">
+                <xs:sequence minOccurs="1" maxOccurs="1">
+                    <xs:element name="uncertain_state_set" type="AbstractUncertainStateSet" minOccurs="0" maxOccurs="unbounded"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>     
     
     <xs:complexType name="AbstractStates" abstract="true">
         <xs:annotation>
@@ -91,6 +112,8 @@
             <xs:extension base="IDTagged">
                 <xs:sequence minOccurs="1" maxOccurs="1">
                     <xs:element name="state" type="AbstractState" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element name="polymorphic_state_set" type="AbstractPolymorphicStateSet" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element name="uncertain_state_set" type="AbstractUncertainStateSet" minOccurs="0" maxOccurs="unbounded"/>
                 </xs:sequence>
             </xs:extension>
         </xs:complexContent>        
