@@ -112,13 +112,17 @@
                 a shorthand token. 
             -->
             <states id="states1">
-                <state id="s1" symbol="1"/>                
+                <state id="s1" symbol="1"/>                                
                 <state id="s2" symbol="2"/>                
-                <state id="s3" symbol="3"/>                
-                <state id="s4" symbol="4">
-                    <mapping state="s1" mstaxa="polymorphism"/>
-                    <mapping state="s2" mstaxa="polymorphism"/>
-                </state>                              
+                <state id="s3" symbol="3"/>                 
+                <polymorphic_state_set symbol="4" id="s4">                    
+                    <member state="s1"/>
+                    <member state="s2"/>                    
+                </polymorphic_state_set>
+                <uncertain_state_set symbol="5" id="s5">
+                    <member state="s3"/>
+                    <member state="s4"/>
+                </uncertain_state_set>      
             </states>
             <!--
                 The matrix in this example contains two columns, both
