@@ -3,9 +3,6 @@
     xmlns="http://www.nexml.org/1.0" xmlns:xml="http://www.w3.org/XML/1998/namespace">
     <xs:include schemaLocation="abstract.xsd"/>
     
-    <!--
-    <xs:import namespace="http://www.w3.org/XML/1998/namespace"
-        schemaLocation="http://www.w3.org/2001/xml.xsd"/>-->
     <xs:annotation>
         <xs:documentation>
             This module defines concrete subclasses for the 
@@ -42,12 +39,50 @@
             <xs:restriction base="AbstractState">
                 <xs:sequence minOccurs="1" maxOccurs="1">
                     <xs:element name="dict" minOccurs="0" maxOccurs="unbounded" type="Dict"/>
-                    <!--<xs:element name="symbol" type="StandardToken" minOccurs="1" maxOccurs="1"/>-->
-                    <xs:element name="mapping" type="StandardMapping" minOccurs="0" maxOccurs="unbounded"/>
                 </xs:sequence>
+                <xs:attribute name="symbol" type="StandardToken" use="required"/>
             </xs:restriction>
         </xs:complexContent>
     </xs:complexType>
+    
+    <xs:complexType name="StandardUncertainStateSet">
+        <xs:annotation>
+            <xs:documentation> 
+                The AbstractState type is the superclass for a state definition.
+                The element encloses a required AbstractSymbol element that in restricted concrete
+                subclasses must be of a sensible type such as a single IUPAC character. It may
+                enclose zero or more AbstractMapping elements to resolve ambiguities.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:restriction base="AbstractUncertainStateSet">
+                <xs:sequence minOccurs="1" maxOccurs="1">
+                    <xs:element name="member" type="StandardMapping" minOccurs="0" maxOccurs="unbounded"/>
+                </xs:sequence>
+                <xs:attribute name="symbol" type="xs:string" use="required"/>
+            </xs:restriction>
+        </xs:complexContent>
+    </xs:complexType>    
+    
+    <xs:complexType name="StandardPolymorphicStateSet">
+        <xs:annotation>
+            <xs:documentation> 
+                The AbstractState type is the superclass for a state definition.
+                The element encloses a required AbstractSymbol element that in restricted concrete
+                subclasses must be of a sensible type such as a single IUPAC character. It may
+                enclose zero or more AbstractMapping elements to resolve ambiguities.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:restriction base="AbstractPolymorphicStateSet">
+                <xs:sequence minOccurs="1" maxOccurs="1">
+                    <xs:element name="member" type="StandardMapping" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element name="uncertain_state_set" type="StandardUncertainStateSet" minOccurs="0" maxOccurs="unbounded"/>
+                </xs:sequence>
+            </xs:restriction>
+        </xs:complexContent>
+    </xs:complexType>     
+    
     
     <xs:complexType name="StandardStates">
         <xs:annotation>
@@ -60,6 +95,8 @@
                 <xs:sequence minOccurs="1" maxOccurs="1">
                     <xs:element name="dict" minOccurs="0" maxOccurs="unbounded" type="Dict"/>
                     <xs:element name="state" type="StandardState" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element name="polymorphic_state_set" type="StandardPolymorphicStateSet" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element name="uncertain_state_set" type="StandardUncertainStateSet" minOccurs="0" maxOccurs="unbounded"/>                    
                 </xs:sequence>
             </xs:restriction>
         </xs:complexContent>        
