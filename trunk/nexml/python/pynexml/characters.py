@@ -678,7 +678,7 @@ class ProteinCharactersBlock(DiscreteCharactersBlock):
         Inits. Handles keyword arguments: `elem_id`, `label` and `taxa_block`.
         """        
         DiscreteCharactersBlock.__init__(self, *args, **kwargs)
-        self.default_state_alphabet = PROTEIN_STATE_AKLPHABET
+        self.default_state_alphabet = PROTEIN_STATE_ALPHABET
         self.state_alphabets.append(self.default_state_alphabet)               
         
 class RestrictionSitesCharactersBlock(DiscreteCharactersBlock):
