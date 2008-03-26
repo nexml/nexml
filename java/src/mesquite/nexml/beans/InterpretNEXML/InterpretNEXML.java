@@ -42,6 +42,9 @@ import mesquite.lib.duties.TaxaManager;
 import org.apache.xmlbeans.XmlAnySimpleType;
 import org.apache.xmlbeans.XmlException;
 
+import org.nexml.x10.AAMatrixSeqRow;
+import org.nexml.x10.AASeq;
+import org.nexml.x10.AASeqMatrix;
 import org.nexml.x10.AbstractBlock;
 import org.nexml.x10.AbstractCells;
 import org.nexml.x10.AbstractChar;
@@ -397,17 +400,31 @@ public class InterpretNEXML extends FileInterpreterI {
         HashMap linkedTaxonMap = (HashMap)taxonMapByTaxaId.get(linkedTaxaId);
         mesquite.lib.characters.CharacterData data = charTask.newCharacterData(linkedTaxa, 0, ProteinData.DATATYPENAME);  // Make this type sensitive
         AbstractSeqMatrix matrix = ((AbstractSeqs)currentBlock).getMatrix();
-        AbstractSeqRow [] rows = matrix.getRowArray();
-        for (int i=0;i<rows.length;i++){
-            AbstractSeqRow curRow = rows[i];
-            String curOtu = curRow.getOtu();
-            mesquite.lib.Taxon t = (mesquite.lib.Taxon)linkedTaxonMap.get(curOtu);
-            int it = linkedTaxa.whichTaxonNumber(t);  //TODO how to handle -1 returns?
-            XmlAnySimpleType x = curRow.getSeq();
-            if (x instanceof DNASeq){
-                DNASeq curSeq = (DNASeq)x;
-                String curString = curSeq.getStringValue();
-                System.out.println("String for " + t.getID() + " is " + curString);
+        if (matrix instanceof AASeqMatrix){
+            AASeqMatrix curAASeqs = (AASeqMatrix)matrix;
+            AbstractSeqRow[] aarows = curAASeqs.getRowArray();
+            for(int k=0;k<aarows.length;k++){
+                if (aarows[k] instanceof AAMatrixSeqRow){
+                    AAMatrixSeqRow curRow = (AAMatrixSeqRow)aarows[k];
+                    String curOtu = curRow.getOtu();
+                    mesquite.lib.Taxon t = (mesquite.lib.Taxon)linkedTaxonMap.get(curOtu);
+                    int it = linkedTaxa.whichTaxonNumber(t);  //TODO how to handle -1 returns?
+                    XmlAnySimpleType q = curRow.getSeq();
+                    if (q instanceof AASeq){
+                        AASeq qAA = (AASeq)q;
+                        String curString = qAA.getStringValue();
+                        int ic = 0;
+                        for(int pos=0;pos<curString.length();pos++){
+                            char curChar = curString.charAt(pos);
+                            if (Character.isLetter(curChar)){
+                                if (data.getNumChars() <= ic)
+                                    data.addCharacters(data.getNumChars()-1, 1, false);   // add a character if needed
+                                ((CategoricalData)data).setState(ic++, it, curChar);
+                            }
+                        }
+                    }
+
+                }
             }
         }
         return data;
