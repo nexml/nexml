@@ -121,7 +121,7 @@
                 </polymorphic_state_set>
                 <uncertain_state_set symbol="5" id="s5">
                     <member state="s3"/>
-                    <member state="s4"/>
+                    <member state="s1"/>
                 </uncertain_state_set>      
             </states>
             <!--
