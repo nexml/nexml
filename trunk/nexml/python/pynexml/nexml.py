@@ -619,7 +619,7 @@ class _NexmlCharBlockParser(_NexmlElementParser):
             member_state_id = nxmember.get('state', None)
             member_state = state_alphabet.get_state('elem_id', member_state_id)
             state.member_states.append(member_state)
-        for nxambiguous in nxpolymorphic.getiterator('uncertain_state'):
+        for nxambiguous in nxpolymorphic.getiterator('uncertain_state_set'):
             state.member_states.append(self.parse_ambiguous_state(nxambiguous, state_alphabet))
         state.multistate = characters.StateAlphabetElement.POLYMORPHIC_STATE
         return state
@@ -638,9 +638,9 @@ class _NexmlCharBlockParser(_NexmlElementParser):
                                                     symbol=nxstate.get('symbol', None),
                                                     token=nxstate.get('token', None))        
             state_alphabet.append(state)
-        for nxstate in nxstates.getiterator('uncertain_state'):
+        for nxstate in nxstates.getiterator('uncertain_state_set'):
             state_alphabet.append(self.parse_ambiguous_state(nxstate, state_alphabet))
-        for nxstate in nxstates.getiterator('polymorphic_state'):
+        for nxstate in nxstates.getiterator('polymorphic_state_set'):
             state_alphabet.append(self.parse_polymorphic_state(nxstate, state_alphabet))        
         return state_alphabet
             
@@ -686,18 +686,20 @@ class _NexmlCharBlockParser(_NexmlElementParser):
         elif nxchartype.startswith('nex:Continuous'):
             char_block = characters.ContinuousCharactersBlock()
         else:
-            raise NotImplementedError()
+            raise NotImplementedError('Character Block %s (\"%s\"): Character type "%s" not supported.' 
+                % (char_block.elem_id, char_block.label, nxchartype))
             
         elem_id = nxchars.get('id', None)
         label = nxchars.get('label', None)
         char_block.elem_id = elem_id
         char_block.label = label   
+          
         taxa_id = nxchars.get('otus', None)
         if taxa_id is None:
-            raise Exception("Taxa block not specified for trees block \"%s\"" % char_block.elem_id)
+            raise Exception("Character Block %s (\"%s\"): Taxa block not specified for trees block \"%s\"" % (char_block.elem_id, char_block.label, char_block.elem_id))
         taxa_block = dataset.find_taxa_block(elem_id = taxa_id)
         if not taxa_block:
-            raise Exception("Taxa block \"%s\" not found" % taxa_id)
+            raise Exception("Character Block %s (\"%s\"): Taxa block \"%s\" not found" % (char_block.elem_id, char_block.label, taxa_id))
         char_block.taxa_block = taxa_block
         self.parse_annotations(annotated=char_block, nxelement=nxchars)                
         
@@ -721,7 +723,7 @@ class _NexmlCharBlockParser(_NexmlElementParser):
             taxon_id = nxrow.get('otu', None)
             taxon = taxa_block.find_taxon(elem_id=taxon_id, update=False)
             if not taxon:
-                raise Exception('Taxon with id "%s" not defined in taxa block "%s"' % (taxon_id, taxa.elem_id))                   
+                raise Exception('Character Block %s (\"%s\"): Taxon with id "%s" not defined in taxa block "%s"' % (char_block.elem_id, char_block.label, taxon_id, taxa.elem_id))                   
                 
             character_vector = characters.CharacterDataVector(elem_id=row_id, label=label, taxon=taxon)
             self.parse_annotations(annotated=character_vector, nxelement=nxrow)
@@ -757,7 +759,7 @@ class _NexmlCharBlockParser(_NexmlElementParser):
                             if char in symbol_state_map:
                                 state = symbol_state_map[char]
                             else:
-                                raise NameError('State with symbol "%s" in sequence "%s" not defined' % (char, seq))
+                                raise NameError('Character Block %s (\"%s\"): State with symbol "%s" in sequence "%s" not defined' % (char_block.elem_id, char_block.label, char, seq))
                             character_vector.append(characters.CharacterDataCell(value=state))
                 else:
                     char_block.markup_as_sequences = False                
@@ -880,9 +882,9 @@ class NexmlWriter(datasets.Writer):
                                 % (self.indent * indent_level, state.elem_id, state.symbol))
         else:
             if state.multistate == characters.StateAlphabetElement.AMBIGUOUS_STATE:
-                tag = "uncertain_state"
+                tag = "uncertain_state_set"
             else:
-                tag = "polymorphic_state"
+                tag = "polymorphic_state_set"
                 
             parts.append('%s<%s id="%s" symbol="%s">' 
                             % (self.indent * indent_level, tag, state.elem_id, state.symbol))
