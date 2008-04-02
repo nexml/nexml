@@ -53,8 +53,10 @@
         <xs:complexContent>
             <xs:restriction base="AbstractState">
                 <xs:sequence minOccurs="1" maxOccurs="1">
+                    <!--
                     <xs:element name="dict" minOccurs="0" maxOccurs="unbounded" type="Dict"/>
                     <xs:element name="mapping" type="DNAMapping" minOccurs="0" maxOccurs="unbounded"/>
+                    -->
                 </xs:sequence>
             </xs:restriction>
         </xs:complexContent>
