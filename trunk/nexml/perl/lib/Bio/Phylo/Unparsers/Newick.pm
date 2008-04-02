@@ -101,23 +101,11 @@ sub _to_string {
     my $tree = $self->{'PHYLO'};
     my $root = $tree->get_root;
     my %args;
-    if ( $self->{'TRANSLATE'} ) {
-    	$args{'-translate'} = $self->{'TRANSLATE'};
-    }
-    if ( $self->{'TIPNAMES'} ) {
-    	$args{'-tipnames'} = $self->{'NAMES'};
-    }
-    if ( $self->{'NHXKEYS'} ) {
-    	$args{'-nhxkeys'} = $self->{'NHXKEYS'};
-    }
-    if ( $self->{'NODELABELS'} ) {
-    	$args{'-nodelabels'} = $self->{'NODELABELS'}; 
-    }
-    if ( $self->{'BLFORMAT'} ) {
-    	$args{'-blformat'} = $self->{'BLFORMAT'}; 
-    }   
-    if ( $self->{'NHXSTYLE'} ) {
-    	$args{'-nhxstyle'} = $self->{'NHXSTYLE'};
+    for my $key ( qw(TRANSLATE TIPNAMES NHXKEYS NODELABELS BLFORMAT NHXSTYLE) ) {
+    	if ( my $val = $self->{$key} ) {
+    		my $arg = '-' . lc($key);
+    		$args{$arg} = $val;
+    	}
     } 
     return $root->to_newick( %args );
 }
