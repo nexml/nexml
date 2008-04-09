@@ -30,11 +30,14 @@ import mesquite.categ.lib.RNAData;
 import mesquite.cont.lib.ContinuousData;
 import mesquite.cont.lib.ContinuousState;
 import mesquite.lib.CommandRecord;
+import mesquite.lib.Listable;
 import mesquite.lib.MesquiteFile;
 import mesquite.lib.MesquiteMessage;
 import mesquite.lib.MesquiteProject;
 import mesquite.lib.ProgressIndicator;
+import mesquite.lib.TreeVector;
 import mesquite.lib.characters.CharacterData;
+import mesquite.lib.characters.CharacterState;
 import mesquite.lib.duties.CharactersManager;
 import mesquite.lib.duties.FileInterpreterI;
 import mesquite.lib.duties.TaxaManager;
@@ -42,38 +45,7 @@ import mesquite.lib.duties.TaxaManager;
 import org.apache.xmlbeans.XmlAnySimpleType;
 import org.apache.xmlbeans.XmlException;
 
-import org.nexml.x10.AAMatrixSeqRow;
-import org.nexml.x10.AASeq;
-import org.nexml.x10.AASeqMatrix;
-import org.nexml.x10.AbstractBlock;
-import org.nexml.x10.AbstractCells;
-import org.nexml.x10.AbstractChar;
-import org.nexml.x10.AbstractFormat;
-import org.nexml.x10.AbstractMapping;
-import org.nexml.x10.AbstractSeqMatrix;
-import org.nexml.x10.AbstractSeqRow;
-import org.nexml.x10.AbstractSeqs;
-import org.nexml.x10.AbstractState;
-import org.nexml.x10.AbstractStates;
-import org.nexml.x10.ContinuousCells;
-import org.nexml.x10.ContinuousSeq;
-import org.nexml.x10.ContinuousSeqs;
-import org.nexml.x10.DNASeq;
-import org.nexml.x10.Dict;
-import org.nexml.x10.DnaCells;
-import org.nexml.x10.DnaSeqs;
-import org.nexml.x10.Nexml;
-import org.nexml.x10.NexmlDocument;
-import org.nexml.x10.ProteinCells;
-import org.nexml.x10.ProteinSeqs;
-import org.nexml.x10.RestrictionCells;
-import org.nexml.x10.RestrictionSeqs;
-import org.nexml.x10.RnaCells;
-import org.nexml.x10.RnaSeqs;
-import org.nexml.x10.StandardChar;
-import org.nexml.x10.StandardState;
-import org.nexml.x10.StandardStates;
-import org.nexml.x10.Taxa;
+import org.nexml.x10.*;
 import org.nexml.x10.impl.StandardCellsImpl;
 import org.nexml.x10.impl.StandardSeqsImpl;
 
@@ -491,16 +463,199 @@ public class InterpretNEXML extends FileInterpreterI {
         mesquite.lib.characters.CharacterData data = charTask.newCharacterData(linkedTaxa, 0, CategoricalData.DATATYPENAME);  // Make this type sensitive
         return data;
     }
-
     
-
     public void exportFile(MesquiteFile file, String arguments) {
-        // TODO Auto-generated method stub
-        
+    	MesquiteProject project = file.getProject();
+    	NexmlDocument doc = NexmlDocument.Factory.newInstance();    
+    	Nexml nexml = doc.addNewNexml();
+    	nexml.setVersion("1.0");
+    	nexml.setGenerator("mesquite");
+    	addOtusElements(project, nexml);
+    	addCharactersElements(project, nexml);
+    	addTreesElements(project, nexml);
+    	
     }
-
+    
+    private static void addTreesElements (MesquiteProject project, Nexml nexml) {
+    	for ( int i = 0; i < project.getNumberTaxas(); i++ ) {
+    		mesquite.lib.Taxa taxa = project.getTaxa(i);
+    		Listable[] treeVectors = project.getCompatibleFileElements(TreeVector.class, taxa);    		
+    		for ( int j = 0; j < treeVectors.length; j++ ) {
+    			TreeVector treeVector = (TreeVector)treeVectors[j];    
+    			addTreesElement(nexml, taxa, treeVector);
+    		}
+    	}    	
+    }
+    
+    private static void addTreesElement(Nexml nexml, mesquite.lib.Taxa taxa, TreeVector treeVector) {
+    	Trees trees = nexml.addNewTrees();
+    	addCommonAttributes(trees, treeVector.getName(), treeVector.getAssignedID());
+    	trees.setOtus(taxa.getAssignedID());
+    	for ( int i = 0; i < treeVector.getNumberOfTrees(); i++ ) {
+    		mesquite.lib.Tree tree = treeVector.getTree(i);
+    		FloatTree xmltree = (FloatTree)trees.addNewTree();
+    		addCommonAttributes(xmltree, tree.getName(), tree.getID());
+    		addTreeElement(xmltree, tree, tree.getRoot());
+    	}
+    }
+    
+    private static void addTreeElement(FloatTree xmltree, mesquite.lib.Tree tree, int N) {
+		TreeNode node = xmltree.addNewNode();
+		addCommonAttributes(node, tree.getNodeLabel(d), "node" + N);   
+		int mother = tree.motherOfNode(N);
+		int taxon  = tree.taxonNumberOfNode(N);
+		if ( mother != 0 ) {
+			TreeFloatEdge edge = (TreeFloatEdge)xmltree.addNewEdge();
+			edge.setSource("node" + mother);
+			edge.setTarget("node" + N);
+			XmlAnySimpleType length = new XmlAnySimpleType();
+			length.setStringValue("" + tree.getBranchLength(N));
+			edge.setLength(length);
+			edge.setId("e" + N);
+		}	
+		else { // node is root
+			node.setRoot(tree.rootIsReal());
+		}
+		if ( taxon != -1 ) {
+			node.setOtu(tree.getTaxa().getTaxon(taxon).getUniqueID());
+		}
+    	for ( int d = tree.firstDaughterOfNode(N); tree.nodeExists(d); d = tree.nextSisterOfNode(d) ) {
+    		addTreeElement(xmltree, tree, d);
+    	}
+    }
+    
+    private static void addCommonAttributes(Labelled obj, String label, String id) {
+    	obj.setLabel(label);
+    	obj.setId(id);
+    }
+    
+    private static void addOtusElements (MesquiteProject project, Nexml nexml) {
+    	for ( int i = 0; i < project.getNumberTaxas(); i++ ) {
+    		mesquite.lib.Taxa taxa = project.getTaxa(i);
+    		Taxa xmltaxa = nexml.addNewOtus();
+    		addCommonAttributes(xmltaxa, taxa.getName(), taxa.getAssignedID());
+    		for ( int j = 0; j < taxa.getNumTaxa(); j++ ) {
+    			mesquite.lib.Taxon taxon = taxa.getTaxon(j);
+    			Taxon xmltaxon = xmltaxa.addNewOtu();
+    			addCommonAttributes(xmltaxon, taxon.getName(), taxon.getUniqueID());
+    		} 
+    	}    	
+    }
+    
+    private static void addCharactersElements (MesquiteProject project, Nexml nexml) {
+    	for ( int i = 0; i < project.getNumberCharMatrices(); i++ ) {
+    		mesquite.lib.characters.CharacterData data = project.getCharacterMatrix(i);
+    		String dataType = data.getDataTypeName();
+    		AbstractBlock xmlcharacters;
+    		AbstractFormat xmlformat;
+    		if ( dataType.equalsIgnoreCase(DNAData.DATATYPENAME) ) {
+    			(DnaCells)xmlcharacters = (DnaCells)nexml.addNewCharacters();
+    		}
+    		else if ( dataType.equalsIgnoreCase(RNAData.DATATYPENAME) ) {
+    			(RnaCells)xmlcharacters = (RnaCells)nexml.addNewCharacters();
+    		}    		
+    		else if ( dataType.equalsIgnoreCase(ProteinData.DATATYPENAME) ) {
+    			(ProteinCells)xmlcharacters = (ProteinCells)nexml.addNewCharacters();
+    		}
+    		else if ( dataType.equalsIgnoreCase(ContinuousData.DATATYPENAME) ) {
+    			(ContinuousCells)xmlcharacters = (ContinuousCells)nexml.addNewCharacters();
+    		}
+    		else if ( dataType.equalsIgnoreCase(CategoricalData.DATATYPENAME) ) {
+    			(StandardCells)xmlcharacters = (StandardCells)nexml.addNewCharacters();
+    		}
+    		addCommonAttributes(xmlcharacters, data.getName(), data.getAssignedID());
+    		xmlcharacters.setOtus(data.getTaxa().getAssignedID());
+    		HashMap idForState = addFormatElement(xmlcharacters, data);
+    		addMatrix(xmlcharacters, data, idForState);
+    	}
+    }   
+    
+    private static HashMap addStateDefinitions(AbstractFormat format, CategoricalData data) {
+    	AbstractStates states = format.addNewStates();
+    	states.setId("states1");
+    	String[] labels = data.getSymbols();
+    	HashMap idForState = new HashMap();
+    	for ( int i = 0; i < labels.length; i++ ) {
+    		String stateId = "state" + i;
+    		AbstractState state = states.addNewState();
+    		XmlAnySimpleType symbol = new XmlAnySimpleType();    		
+    		symbol.setStringValue(labels[i]);
+    		state.setSymbol(symbol);
+    		state.setId(stateId);
+    		idForState.put(labels[i], stateId);
+    	}
+    	return idForState;
+    }
+    
+    private static void addCharacterLabels (AbstractFormat format, CharacterData data) {
+    	for ( int i = 0; i < data.getNumChars(); i++ ) {
+    		AbstractChar c = format.addNewChar();
+    		XmlAnySimpleType id = new XmlAnySimpleType();
+    		id.setStringValue("c" + i);
+    		String charName = data.getCharacterName(i);
+    		c.setLabel(charName);
+	    	if ( data instanceof CategoricalData ) {
+	    		c.setStates("states1");
+	    	}
+    	}
+    }
+    
+    private static HashMap addFormatElement(StandardCells characters, CharacterData data) {
+    	StandardFormat format = (StandardFormat)characters.addNewFormat();
+    	HashMap idForState = addStateDefinitions(format, (CategoricalData)data);
+    	addCharacterLabels(format, data);
+    	return idForState;
+    }
+    
+    private static HashMap addFormatElement(DnaCells characters, CharacterData data) {
+    	DNAFormat format = (DNAFormat)characters.addNewFormat();  	
+    	HashMap idForState = addStateDefinitions(format, (CategoricalData)data);
+    	addCharacterLabels(format, data);
+    	return idForState;
+    }
+    
+    private static HashMap addFormatElement(RnaCells characters, CharacterData data) {
+    	RNAFormat format = (RNAFormat)characters.addNewFormat();
+    	HashMap idForState = addStateDefinitions(format, (CategoricalData)data);
+    	addCharacterLabels(format, data);
+    	return idForState;
+    }    
+    
+    private static HashMap addFormatElement(ProteinCells characters, CharacterData data) {
+    	AAFormat format = (AAFormat)characters.addNewFormat();
+    	HashMap idForState = addStateDefinitions(format, (CategoricalData)data);
+    	addCharacterLabels(format, data);
+    	return idForState;
+    } 
+    
+    private static HashMap addFormatElement(ContinuousCells characters, CharacterData data) {
+    	ContinuousFormat format (ContinuousFormat)characters.addNewFormat();
+    	// no state definitions here
+    	addCharacterLabels(format, data);
+    	return new HashMap();
+    }    
+    
+    private static void addMatrix(AbstractBlock characters, CharacterData data, HashMap idForState) {
+    	AbstractObsMatrix matrix = ((AbstractCells)characters).addNewMatrix();    
+    	AbstractFormat format = characters.getFormat();
+    	for ( int i = 0; i < data.getNumTaxa(); i++ ) {
+    		AbstractObsRow row = matrix.addNewRow();
+    		for ( int j = 0; j < data.getNumChars(); j++ ) {    
+    			StringBuffer sb = new StringBuffer(10);
+    			data.statesIntoStringBuffer(j, i, sb, false);
+    			AbstractObs cell = row.addNewCell();
+    			XmlAnySimpleType state = new XmlAnySimpleType();
+    			XmlAnySimpleType character = new XmlAnySimpleType();
+    			character.setStringValue("c" + j);
+    			state.setStringValue(idForState.get(sb.toString()));
+    			cell.setChar(character);
+    			cell.setState(state);
+    		}
+    	}
+    }
+    
     public String getName() {
         // TODO Auto-generated method stub
-        return "Nexml Import";
+        return "Nexml import and export";
     }
 }
