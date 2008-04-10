@@ -15,12 +15,29 @@ package mesquite.nexml.beans.InterpretNEXML;
 
 //$Id: InterpretNEXML.java 472 2008-03-05 20:00:35Z pmidford $
 
+/*
+ * Assuming you have a workspace in which you've checked out mesquite as 
+ * "workspace/Mesquite Project" and you have a all of nexml (i.e. trunk +
+ * branches) next to it in the workspace in "workspace/nexml", and you have
+ * eclipse set up to build the nexml stuff in nexml/bin, here's what you have
+ * to add to the classpaths.xml file in "workspace/Mesquite Project/Mesquite_folder"
+ *      <classpath>../../nexml/trunk/nexml/java/jars/jsr173_1.0_api.jar</classpath>
+        <classpath>../../nexml/trunk/nexml/java/jars/nexmlbeans.jar</classpath>
+        <classpath>../../nexml/trunk/nexml/java/jars/resolver.jar</classpath>
+        <classpath>../../nexml/trunk/nexml/java/jars/xbean_xpath.jar</classpath>
+        <classpath>../../nexml/trunk/nexml/java/jars/xbean.jar</classpath>
+        <classpath>../../nexml/trunk/nexml/java/jars/xmlpublic.jar</classpath>
+        <classpath>../../nexml/trunk/nexml/java/jars/xmlbeans-qname.jar</classpath>
+        <classpath>../../nexml/bin</classpath>
+ */
 
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Vector;
 
 import mesquite.Mesquite;
 import mesquite.categ.lib.CategoricalData;
@@ -34,11 +51,13 @@ import mesquite.lib.Listable;
 import mesquite.lib.MesquiteFile;
 import mesquite.lib.MesquiteMessage;
 import mesquite.lib.MesquiteProject;
+import mesquite.lib.MesquiteTree;
 import mesquite.lib.ProgressIndicator;
 import mesquite.lib.TreeVector;
 import mesquite.lib.characters.CharacterData;
 import mesquite.lib.characters.CharacterState;
 import mesquite.lib.duties.CharactersManager;
+import mesquite.lib.duties.TreesManager;
 import mesquite.lib.duties.FileInterpreterI;
 import mesquite.lib.duties.TaxaManager;
 
@@ -48,6 +67,7 @@ import org.apache.xmlbeans.XmlException;
 import org.nexml.x10.*;
 import org.nexml.x10.impl.StandardCellsImpl;
 import org.nexml.x10.impl.StandardSeqsImpl;
+import org.nexml.x10.DnaCells;
 
 /** A file interpreter for a NEXML file format.  */
 public class InterpretNEXML extends FileInterpreterI {  
@@ -85,7 +105,7 @@ public class InterpretNEXML extends FileInterpreterI {
         return true;
     }
     /*.................................................................................................................*/
-    public boolean canExportData(Class dataClass) {  
+    public boolean canExportData(java.lang.Class dataClass) {  
         return true;
     }
     /*.................................................................................................................*/
@@ -117,9 +137,7 @@ public class InterpretNEXML extends FileInterpreterI {
     private void errorReport(Exception e){
         System.out.println("An exception was thrown: " + e);
         e.printStackTrace();
-    }
-    
-    
+    }        
     
     /**
      * This uses the document factory to parse the file into an XMLBeans Document
@@ -133,20 +151,86 @@ public class InterpretNEXML extends FileInterpreterI {
         try {
             nDoc = NexmlDocument.Factory.parse(new File(file.getPath()));
         } catch (XmlException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            errorReport(e);
         } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+        	errorReport(e);
         }
         
         Nexml n = nDoc.getNexml();
         
         processOTUBlocks(n,file);
         processCharactersBlocks(n,file);
+        processTreesBlocks(n,file);
         
     }
     
+    private void processTreesBlocks(Nexml nexml, MesquiteFile file) {
+    	Trees[] treeBlocks = nexml.getTreesArray();
+    	if ( treeBlocks != null && treeBlocks.length > 0 ) {
+    		TreesManager treeTask = (TreesManager)findElementManager(TreeVector.class); 
+    		int numTaxas = getProject().getNumberTaxas(); 
+    		for ( int i = 0; i < treeBlocks.length; i++ ) {
+    			Trees currentBlock = treeBlocks[i];
+    			String otusIdRef = currentBlock.getOtus();
+    			mesquite.lib.Taxa referencedTaxa = new mesquite.lib.Taxa(0);
+    			for ( int j = 0; j > numTaxas; j++ ) {
+    				mesquite.lib.Taxa taxa = getProject().getTaxa(j);
+    				if ( taxa.getAssignedID().equals(otusIdRef) ) {
+    					referencedTaxa = taxa;
+    					break;
+    				}    				
+    			}
+    			AbstractTree[] trees = currentBlock.getTreeArray();
+    			TreeVector treevector = treeTask.makeNewTreeBlock(referencedTaxa, currentBlock.getLabel(), file);
+    			if ( trees != null && trees.length > 0 ) {
+    				for ( int j = 0; j < trees.length; j++ ) {
+    					if ( trees[j] instanceof FloatTree || trees[j] instanceof IntTree ) {
+    						MesquiteTree tree = new MesquiteTree(referencedTaxa);
+    						tree.setName(trees[j].getId());    					
+    						treevector.addElement(tree, false);
+    						TreeNode root = (TreeNode)trees[j].getNodeArray(0);
+    						tree.setRooted(root.getRoot(), false);
+    						buildTree(tree,root,-1,(FloatTree)trees[j]);
+    					}
+    				}    				
+    			}
+    		}
+    	}
+    }    
+    
+    private static void buildTree (MesquiteTree mesquiteTree, TreeNode currentXmlNode, int parentNode, FloatTree xmlTree) {
+    	int currentNode = mesquiteTree.sproutDaughter(parentNode, false);
+    	String otuIdRef = currentXmlNode.getOtu();
+    	String nodeId = currentXmlNode.getId();
+    	if ( otuIdRef != null ) {
+    		mesquite.lib.Taxa taxa = mesquiteTree.getTaxa();
+    		for ( int i = 0; i < taxa.getNumTaxa(); i++ ) {
+    			if ( otuIdRef.equals(taxa.getTaxon(i).getUniqueID()) ) {
+    				mesquiteTree.setTaxonNumber(currentNode, taxa.getTaxon(i).getNumber(), false);
+    				break;
+    			}
+    		}
+    	}
+    	mesquiteTree.setNodeLabel(currentXmlNode.getLabel(), currentNode);
+    	TreeNode[] xmlnodes = (TreeNode[])xmlTree.getNodeArray();
+    	TreeFloatEdge[] xmledges = (TreeFloatEdge[])xmlTree.getEdgeArray();
+    	Vector<String> children = new Vector();
+    	for ( int i = 0; i < xmledges.length; i++ ) {
+    		if ( xmledges[i].getTarget().equals(nodeId) ) {
+    			mesquiteTree.setBranchLength(currentNode, Double.parseDouble(xmledges[i].getLength().getStringValue()), false);
+    		}
+    		if ( xmledges[i].getSource().equals(nodeId) ) {
+    			children.add(xmledges[i].getTarget());
+    		}
+    	}
+    	for ( int i = 0; i < xmlnodes.length; i++ ) {
+    		for ( int j = 0; j < children.size(); j++ ) {
+    			if ( children.get(j).equals(xmlnodes[i].getId()) ) {
+    				buildTree(mesquiteTree, xmlnodes[i], currentNode, xmlTree);
+    			}
+    		}
+    	}
+    }
     
     private void processOTUBlocks(Nexml n,MesquiteFile file){
         Taxa[] o = n.getOtusArray();
@@ -297,9 +381,9 @@ public class InterpretNEXML extends FileInterpreterI {
                     for(int j=0;j<stateSet.length;j++){
                         if (stateSet[j] instanceof StandardState){
                             StandardState aState = (StandardState)stateSet[j];
-                            AbstractMapping[] mapA = aState.getMappingArray();
+                            //AbstractMapping[] mapA = aState.getMappingArray();
                             String stateID = aState.getId();
-                            String stateSymbol = aState.getSymbol();
+                            String stateSymbol = aState.getSymbol().getStringValue();
                             stateSymbolbyID.put(stateID, stateSymbol);
                         }
                         else
@@ -468,7 +552,7 @@ public class InterpretNEXML extends FileInterpreterI {
     	MesquiteProject project = file.getProject();
     	NexmlDocument doc = NexmlDocument.Factory.newInstance();    
     	Nexml nexml = doc.addNewNexml();
-    	nexml.setVersion("1.0");
+    	nexml.setVersion(new java.math.BigDecimal(1.0));
     	nexml.setGenerator("mesquite");
     	addOtusElements(project, nexml);
     	addCharactersElements(project, nexml);
@@ -494,21 +578,21 @@ public class InterpretNEXML extends FileInterpreterI {
     	for ( int i = 0; i < treeVector.getNumberOfTrees(); i++ ) {
     		mesquite.lib.Tree tree = treeVector.getTree(i);
     		FloatTree xmltree = (FloatTree)trees.addNewTree();
-    		addCommonAttributes(xmltree, tree.getName(), tree.getID());
+    		addCommonAttributes(xmltree, tree.getName(), "" + tree.getID());
     		addTreeElement(xmltree, tree, tree.getRoot());
     	}
     }
     
     private static void addTreeElement(FloatTree xmltree, mesquite.lib.Tree tree, int N) {
-		TreeNode node = xmltree.addNewNode();
-		addCommonAttributes(node, tree.getNodeLabel(d), "node" + N);   
+		TreeNode node = (TreeNode)xmltree.addNewNode();
+		addCommonAttributes(node, tree.getNodeLabel(N), "node" + N);   
 		int mother = tree.motherOfNode(N);
 		int taxon  = tree.taxonNumberOfNode(N);
 		if ( mother != 0 ) {
 			TreeFloatEdge edge = (TreeFloatEdge)xmltree.addNewEdge();
 			edge.setSource("node" + mother);
 			edge.setTarget("node" + N);
-			XmlAnySimpleType length = new XmlAnySimpleType();
+			XmlAnySimpleType length = XmlAnySimpleType.Factory.newInstance();
 			length.setStringValue("" + tree.getBranchLength(N));
 			edge.setLength(length);
 			edge.setId("e" + N);
@@ -524,7 +608,7 @@ public class InterpretNEXML extends FileInterpreterI {
     	}
     }
     
-    private static void addCommonAttributes(Labelled obj, String label, String id) {
+    private static void addCommonAttributes(IDTagged obj, String label, String id) {
     	obj.setLabel(label);
     	obj.setId(id);
     }
@@ -546,26 +630,25 @@ public class InterpretNEXML extends FileInterpreterI {
     	for ( int i = 0; i < project.getNumberCharMatrices(); i++ ) {
     		mesquite.lib.characters.CharacterData data = project.getCharacterMatrix(i);
     		String dataType = data.getDataTypeName();
-    		AbstractBlock xmlcharacters;
-    		AbstractFormat xmlformat;
-    		if ( dataType.equalsIgnoreCase(DNAData.DATATYPENAME) ) {
-    			(DnaCells)xmlcharacters = (DnaCells)nexml.addNewCharacters();
-    		}
-    		else if ( dataType.equalsIgnoreCase(RNAData.DATATYPENAME) ) {
-    			(RnaCells)xmlcharacters = (RnaCells)nexml.addNewCharacters();
-    		}    		
-    		else if ( dataType.equalsIgnoreCase(ProteinData.DATATYPENAME) ) {
-    			(ProteinCells)xmlcharacters = (ProteinCells)nexml.addNewCharacters();
-    		}
-    		else if ( dataType.equalsIgnoreCase(ContinuousData.DATATYPENAME) ) {
-    			(ContinuousCells)xmlcharacters = (ContinuousCells)nexml.addNewCharacters();
-    		}
-    		else if ( dataType.equalsIgnoreCase(CategoricalData.DATATYPENAME) ) {
-    			(StandardCells)xmlcharacters = (StandardCells)nexml.addNewCharacters();
-    		}
+    		AbstractBlock xmlcharacters = nexml.addNewCharacters();
+    		HashMap idForState = new HashMap();
     		addCommonAttributes(xmlcharacters, data.getName(), data.getAssignedID());
     		xmlcharacters.setOtus(data.getTaxa().getAssignedID());
-    		HashMap idForState = addFormatElement(xmlcharacters, data);
+    		if ( dataType.equalsIgnoreCase(DNAData.DATATYPENAME) ) {
+    			idForState = addFormatElement((DnaCells)xmlcharacters, data);
+    		}
+    		else if ( dataType.equalsIgnoreCase(RNAData.DATATYPENAME) ) {
+    			idForState = addFormatElement((RnaCells)xmlcharacters, data);
+    		}    		
+    		else if ( dataType.equalsIgnoreCase(ProteinData.DATATYPENAME) ) {
+    			idForState = addFormatElement((ProteinCells)xmlcharacters, data);
+    		}
+    		else if ( dataType.equalsIgnoreCase(ContinuousData.DATATYPENAME) ) {
+    			idForState = addFormatElement((ContinuousCells)xmlcharacters, data);
+    		}
+    		else if ( dataType.equalsIgnoreCase(CategoricalData.DATATYPENAME) ) {
+    			idForState = addFormatElement((StandardCells)xmlcharacters, data);
+    		}    		    		
     		addMatrix(xmlcharacters, data, idForState);
     	}
     }   
@@ -578,7 +661,7 @@ public class InterpretNEXML extends FileInterpreterI {
     	for ( int i = 0; i < labels.length; i++ ) {
     		String stateId = "state" + i;
     		AbstractState state = states.addNewState();
-    		XmlAnySimpleType symbol = new XmlAnySimpleType();    		
+    		XmlAnySimpleType symbol = XmlAnySimpleType.Factory.newInstance();    		
     		symbol.setStringValue(labels[i]);
     		state.setSymbol(symbol);
     		state.setId(stateId);
@@ -590,7 +673,7 @@ public class InterpretNEXML extends FileInterpreterI {
     private static void addCharacterLabels (AbstractFormat format, CharacterData data) {
     	for ( int i = 0; i < data.getNumChars(); i++ ) {
     		AbstractChar c = format.addNewChar();
-    		XmlAnySimpleType id = new XmlAnySimpleType();
+    		XmlAnySimpleType id = XmlAnySimpleType.Factory.newInstance();
     		id.setStringValue("c" + i);
     		String charName = data.getCharacterName(i);
     		c.setLabel(charName);
@@ -629,7 +712,7 @@ public class InterpretNEXML extends FileInterpreterI {
     } 
     
     private static HashMap addFormatElement(ContinuousCells characters, CharacterData data) {
-    	ContinuousFormat format (ContinuousFormat)characters.addNewFormat();
+    	ContinuousFormat format = (ContinuousFormat)characters.addNewFormat();
     	// no state definitions here
     	addCharacterLabels(format, data);
     	return new HashMap();
@@ -644,10 +727,10 @@ public class InterpretNEXML extends FileInterpreterI {
     			StringBuffer sb = new StringBuffer(10);
     			data.statesIntoStringBuffer(j, i, sb, false);
     			AbstractObs cell = row.addNewCell();
-    			XmlAnySimpleType state = new XmlAnySimpleType();
-    			XmlAnySimpleType character = new XmlAnySimpleType();
+    			XmlAnySimpleType state = XmlAnySimpleType.Factory.newInstance();
+    			XmlAnySimpleType character = XmlAnySimpleType.Factory.newInstance();
     			character.setStringValue("c" + j);
-    			state.setStringValue(idForState.get(sb.toString()));
+    			state.setStringValue((String)idForState.get(sb.toString()));
     			cell.setChar(character);
     			cell.setState(state);
     		}
