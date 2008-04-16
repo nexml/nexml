@@ -48,6 +48,7 @@ import mesquite.cont.lib.ContinuousData;
 import mesquite.cont.lib.ContinuousState;
 import mesquite.lib.CommandRecord;
 import mesquite.lib.Listable;
+import mesquite.lib.NameReference;
 import mesquite.lib.MesquiteFile;
 import mesquite.lib.MesquiteMessage;
 import mesquite.lib.MesquiteProject;
@@ -234,27 +235,52 @@ public class InterpretNEXML extends FileInterpreterI {
     
     private void processOTUBlocks(Nexml n,MesquiteFile file){
         Taxa[] o = n.getOtusArray();
-        if (o != null && o.length > 0){
+        if ( o != null && o.length > 0 ) {
             TaxaManager taxaTask = (TaxaManager)findElementManager(mesquite.lib.Taxa.class);
             for(int taxaCount = 0;taxaCount < o.length; taxaCount++){
                 Taxa currentBlock = o[taxaCount];
                 int taxaInBlock = currentBlock.getOtuArray().length;
                 mesquite.lib.Taxa taxa = taxaTask.makeNewTaxa(getProject().getTaxas().getUniqueName(currentBlock.getLabel()), taxaInBlock, false);
-                if (taxa !=null){
+                if ( taxa != null ) {
+                	taxa.setCIPResIDString(currentBlock.getId());
                     taxa.addToFile(file, getProject(), taxaTask);
                     taxaById.put(currentBlock.getId(), taxa);
                     HashMap myTaxonMap = new HashMap();
+                    NameReference nref = taxa.makeAssociatedObjects("NexmlAttributes");
                     taxonMapByTaxaId.put(currentBlock.getId(), myTaxonMap);
-                    for(int taxaCounter = 0;taxaCounter<taxaInBlock;taxaCounter++){
+                    for ( int taxaCounter = 0; taxaCounter < taxaInBlock; taxaCounter++ ){
                         mesquite.lib.Taxon t = taxa.getTaxon(taxaCounter);
-                        if (t!=null) {
-                            t.setName(currentBlock.getOtuArray(taxaCounter).getLabel());
+                        if ( t != null ) {
+                        	org.nexml.x10.Taxon currentTaxon = currentBlock.getOtuArray(taxaCounter);
+                        	HashMap attrs = processStandardAttributes(currentTaxon);
+                        	taxa.setAssociatedObject(nref, taxaCounter, attrs);
+                            t.setName(currentTaxon.getLabel());
                             myTaxonMap.put(currentBlock.getOtuArray(taxaCounter).getId(), t);
                         }
                     }
                 }
             }
         }
+    }
+    
+    private static HashMap processStandardAttributes (org.nexml.x10.Base obj) {
+    	HashMap attrs = new HashMap();
+    	if ( obj.getBase() != null ) {
+    		attrs.put("xml:base", obj.getBase());
+    	}
+    	if ( obj.getHref() != null ) {
+    		attrs.put("xlink:href", obj.getHref());
+    	}
+    	if ( obj.getLang() != null ) {
+    		attrs.put("xml:lang", obj.getLang());
+    	}
+    	if ( obj.getClass1() != null ) {
+    		attrs.put("class", obj.getClass1());
+    	}
+    	if ( obj instanceof org.nexml.x10.IDTagged ) {
+    		attrs.put("id", ((org.nexml.x10.IDTagged)obj).getId());
+    	}
+    	return attrs;
     }
     
     
@@ -549,7 +575,7 @@ public class InterpretNEXML extends FileInterpreterI {
     }
     
     public void exportFile(MesquiteFile file, String arguments) {
-    	MesquiteProject project = file.getProject();
+    	MesquiteProject project = getProject();
     	NexmlDocument doc = NexmlDocument.Factory.newInstance();    
     	Nexml nexml = doc.addNewNexml();
     	nexml.setVersion(new java.math.BigDecimal(1.0));
@@ -557,7 +583,7 @@ public class InterpretNEXML extends FileInterpreterI {
     	addOtusElements(project, nexml);
     	addCharactersElements(project, nexml);
     	addTreesElements(project, nexml);
-    	
+    	System.out.print(doc.toString());
     }
     
     private static void addTreesElements (MesquiteProject project, Nexml nexml) {
@@ -609,7 +635,9 @@ public class InterpretNEXML extends FileInterpreterI {
     }
     
     private static void addCommonAttributes(IDTagged obj, String label, String id) {
-    	obj.setLabel(label);
+    	if ( label != null ) {
+    		obj.setLabel(label);
+    	}
     	obj.setId(id);
     }
     
@@ -617,7 +645,7 @@ public class InterpretNEXML extends FileInterpreterI {
     	for ( int i = 0; i < project.getNumberTaxas(); i++ ) {
     		mesquite.lib.Taxa taxa = project.getTaxa(i);
     		Taxa xmltaxa = nexml.addNewOtus();
-    		addCommonAttributes(xmltaxa, taxa.getName(), taxa.getAssignedID());
+    		addCommonAttributes(xmltaxa, taxa.getName(), taxa.getCIPResIDString());
     		for ( int j = 0; j < taxa.getNumTaxa(); j++ ) {
     			mesquite.lib.Taxon taxon = taxa.getTaxon(j);
     			Taxon xmltaxon = xmltaxa.addNewOtu();
