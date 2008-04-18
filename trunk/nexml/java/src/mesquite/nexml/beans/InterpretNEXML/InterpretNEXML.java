@@ -75,8 +75,8 @@ public class InterpretNEXML extends FileInterpreterI {
 
     private HashMap taxaById;  //It would be nice to upgrade these to generics someday
     private HashMap taxonMapByTaxaId;
-    private HashMap stateMapById;
-    private HashMap stateSetByCharacter;
+    //private HashMap stateMapById;
+    //private HashMap stateSetByCharacter;
     /*.................................................................................................................*/
 
     
@@ -91,8 +91,8 @@ public class InterpretNEXML extends FileInterpreterI {
     public boolean startJob(String arguments, Object condition, boolean hiredByName) {
         taxaById = new HashMap();
         taxonMapByTaxaId = new HashMap();
-        stateMapById = new HashMap();
-        stateSetByCharacter = new HashMap();
+        //stateMapById = new HashMap();
+        //stateSetByCharacter = new HashMap();
         return true;
     }   
     
@@ -127,7 +127,8 @@ public class InterpretNEXML extends FileInterpreterI {
             boolean abort = false;
             try {
                 processFile(project,file);
-            } catch (Exception e) {
+            } 
+            catch (Exception e) {
                 errorReport(e);
             }
             finishImport(progIndicator, file, abort);
@@ -151,98 +152,179 @@ public class InterpretNEXML extends FileInterpreterI {
         NexmlDocument nDoc = null;
         try {
             nDoc = NexmlDocument.Factory.parse(new File(file.getPath()));
-        } catch (XmlException e) {
+        } 
+        catch (XmlException e) {
             errorReport(e);
-        } catch (IOException e) {
+        } 
+        catch (IOException e) {
         	errorReport(e);
         }
         
-        Nexml n = nDoc.getNexml();
-        
+        Nexml n = nDoc.getNexml();        
         processOTUBlocks(n,file);
         processCharactersBlocks(n,file);
         processTreesBlocks(n,file);
         
     }
     
+    /**
+     * Searches current project for a taxa block with the provided ID
+     * @param id The value of the id attribute on the otus element
+     * @param alsoCheckAssignedID If true, also search for taxa by their assignedID field
+     * @return A taxa block
+     */
+    private mesquite.lib.Taxa getTaxaById(String id, boolean alsoCheckAssignedID ) {
+    	mesquite.lib.Taxa theTaxa = null;
+    	MesquiteProject project = getProject();
+    	for ( int i = 0; i < project.getNumberTaxas(); i++ ) {
+    		mesquite.lib.Taxa taxa = project.getTaxa(i);
+    		XmlAttributes taxaAttrs = getAttachedXmlAttributes(taxa);
+    		if ( taxaAttrs != null ) {
+    			if ( id.equals( (String)taxaAttrs.get("id") ) ) {
+    				theTaxa = taxa;
+    				break;
+    			}
+    		}
+    		if ( alsoCheckAssignedID && id.equals( taxa.getAssignedID() ) ) {
+    			theTaxa = taxa;
+    			break;
+    		}
+    	}    	
+    	return theTaxa;
+    }
+    
+    /**
+     * Searches provided taxa block for a taxon with the provided ID
+     * @param taxa A taxa block to search 
+     * @param id The value of the id attribute of the otu element
+     * @param alsoCheckUniqueId If true, also match against the uniqueID field
+     * @return A matching taxon
+     */
+    private mesquite.lib.Taxon getTaxonById(mesquite.lib.Taxa taxa, String id, boolean alsoCheckUniqueId ) {
+    	mesquite.lib.Taxon theTaxon = null;
+    	NameReference nref = taxa.makeAssociatedObjects("NexmlAttributes");
+		for ( int i = 0; i < taxa.getNumTaxa(); i++ ) {
+			XmlAttributes taxonMap = (XmlAttributes) taxa.getAssociatedObject(nref,i);
+			if ( taxonMap != null ) {
+				String taxonId = (String)taxonMap.get("id");
+				if ( taxonId != null ) {
+					if ( id.equals(taxonId) ) {
+						theTaxon = taxa.getTaxon(i);
+						break;
+					}
+				}
+			}
+			if ( alsoCheckUniqueId && taxa.getTaxon(i).getUniqueID().equals(id) ) {
+				theTaxon = taxa.getTaxon(i);
+				break;
+			}
+		}    	
+    	return theTaxon;
+    }
+    
     private void processTreesBlocks(Nexml nexml, MesquiteFile file) {
     	Trees[] treeBlocks = nexml.getTreesArray();
     	if ( treeBlocks != null && treeBlocks.length > 0 ) {
-    		TreesManager treeTask = (TreesManager)findElementManager(TreeVector.class); 
-    		int numTaxas = getProject().getNumberTaxas(); 
+    		TreesManager treeTask = (TreesManager)findElementManager(TreeVector.class);  
     		for ( int i = 0; i < treeBlocks.length; i++ ) {
     			Trees currentBlock = treeBlocks[i];
-    			String otusIdRef = currentBlock.getOtus();
-    			mesquite.lib.Taxa referencedTaxa = new mesquite.lib.Taxa(0);
-    			for ( int j = 0; j > numTaxas; j++ ) {
-    				mesquite.lib.Taxa taxa = getProject().getTaxa(j);
-    				if ( taxa.getAssignedID().equals(otusIdRef) ) {
-    					referencedTaxa = taxa;
-    					break;
-    				}    				
-    			}
+    			mesquite.lib.Taxa referencedTaxa = getTaxaById(currentBlock.getOtus(), true);
     			AbstractTree[] trees = currentBlock.getTreeArray();
     			TreeVector treevector = treeTask.makeNewTreeBlock(referencedTaxa, currentBlock.getLabel(), file);
+    			XmlAttributes treesAttr = processStandardAttributes(currentBlock);
+    			treevector.attach(treesAttr);
     			if ( trees != null && trees.length > 0 ) {
-    				for ( int j = 0; j < trees.length; j++ ) {
-    					if ( trees[j] instanceof FloatTree || trees[j] instanceof IntTree ) {
+    				for ( int j = 0; j < trees.length; j++ ) {    					
+    					if ( ! ( trees[j] instanceof AbstractNetwork ) ) {
     						MesquiteTree tree = new MesquiteTree(referencedTaxa);
-    						tree.setName(trees[j].getId());    					
+    						tree.setName(trees[j].getId()); 
+    						XmlAttributes attr = processStandardAttributes(trees[j]);
+    						tree.attach(attr);
     						treevector.addElement(tree, false);
     						TreeNode root = (TreeNode)trees[j].getNodeArray(0);
-    						tree.setRooted(root.getRoot(), false);
-    						buildTree(tree,root,-1,(FloatTree)trees[j]);
+    						XmlAttributes nodeAttr = processStandardAttributes(root);
+    						tree.setRooted(root.getRoot(), false);  
+    						Vector<AbstractNode> children = getChildNodes(root, trees[j]);
+    						int rootNode = tree.getRoot();
+    						NameReference nRef = tree.makeAssociatedObjects("NexmlAttributes");
+    						tree.setAssociatedObject(nRef, rootNode, nodeAttr);
+    						for ( int k = 0; k < children.size(); k++ ) {
+    							buildTree(tree,children.get(k),rootNode,(AbstractTree)trees[j], nRef);
+    						}
     					}
-    				}    				
+    					else { //networks
+    					}
+    				}
+    				treevector.addToFile(file, getProject(), treeTask);
     			}
     		}
     	}
     }    
     
-    private static void buildTree (MesquiteTree mesquiteTree, TreeNode currentXmlNode, int parentNode, FloatTree xmlTree) {
-    	int currentNode = mesquiteTree.sproutDaughter(parentNode, false);
+    private void buildTree (MesquiteTree mesquiteTree, AbstractNode currentXmlNode, int parentNode, AbstractTree xmlTree, NameReference nRef) {
+    	int currentNode = mesquiteTree.sproutDaughter(parentNode, false);    	    	
     	String otuIdRef = currentXmlNode.getOtu();
-    	String nodeId = currentXmlNode.getId();
     	if ( otuIdRef != null ) {
     		mesquite.lib.Taxa taxa = mesquiteTree.getTaxa();
-    		for ( int i = 0; i < taxa.getNumTaxa(); i++ ) {
-    			if ( otuIdRef.equals(taxa.getTaxon(i).getUniqueID()) ) {
-    				mesquiteTree.setTaxonNumber(currentNode, taxa.getTaxon(i).getNumber(), false);
-    				break;
-    			}
-    		}
+    		mesquite.lib.Taxon taxon = getTaxonById(taxa, otuIdRef, true);
+    		int taxonNumber = taxa.whichTaxonNumber(taxon);
+    		mesquiteTree.setTaxonNumber(currentNode, taxonNumber, false);
     	}
+    	AbstractEdge theEdge = getEdge(currentXmlNode, xmlTree);
     	mesquiteTree.setNodeLabel(currentXmlNode.getLabel(), currentNode);
-    	TreeNode[] xmlnodes = (TreeNode[])xmlTree.getNodeArray();
-    	TreeFloatEdge[] xmledges = (TreeFloatEdge[])xmlTree.getEdgeArray();
-    	Vector<String> children = new Vector();
-    	for ( int i = 0; i < xmledges.length; i++ ) {
-    		if ( xmledges[i].getTarget().equals(nodeId) ) {
-    			mesquiteTree.setBranchLength(currentNode, Double.parseDouble(xmledges[i].getLength().getStringValue()), false);
+    	mesquiteTree.setBranchLength(currentNode, Double.parseDouble(theEdge.getLength().getStringValue()), false);
+    	Vector<AbstractNode> theChildren = getChildNodes(currentXmlNode, xmlTree);
+    	for ( int i = 0; i < theChildren.size(); i++ ) {
+    		buildTree(mesquiteTree, theChildren.get(i), currentNode, xmlTree, nRef);
+    	}
+    	XmlAttributes attrs = processStandardAttributes(currentXmlNode);
+    	XmlAttributes edgeAttrs = processStandardAttributes(theEdge);
+    	attrs.put("edgeAttributes", edgeAttrs);
+    	mesquiteTree.setAssociatedObject(nRef, currentNode, attrs);    	
+    }
+    
+    private static Vector<AbstractNode> getChildNodes (AbstractNode parent, AbstractTree tree) {
+    	Vector<AbstractNode> children = new Vector();
+    	AbstractNode[] nodes = tree.getNodeArray();
+    	AbstractEdge[] edges = tree.getEdgeArray();
+    	String nodeId = parent.getId();
+    	for ( int i = 0; i < edges.length; i++ ) {
+    		if ( edges[i].getSource().equals(nodeId) ) {
+    			String childId = edges[i].getTarget();
+    			for ( int j = 0; j < nodes.length; j++ ) {
+    				if ( nodes[j].getId().equals(childId) ) {
+    					children.add(nodes[j]);
+    				}
+    			}    			
     		}
-    		if ( xmledges[i].getSource().equals(nodeId) ) {
-    			children.add(xmledges[i].getTarget());
+    	}    	
+    	return children;
+    }
+    
+    private static AbstractEdge getEdge (AbstractNode node, AbstractTree tree) {
+    	AbstractEdge[] edges = tree.getEdgeArray();
+    	AbstractEdge edge = null;
+    	String nodeId = node.getId();
+    	for ( int i = 0; i < edges.length; i++ ) {
+    		if ( edges[i].getTarget().equals(nodeId) ) {
+    			edge = edges[i];
     		}
     	}
-    	for ( int i = 0; i < xmlnodes.length; i++ ) {
-    		for ( int j = 0; j < children.size(); j++ ) {
-    			if ( children.get(j).equals(xmlnodes[i].getId()) ) {
-    				buildTree(mesquiteTree, xmlnodes[i], currentNode, xmlTree);
-    			}
-    		}
-    	}
+    	return edge;
     }
     
     private void processOTUBlocks(Nexml n,MesquiteFile file){
         Taxa[] o = n.getOtusArray();
         if ( o != null && o.length > 0 ) {
-            TaxaManager taxaTask = (TaxaManager)findElementManager(mesquite.lib.Taxa.class);
-            for(int taxaCount = 0;taxaCount < o.length; taxaCount++){
+            TaxaManager taxaTask = (TaxaManager)findElementManager(mesquite.lib.Taxa.class);            
+            for ( int taxaCount = 0; taxaCount < o.length; taxaCount++ ) {
                 Taxa currentBlock = o[taxaCount];
                 int taxaInBlock = currentBlock.getOtuArray().length;
                 mesquite.lib.Taxa taxa = taxaTask.makeNewTaxa(getProject().getTaxas().getUniqueName(currentBlock.getLabel()), taxaInBlock, false);
                 if ( taxa != null ) {
-                	taxa.setCIPResIDString(currentBlock.getId());
+                	XmlAttributes taxaAttrs = processStandardAttributes(currentBlock);
+                	taxa.attach(taxaAttrs);
+                	taxa.setName(currentBlock.getLabel());
                     taxa.addToFile(file, getProject(), taxaTask);
                     taxaById.put(currentBlock.getId(), taxa);
                     HashMap myTaxonMap = new HashMap();
@@ -252,9 +334,14 @@ public class InterpretNEXML extends FileInterpreterI {
                         mesquite.lib.Taxon t = taxa.getTaxon(taxaCounter);
                         if ( t != null ) {
                         	org.nexml.x10.Taxon currentTaxon = currentBlock.getOtuArray(taxaCounter);
-                        	HashMap attrs = processStandardAttributes(currentTaxon);
+                        	XmlAttributes attrs = processStandardAttributes(currentTaxon);
                         	taxa.setAssociatedObject(nref, taxaCounter, attrs);
-                            t.setName(currentTaxon.getLabel());
+                        	if ( currentTaxon.getLabel() != null ) {
+                        		t.setName(currentTaxon.getLabel());
+                        	}
+                        	else {
+                        		//t.setName(currentTaxon.getId()); //XXX
+                        	}
                             myTaxonMap.put(currentBlock.getOtuArray(taxaCounter).getId(), t);
                         }
                     }
@@ -263,8 +350,8 @@ public class InterpretNEXML extends FileInterpreterI {
         }
     }
     
-    private static HashMap processStandardAttributes (org.nexml.x10.Base obj) {
-    	HashMap attrs = new HashMap();
+    private static XmlAttributes processStandardAttributes (org.nexml.x10.Base obj) {
+    	XmlAttributes attrs = new XmlAttributes();
     	if ( obj.getBase() != null ) {
     		attrs.put("xml:base", obj.getBase());
     	}
@@ -599,57 +686,155 @@ public class InterpretNEXML extends FileInterpreterI {
     
     private static void addTreesElement(Nexml nexml, mesquite.lib.Taxa taxa, TreeVector treeVector) {
     	Trees trees = nexml.addNewTrees();
-    	addCommonAttributes(trees, treeVector.getName(), treeVector.getAssignedID());
-    	trees.setOtus(taxa.getAssignedID());
+    	XmlAttributes treesAttrs = getAttachedXmlAttributes(treeVector); 
+    	if ( treesAttrs == null ) {
+    		treesAttrs = new XmlAttributes();
+    	}
+    	if ( ! treesAttrs.containsKey("id") ) {
+    		treesAttrs.put("id", treeVector.getAssignedID());
+    	}
+    	if ( ! treesAttrs.containsKey("otus") ) {
+    		XmlAttributes taxaAttrs = getAttachedXmlAttributes(taxa);
+    		String otusId;
+    		if ( taxaAttrs != null ) {
+    			if ( taxaAttrs.containsKey("id") ) {
+    				otusId = (String)taxaAttrs.get("id");
+    			}
+    			else {
+    				otusId = taxa.getAssignedID();
+    			}
+    		}
+    		else {
+    			otusId = taxa.getAssignedID();
+    		}    		
+    		trees.setOtus(otusId);
+    	}
+    	addCommonAttributes(trees, treeVector.getName(), treesAttrs);    	
     	for ( int i = 0; i < treeVector.getNumberOfTrees(); i++ ) {
-    		mesquite.lib.Tree tree = treeVector.getTree(i);
-    		FloatTree xmltree = (FloatTree)trees.addNewTree();
-    		addCommonAttributes(xmltree, tree.getName(), "" + tree.getID());
-    		addTreeElement(xmltree, tree, tree.getRoot());
+    		MesquiteTree tree = (MesquiteTree)treeVector.getTree(i);
+    		AbstractTree tr = trees.addNewTree();
+    		FloatTree xmltree = FloatTree.Factory.newInstance();
+    		int size = trees.sizeOfTreeArray();    		
+    		XmlAttributes treeAttrs = new XmlAttributes();
+    		treeAttrs.put("id", "" + tree.getID());
+    		addCommonAttributes(xmltree, tree.getName(), treeAttrs);    
+    		NameReference nRef = tree.makeAssociatedObjects("NexmlAttributes");
+    		addTreeElement(xmltree, tree, tree.getRoot(), nRef);
+    		trees.setTreeArray(size - 1, xmltree);
     	}
     }
     
-    private static void addTreeElement(FloatTree xmltree, mesquite.lib.Tree tree, int N) {
-		TreeNode node = (TreeNode)xmltree.addNewNode();
-		addCommonAttributes(node, tree.getNodeLabel(N), "node" + N);   
+    private static String getNodeId(MesquiteTree tree, int N, NameReference nRef) {
+    	String nodeId = "node" + N;
+    	XmlAttributes nodeAttrs = (XmlAttributes)tree.getAssociatedObject(nRef, N);
+    	if ( nodeAttrs != null ) {
+    		if ( nodeAttrs.containsKey("id") ) {
+    			nodeId = (String)nodeAttrs.get("id");
+    		}
+    	}    	
+    	return nodeId;
+    }
+    
+    private static XmlAnySimpleType makeBranchLength(MesquiteTree tree, int node) {
+    	XmlAnySimpleType length = XmlAnySimpleType.Factory.newInstance();
+    	length.setStringValue("" + tree.getBranchLength(node));
+    	return length;
+    }
+    
+    private static void addTreeElement(FloatTree xmltree, MesquiteTree tree, int N, NameReference nRef) {		
+    	TreeNode node = (TreeNode)xmltree.addNewNode();		
+    	XmlAttributes nodeAttrs = (XmlAttributes)tree.getAssociatedObject(nRef, N);
+    	XmlAttributes edgeAttrs = null;
+    	if ( nodeAttrs != null ) {
+    		edgeAttrs = (XmlAttributes)nodeAttrs.get("edgeAttributes");
+    	}
+    	String nodeId = getNodeId(tree,N,nRef);
+		addCommonAttributes(node, tree.getNodeLabel(N), nodeAttrs);   
 		int mother = tree.motherOfNode(N);
-		int taxon  = tree.taxonNumberOfNode(N);
-		if ( mother != 0 ) {
+		int taxon  = tree.taxonNumberOfNode(N);		
+		if ( N != tree.getRoot() ) {
 			TreeFloatEdge edge = (TreeFloatEdge)xmltree.addNewEdge();
-			edge.setSource("node" + mother);
-			edge.setTarget("node" + N);
-			XmlAnySimpleType length = XmlAnySimpleType.Factory.newInstance();
-			length.setStringValue("" + tree.getBranchLength(N));
-			edge.setLength(length);
-			edge.setId("e" + N);
+			edge.setSource(getNodeId(tree,mother,nRef));
+			edge.setTarget(nodeId);
+			edge.setLength(makeBranchLength(tree,N));			
+			addCommonAttributes(edge,null,edgeAttrs);
 		}	
-		else { // node is root
-			node.setRoot(tree.rootIsReal());
+		else {
+			node.setRoot(tree.rootIsReal());			
+			if ( mesquite.lib.MesquiteDouble.equals( 0.00, tree.getBranchLength(N), 0.0001 ) ) {
+				TreeFloatRootEdge edge = (TreeFloatRootEdge)xmltree.addNewRootedge();
+				edge.setTarget(nodeId);
+				edge.setLength(makeBranchLength(tree,N));
+				addCommonAttributes(edge,null,edgeAttrs);
+			}
 		}
 		if ( taxon != -1 ) {
-			node.setOtu(tree.getTaxa().getTaxon(taxon).getUniqueID());
+			XmlAttributes taxonAttrs = (XmlAttributes)tree.getTaxa().getAssociatedObject(nRef, taxon);
+			if ( taxonAttrs != null ) {
+				String otuId = (String)taxonAttrs.get("id");
+				if ( otuId != null ) {
+					node.setOtu(otuId);
+				}
+				else {
+					node.setOtu(tree.getTaxa().getTaxon(taxon).getUniqueID());
+				}
+			}
+			else {
+				node.setOtu(tree.getTaxa().getTaxon(taxon).getUniqueID());
+			}
 		}
     	for ( int d = tree.firstDaughterOfNode(N); tree.nodeExists(d); d = tree.nextSisterOfNode(d) ) {
-    		addTreeElement(xmltree, tree, d);
+    		addTreeElement(xmltree, tree, d, nRef);
     	}
     }
-    
-    private static void addCommonAttributes(IDTagged obj, String label, String id) {
+  
+    private static void addCommonAttributes(IDTagged obj, String label, XmlAttributes attrs) {
     	if ( label != null ) {
     		obj.setLabel(label);
     	}
-    	obj.setId(id);
+    	if ( attrs != null ) {
+	    	if ( attrs.containsKey("xml:base") ) {
+	    		obj.setBase((String)attrs.get("xml:base"));
+	    	}
+	    	if ( attrs.containsKey("xlink:href") ) {
+	    		obj.setHref((String)attrs.get("xlink:href"));
+	    	}
+	    	if ( attrs.containsKey("xml:lang") ) {
+	    		obj.setLang((String)attrs.get("xml:lang"));
+	    	}
+	    	if ( attrs.containsKey("class") ) {
+	    		//obj.setClass1((String)attrs.get("class"));
+	    	}
+	    	if ( attrs.containsKey("id") ) {
+	    		obj.setId((String)attrs.get("id"));
+	    	}
+    	}
+    }
+    
+    public static XmlAttributes getAttachedXmlAttributes (mesquite.lib.Attachable obj) {
+    	Vector attachments = obj.getAttachments();
+    	XmlAttributes theAttachment = new XmlAttributes();
+    	for ( int i = 0; i < attachments.size(); i++ ) {
+    		Object att = attachments.get(i);
+    		if ( att instanceof XmlAttributes ) {
+    			theAttachment = (XmlAttributes)att;
+    		}
+    	}
+    	return theAttachment;
     }
     
     private static void addOtusElements (MesquiteProject project, Nexml nexml) {
     	for ( int i = 0; i < project.getNumberTaxas(); i++ ) {
     		mesquite.lib.Taxa taxa = project.getTaxa(i);
+    		NameReference nRef = taxa.makeAssociatedObjects("NexmlAttributes");
     		Taxa xmltaxa = nexml.addNewOtus();
-    		addCommonAttributes(xmltaxa, taxa.getName(), taxa.getCIPResIDString());
+    		XmlAttributes taxaAttrs = getAttachedXmlAttributes(taxa);
+    		addCommonAttributes(xmltaxa, taxa.getName(), taxaAttrs);
     		for ( int j = 0; j < taxa.getNumTaxa(); j++ ) {
+    			XmlAttributes attrs = (XmlAttributes)taxa.getAssociatedObject(nRef, j);
     			mesquite.lib.Taxon taxon = taxa.getTaxon(j);
     			Taxon xmltaxon = xmltaxa.addNewOtu();
-    			addCommonAttributes(xmltaxon, taxon.getName(), taxon.getUniqueID());
+    			addCommonAttributes(xmltaxon, taxon.getName(), attrs);
     		} 
     	}    	
     }
@@ -660,7 +845,9 @@ public class InterpretNEXML extends FileInterpreterI {
     		String dataType = data.getDataTypeName();
     		AbstractBlock xmlcharacters = nexml.addNewCharacters();
     		HashMap idForState = new HashMap();
-    		addCommonAttributes(xmlcharacters, data.getName(), data.getAssignedID());
+    		XmlAttributes attrs = new XmlAttributes();
+    		attrs.put("id", data.getAssignedID());
+    		addCommonAttributes(xmlcharacters, data.getName(), attrs);
     		xmlcharacters.setOtus(data.getTaxa().getAssignedID());
     		if ( dataType.equalsIgnoreCase(DNAData.DATATYPENAME) ) {
     			idForState = addFormatElement((DnaCells)xmlcharacters, data);
@@ -769,4 +956,8 @@ public class InterpretNEXML extends FileInterpreterI {
         // TODO Auto-generated method stub
         return "Nexml import and export";
     }
+}
+
+class XmlAttributes extends HashMap {
+	
 }
