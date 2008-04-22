@@ -40,6 +40,7 @@ import java.util.List;
 import java.util.Vector;
 
 import mesquite.Mesquite;
+import mesquite.categ.lib.*;
 import mesquite.categ.lib.CategoricalData;
 import mesquite.categ.lib.DNAData;
 import mesquite.categ.lib.ProteinData;
@@ -252,7 +253,7 @@ public class InterpretNEXML extends FileInterpreterI {
     							buildTree(tree,children.get(k),rootNode,(AbstractTree)trees[j], nRef);
     						}
     					}
-    					else { //networks
+    					else { // XXX networks
     					}
     				}
     				treevector.addToFile(file, getProject(), treeTask);
@@ -404,10 +405,10 @@ public class InterpretNEXML extends FileInterpreterI {
      */
     private void processCharactersBlocks(Nexml n, MesquiteFile file){
         AbstractBlock[] c = n.getCharactersArray();
-        if (c != null && c.length > 0){
+        if ( c != null && c.length > 0 ){
             CharactersManager charTask = (CharactersManager)findElementManager(CharacterData.class);
 
-            for(int charBlockCount = 0; charBlockCount< c.length;charBlockCount++){
+            for( int charBlockCount = 0; charBlockCount < c.length; charBlockCount++ ){
                 AbstractBlock currentBlock = c[charBlockCount];
                 String linkedTaxaId = currentBlock.getOtus();
                 if (taxaById.get(linkedTaxaId) == null){                
@@ -469,48 +470,114 @@ public class InterpretNEXML extends FileInterpreterI {
             }
         }
     }
-
-
     
+    private static void processAbstractState(AbstractState[] stateSet,HashMap symbolForId) {
+    	for ( int i = 0; i < stateSet.length; i++ ) {
+    		String stateId = stateSet[i].getId();
+    		String stateSymbol = stateSet[i].getSymbol().getStringValue();
+    		symbolForId.put(stateId, stateSymbol);
+    	}    	
+    }
 
+    private HashMap processFormatElement (AbstractFormat format,mesquite.lib.characters.CharacterData data) {
+    	HashMap stateSetForId = new HashMap();
+    	HashMap stateSetForChar = new HashMap();
+    	AbstractStates states[] = format.getStatesArray();
+    	AbstractChar characters[] = format.getCharArray();
+    	for ( int i = 0; i < states.length; i++ ) {
+    		String stateSetId = states[i].getId();
+    		HashMap symbolForId = new HashMap();
+    		AbstractState stateSet[] = states[i].getStateArray();
+    		AbstractPolymorphicStateSet apss[] = states[i].getPolymorphicStateSetArray();
+    		AbstractUncertainStateSet uss[] = states[i].getUncertainStateSetArray();    		
+    		processAbstractState(stateSet,symbolForId);
+    		processAbstractState(apss,symbolForId);
+    		processAbstractState(uss,symbolForId);
+    		stateSetForId.put(stateSetId, symbolForId);
+    	}
+    	data.addParts(-1,characters.length);
+    	for ( int i = 0; i < characters.length; i++ ) {
+    		data.setCharacterName(i, characters[i].getLabel());
+    		String charId = characters[i].getId().getStringValue();
+    		String statesId = characters[i].getStates();
+    		stateSetForChar.put(charId, stateSetForId.get(statesId));
+    		XmlAttributes charAttrs = processStandardAttributes(characters[i]);
+    		NameReference nRef = data.makeAssociatedObjects("NexmlAttributes");
+    		data.setAssociatedObject(nRef, i, charAttrs);
+    	}    	
+    	return stateSetForChar;
+    }
+    
+    private void populateMatrix(HashMap stateSetForChar,StandardObsMatrix currentBlock, mesquite.lib.characters.CharacterData data) {
+    	AbstractObsRow rows[] = currentBlock.getRowArray();
+    	NameReference nRef = data.makeAssociatedObjects("NexmlAttributes");
+    	for ( int i = 0; i < rows.length; i++ ) {
+    		AbstractObs cells[] = rows[i].getCellArray();
+    		for ( int j = 0; j < cells.length; j++ ) {
+    			String charId = cells[j].getChar().getStringValue();
+    			String stateId = cells[j].getState().getStringValue();
+    			String symbol = null;
+    			int charIndex = -1;
+    			if ( stateSetForChar.containsKey(charId) ) {
+    				HashMap states = (HashMap)stateSetForChar.get(charId);
+    				symbol = (String)states.get(stateId);    				
+    			}
+    			if ( symbol == null ) {
+    				symbol = stateId;
+    			}
+    			for ( int k = 0; k < data.getNumChars(); k++ ) {
+    				XmlAttributes charAttrs = (XmlAttributes)data.getAssociatedObject(nRef, k);
+    				if ( ((String)charAttrs.get("id")).equals(charId) ) {
+    					charIndex = k;
+    					break;
+    				}
+    			}
+    			CategoricalState cs = new CategoricalState();    			
+    			cs.setValue(symbol, data);
+    			data.setState(charIndex, i, cs);
+    		}
+    	}
+    }
+    
     private mesquite.lib.characters.CharacterData addStandardCellCharBlock(CharactersManager charTask, String linkedTaxaId, AbstractBlock currentBlock){
         mesquite.lib.Taxa linkedTaxa = (mesquite.lib.Taxa)taxaById.get(linkedTaxaId);
-        AbstractFormat f = null;
+        AbstractFormat format = null;
         AbstractStates states [] = null;
         AbstractChar chars [] = null;
         
-        if (currentBlock.isSetFormat()){
-            f = currentBlock.getFormat();
-            states = f.getStatesArray();
-            chars = f.getCharArray();
+        if ( currentBlock.isSetFormat() ) {
+        	format = currentBlock.getFormat();
+            states = format.getStatesArray();
+            chars  = format.getCharArray();
         }
-        if (states != null){
-            for(int i=0;i<states.length;i++){
-                if (states[i] instanceof StandardStates){
+        if ( states != null ) {
+            for ( int i = 0; i < states.length; i++ ) {
+                if ( states[i] instanceof StandardStates ) {
                     StandardStates theseStates = (StandardStates)states[i];
                     String statesID = theseStates.getId();
                     HashMap stateSymbolbyID = new HashMap();
                     AbstractState stateSet [] = theseStates.getStateArray();
-                    for(int j=0;j<stateSet.length;j++){
-                        if (stateSet[j] instanceof StandardState){
+                    for ( int j = 0; j < stateSet.length; j++ ) {
+                        if ( stateSet[j] instanceof StandardState ) {
                             StandardState aState = (StandardState)stateSet[j];
                             //AbstractMapping[] mapA = aState.getMappingArray();
                             String stateID = aState.getId();
                             String stateSymbol = aState.getSymbol().getStringValue();
                             stateSymbolbyID.put(stateID, stateSymbol);
                         }
-                        else
+                        else {
                             MesquiteMessage.warnProgrammer("Expected each state to be a StandardState, but got " + stateSet[j]);
+                        }
                     }
                 }
-                else 
+                else {
                     MesquiteMessage.warnProgrammer("Expected states to be StandardStates, but got " + states[i]);
-                
+                }                
             }
         }
-        if (chars != null){
-            for(int i= 0;i<chars.length;i++){
-                if (chars[i] instanceof StandardChar){
+        if ( chars != null ) {
+            for ( int i = 0; i < chars.length; i++ ) {
+                if ( chars[i] instanceof StandardChar ) {
                     StandardChar thisChar = (StandardChar)chars[i];
                     String thisStateSet = thisChar.getStates();
                 }
