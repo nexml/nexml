@@ -368,6 +368,9 @@ public class InterpretNEXML extends FileInterpreterI {
     	if ( obj instanceof org.nexml.x10.IDTagged ) {
     		attrs.put("id", ((org.nexml.x10.IDTagged)obj).getId());
     	}
+    	else if ( obj instanceof org.nexml.x10.AbstractChar ) {
+    		attrs.put("id", ((org.nexml.x10.AbstractChar)obj).getId().getStringValue());
+    	}
     	return attrs;
     }
     
@@ -508,7 +511,7 @@ public class InterpretNEXML extends FileInterpreterI {
     	return stateSetForChar;
     }
     
-    private void populateMatrix(HashMap stateSetForChar,StandardObsMatrix currentBlock, mesquite.lib.characters.CharacterData data) {
+    private void populateMatrix(HashMap stateSetForChar,AbstractObsMatrix currentBlock,mesquite.lib.characters.CharacterData data) {
     	AbstractObsRow rows[] = currentBlock.getRowArray();
     	NameReference nRef = data.makeAssociatedObjects("NexmlAttributes");
     	for ( int i = 0; i < rows.length; i++ ) {
@@ -520,77 +523,63 @@ public class InterpretNEXML extends FileInterpreterI {
     			int charIndex = -1;
     			if ( stateSetForChar.containsKey(charId) ) {
     				HashMap states = (HashMap)stateSetForChar.get(charId);
-    				symbol = (String)states.get(stateId);    				
+    				if ( states != null ) {
+    					symbol = (String)states.get(stateId);
+    				}
     			}
     			if ( symbol == null ) {
     				symbol = stateId;
     			}
     			for ( int k = 0; k < data.getNumChars(); k++ ) {
     				XmlAttributes charAttrs = (XmlAttributes)data.getAssociatedObject(nRef, k);
-    				if ( ((String)charAttrs.get("id")).equals(charId) ) {
-    					charIndex = k;
-    					break;
+    				if ( charAttrs != null ) {
+    					String id = (String)charAttrs.get("id");
+    					if ( id != null ) {
+    						if ( id.equals(charId) ) {
+    							charIndex = k;
+    							break;
+    						}
+    					}
     				}
     			}
-    			CategoricalState cs = new CategoricalState();    			
-    			cs.setValue(symbol, data);
-    			data.setState(charIndex, i, cs);
+    			CharacterState cs = null;
+    			if ( currentBlock instanceof ContinuousObsMatrix ) {
+    				cs = new ContinuousState();
+    			}
+    			else {
+    				cs = new CategoricalState();
+    			}
+				cs.setValue(symbol, data);
+				data.setState(charIndex, i, cs);    			
     		}
     	}
     }
     
     private mesquite.lib.characters.CharacterData addStandardCellCharBlock(CharactersManager charTask, String linkedTaxaId, AbstractBlock currentBlock){
         mesquite.lib.Taxa linkedTaxa = (mesquite.lib.Taxa)taxaById.get(linkedTaxaId);
-        AbstractFormat format = null;
-        AbstractStates states [] = null;
-        AbstractChar chars [] = null;
-        
+        mesquite.lib.characters.CharacterData data = charTask.newCharacterData(linkedTaxa, 0, CategoricalData.DATATYPENAME);  // Make this type sensitive
+        StandardObsMatrix obsMatrix = (StandardObsMatrix)((StandardCells)currentBlock).getMatrix();
+        HashMap stateSetForChar = null;
+        AbstractFormat format = null;             
         if ( currentBlock.isSetFormat() ) {
         	format = currentBlock.getFormat();
-            states = format.getStatesArray();
-            chars  = format.getCharArray();
-        }
-        if ( states != null ) {
-            for ( int i = 0; i < states.length; i++ ) {
-                if ( states[i] instanceof StandardStates ) {
-                    StandardStates theseStates = (StandardStates)states[i];
-                    String statesID = theseStates.getId();
-                    HashMap stateSymbolbyID = new HashMap();
-                    AbstractState stateSet [] = theseStates.getStateArray();
-                    for ( int j = 0; j < stateSet.length; j++ ) {
-                        if ( stateSet[j] instanceof StandardState ) {
-                            StandardState aState = (StandardState)stateSet[j];
-                            //AbstractMapping[] mapA = aState.getMappingArray();
-                            String stateID = aState.getId();
-                            String stateSymbol = aState.getSymbol().getStringValue();
-                            stateSymbolbyID.put(stateID, stateSymbol);
-                        }
-                        else {
-                            MesquiteMessage.warnProgrammer("Expected each state to be a StandardState, but got " + stateSet[j]);
-                        }
-                    }
-                }
-                else {
-                    MesquiteMessage.warnProgrammer("Expected states to be StandardStates, but got " + states[i]);
-                }                
-            }
-        }
-        if ( chars != null ) {
-            for ( int i = 0; i < chars.length; i++ ) {
-                if ( chars[i] instanceof StandardChar ) {
-                    StandardChar thisChar = (StandardChar)chars[i];
-                    String thisStateSet = thisChar.getStates();
-                }
-            
-            }
-        }
-        mesquite.lib.characters.CharacterData data = charTask.newCharacterData(linkedTaxa, 0, CategoricalData.DATATYPENAME);  // Make this type sensitive
+            stateSetForChar = processFormatElement(format,data);
+        }     
+        populateMatrix(stateSetForChar,obsMatrix,data);
         return data;
     }
 
     private mesquite.lib.characters.CharacterData addContinuousCellCharBlock(CharactersManager charTask, String linkedTaxaId, AbstractBlock currentBlock){
         mesquite.lib.Taxa linkedTaxa = (mesquite.lib.Taxa)taxaById.get(linkedTaxaId);
         mesquite.lib.characters.CharacterData data = charTask.newCharacterData(linkedTaxa, 0, ContinuousData.DATATYPENAME);  // Make this type sensitive
+        ContinuousObsMatrix obsMatrix = (ContinuousObsMatrix)((ContinuousCells)currentBlock).getMatrix();
+        HashMap stateSetForChar = null;
+        AbstractFormat format = null;             
+        if ( currentBlock.isSetFormat() ) {
+        	format = currentBlock.getFormat();
+            stateSetForChar = processFormatElement(format,data);
+        }     
+        populateMatrix(stateSetForChar,obsMatrix,data);        
         return data;
     }
 
@@ -600,7 +589,7 @@ public class InterpretNEXML extends FileInterpreterI {
         mesquite.lib.characters.CharacterData data = charTask.newCharacterData(linkedTaxa, 0, DNAData.DATATYPENAME);  // Make this type sensitive
         AbstractSeqMatrix matrix = ((AbstractSeqs)currentBlock).getMatrix();
         AbstractSeqRow [] rows = matrix.getRowArray();
-        for (int i=0;i<rows.length;i++){
+        for ( int i = 0; i < rows.length; i++ ){
             AbstractSeqRow curRow = rows[i];
             String curOtu = curRow.getOtu();
             mesquite.lib.Taxon t = (mesquite.lib.Taxon)linkedTaxonMap.get(curOtu);
@@ -622,6 +611,36 @@ public class InterpretNEXML extends FileInterpreterI {
         }
         return data;
     }
+    
+    private mesquite.lib.characters.CharacterData addRNASeqCharBlock(CharactersManager charTask, String linkedTaxaId, AbstractBlock currentBlock){
+        mesquite.lib.Taxa linkedTaxa = (mesquite.lib.Taxa)taxaById.get(linkedTaxaId);
+        HashMap linkedTaxonMap = (HashMap)taxonMapByTaxaId.get(linkedTaxaId);
+        mesquite.lib.characters.CharacterData data = charTask.newCharacterData(linkedTaxa, 0, DNAData.DATATYPENAME);  //TODO so how to make this RNA specific?
+        AbstractSeqMatrix matrix = ((AbstractSeqs)currentBlock).getMatrix();
+        AbstractSeqRow [] rows = matrix.getRowArray();
+        for ( int i = 0; i < rows.length; i++ ) {
+        	AbstractSeqRow curRow = rows[i];
+        	String curOtu = curRow.getOtu();
+        	mesquite.lib.Taxon t = (mesquite.lib.Taxon)linkedTaxonMap.get(curOtu);
+            int it = linkedTaxa.whichTaxonNumber(t);  //TODO how to handle -1 returns?
+            XmlAnySimpleType x = curRow.getSeq();
+            if ( x instanceof RNASeq ) {
+                RNASeq curSeq = (RNASeq)x;
+                String curString = curSeq.getStringValue();
+                int ic = 0;
+                for ( int pos = 0; pos < curString.length(); pos++ ) {
+                    char curChar = curString.charAt(pos);
+                    if ( !Character.isSpaceChar(curChar) ) {
+                        if ( data.getNumChars() <= ic ) {
+                            data.addCharacters(data.getNumChars()-1, 1, false);   // add a character if needed
+                        }
+                        ((CategoricalData)data).setState(ic++, it, curChar);
+                    }
+                }
+            }        	
+        }
+        return data;
+    }    
 
     private mesquite.lib.characters.CharacterData addDNACellCharBlock(CharactersManager charTask, String linkedTaxaId, AbstractBlock currentBlock){
         mesquite.lib.Taxa linkedTaxa = (mesquite.lib.Taxa)taxaById.get(linkedTaxaId);
@@ -672,13 +691,6 @@ public class InterpretNEXML extends FileInterpreterI {
         return data;
     }
 
-
-    private mesquite.lib.characters.CharacterData addRNASeqCharBlock(CharactersManager charTask, String linkedTaxaId, AbstractBlock currentBlock){
-        mesquite.lib.Taxa linkedTaxa = (mesquite.lib.Taxa)taxaById.get(linkedTaxaId);
-        mesquite.lib.characters.CharacterData data = charTask.newCharacterData(linkedTaxa, 0, DNAData.DATATYPENAME);  //TODO so how to make this RNA specific?
-        return data;
-    }
-
     private mesquite.lib.characters.CharacterData addRNACellCharBlock(CharactersManager charTask, String linkedTaxaId, AbstractBlock currentBlock){
         mesquite.lib.Taxa linkedTaxa = (mesquite.lib.Taxa)taxaById.get(linkedTaxaId);
         HashMap linkedTaxonMap = (HashMap)taxonMapByTaxaId.get(linkedTaxaId);
@@ -724,7 +736,34 @@ public class InterpretNEXML extends FileInterpreterI {
 
     private mesquite.lib.characters.CharacterData addStandardSeqCharBlock(CharactersManager charTask, String linkedTaxaId, AbstractBlock currentBlock){
         mesquite.lib.Taxa linkedTaxa = (mesquite.lib.Taxa)taxaById.get(linkedTaxaId);
+        HashMap linkedTaxonMap = (HashMap)taxonMapByTaxaId.get(linkedTaxaId);
         mesquite.lib.characters.CharacterData data = charTask.newCharacterData(linkedTaxa, 0, CategoricalData.DATATYPENAME);  // Make this type sensitive
+        AbstractSeqMatrix matrix = ((AbstractSeqs)currentBlock).getMatrix();
+        AbstractSeqRow [] rows = matrix.getRowArray();
+        for (int i= 0; i< rows.length;i++){
+            AbstractSeqRow curRow = rows[i];
+            String curOtu = curRow.getOtu(); 
+            mesquite.lib.Taxon t = (mesquite.lib.Taxon)linkedTaxonMap.get(curOtu);
+            int it = linkedTaxa.whichTaxonNumber(t);  //TODO how to handle -1 returns?
+            XmlAnySimpleType x = curRow.getSeq();
+            if (x instanceof StandardSeq){
+            	StandardSeq curSeq = (StandardSeq)x;
+                List seqList = curSeq.getListValue();
+                int ic = 0;
+                Iterator elementItr = seqList.iterator();
+                while ( elementItr.hasNext() ) {
+                	java.math.BigInteger element = (java.math.BigInteger)elementItr.next();
+                	//System.out.println(element.longValue());
+                    CategoricalState elementState = new CategoricalState();
+                    elementState.setValue(element.toString(), data);
+                    if ( data.getNumChars() <= ic ) {
+                        data.addCharacters(data.getNumChars()-1, 1, false);   // add a character if needed
+                    }
+                    data.setState(ic,it,elementState);
+                    ic++;                                                                                 
+                }
+            }
+        }
         return data;
     }
     
