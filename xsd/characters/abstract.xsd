@@ -155,12 +155,11 @@
             </xs:documentation>
         </xs:annotation>
         <xs:complexContent>
-            <xs:extension base="Labelled">
+            <xs:extension base="IDTagged">
                 <xs:sequence minOccurs="1" maxOccurs="1"/>                
                 <xs:attribute name="tokens" type="MSTokenLength" use="optional"/>
                 <xs:attribute name="states" type="xs:NCName" use="optional"/>
                 <xs:attribute name="codon" type="CodonPosition" use="optional"/>
-                <xs:attribute name="id" type="xs:anySimpleType" use="required"/>
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
@@ -212,6 +211,20 @@
             </xs:documentation>
         </xs:annotation>
         <xs:restriction base="xs:string"/>
+    </xs:simpleType>
+    
+    <xs:simpleType name="AbstractTokenList">
+        <xs:annotation>
+            <xs:documentation>
+                AbstractTokenList is a simple type superclass for a compact character
+                data representations that consist of space-separated lists of tokens. 
+                Examples of this are continuous character data (where the compact 
+                representation is a list of space-separated floating point numbers) and
+                standard categorical data (which is represented as integers, which can be
+                > 9, and hence need to be space-separated).
+            </xs:documentation>
+        </xs:annotation>
+        <xs:list itemType="xs:double"/>
     </xs:simpleType>
 
     <xs:complexType name="AbstractSeqRow" abstract="true">

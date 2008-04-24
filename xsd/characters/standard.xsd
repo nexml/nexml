@@ -156,8 +156,10 @@
             <xs:documentation> This is a simple type that specifies a sequence of standard characters.
             </xs:documentation>
         </xs:annotation>
-        <xs:list itemType="StandardToken"/>
-    </xs:simpleType>
+        <xs:restriction base="AbstractTokenList">
+            <xs:pattern value="[0-9]+(\s[0-9]+)*"></xs:pattern>
+        </xs:restriction>
+    </xs:simpleType>    
     
     <xs:complexType name="StandardMatrixSeqRow" abstract="false">
         <xs:annotation>

@@ -84,7 +84,8 @@
                 a list of xs:float characters.
             </xs:documentation>
         </xs:annotation>
-        <xs:list itemType="xs:float"/>       
+        <!--<xs:list itemType="xs:float"/>-->
+        <xs:restriction base="AbstractTokenList"/>  
     </xs:simpleType>
     
     <xs:complexType name="ContinuousMatrixSeqRow" abstract="false">
