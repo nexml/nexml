@@ -33,16 +33,13 @@ package mesquite.nexml.beans.InterpretNEXML;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
-import mesquite.Mesquite;
 import mesquite.categ.lib.*;
 import mesquite.cont.lib.ContinuousData;
 import mesquite.cont.lib.ContinuousState;
-import mesquite.lib.CommandRecord;
 import mesquite.lib.Listable;
 import mesquite.lib.NameReference;
 import mesquite.lib.MesquiteFile;
@@ -68,6 +65,7 @@ import org.nexml.x10.DnaCells;
 
 /** A file interpreter for a NEXML file format.  */
 public class InterpretNEXML extends FileInterpreterI {  
+	private static final String nameReferenceKey = "NexmlAttributes";
 
     /*.................................................................................................................*/
     
@@ -147,7 +145,14 @@ public class InterpretNEXML extends FileInterpreterI {
         	errorReport(e);
         }
         
-        Nexml n = nDoc.getNexml();        
+        Nexml n = nDoc.getNexml();   
+        XmlAttributes attrs = processStandardAttributes(n);
+        if ( project instanceof mesquite.lib.Attachable ) {
+        	((mesquite.lib.Attachable)project).attach(attrs);
+        }
+        else {
+        	MesquiteMessage.warnProgrammer("Can't attach attributes to project");
+        }
         processOTUBlocks(n,file);
         processCharactersBlocks(n,file);
         processTreesBlocks(n,file);
@@ -180,6 +185,13 @@ public class InterpretNEXML extends FileInterpreterI {
     	return theTaxa;
     }
     
+    /**
+     * Retrieves a suitable identifier to use for the xml id attribute,
+     * either (preferably) by fetching it from the attached XmlAttributes
+     * object, or by using the getUniqueID return value
+     * @param taxa
+     * @return a unique identifier
+     */
     private static String getTaxaId(mesquite.lib.Taxa taxa) {
     	String id = null;
     	XmlAttributes attrs = getAttachedXmlAttributes(taxa);
@@ -191,11 +203,19 @@ public class InterpretNEXML extends FileInterpreterI {
     		}
     	}
     	if ( id == null ) {
-    		id = taxa.getAssignedID();
+    		id = taxa.getUniqueID(); // use these, (supposed to be) in nexus    		
     	}
     	return id;
     }
     
+    /**
+     * Retrieves a suitable identifier to use for the xml id attribute,
+     * either (preferably) by fetching it from the attached XmlAttributes
+     * object, or by using the getUniqueID return value
+     * @param taxa
+     * @param taxon
+     * @return a unique identifier
+     */
     private static String getTaxonId(mesquite.lib.Taxa taxa, mesquite.lib.Taxon taxon) {
     	String id = null;
     	int taxonNumber = taxa.whichTaxonNumber(taxon);
@@ -213,6 +233,13 @@ public class InterpretNEXML extends FileInterpreterI {
     	return id;
     }
     
+    /**
+	 * Retrieves a suitable identifier to use for the xml id attribute,
+     * either (preferably) by fetching it from the attached XmlAttributes
+     * object, or by using the getUniqueID return value
+     * @param data
+     * @return a unique identifier
+     */
     private static String getCharactersId(mesquite.lib.characters.CharacterData data) {
     	String id = null;
     	XmlAttributes attrs = getAttachedXmlAttributes(data);
@@ -224,11 +251,19 @@ public class InterpretNEXML extends FileInterpreterI {
     		}
     	}
     	if ( id == null ) {
-    		id = data.getAssignedID();
+    		id = data.getUniqueID();
     	}    	
     	return id;
     }
     
+    /**
+	 * Retrieves a suitable identifier to use for the xml id attribute,
+     * either (preferably) by fetching it from the attached XmlAttributes
+     * object, or by using the getUniqueID return value
+     * @param data
+     * @param ic
+     * @return a unique identifier
+     */
     private static String getCharacterId(mesquite.lib.characters.CharacterData data,int ic) {
     	String id = null;
     	XmlAttributes attrs = getAssociatedXmlAttributes(data,ic);
@@ -240,7 +275,7 @@ public class InterpretNEXML extends FileInterpreterI {
     		}
     	}
     	if ( id == null ) {
-    		id = "c" + ic;
+    		id = data.getUniqueID(ic);
     	}
     	return id;
     }
@@ -254,7 +289,7 @@ public class InterpretNEXML extends FileInterpreterI {
      */
     private mesquite.lib.Taxon getTaxonById(mesquite.lib.Taxa taxa, String id, boolean alsoCheckUniqueId ) {
     	mesquite.lib.Taxon theTaxon = null;
-    	NameReference nref = taxa.makeAssociatedObjects("NexmlAttributes");
+    	NameReference nref = taxa.makeAssociatedObjects(nameReferenceKey);
 		for ( int i = 0; i < taxa.getNumTaxa(); i++ ) {
 			XmlAttributes taxonMap = (XmlAttributes) taxa.getAssociatedObject(nref,i);
 			if ( taxonMap != null ) {
@@ -298,7 +333,7 @@ public class InterpretNEXML extends FileInterpreterI {
     						tree.setRooted(root.getRoot(), false);  
     						Vector children = getChildNodes(root, trees[j]);
     						int rootNode = tree.getRoot();
-    						NameReference nRef = tree.makeAssociatedObjects("NexmlAttributes");
+    						NameReference nRef = tree.makeAssociatedObjects(nameReferenceKey);
     						tree.setAssociatedObject(nRef, rootNode, nodeAttr);
     						for ( int k = 0; k < children.size(); k++ ) {
     							buildTree(tree,(AbstractNode)children.get(k),rootNode,(AbstractTree)trees[j], nRef);
@@ -365,7 +400,7 @@ public class InterpretNEXML extends FileInterpreterI {
     	return edge;
     }
     
-    private void processOTUBlocks(Nexml n,MesquiteFile file){
+    private void processOTUBlocks(Nexml n,MesquiteFile file) {
         Taxa[] o = n.getOtusArray();
         if ( o != null && o.length > 0 ) {
             TaxaManager taxaTask = (TaxaManager)findElementManager(mesquite.lib.Taxa.class);            
@@ -378,8 +413,8 @@ public class InterpretNEXML extends FileInterpreterI {
                 	taxa.attach(taxaAttrs);
                 	taxa.setName(currentBlock.getLabel());
                     taxa.addToFile(file, getProject(), taxaTask);
-                    NameReference nref = taxa.makeAssociatedObjects("NexmlAttributes");
-                    for ( int taxaCounter = 0; taxaCounter < taxaInBlock; taxaCounter++ ){
+                    NameReference nref = taxa.makeAssociatedObjects(nameReferenceKey);
+                    for ( int taxaCounter = 0; taxaCounter < taxaInBlock; taxaCounter++ ) {
                         mesquite.lib.Taxon t = taxa.getTaxon(taxaCounter);
                         if ( t != null ) {
                         	org.nexml.x10.Taxon currentTaxon = currentBlock.getOtuArray(taxaCounter);
@@ -464,10 +499,10 @@ public class InterpretNEXML extends FileInterpreterI {
      */
     private void processCharactersBlocks(Nexml n, MesquiteFile file){
         AbstractBlock[] c = n.getCharactersArray();
-        if ( c != null && c.length > 0 ){
+        if ( c != null && c.length > 0 ) {
             CharactersManager charTask = (CharactersManager)findElementManager(CharacterData.class);
 
-            for( int charBlockCount = 0; charBlockCount < c.length; charBlockCount++ ){
+            for ( int charBlockCount = 0; charBlockCount < c.length; charBlockCount++ ) {
                 AbstractBlock currentBlock = c[charBlockCount];
                 String linkedTaxaId = currentBlock.getOtus();
                 mesquite.lib.characters.CharacterData data = null;
@@ -558,7 +593,7 @@ public class InterpretNEXML extends FileInterpreterI {
     		String statesId = characters[i].getStates();
     		stateSetForChar.put(charId, stateSetForId.get(statesId));
     		XmlAttributes charAttrs = processStandardAttributes(characters[i]);
-    		NameReference nRef = data.makeAssociatedObjects("NexmlAttributes");
+    		NameReference nRef = data.makeAssociatedObjects(nameReferenceKey);
     		data.setAssociatedObject(nRef, i, charAttrs);
     	}    	
     	return stateSetForChar;
@@ -566,7 +601,7 @@ public class InterpretNEXML extends FileInterpreterI {
     
     private void populateMatrix(HashMap stateSetForChar,AbstractObsMatrix currentBlock,mesquite.lib.characters.CharacterData data) {
     	AbstractObsRow rows[] = currentBlock.getRowArray();
-    	NameReference nRef = data.makeAssociatedObjects("NexmlAttributes");
+    	NameReference nRef = data.makeAssociatedObjects(nameReferenceKey);
     	mesquite.lib.Associable ti = data.getTaxaInfo(true);    
     	for ( int i = 0; i < rows.length; i++ ) {
     		XmlAttributes rowAttrs = processStandardAttributes(rows[i]);    		
@@ -632,7 +667,7 @@ public class InterpretNEXML extends FileInterpreterI {
         mesquite.lib.characters.CharacterData data = charTask.newCharacterData(linkedTaxa, 0, dataType);
         AbstractSeqMatrix matrix = ((AbstractSeqs)currentBlock).getMatrix();
         AbstractSeqRow [] rows = matrix.getRowArray();
-    	NameReference nRef = data.makeAssociatedObjects("NexmlAttributes");
+    	NameReference nRef = data.makeAssociatedObjects(nameReferenceKey);
     	mesquite.lib.Associable ti = data.getTaxaInfo(true);        
         for ( int i = 0; i < rows.length; i++ ) {
     		XmlAttributes rowAttrs = processStandardAttributes(rows[i]);    		
@@ -743,7 +778,7 @@ public class InterpretNEXML extends FileInterpreterI {
     		XmlAttributes treeAttrs = new XmlAttributes();
     		treeAttrs.put("id", "" + tree.getID());
     		addCommonAttributes(xmltree, tree.getName(), treeAttrs);    
-    		NameReference nRef = tree.makeAssociatedObjects("NexmlAttributes");
+    		NameReference nRef = tree.makeAssociatedObjects(nameReferenceKey);
     		addTreeElement(xmltree, tree, tree.getRoot(), nRef);
     		trees.setTreeArray(size - 1, xmltree);
     	}
@@ -856,7 +891,7 @@ public class InterpretNEXML extends FileInterpreterI {
     
     public static XmlAttributes getAssociatedXmlAttributes (mesquite.lib.Associable obj, int i) {
     	XmlAttributes theAttachment = null;
-    	NameReference nRef = obj.makeAssociatedObjects("NexmlAttributes");
+    	NameReference nRef = obj.makeAssociatedObjects(nameReferenceKey);
     	theAttachment = (XmlAttributes)obj.getAssociatedObject(nRef, i);
     	if ( theAttachment == null ) {
     		theAttachment = new XmlAttributes();
@@ -868,7 +903,7 @@ public class InterpretNEXML extends FileInterpreterI {
     private static void addOtusElements (MesquiteProject project, Nexml nexml) {
     	for ( int i = 0; i < project.getNumberTaxas(); i++ ) {
     		mesquite.lib.Taxa taxa = project.getTaxa(i);
-    		NameReference nRef = taxa.makeAssociatedObjects("NexmlAttributes");
+    		NameReference nRef = taxa.makeAssociatedObjects(nameReferenceKey);
     		Taxa xmltaxa = nexml.addNewOtus();
     		XmlAttributes taxaAttrs = getAttachedXmlAttributes(taxa);
     		addCommonAttributes(xmltaxa, taxa.getName(), taxaAttrs);
@@ -939,7 +974,7 @@ public class InterpretNEXML extends FileInterpreterI {
     	for ( int i = 0; i < data.getNumChars(); i++ ) {
     		XmlAttributes attr = getAssociatedXmlAttributes(data,i);
     		if ( ! attr.containsKey("id") ) {
-    			attr.put("id", "c" + i);
+    			attr.put("id", getCharacterId(data,i));
     		}
     		AbstractChar c = format.addNewChar();
     		addCommonAttributes((IDTagged)c,data.getCharacterName(i),attr);    		
@@ -983,7 +1018,7 @@ public class InterpretNEXML extends FileInterpreterI {
     private static void addMatrix(AbstractBlock characters, CharacterData data, HashMap idForState) {
     	AbstractObsMatrix matrix = ((AbstractCells)characters).addNewMatrix();    
     	mesquite.lib.Associable taxaInfo = data.getTaxaInfo(true);
-    	NameReference nRef = data.makeAssociatedObjects("NexmlAttributes");
+    	NameReference nRef = data.makeAssociatedObjects(nameReferenceKey);
     	for ( int i = 0; i < data.getNumTaxa(); i++ ) {
     		AbstractObsRow row = matrix.addNewRow();
     		for ( int j = 0; j < data.getNumChars(); j++ ) {
@@ -1018,10 +1053,16 @@ public class InterpretNEXML extends FileInterpreterI {
     }
     
     public String getName() {
-        return "Nexml import and export";
+        return "Nexml";
     }
+    
+	public String getExplanation() {
+		return "Imports and exports nexml files (http://www.nexml.org)" ;
+	}    
 }
 
-class XmlAttributes extends HashMap {
-	
+class XmlAttributes extends HashMap implements mesquite.lib.NexusWritable {
+	public String getNexusString () {
+		return "";
+	}
 }
