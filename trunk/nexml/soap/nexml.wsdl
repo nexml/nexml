@@ -19,24 +19,24 @@
     
     <!-- Abstract interfaces -->
     <interface name="RESTfulInterface">
-        <fault name="ClientError" element="tns:response"/>
-        <fault name="ServerError" element="tns:response"/>
-        <fault name="Redirection" element="tns:response"/>
+        <fault name="ClientError" element="nex:nexml"/>
+        <fault name="ServerError" element="nex:nexml"/>
+        <fault name="Redirection" element="nex:nexml"/>
         <operation name="Get" pattern="http://www.w3.org/ns/wsdl/in-out">
-            <input messageLabel="GetMsg" element="tns:request"/>
-            <output messageLabel="SuccessfulMsg" element="tns:response"/>
+            <input messageLabel="GetMsg" element="nex:nexml"/>
+            <output messageLabel="SuccessfulMsg" element="nex:nexml"/>
         </operation>
         <operation name="Post" pattern="http://www.w3.org/ns/wsdl/in-out">
-            <input messageLabel="PostMsg" element="tns:request"/>
-            <output messageLabel="SuccessfulMsg" element="tns:response"/>
+            <input messageLabel="PostMsg" element="nex:nexml"/>
+            <output messageLabel="SuccessfulMsg" element="nex:nexml"/>
         </operation>
         <operation name="Put" pattern="http://www.w3.org/ns/wsdl/in-out">
-            <input messageLabel="PutMsg" element="tns:request"/>
-            <output messageLabel="SuccessfulMsg" element="tns:response"/>
+            <input messageLabel="PutMsg" element="nex:nexml"/>
+            <output messageLabel="SuccessfulMsg" element="nex:nexml"/>
         </operation>
         <operation name="Delete" pattern="http://www.w3.org/ns/wsdl/in-out">
-            <input messageLabel="DeleteMsg" element="tns:request"/>
-            <output messageLabel="SuccessfulMsg" element="tns:response"/>
+            <input messageLabel="DeleteMsg" element="nex:nexml"/>
+            <output messageLabel="SuccessfulMsg" element="nex:nexml"/>
         </operation>
     </interface>
     
@@ -56,7 +56,7 @@
         type="http://www.w3.org/ns/wsdl/soap" 
         wsoap:protocol="http://www.w3.org/2003/05/soap/bindings/HTTP/"
         wsoap:mepDefault="http://www.w3.org/2003/05/soap/mep/request-response">
-        <operation ref="tns:Get" />
+        <operation ref="tns:Get"/>
         <operation ref="tns:Post" />
         <operation ref="tns:Put" />
         <operation ref="tns:Delete" />
