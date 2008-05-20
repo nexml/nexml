@@ -16,12 +16,13 @@
         </xs:documentation>
     </xs:annotation>  
        
-    <xs:simpleType name="AAToken" id="AminoAcid">
+    <xs:simpleType name="AAToken">
         <xs:annotation>
             <xs:documentation>
                 The AAToken simple type is a restriction of AbstractSymbol 
                 that defines an IUPAC single character amino acid symbol.
             </xs:documentation>
+            <xs:appinfo>AminoAcid</xs:appinfo>
         </xs:annotation>
         <xs:restriction base="AbstractSymbol">
             <xs:pattern value="[ABCDEFGHIKLMNPQRSTUVWXYZ]"/>
@@ -37,6 +38,7 @@
                 There must be an identifier ("id") that is of type xs:nonNegativeInteger to 
                 define the column number.
             </xs:documentation>
+            <xs:appinfo>Amino_Acid_Character</xs:appinfo>
         </xs:annotation>
         <xs:complexContent>
             <xs:restriction base="AbstractChar">
@@ -71,6 +73,7 @@
             	This is a single cell in a matrix containing
             	an amino acid observation. 
             </xs:documentation>
+            <xs:appinfo>Amino_Acid_State_Datum</xs:appinfo>
         </xs:annotation>
         <xs:complexContent>
             <xs:restriction base="AbstractObs">

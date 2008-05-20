@@ -54,7 +54,6 @@
                   <xs:field xpath="@id"/>
                 </xs:key>
               </xs:element>
-              <!--<xs:element name="models" type="Models" minOccurs="0" maxOccurs="unbounded"/>-->
             </xs:choice>
           </xs:sequence>     
         </xs:sequence>
