@@ -144,7 +144,7 @@
         <xs:restriction base="xs:positiveInteger"/>
     </xs:simpleType>
 
-    <xs:complexType name="AbstractChar" abstract="true">
+    <xs:complexType name="AbstractChar" abstract="true" id="Character">
         <xs:annotation>
             <xs:documentation> 
                 The AbstractChar type is the superclass for a column definition, which may
