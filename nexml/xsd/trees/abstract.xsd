@@ -29,16 +29,13 @@
             </xs:documentation>
         </xs:annotation>
         <xs:complexContent>
-            <xs:extension base="OptionalTaxonLinked"><!--
-                <xs:sequence minOccurs="1" maxOccurs="1">
-                    <xs:element name="dict" type="Dict" minOccurs="0" maxOccurs="unbounded"/>
-                </xs:sequence>-->
+            <xs:extension base="OptionalTaxonLinked">
                 <xs:attribute name="root" type="xs:boolean" default="false" use="optional"/>
             </xs:extension>            
         </xs:complexContent>        
     </xs:complexType>
     
-    <xs:complexType name="AbstractEdge" abstract="true">
+    <xs:complexType name="AbstractEdge" abstract="true" id="Edge">
         <xs:annotation>
             <xs:documentation>
                 The AbstractEdge superclass is what concrete edges inherit
@@ -47,10 +44,7 @@
             </xs:documentation>
         </xs:annotation>
         <xs:complexContent>
-            <xs:extension base="IDTagged"><!--
-                <xs:sequence minOccurs="1" maxOccurs="1">
-                    <xs:element name="dict" type="Dict" minOccurs="0" maxOccurs="unbounded"/>
-                </xs:sequence> -->               
+            <xs:extension base="IDTagged">       
                 <xs:attribute name="source" type="xs:NCName" use="required"/>
                 <xs:attribute name="target" type="xs:NCName" use="required"/>   
                 <xs:attribute name="length" type="xs:anySimpleType" use="optional"/>             
@@ -69,10 +63,7 @@
             </xs:documentation>
         </xs:annotation>
         <xs:complexContent>
-            <xs:extension base="IDTagged"><!--
-                <xs:sequence minOccurs="1" maxOccurs="1">
-                    <xs:element name="dict" type="Dict" minOccurs="0" maxOccurs="unbounded"/>
-                </xs:sequence>  -->              
+            <xs:extension base="IDTagged">             
                 <xs:attribute name="target" type="xs:NCName" use="required"/>  
                 <xs:attribute name="length" type="xs:anySimpleType" use="optional"/>              
             </xs:extension>            
