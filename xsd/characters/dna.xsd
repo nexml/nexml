@@ -86,6 +86,7 @@
                 There may be a CodonPosition ("codon") attribute, and there must be an identifier
                 ("id") that is of type xs:nonNegativeInteger to define the column number.
             </xs:documentation>
+            <xs:appinfo>Nucleotide_Character</xs:appinfo>
         </xs:annotation>
         <xs:complexContent>
             <xs:restriction base="AbstractChar">
@@ -117,8 +118,10 @@
 
     <xs:complexType name="DNAObs" abstract="false">
         <xs:annotation>
-            <xs:documentation> This is a single cell in a matrix containing a nucleotide
-                observation. </xs:documentation>
+            <xs:documentation> 
+                This is a single cell in a matrix containing a nucleotide observation. 
+            </xs:documentation>
+            <xs:appinfo>Nucleotide_State_Datum</xs:appinfo>
         </xs:annotation>
         <xs:complexContent>
             <xs:restriction base="AbstractObs">
