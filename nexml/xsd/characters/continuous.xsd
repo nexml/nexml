@@ -30,6 +30,7 @@
                 A concrete implementation of the char element, which requires
                 only an id attribute.
             </xs:documentation>
+            <xs:appinfo>Continuous_Character</xs:appinfo>
         </xs:annotation>
         <xs:complexContent>
             <xs:restriction base="AbstractChar">
@@ -65,6 +66,7 @@
                 This is a single cell in a matrix containing a continuous
                 observation. 
             </xs:documentation>
+            <xs:appinfo>Continuous_State_Datum</xs:appinfo>
         </xs:annotation>
         <xs:complexContent>
             <xs:restriction base="AbstractObs">

@@ -35,13 +35,14 @@
         </xs:complexContent>        
     </xs:complexType>
     
-    <xs:complexType name="AbstractEdge" abstract="true" id="Edge">
+    <xs:complexType name="AbstractEdge" abstract="true">
         <xs:annotation>
             <xs:documentation>
                 The AbstractEdge superclass is what concrete edges inherit
                 from by restriction. It represents an edge element much like
                 that of GraphML, i.e. an element that connects node elements.
             </xs:documentation>
+            <xs:appinfo>Edge</xs:appinfo>
         </xs:annotation>
         <xs:complexContent>
             <xs:extension base="IDTagged">       
