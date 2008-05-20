@@ -3,9 +3,6 @@
     xmlns="http://www.nexml.org/1.0" xmlns:xml="http://www.w3.org/XML/1998/namespace">
     <xs:include schemaLocation="abstract.xsd"/>
     
-    <!--
-    <xs:import namespace="http://www.w3.org/XML/1998/namespace"
-        schemaLocation="http://www.w3.org/2001/xml.xsd"/>-->
     <xs:annotation>
         <xs:documentation>
             This module defines concrete subclasses for the 
@@ -17,8 +14,9 @@
             nucleotide symbols. In a compact notation, the same data 
             is represented as a sequence of tokens (whitespace is allowed but has no meaning).
         </xs:documentation>
-    </xs:annotation>     
-    <xs:simpleType name="AAToken">
+    </xs:annotation>  
+       
+    <xs:simpleType name="AAToken" id="AminoAcid">
         <xs:annotation>
             <xs:documentation>
                 The AAToken simple type is a restriction of AbstractSymbol 
@@ -30,54 +28,6 @@
             <xs:length value="1"/>
         </xs:restriction>
     </xs:simpleType>
-    <!--
-        
-        The following types would be used if we explicitly defined ambiguity mappings,
-        allowed states, etc. But we don't, because we use the IUPAC symbols anyway. 
-        
-        <xs:complexType name="DNAMapping">
-        <xs:annotation>
-        <xs:documentation>An IUPAC ambiguity mapping.</xs:documentation>
-        </xs:annotation>
-        <xs:complexContent>
-        <xs:restriction base="AbstractMapping"/>            
-        </xs:complexContent>
-        </xs:complexType>
-        
-        <xs:complexType name="DNAState">
-        <xs:annotation>
-        <xs:documentation> 
-        This is a concrete implementation of the state element, which requires
-        a symbol element, in this case restricted to DNAToken, i.e. a single IUPAC nucleotide
-        symbol, and optional mapping elements to refer to other states.
-        </xs:documentation>
-        </xs:annotation>
-        <xs:complexContent>
-        <xs:restriction base="AbstractState">
-        <xs:sequence minOccurs="1" maxOccurs="1">
-        <xs:element name="dict" minOccurs="0" maxOccurs="unbounded" type="Dict"/>
-        <xs:element name="symbol" type="DNAToken" minOccurs="1" maxOccurs="1"/>
-        <xs:element name="mapping" type="DNAMapping" minOccurs="0" maxOccurs="unbounded"/>
-        </xs:sequence>
-        </xs:restriction>
-        </xs:complexContent>
-        </xs:complexType>
-        
-        <xs:complexType name="DNAStates">
-        <xs:annotation>
-        <xs:documentation>
-        A container for a set of states.
-        </xs:documentation>
-        </xs:annotation>
-        <xs:complexContent>
-        <xs:restriction base="AbstractStates">
-        <xs:sequence minOccurs="1" maxOccurs="1">
-        <xs:element name="dict" minOccurs="0" maxOccurs="unbounded" type="Dict"/>
-        <xs:element name="state" type="DNAState" minOccurs="0" maxOccurs="unbounded"/>
-        </xs:sequence>
-        </xs:restriction>
-        </xs:complexContent>        
-        </xs:complexType> -->
     
     <xs:complexType name="AAChar">
         <xs:annotation>
@@ -109,7 +59,6 @@
         <xs:complexContent>
             <xs:restriction base="AbstractFormat">
                 <xs:sequence minOccurs="1" maxOccurs="1">
-                    <!--     <xs:element name="states" type="DNAStates" minOccurs="0" maxOccurs="0"/> -->
                     <xs:element name="char" type="AAChar" minOccurs="1" maxOccurs="unbounded"/>
                 </xs:sequence>
             </xs:restriction>
