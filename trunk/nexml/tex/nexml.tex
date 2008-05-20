@@ -1,7 +1,10 @@
 \documentclass{article}
+% $Id: $
 
 \author{Rutger A. Vos}
-% by all means: add your name here
+% This manuscript is supposed to be a manifesto of sorts, so anyone supporting
+% the ideas outlined here is cordially invited to join in. Feel free to add
+% your name here as another author: \author{Your Name Here}
 
 \title{Nexml: an XML format for phylogenetic data}
 \newcommand{\code}{\texttt}
@@ -11,30 +14,36 @@
 \tableofcontents
 
 \section{Introduction}
-In the first evoinfo\footnote{http://evoinfo.nescent.org} meeting the working group acknowledged the desirability of a formal 
-ontology as the basis for data interoperability, and has chosen the development of an ontology 
-as one of its goals. Such a formal ontology, for example in RDF, can be translated directly into a 
-serialization protocol and into a file standard definition such as an XML Schema. However, the requirements 
-of this ontology were not clearly established, and a serialization protocol for it would not automatically 
-result in a ``convenient'' next generation file standard. Hence, some attendants argued\footnote{https://www.nescent.org/wg/evoinfo/images/7/7a/Standards.ppt} that a more "bottom up" approach that 
-starts with the design of a new standard will help uncover the hidden requirements of the ontology and generate 
-the serialization protocol in the process. This page describes recent discussion and ongoing work on the 
-design of this new standard.
+Phylogenetic analyses are growing in size and scope.
 
-\subsection{Goals for the working group}
-At the first meeting (20-23 May, 2007), the working group decided that work on the future data exchange 
-standard would primarily proceed under the auspices of Rutger Vos who has  
-reported on its progress at the Fall '07 meeting.
+Extensible markup language, or XML\cite{citeulike:2580222}, is an increasingly popular way to represent 
+scientific data in general \cite{citeulike:1937046} and bioinformatic data \cite{citeulike:242} in particular. 
+Here we present a new XML format for phylogenetic data, which in honor of the commonly used nexus \cite{citeulike:2011773} 
+flat file format is called ``nexml''.
 
 \section{RFC: nexml}
-In internetworking and computer network engineering, Request for Comments (RFC) documents are a series of 
-memoranda encompassing new research, innovations, and methodologies applicable to Internet technologies. 
-RFCs are meant for peer review and to transmit new concepts, and are published through the Internet Society. 
-This document is therefore in strict terms not a ``real'' RFC, but it serves the same purpose: to provoke 
-comment and discussion, and to disseminate information about the design process of a new data exchange 
-standard for phylogenetics, which in honor of the commonly used nexus flat file format is called ``nexml''. 
-The status of this page is neither that of a formal specification or recommendation, nor formally endorsed 
-by evoinfo in its current stage.
+% In the first evoinfo\footnote{http://evoinfo.nescent.org} meeting the working group acknowledged the desirability of a formal 
+% ontology as the basis for data interoperability, and has chosen the development of an ontology 
+% as one of its goals. Such a formal ontology, for example in RDF, can be translated directly into a 
+% serialization protocol and into a file standard definition such as an XML Schema. However, the requirements 
+% of this ontology were not clearly established, and a serialization protocol for it would not automatically 
+% result in a ``convenient'' next generation file standard. Hence, some attendants argued
+% \footnote{https://www.nescent.org/wg/evoinfo/images/7/7a/Standards.ppt} that a more "bottom up" approach that 
+% starts with the design of a new standard will help uncover the hidden requirements of the ontology and generate 
+% the serialization protocol in the process. This page describes recent discussion and ongoing work on the 
+% design of this new standard.
+% 
+% At the first meeting (20-23 May, 2007), the working group decided that work on the future data exchange 
+% standard would primarily proceed under the auspices of Rutger Vos who has  
+% reported on its progress at the Fall '07 meeting.
+% 
+% In internetworking and computer network engineering, Request for Comments (RFC) documents are a series of 
+% memoranda encompassing new research, innovations, and methodologies applicable to Internet technologies. 
+% RFCs are meant for peer review and to transmit new concepts, and are published through the Internet Society. 
+% This document is therefore in strict terms not a ``real'' RFC, but it serves the same purpose: to provoke 
+% comment and discussion, and to disseminate information about the design process of nexml. The status of 
+% this document is neither that of a formal specification or recommendation, nor formally endorsed by evoinfo 
+% in its current stage.
 
 \subsection{Preamble}
 The following subsections introduce the context within which nexml development takes place, describing 
@@ -736,5 +745,9 @@ the work to date on this project has been implemented using IDL, there's some ch
 this might be transformed\footnote{http://search.cpan.org/~perrad/CORBA-XMLSchemas-0.41/idl2xsd.pl} directly into XML schema, 
 then added to nexml. During a work meeting in Lawrence, KS, some contributors sketched out an 
 example\footnote{http://nexml07gsoc.googlecode.com/svn/trunk/examples/models.xml} of what a model description in XML might look like.
+
+\section{References}
+\bibliographystyle{alpha}
+\bibliography{refs}
 
 \end{document}
