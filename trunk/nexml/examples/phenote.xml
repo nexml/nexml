@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<nex:nexml 
+    version="1.0" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:phe="http://www.phenote.org"
+    xsi:schemaLocation="http://www.phenote.org phenote.xsd"
+    xmlns:nex="http://www.nexml.org/1.0">
+    <otus id="taxablock">
+        <otu id="o1" label="Chanos chanos">
+            <dict xsi:type="phe:TaxonID">
+                <key>taxonID</key>
+                <string>TTO:1027661</string>
+            </dict>
+        </otu>
+    </otus>
+    <characters otus="taxablock" id="characters" xsi:type="nex:StandardCells">
+        <format>
+            <states id="statesblock">
+                <state symbol="1" id="s1">
+                    <dict>
+                        <key>termid</key>
+                        <string>TAO:7234637</string>
+                        <key>description</key>
+                        <any>present</any>
+                    </dict>
+                </state>
+                <state symbol="0" id="s2">
+                    <dict>
+                        <key>termid</key>
+                        <string>TAO:7234637</string>
+                        <key>description</key>
+                        <string>absent</string>
+                    </dict>
+                </state>
+              </states>
+            <char states="statesblock" id="c1"/>
+        </format>
+        <matrix>
+            <row otu="o1" id="row1">
+                <cell char="c1" state="s1"></cell>
+            </row>
+        </matrix>
+    </characters>
+</nex:nexml>
