@@ -113,7 +113,7 @@ Tree constructor from Bio::Tree::TreeI argument.
 		my ( $class, $bptree ) = @_;
 		my $self;
 		if ( blessed $bptree && $bptree->isa('Bio::Tree::TreeI') ) {
-			$self = Bio::Phylo::Forest::Tree->SUPER::new(@_);
+			$self = Bio::Phylo::Forest::Tree->SUPER::new('-tag' => 'tree');
 			bless $self, $class;
 			$self = $self->_recurse( $bptree->get_root_node );
 		}
