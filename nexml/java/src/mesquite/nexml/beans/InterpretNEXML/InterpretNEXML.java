@@ -15,6 +15,8 @@ package mesquite.nexml.beans.InterpretNEXML;
 
 //$Id: InterpretNEXML.java 472 2008-03-05 20:00:35Z pmidford $
 
+// XXX Note to self: access me from $project/src (RAV)
+
 /*
  * Assuming you have a workspace in which you've checked out mesquite as 
  * "workspace/Mesquite Project" and you have a all of nexml (i.e. trunk +
@@ -78,7 +80,7 @@ public class InterpretNEXML extends FileInterpreterI {
      */
     /*.................................................................................................................*/
     public boolean startJob(String arguments, Object condition, boolean hiredByName) {
-        return true;
+    	return true;
     }   
     
     
@@ -309,6 +311,11 @@ public class InterpretNEXML extends FileInterpreterI {
     	return theTaxon;
     }
     
+    /**
+     * Populates trees objects from nexml document
+     * @param nexml
+     * @param file
+     */
     private void processTreesBlocks(Nexml nexml, MesquiteFile file) {
     	Trees[] treeBlocks = nexml.getTreesArray();
     	if ( treeBlocks != null && treeBlocks.length > 0 ) {
@@ -339,7 +346,7 @@ public class InterpretNEXML extends FileInterpreterI {
     							buildTree(tree,(AbstractNode)children.get(k),rootNode,(AbstractTree)trees[j], nRef);
     						}
     					}
-    					else { // XXX networks
+    					else { // networks would go here
     					}
     				}
     				treevector.addToFile(file, getProject(), treeTask);
@@ -348,6 +355,14 @@ public class InterpretNEXML extends FileInterpreterI {
     	}
     }    
     
+    /**
+     * Recursively traverses nexml node and edge elements, populates mesquiteTree 
+     * @param mesquiteTree
+     * @param currentXmlNode
+     * @param parentNode
+     * @param xmlTree
+     * @param nRef
+     */
     private void buildTree (MesquiteTree mesquiteTree, AbstractNode currentXmlNode, int parentNode, AbstractTree xmlTree, NameReference nRef) {
     	int currentNode = mesquiteTree.sproutDaughter(parentNode, false);    	    	
     	String otuIdRef = currentXmlNode.getOtu();
@@ -370,6 +385,12 @@ public class InterpretNEXML extends FileInterpreterI {
     	mesquiteTree.setAssociatedObject(nRef, currentNode, attrs);    	
     }
     
+    /**
+     * Returns a vector of nodes whose parent is "parent"
+     * @param parent
+     * @param tree
+     * @return
+     */
     private static Vector getChildNodes (AbstractNode parent, AbstractTree tree) {
     	Vector children = new Vector();
     	AbstractNode[] nodes = tree.getNodeArray();
@@ -388,6 +409,12 @@ public class InterpretNEXML extends FileInterpreterI {
     	return children;
     }
     
+    /**
+     * 
+     * @param node
+     * @param tree
+     * @return
+     */
     private static AbstractEdge getEdge (AbstractNode node, AbstractTree tree) {
     	AbstractEdge[] edges = tree.getEdgeArray();
     	AbstractEdge edge = null;
@@ -400,8 +427,13 @@ public class InterpretNEXML extends FileInterpreterI {
     	return edge;
     }
     
-    private void processOTUBlocks(Nexml n,MesquiteFile file) {
-        Taxa[] o = n.getOtusArray();
+    /**
+     * 
+     * @param nexml
+     * @param file
+     */
+    private void processOTUBlocks( Nexml nexml, MesquiteFile file ) {
+        Taxa[] o = nexml.getOtusArray();
         if ( o != null && o.length > 0 ) {
             TaxaManager taxaTask = (TaxaManager)findElementManager(mesquite.lib.Taxa.class);            
             for ( int taxaCount = 0; taxaCount < o.length; taxaCount++ ) {
@@ -424,7 +456,7 @@ public class InterpretNEXML extends FileInterpreterI {
                         		t.setName(currentTaxon.getLabel());
                         	}
                         	else {
-                        		//t.setName(currentTaxon.getId()); //XXX
+                        		//t.setName(currentTaxon.getId());
                         	}
                         }
                     }
@@ -542,7 +574,7 @@ public class InterpretNEXML extends FileInterpreterI {
                         MesquiteMessage.warnUser("Restriction data not recognized by mesquite in block " + currentBlock.getId());                       
                     }
                     else if (currentBlock instanceof RnaCells){
-                        data = processCellCharBlock(charTask,linkedTaxaId,currentBlock,DNAData.DATATYPENAME); // XXX so how does mesquite handle RNA?
+                        data = processCellCharBlock(charTask,linkedTaxaId,currentBlock,DNAData.DATATYPENAME);
                     }
                     else if (currentBlock instanceof StandardCellsImpl){
                         data = processCellCharBlock(charTask,linkedTaxaId,currentBlock,CategoricalData.DATATYPENAME);
@@ -562,30 +594,35 @@ public class InterpretNEXML extends FileInterpreterI {
         }
     }
     
-    private static void processAbstractState(AbstractState[] stateSet,HashMap symbolForId) {
-    	for ( int i = 0; i < stateSet.length; i++ ) {
+    private static void processAbstractState(AbstractState[] stateSet,HashMap symbolForId,HashMap attributes) {
+    	for ( int i = 0; i < stateSet.length; i++ ) {    		
     		String stateId = stateSet[i].getId();
     		String stateSymbol = stateSet[i].getSymbol().getStringValue();
+    		XmlAttributes attr = processStandardAttributes(stateSet[i]);
     		symbolForId.put(stateId, stateSymbol);
-    	}    	
+    		attributes.put(stateSymbol, attr);
+    	}
     }
-
+    
     private HashMap processFormatElement (AbstractFormat format,mesquite.lib.characters.CharacterData data) {
     	HashMap stateSetForId = new HashMap();
     	HashMap stateSetForChar = new HashMap();
+    	HashMap stateSetAttributes = new HashMap();
     	AbstractStates states[] = format.getStatesArray();
-    	AbstractChar characters[] = format.getCharArray();
     	for ( int i = 0; i < states.length; i++ ) {
     		String stateSetId = states[i].getId();
     		HashMap symbolForId = new HashMap();
     		AbstractState stateSet[] = states[i].getStateArray();
     		AbstractPolymorphicStateSet apss[] = states[i].getPolymorphicStateSetArray();
-    		AbstractUncertainStateSet uss[] = states[i].getUncertainStateSetArray();    		
-    		processAbstractState(stateSet,symbolForId);
-    		processAbstractState(apss,symbolForId);
-    		processAbstractState(uss,symbolForId);
+    		AbstractUncertainStateSet uss[] = states[i].getUncertainStateSetArray();
+    		HashMap stateAttributes = new HashMap();
+    		processAbstractState(stateSet,symbolForId,stateAttributes);
+    		processAbstractState(apss,symbolForId,stateAttributes);
+    		processAbstractState(uss,symbolForId,stateAttributes);
     		stateSetForId.put(stateSetId, symbolForId);
-    	}
+    		stateSetAttributes.put(stateSetId, stateAttributes);
+    	}    	
+    	AbstractChar characters[] = format.getCharArray();    	
     	data.addParts(-1,characters.length);
     	for ( int i = 0; i < characters.length; i++ ) {
     		data.setCharacterName(i, characters[i].getLabel());
@@ -594,7 +631,9 @@ public class InterpretNEXML extends FileInterpreterI {
     		stateSetForChar.put(charId, stateSetForId.get(statesId));
     		XmlAttributes charAttrs = processStandardAttributes(characters[i]);
     		NameReference nRef = data.makeAssociatedObjects(nameReferenceKey);
+    		NameReference stateRef = data.makeAssociatedObjects("StateAttributes");
     		data.setAssociatedObject(nRef, i, charAttrs);
+    		data.setAssociatedObject(stateRef, i, stateSetAttributes.get(statesId));
     	}    	
     	return stateSetForChar;
     }
@@ -675,7 +714,7 @@ public class InterpretNEXML extends FileInterpreterI {
             AbstractSeqRow curRow = rows[i];
             String curOtu = curRow.getOtu();
             mesquite.lib.Taxon t = getTaxonById(linkedTaxa,curOtu,true);
-            int it = linkedTaxa.whichTaxonNumber(t);  //TODO how to handle -1 returns?
+            int it = linkedTaxa.whichTaxonNumber(t);
             XmlAnySimpleType x = curRow.getSeq();             
             if ( x instanceof AbstractTokenList ) {
             	AbstractTokenList curSeq = (AbstractTokenList)x;
@@ -955,10 +994,12 @@ public class InterpretNEXML extends FileInterpreterI {
     
     private static HashMap addStateDefinitions(AbstractFormat format, CategoricalData data) {
     	AbstractStates states = format.addNewStates();
+    	NameReference stateRef = data.makeAssociatedObjects("StateAttributes");
     	states.setId("states1");
     	String[] labels = data.getSymbols();
     	HashMap idForState = new HashMap();
     	for ( int i = 0; i < labels.length; i++ ) {
+    	//for ( int i = 0; i < data.getMaxState(); i++ ) {
     		String stateId = "state" + i;
     		AbstractState state = states.addNewState();
     		XmlAnySimpleType symbol = XmlAnySimpleType.Factory.newInstance();    		
@@ -966,6 +1007,18 @@ public class InterpretNEXML extends FileInterpreterI {
     		state.setSymbol(symbol);
     		state.setId(stateId);
     		idForState.put(labels[i], stateId);
+    		for ( int j = 0; j < data.getNumChars(); j++ ) {
+    			HashMap attr = (HashMap)data.getAssociatedObject(stateRef, j);
+    			if ( attr != null ) {
+    				if ( attr.containsKey(labels[i]) ) {
+    					XmlAttributes stateAttr = (XmlAttributes)attr.get(labels[i]);
+    					Dict stateDict[] = (Dict[])stateAttr.get("dict");
+    					if ( stateDict != null ) {
+    						state.setDictArray(stateDict);
+    					}
+    				}
+    			}
+    		}    		
     	}
     	return idForState;
     }
