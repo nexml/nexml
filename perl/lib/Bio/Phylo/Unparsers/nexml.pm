@@ -2,6 +2,7 @@
 # Subversion: $Rev: 190 $
 package Bio::Phylo::Unparsers::Nexml;
 use strict;
+use XML::Twig;
 use Bio::Phylo::IO;
 use Bio::Phylo::Util::CONSTANT qw(:objecttypes);
 use Bio::Phylo::Util::Exceptions;

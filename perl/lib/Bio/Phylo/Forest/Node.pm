@@ -2293,9 +2293,9 @@ sub internal_id { shift->get_id }
 sub description {
 	my $self = shift;
 	if ( @_ ) {
-		$self->set_description(shift);
+		$self->set_desc(shift);
 	}
-	return $self->get_description;
+	return $self->get_desc;
 }
 
 sub bootstrap {
