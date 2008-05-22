@@ -17,13 +17,13 @@
 			compile with <code>-I$XERCES_HOME/include</code> and link with 
 			<code>-L$XERCES_HOME/lib -lxerces-c</code>.		
 		</li>
-		<li>
+		<li class="rss">
 			Generate the headers and binding sources using something like this <a href="build.sh">shell
 			script</a> or this <a href="makefile">makefile</a>. You may have to tweak these a little
 			depending on your install location and version for xsd and xerces-c, the salient point
 			in these script examples is the command line invocation for <code>xsd</code>.
 		</li>
-		<li>
+		<li class="rss">
 			Create your own mappings between the xsd object model and that of your software. The
 			<a href="driver.cxx">driver.cxx</a> gives a simple example of where to start with that.
 		</li>
