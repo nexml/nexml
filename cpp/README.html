@@ -1,10 +1,11 @@
 <h3 class="plain">Prerequisites</h3>
 <p>
-	C++ bindings are generated from the <a href="../xsd">xml schema files</a> using the <code>xsd</code>
+	C++ bindings are generated from the <a href="../xsd">nexml schema files</a> using the <code>xsd</code>
 	tool from <a href="http://www.codesynthesis.com/products/xsd/download.xhtml">CodeSynthesis</a>,
 	and are then compiled with something like the <a href="driver.cxx">driver.cxx</a> file to yield 
 	an executable that processes nexml instance documents (presumably this would be part of an importer
-	that maps the beans objects onto your internal object model). The basic steps are as follows:
+	that maps the beans objects created by the <code>xsd</code> tool onto your internal object model). 
+	The basic steps are as follows:
 	<ul>
 		<li class="rss">
 			<a href="http://www.codesynthesis.com/products/xsd/download.xhtml">Download</a> and install 
