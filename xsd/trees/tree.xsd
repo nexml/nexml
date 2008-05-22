@@ -16,7 +16,7 @@
         </xs:documentation>
     </xs:annotation>    
     
-    <xs:include schemaLocation="abstract.xsd"/>
+    <xs:include schemaLocation="abstracttrees.xsd"/>
     
     <xs:complexType name="TreeNode" abstract="false">
         <xs:annotation>
