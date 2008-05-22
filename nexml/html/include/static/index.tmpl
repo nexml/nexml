@@ -85,14 +85,19 @@
         page.
     </li>
     <li class="rss">
-        Secondly, we're developing java class libraries to aid
-        software developers wanting to use nexml in their applications
-        These class libraries will support reading of nexml data
-        through a SAX API (to facilitate large data sets or data
-        streams) and writing through a set of simple interfaces objects
-        need to implement in order to become xml writable. The code
-        for this subproject is in the java subfolder on the svn
-        repository.
+        Secondly, we're implementing nexml read/write abilities in a number of 
+        software packages:<br/>
+        <img class="app" src="<% paths.strip(paths.include('mesquite.gif')) %>"/>
+        <a href="http://mesquiteproject.org">Mesquite</a> now supports reading
+        and writing of nexml, including round-tripping of all elements and
+        attributes.<br/>
+        <img class="app" src="<% paths.strip(paths.include('dambe.gif')) %>"/>
+        <a href="http://dambe.bio.uottawa.ca/dambe.asp">DAMBE</a> reads and 
+        writes nexml data.<br/>
+        <img class="app" src="<% paths.strip(paths.include('Rlogo.jpg')) %>"/>
+        The <a href="https://r-forge.r-project.org/projects/phylobase/">phylobase</a>
+        package for <a href="http://www.r-project.org/">R</a> reads and writes
+        tree descriptions, with character matrices under way.
     </li>
     <li class="rss">
         Third, we're developing perl modules that plug into the 
