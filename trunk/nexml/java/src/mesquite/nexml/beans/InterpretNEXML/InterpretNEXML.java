@@ -303,9 +303,11 @@ public class InterpretNEXML extends FileInterpreterI {
 					}
 				}
 			}
-			if ( alsoCheckUniqueId && taxa.getTaxon(i).getUniqueID().equals(id) ) {
-				theTaxon = taxa.getTaxon(i);
-				break;
+			if ( alsoCheckUniqueId ) {
+			    if ((taxa.getTaxon(i) != null) && (taxa.getTaxon(i).getUniqueID() != null) && taxa.getTaxon(i).getUniqueID().equals(id) ) {
+			        theTaxon = taxa.getTaxon(i);
+			        break;
+			    }
 			}
 		}    	
     	return theTaxon;
@@ -757,7 +759,7 @@ public class InterpretNEXML extends FileInterpreterI {
         return data;
     }
     
-    public void exportFile(MesquiteFile file, String arguments) {
+    public boolean exportFile(MesquiteFile file, String arguments) {
     	MesquiteProject project = getProject();
     	NexmlDocument doc = NexmlDocument.Factory.newInstance();    
     	Nexml nexml = doc.addNewNexml();
@@ -770,6 +772,7 @@ public class InterpretNEXML extends FileInterpreterI {
     	StringBuffer outputBuffer = new StringBuffer();
     	outputBuffer.append(doc.toString());
     	saveExportedFileWithExtension(outputBuffer, arguments, "xml");
+    	return true;
     }
     
     private static void addTreesElements (MesquiteProject project, Nexml nexml) {
