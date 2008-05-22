@@ -224,17 +224,7 @@
             <xs:restriction base="Dict">
                 <xs:sequence minOccurs="1" maxOccurs="1">
                     <xs:element name="key" type="DCKey" minOccurs="1" maxOccurs="1"/>
-                    <xs:element name="any" type="DCAny">
-                 <!--       <xs:complexType>
-                            <xs:sequence>
-                                <xs:any 
-                                    namespace="http://purl.org/dc/elements/1.1/ http://purl.org/dc/terms/ http://www.w3.org/1999/02/22-rdf-syntax-ns#" 
-                                    processContents="lax" 
-                                    minOccurs="0" 
-                                    maxOccurs="unbounded"/>
-                            </xs:sequence>
-                        </xs:complexType> -->
-                    </xs:element>                 
+                    <xs:element name="any" type="DCAny" minOccurs="1" maxOccurs="1"/>                                     
                 </xs:sequence>
             </xs:restriction>
         </xs:complexContent>
@@ -264,17 +254,7 @@
             <xs:restriction base="Dict">
                 <xs:sequence minOccurs="1" maxOccurs="1">
                     <xs:element name="key" type="XHTMLKey" minOccurs="1" maxOccurs="1"/>
-                    <xs:element name="any" type="XHTMLAny">
-               <!--         <xs:complexType>
-                            <xs:sequence>
-                                <xs:any 
-                                    namespace="http://www.w3.org/1999/xhtml" 
-                                    processContents="lax" 
-                                    minOccurs="0" 
-                                    maxOccurs="unbounded"/>
-                            </xs:sequence>
-                        </xs:complexType> -->
-                    </xs:element>                  
+                    <xs:element name="any" type="XHTMLAny"/>                                      
                 </xs:sequence>
             </xs:restriction>
         </xs:complexContent>
