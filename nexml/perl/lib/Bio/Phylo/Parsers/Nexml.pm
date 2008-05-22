@@ -317,15 +317,30 @@ sub _process_definitions {
 		my $states_id = $states_elt->att('id');
 		$states_hash->{$states_id} = {};		
 
-		# here we iterate of state definitions, i.e. each
-		# $state_elt <state/> describes what symbol that state has,
-		# TODO and possible ambiguity mappings
-		for my $state_elt ( $states_elt->children('state') ) {
-			my $state_id  = $state_elt->att('id');
-			my $state_sym = $state_elt->att('symbol');
+		my $process_state = sub {
+			my $elt = shift;
+			my ( $id, $sym ) = ( $elt->att('id'), $elt->att('symbol') );
+			$states_hash->{$states_id}->{$id} = $sym;  
+		};
 
-			# for continuous data, $state_sym is undefined
-			$states_hash->{$states_id}->{$state_id} = $state_sym;
+		# here we iterate of state definitions, i.e. each
+		# $state_elt <state/> describes what symbol that state has
+		for my $state_elt ( $states_elt->children('state') ) {
+			$process_state->($state_elt);
+		}		
+		for my $polymorphic_state_set_elt ( $states_elt->children('polymorphic_state_set') ) {
+			$process_state->($polymorphic_state_set_elt);
+			# TODO
+			for my $member_elt ( $polymorphic_state_set_elt->children('member') ) {
+				
+			}
+		}
+		for my $uncertain_state_set_elt ( $states_elt->children('uncertain_state_set') ) {
+			$process_state->($uncertain_state_set_elt);
+			# TODO
+			for my $member_elt ( $uncertain_state_set_elt->children('member') ) {
+				
+			}			
 		}
 	}
 	
