@@ -204,6 +204,10 @@ li.rss {
     border: none
 }
 
+img.app {
+    vertical-align: text-top
+}
+
 .clear { 
     clear: both;  
     margin: 0
@@ -298,7 +302,6 @@ hr {
 div.directoryIndex {
     padding: 1em;
     font-size: 120% !important;
-//    font-weight: bold
 }
 
 /* 
