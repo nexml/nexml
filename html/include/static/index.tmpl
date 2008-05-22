@@ -13,15 +13,21 @@
 </p>
 <ul>
 <li class="rss">
-    <strong>Validation</strong> &mdash; some of the issues hampering
+    <strong>Syntax validation</strong> &mdash; some of the issues hampering
     interoperability are caused by the fact that no formal
-    specification exists for NEXUS and other flat files, and no objective way
+    specification exists for NEXUS and other flat files, and no unambiguous way
     to validate them. Thanks to <a rel="nofollow" href="http://www.w3.org/XML/Schema">
     XML Schema</a> we can now define a grammar against which 
-    data files can be validated syntactically, and with the wider
-    <a rel="nofollow" href="https://www.nescent.org/wg_evoinfo/">
-    EvoInfo working group</a> we are developing an ontology against
-    which data can be validated semantically.
+    data files can be validated syntactically.
+</li>
+<li class="rss">
+	<strong>Semantic annotation</strong> &mdash; another issue in current file
+	formats is that their semantics are not well-defined. For example, what does
+	it mean to use an ambiguity code in a matrix? Is it uncertainty or polymorphism?  	
+	With the wider <a rel="nofollow" href="https://www.nescent.org/wg_evoinfo/">
+    EvoInfo working group</a> we are developing an <a href="http://www.evolutionaryontology.org">
+    ontology</a> on which we are mapping nexml schema types so that the semantics
+    of data files become well-defined.
 </li>
 <li class="rss">
     <strong>Web services</strong> &mdash; a number of different 
