@@ -87,18 +87,29 @@
     <li class="rss">
         Secondly, we're implementing nexml read/write abilities in a number of 
         software packages:<br/>
+        
         <img class="app" src="<% paths.strip(paths.include('mesquite.gif')) %>"/>
         <a href="http://mesquiteproject.org">Mesquite</a> now supports reading
         and writing of nexml, including round-tripping of all elements and
-        attributes.<br/>
+        attributes. This implementation, developed by Peter Midford and Rutger
+        Vos, uses xmlbeans - while a stream-based implementation is under way.<br/>
+        
         <img class="app" src="<% paths.strip(paths.include('dambe.gif')) %>"/>
-        <a href="http://dambe.bio.uottawa.ca/dambe.asp">DAMBE</a> reads and 
-        writes nexml data.<br/>
+        At the most recent EvoInfo meeting, Xuhua Xia demonstrated 
+        <a href="http://dambe.bio.uottawa.ca/dambe.asp">DAMBE</a>'s abilities
+        to read and write nexml data transparently.<br/>
+        
         <img class="app" src="<% paths.strip(paths.include('Rlogo.jpg')) %>"/>
         The <a href="https://r-forge.r-project.org/projects/phylobase/">phylobase</a>
         package for <a href="http://www.r-project.org/">R</a> reads and writes
-        tree descriptions, with character matrices under way.
+        tree descriptions, with character matrices under way. This implementation
+        is being developed by Aaron Mackey.<br/>
+        
         <img class="app" src="<% paths.strip(paths.include('paup.gif')) %>"/>
+        David Swofford has started implementing nexml I/O for 
+        <a href="http://paup.csit.fsu.edu/">paup</a>. This implementation uses
+        C++ bindings analogous to xmlbeans.
+        
     </li>
     <li class="rss">
         Third, we're developing perl modules that plug into the 
