@@ -206,7 +206,8 @@ li.rss {
 
 img.app {
     vertical-align: text-top;
-    float: left
+    float: left;
+    padding-right: 5px
 }
 
 .clear { 
