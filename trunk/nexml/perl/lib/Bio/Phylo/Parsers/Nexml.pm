@@ -28,7 +28,7 @@ don't call it directly.
 
 =item L<Bio::Phylo::IO>
 
-The newick parser is called by the L<Bio::Phylo::IO> object.
+The nexml parser is called by the L<Bio::Phylo::IO> object.
 Look there to learn how to parse nexml (or any other data Bio::Phylo supports).
 
 =item L<Bio::Phylo::Manual>
