@@ -14,46 +14,39 @@ BEGIN {
     push @INC, '/Users/rvosa/CIPRES-and-deps/cipres/build/lib/perl/lib';
 }
 use strict;
-use warnings;
 use CGI::Carp 'fatalsToBrowser';
 use Bio::Phylo::IO qw(parse unparse);
 use Bio::Phylo::Forest;
 use LWP::UserAgent;
+use constant URL => 'http://tolweb.org/onlinecontributors/app?service=external&page=xml/TreeStructureService&node_id=';
 
-my $url = 'http://tolweb.org/onlinecontributors/app?service=external&page=xml/TreeStructureService&node_id=';
-my $tolwebid;
-my $pathinfo = $ENV{'PATH_INFO'};
-if ( $pathinfo and $pathinfo =~ m|/([0-9]+)$| ) {
-	$tolwebid = $1;
-}
-else {
-	die "not a valid tolweb ID";
-}
-
-my $ua = LWP::UserAgent->new;
-my $response = $ua->get($url.$tolwebid);
- 
-if ($response->is_success) {
-	my $nexml;	
-	my $content = $response->content;
-	$content =~ s/\Q<?xml version="1.0" standalone="yes"?>\E//;
-	$content =~ s/.*<TREE>/<TREE>/s;
-	$content =~ s/<\/TREE>.*/<\/TREE>/s;
-	eval {
-		my $tree = parse('-format'=>'tolweb','-string'=>$content);
-		$nexml = unparse(
-			'-format' => 'nexml',
-			'-phylo'  => Bio::Phylo::Forest->new()->insert($tree)
-		) 
-	};
-	if ( $@ ) {
-		die $@, $content;
+if ( $ENV{'PATH_INFO'} and $ENV{'PATH_INFO'} =~ m|/([0-9]+)$| ) {
+	my $response = LWP::UserAgent->new->get( URL . $1 );	 
+	if ( $response->is_success ) {
+		my $nexml;	
+		my $content = $response->content;
+		eval {
+			my $tree = parse(
+				'-format' => 'tolweb',
+				'-string' => $content
+			);
+			$nexml = unparse(
+				'-format' => 'nexml',
+				'-phylo'  => Bio::Phylo::Forest->new->insert($tree)
+			) 
+		};
+		if ( $nexml and not $@ ) {
+			print "Content-type: text/xml\n\n" . $nexml;			
+		}
+		else {
+			die $@, $content;
+		}		
 	}
 	else {
-		print "Content-type: text/xml\n\n" . $nexml;
+		die $response->status_line;
 	}
-	
 }
 else {
-	die $response->status_line;
+	die "$ENV{'PATH_INFO'} => not a valid tolweb ID!";
 }
+
