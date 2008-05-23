@@ -169,7 +169,7 @@ Retrieves tag string
 =cut
 
 	sub get_xml_tag {
-		my $self = shift;
+		my ($self, $closeme) = @_;
 		my %attrs = %{ $self->get_attributes };
 		my $tag = $self->get_tag;
 		my $xml = '<' . $tag;
@@ -184,10 +184,11 @@ Retrieves tag string
 				my $tag = $val->[0];
 				$xml .= "<$tag>" . $val->[1] . "</$tag>";
 			}
-			$xml .= '</dict>' . "</$tag>";
+			$xml .= '</dict>';
+			$xml .= "</$tag>" if $closeme;
 		}
 		else {
-			$xml .= shift(@_) ? '/>' : '>';
+			$xml .= $closeme ? '/>' : '>';
 		}
 		return $xml;
 	}
