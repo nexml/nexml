@@ -66,13 +66,17 @@ sub _new {
 
 	# this is the actual parser object, which needs to hold a reference
 	# to the XML::Twig object and to the tree
-	my $self = bless { '_tree' => undef }, $class;
+	my $self = bless { 
+		'_tree'      => undef,
+		'_node_of'   => {},
+		'_parent_of' => {}, 
+	}, $class;
 
 	# here we put the two together, i.e. create the actual XML::Twig object
 	# with its handlers, and create a reference to it in the parser object
 	$self->{'_twig'} = XML::Twig->new( 
 		'TwigHandlers' => {
-			'TREE' => sub { &_handle_tree( $self, @_ ) },			
+			'NODE' => sub { &_handle_node( $self, @_ ) },			
 		}		
 	);
 	return $self;
@@ -95,56 +99,57 @@ sub _from_both {
 	$logger->debug("going to parse xml");
 	my %opt = @_;
 
+	$self->{'_tree'} = $factory->create_tree;
+	
 	# XML::Twig doesn't care if we parse from a handle or a string
 	my $xml = $opt{'-handle'} || $opt{'-string'};
 	$self->{'_twig'}->parse($xml);
 	$logger->debug("done parsing xml");
+	
+	for my $node_id ( keys %{ $self->{'_node_of'} } ) {
+		if ( defined( my $parent_id = $self->{'_parent_of'}->{$node_id} ) ) {
+			my $child = $self->{'_node_of'}->{$node_id};
+			my $parent = $self->{'_node_of'}->{$parent_id};
+			$child->set_parent($parent);
+		}
+	}
 
 	# we're done, now grab the tree from its field
 	my $tree = $self->{'_tree'};
 
 	# reset everything in its initial state: Bio::Phylo::IO caches parsers
-	$self->{'_tree'} = undef;
+	$self->{'_tree'}      = undef;
+	$self->{'_node_of'}   = {};
+	$self->{'_parent_of'} = {}; 	
 
 	return $tree;
 }
 
-sub _handle_tree {
-	my ( $self, $twig, $tree_elt ) = @_;
-	$logger->debug("handling tree");
-	$self->{'_tree'} = $factory->create_tree;
-	for my $node_elt ( $tree_elt->children('NODE') ) {
-		$self->_handle_node($node_elt,undef);
-	}
-}
-
 sub _handle_node {
-	my ($self,$node_elt,$parent_obj) = @_;
+	my ( $self, $twig, $node_elt ) = @_;	
 	my $node_obj = $factory->create_node;
+	my $id = $node_elt->att('ID');
+	$self->{'_node_of'}->{$id} = $node_obj;
+	if ( my $parent = $node_elt->parent->parent ) {
+		$self->{'_parent_of'}->{$id} = $parent->att('ID');
+	}
 	$self->{'_tree'}->insert($node_obj);
-	$node_obj->set_parent($parent_obj) if $parent_obj;
 	my %dict;
 	for my $child_elt ( $node_elt->children ) {		
 		if ( $child_elt->tag eq 'NODES' or $child_elt->tag eq 'OTHERNAMES' ) {
 			next;
 		}
 		elsif ( $child_elt->tag eq 'NAME' ) {
-			my $name = $child_elt->text;
-			if ($name) {
-				if ( $name =~ m/[ ()]/ ) {
-					$node_obj->set_name("'". $name . "'");
-				}
-				else {
-					$node_obj->set_name($name);
-				}
-			}
+			if (my $name = $child_elt->text) {
+				$name =~ m/[ ()]/ ? $node_obj->set_name("'". $name . "'") : $node_obj->set_name($name);
+			}			
 		}
 		elsif ( $child_elt->tag eq 'DESCRIPTION' ) {
 			$node_obj->set_desc($child_elt->text);
 		}
 		elsif ( my $text = $child_elt->text ) {
 			$dict{$child_elt->tag} = [ 'string', $text ];
-		}
+		}		
 	}
 	for my $att_name ( $node_elt->att_names ) {
 		if ( $att_name eq 'COMBINATION_DATE' ) {
@@ -155,11 +160,7 @@ sub _handle_node {
 		}
 	}
 	$node_obj->set_generic( 'dict' => \%dict );
-	if ( my $nodes_elt = $node_elt->first_child('NODES') ) {
-		for my $child_node_elt ( $nodes_elt->children('NODE') ) {
-			$self->_handle_node($child_node_elt,$node_obj);
-		}
-	}
+	$twig->purge;
 }
 
 1;
