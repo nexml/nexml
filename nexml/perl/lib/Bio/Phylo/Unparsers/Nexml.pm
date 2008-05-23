@@ -126,17 +126,25 @@ sub _to_string {
 			'xsi:schemaLocation' => 'http://www.nexml.org/1.0 http://www.nexml.org/1.0/nexml.xsd',
 		}
 	);
-	my $taxa_elt = $parse_twig->parse($taxa_obj->to_xml);
-	#my $taxa_elt = _process_taxa($taxa_obj);
-	$parse_twig->root->paste($nexml_root);
+	eval {
+		my $taxa_elt = $parse_twig->parse($taxa_obj->to_xml);
+		$parse_twig->root->paste($nexml_root);
+	};
+	die $@, $taxa_obj->to_xml if $@;
 
 	for my $characters_obj ( reverse @{ $taxa_obj->get_matrices } ) {
-		my $characters_elt = $parse_twig->parse($characters_obj->to_xml); 
-		$characters_elt->root->paste( 'last_child', $nexml_root );
+		eval {
+			my $characters_elt = $parse_twig->parse($characters_obj->to_xml); 
+			$characters_elt->root->paste( 'last_child', $nexml_root );
+		};
+		die $@, $characters_obj->to_xml if $@;
 	}
 	for my $forest_obj ( reverse @{ $taxa_obj->get_forests } ) {		
-		my $forest_elt = $parse_twig->parse($forest_obj->to_xml);
-		$forest_elt->root->paste( 'last_child', $nexml_root );
+		eval {
+			my $forest_elt = $parse_twig->parse($forest_obj->to_xml);
+			$forest_elt->root->paste( 'last_child', $nexml_root );
+		};
+		die $@, $forest_obj->to_xml if $@;
 	}
 	$nexml_twig->set_root($nexml_root);
 	my $nexml_string = $nexml_twig->sprint('indented');

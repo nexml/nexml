@@ -176,7 +176,19 @@ Retrieves tag string
 		for my $key ( keys %attrs ) {
 			$xml .= ' ' . $key . '="' . $attrs{$key} . '"';
 		}
-		$xml .= shift(@_) ? '/>' : '>';
+		if ( my $dict = $self->get_generic('dict') ) {
+			$xml .= '><dict>';
+			for my $key ( keys %{$dict} ) {
+				$xml.= '<key>' . $key . '</key>';
+				my $val = $dict->{$key};
+				my $tag = $val->[0];
+				$xml .= "<$tag>" . $val->[1] . "</$tag>";
+			}
+			$xml .= '</dict>' . "</$tag>";
+		}
+		else {
+			$xml .= shift(@_) ? '/>' : '>';
+		}
 		return $xml;
 	}
 
