@@ -166,7 +166,7 @@ sub parse {
 	if ( !grep ucfirst( $opts{'-format'} ), @parsers ) {
 		throw 'BadFormat' => 'no parser available for specified format.';
 	}
-	if ( not ( $opts{-file} or $opts{-string} or $opts{-handle} ) ) {
+	if ( not ( $opts{'-file'} or $opts{'-string'} or $opts{'-handle'} or $opts{'-url'} ) ) {
 		throw 'BadArgs' => 'no parseable data source specified.';
 	}
 	my $lib = 'Bio::Phylo::Parsers::' . ucfirst($opts{'-format'});
@@ -186,11 +186,21 @@ sub parse {
 		}
         return $parser->_from_handle(%opts);
     }
-    elsif ( $opts{-string} && $parser->can('_from_string') ) {
-        return $parser->_from_string(%opts);
+    elsif ( $opts{'-string'} ) {
+        if ( $parser->can('_from_string') ) {
+        	return $parser->_from_string(%opts);
+        }
+        else {
+        	throw 'BadArgs' => "$opts{-format} parser can't handle strings";
+        }
     }
-    elsif ( $opts{-string} && ! $parser->can('_from_string') ) {
-        throw 'BadArgs' => "$opts{-format} parser can't handle strings";
+    elsif ( $opts{'-url'} ) {
+        if ( $parser->can('_from_url') ) {
+        	return $parser->_from_url(%opts);
+        }
+        else {
+        	throw 'BadArgs' => "$opts{-format} parser can't handle URLs";
+        }    	
     }
 }
 
