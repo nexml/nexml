@@ -15,11 +15,11 @@ if ( $@ ) {
 
 =head1 NAME
 
-Bio::Phylo::Parsers::Nexml - Parses nexml data. No serviceable parts inside.
+Bio::Phylo::Parsers::Tolweb - Parses Tree of Life xml feed data. No serviceable parts inside.
 
 =head1 DESCRIPTION
 
-This module parses nexml data. It is called by the L<Bio::Phylo::IO> facade,
+This module parses Tree of Life data. It is called by the L<Bio::Phylo::IO> facade,
 don't call it directly.
 
 =head1 SEE ALSO
@@ -28,16 +28,17 @@ don't call it directly.
 
 =item L<Bio::Phylo::IO>
 
-The newick parser is called by the L<Bio::Phylo::IO> object.
-Look there to learn how to parse nexml (or any other data Bio::Phylo supports).
+The ToL web parser is called by the L<Bio::Phylo::IO> object.
+Look there to learn how to parse Tree of Life data (or any other data Bio::Phylo supports).
 
 =item L<Bio::Phylo::Manual>
 
 Also see the manual: L<Bio::Phylo::Manual> and L<http://rutgervos.blogspot.com>.
 
-=item L<http://www.nexml.org>
+=item L<http://tolweb.org>
 
-For more information about the nexml data standard, visit L<http://www.nexml.org>
+For more information about the Tree of Life xml format, visit 
+L<http://tolweb.org/tree/home.pages/downloadtree.html>
 
 =back
 
@@ -89,6 +90,7 @@ sub _new {
 # suffice with aliases that point to the same method _from_both
 *_from_handle = \&_from_both;
 *_from_string = \&_from_both;
+*_from_url    = \&_from_both;
 
 # this method will be called by Bio::Phylo::IO, indirectly, through
 # _from_handle if the parse function is called with the -file => $filename
@@ -103,7 +105,12 @@ sub _from_both {
 	
 	# XML::Twig doesn't care if we parse from a handle or a string
 	my $xml = $opt{'-handle'} || $opt{'-string'};
-	$self->{'_twig'}->parse($xml);
+	if ( $xml ) {
+		$self->{'_twig'}->parse($xml);
+	}
+	elsif ( $opt{'-url'} ) {
+		$self->{'_twig'}->parseurl($opt{'-url'});
+	}
 	$logger->debug("done parsing xml");
 	
 	for my $node_id ( keys %{ $self->{'_node_of'} } ) {
