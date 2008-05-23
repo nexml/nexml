@@ -17,14 +17,22 @@ use strict;
 use CGI::Carp 'fatalsToBrowser';
 use Bio::Phylo::IO qw(parse unparse);
 use Bio::Phylo::Forest;
+use HTML::Entities;
 use constant URL => 'http://tolweb.org/onlinecontributors/app?service=external&page=xml/TreeStructureService&node_id=';
 
 if ( $ENV{'PATH_INFO'} and $ENV{'PATH_INFO'} =~ m|/([0-9]+)$| ) {
-	my $nexml;	
+	my $nexml;
+	my $url = URL . $1;	
 	eval {
 		my $tree = parse(
 			'-format' => 'tolweb',
-			'-url'    => URL . $1
+			'-url'    => $url
+		);
+		$tree->set_generic(
+			'dict' => {
+				'source'  => [ 'uri' => encode_entities($url) ],
+				'webpage' => [ 'uri' => 'http://tolweb.org' . $ENV{'PATH_INFO'} ]
+			}
 		);
 		$nexml = unparse(
 			'-format' => 'nexml',
