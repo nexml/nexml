@@ -17,34 +17,26 @@ use strict;
 use CGI::Carp 'fatalsToBrowser';
 use Bio::Phylo::IO qw(parse unparse);
 use Bio::Phylo::Forest;
-use LWP::UserAgent;
 use constant URL => 'http://tolweb.org/onlinecontributors/app?service=external&page=xml/TreeStructureService&node_id=';
 
 if ( $ENV{'PATH_INFO'} and $ENV{'PATH_INFO'} =~ m|/([0-9]+)$| ) {
-	my $response = LWP::UserAgent->new->get( URL . $1 );	 
-	if ( $response->is_success ) {
-		my $nexml;	
-		my $content = $response->content;
-		eval {
-			my $tree = parse(
-				'-format' => 'tolweb',
-				'-string' => $content
-			);
-			$nexml = unparse(
-				'-format' => 'nexml',
-				'-phylo'  => Bio::Phylo::Forest->new->insert($tree)
-			) 
-		};
-		if ( $nexml and not $@ ) {
-			print "Content-type: text/xml\n\n" . $nexml;			
-		}
-		else {
-			die $@, $content;
-		}		
+	my $nexml;	
+	eval {
+		my $tree = parse(
+			'-format' => 'tolweb',
+			'-url'    => URL . $1
+		);
+		$nexml = unparse(
+			'-format' => 'nexml',
+			'-phylo'  => Bio::Phylo::Forest->new->insert($tree)
+		) 
+	};
+	if ( $nexml and not $@ ) {
+		print "Content-type: text/xml\n\n" . $nexml;			
 	}
 	else {
-		die $response->status_line;
-	}
+		die $@;
+	}		
 }
 else {
 	die "$ENV{'PATH_INFO'} => not a valid tolweb ID!";
