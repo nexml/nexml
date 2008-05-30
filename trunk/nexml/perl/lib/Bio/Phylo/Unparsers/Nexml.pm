@@ -101,6 +101,17 @@ sub _to_string {
 	if ( $taxa_obj->can('_type') && $taxa_obj->_type != _TAXA_ ) {
 		if ( $taxa_obj->can('make_taxa') ) {
 			my $obj = $taxa_obj->make_taxa;
+			my $attached_obj = $taxa_obj;
+			for my $contained_obj ( @{ $attached_obj->get_entities } ) {
+				if ( $contained_obj->_type == _DATUM_ ) {
+					$contained_obj->set_name();
+				}
+				else {
+					for my $node ( @{ $contained_obj->get_entities } ) {
+						$node->set_name();
+					}
+				}
+			}
 			$taxa_obj = $obj;
 		}
 		else {
@@ -112,23 +123,19 @@ sub _to_string {
 	}
 	my $parse_twig = XML::Twig->new;
 	my $nexml_twig = XML::Twig->new;
-	$nexml_twig->set_xml_version('1.0');
-	$nexml_twig->set_encoding('ISO-8859-1');
-	$nexml_twig->set_pretty_print('indented');
-	$nexml_twig->set_empty_tag_style('normal');
 	my $nexml_root = XML::Twig::Elt->new(
 		'nex:nexml',
 		{
 			'xmlns:nex'          => 'http://www.nexml.org/1.0',
 			'version'            => '1.0',
-			'generator'          => __PACKAGE__ . $VERSION,
+			'generator'          => __PACKAGE__ . ' v.' . $VERSION,
 			'xmlns:xsi'          => 'http://www.w3.org/2001/XMLSchema-instance',
 			'xsi:schemaLocation' => 'http://www.nexml.org/1.0 http://www.nexml.org/1.0/nexml.xsd',
 		}
 	);
 	eval {
 		my $taxa_elt = $parse_twig->parse($taxa_obj->to_xml);
-		$parse_twig->root->paste($nexml_root);
+		$taxa_elt->root->paste($nexml_root);
 	};
 	die $@, $taxa_obj->to_xml if $@;
 
@@ -147,7 +154,11 @@ sub _to_string {
 		die $@, $forest_obj->to_xml if $@;
 	}
 	$nexml_twig->set_root($nexml_root);
-	my $nexml_string = $nexml_twig->sprint('indented');
+	$nexml_twig->set_xml_version('1.0');
+	$nexml_twig->set_encoding('ISO-8859-1');
+	$nexml_twig->set_pretty_print('indented');
+	$nexml_twig->set_empty_tag_style('normal');	
+	my $nexml_string = $nexml_twig->sprint();
 	return $nexml_string;
 }
 
