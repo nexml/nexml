@@ -322,13 +322,18 @@ Serializes invocant to XML.
 
 	sub to_xml {
 	    my $self = shift;
-	    my $xml = $self->get_xml_tag;
+	    my $xml = '';
 		if ( $self->can('get_entities') ) {
 			for my $ent ( @{ $self->get_entities } ) {
 				$xml .= "\n" . $ent->to_xml;
 			}
 		}
-		$xml .= sprintf( "</%s>", $self->get_tag );
+		if ( $xml ) {
+			$xml = $self->get_xml_tag . $xml . sprintf( "</%s>", $self->get_tag );
+		}
+		else {
+			$xml = $self->get_xml_tag(1);
+		}
 		return $xml;
 	}		
 
