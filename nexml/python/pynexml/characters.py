@@ -432,6 +432,38 @@ class CharacterDataMatrix(dict, base.Annotated):
     def __init__(self):
         dict.__init__(self)
         base.Annotated.__init__(self)
+        
+    def __isint(value):
+        try:
+            i = int(value)
+            return True
+        except:
+            return False
+    __isint = staticmethod(__isint)
+        
+    def __getitem__(self, key):
+        """
+        Dictionary interface implementation to allow for index-based access to matrix
+        """
+        if key not in self:
+            if self.__isint(key):
+                idx = int(key)
+                key = self.keys()[idx]
+        # force normal index error
+        return dict.__getitem__(self, key)
+       
+    def __setitem__(self, key, value):
+        """
+        Dictionary interface implementation to allow for index-based access to matrix.
+        """
+        if key not in self:
+            if self.__isint(key):
+                idx = int(key)
+                key = self.keys()[idx]
+        # force normal index error
+        return dict.__setitem__(self, key, value)                    
+        
+       
                        
 class CharactersBlock(taxa.TaxaLinked):
     """
