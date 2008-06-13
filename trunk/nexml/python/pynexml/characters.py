@@ -239,7 +239,7 @@ class DnaStateAlphabet(StateAlphabet):
         self.append(StateAlphabetElement(symbol="B", 
                                            multistate=StateAlphabetElement.AMBIGUOUS_STATE,
                                            member_states=self.get_states(symbols=['C', 'G', 'T'])))
-                                           
+        
 class RnaStateAlphabet(StateAlphabet):
 
     def __init__(self, elem_id=None, label=None):
@@ -401,6 +401,21 @@ class CharacterDataCell(base.Annotated):
     def __str__(self):
         return str(self.value)
         
+    def __eq__(self, other):
+        if isinstance(other, CharacterDataCell):
+            return self.value == other.value
+#         elif isinstance(other, self.value):
+#             
+        else:
+            return NotImplemented
+            
+    def __ne__(self, other):
+        result = self.__eq__(other)
+        if result is NotImplemented:
+            return result
+        return not result
+        
+        
 class CharacterDataVector(list, taxa.TaxonLinked):
     """
     A list of character data values.
@@ -423,6 +438,7 @@ class CharacterDataVector(list, taxa.TaxonLinked):
             return ' '.join([str(cell.value) for cell in self])
         else:
             return ''
+
 
 #class CharacterDataMatrix(utils.OrderedCaselessDict, base.Annotated):
 class CharacterDataMatrix(dict, base.Annotated):
