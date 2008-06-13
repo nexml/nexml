@@ -431,7 +431,10 @@ class CharacterDataVector(list, taxa.TaxonLinked):
         """        
         while len(self) <= column_index:
             self.append(None)
-        self[column_index] = cell            
+        self[column_index] = cell     
+        
+    def values(self):
+        return [cell.value for cell in self]
         
     def __str__(self):
         if self:
