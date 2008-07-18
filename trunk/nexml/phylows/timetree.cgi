@@ -1,5 +1,8 @@
 #!/usr/bin/perl
 BEGIN {
+    use CGI::Carp qw(fatalsToBrowser);
+}
+BEGIN {
     use Config;
     $ENV{ $Config{'ldlibpthname'} } = '../expat/lib';
 }
@@ -20,7 +23,6 @@ use URI::Escape;
 use CGI;
 use Scalar::Util qw(looks_like_number);
 use HTML::Entities;
-use CGI::Carp qw(fatalsToBrowser);
 use Bio::Phylo::Factory;
 use Bio::Phylo::IO 'unparse';
 use constant URL => 'http://timetree.org/time_query.php?';
