@@ -209,6 +209,61 @@ Validates taxon links of nodes in invocant's trees.
 		return $self;
 	}
 
+=item make_matrix()
+
+Creates an MRP matrix object.
+
+ Type    : Method
+ Title   : make_matrix
+ Usage   : my $matrix = $obj->make_matrix
+ Function: Creates an MRP matrix object
+ Returns : $matrix
+ Args    : NONE
+
+=cut
+
+    sub make_matrix {
+        my $self = shift;
+        my $taxa = $self->make_taxa;
+        my $matrix = $factory->create_matrix;
+        $matrix->set_taxa( $taxa );
+        my ( %data, @charlabels, @statelabels );
+        for my $taxon ( @{ $taxa->get_entities } ) {
+            my $datum = $factory->create_datum;
+            $datum->set_taxon( $taxon );
+            $datum->set_name( $taxon->get_name );
+            $matrix->insert( $datum );
+            $data{ $taxon->get_name } = [];
+        }
+        my $recursion = sub {
+            my ( $node, $tree, $taxa, $method ) = @_;
+            push @charlabels, $tree->get_internal_name;
+            push @statelabels, [ 'outgroup', $node->get_internal_name ];
+            my %tip_values = map { $_->get_name => 1 } @{ $node->get_terminals };
+            for my $tipname ( map { $_->get_name } @{ $tree->get_terminals } ) {
+                $tip_values{$tipname} = 0 if not exists $tip_values{$tipname};
+            }
+            for my $datumname ( keys %data ) {
+                if ( exists $tip_values{$datumname} ) {
+                    push @{ $data{$datumname} }, $tip_values{$datumname};
+                }
+                else {
+                    push @{ $data{$datumname} }, '?';
+                }
+            }
+            $method->( $_, $tree, $taxa, $method ) for grep { $_->is_internal } @{ $node->get_children };            
+        };
+        for my $tree ( @{ $self->get_entities } ) {
+            $recursion->( $tree->get_root, $tree, $taxa, $recursion );
+        }
+        for my $datum ( @{ $matrix->get_entities } ) {
+            $datum->set_char( $data{ $datum->get_name } );
+        }
+        $matrix->set_charlabels( \@charlabels );
+        $matrix->set_statelabels( \@statelabels );
+        return $matrix;
+    }
+
 =item make_taxa()
 
 Creates a taxa block from the objects contents if none exists yet.

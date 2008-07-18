@@ -756,30 +756,36 @@ Serializes matrix to nexus format.
  Returns : Nexus data block (SCALAR).
  Args    : The following options are available:
  
- 		   # if set, writes TITLE & LINK tokens
- 		   '-links' => 1
- 		   
-           # if set, writes block as a "data" block (deprecated, but used by mrbayes),
-           # otherwise writes "characters" block (default)
- 	       -data_block => 1
- 	       
- 	       # if set, writes "RESPECTCASE" token
- 	       -respectcase => 1
- 	       
- 	       # if set, writes "GAPMODE=(NEWSTATE or MISSING)" token
- 	       -gapmode => 1
- 	       
- 	       # if set, writes "MSTAXA=(POLYMORPH or UNCERTAIN)" token
- 	       -polymorphism => 1
- 	       
- 	       # if set, writes character labels
- 	       -charlabels => 1
- 	       
-		   # by default, names for sequences are derived from $datum->get_name, if 
-		   # 'internal' is specified, uses $datum->get_internal_name, if 'taxon'
-		   # uses $datum->get_taxon->get_name, if 'taxon_internal' uses 
-		   # $datum->get_taxon->get_internal_name, if $key, uses $datum->get_generic($key)
-		   -tipnames => one of (internal|taxon|taxon_internal|$key)
+            # if set, writes TITLE & LINK tokens
+            '-links' => 1
+            
+            # if set, writes block as a "data" block (deprecated, but used by mrbayes),
+            # otherwise writes "characters" block (default)
+            -data_block => 1
+            
+            # if set, writes "RESPECTCASE" token
+            -respectcase => 1
+            
+            # if set, writes "GAPMODE=(NEWSTATE or MISSING)" token
+            -gapmode => 1
+            
+            # if set, writes "MSTAXA=(POLYMORPH or UNCERTAIN)" token
+            -polymorphism => 1
+            
+            # if set, writes character labels
+            -charlabels => 1
+            
+            # if set, writes state labels
+            -statelabels => 1
+            
+            # if set, writes mesquite-style charstatelabels
+            -charstatelabels => 1
+            
+            # by default, names for sequences are derived from $datum->get_name, if 
+            # 'internal' is specified, uses $datum->get_internal_name, if 'taxon'
+            # uses $datum->get_taxon->get_name, if 'taxon_internal' uses 
+            # $datum->get_taxon->get_internal_name, if $key, uses $datum->get_generic($key)
+            -seqnames => one of (internal|taxon|taxon_internal|$key)
 
 =cut
 
@@ -840,11 +846,59 @@ Serializes matrix to nexus format.
 		if ( $args{'-charlabels'} ) {
 			my $charlabels;
 			if ( my @labels = @{ $self->get_charlabels } ) {
+				my $i = 1;
 				for my $label (@labels) {
-					$charlabels .= $label =~ /\s/ ? " '$label'" : " $label";
+					$charlabels .= $label =~ /\s/ ? "\n\t\t [$i] '$label'" : "\n\t\t [$i] $label";
+					$i++;
 				}
-				$string .= "\tCHARLABELS$charlabels;\n";
+				$string .= "\tCHARLABELS$charlabels\n\t;\n";
 			}
+		}
+		
+		# statelabels token line
+		if ( $args{'-statelabels'} ) {
+		    my $statelabels;
+		    if ( my @labels = @{ $self->get_statelabels } ) {
+		        my $i = 1;
+		        for my $labelset ( @labels ) {
+		            $statelabels .= "\n\t\t $i";
+		            for my $label ( @{ $labelset } ) {
+		                $statelabels .= $label =~ /\s/ ? "\n\t\t\t'$label'" : "\n\t\t\t$label";
+		                $i++;
+		            }
+		            $statelabels .= ',';
+		        }
+		        $string .= "\tSTATELABELS$statelabels\n\t;\n";
+		    }
+		}
+		
+		# charstatelabels token line
+		if ( $args{'-charstatelabels'} ) {
+		    my @charlabels = @{ $self->get_charlabels };
+		    my @statelabels = @{ $self->get_statelabels };
+		    if ( @charlabels and @statelabels ) {
+		        my $charstatelabels;
+		        my $nlabels = $self->get_nchar - 1;
+		        for my $i ( 0 .. $nlabels ) {
+		            $charstatelabels .= "\n\t\t" . ( $i + 1 );
+		            if ( my $label = $charlabels[$i] ) {
+		                $charstatelabels .= $label =~ /\s/ ? " '$label' /" : " $label /";
+		            }
+		            else {
+		                $charstatelabels .= " ' ' /";
+		            }
+		            if ( my $labelset = $statelabels[$i] ) {
+		                for my $label ( @{ $labelset } ) {
+		                    $charstatelabels .= $label =~ /\s/ ? " '$label'" : " $label";
+		                }
+		            }
+		            else {
+		                $charstatelabels .= " ' '";
+		            }
+		            $charstatelabels .= $i == $nlabels ? "\n\t;" : ',';
+		        }
+		        $string .= "\tCHARSTATELABELS$charstatelabels\n\t;\n";
+		    }
 		}
 
 		# ...and write matrix!
