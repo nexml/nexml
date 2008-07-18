@@ -73,6 +73,7 @@ my %defaults = (
 	'nchar'            => \&_nchar,
 	'format'           => \&_format,
 	'datatype'         => \&_datatype,
+	'matchchar'        => \&_matchchar,
 	'gap'              => \&_gap,
 	'missing'          => \&_missing,
 	'charlabels'       => \&_charlabels,
@@ -640,6 +641,15 @@ sub _datatype {
         my $datatype = shift;
         $self->_current->set_type($datatype);
         $logger->info( "datatype: $datatype" );
+    }
+}
+
+sub _matchchar {
+    my $self = shift;
+    if ( defined $_[0] and $_[0] !~ m/^(?:MATCHCHAR|=)/i ) {
+        my $matchchar = shift;
+        $self->_current->set_matchchar($matchchar);
+        $logger->info( "matchchar: $matchchar" );
     }
 }
 

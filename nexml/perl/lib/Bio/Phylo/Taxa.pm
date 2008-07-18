@@ -4,6 +4,7 @@ use strict;
 use Bio::Phylo::Listable;
 use Bio::Phylo::Util::CONSTANT qw(_NONE_ _TAXA_ _FOREST_ _MATRIX_ looks_like_object);
 use Bio::Phylo::Mediators::TaxaMediator;
+use Bio::Phylo::Factory;
 use vars qw(@ISA);
 
 =begin comment
@@ -20,6 +21,7 @@ This class has no internal state, no cleanup is necessary.
 
 	my $logger    = __PACKAGE__->get_logger;
 	my $mediator  = 'Bio::Phylo::Mediators::TaxaMediator';
+	my $factory   = Bio::Phylo::Factory->new;
 	my $CONTAINER = _NONE_;
 	my $TYPE      = _TAXA_;
 	my $MATRIX    = _MATRIX_;
@@ -289,36 +291,28 @@ Merges argument Bio::Phylo::Taxa object with invocant.
 =cut
 
     sub merge_by_name {
-        my ( $self, $other_taxa ) = @_;
-        if ( looks_like_object( $other_taxa, $TYPE ) ) {
-            my %self = map { $_->get_name => $_ } @{ $self->get_entities };
-            my %other =
-              map { $_->get_name => $_ } @{ $other_taxa->get_entities };
-            my $new = Bio::Phylo::Taxa->new;
-            foreach my $name ( keys %self ) {
-                my $taxon = Bio::Phylo::Taxa::Taxon->new( '-name' => $name );
-                foreach my $datum ( @{ $self{$name}->get_data } ) {
-                    $datum->set_taxon($taxon);
-                    $taxon->set_datum($datum);
+        my $merged = $factory->create_taxa;
+        for my $taxa ( @_ ) {
+            my %object_by_name = map { $_->get_name => $_ } @{ $merged->get_entities };
+            foreach my $taxon ( @{ $taxa->get_entities } ) {
+                my $name   = $taxon->get_name;
+                my $target = $factory->create_taxon( '-name' => $name );
+                if ( exists $object_by_name{$name} ) {
+                    $target = $object_by_name{$name};
+                }                
+                foreach my $datum ( @{ $taxon->get_data } ) {
+                    $datum->set_taxon( $target );
                 }
-                foreach my $node ( @{ $self{$name}->get_nodes } ) {
-                    $node->set_taxon($taxon);
-                    $taxon->set_node($node);
+                foreach my $node ( @{ $taxon->get_nodes } ) {
+                    $node->set_taxon( $target );
                 }
-                if ( exists $other{$name} ) {
-                    foreach my $datum ( @{ $other{$name}->get_data } ) {
-                        $datum->set_taxon($taxon);
-                        $taxon->set_datum($datum);
-                    }
-                    foreach my $node ( @{ $other{$name}->get_nodes } ) {
-                        $node->set_taxon($taxon);
-                        $taxon->set_node($node);
-                    }
+                if ( not exists $object_by_name{$name} ) {
+                    $merged->insert($target);
+                    $object_by_name{ $target->get_name } = $target;
                 }
-                $new->insert($taxon);
             }
-            return $new;
         }
+        return $merged;
     }
 
 =item to_nexus()
