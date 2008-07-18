@@ -83,6 +83,7 @@ if ( $response->is_success ) {
         $tree->insert( $node_a, $node_b );
         $forest->insert( $tree );
     }
+    print "Content-type: text/xml\n\n";
     print unparse( '-format' => 'nexml', '-phylo' => $forest );
 }
 else {
