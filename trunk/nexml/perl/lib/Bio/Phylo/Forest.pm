@@ -299,6 +299,27 @@ Creates a taxa block from the objects contents if none exists yet.
 		}
 	}
 
+=item to_newick()
+
+Serializes invocant to newick string.
+
+ Type    : Stringifier
+ Title   : to_newick
+ Usage   : my $string = $forest->to_newick;
+ Function: Turns the invocant forest object 
+           into a newick string, one line per tree
+ Returns : SCALAR
+ Args    : NONE
+
+=cut
+
+    sub to_newick {
+        my $self = shift;
+        my $newick;
+        $newick .= $_->to_newick, "\n" for @{ $self->get_entities };
+        return $newick;
+    }
+
 =item to_nexus()
 
 Serializer to nexus format.

@@ -154,7 +154,9 @@ Sets character state(s)
 
     sub set_char {
         my $self = shift;
-        $logger->info("setting chars '@_'");
+        my $name = $self->get_internal_name;
+        my $length = join '', @{ $_[0] };
+        $logger->info("setting $name $length chars '@_'");
         my @data;
         for my $arg (@_) {
             if ( isa( $arg, 'ARRAY' ) ) {
@@ -179,8 +181,8 @@ Sets character state(s)
         	eval { $self->insert(@char) };
 			undef($@);
 			throw 'InvalidData' => sprintf(
-					'Invalid data for type %s: %s',
-					$self->get_type, join( ' ', @data )
+					'Invalid data for row %s (type %s: %s)',
+					$self->get_internal_name, $self->get_type, join( ' ', @data )
 			);
 		}
 		$self->set_annotations;

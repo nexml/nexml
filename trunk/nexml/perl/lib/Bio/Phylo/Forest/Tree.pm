@@ -1744,26 +1744,27 @@ Prunes argument nodes from invocant.
 			my @tmp = map { $_->get_name } @{ $tips->get_entities };
 			$tips = \@tmp;
 		}
-		my %names_to_delete = map { $_           => 1 } @{$tips};
-		my %keep            = map { $_->get_name => 1 }
-		  grep { not exists $names_to_delete{ $_->get_name } }
-		  @{ $self->get_terminals };
-		$self->visit_post_order(
-			sub {
-				my $node = shift;
-				if ( $node->is_terminal ) {
-					$self->delete($node) if not $keep{ $node->get_name };
-				}
-				else {
-					my $seen_tip_to_keep = 0;
-					for my $tip ( @{ $node->get_terminals } ) {
-						$seen_tip_to_keep++ if $keep{ $tip->get_name };
-					}
-					$self->delete($node) if not $seen_tip_to_keep;
-				}
-			}
-		);
-		$self->remove_unbranched_internals;
+		my %names_to_delete = map { $_ => 1 } @{ $tips };
+		my %names_to_keep;
+		for my $tip ( @{ $self->get_terminals } ) {
+		    my $name = $tip->get_internal_name;
+		    if ( not $names_to_delete{$name} ) {
+		        $names_to_keep{$name} = 1;
+		    }
+		}
+        $self->visit_depth_first(
+            '-post' => sub {
+                my $node = shift;
+                for my $tip ( @{ $node->get_terminals } ) {
+                    if ( not $names_to_keep{ $tip->get_internal_name } ) {
+                        $tip->get_parent->prune_child( $tip );
+                        $self->delete( $tip );
+                    }
+                }
+                $self->remove_unbranched_internals;
+            }
+        );
+		$self->remove_unbranched_internals;	
 		return $self;
 	}
 
@@ -1787,16 +1788,13 @@ Keeps argument nodes from invocant (i.e. prunes all others).
 			my @tmp = map { $_->get_name } @{ $tips->get_entities };
 			$tips = \@tmp;
 		}
-		my %tip_names = map { $_->get_name => 1 } @{ $tree->get_terminals };
-		my %keep_taxa = map { $_           => 1 } @{$tips};
+		my %keep_taxa = map { $_ => 1 } @{ $tips };
 		my @taxa_to_prune;
-		for my $name ( keys %tip_names ) {
-			if ( not exists $keep_taxa{$name} ) {
-				push @taxa_to_prune, $name;
-			}
+		for my $tip ( @{ $tree->get_terminals } ) {
+		    my $name = $tip->get_internal_name;
+		    push @taxa_to_prune, $name if not exists $keep_taxa{$name};
 		}
-		$tree->prune_tips( \@taxa_to_prune );
-		return $tree;
+		return $tree->prune_tips( \@taxa_to_prune );
 	}
 
 =item negative_to_zero()
