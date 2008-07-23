@@ -35,7 +35,7 @@ my $fac = Bio::Phylo::Factory->new;
 my $taxon_a = $cgi->param('taxon_a') || shift @ARGV;
 my $taxon_b = $cgi->param('taxon_b') || shift @ARGV;
 my $pubmed  = 'http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=PubMed&list_uids=';
-my $dates   = [ date->new ];
+my $dates   = [];
 
 my $response = $lua->get( 
     URL 
@@ -50,8 +50,7 @@ if ( $response->is_success ) {
     my $content = $response->content;
     $tre->parse( $content );
     $tre->eof;
-    recurse( $tre, $dates );
-    pop @{ $dates };
+    find_tbody( $tre, $dates );
     my $forest = $fac->create_forest;
     my $taxa   = $fac->create_taxa;
     my $taxona = $fac->create_taxon( '-xml_id' => 'taxona' );
@@ -64,7 +63,7 @@ if ( $response->is_success ) {
             'genes'  => [ 'string' => $date->genes  ],
             'data'   => [ 'string' => $date->data   ],     
             'source' => [ 'string' => $date->source ],
-            'pub'    => [ 'url'    => encode_entities($pubmed . $date->pub . '&dopt=Abstract') ]                               
+            'pub'    => [ 'uri'    => encode_entities($pubmed . $date->pub . '&dopt=Abstract') ]                               
         );
         $tree->set_generic( 'dict' => \%dict );
         my $root = $fac->create_node;
@@ -91,66 +90,82 @@ else {
     die $response->status_line;
 }
 
-sub recurse {
+sub find_tbody {
     my ( $node, $dates ) = @_;
-    if ( ref $node and $node->isa('HTML::Element')  ) {
-        if ( $node->tag eq 'a' and $node->attr('href') =~ /\Q$pubmed\E(\d+)/ ) {
-            my $pub = $1;
-            $dates->[-1]->pub($pub);
-        }
-        if ( $node->tag eq 'div' and $node->attr('class') and $node->attr('class') =~ /^mock/ ) {
-            for my $content ( $node->content_list ) {
-                if ( ref $content ) {                    
-                    for my $child ( $content->content_list ) {
-                        if ( not ref $child ) {
-                            if ( looks_like_number $child ) {
-                                $dates->[-1]->time($child);
-                            }
-                            elsif ( $child eq 'n/c' ) {
-                                $dates->[-1]->genes($child);
-                            }
-                        }
-                        else {
-                            for my $taxon ( $child->content_list ) {
-                                if ( $dates->[-1]->taxona ) {
-                                    $dates->[-1]->taxonb($taxon);
-                                }
-                                else {
-                                    $dates->[-1]->taxona($taxon);
-                                }
-                            }
-                        }
+    for my $table ( $node->descendents ) {
+        if ( UNIVERSAL::isa( $table, 'HTML::Element' ) ) {
+            my $class = $table->attr('class');
+            if ( $table->tag eq 'table' and $class and $class eq 'collapsible' ) {           
+                for my $tbody ( $table->content_list ) {
+                    if ( UNIVERSAL::isa( $tbody, 'HTML::Element' ) and $tbody->tag =~ /tbody/i ) {
+                        process_tbody( $tbody, $dates );
                     }
-                }
-                else {
-                    if ( $content =~ /(?:Nucleotide|Amino)/ ) {
-                        $dates->[-1]->data($content);
-                    }
-                    elsif ( looks_like_number $content or $content =~ m/^\d+kb$/ or $content eq '-' ) {
-                        $dates->[-1]->genes($content);
-                    }
-                    else {
-                        if ( $content !~ /(?:DataType|Time|Source|Taxon [AB]|# Genes)/ ) {
-                            $dates->[-1]->source($content);
-                            if ( $dates->[-1]->is_complete ) {
-                                push @{ $dates }, date->new;
-                            }
-                            else {
-                                eval { $dates->[-1]->pub( $dates->[-2]->pub ) }; 
-                                if ( $@ or not $dates->[-1]->is_complete ) {
-                                    die Dumper( $dates->[-1] );
-                                }
-                                else {
-                                    push @{ $dates }, date->new;                                
-                                }
-                            }
-                        }
-                    }
-                }
+                }            
             }
         }
-        recurse($_,$dates) for $node->content_list;
-    } 
+    }
+}
+
+sub process_tbody {
+    my ( $tbody, $dates ) = @_;    
+    my ( $pub, $taxona, $taxonb, $source, $data, $genes, $time );
+    for my $tr ( $tbody->content_list ) {
+        if ( UNIVERSAL::isa( $tr, 'HTML::Element' ) and $tr->tag eq 'tr' ) {
+            
+            # a header row
+            if ( $tr->attr('bgcolor') and $tr->attr('bgcolor') eq '#FFFFFF' ) {
+                for my $a ( $tr->descendents ) {
+                    if ( UNIVERSAL::isa( $a, 'HTML::Element' ) and $a->tag eq 'a' ) {
+                        my $href = $a->attr('href');
+                        if ( $href =~ /\Q$pubmed\E(\d+)/ ) {
+                            $pub = $1;
+                        }
+                    }                
+                }            
+            }
+            
+            # a content row
+            elsif ( $tr->attr('class') eq 'collapsible' ) {
+                for my $div ( $tr->descendents ) {
+                    if ( UNIVERSAL::isa( $div, 'HTML::Element' ) and $div->tag eq 'div' ) {
+                        if ( $div->attr('class') eq 'mockTD' ) {
+                            if ( not defined $time ) {
+                                $time = $div->as_text;
+                            }
+                            elsif ( not defined $genes ) {
+                                $genes = $div->as_text;
+                            }
+                            elsif ( not defined $data ) {
+                                $data = $div->as_text;
+                            }
+                        }
+                        elsif ( $div->attr('class') eq 'mockTDTaxa' ) {
+                            if ( not defined $taxona ) {
+                                $taxona = $div->as_text;
+                            }
+                            elsif ( not defined $taxonb ) {
+                                $taxonb = $div->as_text;
+                            }
+                        }
+                        elsif ( $div->attr('class') eq 'mockTDSource' ) {
+                            $source = $div->as_text;
+                            push @{ $dates }, date->new(
+                                'pub'    => $pub,
+                                'taxona' => $taxona,
+                                'taxonb' => $taxonb,
+                                'source' => $source,
+                                'data'   => $data,
+                                'genes'  => $genes,
+                                'time'   => $time
+                            );
+                            ( $taxona, $taxonb, $source, $data, $genes, $time ) =
+                            ( undef,   undef,   undef,   undef, undef,  undef );
+                        }
+                    }
+                }            
+            }            
+        }
+    }
 }
 
 package date;
@@ -159,14 +174,15 @@ our $AUTOLOAD;
 
 sub new {
     my $class = shift;
+    my %args  = @_;
     my $self = {
-        'time'   => undef,
-        'genes'  => undef,
-        'taxona' => undef,
-        'taxonb' => undef,
-        'data'   => undef,
-        'source' => undef,
-        'pub'    => undef,
+        'time'   => $args{'time'},
+        'genes'  => $args{'genes'},
+        'taxona' => $args{'taxona'},
+        'taxonb' => $args{'taxonb'},
+        'data'   => $args{'data'},
+        'source' => $args{'source'},
+        'pub'    => $args{'pub'},
     };
     return bless $self, $class;
 }
