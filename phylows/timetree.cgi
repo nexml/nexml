@@ -21,6 +21,7 @@ use HTML::Tree;
 use LWP::UserAgent;
 use URI::Escape;
 use CGI;
+use Data::Dumper;
 use Scalar::Util qw(looks_like_number);
 use HTML::Entities;
 use Bio::Phylo::Factory;
@@ -133,13 +134,15 @@ sub recurse {
                             $dates->[-1]->source($content);
                             if ( $dates->[-1]->is_complete ) {
                                 push @{ $dates }, date->new;
-                                #print "\n\n=====\n";
                             }
                             else {
-                                $dates->[-1]->pub( $dates->[-2]->pub ); 
-                                #print "\n\n=====\n";
-                                die "huh?" if not $dates->[-1]->is_complete;
-                                push @{ $dates }, date->new;                                
+                                eval { $dates->[-1]->pub( $dates->[-2]->pub ) }; 
+                                if ( $@ or not $dates->[-1]->is_complete ) {
+                                    die Dumper( $dates->[-1] );
+                                }
+                                else {
+                                    push @{ $dates }, date->new;                                
+                                }
                             }
                         }
                     }
