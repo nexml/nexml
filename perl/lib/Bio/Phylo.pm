@@ -677,7 +677,7 @@ Clones invocant.
 		my ( $self, %subs ) = @_;
 
 		# may not work yet! warn user
-		$logger->warn("cloning is experimental, use with caution");
+		$logger->info("cloning is experimental, use with caution");
 
 		# get inheritance tree
 		my ( $class, $isa, $seen ) = ( ref($self), [], {} );

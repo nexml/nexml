@@ -68,6 +68,7 @@ my %defaults = (
 	'dimensions'       => \&_dimensions,
 	'ntax'             => \&_ntax,
 	'taxlabels'        => \&_taxlabels,
+	'blockid'          => \&_blockid,
 	'data'             => \&_data,
 	'characters'       => \&_characters,
 	'nchar'            => \&_nchar,
@@ -604,6 +605,15 @@ sub _taxlabels {
     }
 }
 
+sub _blockid {
+    my $self = shift;
+    if ( defined $_[0] and uc( $_[0] ) ne 'BLOCKID' ) {
+        my $blockid = shift;
+        $logger->debug( "blockid: $blockid" );
+        $self->_current->set_generic( 'blockid' => $blockid );
+    }
+}
+
 sub _data {
     my $self = shift;
     if ( $self->{'_begin'} ) {
@@ -733,8 +743,29 @@ sub _add_tokens_to_row {
 	my $rowname;
 	for my $token ( @{ $tokens } ) {
 		last if $token eq ';';
+		
+		# mesquite sometimes writes multiline (but not interleaved)
+		# matrix rows (harrumph).
 		if ( not $rowname and $token !~ $COMMENT ) {
-			$rowname = $token;
+		    if ( my $taxa = $self->_current->get_taxa ) {
+		        if ( my $taxon = $taxa->get_by_name($token) ) {
+		            $rowname = $token;    
+		        }
+		        else {
+		            $rowname = $self->{'_matrixrowlabels'}->[-1];
+		        }
+		    }
+		    elsif ( my $taxa = $self->_find_last_seen_taxa_block ) {
+		        if ( my $taxon = $taxa->get_by_name($token) ) {
+		            $rowname = $token;
+		        }
+		        else {
+		            $rowname = $self->{'_matrixrowlabels'}->[-1];
+		        }		        
+		    }
+		    else {
+		        $rowname = $token;
+		    }			
 			if ( not exists $self->{'_matrix'}->{$rowname} ) {
 				$self->{'_matrix'}->{$rowname} = [];
 				push @{ $self->{'_matrixrowlabels'} }, $rowname;
@@ -825,7 +856,7 @@ sub _resolve_ambig {
 	my $close;
 	for my $c ( @{ $chars } ) {
 		if ( not $in_set and not exists $brackets{$c} ) {
-			push @resolved, $c;
+			push @resolved, $c if $c;
 		}
 		elsif ( not $in_set and exists $brackets{$c} ) {
 			$in_set++;
