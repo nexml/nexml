@@ -747,7 +747,8 @@ sub _add_tokens_to_row {
 		# mesquite sometimes writes multiline (but not interleaved)
 		# matrix rows (harrumph).
 		if ( not $rowname and $token !~ $COMMENT ) {
-		    if ( my $taxa = $self->_current->get_taxa ) {
+		    my $taxa;
+		    if ( $taxa = $self->_current->get_taxa ) {
 		        if ( my $taxon = $taxa->get_by_name($token) ) {
 		            $rowname = $token;    
 		        }
@@ -755,7 +756,7 @@ sub _add_tokens_to_row {
 		            $rowname = $self->{'_matrixrowlabels'}->[-1];
 		        }
 		    }
-		    elsif ( my $taxa = $self->_find_last_seen_taxa_block ) {
+		    elsif ( $taxa = $self->_find_last_seen_taxa_block ) {
 		        if ( my $taxon = $taxa->get_by_name($token) ) {
 		            $rowname = $token;
 		        }
