@@ -24,14 +24,32 @@ Bio::Phylo::IO - Input and output of phylogenetic data.
 
 =head1 SYNOPSIS
 
- use Bio::Phylo::IO;
+B<Import the module, optionally with functions.>
+
+ use Bio::Phylo::IO 'parse';
+
+B<Parsing nexus files.>
+
+ # returns an unblessed array reference of block objects,
+ # i.e. taxa, matrix or forest objects
+ my $blocks = parse(
+    '-file'   => $file,
+    '-format' => 'nexus',
+ );
+ 
+ for my $block ( @{ $blocks } ) {
+    if ( $block->isa('Bio::Phylo::Taxa') ) {
+        my $taxa = $block;
+        # do something with the taxa
+    }
+ }
+
+B<Parsing newick strings.>
 
  # parsing a tree from a newick string
  my $tree_string = '(((A,B),C),D);';
  my $tree = Bio::Phylo::IO->parse(
     '-string' => $tree_string,
-
-    # old parser, always adds node labels
     '-format' => 'newick',
  )->first;
 
@@ -42,6 +60,8 @@ Bio::Phylo::IO - Input and output of phylogenetic data.
 
  # prints 'Bio::Phylo::Forest::Tree'
  print ref $tree, "\n";
+
+B<Parsing tab (or otherwise-) delimited tables.>
 
  # parsing a table
  my $table_string = qq(A,1,2|B,1,2|C,2,2|D,2,1);
@@ -62,6 +82,8 @@ Bio::Phylo::IO - Input and output of phylogenetic data.
  # prints 'Bio::Phylo::Matrices::Matrix'
  print ref $matrix, "\n"; 
 
+B<Parsing lists of taxa.>
+
  # parsing a list of taxa
  my $taxa_string = 'A:B:C:D';
  my $taxa = Bio::Phylo::IO->parse(
@@ -78,6 +100,8 @@ Bio::Phylo::IO - Input and output of phylogenetic data.
 
  # likewise for matrix  
  $matrix->cross_reference($taxa);
+
+B<Writing "Pagel" format files.>
 
  print Bio::Phylo::IO->unparse(
 
@@ -127,18 +151,18 @@ Parses a file or string.
            -format  => (description format),
            -(other) => (parser specific options)
  Comments: The parse method makes assumptions about 
-		   the capabilities of Bio::Phylo::Parsers::* 
-		   modules: i) their names match those of the
-		   -format => (blah) arguments, insofar that 
-		   ucfirst(blah) . '.pm' is an existing module; 
-		   ii) the modules implement a _from_handle, 
-		   or a _from_string method. Exceptions are 
-		   thrown if either assumption is violated. 
-		   
-		   If @ARGV contains even key/value pairs such
-		   as "format newick file <filename>" (note: no
-		   dashes) these will be prepended to @_, for
-		   one-liners.          
+           the capabilities of Bio::Phylo::Parsers::* 
+           modules: i) their names match those of the
+           -format => (blah) arguments, insofar that 
+           ucfirst(blah) . '.pm' is an existing module; 
+           ii) the modules implement a _from_handle, 
+           or a _from_string method. Exceptions are 
+           thrown if either assumption is violated. 
+           
+           If @ARGV contains even key/value pairs such
+           as "format newick file <filename>" (note: no
+           dashes) these will be prepended to @_, for
+           one-liners.          
 
 =cut
 
