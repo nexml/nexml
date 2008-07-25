@@ -68,52 +68,52 @@ Bio::Phylo::Matrices::Matrix - Character state matrix.
  
  # note: complicated constructor for mixed data!
  my $mixed_matrix = Bio::Phylo::Matrices::Matrix->new( 
-	
-	# if you want to create 'mixed', value for '-type' is array ref...
-	'-type' =>  [ 
-	
-		# ...with first field 'mixed'...				
-		'mixed',
-		
-		# ...second field is an array ref...
-		[
-			
-			# ...with _ordered_ key/value pairs...
-			'dna'      => 10, # value is length of type range
-			'standard' => 10, # value is length of type range
-			
-			# ... or, more complicated, value is a hash ref...
-			'rna'      => {
-				'-length' => 10, # value is length of type range
-				
-				# ...value for '-args' is an array ref with args 
-				# as can be passed to 'unmixed' datatype constructors,
-				# for example, here we modify the lookup table for
-				# rna to allow both 'U' (default) and 'T'
-				'-args'   => [
-					'-lookup' => {
-						'A' => [ 'A'                     ],
-						'C' => [ 'C'                     ],
-						'G' => [ 'G'                     ],
-						'U' => [ 'U'                     ],
-						'T' => [ 'T'                     ],
-						'M' => [ 'A', 'C'                ],
-						'R' => [ 'A', 'G'                ],
-						'S' => [ 'C', 'G'                ],
-						'W' => [ 'A', 'U', 'T'           ],						
-						'Y' => [ 'C', 'U', 'T'           ],
-						'K' => [ 'G', 'U', 'T'           ],
-						'V' => [ 'A', 'C', 'G'           ],
-						'H' => [ 'A', 'C', 'U', 'T'      ],
-						'D' => [ 'A', 'G', 'U', 'T'      ],
-						'B' => [ 'C', 'G', 'U', 'T'      ],
-						'X' => [ 'G', 'A', 'U', 'T', 'C' ],
-						'N' => [ 'G', 'A', 'U', 'T', 'C' ],
-					},
-				],
-			},
-		],
-	],
+    
+    # if you want to create 'mixed', value for '-type' is array ref...
+    '-type' =>  [ 
+    
+        # ...with first field 'mixed'...                
+        'mixed',
+        
+        # ...second field is an array ref...
+        [
+            
+            # ...with _ordered_ key/value pairs...
+            'dna'      => 10, # value is length of type range
+            'standard' => 10, # value is length of type range
+            
+            # ... or, more complicated, value is a hash ref...
+            'rna'      => {
+                '-length' => 10, # value is length of type range
+                
+                # ...value for '-args' is an array ref with args 
+                # as can be passed to 'unmixed' datatype constructors,
+                # for example, here we modify the lookup table for
+                # rna to allow both 'U' (default) and 'T'
+                '-args'   => [
+                    '-lookup' => {
+                        'A' => [ 'A'                     ],
+                        'C' => [ 'C'                     ],
+                        'G' => [ 'G'                     ],
+                        'U' => [ 'U'                     ],
+                        'T' => [ 'T'                     ],
+                        'M' => [ 'A', 'C'                ],
+                        'R' => [ 'A', 'G'                ],
+                        'S' => [ 'C', 'G'                ],
+                        'W' => [ 'A', 'U', 'T'           ],
+                        'Y' => [ 'C', 'U', 'T'           ],
+                        'K' => [ 'G', 'U', 'T'           ],
+                        'V' => [ 'A', 'C', 'G'           ],
+                        'H' => [ 'A', 'C', 'U', 'T'      ],
+                        'D' => [ 'A', 'G', 'U', 'T'      ],
+                        'B' => [ 'C', 'G', 'U', 'T'      ],
+                        'X' => [ 'G', 'A', 'U', 'T', 'C' ],
+                        'N' => [ 'G', 'A', 'U', 'T', 'C' ],
+                    },
+                ],
+            },
+        ],
+    ],
  );
  
  # prints 'mixed(Dna:1-10, Standard:11-20, Rna:21-30)'
