@@ -330,19 +330,19 @@ Serializer to nexus format.
  Function: Converts matrix object into a nexus data block.
  Returns : Nexus data block (SCALAR).
  Args    : Trees can be formatted using the same arguments as those
- 		   passed to Bio::Phylo::Unparsers::Newick. In addition, you
- 		   can provide: 
- 		   
- 		   # as per mesquite's inter-block linking system (default is false):
- 		   -links => 1 (to create a TITLE token, and a LINK token, if applicable)
- 		   
- 		   # rooting is determined based on basal trichotomy. "token" means 'TREE' or 'UTREE'
- 		   # is used, "comment" means [&R] or [&U] is used, "nhx" means [%unrooted=on] or
- 		   # [%unrooted=off] if used, default is "comment"
- 		   -rooting => one of (token|comment|nhx)
- 		   
- 		   # to map taxon names to indices (default is false)
- 		   -make_translate => 1 (autogenerate translation table, overrides -translate => {})
+           passed to Bio::Phylo::Unparsers::Newick. In addition, you
+           can provide: 
+           
+           # as per mesquite's inter-block linking system (default is false):
+           -links => 1 (to create a TITLE token, and a LINK token, if applicable)
+           
+           # rooting is determined based on basal trichotomy. "token" means 'TREE' or 'UTREE'
+           # is used, "comment" means [&R] or [&U] is used, "nhx" means [%unrooted=on] or
+           # [%unrooted=off] if used, default is "comment"
+           -rooting => one of (token|comment|nhx)
+           
+           # to map taxon names to indices (default is false)
+           -make_translate => 1 (autogenerate translation table, overrides -translate => {})
  Comments:
 
 =cut
