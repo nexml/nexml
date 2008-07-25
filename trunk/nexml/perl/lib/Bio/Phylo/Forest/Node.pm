@@ -1692,37 +1692,37 @@ Visits nodes depth first
  Function: Visits nodes in a depth first traversal, executes subs
  Returns : $tree
  Args    : Optional:
-			# first event handler, is executed when node is reached in recursion
-			-pre            => sub { print "pre: ",            shift->get_name, "\n" },
-						
-			# is executed if node has a daughter, but before that daughter is processed
-			-pre_daughter   => sub { print "pre_daughter: ",   shift->get_name, "\n" },
-			
-			# is executed if node has a daughter, after daughter has been processed	
-			-post_daughter  => sub { print "post_daughter: ",  shift->get_name, "\n" },
-			
-			# is executed if node has no daughter
-			-no_daughter    => sub { print "no_daughter: ",    shift->get_name, "\n" },							
+            # first event handler, is executed when node is reached in recursion
+            -pre            => sub { print "pre: ",            shift->get_name, "\n" },
+                        
+            # is executed if node has a daughter, but before that daughter is processed
+            -pre_daughter   => sub { print "pre_daughter: ",   shift->get_name, "\n" },
+            
+            # is executed if node has a daughter, after daughter has been processed 
+            -post_daughter  => sub { print "post_daughter: ",  shift->get_name, "\n" },
+            
+            # is executed if node has no daughter
+            -no_daughter    => sub { print "no_daughter: ",    shift->get_name, "\n" },                         
 
-			# is executed whether or not node has sisters, if it does have sisters
-			# they're processed first	
-			-in             => sub { print "in: ",             shift->get_name, "\n" },
+            # is executed whether or not node has sisters, if it does have sisters
+            # they're processed first   
+            -in             => sub { print "in: ",             shift->get_name, "\n" },
 
-			# is executed if node has a sister, before sister is processed
-			-pre_sister     => sub { print "pre_sister: ",     shift->get_name, "\n" },	
-			
-			# is executed if node has a sister, after sister is processed
-			-post_sister    => sub { print "post_sister: ",    shift->get_name, "\n" },			
-			
-			# is executed if node has no sister
-			-no_sister      => sub { print "no_sister: ",      shift->get_name, "\n" },	
-			
-			# is executed last			
-			-post           => sub { print "post: ",           shift->get_name, "\n" },
-			
-			# specifies traversal order, default 'ltr' means first_daugher -> next_sister
-			# traversal, alternate value 'rtl' means last_daughter -> previous_sister traversal
-			-order          => 'ltr', # ltr = left-to-right, 'rtl' = right-to-left
+            # is executed if node has a sister, before sister is processed
+            -pre_sister     => sub { print "pre_sister: ",     shift->get_name, "\n" }, 
+            
+            # is executed if node has a sister, after sister is processed
+            -post_sister    => sub { print "post_sister: ",    shift->get_name, "\n" },         
+            
+            # is executed if node has no sister
+            -no_sister      => sub { print "no_sister: ",      shift->get_name, "\n" }, 
+            
+            # is executed last          
+            -post           => sub { print "post: ",           shift->get_name, "\n" },
+            
+            # specifies traversal order, default 'ltr' means first_daugher -> next_sister
+            # traversal, alternate value 'rtl' means last_daughter -> previous_sister traversal
+            -order          => 'ltr', # ltr = left-to-right, 'rtl' = right-to-left
  Comments: 
 
 =cut
@@ -1796,37 +1796,37 @@ Visits nodes breadth first
  Returns : $tree
  Args    : Optional handlers in the order in which they would be executed on an internal node:
 			
-			# first event handler, is executed when node is reached in recursion
-			-pre            => sub { print "pre: ",            shift->get_name, "\n" },
-			
-			# is executed if node has a sister, before sister is processed
-			-pre_sister     => sub { print "pre_sister: ",     shift->get_name, "\n" },	
-			
-			# is executed if node has a sister, after sister is processed
-			-post_sister    => sub { print "post_sister: ",    shift->get_name, "\n" },			
-			
-			# is executed if node has no sister
-			-no_sister      => sub { print "no_sister: ",      shift->get_name, "\n" },				
-			
-			# is executed whether or not node has sisters, if it does have sisters
-			# they're processed first	
-			-in             => sub { print "in: ",             shift->get_name, "\n" },			
-			
-			# is executed if node has a daughter, but before that daughter is processed
-			-pre_daughter   => sub { print "pre_daughter: ",   shift->get_name, "\n" },
-			
-			# is executed if node has a daughter, after daughter has been processed	
-			-post_daughter  => sub { print "post_daughter: ",  shift->get_name, "\n" },
-			
-			# is executed if node has no daughter
-			-no_daughter    => sub { print "no_daughter: ",    shift->get_name, "\n" },							
-			
-			# is executed last			
-			-post           => sub { print "post: ",           shift->get_name, "\n" },
-			
-			# specifies traversal order, default 'ltr' means first_daugher -> next_sister
-			# traversal, alternate value 'rtl' means last_daughter -> previous_sister traversal
-			-order          => 'ltr', # ltr = left-to-right, 'rtl' = right-to-left
+            # first event handler, is executed when node is reached in recursion
+            -pre            => sub { print "pre: ",            shift->get_name, "\n" },
+            
+            # is executed if node has a sister, before sister is processed
+            -pre_sister     => sub { print "pre_sister: ",     shift->get_name, "\n" }, 
+            
+            # is executed if node has a sister, after sister is processed
+            -post_sister    => sub { print "post_sister: ",    shift->get_name, "\n" },         
+            
+            # is executed if node has no sister
+            -no_sister      => sub { print "no_sister: ",      shift->get_name, "\n" },             
+            
+            # is executed whether or not node has sisters, if it does have sisters
+            # they're processed first   
+            -in             => sub { print "in: ",             shift->get_name, "\n" },         
+            
+            # is executed if node has a daughter, but before that daughter is processed
+            -pre_daughter   => sub { print "pre_daughter: ",   shift->get_name, "\n" },
+            
+            # is executed if node has a daughter, after daughter has been processed 
+            -post_daughter  => sub { print "post_daughter: ",  shift->get_name, "\n" },
+            
+            # is executed if node has no daughter
+            -no_daughter    => sub { print "no_daughter: ",    shift->get_name, "\n" },                         
+            
+            # is executed last          
+            -post           => sub { print "post: ",           shift->get_name, "\n" },
+            
+            # specifies traversal order, default 'ltr' means first_daugher -> next_sister
+            # traversal, alternate value 'rtl' means last_daughter -> previous_sister traversal
+            -order          => 'ltr', # ltr = left-to-right, 'rtl' = right-to-left
  Comments: 
 
 =cut
