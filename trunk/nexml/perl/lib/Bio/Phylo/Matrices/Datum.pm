@@ -155,7 +155,7 @@ Sets character state(s)
     sub set_char {
         my $self = shift;
         my $name = $self->get_internal_name;
-        my $length = join '', @{ $_[0] };
+        my $length = ref $_[0] ? join( '', @{ $_[0] } ) : join( '', @_ );
         $logger->info("setting $name $length chars '@_'");
         my @data;
         for my $arg (@_) {

@@ -309,14 +309,17 @@ Serializes invocant to newick string.
  Function: Turns the invocant forest object 
            into a newick string, one line per tree
  Returns : SCALAR
- Args    : NONE
+ Args    : The same arguments as 
+           Bio::Phylo::Forest::Tree::to_newick
 
 =cut
 
     sub to_newick {
         my $self = shift;
         my $newick;
-        $newick .= $_->to_newick, "\n" for @{ $self->get_entities };
+        for my $tree ( @{ $self->get_entities } ) {
+            $newick .= $tree->to_newick(@_) . "\n";
+        }
         return $newick;
     }
 
