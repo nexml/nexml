@@ -722,6 +722,7 @@ sub _statelabels {
 # for data type, character labels, state labels
 sub _add_matrix_metadata {
 	my $self = shift;
+	$logger->info("adding matrix metadata");
     if ( not defined $self->{'_matrixtype'} ) {
         $self->{'_matrixtype'} = $self->_current->get_type;
         if ( @{ $self->{'_charlabels'} } ) {
@@ -741,12 +742,14 @@ sub _add_matrix_metadata {
 sub _add_tokens_to_row {
 	my ( $self, $tokens ) = @_;
 	my $rowname;
+	$logger->debug("adding tokens to row");
 	for my $token ( @{ $tokens } ) {
+	    $logger->debug("token: $token");
 		last if $token eq ';';
 		
 		# mesquite sometimes writes multiline (but not interleaved)
 		# matrix rows (harrumph).
-		if ( not $rowname and $token !~ $COMMENT ) {
+		if ( not defined $rowname and $token !~ $COMMENT ) {
 		    my $taxa;
 		    if ( $taxa = $self->_current->get_taxa ) {
 		        if ( my $taxon = $taxa->get_by_name($token) ) {
@@ -772,7 +775,7 @@ sub _add_tokens_to_row {
 				push @{ $self->{'_matrixrowlabels'} }, $rowname;
 			}
 		}
-		elsif ( $rowname and $token !~ $COMMENT ) {
+		elsif ( defined $rowname and $token !~ $COMMENT ) {
 			my $row = $self->{'_matrix'}->{$rowname};
 			if ( $self->{'_matrixtype'} =~ m/^continuous$/i ) {
 				push @{ $row }, split( /\s+/, $token );
@@ -780,6 +783,7 @@ sub _add_tokens_to_row {
 			else {
 				push @{ $row }, split( //, $token );
 			}
+			$logger->debug("added states to row: $token");
 		}
 	}
 }
@@ -857,7 +861,7 @@ sub _resolve_ambig {
 	my $close;
 	for my $c ( @{ $chars } ) {
 		if ( not $in_set and not exists $brackets{$c} ) {
-			push @resolved, $c if $c;
+			push @resolved, $c if defined $c;
 		}
 		elsif ( not $in_set and exists $brackets{$c} ) {
 			$in_set++;
@@ -915,6 +919,7 @@ sub _matrix {
             	'-type_object' => $self->_current->get_type_object,
             	'-name'        => $row,       
             );
+            $logger->debug(sprintf("row: %s", join '', @{ $self->{'_matrix'}->{ $row } }));
             my $char = $self->_resolve_ambig( $datum, $self->{'_matrix'}->{ $row } );
             $datum->set_char( $char );
 
