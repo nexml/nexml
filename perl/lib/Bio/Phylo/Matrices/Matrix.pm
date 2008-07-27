@@ -167,6 +167,55 @@ Matrix constructor.
 		return $self;
 	}
 
+=item new_from_bioperl()
+
+Matrix constructor from Bio::Align::AlignI argument.
+
+ Type    : Constructor
+ Title   : new_from_bioperl
+ Usage   : my $matrix = 
+           Bio::Phylo::Matrices::Matrix->new_from_bioperl(
+               $aln           
+           );
+ Function: Instantiates a 
+           Bio::Phylo::Matrices::Matrix object.
+ Returns : A Bio::Phylo::Matrices::Matrix object.
+ Args    : An alignment that implements Bio::Align::AlignI
+
+=cut
+	
+	sub new_from_bioperl {
+	    my ( $class, $aln ) = @_;
+		if ( UNIVERSAL::isa( $aln, 'Bio::Align::AlignI' ) ) {
+		    $aln->unmatch;
+		    $aln->map_chars('\.','-');
+		    my @seqs = $aln->each_seq;
+			my $self = $class->SUPER::new( 
+			    '-tag'       => 'characters',
+			    '-type'      => $seqs[0] ? $seqs[0]->alphabet : 'dna',
+                '-missing'   => $aln->missing_char,
+                '-gap'       => $aln->gap_char,
+                '-matchchar' => $aln->match_char,
+			);
+			my $to = $self->get_type_object;
+			bless $self, $class;
+            for my $seq ( @seqs ) {
+                $self->insert( 
+                    $factory->create_datum( 
+                        '-type_object' => $to,
+                        '-char'        => $seq->seq,
+                        '-name'        => $seq->display_id,
+                        '-desc'        => $seq->desc,                                        
+                    )
+                );
+            }
+            return $self;
+		}
+		else {
+			throw 'ObjectMismatch' => 'Not a bioperl alignment!';
+		}
+	}
+
 =back
 
 =head2 MUTATORS
