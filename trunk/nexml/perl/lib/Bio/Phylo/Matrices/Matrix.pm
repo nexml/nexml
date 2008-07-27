@@ -186,7 +186,7 @@ Matrix constructor from Bio::Align::AlignI argument.
 	
 	sub new_from_bioperl {
 	    my ( $class, $aln ) = @_;
-		if ( UNIVERSAL::isa( $aln, 'Bio::Align::AlignI' ) ) {
+		if ( isa( $aln, 'Bio::Align::AlignI' ) ) {
 		    $aln->unmatch;
 		    $aln->map_chars('\.','-');
 		    my @seqs = $aln->each_seq;
