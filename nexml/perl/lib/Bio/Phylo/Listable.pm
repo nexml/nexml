@@ -40,8 +40,9 @@ Bio::Phylo::Listable - Parent class for listable/iterator objects.
 A listable object is an object that contains multiple smaller objects of the
 same type. For example: a tree contains nodes, so it's a listable object.
 
-This class contains methods that are useful for all listable objects: Matrices,
-Matrix objects, Alignment objects, Taxa, Forest, Tree objects.
+This class contains methods that are useful for all listable objects: Matrices
+(i.e. sets of matrix objects), individual Matrix objects, Datum objects (i.e.
+character state sequences), Taxa, Forest, Tree and Node objects.
 
 =head1 METHODS
 
@@ -894,6 +895,10 @@ Iterate over a set of trees.
 =item L<Bio::Phylo::Forest::Tree>
 
 Iterate over nodes in a tree.
+
+=item L<Bio::Phylo::Forest::Node>
+
+Iterate of children of a node.
 
 =item L<Bio::Phylo::Matrices>
 
