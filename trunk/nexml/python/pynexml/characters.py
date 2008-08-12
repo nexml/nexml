@@ -501,6 +501,18 @@ class CharactersBlock(taxa.TaxaLinked):
         self.column_types = []
         self.markup_as_sequences = True
         
+    def vectors(self):
+        """
+        Returns list of vectors.        
+        """
+        if self.taxa_block is not None and self.matrix is not None:
+            if len(self.matrix) > 0:
+                return [self.matrix[t] for t in self.taxa_block]
+            else:
+                return []
+        else:
+            return None
+        
     def __getitem__(self, key):
         """
         Dictionary interface implementation for direct access to matrix.
@@ -631,7 +643,6 @@ class CharactersBlock(taxa.TaxaLinked):
         Sets the default value to return if key not present.
         """
         return super(dict, self.matrix).setdefault(key, def_val)
-
       
     def id_column_map(self):
         """
