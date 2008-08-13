@@ -98,7 +98,7 @@ XSDGEN_EXT = .hxx .cxx
 
 # .hxx and .cxx generated from our .xsd
 $(foreach file, $(NEXML_XSD_PREFIXES), $(foreach ext, $(XSDGEN_EXT), $(file)$(ext))): $(addsuffix .xsd, $(foreach xsdfile, $(NEXML_XSD_PREFIXES), $(abs_top_srcdir)/xsd/$(xsdfile))) $(foreach file, $(FROM_ORB_PREFIXES), $(foreach ext, $(XSDGEN_EXT), $(file)$(ext)))
-	@xsdtag=`echo "$@" | $(EXSED) -e 's:(.*/)?([a-zA-Z]*)\....:\2:'`; xsdsubdir=`echo "$@" | $(EXSED) -e 's:(.*/)?([a-zA-Z]*)\....:\1:'`; echo $@ compiling $@ as $$xsdtag in $$xsdsubdir; if ! test -d ./$$xsdsubdir ; then mkdir ./$$xsdsubdir ; else echo ./$$xsdsubdir exists  ; fi ; @XSDBIN@ cxx-tree --namespace-map http://www.nexml.org/1.0=NeXML --generate-polymorphic --generate-ostream --output-dir ./$$xsdsubdir $(abs_top_srcdir)/xsd/$$xsdsubdir$$xsdtag.xsd 
+	@xsdtag=`echo "$@" | $(EXSED) -e 's:(.*/)?([a-zA-Z]*)\....:\2:'`; xsdsubdir=`echo "$@" | $(EXSED) -e 's:(.*/)?([a-zA-Z]*)\....:\1:'`; if ! test -d ./$$xsdsubdir ; then mkdir ./$$xsdsubdir ; fi ; @XSDBIN@ cxx-tree --namespace-map http://www.nexml.org/1.0=NeXML --generate-polymorphic --generate-ostream --output-dir ./$$xsdsubdir $(abs_top_srcdir)/xsd/$$xsdsubdir$$xsdtag.xsd 
 
 # each .lo for generated files: depend on all generated .cxxs 
 # should be built using default .cxx:.lo rule
@@ -107,4 +107,6 @@ $(foreach file, $(NEXML_XSD_PREFIXES), $(file).lo): $(addsuffix .cxx, $(foreach 
 uninstall-hook:
 	rmdir $(libnexmlparse_ladir) 2> /dev/null || true
 dist-hook:
-	
+	for subdir in "." taxa characters external meta trees ; do mkdir $(distdir)/$$subdir ; cp $$subdir/*hxx $(distdir)/$$subdir ; cp $$subdir/*cxx $(distdir)/$$subdir ; done
+
+
