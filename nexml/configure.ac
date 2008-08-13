@@ -54,6 +54,8 @@ AX_CXXFLAGS
 AC_SUBST(CXXFLAGS)
 AC_CXX_RTTI
 
+
+
 CPPFLAGS="-I\$(top_srcdir) $CPPFLAGS"
 # Checks for libraries.
 
@@ -87,12 +89,60 @@ AC_CHECK_FUNCS([memmove strchr strtol])
 #	MAYBE_TEST_DIR="test"
 #fi
 
-XSD_HOME="/Users/mholder/builds/xsd-3.2.0.b1-i686-macosx"
-XERCES_HOME="/Users/mholder/builds/xerces-c-src_2_8_0"
+XERCES_HOME="/usr/local"
+AC_ARG_WITH(
+	[xerces],
+	AC_HELP_STRING(
+		[--with-xerces=DIR],
+		[Specify the XERCES_HOME directory for xerces library (parent of the include/xercesc and lib directories)]
+		),
+	[
+	if ! test "$withval" = "yes" -o "$withval" = "no" ; then
+		XERCES_HOME="$withval"
+	fi
+	])
+
+if ! test -d "$XERCES_HOME/include/xercesc" ; then
+	AC_MSG_ERROR([Xerces is a prerequisite for building nexmlparse. Expecting a directory called $XERCES_HOME/include/xercesc, verify that the argument to --with-xercesc is correct])
+fi
+
+XSD_HOME="/usr/local"
+AC_ARG_WITH(
+	[code-syn-xsd],
+	AC_HELP_STRING(
+		[--with-code-syn-xsd=DIR],
+		[Specify the XSD_HOME directory for the xsd tool by CodeSynthesis]
+		),
+	[
+	if ! test "$withval" = "yes" -o "$withval" = "no" ; then
+		XSD_HOME="$withval"
+		if ! test -f "$XSD_HOME/bin/xsd" ; then
+			AC_MSG_ERROR([The xsd tool by CodeSynthesis was not found at $XSD_HOME/bin/xsd])
+		fi
+	fi
+	])
 
 XSDBIN="$XSD_HOME/bin/xsd"
+if ! test -f "$XSDBIN" ; 
+then
+	AC_MSG_ERROR([The xsd tool by CodeSynthesis is a prerequisite for rebuilding nexmlparse code. Use the --with-code-syn-xsd argument to configure to specify the location of the xsd if you do wish to use it. Expecting an executable at "$XSD_HOME/bin/xsd"])
+fi
+if ! test -d "$XSD_HOME/libxsd" ; 
+then
+	AC_MSG_ERROR([The xsd tool by CodeSynthesis is a prerequisite for rebuilding nexmlparse code. Use the --with-code-syn-xsd argument to configure to specify the location of the xsd if you do wish to use it. Expecting a directory at "$XSD_HOME/libxsd"])
+fi
 
 CPPFLAGS="$CPPFLAGS -I$XERCES_HOME/include -I$XSD_HOME/libxsd"
+LDFLAGS="$LDFLAGS -L$XERCES_HOME/lib"
+LDADD="$LDADD -lxerces-c"
+
+
+
+
+
+
+
+CPPFLAGS="$CPPFLAGS"
 
 AC_SUBST(XSDBIN)
 AC_SUBST(MAYBE_TEST_DIR)
