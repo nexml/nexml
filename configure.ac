@@ -132,9 +132,8 @@ then
 	AC_MSG_ERROR([The xsd tool by CodeSynthesis is a prerequisite for rebuilding nexmlparse code. Use the --with-code-syn-xsd argument to configure to specify the location of the xsd if you do wish to use it. Expecting a directory at "$XSD_HOME/libxsd"])
 fi
 
-CPPFLAGS="$CPPFLAGS -I$XERCES_HOME/include -I$XSD_HOME/libxsd"
 LDFLAGS="$LDFLAGS -L$XERCES_HOME/lib"
-LDADD="$LDADD -lxerces-c"
+LIBS="$LIBS -lxerces-c"
 
 
 
@@ -152,5 +151,6 @@ AC_PROG_MAKE_SET
 AC_CONFIG_FILES([					\
 	Makefile 						\
 	cpp/Makefile					\
+	cpp-example/Makefile			\
 	])
 AC_OUTPUT
