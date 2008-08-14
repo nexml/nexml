@@ -1,4 +1,4 @@
-SUBDIRS = cpp
+SUBDIRS = cpp cpp-example
 
 EXTRA_DIST = examples html xsd
 
