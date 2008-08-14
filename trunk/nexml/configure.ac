@@ -152,5 +152,6 @@ AC_CONFIG_FILES([					\
 	Makefile 						\
 	cpp/Makefile					\
 	cpp-example/Makefile			\
+	cpp-example/reporter/Makefile	\
 	])
 AC_OUTPUT
