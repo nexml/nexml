@@ -137,11 +137,7 @@ LIBS="$LIBS -lxerces-c"
 
 
 
-
-
-
-
-CPPFLAGS="$CPPFLAGS"
+CPPFLAGS="$CPPFLAGS  -I$XERCES_HOME/include -I$XSD_HOME/libxsd"
 
 AC_SUBST(XSDBIN)
 AC_SUBST(MAYBE_TEST_DIR)
@@ -153,5 +149,6 @@ AC_CONFIG_FILES([					\
 	cpp/Makefile					\
 	cpp-example/Makefile			\
 	cpp-example/reporter/Makefile	\
+	cpp-example/to_nexus/Makefile	\
 	])
 AC_OUTPUT
