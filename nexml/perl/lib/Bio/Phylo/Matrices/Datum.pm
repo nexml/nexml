@@ -11,6 +11,16 @@ use UNIVERSAL qw(isa can);
   Bio::Phylo::Matrices::TypeSafeData
   Bio::Phylo::Taxa::TaxonLinker
 );
+
+eval { require Bio::Seq };
+if ( not $@ ) {
+	push @ISA, 'Bio::Seq';
+}
+else {
+	undef($@);
+}
+my $LOADED_WRAPPERS = 0;
+
 {
     my $logger             = __PACKAGE__->get_logger;
     my $TYPE_CONSTANT      = _DATUM_;
@@ -87,6 +97,12 @@ Datum object constructor.
 
         # notify user
         $logger->info("constructor called for '$class'");
+        
+		if ( not $LOADED_WRAPPERS ) {
+			eval do { local $/; <DATA> };
+			die $@ if $@;
+			$LOADED_WRAPPERS++;
+		}        
 
         # go up inheritance tree, eventually get an ID
         my $self = $class->SUPER::new( '-tag' => 'row', @_ );
@@ -864,3 +880,64 @@ Also see the manual: L<Bio::Phylo::Manual> and L<http://rutgervos.blogspot.com>.
 =cut
 
 1;
+__DATA__
+
+sub get_SeqFeatures { $logger->warn }
+
+sub get_all_SeqFeatures { $logger->warn }
+
+sub feature_count { $logger->warn }
+
+sub seq {
+    my $self = shift;
+    my $seq = $self->get_char;
+    return $seq;
+}
+
+sub write_GFF { $logger->warn }
+
+sub annotation { $logger->warn }
+
+sub species { $logger->warn }
+
+sub primary_seq { $logger->warn }
+
+sub accession_number { $logger->warn }
+
+sub alphabet {
+    my $self = shift;
+    my $type = $self->get_type;
+    return lc $type;
+}
+
+sub can_call_new { $logger->warn }
+
+sub desc {
+    my ( $self, $desc ) = @_;
+    if ( defined $desc ) {
+        $self->set_desc( $desc );
+    }
+    return $self->get_desc;
+}
+
+sub display_id { shift->get_name }
+
+sub id { shift->get_name }
+
+sub is_circular { $logger->warn }
+
+sub length { shift->get_length }
+
+sub moltype { shift->alphabet }
+
+sub primary_id { $logger->warn }
+
+sub revcom { $logger->warn }
+
+sub subseq { $logger->warn }
+
+sub translate { $logger->warn }
+
+sub trunc { $logger->warn }
+
+sub get_nse { shift->get_name }

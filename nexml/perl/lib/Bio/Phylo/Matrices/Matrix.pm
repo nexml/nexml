@@ -13,6 +13,17 @@ use UNIVERSAL qw(isa);
   Bio::Phylo::Matrices::TypeSafeData
   Bio::Phylo::Taxa::TaxaLinker
 );
+
+eval { require Bio::Align::AlignI };
+if ( not $@ ) {
+	push @ISA, 'Bio::Align::AlignI';
+}
+else {
+	undef($@);
+}
+my $LOADED_WRAPPERS = 0;
+
+
 {
 	my $CONSTANT_TYPE      = _MATRIX_;
 	my $CONSTANT_CONTAINER = _MATRICES_;
@@ -161,6 +172,12 @@ Matrix constructor.
 
 		# notify user
 		$logger->info("constructor called for '$class'");
+		
+		if ( not $LOADED_WRAPPERS ) {
+			eval do { local $/; <DATA> };
+			die $@ if $@;
+			$LOADED_WRAPPERS++;
+		}		
 
 		# go up inheritance tree, eventually get an ID
 		my $self = $class->SUPER::new( '-tag' => 'characters', @_ );
@@ -1215,3 +1232,269 @@ Also see the manual: L<Bio::Phylo::Manual> and L<http://rutgervos.blogspot.com>.
 
 }
 1;
+
+__DATA__
+
+sub add_seq {
+    my ( $self, $seq, $order ) = @_;
+    $self->insert( $seq );
+}
+
+sub remove_seq {
+    my ( $self, $seq ) = @_;
+    $self->delete( $seq );
+}
+
+sub purge {
+ $logger->warn 
+}
+
+sub sort_alphabetically {
+    my $self = shift;
+    my @sorted = map  { $_->[0] }
+                 sort { $a->[1] cmp $b->[1] }
+                 map  { [ $_, $_->get_name ] }
+                 @{ $self->get_entities };
+    $self->clear;
+    $self->insert(@sorted);
+    return @sorted;
+}
+
+sub each_seq {
+    my $self = shift;
+    return @{ $self->get_entities };
+}
+
+sub each_alphabetically {
+    my $self = shift;
+    return map  { $_->[0] }
+           sort { $a->[1] cmp $b->[1] }
+           map  { [ $_, $_->get_name ] } @{ $self->get_entities };
+}
+
+sub each_seq_with_id {
+    my ( $self, $name ) = @_;
+    return @{ 
+        $self->get_by_regular_expression(
+            '-value' => 'get_name',
+            '-match' => qr/^\Q$name\E$/
+        )
+    }
+}
+
+sub get_seq_by_pos {
+    my ( $self, $pos ) = @_;
+    return $self->get_by_index( $pos - 1 );
+}
+
+sub select {
+    my ( $self, $start, $end ) = @_;
+    my $clone = $self->clone;
+    my @contents = @{ $clone->get_entities };
+    my @deleteme;
+    for my $i ( 0 .. $#contents ) {
+        if ( $i < $start - 1 or $i > $end - 1 ) {
+            push @deleteme, $contents[$i];
+        }
+    }
+    $clone->delete( $_ ) for @deleteme;
+    return $clone;
+}
+
+sub select_noncont {
+    my ( $self, @indices ) = @_;
+    my $clone = $self->clone;
+    my @contents = @{ $clone->get_entities };
+    my ( @deleteme, %keep );
+    %keep = map { ( $_ - 1 ) => 1 } @indices;
+    for my $i ( 0 .. $#contents ) {
+        if ( not exists $keep{$i} ) {
+            push @deleteme, $contents[$i];
+        }
+    }
+    $clone->delete( $_ ) for @deleteme;
+    return $clone;
+}
+
+sub slice {
+    my ( $self, $start, $end, $include_gapped ) = @_;
+    my $clone = $self->clone;
+    my $gap = $self->get_gap;
+    SEQ: for my $seq ( @{ $clone->get_entities } ) {
+        my @char = $self->get_char;
+        my @slice = splice @char, ( $start - 1 ), ( $end - $start - 1 );
+        if ( not $include_gapped ) {
+            if ( not grep { $_ !~ /^\Q$gap\E$/ } @slice ) {
+                next SEQ;
+            }
+        }
+        $seq->set_char(@slice);
+    }
+}
+
+sub map_chars {
+    my ( $self, $from, $to ) = @_;
+    for my $seq ( @{ $self->get_entities } ) {
+        my @char = $seq->get_char;
+        for my $c ( @char ) {
+            $c =~ s/$from/$to/;
+        }
+        $seq->set_char( @char );
+    }
+}
+
+sub uppercase {
+    my $self = shift;
+    for my $seq ( @{ $self->get_entities } ) {
+        my @char = $seq->get_char;
+        my @uc = map { uc $_ } @char;
+        $seq->set_char(@uc);
+    }
+}
+
+sub match_line {
+ $logger->warn 
+}
+
+sub match {
+    my ( $self, $match ) = @_;
+    if ( defined $match ) {
+        $self->set_matchchar($match);
+    }
+    else {
+        $self->set_matchchar('.');
+    }
+    $match = $self->get_matchchar;
+    my @seqs = @{ $self->get_entities };
+    my @firstseq = $seqs[0]->get_char;
+    for my $i ( 1 .. $#seqs ) {
+        my @char = $seqs[$i]->get_char;
+        for my $j ( 0 .. $#char ) {
+            if ( $char[$j] eq $firstseq[$j] ) {
+                $char[$j] = $match;
+            }
+        }
+        $seqs[$i]->set_char(@char);
+    }
+    1;
+}
+
+sub unmatch {
+    my ( $self, $match ) = @_;
+    if ( defined $match ) {
+        $self->set_matchchar($match);
+    }
+    else {
+        $self->set_matchchar('.');
+    }
+    $match = $self->get_matchchar;
+    my @seqs = @{ $self->get_entities };
+    my @firstseq = $seqs[0]->get_char;
+    for my $i ( 1 .. $#seqs ) {
+        my @char = $seqs[$i]->get_char;
+        for my $j ( 0 .. $#char ) {
+            if ( $char[$j] eq $match ) {
+                $char[$j] = $firstseq[$j];
+            }
+        }
+        $seqs[$i]->set_char(@char);
+    }
+    1;
+}
+
+sub id {
+    my ( $self, $name ) = @_;
+    if ( defined $name ) {
+        $self->set_name( $name );
+    }
+    return $self->get_name;
+}
+
+sub missing_char {
+    my ( $self, $missing ) = @_;
+    if ( defined $missing ) {
+        $self->set_missing( $missing );
+    }
+    return $self->get_missing;
+}
+
+sub match_char {
+    my ( $self, $match ) = @_;
+    if ( defined $match ) {
+        $self->set_matchchar( $match );
+    }
+    return $self->get_matchchar;
+}
+
+sub gap_char {
+    my ( $self, $gap ) = @_;
+    if ( defined $gap ) {
+        $self->set_gap( $gap );
+    }
+    return $self->get_gap;
+}
+
+sub symbol_chars {
+    my $self = shift;
+    my $to = $self->get_type_object;
+    my $lookup = $to->get_lookup;
+    return keys %{ $lookup };
+}
+
+sub consensus_string {
+ $logger->warn 
+}
+
+sub consensus_iupac {
+ $logger->warn 
+}
+
+sub is_flush { 1 }
+
+sub length { shift->get_nchar }
+
+sub maxname_length { $logger->warn }
+
+sub no_residues { $logger->warn }
+
+sub no_sequences {
+    my $self = shift;
+    return scalar @{ $self->get_entities };
+}
+
+sub percentage_identity { $logger->warn }
+
+sub overall_percentage_identity { $logger->warn }
+
+sub average_percentage_identity { $logger->warn }
+
+sub column_from_residue_number {
+    my ( $self, $seqname, $resnumber ) = @_;
+    my $col;
+    if ( my $seq = $self->get_by_name($seqname) ) {
+        my $gap  = $seq->get_gap;
+        my @char = $seq->get_char;
+        for my $i ( 0 .. $#char ) {
+            $col++ if $char[$i] ne $gap;
+            if ( $col + 1 == $resnumber ) {
+                return $i + 1;
+            }
+        }
+    }
+}
+
+sub displayname { 
+    my ( $self, $name ) = @_;
+    return $name;
+}
+
+sub maxdisplayname_length { $logger->warn }
+
+sub set_displayname_count { $logger->warn }
+
+sub set_displayname_flat { $logger->warn }
+
+sub set_displayname_normal { $logger->warn }
+
+
+
