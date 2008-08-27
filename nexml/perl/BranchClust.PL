@@ -1,32 +1,46 @@
-#!/usr/bin/perl 
-# ************************************************************
-# BrunchClust algorithm
-# version 1.01 November 10, 2006
-#
-# Copyright Maria Poptsova and J. Peter Gogarten 2006-2007
-#
-# E-mail: maria.poptsova@uconn.edu
-# http://www.bioinformtics.org/branchclust/
-#
-# ************************************************************
-# Program requires gi-numbers recongnition file, gi_numbers.out, which will contain
-# taxa identification table (by gi_numbers, or specific names)
-# The web-site contains an examples of how to create taxa recognition files.
-# You can also download examples as one archive:
-# http://bioinformatics.org/branchclust/BranchClust_all.tgz
-#
-# !!! IMPORTANT NOTE: - nu of different taxa is defined by the number of lines in the file gi_numbers.out
-# make sure that each line represent one taxa
-#
-# ************************************************************
-# history:
-# version 1.00 - June, 2006
-# ************************************************************
-# changes made to the version 1.00
-#
-# - clusters are not removed from the tree but marked with leaf "R" that will serve as a "stopper"
-# this allows to avoid combination of paraphyletic branches
-# ************************************************************
+#!/usr/bin/perl
+
+=head1 NAME
+
+BranchClust - tree-based ortholog-finding
+
+=head1 SYNOPSIS
+
+BranchClust.PL -t F<treefile> -m <many>
+
+=head1 DESCRIPTION
+
+ ************************************************************
+ BrunchClust algorithm
+ version 1.01 November 10, 2006
+
+ Copyright Maria Poptsova and J. Peter Gogarten 2006-2007
+
+ E-mail: maria.poptsova@uconn.edu
+ http://www.bioinformtics.org/branchclust/
+
+ ************************************************************
+ Program requires gi-numbers recongnition file, gi_numbers.out, which will contain
+ taxa identification table (by gi_numbers, or specific names)
+ The web-site contains an examples of how to create taxa recognition files.
+ You can also download examples as one archive:
+ http://bioinformatics.org/branchclust/BranchClust_all.tgz
+
+ !!! IMPORTANT NOTE: - nu of different taxa is defined by the number of lines in the file gi_numbers.out
+ make sure that each line represent one taxa
+
+ ************************************************************
+ history:
+ version 1.00 - June, 2006
+ ************************************************************
+ changes made to the version 1.00
+
+ - clusters are not removed from the tree but marked with leaf "R" that will serve as a "stopper"
+ this allows to avoid combination of paraphyletic branches
+ ************************************************************
+
+=cut
+
 use Bio::TreeIO;
 use Bio::Phylo::Util::Logger;
 use Getopt::Long;
@@ -262,9 +276,16 @@ for $cycle ( 1 .. 3 ) {
 close(CLUSTERS);
 close(FAMILIES);
 
-# --------------------------------------------------------------------
-# -------------------------------------------------------------------
-# read gi-numbers patterns to the specified array
+=head1 SUBROUTINES
+
+=over
+
+=item read_gis_table()
+
+read gi-numbers patterns to the specified array
+
+=cut
+
 sub read_gis_table {
 	$logger->debug;
     my $ref = $_[0];
@@ -294,10 +315,13 @@ sub read_gis_table {
     }
 }
 
-# end of read_gis_table ----------------------------------------------
-# -------------------------------------------------------------------
-# calculates the number of different taxa in an array of genes
-# ref to an array - argument
+=item nu_of_taxa()
+
+calculates the number of different taxa in an array of genes
+ref to an array - argument
+
+=cut
+
 sub nu_of_taxa {
 	$logger->debug;
     my $ref        = $_[0];
@@ -316,10 +340,13 @@ sub nu_of_taxa {
     return $taxa_count;
 }
 
-# end of nu_of_taxa--------------------------------------------------
-#--------------------------------------------------------------------
-# returns species index according to gi-numbers' table
-# gi-number as an argument
+=item species_index()
+
+returns species index according to gi-numbers' table
+gi-number as an argument
+
+=cut
+
 sub species_index {
 	$logger->debug;
     my $species = $_[0];
@@ -338,10 +365,12 @@ sub species_index {
     return $index;
 }
 
-# end of species_index -----------------------------------------------
-#-------------------------------------------------------------------
-# returns the ref to the most distant leaf in a given tree
-#
+=item distant_leaf()
+
+returns the ref to the most distant leaf in a given tree
+
+=cut
+
 sub distant_leaf {
     my $ref_to_tree = $_[0];
     my $mytree      = $$ref_to_tree;
@@ -380,11 +409,14 @@ sub distant_leaf {
     return $myleaf;
 }
 
-# end of distant_leaf------------------------------------------------
-#-------------------------------------------------------------------
-# for a given node returns array of genes in order starting from the most distant
-# and then adding others while descending
-# arguments - ref to tree and ref to the node
+=item get_cluster_from_node()
+
+for a given node returns array of genes in order starting from the most distant
+and then adding others while descending
+arguments - ref to tree and ref to the node
+
+=cut
+
 sub get_cluster_from_node {
 	$logger->debug;
     my ( $ref_mytree, $ref_cluster_node ) = @_;
@@ -474,13 +506,15 @@ sub get_cluster_from_node {
     }
 }
 
-# end of get_cluster_from_node----------------------------------------
-#--------------------------------------------------------------------
-# for a given node and selected family returns out-of_cluster paralogs,
-# i.e. those genes that are located after the node containing family
-# 4 arguments: ref to the tree, ref to the node,
-#              ref to the array-cluster and to the array-family
-#
+=item get_out_of_cluster_paralogs()
+
+for a given node and selected family returns out-of_cluster paralogs,
+i.e. those genes that are located after the node containing family
+4 arguments: ref to the tree, ref to the node,
+             ref to the array-cluster and to the array-family
+
+=cut
+
 sub get_out_of_cluster_paralogs {
 	$logger->debug;
     my ( $ref_mytree, $ref_cluster_node, $ref_fam, $ref_cluster ) = @_;
@@ -593,10 +627,13 @@ sub get_out_of_cluster_paralogs {
     }
 }
 
-# end of get_out_of_cluser_paralogs----------------------------------
-#-------------------------------------------------------------------
-# takes two arrays (as ref) as arguments
-# returns an array with common members
+=item common_members()
+
+takes two arrays (as ref) as arguments
+returns an array with common members
+
+=cut
+
 sub common_members {
 	$logger->debug;
     my ( $ref1, $ref2 ) = @_;
@@ -610,10 +647,13 @@ sub common_members {
     return \@result;
 }
 
-# end of common_members----------------------------------------------
-#--------------------------------------------------------------------
-# takes two arrays (as ref) as arguments
-# return the array with different members
+=item diff_members()
+
+takes two arrays (as ref) as arguments
+return the array with different members
+
+=cut
+
 sub diff_members {
 	$logger->debug;
     my ( $ref1, $ref2 ) = @_;
@@ -635,11 +675,14 @@ sub diff_members {
     return \@result;
 }
 
-# end of diff_members-----------------------------------------------
-#---------------- ---------------------------------------------------
-# reorder cluster from a branch in order from the most distant leaf
-# towards the root
-# arguments - ref to the tree, node with a cluster and the array-cluster
+=item reorder_branch()
+
+reorder cluster from a branch in order from the most distant leaf
+towards the root
+arguments - ref to the tree, node with a cluster and the array-cluster
+
+=cut
+
 sub reorder_branch {
 	$logger->debug;
     my ( $ref_mytree, $ref_cluster_node, $ref_cluster ) = @_;
@@ -744,11 +787,14 @@ sub reorder_branch {
     }
 }
 
-# end of reorder_branch--------------------------------------------
-#--------------------------------------------------------------------
-# reporting cluster
-# arguments: ref to array of cluster, ref to family,
-#            ref to inparalogs and out-of-cluster paralogs
+=item print_cluster()
+
+reporting cluster
+arguments: ref to array of cluster, ref to family,
+            ref to inparalogs and out-of-cluster paralogs
+
+=cut
+
 sub print_cluster {
 	$logger->debug;
     my ( $ref_cluster, $ref_fam, $ref_par, $ref_outpar, $cycle ) = @_;
@@ -809,10 +855,13 @@ sub print_cluster {
     }
 }
 
-# end of print_cluster-----------------------------------------------
-#--------------------------------------------------------------------
-# takes a ref to an array of genes and extarct family ( even uncomplete)
-# return ref to the array family and array with paralogs
+=item extract_family()
+
+takes a ref to an array of genes and extarct family ( even uncomplete)
+return ref to the array family and array with paralogs
+
+=cut
+
 sub extract_family {
 	$logger->debug;
     my ($ref_cluster) = @_;
@@ -845,8 +894,10 @@ sub extract_family {
     return @refs;
 }
 
-# end of extract_family-------------------------------------------------------------
-#-----------------------------------------------------------------------------------
+=item empty_family()
+
+=cut
+
 sub empty_family {
 	$logger->debug;
     my ($ref) = @_;
@@ -855,12 +906,15 @@ sub empty_family {
     }
 }
 
-# end of empty_family--------------------------------------------------------------
-#-----------------------------------------------------------------------------------
-# Recursion
-# if Node1 is a cluster (complete or incomplete) then function returns 1,
-# if we descend further - return 0
-# arguments - ref to tree and to node
+=item analyze_node1()
+
+Recursion
+if Node1 is a cluster (complete or incomplete) then function returns 1,
+if we descend further - return 0
+arguments - ref to tree and to node
+
+=cut
+
 sub analyze_node1 {
 	$logger->debug;
     my ( $ref_tree, $ref_node1 ) = @_;
@@ -924,4 +978,10 @@ sub analyze_node1 {
     return 0;
 }
 
-# end of recursion------------------------------------------------------------------
+=back
+
+=head1 REVISION
+
+ $Id$
+
+=cut
