@@ -27,7 +27,7 @@ my $LOADED_WRAPPERS = 0;
 	my ( $TYPE_CONSTANT, $CONTAINER_CONSTANT ) = ( _NODE_, _TREE_ );
 
 	# @fields array necessary for object destruction
-	my @fields = \( my ( %branch_length, %parent ) );
+	my @fields = \( my ( %branch_length, %parent, %tree ) );
 
 =head1 NAME
 
@@ -570,9 +570,9 @@ Sets new (unbranched) node below invocant.
 		$parent->set_child( $new_node );
 		
 		# insert new node in tree
-		if ( my $tree = $self->_get_container ) {
-			$tree->insert( $new_node );
-		}
+# 		if ( my $tree = $self->_get_container ) {
+# 			$tree->insert( $new_node );
+# 		}
 		
 		# attach $self to new node
 		$new_node->set_child( $self );	
@@ -661,6 +661,8 @@ sub set_root_below {
 	}
 	else {
 		# XXX
+		$logger->warn;
+		$ancestors[0]->set_child( $ancestors[1] );
 	}
 	return $ancestors[0];
 	
@@ -713,6 +715,40 @@ sub set_root_below {
 # 			}
 # 		}
 # 	}
+
+=item set_tree()
+
+Sets what tree invocant belongs to
+
+ Type    : Mutator
+ Title   : set_tree
+ Usage   : $node->set_tree($tree);
+ Function: Sets what tree invocant belongs to
+ Returns : Invocant
+ Args    : Bio::Phylo::Forest::Tree
+ Comments: This method is called automatically 
+           when inserting or deleting nodes in
+           trees.
+
+=cut 
+
+    sub set_tree {
+        my ( $self, $tree ) = @_;
+        my $id = $self->get_id;
+        if ( $tree ) {
+            if ( looks_like_object $tree, $CONTAINER_CONSTANT ) {
+                $tree{$id} = $tree;
+                weaken $tree{$id};
+            }
+            else {
+                throw 'ObjectMismatch' => "$tree is not a tree";
+            }
+        }
+        else {
+            $tree{$id} = undef;
+        }
+        return $self;
+    }
 
 =back
 
@@ -1081,7 +1117,8 @@ Gets invocant's most recent common ancestor shared with argument.
 				}
 			}
 		}
-		return;
+		$logger->warn( "using " . $self_anc->[-1]->get_internal_name );
+		return $self_anc->[-1];
 	}
 
 =item get_leftmost_terminal()
@@ -1143,6 +1180,25 @@ Gets invocant's rightmost terminal descendant
 		}
 		return $daughter;
 	}
+
+=item get_tree()
+
+Returns the tree invocant belongs to
+
+ Type    : Query
+ Title   : get_tree
+ Usage   : my $tree = $node->get_tree;
+ Function: Returns the tree $node belongs to
+ Returns : Bio::Phylo::Forest::Tree
+ Args    : NONE
+
+=cut
+
+    sub get_tree {
+        my $self = shift;
+        my $id = $self->get_id;
+        return $tree{$id};
+    }
 
 =back
 
@@ -1662,7 +1718,7 @@ Calculates patristic distance between invocant and argument.
 			}
 			$self = $self->get_parent;
 		}
-		while ( $other_node->get_id != $mrca_id ) {
+		while ( $other_node and $other_node->get_id != $mrca_id ) {
 			my $branch_length = $other_node->get_branch_length;
 			if ( defined $branch_length ) {
 				$patristic_distance += $branch_length;
@@ -1670,6 +1726,37 @@ Calculates patristic distance between invocant and argument.
 			$other_node = $other_node->get_parent;
 		}
 		return $patristic_distance;
+	}
+	
+=item calc_nodal_distance()
+
+Calculates node distance between invocant and argument.
+
+ Type    : Calculation
+ Title   : calc_nodal_distance
+ Usage   : my $nodal_distance =
+           $node->calc_nodal_distance($other_node);
+ Function: Returns the number of nodes
+           between $node and $other_node.
+ Returns : INT
+ Args    : Bio::Phylo::Forest::Node
+
+=cut	
+	
+	sub calc_nodal_distance {
+	    my ( $self, $other_node ) = @_;
+	    my $nodal_distance;
+	    my $mrca = $self->get_mrca( $other_node );
+	    my $mrca_id = $mrca->get_id;
+		while ( $self and $self->get_id != $mrca_id ) {
+			$nodal_distance++;
+			$self = $self->get_parent;
+		}
+		while ( $other_node and $other_node->get_id != $mrca_id ) {
+			$nodal_distance++;
+			$other_node = $other_node->get_parent;
+		}
+		return $nodal_distance;	    
 	}
 
 =back

@@ -88,7 +88,21 @@ Tree constructor.
 		}	
 
 		# go up inheritance tree, eventually get an ID
-		my $self = $class->SUPER::new( '-tag' => 'tree', @_ );			
+		my $self = $class->SUPER::new( 
+		    '-tag'      => 'tree', 
+		    '-listener' => sub {
+		        my ( $self, $method, @args ) = @_;                
+		        for my $node ( @args ) {
+		            if ( $method eq 'insert' ) {
+                        $node->set_tree( $self );
+		            }
+		            elsif ( $method eq 'delete' ) {
+		                $node->set_tree();
+		            }
+		        }
+		    },
+		    @_ 
+		);			
 		return $self;
 	}
 
@@ -660,6 +674,31 @@ Tests if argument (node array ref) forms a clade.
 			  $tips->[0]->get_mrca( $tips->[$i] );
 		}
 		scalar @{ $mrca->get_terminals } == scalar @{$tips} ? return 1 : return;
+	}
+
+=item is_cladogram()
+
+Tests if tree is a cladogram (i.e. no branch lengths)
+
+ Type    : Test
+ Title   : is_cladogram
+ Usage   : if ( $tree->is_cladogram() ) {
+              # do something
+           }
+ Function: Tests whether the tree is a 
+           cladogram (i.e. no branch lengths)
+ Returns : BOOLEAN
+ Args    : NONE
+ Comments:
+
+=cut
+
+	sub is_cladogram {
+	    my $tree = shift;
+	    for my $node ( @{ $tree->get_entities } ) {
+	        return 0 if defined $node->get_branch_length;
+	    }
+	    return 1;
 	}
 
 =back
@@ -2082,6 +2121,29 @@ Serializes invocant to xml.
 			}			
 		}
 	}
+
+=begin comment
+
+ Type    : Internal method
+ Title   : _consolidate
+ Usage   : $tree->_consolidate;
+ Function: Does pre-order traversal, only keeps
+           nodes seen during traversal in tree,
+           in order of traversal
+ Returns :
+ Args    :
+
+=end comment
+
+=cut
+
+    sub _consolidate {
+        my $self = shift;
+        my @nodes;
+        $self->visit_depth_first( '-pre' => sub { push @nodes, shift } );
+        $self->clear;
+        $self->insert(@nodes);    
+    }
 
 =begin comment
 

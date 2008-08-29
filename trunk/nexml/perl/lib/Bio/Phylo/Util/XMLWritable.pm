@@ -180,9 +180,9 @@ Retrieves tag string
 			$xml .= '><dict>';
 			for my $key ( keys %{$dict} ) {
 				$xml.= '<key>' . $key . '</key>';
-				my $val = $dict->{$key};
-				my $tag = $val->[0];
-				$xml .= "<$tag>" . $val->[1] . "</$tag>";
+				my @val = @{ $dict->{$key} };
+				my $tag = shift @val;
+				$xml .= "<$tag>@val</$tag>";
 			}
 			$xml .= '</dict>';
 			$xml .= "</$tag>" if $closeme;

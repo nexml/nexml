@@ -96,8 +96,8 @@ sub _new {
 =cut
 
 sub _to_string {
-	my $self       = shift;
-	my $taxa_obj   = $self->{'PHYLO'};
+	my $self     = shift;
+	my $taxa_obj = $self->{'PHYLO'};
 	if ( $taxa_obj->can('_type') && $taxa_obj->_type != _TAXA_ ) {
 		if ( $taxa_obj->can('make_taxa') ) {
 			my $obj = $taxa_obj->make_taxa;
@@ -115,12 +115,12 @@ sub _to_string {
 			$taxa_obj = $obj;
 		}
 		else {
-			throw 'ObjectMismatch' => "Can't serialize $taxa_obj to nexml";
+			throw 'ObjectMismatch' => "Object ($taxa_obj) is not a taxa object,\n and doesn't link to one";
 		}
 	}
-	else {
-		throw 'ObjectMismatch' => "Can't serialize $taxa_obj to nexml";
-	}
+# 	else {
+# 		throw 'ObjectMismatch' => "Can't serialize $taxa_obj to nexml";
+# 	}
 	my $parse_twig = XML::Twig->new;
 	my $nexml_twig = XML::Twig->new;
 	my $nexml_root = XML::Twig::Elt->new(
@@ -139,19 +139,23 @@ sub _to_string {
 	};
 	die $@, $taxa_obj->to_xml if $@;
 
-	for my $characters_obj ( reverse @{ $taxa_obj->get_matrices } ) {
-		eval {
-			my $characters_elt = $parse_twig->parse($characters_obj->to_xml); 
-			$characters_elt->root->paste( 'last_child', $nexml_root );
-		};
-		die $@, $characters_obj->to_xml if $@;
+    if ( $taxa_obj->get_matrices ) {
+        for my $characters_obj ( reverse @{ $taxa_obj->get_matrices } ) {
+            eval {
+                my $characters_elt = $parse_twig->parse($characters_obj->to_xml); 
+                $characters_elt->root->paste( 'last_child', $nexml_root );
+            };
+            die $@, $characters_obj->to_xml if $@;
+        }
 	}
-	for my $forest_obj ( reverse @{ $taxa_obj->get_forests } ) {		
-		eval {
-			my $forest_elt = $parse_twig->parse($forest_obj->to_xml);
-			$forest_elt->root->paste( 'last_child', $nexml_root );
-		};
-		die $@, $forest_obj->to_xml if $@;
+	if ( $taxa_obj->get_forests ) {
+        for my $forest_obj ( reverse @{ $taxa_obj->get_forests } ) {		
+            eval {
+                my $forest_elt = $parse_twig->parse($forest_obj->to_xml);
+                $forest_elt->root->paste( 'last_child', $nexml_root );
+            };
+            die $@, $forest_obj->to_xml if $@;
+        }
 	}
 	$nexml_twig->set_root($nexml_root);
 	$nexml_twig->set_xml_version('1.0');
