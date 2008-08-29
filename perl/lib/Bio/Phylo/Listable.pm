@@ -108,7 +108,7 @@ Pushes an object into its container.
 					$obj->_set_container( $self );
 				}
 			}
-			$self->notify_listeners;
+			$self->notify_listeners( 'insert', @obj );
 			return $self;
 		}
 		else {
@@ -189,7 +189,7 @@ Deletes argument from invocant object.
 		else {
 			throw 'ObjectMismatch' => "Invocant object cannot contain argument object";
 		}
-		$self->notify_listeners;		
+		$self->notify_listeners( 'delete', $obj );		
 		return $self;
 	}
 
@@ -210,7 +210,7 @@ Empties container object.
 	sub clear {
 		my $self = shift;
 		$entities{$$self} = [];
-		$self->notify_listeners;
+		$self->notify_listeners( 'clear' );
 		return $self;
 	}
 
@@ -797,11 +797,11 @@ Notifies listeners of changed contents.
 =cut
 
 	sub notify_listeners {
-		my $self = shift;
+		my ( $self, @args ) = @_;
 		my $id = $$self;
 		if ( $listeners{$id} ) {
 			for my $l ( @{ $listeners{$id} } ) {
-				$l->($self);
+				$l->( $self, @args );
 			}
 		}
 		return $self;
