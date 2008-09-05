@@ -6,6 +6,7 @@ use Bio::Phylo::Forest::Node;
 use Bio::Phylo::IO qw(unparse);
 use Bio::Phylo::Util::Exceptions 'throw';
 use Bio::Phylo::Util::CONSTANT qw(_TREE_ _FOREST_ looks_like_number looks_like_hash);
+use Bio::Phylo::Factory;
 use Scalar::Util qw(blessed);
 use vars qw(@ISA);
 
@@ -27,6 +28,21 @@ my $LOADED_WRAPPERS = 0;
 	my $logger = __PACKAGE__->get_logger;
 	my ( $TYPE_CONSTANT, $CONTAINER_CONSTANT ) = ( _TREE_, _FOREST_ );
 	my @fields = \( my ( %default, %rooted ) );
+	my $fac = Bio::Phylo::Factory->new;
+	my %default_constructor_args = (
+        '-tag'      => 'tree', 
+        '-listener' => sub {
+            my ( $self, $method, @args ) = @_;                
+            for my $node ( @args ) {
+                if ( $method eq 'insert' ) {
+                    $node->set_tree( $self );
+                }
+                elsif ( $method eq 'delete' ) {
+                    $node->set_tree();
+                }
+            }
+        },	
+	);
 
 =head1 NAME
 
@@ -88,21 +104,7 @@ Tree constructor.
 		}	
 
 		# go up inheritance tree, eventually get an ID
-		my $self = $class->SUPER::new( 
-		    '-tag'      => 'tree', 
-		    '-listener' => sub {
-		        my ( $self, $method, @args ) = @_;                
-		        for my $node ( @args ) {
-		            if ( $method eq 'insert' ) {
-                        $node->set_tree( $self );
-		            }
-		            elsif ( $method eq 'delete' ) {
-		                $node->set_tree();
-		            }
-		        }
-		    },
-		    @_ 
-		);			
+		my $self = $class->SUPER::new( %default_constructor_args, @_ );			
 		return $self;
 	}
 
@@ -127,7 +129,7 @@ Tree constructor from Bio::Tree::TreeI argument.
 		my ( $class, $bptree ) = @_;
 		my $self;
 		if ( blessed $bptree && $bptree->isa('Bio::Tree::TreeI') ) {
-			$self = Bio::Phylo::Forest::Tree->SUPER::new('-tag' => 'tree');
+			$self = $fac->create_tree;
 			bless $self, $class;
 			$self = $self->_recurse( $bptree->get_root_node );
 		}
@@ -2098,6 +2100,26 @@ Serializes invocant to xml.
 		}
 		$xml .= sprintf( "\n</%s>", $self->get_tag );
 		return $xml;		
+	}
+
+=item to_svg()
+
+Serializes invocant to SVG.
+
+ Type    : Serializer
+ Title   : to_svg
+ Usage   : my $svg = $obj->to_svg;
+ Function: Turns the invocant object into an SVG string.
+ Returns : SCALAR
+ Args    : Same args as the Bio::Phylo::Treedrawer constructor
+
+=cut
+
+	sub to_svg {
+	    my $self = shift;
+		my $drawer = $fac->create_drawer(@_);
+		$drawer->set_tree($self);
+	    return $drawer->draw;
 	}
 
 =begin comment
