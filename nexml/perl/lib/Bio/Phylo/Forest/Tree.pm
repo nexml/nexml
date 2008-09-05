@@ -2122,6 +2122,30 @@ Serializes invocant to SVG.
 	    return $drawer->draw;
 	}
 
+=item to_json()
+
+Serializes object to JSON string
+
+ Type    : Serializer
+ Title   : to_json()
+ Usage   : print $obj->to_json();
+ Function: Serializes object to JSON string
+ Returns : String 
+ Args    : None
+ Comments:
+
+=cut
+
+    sub to_json {
+        my $self = shift;
+        if ( my $root = $self->get_root ) {
+            return '{' . $self->_to_json() . ',"root":' . $root->to_json() . '}';
+        }
+        else {
+            return $self->SUPER::to_json;
+        }
+    }
+
 =begin comment
 
  Type    : Internal method

@@ -2071,6 +2071,35 @@ Clones invocant.
 
 =over
 
+=item to_json()
+
+Serializes object to JSON string
+
+ Type    : Serializer
+ Title   : to_json()
+ Usage   : print $obj->to_json();
+ Function: Serializes object to JSON string
+ Returns : String 
+ Args    : None
+ Comments:
+
+=cut
+
+    sub to_json {
+        my $node = shift;
+        my $extra_attr = { 'get_branch_length' => 'length' };
+        if ( my @children = @{ $node->get_children } ) {
+            return '{' 
+                . $node->_to_json( $extra_attr )
+                . ',"children":['
+                . ( join ',', map { $_->to_json } @children )
+                . ']}';
+        }
+        else {
+            return '{' . $node->_to_json($extra_attr) . '}';
+        }
+    }
+
 =item to_xml()
 
 Serializes invocant to xml.
