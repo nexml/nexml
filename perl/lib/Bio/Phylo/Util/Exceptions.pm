@@ -119,18 +119,25 @@ ERROR_HERE_DOC
 
 sub throw (@) {
 	# called as static method, with odd args
+	my $self;	
 	if ( scalar @_ % 2 ) {
 		my $class = shift;
-		my $self = $class->new(@_);
-		die $self;	
+		$self = $class->new(@_);		
 	}
 	# called as function, with even args e.g. throw BadArgs => 'msg';
 	else {
 		my $type = shift;
 		my $class = __PACKAGE__ . '::' . $type;
-		my $self = $class->new( 'error' => shift, @_ );
-		die $self;
+		$self = $class->new( 'error' => shift, @_ );
 	}
+	if ( not $ENV{'PERL_DL_NONLAZY'} ) {
+		require Bio::Phylo;
+		$Bio::Phylo::Util::Logger::TRACEBACK = 1;
+		my $logger = Bio::Phylo->get_logger();
+		$logger->error($self->error);
+		$Bio::Phylo::Util::Logger::TRACEBACK = 0;
+	}	
+	die $self;	
 }
 
 sub rethrow {
