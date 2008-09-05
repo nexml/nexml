@@ -1,4 +1,4 @@
-# $Id: Generator.pm 4786 2007-11-28 07:31:19Z rvosa $
+# $Id$
 package Bio::Phylo::Generator;
 use strict;
 use Bio::Phylo::Util::IDPool;
@@ -388,7 +388,7 @@ Also see the manual: L<Bio::Phylo::Manual> and L<http://rutgervos.blogspot.com>.
 
 =head1 REVISION
 
- $Id: Generator.pm 4786 2007-11-28 07:31:19Z rvosa $
+ $Id$
 
 =cut
 

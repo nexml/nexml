@@ -1,4 +1,4 @@
-# $Id: simpleType.pm 183 2007-12-07 08:16:31Z rvos $
+# $Id$
 package xs::simpleType;
 use strict;
 use warnings;

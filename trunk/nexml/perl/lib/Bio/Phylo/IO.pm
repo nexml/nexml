@@ -1,4 +1,4 @@
-# $Id: IO.pm 4786 2007-11-28 07:31:19Z rvosa $
+# $Id$
 package Bio::Phylo::IO;
 use Bio::Phylo;
 use Bio::Phylo::Util::CONSTANT qw(looks_like_class looks_like_hash);
@@ -306,7 +306,7 @@ Also see the manual: L<Bio::Phylo::Manual> and L<http://rutgervos.blogspot.com>
 
 =head1 REVISION
 
- $Id: IO.pm 4786 2007-11-28 07:31:19Z rvosa $
+ $Id$
 
 =cut
 

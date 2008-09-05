@@ -1,4 +1,4 @@
-# $Id: schema.pm 200 2007-12-12 05:48:59Z rvos $
+# $Id$
 package xs::schema;
 use strict;
 use warnings;
