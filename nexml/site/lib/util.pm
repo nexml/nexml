@@ -1,4 +1,4 @@
-# $Id: util.pm 210 2007-12-12 10:24:05Z rvos $
+# $Id$
 package util;
 use strict;
 use warnings;
@@ -238,7 +238,7 @@ Also see the website: L<http://www.nexml.org>
 
 =head1 REVISION
 
- $Id: Phylo.pm 4786 2007-11-28 07:31:19Z rvosa $
+ $Id$
 
 =cut
 

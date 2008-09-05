@@ -1,4 +1,4 @@
-# $Id: Listable.pm 4786 2007-11-28 07:31:19Z rvosa $
+# $Id$
 package Bio::Phylo::Listable;
 use strict;
 use vars qw(@ISA);
@@ -931,7 +931,7 @@ defined there are also applicable here.
 
 =head1 REVISION
 
- $Id: Listable.pm 4786 2007-11-28 07:31:19Z rvosa $
+ $Id$
 
 =cut
 

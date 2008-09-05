@@ -1,4 +1,4 @@
-# $Id: Nexus.pm 4213 2007-07-15 03:11:27Z rvosa $
+# $Id$
 # Subversion: $Rev: 190 $
 package Bio::Phylo::Unparsers::Nexml;
 use strict;
@@ -183,7 +183,7 @@ Also see the manual: L<Bio::Phylo::Manual>.
 
 =head1 REVISION
 
- $Id: Nexus.pm 4213 2007-07-15 03:11:27Z rvosa $
+ $Id$
 
 =cut
 

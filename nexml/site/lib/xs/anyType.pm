@@ -1,4 +1,4 @@
-# $Id: anyType.pm 185 2007-12-07 23:27:40Z rvos $
+# $Id$
 package xs::anyType;
 use strict;
 use warnings;

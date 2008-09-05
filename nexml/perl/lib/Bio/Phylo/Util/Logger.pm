@@ -386,6 +386,6 @@ Also see the manual: L<Bio::Phylo::Manual> and L<http://rutgervos.blogspot.com>.
 
 =head1 REVISION
 
- $Id: Phylo.pm 4214 2007-07-15 03:12:14Z rvosa $
+ $Id$
 
 =cut

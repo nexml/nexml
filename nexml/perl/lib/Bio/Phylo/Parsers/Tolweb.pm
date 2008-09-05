@@ -44,7 +44,7 @@ L<http://tolweb.org/tree/home.pages/downloadtree.html>
 
 =head1 REVISION
 
- $Id: Nexml.pm 530 2008-05-22 17:34:05Z rvos $
+ $Id$
 
 =cut
 

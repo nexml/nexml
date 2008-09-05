@@ -1,4 +1,4 @@
-# $Id: Protein.pm 4786 2007-11-28 07:31:19Z rvosa $
+# $Id$
 package Bio::Phylo::Matrices::Datatype::Protein;
 use Bio::Phylo::Matrices::Datatype;
 use strict;
@@ -39,7 +39,7 @@ L<http://www.cpanforum.com/dist/Bio-Phylo>
 
 =head1 REVISION
 
- $Id: Protein.pm 4786 2007-11-28 07:31:19Z rvosa $
+ $Id$
 
 =cut
 

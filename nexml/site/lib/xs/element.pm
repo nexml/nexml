@@ -1,4 +1,4 @@
-# $Id: element.pm 183 2007-12-07 08:16:31Z rvos $
+# $Id$
 package xs::element;
 use strict;
 use warnings;

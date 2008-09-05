@@ -1,4 +1,4 @@
-# $Id: Node.pm 4125 2007-07-06 15:10:35Z rvosa $
+# $Id$
 package Bio::Phylo::Mediators::NodeMediator;
 use strict;
 use Scalar::Util qw(weaken);
@@ -569,7 +569,7 @@ Also see the manual: L<Bio::Phylo::Manual> and L<http://rutgervos.blogspot.com>.
 
 =head1 REVISION
 
- $Id: TaxaMediator.pm 3386 2007-03-24 16:22:25Z rvosa $
+ $Id$
 
 =cut
 
