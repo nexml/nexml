@@ -120,7 +120,7 @@ Removes argument from invocant's cache.
 		my ( $self, $obj ) = @_;
 
 		# notify user
-		$logger->info("unregistering object '$obj'"); # XXX
+		#$logger->info("unregistering object '$obj'"); # XXX
 
 		my $id = $$obj;
 		if ( defined $id ) {
