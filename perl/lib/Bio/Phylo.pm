@@ -623,6 +623,78 @@ Attempts to fetch an in-memory object by its UID
 		return $objects{$id};
 	}
 
+=item to_json()
+
+Serializes object to JSON string
+
+ Type    : Serializer
+ Title   : to_json()
+ Usage   : print $obj->to_json();
+ Function: Serializes object to JSON string
+ Returns : String 
+ Args    : None
+ Comments:
+
+=cut
+
+    sub to_json { return '{' . shift->_to_json . '}' }
+    
+    sub _to_json {
+        my ( $obj, $extra_attr ) = @_;
+        my $attr = {
+            'name'    => $obj->get_name,
+            'id'      => $obj->get_id,
+            'desc'    => $obj->get_desc,
+            'score'   => $obj->get_score,
+            'generic' => $obj->get_generic,    
+        };
+        if ( $extra_attr ) {
+            for my $method ( keys %{ $extra_attr } ) {
+                my $field = $extra_attr->{$method};
+                $attr->{$field} = $obj->$method;
+            }
+        }
+        $obj->_hash_to_json( $attr );
+    }
+    
+    sub _hash_to_json {
+        my ( $self, $generic ) = @_;
+        my @json;
+        for my $key ( keys %{ $generic } ) {
+            my $val = $generic->{$key};
+            if ( not ref $val ) {
+                next if not defined $val;        
+                push @json, "\"$key\":\"$val\"";
+            }
+            elsif ( UNIVERSAL::isa($val,'HASH') ) {
+                next if not %{ $val };
+                push @json, "\"$key\":{" . $self->_hash_to_json($val) . '}';
+            }
+            elsif ( UNIVERSAL::isa($val,'ARRAY') ) {
+                next if not @{ $val };
+                push @json, "\"$key\":[" . $self->_array_to_json($val) . ']';
+            }
+        }   
+        return join ',', @json;
+    }
+    
+    sub _array_to_json {
+        my ( $self, $array ) = @_;
+        my @json;
+        for my $val ( @{ $array } ) {
+            if ( not ref $val ) {
+                push @json, "\"$val\"";
+            }
+            elsif ( UNIVERSAL::isa($val,'HASH') ) {
+                push @json, $self->_hash_to_json($val);
+            }
+            elsif ( UNIVERSAL::isa($val,'ARRAY') ) {
+                push @json, $self->_array_to_json($val);
+            }
+        }   
+        return join ',', @json;
+    }
+
 =item to_string()
 
 Serializes object to general purpose string
