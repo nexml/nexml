@@ -2,7 +2,7 @@ package Bio::Phylo::Util::IDPool;
 use strict;
 {
     my @reclaim;
-    my $obj_counter = 0;
+    my $obj_counter = 1;
 
     sub _initialize {
         my $obj_ID = 0;
@@ -18,7 +18,7 @@ use strict;
 
     sub _reclaim {
         my ( $class, $obj ) = @_;
-        #push @reclaim, $obj->get_id;
+        push @reclaim, $obj->get_id;
     }
 }
 1;
