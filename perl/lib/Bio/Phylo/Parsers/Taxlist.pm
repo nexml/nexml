@@ -1,4 +1,4 @@
-# $Id: Taxlist.pm 4786 2007-11-28 07:31:19Z rvosa $
+# $Id$
 package Bio::Phylo::Parsers::Taxlist;
 use strict;
 use Bio::Phylo::Taxa;
@@ -102,7 +102,7 @@ Also see the manual: L<Bio::Phylo::Manual> and L<http://rutgervos.blogspot.com>.
 
 =head1 REVISION
 
- $Id: Taxlist.pm 4786 2007-11-28 07:31:19Z rvosa $
+ $Id$
 
 =cut
 

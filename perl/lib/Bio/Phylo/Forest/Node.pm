@@ -1,4 +1,4 @@
-# $Id: Node.pm 4890 2007-12-13 21:06:34Z rvosa $
+# $Id$
 package Bio::Phylo::Forest::Node;
 use strict;
 use Bio::Phylo::Taxa::TaxonLinker;
@@ -2344,7 +2344,7 @@ Also see the manual: L<Bio::Phylo::Manual> and L<http://rutgervos.blogspot.com>.
 
 =head1 REVISION
 
- $Id: Node.pm 4890 2007-12-13 21:06:34Z rvosa $
+ $Id$
 
 =cut
 
