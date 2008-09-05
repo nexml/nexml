@@ -2087,7 +2087,9 @@ Serializes object to JSON string
 
     sub to_json {
         my $node = shift;
-        my $extra_attr = { 'get_branch_length' => 'length' };
+        my %args = @_;
+        my $extra_attr = \%args;
+        $extra_attr->{'get_branch_length'} = 'length';
         if ( my @children = @{ $node->get_children } ) {
             return '{' 
                 . $node->_to_json( $extra_attr )
