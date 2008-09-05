@@ -4,12 +4,13 @@ use File::Spec;
 use Bio::Phylo::Util::CONSTANT 'looks_like_hash';
 use Bio::Phylo::Util::Exceptions 'throw';
 use Config;
-use vars qw($volume $class_dir $file $VERBOSE $AUTOLOAD);
+use vars qw($volume $class_dir $file $VERBOSE $AUTOLOAD $TRACEBACK);
 use UNIVERSAL 'isa';
 
 BEGIN {
 	my $class_file = __FILE__;
 	( $volume, $class_dir, $file ) = File::Spec->splitpath( $class_file );
+	$TRACEBACK = 0;
 	$class_dir =~ s/Bio.Phylo.Util.?$//;
 #	printf STDERR "[ %s starting, will use PREFIX=%s where applicable ]\n", __PACKAGE__, $class_dir;
 }
@@ -25,8 +26,8 @@ BEGIN {
 eval <<"CODE_TEMPLATE";	
 	sub $method {
 		my ( \$self, \$msg ) = \@_;
-		my ( \$package, \$file1up, \$line1up, \$subroutine ) = caller(1);
-		my ( \$pack0up, \$filename, \$line, \$sub0up )       = caller(0);
+		my ( \$package, \$file1up, \$line1up, \$subroutine ) = caller( \$TRACEBACK + 1 );
+		my ( \$pack0up, \$filename, \$line, \$sub0up )       = caller( \$TRACEBACK + 0 );
 		my \$verbosity;
 		if ( exists \$VERBOSE{\$subroutine} ) {
  			\$verbosity = \$VERBOSE{\$subroutine};
@@ -136,7 +137,7 @@ Bio::Phylo::Util::Logger - Logging for Bio::Phylo.
  
  # Create a file handle for logger to write to.
  # This is not necessary, by default the logger
- # writes to STDOUT, but sometimes you will want
+ # writes to STDERR, but sometimes you will want
  # to write to a file, as per this example.
  open my $fh, '>', 'parsing.log' or die $!;
  
@@ -202,6 +203,19 @@ This class defines a logger, a utility object for logging messages.
 The other objects in Bio::Phylo use this logger to give detailed feedback
 about what they are doing at per-class, per-method user-configurable log levels
 (debug, info, warn, error and fatal). 
+
+By default, the logger formats its 
+messages to show where the logging method (i.e. DEBUG, INFO, WARN, ERROR or FATAL)
+was called, so in the above example the $logger->info method was called in
+Bio/Phylo.pm on line 280. However, in some cases you may want to have the
+message be formatted to originate earlier in the call stack. An example of
+this is in Bio::Phylo::Util::Exceptions, which calls $logger->error automatically 
+every time an exception is thrown. This behaviour would not be very useful if the
+resulting message is shown to originate from within the "throw" method - so
+instead it seems to originate from where the exception was thrown, i.e. one
+frame up in the call stack. This behaviour can be achieved by changing the value
+of the $Bio::Phylo::Util::Logger::TRACEBACK variable. For each increment in that
+variable, the logger moves one frame up in the call stack.
 
 The least verbose is level 0, in which case only 'fatal' messages are shown. 
 The most verbose level, 4, shows debugging messages, including from internal 
