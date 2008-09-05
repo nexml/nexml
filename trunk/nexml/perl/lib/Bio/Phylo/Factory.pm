@@ -12,6 +12,7 @@ my %class = (
     'node'   => 'Bio::Phylo::Forest::Node',
     'tree'   => 'Bio::Phylo::Forest::Tree',
     'logger' => 'Bio::Phylo::Util::Logger',
+    'drawer' => 'Bio::Phylo::Treedrawer',
 );
 
 =head1 NAME

@@ -664,6 +664,10 @@ sub set_root_below {
 		$logger->warn;
 		$ancestors[0]->set_child( $ancestors[1] );
 	}
+
+	if ( my $tree = $self->get_tree ) {
+	    $tree->insert($ancestors[0]);
+	}
 	return $ancestors[0];
 	
 }
