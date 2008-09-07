@@ -1,0 +1,88 @@
+<!DOCTYPE html SYSTEM "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <script type="text/javascript" src="Phylo/Util/CONSTANT.js" />
+        <script type="text/javascript" src="Phylo/Util/Exceptions.js" />
+        <script type="text/javascript" src="Phylo/Util/Logger.js" />
+        <script type="text/javascript" src="Phylo/Mediators/TaxaMediator.js" />        
+        <script type="text/javascript" src="Phylo.js" />
+        <script type="text/javascript" src="Phylo/Util/XMLWritable.js" />        
+        <script type="text/javascript" src="Phylo/Listable.js" />
+        <script type="text/javascript" src="Phylo/Taxa.js" />
+        <script type="text/javascript" src="Phylo/Taxa/TaxaLinker.js" />        
+        <script type="text/javascript" src="Phylo/Taxa/Taxon.js" />
+        <script type="text/javascript" src="Phylo/Taxa/TaxonLinker.js" />        
+        <script type="text/javascript" src="Phylo/Forest.js" />        
+        <script type="text/javascript" src="Phylo/Forest/Tree.js" />
+        <script type="text/javascript" src="Phylo/Forest/Node.js" />
+        <script type="text/javascript" src="Phylo/Parsers/Nexml.js" />        
+        <script type="text/javascript">/*<![CDATA[*/
+            var logger = new Logger();
+            var statdiv;			
+            logger.set_listener( 
+            function( msg ) { 
+                if ( statdiv == null ) {
+                    statdiv = document.getElementById('status');
+                }
+                statdiv.innerHTML += '<pre>' + msg + '</pre>';
+            }        	
+        );
+            /*]]>*/</script>
+        <title>PhyloJS</title>
+    </head>
+    <body>
+        <pre id="status" />       
+        <script type="text/javascript">/*<![CDATA[*/
+            var child1   = new Node( { name: 'child1',  branch_length: 0 } );
+            var child2   = new Node( { name: 'child2',  branch_length: 0 } );
+            var gchild1  = new Node( { name: 'gchild1', branch_length: 0 } );
+            var gchild2  = new Node( { name: 'gchild2', branch_length: 0 } );
+            var root     = new Node( { name: 'root',    branch_length: 0 } );
+            var tree     = new Tree( { name: 'myTree' } );
+            var forest   = new Forest( { name: 'myForest' } );
+            var taxa     = new Taxa( { name: 'myTaxa' } );
+            taxa.set_forest(forest);
+            logger.VERBOSE( 4 );
+            try {
+                tree.insert( root );
+                tree.insert( child1 );
+                tree.insert( child2 );
+                tree.insert( gchild1 );
+                tree.insert( gchild2 );
+                root.set_child( child1 );
+                root.set_child( child2 );
+                child1.set_parent(root);
+                child2.set_parent(root);
+                child2.set_child( gchild1 );
+                child2.set_child( gchild2 );
+                gchild1.set_parent( child2 );
+                gchild2.set_parent( child2 );
+                forest.insert(tree);
+                var tips = tree.get_terminals();
+                for ( var i = 0; i < tips.length; i++ ) {
+                    var taxon = new Taxon( { name: tips[i].get_name() } );
+                    tips[i].set_taxon(taxon);
+                    taxa.insert(taxon);
+                }                
+            }
+            catch( exception ) {
+                logger.fatal( exception.description );
+            }
+            var nexml = forest.get_root_open_tag() 
+                + taxa.to_xml() 
+                + forest.to_xml() 
+                + forest.get_root_close_tag();
+            alert(nexml);                       
+            var blocks = parse({'format':'nexml','string':nexml});
+            if ( blocks != null && blocks[0] != null ) {
+                var roundtrip = blocks[0].get_root_open_tag();
+                for ( var i = 0; i < blocks.length; i++ ) {
+                    roundtrip += blocks[i].to_xml();
+                }
+                roundtrip += blocks[0].get_root_close_tag();
+                alert(roundtrip);
+            }
+            logger.debug( taxa.get_forests()[0].get_name() );
+            /*]]>*/</script>         
+    </body>     
+</html>
