@@ -9,12 +9,12 @@ function parse(args) {
   	}
 	catch(e) {
   		try { //Firefox, Mozilla, Opera, etc.
-  			parser = new DOMParser();
+  			var parser = new DOMParser();
   			xmlDoc = parser.parseFromString(xml,"text/xml");
   		}
   		catch(e) {
   			alert(e.message);
-  			return;
+  			return result;
   		}
 	}
 	var taxa_blocks = process_otus(xmlDoc.getElementsByTagName("otus"));
@@ -160,7 +160,7 @@ function obj_from_elt (elt) {
 		case 'trees': return new Forest(args);
 		case 'tree' : return new Tree(args);
 		case 'node' : return new Node(args);
-		default : alert(tag_name);
+		default : throw new API("Can't create object from element " + tag_name);
 	}
 }
 
