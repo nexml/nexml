@@ -1,55 +1,52 @@
-var constant = new Constant();
-var mediator = new TaxaMediator();
-
 function Taxa(args) {
 	if (args==null) args = {};
 	args["tag"] = "otus";	
     this.Listable(args);
-    this._type      = constant._TAXA_;
-    this._container = constant._NONE_;
+    this._type      = Constant._TAXA_;
+    this._container = Constant._NONE_;
     return this;
 }
 copyPrototype(Taxa,Listable);
 
 Taxa.prototype.set_forest = function (forest) {
-    if ( looks_like_object(forest,constant._FOREST_) ) {
+    if ( looks_like_object(forest,Constant._FOREST_) ) {
         forest.set_taxa(this);
     }
     return this;
 };
 
 Taxa.prototype.set_matrix = function (matrix) {
-    if ( looks_like_object(matrix,constant._MATRIX_) ) {
+    if ( looks_like_object(matrix,Constant._MATRIX_) ) {
         matrix.set_taxa(this);
     }
     return this;
 };
 
 Taxa.prototype.unset_forest = function(forest) {
-    if ( looks_like_object(forest,constant._FOREST_) ) {
+    if ( looks_like_object(forest,Constant._FOREST_) ) {
         forest.unset_taxa();
     }
     return this;
 };
 
 Taxa.prototype.unset_matrix = function(matrix) {
-    if ( looks_like_object(matrix,constant._MATRIX_) ) {
+    if ( looks_like_object(matrix,Constant._MATRIX_) ) {
         matrix.unset_taxa();
     }
     return this;
 };
 
 Taxa.prototype.get_forests = function() {
-    return mediator.get_link( {
+    return TaxaMediator.get_link( {
         "source" : this,
-        "type"   : constant._FOREST_()
+        "type"   : Constant._FOREST_()
     } );
 };
 
 Taxa.prototype.get_matrices = function () {
-    return mediator.get_link( {
+    return TaxaMediator.get_link( {
         "source" : this,
-        "type"   : constant._MATRIX_()    
+        "type"   : Constant._MATRIX_()    
     } );
 };
 

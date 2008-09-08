@@ -1,11 +1,9 @@
-var constant = new Constant();
-
 function Tree(args) {
 	if (args==null) args = {};
 	args["tag"] = "tree";
     this.Listable(args);
-    this._type      = constant._TREE_;
-    this._container = constant._FOREST_;
+    this._type      = Constant._TREE_;
+    this._container = Constant._FOREST_;
     return this;
 }
 copyPrototype(Tree,Listable);
