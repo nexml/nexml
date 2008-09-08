@@ -1,19 +1,16 @@
-var constant = new Constant();
-var mediator = new TaxaMediator();
-
 function Taxon(args) {
 	if (args==null) args = {};	
 	args["tag"] = "otu";
     this.XMLWritable(args);
-    this._type      = constant._TAXON_;
-    this._container = constant._TAXA_;
+    this._type      = Constant._TAXON_;
+    this._container = Constant._TAXA_;
     return this;
 }
 copyPrototype(Taxon,XMLWritable);
 
 Taxon.prototype.set_data = function (datum) {
-	if ( looks_like_object( datum, constant._DATUM_ ) ) {
-		mediator.set_link({
+	if ( looks_like_object( datum, Constant._DATUM_ ) ) {
+		TaxaMediator.set_link({
 			'one'  : this,
 			'many' : datum
 		});
@@ -22,8 +19,8 @@ Taxon.prototype.set_data = function (datum) {
 };
 
 Taxon.prototype.set_nodes = function (node) {
-	if ( looks_like_object( node, constant._NODE_ ) ) {
-		mediator.set_link({
+	if ( looks_like_object( node, Constant._NODE_ ) ) {
+		TaxaMediator.set_link({
 			'one'  : this,
 			'many' : node
 		});
@@ -32,7 +29,7 @@ Taxon.prototype.set_nodes = function (node) {
 };
 
 Taxon.prototype.unset_datum = function (datum) {
-	mediator.remove_link({
+	TaxaMediator.remove_link({
 		'one'  : this,
 		'many' : datum
 	});
@@ -40,7 +37,7 @@ Taxon.prototype.unset_datum = function (datum) {
 };
 
 Taxon.prototype.unset_node = function (node) {
-	mediator.remove_link({
+	TaxaMediator.remove_link({
 		'one'  : this,
 		'many' : node
 	});
@@ -48,16 +45,16 @@ Taxon.prototype.unset_node = function (node) {
 };
 
 Taxon.prototype.get_data = function () {
-    return mediator.get_link({
+    return TaxaMediator.get_link({
         'source' : this, 
-        'type'   : constant._DATUM_()
+        'type'   : Constant._DATUM_()
     });
 };
 
 Taxon.prototype.get_nodes = function () {
-    return mediator.get_link({
+    return TaxaMediator.get_link({
         'source' : this, 
-        'type'   : constant._NODE_()
+        'type'   : Constant._NODE_()
     });
 };
 

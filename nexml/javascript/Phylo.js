@@ -38,7 +38,6 @@ function invoke( obj, method, args ) {
 
     var id      = 0;
     var objects = {};
-    var mediator = new TaxaMediator();
     
     function Phylo(args){
         if ( args != null ) {
@@ -49,7 +48,7 @@ function invoke( obj, method, args ) {
         this.id = id++;
         this.generic = {};
         objects[this.id] = this;
-        mediator.register(this);
+        TaxaMediator.register(this);
         return this;
     }
     

@@ -6,8 +6,6 @@ function Listable (args) {
 }
 copyPrototype(Listable,XMLWritable);
 
-var logger = new Logger();
-
 Listable.prototype.get_entities = function() {
     return this.entities;
 }

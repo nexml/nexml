@@ -1,21 +1,24 @@
-var singletonMediator;
 var object = new Array();
 var relationship = new Array();
 
+/*
+var singletonMediator;
 function TaxaMediator(){
     if ( singletonMediator == null ) {
         singletonMediator = this;
     }
     return singletonMediator;
 }
+*/
+var TaxaMediator = {};
 
-TaxaMediator.prototype.register = function(obj) {
+TaxaMediator.register = function(obj) {
     var id = obj.get_id();
     object[id] = obj;
     return this;
 };
 
-TaxaMediator.prototype.unregister = function(obj) {
+TaxaMediator.unregister = function(obj) {
     var id = obj.get_id();
     if ( object[id] != null ) {
         // one-to-many relationship
@@ -37,7 +40,7 @@ TaxaMediator.prototype.unregister = function(obj) {
     return this;
 };
 
-TaxaMediator.prototype.set_link = function(args) {
+TaxaMediator.set_link = function(args) {
     var one  = args["one"];
     var many = args["many"];
     var one_id  = one.get_id();
@@ -55,7 +58,7 @@ TaxaMediator.prototype.set_link = function(args) {
     return this;
 };
 
-TaxaMediator.prototype.get_link = function (args) {
+TaxaMediator.get_link = function (args) {
     var id = args["source"].get_id();
     
     // have to get many objects of the same type
@@ -83,7 +86,7 @@ TaxaMediator.prototype.get_link = function (args) {
     return null;
 };
 
-TaxaMediator.prototype.remove_link = function(args) {
+TaxaMediator.remove_link = function(args) {
     var one = args["one"];
     var many = args["many"];
     if ( one != null ) {

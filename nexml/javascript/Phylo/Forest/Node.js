@@ -1,12 +1,10 @@
-var constant = new Constant();
-
 function Node(args) {
 	if (args==null) args = {};
 	args["tag"] = "node";
     this.XMLWritable(args);
     this.children   = [];
-    this._type      = constant._NODE_;
-    this._container = constant._TREE_;
+    this._type      = Constant._NODE_;
+    this._container = Constant._TREE_;
     return this;
 }
 copyPrototypeMI(Node,[XMLWritable,TaxonLinker]);

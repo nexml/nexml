@@ -19,9 +19,8 @@
         <script type="text/javascript" src="Phylo/Forest/DrawNode.js" />
         <script type="text/javascript" src="Phylo/Parsers/Nexml.js" />     
         <script type="text/javascript">/*<![CDATA[*/
-            var logger = new Logger();
             var statdiv;			
-            logger.set_listener( 
+            Logger.set_listener( 
             function( msg ) { 
                 if ( statdiv == null ) {
                     statdiv = document.getElementById('status');
@@ -44,7 +43,7 @@
             var forest   = new Forest( { name: 'myForest' } );
             var taxa     = new Taxa( { name: 'myTaxa' } );
             taxa.set_forest(forest);
-            logger.VERBOSE( 4 );
+            Logger.VERBOSE( 4 );
             try {
                 tree.insert( root );
                 tree.insert( child1 );
@@ -68,7 +67,7 @@
                 }                
             }
             catch( exception ) {
-                logger.fatal( exception.description );
+                Logger.fatal( exception.description );
             }
             var nexml = forest.get_root_open_tag() 
                 + taxa.to_xml() 
@@ -84,10 +83,10 @@
                 roundtrip += blocks[0].get_root_close_tag();
                 alert(roundtrip);
             }
-            logger.debug( taxa.get_forests()[0].get_name() );
+            Logger.debug( taxa.get_forests()[0].get_name() );
             var drawtree = new DrawTree({'tree':tree,'width':800,'height':600});
             drawtree._redraw();
-            drawtree.entities.map(function(n){logger.debug(n.name+' '+n.x+','+n.y)});
+            drawtree.entities.map(function(n){Logger.debug(n.name+' '+n.x+','+n.y)});
             /*]]>*/</script>         
     </body>     
 </html>
