@@ -35,7 +35,6 @@ function invoke( obj, method, args ) {
 	//var req = new Ajax.Request( url, request_hash );
 }
 
-{
 
     var id      = 0;
     var objects = {};
@@ -116,5 +115,3 @@ function invoke( obj, method, args ) {
 		var revision_number = revision_string.match(regex);
 		return revision_number;
     };
-
-}

@@ -50,6 +50,14 @@ Tree.prototype.get_root = function () {
     return null;
 };
 
+Tree.prototype.calc_number_of_terminals = function () {
+	return this.get_terminals().length;
+};
+
+Tree.prototype.visit_depth_first = function(args) {
+	return this.get_root().visit_depth_first(args);
+};
+
 Tree.prototype.to_newick = function () {
     return this.get_root().to_newick();
 };

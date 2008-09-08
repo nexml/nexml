@@ -240,6 +240,44 @@ Node.prototype.is_ancestor_of = function (descendant) {
     return false;
 };
 
+Node.prototype.calc_max_path_to_tips = function () {
+	var maxpath = 0;
+	var root = this;
+	this.visit_depth_first({
+		'pre' : function (n) {
+			if ( n.is_terminal() ) {
+				var node = n;
+				var path = 0;
+				while( node.get_id() != root.get_id() ) {
+					path += node.get_branch_length();
+					node = node.get_parent();
+				}
+				if ( path > maxpath ) maxpath = path;
+			}
+		}
+	});
+	return maxpath;
+};
+
+Node.prototype.calc_max_nodes_to_tips = function () {
+	var maxnodes = 0;
+	var root = this;
+	this.visit_depth_first({
+		'pre' : function (n) {
+			if ( n.is_terminal() ) {
+				var node = n;
+				var nodes = 0;
+				while( node.get_id() != root.get_id() ) {
+					nodes++;
+					node = node.get_parent();
+				}
+				if ( nodes > maxnodes ) maxnodes = nodes;
+			}
+		}
+	});
+	return maxnodes;
+};
+
 Node.prototype.visit_depth_first = function (args) {
     if (args==null) args = {};
     if (args["pre"]!=null) args["pre"](this);

@@ -15,7 +15,9 @@
         <script type="text/javascript" src="Phylo/Forest.js" />        
         <script type="text/javascript" src="Phylo/Forest/Tree.js" />
         <script type="text/javascript" src="Phylo/Forest/Node.js" />
-        <script type="text/javascript" src="Phylo/Parsers/Nexml.js" />        
+        <script type="text/javascript" src="Phylo/Forest/DrawTree.js" />
+        <script type="text/javascript" src="Phylo/Forest/DrawNode.js" />
+        <script type="text/javascript" src="Phylo/Parsers/Nexml.js" />     
         <script type="text/javascript">/*<![CDATA[*/
             var logger = new Logger();
             var statdiv;			
@@ -83,6 +85,9 @@
                 alert(roundtrip);
             }
             logger.debug( taxa.get_forests()[0].get_name() );
+            var drawtree = new DrawTree({'tree':tree,'width':800,'height':600});
+            drawtree._redraw();
+            drawtree.entities.map(function(n){logger.debug(n.name+' '+n.x+','+n.y)});
             /*]]>*/</script>         
     </body>     
 </html>
