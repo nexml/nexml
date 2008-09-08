@@ -5,8 +5,6 @@ function XMLWritable (args) {
 }
 copyPrototype(XMLWritable,Phylo);
 
-var logger = new Logger();
-
 XMLWritable.prototype.set_tag = function(tag) {
     this.tag = tag;
     return this;
@@ -92,7 +90,7 @@ XMLWritable.prototype.get_attributes = function () {
 			attrs["otu"] = taxon.get_xml_id();
 		}
 		else {
-			logger.info("No linked taxon found");
+			Logger.info("No linked taxon found");
 		}
 	}
 	return attrs;
