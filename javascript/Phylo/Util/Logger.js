@@ -2,12 +2,7 @@ var singleton;
 
 function Logger () {
     if ( singleton == null ) {
-        this.level = 2;
-        this.fatalLevel = 0;
-        this.errorLevel = 1;
-        this.warnLevel  = 2;
-        this.infoLevel  = 3;
-        this.debugLevel = 4;        
+        this.level = 2;       
         this.listeners  = [ 
             function(msg) {
                 self.status = msg;
@@ -19,31 +14,31 @@ function Logger () {
 };
 
 Logger.prototype.debug = function(msg) {
-	if ( this.level >= this.debugLevel ) {
+	if ( this.level >= 4 ) {
 		this.broadcast( "DEBUG: " + msg );
 	}
 };
 
-Logger.prototype.info = function(msg) {
-	if ( this.level >= this.infoLevel ) {
+Logger.prototype.info = function (msg) {
+	if ( this.level >= 3 ) {
 		this.broadcast( "INFO: " + msg );
 	}
 };
 
 Logger.prototype.warn = function(msg) {
-	if ( this.level >= this.warnLevel ) {
+	if ( this.level >= 2 ) {
 		this.broadcast( "WARN: " + msg );
 	}
 };
 
 Logger.prototype.error = function(msg) {
-	if ( this.level >= this.errorLevel ) {
+	if ( this.level >= 1 ) {
 		this.broadcast( "ERROR: " + msg );
 	}
 };
 
 Logger.prototype.fatal = function(msg) {
-	if ( this.level >= this.fatalLevel ) {
+	if ( this.level >= 0 ) {
 		this.broadcast( "FATAL: " + msg );
 	}
 };
