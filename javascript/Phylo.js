@@ -22,7 +22,9 @@ function Base (args){
         }
     }
     this.id = Phylo.id_maker();
-    this.generic = {};
+    if ( this.generic == null ) {
+    	this.generic = {};
+    }
     Phylo.objects[this.id] = this;
     Phylo.Mediators.TaxaMediator.register(this);
     return this;
