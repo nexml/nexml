@@ -2,7 +2,7 @@
 Phylo.IO = {};
 
 Phylo.Parsers = {
-	'Nexml' : {},
+	'Nexml' : {}
 };
 
 function parse(args) {

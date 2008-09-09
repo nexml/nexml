@@ -20,79 +20,74 @@
         <script type="text/javascript" src="Phylo/IO.js" />
         <script type="text/javascript" src="Phylo/Parsers/Nexml.js" />     
         <script type="text/javascript">/*<![CDATA[*/
-            var statdiv;			
-            Phylo.Util.Logger.set_listener( 
-            function( msg ) { 
-                if ( statdiv == null ) {
-                    statdiv = document.getElementById('status');
+            var statdiv;
+            var base     = 'http://localhost/nexml/phylows/tolweb/';
+            var logger   = Phylo.Util.Logger;
+            var constant = Phylo.Util.CONSTANT;
+            var tree;
+            logger.VERBOSE(3);
+            logger.set_listener( 
+                function( msg ) { 
+                    if ( statdiv == null ) {
+                        statdiv = document.getElementById('status');
+                    }
+                    statdiv.innerHTML += '<pre>' + msg + '</pre>';
+                }        	
+            );
+            function initialize_ajax() {
+                var xmlHttp;
+                try {
+                    // Firefox, Opera 8.0+, Safari
+                    xmlHttp = new XMLHttpRequest();
+                } catch (e) {
+                    // Internet Explorer
+                    try {
+                        xmlHttp = new ActiveXObject("Msxml2.XMLHTTP");
+                    } catch (e) {
+                        try {
+                            xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");
+                        } catch (e) {
+                            alert("Your browser does not support AJAX!");
+                            return false;
+                        }
+                    }
                 }
-                statdiv.innerHTML += '<pre>' + msg + '</pre>';
-            }        	
-        );
+                xmlHttp.onreadystatechange = function() {
+                    if ( xmlHttp.readyState == 4 ) {
+                        var nexml = xmlHttp.responseText;
+                        var blocks = Phylo.IO.parse({
+                            'format':'nexml',
+                            'string':nexml
+                        });
+                        for ( var i = 0; i < blocks.length; i++ ) {
+                            if ( blocks[i]._type() == constant._FOREST_() ) {                                
+                                tree = blocks[i].first();
+                                logger.info(tree.to_newick());
+                            }                            
+                        }
+                    }
+                };           
+                return xmlHttp;
+            }     
+            function fetch_tree () {
+                var id = document.getElementById('tree_id').value;
+                var ajax = initialize_ajax();
+                logger.debug(ajax);
+                var url = base + id;
+                ajax.open("GET",url,true);
+                ajax.send(null);
+            }            
             /*]]>*/</script>
         <title>PhyloJS</title>
     </head>
     <body>
+        <form>
+            <input type="text" name="tree_id" id="tree_id" value="16299"/>
+            <input type="button" value="submit" onclick="fetch_tree()"/>
+        </form>
         <pre id="status" />       
         <script type="text/javascript">/*<![CDATA[*/
-            var child1   = new Phylo.Forest.Node( { name: 'child1',  branch_length: 0 } );
-            var child2   = new Phylo.Forest.Node( { name: 'child2',  branch_length: 0 } );
-            var gchild1  = new Phylo.Forest.Node( { name: 'gchild1', branch_length: 0 } );
-            var gchild2  = new Phylo.Forest.Node( { name: 'gchild2', branch_length: 0 } );
-            var root     = new Phylo.Forest.Node( { name: 'root',    branch_length: 0 } );
-            var tree     = new Phylo.Forest.Tree( { name: 'myTree' } );
-            var forest   = new Phylo.Forest( { name: 'myForest' } );
-            var taxa     = new Phylo.Taxa( { name: 'myTaxa' } );
-            taxa.set_forest(forest);
-            Phylo.Util.Logger.VERBOSE( 4 );
-            try {
-                tree.insert( root );
-                tree.insert( child1 );
-                tree.insert( child2 );
-                tree.insert( gchild1 );
-                tree.insert( gchild2 );
-                root.set_child( child1 );
-                root.set_child( child2 );
-                child1.set_parent(root);
-                child2.set_parent(root);
-                child2.set_child( gchild1 );
-                child2.set_child( gchild2 );
-                gchild1.set_parent( child2 );
-                gchild2.set_parent( child2 );
-                forest.insert(tree);
-                var tips = tree.get_terminals();
-                for ( var i = 0; i < tips.length; i++ ) {
-                    var taxon = new Phylo.Taxa.Taxon( { name: tips[i].get_name() } );
-                    tips[i].set_taxon(taxon);
-                    taxa.insert(taxon);
-                }                
-            }
-            catch( exception ) {
-                Phylo.Util.Logger.fatal( exception.description );
-            }
-            var nexml = forest.get_root_open_tag() 
-                + taxa.to_xml() 
-                + forest.to_xml() 
-                + forest.get_root_close_tag();
-            alert(nexml);        
-            try {
-            var blocks = Phylo.IO.parse({'format':'nexml','string':nexml});
-            }
-            catch (e) {
-                alert(e.message);
-            }
-            if ( blocks != null && blocks[0] != null ) {
-                var roundtrip = blocks[0].get_root_open_tag();
-                for ( var i = 0; i < blocks.length; i++ ) {
-                    roundtrip += blocks[i].to_xml();
-                }
-                roundtrip += blocks[0].get_root_close_tag();
-                alert(roundtrip);
-            }
-            Phylo.Util.Logger.debug( taxa.get_forests()[0].get_name() );
-            var drawtree = new Phylo.Forest.DrawTree({'tree':tree,'width':800,'height':600});
-            drawtree._redraw();
-            drawtree.entities.map(function(n){Phylo.Util.Logger.debug(n.name+' '+n.x+','+n.y)});
+
             /*]]>*/</script>         
     </body>     
 </html>

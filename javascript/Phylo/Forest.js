@@ -3,8 +3,8 @@ Phylo.Forest = function (args) {
 	args["tag"] = "trees";
     this.Listable(args);
     this.TaxaLinker(args);
-    this._type      = Phylo.Util.Constant._FOREST_;
-    this._container = Phylo.Util.Constant._NONE_;
+    this._type      = Phylo.Util.CONSTANT._FOREST_;
+    this._container = Phylo.Util.CONSTANT._NONE_;
     return this;
 }
 copyPrototypeMI(Phylo.Forest,[Phylo.Listable,Phylo.Taxa.TaxaLinker]);

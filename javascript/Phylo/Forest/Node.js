@@ -4,8 +4,8 @@ function Node (args) {
 	args["tag"] = "node";
     this.XMLWritable(args);
     this.children   = [];
-    this._type      = Phylo.Util.Constant._NODE_;
-    this._container = Phylo.Util.Constant._TREE_;
+    this._type      = Phylo.Util.CONSTANT._NODE_;
+    this._container = Phylo.Util.CONSTANT._TREE_;
     return this;
 }
 Phylo.Forest.Node = Node;
@@ -319,7 +319,15 @@ Phylo.Forest.Node.prototype.to_newick = function () {
         this.get_first_daughter().to_newick();
         newick_string += ')';
     }
-    newick_string += name + ':' + branch_length;
+    if ( this.get_name() != null ) {
+    	newick_string += this.get_name();
+    }
+    else if ( this.get_taxon() != null && this.get_taxon().get_name() != null ) {
+    	newick_string += this.get_taxon().get_name();
+    }
+    if ( this.get_branch_length() != null ) {
+    	newick_string += ':' + this.get_branch_length();
+    }
     if ( this.is_root() ) {
         var result = newick_string + ';';
         newick_string = new String();
