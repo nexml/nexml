@@ -1,5 +1,4 @@
-<!DOCTYPE html SYSTEM "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
     <head>
         <script type="text/javascript" src="Phylo/Util/CONSTANT.js" />
         <script type="text/javascript" src="Phylo/Util/Exceptions.js" />
@@ -18,10 +17,11 @@
         <script type="text/javascript" src="Phylo/Forest/DrawTree.js" />
         <script type="text/javascript" src="Phylo/Forest/DrawNode.js" />
         <script type="text/javascript" src="Phylo/IO.js" />
-        <script type="text/javascript" src="Phylo/Parsers/Nexml.js" />     
+        <script type="text/javascript" src="Phylo/Parsers/Nexml.js" /> 
+        <script type="text/javascript" src="http://www.phylowidget.org/scripts/phylowidget.js" />
         <script type="text/javascript">/*<![CDATA[*/
             var statdiv;
-            var base     = 'http://localhost/nexml/phylows/tolweb/';
+            var base     = 'http://' + top.location.host + '/nexml/phylows/tolweb/';
             var logger   = Phylo.Util.Logger;
             var constant = Phylo.Util.CONSTANT;
             var tree;
@@ -76,11 +76,43 @@
                 var url = base + id;
                 ajax.open("GET",url,true);
                 ajax.send(null);
-            }            
+            }       
+            function initialize_phylowidget () {
+                try {
+                    PhyloWidget.useFull(); // Use PhyloWidget Full 
+                    var params = { 
+                        'width'  : 500, 
+                        'height' : 300, 
+                        'tree'   : '(a,(b,c));', 
+                        'search' : 'a'                
+                    };
+                    // Loads PhyloWidget into the element with ID of 'my_div' 
+                    PhyloWidget.loadWidget('my_div',params); 
+                } catch (e) {
+                    logger.info(e.stack);
+                }
+            }
+            PhyloWidget.getQueryParameters = function(destObject,url) {
+                if (!destObject) var destObject = {};
+                url = url || top.location.href;
+                if ( tree != null ) {
+                    destObject['tree'] = tree.to_newick();
+                }
+                else {
+                    destObject['tree'] = '((a,b),c);';
+                }
+                
+                /*
+                * Now load up the rest of the query params as normal.
+                */
+                destObject = AppletLoader.getQueryParameters(destObject,url);
+                return destObject;
+            };            
             /*]]>*/</script>
         <title>PhyloJS</title>
     </head>
-    <body>
+    <body onload="initialize_phylowidget()">
+        <div id="my_div" />
         <form>
             <input type="text" name="tree_id" id="tree_id" value="16299"/>
             <input type="button" value="submit" onclick="fetch_tree()"/>
@@ -88,6 +120,6 @@
         <pre id="status" />       
         <script type="text/javascript">/*<![CDATA[*/
 
-            /*]]>*/</script>         
+            /*]]>*/</script>              
     </body>     
 </html>
