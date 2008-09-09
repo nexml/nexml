@@ -311,12 +311,12 @@ Phylo.Forest.Node.prototype.visit_depth_first = function (args) {
 };
 
 var newick_string = new String();
-Phylo.Forest.Node.prototype.to_newick = function () {
+Phylo.Forest.Node.prototype.to_newick = function (args) {
     var name = this.get_name();
     var branch_length = this.get_branch_length();
     if ( this.is_internal() ) {
         newick_string += '(';
-        this.get_first_daughter().to_newick();
+        this.get_first_daughter().to_newick(args);
         newick_string += ')';
     }
     if ( this.get_name() != null ) {
@@ -328,6 +328,15 @@ Phylo.Forest.Node.prototype.to_newick = function () {
     if ( this.get_branch_length() != null ) {
     	newick_string += ':' + this.get_branch_length();
     }
+    if ( args != null && args['nhxkeys'] != null ) {
+    	var nhx = '[&&NHX:';
+    	for ( var i = 0; i < args['nhxkeys'].length; i++ ) {
+    		nhx += args['nhxkeys'][i] + '=';
+    		nhx += this.get_generic(args['nhxkeys'][i]) + ':';
+    	}
+    	nhx += ']';
+    	newick_string += nhx;
+    }
     if ( this.is_root() ) {
         var result = newick_string + ';';
         newick_string = new String();
@@ -335,7 +344,7 @@ Phylo.Forest.Node.prototype.to_newick = function () {
     }
     else if ( this.get_next_sister() != null ) {
         newick_string += ',';
-        this.get_next_sister().to_newick();
+        this.get_next_sister().to_newick(args);
     }
     return null;
 };

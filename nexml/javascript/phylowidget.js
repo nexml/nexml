@@ -10,7 +10,7 @@ var PhyloWidget = {
  
  useFull: function()
  {
- 	PhyloWidget.codebase="http://www.phylowidget.org/full/lib";
+ 	PhyloWidget.codebase='http://' + top.location.host + '/nexml/java/jars/';
  },
  
  useLite: function()
