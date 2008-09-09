@@ -55,6 +55,10 @@ Phylo.prototype.get_name = function() {
     return this.name;
 };
 
+Phylo.prototype.get_internal_name = function () {
+	return this.get_tag() + this.get_id();
+};
+
 Phylo.prototype.get_desc = function() {
     return this.desc;
 };

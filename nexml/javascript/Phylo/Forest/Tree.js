@@ -3,8 +3,8 @@ function Tree (args) {
 	if (args==null) args = {};
 	args["tag"] = "tree";
     this.Listable(args);
-    this._type      = Phylo.Util.Constant._TREE_;
-    this._container = Phylo.Util.Constant._FOREST_;
+    this._type      = Phylo.Util.CONSTANT._TREE_;
+    this._container = Phylo.Util.CONSTANT._FOREST_;
     return this;
 }
 Phylo.Forest.Tree = Tree;

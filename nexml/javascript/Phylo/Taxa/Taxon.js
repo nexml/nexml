@@ -2,14 +2,14 @@ Phylo.Taxa.Taxon = function (args) {
 	if (args==null) args = {};	
 	args["tag"] = "otu";
     this.XMLWritable(args);
-    this._type      = Phylo.Util.Constant._TAXON_;
-    this._container = Phylo.Util.Constant._TAXA_;
+    this._type      = Phylo.Util.CONSTANT._TAXON_;
+    this._container = Phylo.Util.CONSTANT._TAXA_;
     return this;
 }
 copyPrototype(Phylo.Taxa.Taxon,Phylo.Util.XMLWritable);
 
 Phylo.Taxa.Taxon.prototype.set_data = function (datum) {
-	if ( looks_like_object( datum, Phylo.Util.Constant._DATUM_ ) ) {
+	if ( looks_like_object( datum, Phylo.Util.CONSTANT._DATUM_ ) ) {
 		Phylo.Mediators.TaxaMediator.set_link({
 			'one'  : this,
 			'many' : datum
@@ -19,7 +19,7 @@ Phylo.Taxa.Taxon.prototype.set_data = function (datum) {
 };
 
 Phylo.Taxa.Taxon.prototype.set_nodes = function (node) {
-	if ( looks_like_object( node, Phylo.Util.Constant._NODE_ ) ) {
+	if ( looks_like_object( node, Phylo.Util.CONSTANT._NODE_ ) ) {
 		Phylo.Mediators.TaxaMediator.set_link({
 			'one'  : this,
 			'many' : node
@@ -47,14 +47,14 @@ Phylo.Taxa.Taxon.prototype.unset_node = function (node) {
 Phylo.Taxa.Taxon.prototype.get_data = function () {
     return Phylo.Mediators.TaxaMediator.get_link({
         'source' : this, 
-        'type'   : Phylo.Util.Constant._DATUM_()
+        'type'   : Phylo.Util.CONSTANT._DATUM_()
     });
 };
 
 Phylo.Taxa.Taxon.prototype.get_nodes = function () {
     return Phylo.Mediators.TaxaMediator.get_link({
         'source' : this, 
-        'type'   : Phylo.Util.Constant._NODE_()
+        'type'   : Phylo.Util.CONSTANT._NODE_()
     });
 };
 

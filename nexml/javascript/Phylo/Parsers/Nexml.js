@@ -95,11 +95,12 @@ function process_tree(tree_elt) {
 	for ( var i = 0; i < edge_elt.length; i++ ) {
 		var attrs  = edge_elt[i].attributes;
 		var target = attrs.getNamedItem("target").value;
-		var bl     = attrs.getNamedItem("length").value;
 		var source = attrs.getNamedItem("source").value;		
 		source_of[target] = source;
 		target_of[source] = target;
-		length_of[target] = bl;
+		if ( attrs.getNamedItem("length") != null ) {
+			length_of[target] = attrs.getNamedItem("length").value;
+		}
 	}
 	var entities = tree_obj.get_entities();
 	for ( var i = 0; i < entities.length; i++ ) {
