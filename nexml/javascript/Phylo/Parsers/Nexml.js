@@ -1,3 +1,4 @@
+(function(){
 function parse(args) {
 	var xml = args["string"];
 	var xmlDoc;
@@ -28,6 +29,7 @@ function parse(args) {
 	}
 	return result;
 }
+Phylo.Parsers.Nexml.parse = parse;
 
 function resolve_tree_taxa(taxa_blocks,tree_blocks) {
 	for ( var i = 0; i < tree_blocks.length; i++ ) {
@@ -51,6 +53,7 @@ function resolve_tree_taxa(taxa_blocks,tree_blocks) {
 		}
 	}
 }
+Phylo.Parsers.Nexml.resolve_tree_taxa = resolve_tree_taxa;
 
 function process_trees(trees_elt) {
 	var result = new Array();
@@ -66,6 +69,7 @@ function process_trees(trees_elt) {
 	}
 	return result;
 }
+Phylo.Parsers.Nexml.process_trees = process_trees;
 
 function process_tree(tree_elt) {
 	var tree_obj = obj_from_elt(tree_elt);
@@ -120,6 +124,7 @@ function process_tree(tree_elt) {
 	}	
 	return tree_obj;
 }
+Phylo.Parsers.Nexml.process_tree = process_tree;
 
 function process_otus (otus) {
 	var taxa_blocks = {};
@@ -134,6 +139,7 @@ function process_otus (otus) {
 	}
 	return taxa_blocks;	
 }
+Phylo.Parsers.Nexml.process_otus = process_otus;
 
 function obj_from_elt (elt) {
 	var attrs = elt.attributes;
@@ -155,14 +161,15 @@ function obj_from_elt (elt) {
 	}
 	var tag_name = elt.nodeName.toLowerCase();
 	switch(tag_name) {
-		case 'otus' : return new Taxa(args);
-		case 'otu'  : return new Taxon(args);
-		case 'trees': return new Forest(args);
-		case 'tree' : return new Tree(args);
-		case 'node' : return new Node(args);
-		default : throw new API("Can't create object from element " + tag_name);
+		case 'otus' : return new Phylo.Taxa(args);
+		case 'otu'  : return new Phylo.Taxa.Taxon(args);
+		case 'trees': return new Phylo.Forest(args);
+		case 'tree' : return new Phylo.Forest.Tree(args);
+		case 'node' : return new Phylo.Forest.Node(args);
+		default : throw new Phylo.Util.Exceptions.API("Can't create object from element " + tag_name);
 	}
 }
+Phylo.Parsers.Nexml.obj_from_elt = obj_from_elt;
 
 function parse_dict (elt) {
 	var result = {};
@@ -193,9 +200,8 @@ function parse_dict (elt) {
 	}
 	return result;	
 }
-
-
-
+Phylo.Parsers.Nexml.parse_dict = parse_dict;
+})()
 
 
 

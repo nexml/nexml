@@ -1,30 +1,33 @@
-function TaxaLinker() {
+(function(){
+function TaxaLinker () {
     return this;
 }
+Phylo.Taxa.TaxaLinker = TaxaLinker;
 
-TaxaLinker.prototype.set_taxa = function(taxa) {
-    if ( taxa != null && looks_like_object( taxa, Constant._TAXA_ ) ) {
-        TaxaMediator.set_link( {
+Phylo.Taxa.TaxaLinker.prototype.set_taxa = function(taxa) {
+    if ( taxa != null && looks_like_object( taxa, Phylo.Util.Constant._TAXA_ ) ) {
+        Phylo.Mediators.TaxaMediator.set_link( {
             "one"  : taxa, 
             "many" : this
         } );
     }
     else {
-        TaxaMediator.remove_link( { "many" : this } );
+        Phylo.Mediators.TaxaMediator.remove_link( { "many" : this } );
     }
     this.check_taxa();
     return this;
 };
 
-TaxaLinker.prototype.unset_taxa = function () {
+Phylo.Taxa.TaxaLinker.prototype.unset_taxa = function () {
     this.set_taxa();
     return this;
 };
 
-TaxaLinker.prototype.get_taxa = function () {
-    return TaxaMediator.get_link( { "source" : this } );
+Phylo.Taxa.TaxaLinker.prototype.get_taxa = function () {
+    return Phylo.Mediators.TaxaMediator.get_link( { "source" : this } );
 };
 
-TaxaLinker.prototype.check_taxa = function () {
-    throw new NotImplemented("Not implemented!");
+Phylo.Taxa.TaxaLinker.prototype.check_taxa = function () {
+    throw new Phylo.Util.Exceptions.NotImplemented("Not implemented!");
 };
+})()

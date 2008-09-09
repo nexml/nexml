@@ -1,12 +1,12 @@
-function Forest(args) {
+Phylo.Forest = function (args) {
 	if (args==null) args = {};
 	args["tag"] = "trees";
     this.Listable(args);
     this.TaxaLinker(args);
-    this._type      = Constant._FOREST_;
-    this._container = Constant._NONE_;
+    this._type      = Phylo.Util.Constant._FOREST_;
+    this._container = Phylo.Util.Constant._NONE_;
     return this;
 }
-copyPrototypeMI(Forest,[Listable,TaxaLinker]);
+copyPrototypeMI(Phylo.Forest,[Phylo.Listable,Phylo.Taxa.TaxaLinker]);
 
-Forest.prototype.check_taxa = function () {};
+Phylo.Forest.prototype.check_taxa = function () {};

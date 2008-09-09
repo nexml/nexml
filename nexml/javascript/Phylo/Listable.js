@@ -1,56 +1,58 @@
+(function(){
 function Listable (args) {
     this.XMLWritable(args);
     this.entities = [];
     this.index = 0;
     return this;
 }
-copyPrototype(Listable,XMLWritable);
+Phylo.Listable = Listable;
+copyPrototype(Phylo.Listable,Phylo.Util.XMLWritable);
 
-Listable.prototype.get_entities = function() {
+Phylo.Listable.prototype.get_entities = function() {
     return this.entities;
 }
 
-Listable.prototype.first = function() {
+Phylo.Listable.prototype.first = function() {
     var i = 0;
     this.index = i;
     return this.entities[i];
 }
 
-Listable.prototype.last = function() {
+Phylo.Listable.prototype.last = function() {
     var i = this.entities.length - 1;
     this.index = i;
     return this.entities[i];
 }
 
-Listable.prototype.last_index = function() {
+Phylo.Listable.prototype.last_index = function() {
     return this.entities.length - 1;
 }
 
-Listable.prototype.current = function() {
+Phylo.Listable.prototype.current = function() {
     return this.entities[ this.index ];
 }
 
-Listable.prototype.current_index = function() {
+Phylo.Listable.prototype.current_index = function() {
     return this.index;
 }
 
-Listable.prototype.next = function() {
+Phylo.Listable.prototype.next = function() {
     var i = this.index + 1;
     this.index = i;
     return this.entities[i];
 }
 
-Listable.prototype.previous = function() {
+Phylo.Listable.prototype.previous = function() {
     var i = this.index - 1;
     this.index = i;
     return this.entities[i];
 }
 
-Listable.prototype.exists = function(i) {
+Phylo.Listable.prototype.exists = function(i) {
     return Boolean(this.entities[i]);
 }
 
-Listable.prototype.contains = function(obj) {
+Phylo.Listable.prototype.contains = function(obj) {
     var ents = this.get_entities();
     for ( var i = 0; i < ents.length; i++ ) {
         if ( ents[i].get_id == obj.get_id ) {
@@ -60,7 +62,7 @@ Listable.prototype.contains = function(obj) {
     return false;
 }
 
-Listable.prototype.can_contain = function(array) {
+Phylo.Listable.prototype.can_contain = function(array) {
     if ( array instanceof Array ) {
         for ( var i = 0; i < array.length; i++ ) {
             if ( this._type != array[i]._container ) {
@@ -76,7 +78,7 @@ Listable.prototype.can_contain = function(array) {
     return true;
 }
 
-Listable.prototype.insert = function(array) {
+Phylo.Listable.prototype.insert = function(array) {
     if ( this.can_contain(array) ) {
         if ( array instanceof Array ) {
             for ( var i = 0; i < array.length; i++ ) {
@@ -88,16 +90,16 @@ Listable.prototype.insert = function(array) {
         }
     }
     else {
-        throw new ObjectMismatch("ObjectMismatch");
+        throw new Phylo.Util.Exceptions.ObjectMismatch("ObjectMismatch");
     }
 }
 
-Listable.prototype.insert_at_index = function(obj,i) {
+Phylo.Listable.prototype.insert_at_index = function(obj,i) {
     if ( this.can_contain(obj) ) {
         this.entities[i] = obj;
     }
     else {
-        throw new ObjectMismatch("ObjectMismatch");		
+        throw new Phylo.Util.Exceptions.ObjectMismatch("ObjectMismatch");		
     }
 }
 
@@ -113,22 +115,22 @@ Listable.prototype.insert_at_index = function(obj,i) {
 // }
 
 
-Listable.prototype.clear = function() {
+Phylo.Listable.prototype.clear = function() {
     this.entities = [];
     this.index = 0;
 }
 
-Listable.prototype.visit = function(func) {
+Phylo.Listable.prototype.visit = function(func) {
     for ( var i = 0; i < this.entities.length; i++ ) {
         func( this.entities[i] );
     }
 }
 
-Listable.prototype.get_by_index = function(i) {
+Phylo.Listable.prototype.get_by_index = function(i) {
     return this.entities[i];
 }
 
-Listable.prototype.get_index_of = function(obj) {
+Phylo.Listable.prototype.get_index_of = function(obj) {
     var ents = this.entities;
     for ( var i = 0; i < ents.length; i++ ) {
         if ( ents[i].get_id() == obj.get_id() ) {
@@ -138,7 +140,7 @@ Listable.prototype.get_index_of = function(obj) {
     return null;
 }
 
-Listable.prototype.get_by_regular_expression = function(obj) {
+Phylo.Listable.prototype.get_by_regular_expression = function(obj) {
     var regex  = obj["match"];
     var method = obj["value"];
     var result = [];
@@ -151,3 +153,4 @@ Listable.prototype.get_by_regular_expression = function(obj) {
     }
     return result;
 }
+})()
