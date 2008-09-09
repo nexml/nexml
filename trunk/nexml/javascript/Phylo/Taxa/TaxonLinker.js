@@ -1,25 +1,25 @@
-function TaxonLinker() {
+Phylo.Taxa.TaxonLinker = function () {
     return this;
 }
 
-TaxonLinker.prototype.set_taxon = function(taxon) {
-    if ( taxon != null && looks_like_object( taxon, Constant._TAXON_ ) ) {
-        TaxaMediator.set_link( {
+Phylo.Taxa.TaxonLinker.prototype.set_taxon = function(taxon) {
+    if ( taxon != null && looks_like_object( taxon, Phylo.Util.Constant._TAXON_ ) ) {
+        Phylo.Mediators.TaxaMediator.set_link( {
             "one"  : taxon, 
             "many" : this
         } );
     }
     else {
-        TaxaMediator.remove_link( { "many" : this } );
+        Phylo.Mediators.TaxaMediator.remove_link( { "many" : this } );
     }
     return this;
 };
 
-TaxonLinker.prototype.unset_taxon = function () {
+Phylo.Taxa.TaxonLinker.prototype.unset_taxon = function () {
     this.set_taxon();
     return this;
 };
 
-TaxonLinker.prototype.get_taxon = function () {
-    return TaxaMediator.get_link( { "source" : this } );
+Phylo.Taxa.TaxonLinker.prototype.get_taxon = function () {
+    return Phylo.Mediators.TaxaMediator.get_link( { "source" : this } );
 };

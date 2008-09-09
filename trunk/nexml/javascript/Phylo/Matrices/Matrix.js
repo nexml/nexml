@@ -1,9 +1,9 @@
-function Matrix(args) {
-    this.TaxaLinker(args);
-    this._type      = constant._MATRIX_;
-    this._container = constant._NONE_;
+Phylo.Matrices.Matrix = function (args) {
+    this.Phylo.Taxa.TaxaLinker(args);
+    this._type      = Phylo.Util.Constant._MATRIX_;
+    this._container = Phylo.Util.Constant._NONE_;
     return this;
 }
-copyPrototype(Matrix,TaxaLinker);
+copyPrototype(Phylo.Matrices.Matrix,Phylo.Taxa.TaxaLinker);
 
-Matrix.prototype.check_taxa = function () {};
+Phylo.Matrices.Matrix.prototype.check_taxa = function () {};
