@@ -1,75 +1,68 @@
-var object = new Array();
-var relationship = new Array();
+Phylo.Mediators = {
+	'TaxaMediator' : {
+		'object'       : [],
+		'relationship' : []
+	}
+};
 
-/*
-var singletonMediator;
-function TaxaMediator(){
-    if ( singletonMediator == null ) {
-        singletonMediator = this;
-    }
-    return singletonMediator;
-}
-*/
-var TaxaMediator = {};
-
-TaxaMediator.register = function(obj) {
+Phylo.Mediators.TaxaMediator.register = function(obj) {
     var id = obj.get_id();
-    object[id] = obj;
+    Phylo.Mediators.TaxaMediator.object[id] = obj;
     return this;
 };
 
-TaxaMediator.unregister = function(obj) {
+Phylo.Mediators.TaxaMediator.unregister = function(obj) {
     var id = obj.get_id();
-    if ( object[id] != null ) {
+    if ( Phylo.Mediators.TaxaMediator.object[id] != null ) {
         // one-to-many relationship
-        if ( relationship[id] != null ) {
-            delete relationship[id];
+        if ( Phylo.Mediators.TaxaMediator.relationship[id] != null ) {
+            delete Phylo.Mediators.TaxaMediator.relationship[id];
         }
         // one-to-one relationship
         else {
-            for ( var i = 0; i < relationship.length; i++ ) {
-                var relation = relationship[i];
+            for ( var i = 0; i < Phylo.Mediators.TaxaMediator.relationship.length; i++ ) {
+                var relation = Phylo.Mediators.TaxaMediator.relationship[i];
                 if ( relation[id] != null ) {
                     delete relation[id];
                     break;
                 }
             }
         }
-        delete object[id];
+        delete Phylo.Mediators.TaxaMediator.object[id];
     }
     return this;
 };
 
-TaxaMediator.set_link = function(args) {
+Phylo.Mediators.TaxaMediator.set_link = function(args) {
     var one  = args["one"];
     var many = args["many"];
     var one_id  = one.get_id();
     var many_id = many.get_id();
-    for ( var i = 0; i < relationship.length; i++ ) {
-        if ( relationship[i] != null && relationship[i][many_id.toString()] != null ) {
-            delete relationship[i][many_id];
+    for ( var i = 0; i < Phylo.Mediators.TaxaMediator.relationship.length; i++ ) {
+        if ( Phylo.Mediators.TaxaMediator.relationship[i] != null && Phylo.Mediators.TaxaMediator.relationship[i][many_id.toString()] != null ) {
+            delete Phylo.Mediators.TaxaMediator.relationship[i][many_id];
             break;
         }
     }
-    if ( relationship[one_id] == null ) {
-        relationship[one_id] = {};
+    if ( Phylo.Mediators.TaxaMediator.relationship[one_id] == null ) {
+        Phylo.Mediators.TaxaMediator.relationship[one_id] = {};
     }
-    relationship[one_id][many.get_id()] = many._type();
+    Phylo.Mediators.TaxaMediator.relationship[one_id][many.get_id()] = many._type();
     return this;
 };
 
-TaxaMediator.get_link = function (args) {
+Phylo.Mediators.TaxaMediator.get_link = function (args) {
     var id = args["source"].get_id();
     
     // have to get many objects of the same type
     if ( args["type"] != null ) {
-        if ( relationship[id] == null ) {
+        if ( Phylo.Mediators.TaxaMediator.relationship[id] == null ) {
             return null;
         }
         var result = new Array();
-        for ( var key in relationship[id] ) {
-            if ( relationship[id][key] == args["type"] ) {
-                result.push(object[key]);
+        for ( var key in Phylo.Mediators.TaxaMediator.relationship[id] ) {
+            if ( Phylo.Mediators.TaxaMediator.relationship[id][key] == args["type"] ) {
+                result.push(Phylo.Mediators.TaxaMediator.object[key]);
             }
         }
         return result;
@@ -77,21 +70,21 @@ TaxaMediator.get_link = function (args) {
     
     // have to get just one
     else {
-        for ( var i = 0; i < relationship.length; i++ ) {
-            if ( relationship[i] != null && relationship[i][id] != null ) {
-                return object[i];
+        for ( var i = 0; i < Phylo.Mediators.TaxaMediator.relationship.length; i++ ) {
+            if ( Phylo.Mediators.TaxaMediator.relationship[i] != null && Phylo.Mediators.TaxaMediator.relationship[i][id] != null ) {
+                return Phylo.Mediators.TaxaMediator.object[i];
             }
         }
     }
     return null;
 };
 
-TaxaMediator.remove_link = function(args) {
+Phylo.Mediators.TaxaMediator.remove_link = function(args) {
     var one = args["one"];
     var many = args["many"];
     if ( one != null ) {
         var one_id = one.get_id();
-        var relation = relationship[one_id];
+        var relation = Phylo.Mediators.TaxaMediator.relationship[one_id];
         if ( relation == null ) {
             return this;
         }
@@ -101,8 +94,8 @@ TaxaMediator.remove_link = function(args) {
     }
     else {
         var id = many.get_id();
-        for ( var i = 0; i < relationship.length; i++ ) {
-            var found_relation = relationship[i];
+        for ( var i = 0; i < Phylo.Mediators.TaxaMediator.relationship.length; i++ ) {
+            var found_relation = Phylo.Mediators.TaxaMediator.relationship[i];
             if ( found_relation[id] != null ) {
                 delete found_relation[id];
                 break;

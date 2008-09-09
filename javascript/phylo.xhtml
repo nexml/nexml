@@ -17,10 +17,11 @@
         <script type="text/javascript" src="Phylo/Forest/Node.js" />
         <script type="text/javascript" src="Phylo/Forest/DrawTree.js" />
         <script type="text/javascript" src="Phylo/Forest/DrawNode.js" />
+        <script type="text/javascript" src="Phylo/IO.js" />
         <script type="text/javascript" src="Phylo/Parsers/Nexml.js" />     
         <script type="text/javascript">/*<![CDATA[*/
             var statdiv;			
-            Logger.set_listener( 
+            Phylo.Util.Logger.set_listener( 
             function( msg ) { 
                 if ( statdiv == null ) {
                     statdiv = document.getElementById('status');
@@ -34,16 +35,16 @@
     <body>
         <pre id="status" />       
         <script type="text/javascript">/*<![CDATA[*/
-            var child1   = new Node( { name: 'child1',  branch_length: 0 } );
-            var child2   = new Node( { name: 'child2',  branch_length: 0 } );
-            var gchild1  = new Node( { name: 'gchild1', branch_length: 0 } );
-            var gchild2  = new Node( { name: 'gchild2', branch_length: 0 } );
-            var root     = new Node( { name: 'root',    branch_length: 0 } );
-            var tree     = new Tree( { name: 'myTree' } );
-            var forest   = new Forest( { name: 'myForest' } );
-            var taxa     = new Taxa( { name: 'myTaxa' } );
+            var child1   = new Phylo.Forest.Node( { name: 'child1',  branch_length: 0 } );
+            var child2   = new Phylo.Forest.Node( { name: 'child2',  branch_length: 0 } );
+            var gchild1  = new Phylo.Forest.Node( { name: 'gchild1', branch_length: 0 } );
+            var gchild2  = new Phylo.Forest.Node( { name: 'gchild2', branch_length: 0 } );
+            var root     = new Phylo.Forest.Node( { name: 'root',    branch_length: 0 } );
+            var tree     = new Phylo.Forest.Tree( { name: 'myTree' } );
+            var forest   = new Phylo.Forest( { name: 'myForest' } );
+            var taxa     = new Phylo.Taxa( { name: 'myTaxa' } );
             taxa.set_forest(forest);
-            Logger.VERBOSE( 4 );
+            Phylo.Util.Logger.VERBOSE( 4 );
             try {
                 tree.insert( root );
                 tree.insert( child1 );
@@ -61,20 +62,25 @@
                 forest.insert(tree);
                 var tips = tree.get_terminals();
                 for ( var i = 0; i < tips.length; i++ ) {
-                    var taxon = new Taxon( { name: tips[i].get_name() } );
+                    var taxon = new Phylo.Taxa.Taxon( { name: tips[i].get_name() } );
                     tips[i].set_taxon(taxon);
                     taxa.insert(taxon);
                 }                
             }
             catch( exception ) {
-                Logger.fatal( exception.description );
+                Phylo.Util.Logger.fatal( exception.description );
             }
             var nexml = forest.get_root_open_tag() 
                 + taxa.to_xml() 
                 + forest.to_xml() 
                 + forest.get_root_close_tag();
-            alert(nexml);                       
-            var blocks = parse({'format':'nexml','string':nexml});
+            alert(nexml);        
+            try {
+            var blocks = Phylo.IO.parse({'format':'nexml','string':nexml});
+            }
+            catch (e) {
+                alert(e.message);
+            }
             if ( blocks != null && blocks[0] != null ) {
                 var roundtrip = blocks[0].get_root_open_tag();
                 for ( var i = 0; i < blocks.length; i++ ) {
@@ -83,10 +89,10 @@
                 roundtrip += blocks[0].get_root_close_tag();
                 alert(roundtrip);
             }
-            Logger.debug( taxa.get_forests()[0].get_name() );
-            var drawtree = new DrawTree({'tree':tree,'width':800,'height':600});
+            Phylo.Util.Logger.debug( taxa.get_forests()[0].get_name() );
+            var drawtree = new Phylo.Forest.DrawTree({'tree':tree,'width':800,'height':600});
             drawtree._redraw();
-            drawtree.entities.map(function(n){Logger.debug(n.name+' '+n.x+','+n.y)});
+            drawtree.entities.map(function(n){Phylo.Util.Logger.debug(n.name+' '+n.x+','+n.y)});
             /*]]>*/</script>         
     </body>     
 </html>

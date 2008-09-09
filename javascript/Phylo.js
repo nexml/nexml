@@ -1,40 +1,33 @@
-function copyPrototype( descendant, parent ) {
-    var sConstructor = parent.toString();
-    var aMatch = sConstructor.match( /\s*function (.*)\(/ );
-    if ( aMatch != null ) { descendant.prototype[aMatch[1]] = parent; }
-    for (var m in parent.prototype) {
-        descendant.prototype[m] = parent.prototype[m];
-    }
-}
+Phylo.objects = {};
 
-function copyPrototypeMI( descendant, parents ) {
-	for ( var i = 0; i < parents.length; i++ ) {
-		var parent = parents[i];
-	    var sConstructor = parent.toString();
-	    var aMatch = sConstructor.match( /\s*function (.*)\(/ );
-	    if ( aMatch != null ) { descendant.prototype[aMatch[1]] = parent; }
-	    for (var m in parent.prototype) {
-    	    descendant.prototype[m] = parent.prototype[m];
-    	}
+Phylo.id_pool = function () {
+	var hidden_id = 0;
+	function new_id () {
+		return ++hidden_id;
 	}
+	return new_id;
 }
 
+Phylo.id_maker = Phylo.id_pool();
 
-var id      = 0;
-var objects = {};
-
-function Phylo(args){
+function Base (args){
+	for ( var method in Base ) {
+		if ( this[method] == null ) {
+			this[method] = Base[method];
+		}
+	}
     if ( args != null ) {
         for ( var key in args ) {
             this[key] = args[key];
         }
     }
-    this.id = id++;
+    this.id = Phylo.id_maker();
     this.generic = {};
-    objects[this.id] = this;
-    TaxaMediator.register(this);
+    Phylo.objects[this.id] = this;
+    Phylo.Mediators.TaxaMediator.register(this);
     return this;
 }
+Phylo.prototype = Base;
 
 Phylo.prototype.set_name = function (name) {
     this.name = String(name);
@@ -89,12 +82,12 @@ Phylo.prototype.get_id = function() {
 };
 
 Phylo.prototype.get_obj_by_id = function(id) {
-    return objects[id];
+    return Phylo.objects[id];
 };
 
 Phylo.prototype.VERSION = function () {
     var revision_string = '$Rev$';
     var regex = /(\d+)/i;
     var revision_number = revision_string.match(regex);
-    return revision_number;
+    return revision_number[0];
 };
