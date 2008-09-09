@@ -21,6 +21,7 @@
         <script type="text/javascript" src="Phylo/IO.js"></script>        
         <script type="text/javascript" src="Phylo/Parsers/Nexml.js"></script>
         <script type="text/javascript" src="tolwebajax.js"></script>
+        <script src="http://www.phylowidget.org/full/scripts/phylowidget.js"></script>        
         <title>PhyloJS</title>
     </head>
     <body onload="initialize_ajax()">
@@ -29,6 +30,11 @@
             <input type="text" name="tree_id" id="tree_id" value="16299"></input>
             <input type="button" value="submit" onclick="fetch_tree()"></input>
         </form>
-        <pre id="status"></pre>           
+        <pre id="status"></pre>   
+		<script type="text/javascript">
+			PhyloWidget.useFull(); // Use PhyloWidget Full 
+			var params = { width:500, height:300, tree:'(a,(b,c));', search:'a' };
+			PhyloWidget.writeWidget(params); // Immediately inserts the applet code directly into the current document. 
+		</script>			
     </body>     
 </html>
