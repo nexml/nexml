@@ -2,35 +2,35 @@ Phylo.Taxa = function (args) {
 	if (args==null) args = {};
 	args["tag"] = "otus";	
     this.Listable(args);
-    this._type      = Phylo.Util.Constant._TAXA_;
-    this._container = Phylo.Util.Constant._NONE_;
+    this._type      = Phylo.Util.CONSTANT._TAXA_;
+    this._container = Phylo.Util.CONSTANT._NONE_;
     return this;
 }
 copyPrototype(Phylo.Taxa,Phylo.Listable);
 
 Phylo.Taxa.prototype.set_forest = function (forest) {
-    if ( looks_like_object(forest,Phylo.Util.Constant._FOREST_) ) {
+    if ( looks_like_object(forest,Phylo.Util.CONSTANT._FOREST_) ) {
         forest.set_taxa(this);
     }
     return this;
 };
 
 Phylo.Taxa.prototype.set_matrix = function (matrix) {
-    if ( looks_like_object(matrix,Phylo.Util.Constant._MATRIX_) ) {
+    if ( looks_like_object(matrix,Phylo.Util.CONSTANT._MATRIX_) ) {
         matrix.set_taxa(this);
     }
     return this;
 };
 
 Phylo.Taxa.prototype.unset_forest = function(forest) {
-    if ( looks_like_object(forest,Phylo.Util.Constant._FOREST_) ) {
+    if ( looks_like_object(forest,Phylo.Util.CONSTANT._FOREST_) ) {
         forest.unset_taxa();
     }
     return this;
 };
 
 Phylo.Taxa.prototype.unset_matrix = function(matrix) {
-    if ( looks_like_object(matrix,Phylo.Util.Constant._MATRIX_) ) {
+    if ( looks_like_object(matrix,Phylo.Util.CONSTANT._MATRIX_) ) {
         matrix.unset_taxa();
     }
     return this;
@@ -39,14 +39,14 @@ Phylo.Taxa.prototype.unset_matrix = function(matrix) {
 Phylo.Taxa.prototype.get_forests = function() {
     return Phylo.Mediators.TaxaMediator.get_link( {
         "source" : this,
-        "type"   : Phylo.Util.Constant._FOREST_()
+        "type"   : Phylo.Util.CONSTANT._FOREST_()
     } );
 };
 
 Phylo.Taxa.prototype.get_matrices = function () {
     return TaxaMediator.get_link( {
         "source" : this,
-        "type"   : Phylo.Util.Constant._MATRIX_()    
+        "type"   : Phylo.Util.CONSTANT._MATRIX_()    
     } );
 };
 
