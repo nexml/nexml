@@ -1,19 +1,19 @@
 <!-- TITLE: nexml - phylogenetic data as xml -->
 <!-- HEADING: Overview -->
-<h3 class="headerstyle">
-    Nexml in action: AJAX + PhyloWidget
-</h3>
-<div id="my_div"></div>
-<form>
-	<input type="text" name="tree_id" id="tree_id" value="16299"></input>
-    <input type="button" value="Draw this Tree of Life clade" onclick="fetch_tree()"></input>
-</form>   
+<div id="my_div"></div>  
 <script type="text/javascript">
 	initialize_ajax();
 	PhyloWidget.useFull(); // Use PhyloWidget Full 
 	var params = { width:500, height:300, tree:'PhyloWidget', search:'a' };
 	PhyloWidget.writeWidget(params); // Immediately inserts the applet code directly into the current document.
 </script>	
+<form>
+	<input type="text" name="tree_id" id="tree_id" value="16299"></input>
+    <input type="button" value="Draw this Tree of Life clade" onclick="fetch_tree()"></input>
+</form>
+<h3 class="headerstyle">
+    Nexml in action: AJAX + PhyloWidget
+</h3>
 <p>
 	The <a rel="nofollow" href="http://www.phylowidget.org">PhyloWidget</a> applet
 	above demonstrates how nexml can be used in a web context: when you click
