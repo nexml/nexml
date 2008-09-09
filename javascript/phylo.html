@@ -1,125 +1,34 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
 <html>
     <head>
-        <script type="text/javascript" src="Phylo/Util/CONSTANT.js" />
-        <script type="text/javascript" src="Phylo/Util/Exceptions.js" />
-        <script type="text/javascript" src="Phylo/Util/Logger.js" />
-        <script type="text/javascript" src="Phylo/Mediators/TaxaMediator.js" />        
-        <script type="text/javascript" src="Phylo.js" />
-        <script type="text/javascript" src="Phylo/Util/XMLWritable.js" />        
-        <script type="text/javascript" src="Phylo/Listable.js" />
-        <script type="text/javascript" src="Phylo/Taxa.js" />
-        <script type="text/javascript" src="Phylo/Taxa/TaxaLinker.js" />        
-        <script type="text/javascript" src="Phylo/Taxa/Taxon.js" />
-        <script type="text/javascript" src="Phylo/Taxa/TaxonLinker.js" />        
-        <script type="text/javascript" src="Phylo/Forest.js" />        
-        <script type="text/javascript" src="Phylo/Forest/Tree.js" />
-        <script type="text/javascript" src="Phylo/Forest/Node.js" />
-        <script type="text/javascript" src="Phylo/Forest/DrawTree.js" />
-        <script type="text/javascript" src="Phylo/Forest/DrawNode.js" />
-        <script type="text/javascript" src="Phylo/IO.js" />
-        <script type="text/javascript" src="Phylo/Parsers/Nexml.js" /> 
-        <script type="text/javascript" src="http://www.phylowidget.org/scripts/phylowidget.js" />
-        <script type="text/javascript">/*<![CDATA[*/
-            var statdiv;
-            var base     = 'http://' + top.location.host + '/nexml/phylows/tolweb/';
-            var logger   = Phylo.Util.Logger;
-            var constant = Phylo.Util.CONSTANT;
-            var tree;
-            logger.VERBOSE(3);
-            logger.set_listener( 
-                function( msg ) { 
-                    if ( statdiv == null ) {
-                        statdiv = document.getElementById('status');
-                    }
-                    statdiv.innerHTML += '<pre>' + msg + '</pre>';
-                }        	
-            );
-            function initialize_ajax() {
-                var xmlHttp;
-                try {
-                    // Firefox, Opera 8.0+, Safari
-                    xmlHttp = new XMLHttpRequest();
-                } catch (e) {
-                    // Internet Explorer
-                    try {
-                        xmlHttp = new ActiveXObject("Msxml2.XMLHTTP");
-                    } catch (e) {
-                        try {
-                            xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");
-                        } catch (e) {
-                            alert("Your browser does not support AJAX!");
-                            return false;
-                        }
-                    }
-                }
-                xmlHttp.onreadystatechange = function() {
-                    if ( xmlHttp.readyState == 4 ) {
-                        var nexml = xmlHttp.responseText;
-                        var blocks = Phylo.IO.parse({
-                            'format':'nexml',
-                            'string':nexml
-                        });
-                        for ( var i = 0; i < blocks.length; i++ ) {
-                            if ( blocks[i]._type() == constant._FOREST_() ) {                                
-                                tree = blocks[i].first();
-                                logger.info(tree.to_newick());
-                            }                            
-                        }
-                    }
-                };           
-                return xmlHttp;
-            }     
-            function fetch_tree () {
-                var id = document.getElementById('tree_id').value;
-                var ajax = initialize_ajax();
-                logger.debug(ajax);
-                var url = base + id;
-                ajax.open("GET",url,true);
-                ajax.send(null);
-            }       
-            function initialize_phylowidget () {
-                try {
-                    PhyloWidget.useFull(); // Use PhyloWidget Full 
-                    var params = { 
-                        'width'  : 500, 
-                        'height' : 300, 
-                        'tree'   : '(a,(b,c));', 
-                        'search' : 'a'                
-                    };
-                    // Loads PhyloWidget into the element with ID of 'my_div' 
-                    PhyloWidget.loadWidget('my_div',params); 
-                } catch (e) {
-                    logger.info(e.stack);
-                }
-            }
-            PhyloWidget.getQueryParameters = function(destObject,url) {
-                if (!destObject) var destObject = {};
-                url = url || top.location.href;
-                if ( tree != null ) {
-                    destObject['tree'] = tree.to_newick();
-                }
-                else {
-                    destObject['tree'] = '((a,b),c);';
-                }
-                
-                /*
-                * Now load up the rest of the query params as normal.
-                */
-                destObject = AppletLoader.getQueryParameters(destObject,url);
-                return destObject;
-            };            
-            /*]]>*/</script>
+        <script type="text/javascript" src="Phylo/Util/CONSTANT.js"></script>     
+        <script type="text/javascript" src="Phylo/Util/Exceptions.js"></script>       
+        <script type="text/javascript" src="Phylo/Util/Logger.js"></script>        
+        <script type="text/javascript" src="Phylo/Mediators/TaxaMediator.js"></script>                
+        <script type="text/javascript" src="Phylo.js"></script>        
+        <script type="text/javascript" src="Phylo/Util/XMLWritable.js"></script> 
+        <script type="text/javascript" src="Phylo/Listable.js"></script>
+        <script type="text/javascript" src="Phylo/Taxa.js"></script>       
+        <script type="text/javascript" src="Phylo/Taxa/TaxaLinker.js"></script>                         
+        <script type="text/javascript" src="Phylo/Taxa/Taxon.js"></script>       
+        <script type="text/javascript" src="Phylo/Taxa/TaxonLinker.js"></script>                       
+        <script type="text/javascript" src="Phylo/Forest.js"></script>       
+        <script type="text/javascript" src="Phylo/Forest/Tree.js"></script>        
+        <script type="text/javascript" src="Phylo/Forest/Node.js"></script>         
+        <script type="text/javascript" src="Phylo/Forest/DrawTree.js"></script>        
+        <script type="text/javascript" src="Phylo/Forest/DrawNode.js"></script>        
+        <script type="text/javascript" src="Phylo/IO.js"></script>        
+        <script type="text/javascript" src="Phylo/Parsers/Nexml.js"></script>
+        <script type="text/javascript" src="tolwebajax.js"></script>
         <title>PhyloJS</title>
     </head>
-    <body onload="initialize_phylowidget()">
-        <div id="my_div" />
+    <body onload="initialize_ajax()">
+        <div id="my_div"></div>
         <form>
-            <input type="text" name="tree_id" id="tree_id" value="16299"/>
-            <input type="button" value="submit" onclick="fetch_tree()"/>
+            <input type="text" name="tree_id" id="tree_id" value="16299"></input>
+            <input type="button" value="submit" onclick="fetch_tree()"></input>
         </form>
-        <pre id="status" />       
-        <script type="text/javascript">/*<![CDATA[*/
-
-            /*]]>*/</script>              
+        <pre id="status"></pre>           
     </body>     
 </html>
