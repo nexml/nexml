@@ -155,7 +155,7 @@ function obj_from_elt (elt) {
 	}
 	var children = elt.childNodes;
 	for ( var i = 0; i < children.length; i++ ) {
-		if ( children[i].tagName == 'DICT' ) {
+		if ( children[i].tagName == 'dict' ) {
 			args["generic"] = { 'dict' : parse_dict(children[i]) };
 			break;
 		}
@@ -175,28 +175,36 @@ Phylo.Parsers.Nexml.obj_from_elt = obj_from_elt;
 function parse_dict (elt) {
 	var result = {};
 	var children = elt.childNodes;
-	for ( var i = 0; i < children.length; i = i + 2 ) {
-		var key = children[i].firstChild.nodeValue;
-		var value_elt = children[i+1];
-		var regex = /vector/;
-		var vector = value_elt.tagName.match(regex);
-		if ( value_elt.tagName == 'DICT' ) {
-			result[key] = parse_dict(value_elt);
-		} 
-		else if ( vector != null ) {
-			var value = new Array();
-			value.push(value_elt.tagName.toLowerCase());
-			var value_array = value_elt.firstChild.nodeValue.split(/\s+/);
-			for ( var i = 0; i < value_array.length; i++ ) {
-				value.push(value_array[i]);
+	for ( var i = 0; i < children.length; i++ ) {		
+		if ( children[i].nodeType == 1 && children[i].tagName == 'key' ) {
+			var key = children[i].textContent;
+			var value_elt;
+			for ( var j = i+1; j < children.length; j++ ) {
+				if ( children[j].nodeType == 1 ) {
+					value_elt = children[j];
+					break;
+				} 
 			}
-			result[key] = value_array;
-		}
-		else if ( value_elt.tagName == 'ANY' ) {
-			result[key] = value_elt;
-		}
-		else {
-			result[key] = value_elt.firstChild.nodeValue;
+			var regex = /vector/;
+			var vector = value_elt.tagName.match(regex);
+			if ( value_elt.tagName == 'dict' ) {
+				result[key] = parse_dict(value_elt);
+			} 
+			else if ( vector != null ) {
+				var value = new Array();
+				value.push(value_elt.tagName);
+				var value_array = value_elt.textContent.split(/\s+/);
+				for ( var i = 0; i < value_array.length; i++ ) {
+					value.push(value_array[i]);
+				}
+				result[key] = value_array;
+			}
+			else if ( value_elt.tagName == 'any' ) {
+				result[key] = [ 'any', value_elt ];
+			}
+			else {
+				result[key] = [ value_elt.tagName, value_elt.textContent ];
+			}
 		}
 	}
 	return result;	

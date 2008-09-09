@@ -3,16 +3,7 @@
             var xmlHttp;        	
         	var logger   = Phylo.Util.Logger;
         	var base     = 'http://' + top.location.host + '/nexml/phylows/tolweb/';
-        	var constant = Phylo.Util.CONSTANT;
-        	logger.VERBOSE(3);
-            logger.set_listener( 
-                function( msg ) { 
-                    if ( status_element == null ) {
-                        status_element = document.getElementById('status');
-                    }
-                    status_element.innerHTML += msg + "\n";
-                }        	
-            );   
+        	var constant = Phylo.Util.CONSTANT;   
             function initialize_ajax() {
                 try {
                     // Firefox, Opera 8.0+, Safari
@@ -40,13 +31,39 @@
                         for ( var i = 0; i < blocks.length; i++ ) {
                             if ( blocks[i]._type() == constant._FOREST_() ) {                                
                                 tree = blocks[i].first();
-                                Phylo.Util.Logger.info(tree.to_newick());
+                                annotate_tree(tree);
+                                var newick = tree.to_newick({
+                                	'nhxkeys' : [ 'img', 'G' ]
+                                });
+                                Phylo.Util.Logger.info(newick);
+                                PhyloWidget.changeSetting('tree',newick);
                             }                            
                         }
                     }
                 };           
                 return xmlHttp;
-            }                 	
+            }  
+            function annotate_tree(t) {
+            	var image_dir = 'http&colon;//' + top.location.host + '/nexml/html/include/';
+            	t.visit(
+            		function(n) {
+            			var dict = n.get_generic('dict');
+            			var nhx = {};
+            			if ( dict != null ) {
+	            			if ( dict['EXTINCT'] != null && dict['EXTINCT'][1] != 0 ) {
+	            				nhx['img'] = image_dir + 'cross.png';
+	            			}
+	            			if ( dict['ID'] != null ) {
+	            				nhx['G'] = dict['ID'][1];
+	            			}
+	            			if ( dict['HASPAGE'] != null && dict['HASPAGE'][1] != 0 ) {
+	            				nhx['img'] = image_dir + 'world_link.png';
+	            			}
+	            			n.set_generic(nhx);
+            			}
+            		}
+            	);
+            }               	
         	function fetch_tree () {
                 var id = document.getElementById('tree_id').value;
                 var ajax = initialize_ajax();

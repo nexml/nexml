@@ -58,8 +58,8 @@ Phylo.Forest.Tree.prototype.visit_depth_first = function(args) {
 	return this.get_root().visit_depth_first(args);
 };
 
-Phylo.Forest.Tree.prototype.to_newick = function () {
-    return this.get_root().to_newick();
+Phylo.Forest.Tree.prototype.to_newick = function (args) {
+    return this.get_root().to_newick(args);
 };
 
 Phylo.Forest.Tree.prototype.to_xml = function () {
