@@ -1,10 +1,6 @@
 Phylo.Util.Logger = {};
 Phylo.Util.Logger.level = 2;
-Phylo.Util.Logger.listeners = [ 
-	function(msg) {
-		self.status = msg;
-	}	
-];
+Phylo.Util.Logger.listeners = [];
 
 Phylo.Util.Logger.debug = function(msg) {
 	if ( this.level >= 4 ) {

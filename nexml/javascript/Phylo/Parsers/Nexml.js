@@ -155,7 +155,7 @@ function obj_from_elt (elt) {
 	}
 	var children = elt.childNodes;
 	for ( var i = 0; i < children.length; i++ ) {
-		if ( children[i].tagName == 'dict' ) {
+		if ( children[i].nodeType == 1 && children[i].tagName == 'dict' ) {
 			args["generic"] = { 'dict' : parse_dict(children[i]) };
 			break;
 		}

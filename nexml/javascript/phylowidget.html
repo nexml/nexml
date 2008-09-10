@@ -1,0 +1,41 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+    <head>
+        <script type="text/javascript" src="/nexml/javascript/Phylo/Util/CONSTANT.js"></script>     
+        <script type="text/javascript" src="/nexml/javascript/Phylo/Util/Exceptions.js"></script>       
+        <script type="text/javascript" src="/nexml/javascript/Phylo/Util/Logger.js"></script>        
+        <script type="text/javascript" src="/nexml/javascript/Phylo/Mediators/TaxaMediator.js"></script>                
+        <script type="text/javascript" src="/nexml/javascript/Phylo.js"></script>        
+        <script type="text/javascript" src="/nexml/javascript/Phylo/Util/XMLWritable.js"></script> 
+        <script type="text/javascript" src="/nexml/javascript/Phylo/Listable.js"></script>
+        <script type="text/javascript" src="/nexml/javascript/Phylo/Taxa.js"></script>       
+        <script type="text/javascript" src="/nexml/javascript/Phylo/Taxa/TaxaLinker.js"></script>                         
+        <script type="text/javascript" src="/nexml/javascript/Phylo/Taxa/Taxon.js"></script>       
+        <script type="text/javascript" src="/nexml/javascript/Phylo/Taxa/TaxonLinker.js"></script>                       
+        <script type="text/javascript" src="/nexml/javascript/Phylo/Forest.js"></script>       
+        <script type="text/javascript" src="/nexml/javascript/Phylo/Forest/Tree.js"></script>        
+        <script type="text/javascript" src="/nexml/javascript/Phylo/Forest/Node.js"></script>         
+        <script type="text/javascript" src="/nexml/javascript/Phylo/Forest/DrawTree.js"></script>        
+        <script type="text/javascript" src="/nexml/javascript/Phylo/Forest/DrawNode.js"></script>        
+        <script type="text/javascript" src="/nexml/javascript/Phylo/IO.js"></script>        
+        <script type="text/javascript" src="/nexml/javascript/Phylo/Parsers/Nexml.js"></script>
+        <script type="text/javascript" src="/nexml/javascript/tolwebajax.js"></script>
+        <script type="text/javascript" src="/nexml/javascript/phylowidget.js"></script>  
+        <title>PhyloJS</title>
+    </head>
+    <body>
+        <div id="my_div"></div>
+        <form>
+            <input type="text" name="tree_id" id="tree_id" value="16299"></input>
+            <input type="button" value="Draw this Tree of Life clade" onclick="fetch_tree()"></input>
+        </form>
+        <pre id="status"></pre>   
+		<script type="text/javascript">
+			initialize_ajax();
+			PhyloWidget.useFull(); // Use PhyloWidget Full 
+			var params = { width:500, height:300, tree:'PhyloWidget', search:'a' };
+			PhyloWidget.writeWidget(params); // Immediately inserts the applet code directly into the current document.
+		</script>			
+    </body>     
+</html>
