@@ -240,6 +240,16 @@ Phylo.Forest.Node.prototype.is_ancestor_of = function (descendant) {
     return false;
 };
 
+Phylo.Forest.Node.prototype.calc_nodes_to_root = function () {
+	var n = 0;
+	var node = this;
+	while(node) {
+		node = node.get_parent();
+		n++;
+	}
+	return n;
+};
+
 Phylo.Forest.Node.prototype.calc_max_path_to_tips = function () {
 	var maxpath = 0;
 	var root = this;
