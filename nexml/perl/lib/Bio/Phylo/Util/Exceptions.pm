@@ -130,13 +130,13 @@ sub throw (@) {
 		my $class = __PACKAGE__ . '::' . $type;
 		$self = $class->new( 'error' => shift, @_ );
 	}
-	if ( not $ENV{'PERL_DL_NONLAZY'} ) {
-		require Bio::Phylo;
-		$Bio::Phylo::Util::Logger::TRACEBACK = 1;
-		my $logger = Bio::Phylo->get_logger();
-		$logger->error($self->error);
-		$Bio::Phylo::Util::Logger::TRACEBACK = 0;
-	}	
+# 	if ( not $ENV{'PERL_DL_NONLAZY'} ) {
+# 		require Bio::Phylo;
+# 		$Bio::Phylo::Util::Logger::TRACEBACK = 1;
+# 		my $logger = Bio::Phylo->get_logger();
+# 		$logger->error($self->error);
+# 		$Bio::Phylo::Util::Logger::TRACEBACK = 0;
+# 	}	
 	die $self;	
 }
 
