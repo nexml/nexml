@@ -21,11 +21,17 @@
 			function test () {
 				var verbosity = document.getElementById('verbosity').value;
 				logger.VERBOSE(verbosity);
+				/*
 				var nexml = document.getElementById('nexml').value;
 				var blocks = Phylo.IO.parse({'format':'nexml','string':nexml});
 				for each ( block in blocks ) {
 					logger.info(block.get_tag());
-				}
+				}*/
+				var d = new Phylo.Matrices.Datum({'type':'Dna'});
+				var t = new Phylo.Taxa.Taxon();
+				d.set_char('acacacaca');
+				d.set_taxon(t);
+				alert(d.to_xml());
 			}        
         </script>            
         <title>PhyloJS</title>

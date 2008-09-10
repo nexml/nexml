@@ -10,7 +10,8 @@ function TypeSafeData(args) {
 		type = type.match(/(^.)(.+)/);
 		type = type[1].toUpperCase() + type[2];
 		args["type"] = type;
-		var obj = new Phylo.Matrices.Datatype({'type':type});		
+		var obj = new Phylo.Matrices.Datatype({'type':type});	
+		args["type_object"] = obj;	
 	}
 	this.Listable(args);
 	return this;	
