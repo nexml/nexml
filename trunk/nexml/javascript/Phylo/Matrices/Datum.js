@@ -38,7 +38,10 @@ Phylo.Matrices.Datum.prototype.set_char = function(args) {
 			arg.map(function(n){data.push(n)});
 		}
 		else {
-			this.get_type_object().split(arg).map(function(n){data.push(n)});
+			var splitchars = this.get_type_object().split(arg);
+			for each ( splitchar in splitchars ) {
+				data.push(splitchar);
+			}
 		}
 	}
 	var missing = this.get_missing();
@@ -199,7 +202,7 @@ Phylo.Matrices.Datum.prototype.get_by_index = function(index) {
 };
 
 Phylo.Matrices.Datum.prototype.can_contain = function(data) {
-	this.get_type_object().is_valid(data);
+	return this.get_type_object().is_valid(data);
 };
 
 
