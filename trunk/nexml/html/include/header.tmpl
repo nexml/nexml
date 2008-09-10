@@ -123,9 +123,19 @@
                 id="validateForm">
                 <fieldset id="validateFieldset">
                     <legend class="hide">Validate nexml data</legend>
-                    <label for="validateUpload">Select file to validate</label>
+                    <input 
+                        type="radio" 
+                        name="action" 
+                        onclick="togglePostAction('validator')" 
+                        value="validator" 
+                        checked="checked">validate</input>
+                    <input 
+                        type="radio" 
+                        name="action" 
+                        onclick="togglePostAction('nex2xml')" 
+                        value="nex2xml">nex2xml</input>                    
                     <input type="file" name="file" id="validateUpload"/>
-                    <input type="submit" id="validateSubmit" value="Validate"/>
+                    <input type="submit" id="validateSubmit" value="Submit"/>
                 </fieldset>
             </form>          
         </div>   

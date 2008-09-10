@@ -44,4 +44,11 @@ function toggleClassDisplay(theClass) {
     }
 }
 
+function togglePostAction(action) {
+    var form = document.getElementById('validateForm');
+    form.attributes.getNamedItem('action').value = '/nexml/' + action;
+//    alert(form.attributes.getNamedItem('action').value);
+    return false;
+}
+
 window.name='nexml_site';
