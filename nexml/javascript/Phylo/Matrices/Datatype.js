@@ -111,7 +111,7 @@ function Datatype (args) {
     this.XMLWritable(args);
     for each ( field in [ 'lookup', 'missing', 'gap' ] ) {
     	if ( ! args[field] ) {
-    		this[field] = Phylo.Matrices.Datatype[field] = fields[field][args["type"]];    		
+    		this[field] = fields[field][args["type"]];    		
     	}
     }
     return this;
@@ -363,10 +363,10 @@ Phylo.Matrices.Datatype.prototype.is_same = function (model) {
 
 Phylo.Matrices.Datatype.prototype.split = function (str) {
 	if ( this.type == 'Continuous' ) {
-		return str.split(/\s+/);
+		return str.split(' ');
 	}
 	else {
-		return str;
+		return str.split('');
 	}
 };
 
@@ -463,6 +463,6 @@ Phylo.Matrices.Datatype.prototype.to_xml = function(args) {
 	else {
 		return xml;
 	}
-}
+};
 
 })()
