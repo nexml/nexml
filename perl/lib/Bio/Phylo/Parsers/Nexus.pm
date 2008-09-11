@@ -974,16 +974,15 @@ sub _trees {
 
 sub _translate {
     my $self = shift;
-    if ( defined $_[0] and $_[0] =~ m/^\d+$/ ) {
-        $self->{'_i'} = shift;
-        if ( $self->{'_i'} == 1 ) {
-            $logger->info( "starting translation table" );
-        }
-        elsif ( $self->{'_i'} > 1 ) {
-        }
+    my $i = $self->{'_i'}; 
+    if ( $i == 1 ) {
+        $logger->info( "starting translation table" );
     }
-    elsif ( defined $self->{'_i'} and defined $_[0] and $_[0] ne ';' ) {
-        my $i = $self->{'_i'};
+    if ( !$i && $_[0] =~ m/^\d+$/ ) {
+        $self->{'_i'} = shift;
+        $self->{'_translate'}->[ $self->{'_i'} ] = undef;
+    }
+    elsif ( $i && exists $self->{'_translate'}->[$i] && ! defined $self->{'_translate'}->[$i] && $_[0] ne ';' ) {
         $self->{'_translate'}->[$i] = $_[0];
         $logger->debug( "Translation: $i => $_[0]" );
         $self->{'_i'} = undef;
