@@ -109,7 +109,9 @@ function Datatype (args) {
 		args["type"] = type;		
 	}
     this.XMLWritable(args);
-    for each ( field in [ 'lookup', 'missing', 'gap' ] ) {
+    var props = [ 'lookup', 'missing', 'gap' ];
+    for ( var i = 0; i < props.length; i++ ) {
+    	var field = props[i];
     	if ( ! args[field] ) {
     		this[field] = fields[field][args["type"]];    		
     	}
