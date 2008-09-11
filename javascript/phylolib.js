@@ -15,11 +15,13 @@ var files = [
 	"Phylo/Forest/Node.js",        
 	"Phylo/Forest/DrawTree.js",        
 	"Phylo/Forest/DrawNode.js", 
+	/*
 	"Phylo/Matrices.js",
 	"Phylo/Matrices/Datatype.js",
 	"Phylo/Matrices/TypeSafeData.js",
 	"Phylo/Matrices/Datum.js", 
-	"Phylo/Matrices/Matrix.js", 	     
+	"Phylo/Matrices/Matrix.js", 
+	*/
 	"Phylo/IO.js",
 	"Phylo/Parsers/Nexml.js",	
 ];
