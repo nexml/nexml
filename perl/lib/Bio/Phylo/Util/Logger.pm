@@ -330,8 +330,13 @@ Adds listeners to send log messages to.
  Function: Sets additional listeners to log to (e.g. a file)
  Returns : invocant
  Args    : One or more code references
- Comments: On execution of the listeners, the first (and only) argument 
-           is the log message.
+ Comments: On execution of the listeners, the @_ arguments are:
+           $log_string, # the formatted log string
+           $level,      # log level, i.e DEBUG, INFO, WARN, ERROR or FATAL
+           $subroutine, # the calling subroutine
+           $filename,   # filename where log method was called
+           $line,       # line where log method was called
+           $msg         # the unformatted message
 
 =item PREFIX()
 
