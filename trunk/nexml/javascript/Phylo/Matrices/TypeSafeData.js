@@ -30,8 +30,9 @@ Phylo.Matrices.TypeSafeData.prototype.set_type = function(arg) {
 	var obj = new Phylo.Matrices.Datatype(args);
 	this.set_type_object(obj);
 	if ( this._type() == Phylo.Util.CONSTANT._MATRIX_() ) {
-		for each ( var row in this.get_entities() ) {
-			row.set_type_object(obj);
+	    var ents = this.get_entities();
+		for ( var i = 0; i < ents.length; i++ ) {
+			ents[i].set_type_object(obj);
 		}
 	}
 	return this;	

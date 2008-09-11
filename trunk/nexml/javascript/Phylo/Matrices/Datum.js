@@ -33,7 +33,8 @@ Phylo.Matrices.Datum.prototype.set_weight = function(weight) {
 
 Phylo.Matrices.Datum.prototype.set_char = function(args) {
 	var data = [];
-	for each ( var arg in args ) {
+	for ( var i = 0; i < args.length; i++ ) {
+	    var arg = args[i];
 		if ( arg instanceof Array ) {
 			arg.map(function(n){data.push(n)});
 		}
