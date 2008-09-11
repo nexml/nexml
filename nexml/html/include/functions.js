@@ -44,11 +44,23 @@ function toggleClassDisplay(theClass) {
     }
 }
 
-function togglePostAction(action) {
+function submitForm () {
+    var action;
     var form = document.getElementById('validateForm');
-    form.attributes.getNamedItem('action').value = '/nexml/' + action;
-//    alert(form.attributes.getNamedItem('action').value);
-    return false;
+    var inputs = form.getElementsByTagName('input');
+    for ( var i = 0; i < inputs.length; i++ ) {
+        if ( inputs[i].type == 'radio' ) {
+            if ( inputs[i].checked ) {
+                action = '/nexml/' + inputs[i].value;
+                break;
+            }
+        }
+    }
+    if ( action == null ) {
+        action = '/nexml/validator';
+    }
+    form.attributes.getNamedItem('action').value = action;
+    form.submit();
 }
 
 window.name='nexml_site';
