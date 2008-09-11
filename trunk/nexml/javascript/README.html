@@ -84,11 +84,11 @@ Some neat things are possible, for example:</p>
     
     // find the forest object, get the parsed tree
     var parsed_tree;
-    for each ( block in blocks ) {
+    for ( var i = 0; i < blocks.length; i++ ) {
     
         // each "class" has a unique constant
-        if ( block._type() == Phylo.Util.CONSTANT._FOREST_() ) {
-            parsed_tree = block.first();
+        if ( blocks[i]._type() == Phylo.Util.CONSTANT._FOREST_() ) {
+            parsed_tree = blocks[i].first();
             break;
         }
     }
@@ -104,8 +104,8 @@ Some neat things are possible, for example:</p>
 <script type="text/javascript">
     function execute(ids) {
         var code;
-        for each ( id in ids ) {
-            code += document.getElementById(id).textContent;
+        for ( var i = 0; i < ids.length; i++ ) {
+            code += document.getElementById(ids[i]).textContent;
         }
         eval( code );
     }
