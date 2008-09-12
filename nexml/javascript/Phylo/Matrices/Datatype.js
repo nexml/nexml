@@ -120,15 +120,16 @@ function Datatype (args) {
 }
 Phylo.Matrices.Datatype = Datatype;
 copyPrototype(Phylo.Matrices.Datatype,Phylo.Util.XMLWritable);
+var proto = Phylo.Matrices.Datatype.prototype;
 
-Phylo.Matrices.Datatype.prototype.set_lookup = function (lookup) {
+proto.set_lookup = function (lookup) {
 	if ( fields.lookup[this.type] != null ) {
 		this.lookup = lookup;
 	}
 	return this;
 };
 
-Phylo.Matrices.Datatype.prototype.set_missing = function (missing) {
+proto.set_missing = function (missing) {
 	if ( this.missing != null ) {
 		if ( this.gap != missing ) {
 			this.missing = missing;
@@ -146,7 +147,7 @@ Phylo.Matrices.Datatype.prototype.set_missing = function (missing) {
 	}
 };
 
-Phylo.Matrices.Datatype.prototype.set_gap = function (gap) {
+proto.set_gap = function (gap) {
 	if ( this.gap != null ) {
 		if ( this.missing != gap ) {
 			this.gap = gap;
@@ -164,11 +165,11 @@ Phylo.Matrices.Datatype.prototype.set_gap = function (gap) {
 	}
 };
 
-Phylo.Matrices.Datatype.prototype.get_type = function () {
+proto.get_type = function () {
 	return this.type;
 };
 
-Phylo.Matrices.Datatype.prototype.get_ids_for_states = function (with_prefix) {
+proto.get_ids_for_states = function (with_prefix) {
 	if ( this.lookup ) {
 		var i = 1;
 		var ids_for_states = {};
@@ -182,7 +183,8 @@ Phylo.Matrices.Datatype.prototype.get_ids_for_states = function (with_prefix) {
 			sortable.push([key, this.lookup[key].length])
 		}
 		var tmp = sortable.sort(sort_on_second);
-		for each ( var state in tmp ) {
+		for ( var j = 0; j < tmp.length; j++ ) {
+		    var state = tmp[j];
 			var count = state[1];
 			var sym = state[0];
 			if (!tmp_cats[count]) {
@@ -190,13 +192,15 @@ Phylo.Matrices.Datatype.prototype.get_ids_for_states = function (with_prefix) {
 			}
 			tmp_cats[count].push(sym);
 		}
-		for each ( var cat in tmp_cats ) {
+		for ( var j = 0; j < tmp_cats.length; j++ ) {
+		    var cat = tmp_cats[j];
 			if ( cat ) {
 				var sorted = cat.sort();
 				sorted.map(function(n){states.push(n)});
 			}
 		}
-		for each ( var state in states ) {
+		for ( var j = 0; j < states.length; j++ ) {
+		    var state = states[j];
 			var id = i++;
 			ids_for_states[state] = with_prefix ? 's' + id : id;
 		}
@@ -207,11 +211,12 @@ Phylo.Matrices.Datatype.prototype.get_ids_for_states = function (with_prefix) {
 	}
 };
 
-Phylo.Matrices.Datatype.prototype.get_symbol_for_states = function (syms) {
+proto.get_symbol_for_states = function (syms) {
     var lookup = this.get_lookup();
     if ( lookup ) {
         var lookup_syms = lookup.keys();
-        SYM: for each ( var sym in lookup_syms ) {
+        SYM: for ( var k in lookup_syms ) {
+            var sym = lookup_syms[k];
             var states = lookup[sym];
             if ( syms.length == states.length ) {
                 var seen_all = 0;
@@ -238,7 +243,9 @@ Phylo.Matrices.Datatype.prototype.get_symbol_for_states = function (syms) {
             }
         }
         else {
-            LETTER: for each ( var letter in range( 'A','Z' ) ) {
+            var char_range = range( 'A', 'Z' );
+            LETTER: for ( var i in char_range ) {
+                var letter = char_range[i];
                 if ( lookup[letter] == null ) {
                     sym = letter;
                     break LETTER;
@@ -256,7 +263,7 @@ Phylo.Matrices.Datatype.prototype.get_symbol_for_states = function (syms) {
     }
 };
 
-Phylo.Matrices.Datatype.prototype.get_lookup = function () {
+proto.get_lookup = function () {
     if ( this.loookup ) {
         return this.lookup;
     }
@@ -266,39 +273,41 @@ Phylo.Matrices.Datatype.prototype.get_lookup = function () {
     }
 };
 
-Phylo.Matrices.Datatype.prototype.get_missing = function () {
+proto.get_missing = function () {
 	return this.missing ? this.missing : '?';
 };
 
-Phylo.Matrices.Datatype.prototype.get_gap = function () {
+proto.get_gap = function () {
 	return this.gap ? this.gap : '-';
 };
 
-Phylo.Matrices.Datatype.prototype.is_valid = function (args) {
+proto.is_valid = function (arg) {//(args) {
 	var data = [];
-	for each ( var arg in args ) {
-		if ( ! arg instanceof String ) {
+	//for ( var i in args ) {
+	    //var arg = args[i];
+		//if ( arg instanceof String ) {
 			if ( arg['get_char'] ) {
 				arg.get_char().map(function(n){data.push(n)});
 			}
-			else {
-				arg.map(function(n){data.push(n)});	
+			else if ( arg instanceof Array ){
+				data = arg;	
 			}
-		}
-		else {
-			if ( arg.length > 1 ) {
-				this.split(arg).map(function(n){data.push(n)});
+		//}
+		//else {
+			else if ( arg.length > 1 ) {
+				data = this.split(arg);
 			}
 			else {
 				data.push(arg);
 			}
-		}
-	}
+		//}
+	//}
 	if (data.length == 0) return true;
 	var lookup = this.get_lookup();
 	var missing = this.get_missing();
 	var gap = this.get_gap();
-	CHAR_CHECK: for each ( character in data ) {
+	CHAR_CHECK: for ( var i in data ) {
+	    var character = data[i];
 		if ( character == null ) continue CHAR_CHECK;
 		var uc = character.toUpperCase();
 		if ( lookup[uc] || ( missing && uc == missing ) || ( gap && uc ==gap ) ) {
@@ -311,12 +320,21 @@ Phylo.Matrices.Datatype.prototype.is_valid = function (args) {
 	return true;
 };	
 
-Phylo.Matrices.Datatype.prototype.is_same = function (model) {
+function keys (obj) {
+	var theKeys = [];
+	if (obj==null) return theKeys;
+	for ( var key in obj ) {
+		theKeys.push(key);
+	}
+	return theKeys;
+}
+
+proto.is_same = function (model) {
 	if ( this.get_id() == model.get_id() ) return true;
 	if ( this.get_type() != model.get_type() ) return false;
 	// check strings
-	for each ( var prop in ['get_mising', 'get_gap'] ) {
-		if ( this[prop]() != model[prop]() ) return false;
+	if ( this.get_missing() != model.get_missing() || this.get_gap() != model.get_gap() ) {
+		return false;
 	}
 	var s_lookup = this.get_lookup();
 	var m_lookup = model.get_lookup();
@@ -329,14 +347,15 @@ Phylo.Matrices.Datatype.prototype.is_same = function (model) {
     	return true
     }
     // get keys        
-    var s_keys = s_lookup.keys();
-    var m_keys = m_lookup.keys();      
+    var s_keys = keys(s_lookup);
+    var m_keys = keys(m_lookup);      
     // different number of keys
     if ( s_keys.length != m_keys.length ) {
     	return false;
     }
     //compare keys
-	for each ( var key in s_keys ) {
+	for ( var i in s_keys ) {
+	    var key = s_keys[i];
 		if ( m_lookup[key] == null ) {
 			return false;
 		}
@@ -353,7 +372,9 @@ Phylo.Matrices.Datatype.prototype.is_same = function (model) {
 			// make hashes to compare on vals
 			s_vals_a.map(function(n){s_vals[n]=1});
 			m_vals_a.map(function(n){m_vals[n]=1});
-			for each ( var val in s_vals.keys() ) {
+			var s_vals_keys = keys(s_vals);
+			for ( var j in s_vals_keys ) {
+			    var val = s_vals_keys[j];
 				if ( m_vals[val] == null ) {
 					return false;
 				}
@@ -363,16 +384,21 @@ Phylo.Matrices.Datatype.prototype.is_same = function (model) {
 	return true;       
 };
 
-Phylo.Matrices.Datatype.prototype.split = function (str) {
+proto.split = function (str) {
 	if ( this.type == 'Continuous' ) {
 		return str.split(' ');
 	}
 	else {
-		return str.split('');
+		if ( str != undefined ) {
+			return str.split('');
+		}
+		else {			
+			Phylo.Util.Logger.warn(str);
+		}
 	}
 };
 
-Phylo.Matrices.Datatype.prototype.join = function (array) {
+proto.join = function (array) {
 	if ( this.type == 'Continuous' ) {
 		return array.join(' ');
 	}
@@ -426,7 +452,7 @@ function range ( low, high, step ) {
     return matrix;
 }
 
-Phylo.Matrices.Datatype.prototype.to_xml = function(args) {
+proto.to_xml = function(args) {
 	var xml = '';
 	var normalized = {};
 	if (args != null) normalized = args;
@@ -434,37 +460,38 @@ Phylo.Matrices.Datatype.prototype.to_xml = function(args) {
 	if (lookup) {
 		xml += "\n" + this.get_xml_tag();
 		var id_for_state = this.get_ids_for_states(false);
-		var states = id_for_state.keys().sort(
+		var states = keys(id_for_state).sort(
 			function(a,b) {
 				return id_for_state[a] - id_for_state[b];
 			}
 		);
-		for each ( var state in states ) {
+		for ( var i in states ) {
+		    var state = states[i];
 			var state_id = id_for_state[state];
 			id_for_state[state_id] = 's' + state_id;
 		}
-		for each ( var state in states ) {
+		for ( var i in states ) {
+		    var state = states[i];
 			var state_id = id_for_state[state];
 			var mapping = lookup[state];
 			var symbol = normalized[state] != null ? normalized[state] : state;
 			// has ambiguity mappings
 			if ( mapping.length > 1 ) {
-				xml += "\n" + '<state id="' + state_id + '" symbol="' + symbol + '">';
-				for each ( var map in mapping ) {
-					xml += "\n" + '<mapping state="' + id_for_state[map] + '" mstaxa="uncertainty"/>';
+				xml += "\n" + '<state id="s' + state_id + '" symbol="' + symbol + '">';
+				for ( var j in mapping ) {
+				    var map = mapping[j];
+					xml += "\n" + '<mapping state="s' + id_for_state[map] + '" mstaxa="uncertainty"/>';
 				}
 				xml += "\n" + '</state>';
 			}
 			// no ambiguity
 			else {
-				xml += "\n" + '<state id="' + state_id + '" symbol="' + symbol + '"/>';
+				xml += "\n" + '<state id="s' + state_id + '" symbol="' + symbol + '"/>';
 			}
 		}
 		xml += "\n" + '</states>';
 	}
-	else {
-		return xml;
-	}
+	return xml;
 };
 
 })()
