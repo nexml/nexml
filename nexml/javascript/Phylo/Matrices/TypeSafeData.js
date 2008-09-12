@@ -16,7 +16,8 @@ function TypeSafeData(args) {
 	this.Listable(args);
 	return this;	
 }
-Phylo.Matrices.TypeSafeData = TypeSafeData;
+//alert(TypeSafeData);
+Phylo.Matrices['TypeSafeData'] = TypeSafeData;
 copyPrototype(Phylo.Matrices.TypeSafeData,Phylo.Listable);
 var proto = Phylo.Matrices.TypeSafeData.prototype;
 
