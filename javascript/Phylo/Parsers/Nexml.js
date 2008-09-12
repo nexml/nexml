@@ -20,16 +20,168 @@ function parse(args) {
 	}
 	var taxa_blocks = process_otus(xmlDoc.getElementsByTagName("otus"));
 	var tree_blocks = process_trees(xmlDoc.getElementsByTagName("trees"));
+	var char_blocks = process_characters(xmlDoc.getElementsByTagName("characters"));
 	resolve_tree_taxa(taxa_blocks,tree_blocks);
+	resolve_matrix_taxa(taxa_blocks,char_blocks);
 	for ( var key in taxa_blocks ) {
 		result.push(taxa_blocks[key]);
 	}
-	for ( var i = 0; i < tree_blocks.length; i++ ) {
+	for ( var i in char_blocks ) {
+		result.push(char_blocks[i]);
+	}
+	for ( var i in tree_blocks ) {
 		result.push(tree_blocks[i]);
 	}
 	return result;
 }
 Phylo.Parsers.Nexml.parse = parse;
+
+function resolve_matrix_taxa(taxa_blocks,char_blocks) {
+	for ( var i in char_blocks ) {
+		var taxa_id = char_blocks[i].get_generic('otus');
+		var taxa = taxa_blocks[taxa_id];
+		var taxon = {};
+		taxa.visit(
+			function(t) {
+				var taxon_id = t.get_xml_id();
+				taxon[taxon_id] = t;
+			}
+		);
+		var rows = char_blocks[i].get_entities();
+		for ( var j in rows ) {
+			var taxon_id_ref = rows[j].get_generic('otu');
+			rows[j].set_taxon(taxon[taxon_id_ref]);
+		}
+		char_blocks[i].set_taxa(taxa);
+	}
+}
+
+function process_characters(char_elts) {
+	var char_blocks = [];
+	if(char_elts.length==0) return char_blocks;
+	for ( var i = 0; i < char_elts.length; i++ ) {
+		var char_obj = obj_from_elt(char_elts[i]);
+		var type = char_elts[i].attributes.getNamedItem('xsi:type').value;
+		type = type.match(/^nex:([A-Z][a-z]+)/)[1];
+		char_obj.set_type(type);
+		var otus = char_elts[i].attributes.getNamedItem('otus').value;
+		char_obj.set_generic({ 'otus' : otus });
+		var format_elt = char_elts[i].getElementsByTagName('format')[0];
+		/*
+		 * state_set = {
+		 *     'states1' : { // state set ID
+		 *         'symbols' : {
+		 *             's1' : 1, // i.e. state ID to state symbol mapping
+		 *             's2' : 2
+		 *         }
+		 *         lookup : {
+		 *             1 : [ 1 ], // ambiguity mapping
+		 *             2 : [ 2 ],
+		 *         }
+		 *     },
+		 *     'states2' : {
+		 *         // etc.
+		 *     }
+		 * }
+		 */
+		var state_set = {};
+		var state_set_of_char = {}; // char id to state set mapping
+		var col_indices = {};
+		if ( format_elt ) {			
+			var states_elts = format_elt.getElementsByTagName('states');
+			for ( var j = 0; j < states_elts.length; j++ ) {
+				var id = states_elts[j].attributes.getNamedItem('id').value;
+				var lookup = {};
+				var symbol_of_id = {};
+				var state_elts = states_elts[j].getElementsByTagName('state');
+				var pss = states_elts[j].getElementsByTagName('polymorphic_state_set');
+				var uss = states_elts[j].getElementsByTagName('uncertain_state_set');
+				resolve_mapping(state_elts,symbol_of_id,lookup);
+				resolve_mapping(pss,symbol_of_id,lookup);
+				resolve_mapping(uss,symbol_of_id,lookup);
+				state_set[id] = { 'lookup' : lookup, 'symbols' : symbol_of_id };
+				char_obj.set_lookup(lookup);
+			}
+			var col_elts = format_elt.getElementsByTagName('char');
+			for ( var j = 0; j < col_elts.length; j++ ) {
+				var id = col_elts[j].attributes.getNamedItem('id').value;
+				var states = col_elts[j].attributes.getNamedItem('states').value;
+				state_set_of_char[id] = states;
+				col_indices[id] = j;
+			}
+		}
+		var matrix_elt = char_elts[i].getElementsByTagName('matrix')[0];
+		process_matrix(char_obj,matrix_elt,state_set_of_char,state_set,col_indices);
+		char_blocks.push(char_obj);
+	}	
+	return char_blocks;
+}
+
+function process_matrix(char_obj,matrix_elt,state_set_for_char,state_set,col_indices) {
+	var rows = matrix_elt.getElementsByTagName('row');
+	for ( var i = 0; i < rows.length; i++ ) {
+		var row_obj = obj_from_elt(rows[i]);
+		var otu = rows[i].attributes.getNamedItem('otu').value;
+		row_obj.set_type_object(char_obj.get_type_object());		
+		row_obj.set_generic({'otu':otu});
+		var seq_elt = rows[i].getElementsByTagName('seq')[0];
+		if ( seq_elt ) {
+			row_obj.set_char([seq_elt.textContent]);
+		}
+		else {
+			var cell_elts = rows[i].getElementsByTagName('cell');
+			var characters = [];
+			for ( var j = 0; j < cell_elts.length; j++ ) {
+				var char_id = cell_elts[j].attributes.getNamedItem('char').value;
+				var col_index;
+				if ( col_indices[char_id] != null ) {
+					col_index = col_indices[char_id]; 
+				}
+				else {
+					col_index = char_id;
+				}
+				var state_id = cell_elts[j].attributes.getNamedItem('state').value;
+				var state_set_id = state_set_for_char[char_id];
+				var state;
+				if ( state_set_id != null ) {
+					state = state_set[state_set_id]['symbols'][state_id];
+				}
+				else {
+					state = state_id;
+				}
+				characters[col_index] = state;
+			}
+			var missing = row_obj.get_missing();
+			for ( var j in characters ) {
+				if ( characters[j] == null ) {
+					characters[j] = missing;
+				}
+			}
+			row_obj.set_char(characters);
+		}
+	}	
+}
+
+function resolve_mapping(state_elts,symbol_of_id,lookup) {
+	for ( var i = 0; i < state_elts.length; i++ ) {
+		var state_elt = state_elts[i];
+		var symbol = state_elt.attributes.getNamedItem('symbol').value;
+		var id = state_elt.attributes.getNamedItem('id').value;
+		symbol_of_id[id] = symbol;
+		var member_elts = state_elt.getElementsByTagName('member');
+		if ( member_elts.length ) {
+			var symbols = [];
+			for ( var i in member_elts ) {
+				var member_id = member_elts[i].attributes.getNamedItem('state').value;
+				symbols.push(symbol_of_id[member_id]);
+			}
+			lookup[symbol] = symbols;
+		}
+		else {
+			lookup[symbol] = [symbol];
+		}
+	}
+}
 
 function resolve_tree_taxa(taxa_blocks,tree_blocks) {
 	for ( var i = 0; i < tree_blocks.length; i++ ) {
@@ -57,6 +209,7 @@ Phylo.Parsers.Nexml.resolve_tree_taxa = resolve_tree_taxa;
 
 function process_trees(trees_elt) {
 	var result = new Array();
+	if (!trees_elt) return result;
 	for ( var i = 0; i < trees_elt.length; i++ ) {
 		var forest_obj = obj_from_elt(trees_elt[i]);
 		var otus_id = trees_elt[i].attributes.getNamedItem("otus").value;
@@ -162,11 +315,13 @@ function obj_from_elt (elt) {
 	}
 	var tag_name = elt.nodeName.toLowerCase();
 	switch(tag_name) {
-		case 'otus' : return new Phylo.Taxa(args);
-		case 'otu'  : return new Phylo.Taxa.Taxon(args);
-		case 'trees': return new Phylo.Forest(args);
-		case 'tree' : return new Phylo.Forest.Tree(args);
-		case 'node' : return new Phylo.Forest.Node(args);
+		case 'otus'       : return new Phylo.Taxa(args);
+		case 'otu'        : return new Phylo.Taxa.Taxon(args);
+		case 'trees'      : return new Phylo.Forest(args);
+		case 'tree'       : return new Phylo.Forest.Tree(args);
+		case 'node'       : return new Phylo.Forest.Node(args);
+		case 'characters' : return new Phylo.Matrices.Matrix(args);
+		case 'row'        : return new Phylo.Matrices.Datum(args);
 		default : throw new Phylo.Util.Exceptions.API("Can't create object from element " + tag_name);
 	}
 }

@@ -10,36 +10,29 @@ function Node (args) {
 }
 Phylo.Forest.Node = Node;
 copyPrototypeMI(Phylo.Forest.Node,[Phylo.Util.XMLWritable,Phylo.Taxa.TaxonLinker]);
+var proto = Phylo.Forest.Node.prototype;
 
-Phylo.Forest.Node.prototype._type = function() {
-    return this._type;
-};
-
-Phylo.Forest.Node.prototype._container = function() {
-    return this._container;
-};
-
-Phylo.Forest.Node.prototype.set_parent = function (parent) {
+proto.set_parent = function (parent) {
     this.parent = parent;
     return this;
 };
 
-Phylo.Forest.Node.prototype.set_child = function (child) {
+proto.set_child = function (child) {
     this.children.push(child);
     return this;
 };
 
-Phylo.Forest.Node.prototype.set_first_daughter = function (child) {
+proto.set_first_daughter = function (child) {
     this.children.unshift(child);
     return this;
 };
 
-Phylo.Forest.Node.prototype.set_last_daughter = function (child) {
+proto.set_last_daughter = function (child) {
     this.children.push(child);
     return this;
 };
 
-Phylo.Forest.Node.prototype.set_previous_sister = function (sister) {
+proto.set_previous_sister = function (sister) {
     var parent = this.get_parent();
     if ( parent != null ) {
         var children = parent.get_children();
@@ -60,7 +53,7 @@ Phylo.Forest.Node.prototype.set_previous_sister = function (sister) {
     return this;
 };
 
-Phylo.Forest.Node.prototype.set_next_sister = function (sister) {
+proto.set_next_sister = function (sister) {
     var parent = this.get_parent();
     if ( parent != null ) {
         var children = parent.get_children();
@@ -76,12 +69,12 @@ Phylo.Forest.Node.prototype.set_next_sister = function (sister) {
     return this;
 };
 
-Phylo.Forest.Node.prototype.set_branch_length = function (branch_length) {
+proto.set_branch_length = function (branch_length) {
     this.branch_length = Number(branch_length);
     return this;
 };
 
-Phylo.Forest.Node.prototype.set_node_below = function () {
+proto.set_node_below = function () {
     var new_parent = new Phylo.Forest.Node();
     var parent = this.get_parent();
     if ( parent != null ) {
@@ -98,7 +91,7 @@ Phylo.Forest.Node.prototype.set_node_below = function () {
     return new_parent;   
 };
 
-Phylo.Forest.Node.prototype.prune_child = function (child) {
+proto.prune_child = function (child) {
     for ( var i = 0; i < this.children.length; i++ ) {
         if ( this.children[i].get_id() == child.get_id() ) {
             this.children.splice(i,1);
@@ -108,15 +101,15 @@ Phylo.Forest.Node.prototype.prune_child = function (child) {
     return this;
 };
 
-Phylo.Forest.Node.prototype.get_parent = function () {
+proto.get_parent = function () {
     return this.parent;
 };
 
-Phylo.Forest.Node.prototype.get_children = function () {
+proto.get_children = function () {
     return this.children;
 };
 
-Phylo.Forest.Node.prototype.get_first_daughter = function () {
+proto.get_first_daughter = function () {
     if ( this.children[0] != null ) {
     	return this.children[0];
     }
@@ -125,7 +118,7 @@ Phylo.Forest.Node.prototype.get_first_daughter = function () {
     }
 };
 
-Phylo.Forest.Node.prototype.get_last_daughter = function () {
+proto.get_last_daughter = function () {
     for ( var i = 0; i < this.children.length; i++ ) {
         if ( this.children[i+1] == null ) {
             return this.children[i];
@@ -134,7 +127,7 @@ Phylo.Forest.Node.prototype.get_last_daughter = function () {
     return null;
 };
 
-Phylo.Forest.Node.prototype.get_next_sister = function () {
+proto.get_next_sister = function () {
     var parent = this.get_parent();
     if ( parent != null ) {
         var siblings = parent.get_children();
@@ -154,7 +147,7 @@ Phylo.Forest.Node.prototype.get_next_sister = function () {
     return null;
 };
 
-Phylo.Forest.Node.prototype.get_previous_sister = function () {
+proto.get_previous_sister = function () {
     var parent = this.get_parent();
     if ( parent != null ) {
         var siblings = parent.get_children();
@@ -174,11 +167,11 @@ Phylo.Forest.Node.prototype.get_previous_sister = function () {
     return null;
 };
 
-Phylo.Forest.Node.prototype.get_branch_length = function () {
+proto.get_branch_length = function () {
     return this.branch_length;
 };
 
-Phylo.Forest.Node.prototype.get_descendants = function () {
+proto.get_descendants = function () {
 	var descendants = new Array();
 	this.visit_depth_first( {
 		"pre" : function(node) {
@@ -189,7 +182,7 @@ Phylo.Forest.Node.prototype.get_descendants = function () {
 	return descendants;
 };
 
-Phylo.Forest.Node.prototype.get_ancestors = function () {
+proto.get_ancestors = function () {
 	var ancestors = new Array();
 	var node = this.get_parent();
 	while ( node != null ) {
@@ -199,27 +192,27 @@ Phylo.Forest.Node.prototype.get_ancestors = function () {
 	return ancestors;
 };
 
-Phylo.Forest.Node.prototype.is_terminal = function () {
+proto.is_terminal = function () {
     return this.children.length == 0 ? true : false;
 };
 
-Phylo.Forest.Node.prototype.is_internal = function () {
+proto.is_internal = function () {
     return this.children.length == 0 ? false : true;
 };
 
-Phylo.Forest.Node.prototype.is_root = function () {  
+proto.is_root = function () {  
     return this.get_parent() == null ? true : false;
 };
 
-Phylo.Forest.Node.prototype.is_first = function () { 
+proto.is_first = function () { 
     return this.get_previous_sister() == null ? true : false;
 };
 
-Phylo.Forest.Node.prototype.is_last = function () { 
+proto.is_last = function () { 
     return this.get_next_sister() == null ? true : false;
 };
 
-Phylo.Forest.Node.prototype.is_descendant_of = function (ancestor) {
+proto.is_descendant_of = function (ancestor) {
     var node = this;
     while ( node != null ) {
         node = node.get_parent();
@@ -230,7 +223,7 @@ Phylo.Forest.Node.prototype.is_descendant_of = function (ancestor) {
     return false;
 };
 
-Phylo.Forest.Node.prototype.is_ancestor_of = function (descendant) {
+proto.is_ancestor_of = function (descendant) {
     while( descendant != null ) {
         descendant = descendant.get_parent();
         if ( descendant.get_id() == this.get_id() ) {
@@ -240,7 +233,7 @@ Phylo.Forest.Node.prototype.is_ancestor_of = function (descendant) {
     return false;
 };
 
-Phylo.Forest.Node.prototype.calc_nodes_to_root = function () {
+proto.calc_nodes_to_root = function () {
 	var n = 0;
 	var node = this;
 	while(node) {
@@ -250,7 +243,7 @@ Phylo.Forest.Node.prototype.calc_nodes_to_root = function () {
 	return n;
 };
 
-Phylo.Forest.Node.prototype.calc_max_path_to_tips = function () {
+proto.calc_max_path_to_tips = function () {
 	var maxpath = 0;
 	var root = this;
 	this.visit_depth_first({
@@ -269,7 +262,7 @@ Phylo.Forest.Node.prototype.calc_max_path_to_tips = function () {
 	return maxpath;
 };
 
-Phylo.Forest.Node.prototype.calc_max_nodes_to_tips = function () {
+proto.calc_max_nodes_to_tips = function () {
 	var maxnodes = 0;
 	var root = this;
 	this.visit_depth_first({
@@ -288,7 +281,7 @@ Phylo.Forest.Node.prototype.calc_max_nodes_to_tips = function () {
 	return maxnodes;
 };
 
-Phylo.Forest.Node.prototype.visit_depth_first = function (args) {
+proto.visit_depth_first = function (args) {
     if (args==null) args = {};
     if (args["pre"]!=null) args["pre"](this);
     
@@ -321,7 +314,7 @@ Phylo.Forest.Node.prototype.visit_depth_first = function (args) {
 };
 
 var newick_string = new String();
-Phylo.Forest.Node.prototype.to_newick = function (args) {
+proto.to_newick = function (args) {
     var name = this.get_name();
     var branch_length = this.get_branch_length();
     if ( this.is_internal() ) {
@@ -359,7 +352,7 @@ Phylo.Forest.Node.prototype.to_newick = function (args) {
     return null;
 };
 
-Phylo.Forest.Node.prototype.to_xml = function () {
+proto.to_xml = function () {
 	var nodes = new Array();
 	var desc = this.get_descendants();
 	nodes.push(this);

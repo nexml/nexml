@@ -9,16 +9,9 @@ function Tree (args) {
 }
 Phylo.Forest.Tree = Tree;
 copyPrototype(Phylo.Forest.Tree,Phylo.Listable);
+var proto = Phylo.Forest.Tree.prototype;
 
-Phylo.Forest.Tree.prototype._type = function() {
-    return this._type;
-};
-
-Phylo.Forest.Tree.prototype._container = function() {
-    return this._container;
-};
-
-Phylo.Forest.Tree.prototype.get_terminals = function () {
+proto.get_terminals = function () {
     var terminals = new Array();
     var allnodes = this.get_entities();
     for ( var i = 0; i < allnodes.length; i++ ) {
@@ -29,7 +22,7 @@ Phylo.Forest.Tree.prototype.get_terminals = function () {
     return terminals;
 };
 
-Phylo.Forest.Tree.prototype.get_internals = function () {
+proto.get_internals = function () {
     var internals = new Array();
     var allnodes = this.get_entities();
     for ( var i = 0; i < allnodes.length; i++ ) {
@@ -40,7 +33,7 @@ Phylo.Forest.Tree.prototype.get_internals = function () {
     return internals;
 };
 
-Phylo.Forest.Tree.prototype.get_root = function () {
+proto.get_root = function () {
     var nodes = this.get_entities();
     for ( var i = 0; i < nodes.length; i++ ) {
         if ( nodes[i].get_parent() == null ) {
@@ -50,19 +43,19 @@ Phylo.Forest.Tree.prototype.get_root = function () {
     return null;
 };
 
-Phylo.Forest.Tree.prototype.calc_number_of_terminals = function () {
+proto.calc_number_of_terminals = function () {
 	return this.get_terminals().length;
 };
 
-Phylo.Forest.Tree.prototype.visit_depth_first = function(args) {
+proto.visit_depth_first = function(args) {
 	return this.get_root().visit_depth_first(args);
 };
 
-Phylo.Forest.Tree.prototype.to_newick = function (args) {
+proto.to_newick = function (args) {
     return this.get_root().to_newick(args);
 };
 
-Phylo.Forest.Tree.prototype.to_xml = function () {
+proto.to_xml = function () {
 	var xsi_type = 'nex:IntTree';
 	var nodes = this.get_entities();
 	for ( var i = 0; i < nodes.length; i++ ) {
