@@ -583,7 +583,7 @@ Splits argument string of characters following appropriate rules.
 
     sub split {
         my ( $self, $string ) = @_;
-        my @array = CORE::split /\s*/, $string;
+        my @array = CORE::split( /\s*/, $string );
         return \@array;
     }
 
@@ -602,7 +602,7 @@ Joins argument array ref of characters following appropriate rules.
 
     sub join {
         my ( $self, $array ) = @_;
-        return CORE::join '', @{ $array };
+        return CORE::join( '', @{ $array } );
     }
     
     sub _cleanup {
