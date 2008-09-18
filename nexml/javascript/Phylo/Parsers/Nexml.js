@@ -349,10 +349,10 @@ function parse_dict (elt) {
 				var value = new Array();
 				value.push(value_elt.tagName);
 				var value_array = value_elt.textContent.split(/\s+/);
-				for ( var i = 0; i < value_array.length; i++ ) {
+				for ( var k = 0; k < value_array.length; k++ ) {
 					value.push(value_array[i]);
 				}
-				result[key] = value_array;
+				result[key] = value;
 			}
 			else if ( value_elt.tagName == 'any' ) {
 				result[key] = [ 'any', value_elt ];
