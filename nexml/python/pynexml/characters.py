@@ -663,6 +663,16 @@ class CharactersBlock(taxa.TaxaLinked):
         for char in self.column_types:
             map[char.elem_id] = char
         return map
+        
+    def dump_str(self, sep=''):
+        """
+        Dumps matrix as dictionary with taxon labels as keys and 
+        sequence string as values.
+        """
+        d = {}
+        for t in self.matrix:
+            d[t] = sep.join([str(s) for s in self.matrix[t]])
+        return d            
             
 class ContinuousCharactersBlock(CharactersBlock):
     """
