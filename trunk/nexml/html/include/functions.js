@@ -45,20 +45,20 @@ function toggleClassDisplay(theClass) {
 }
 
 function submitForm () {    
-    var form = document.getElementById('validateDiv');
-    var select = document.getElementById('validateSelect');
-    var options = select.getElementsByTagName('option');
+    var form = document.forms[0];
+    var options = form.getElementsByTagName('option');
     var action;
-    for each ( var option in options ) {
-    	if ( option.selected ) {
-    		action = option.value;
+    for ( var i = 0; i < options.length; i++ ) {
+    	if ( options[i].selected ) {
+    		action = options[i].value;
+    		break;
     	}
     }
     if ( action == null ) {
         action = '/nexml/validator';
     }
     form.action = '/nexml/' + action;
-    document.forms[0].submit();
+    form.submit();
 }
 
 window.name='nexml_site';
