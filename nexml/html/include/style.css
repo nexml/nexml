@@ -198,6 +198,10 @@ li.rss {
     line-height: 1.5em
 }
 
+li.external {    
+    list-style-image: url('<% paths.strip(paths.include("resultset_next.gif")) %>')
+}
+
 .icon { 
     text-decoration: none;  
     vertical-align: middle;
