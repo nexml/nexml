@@ -157,6 +157,12 @@ class TaxaBlock(list, base.IdTagged):
             self.append(taxon)
             return taxon
             
+    def add_taxon(self, elem_id=None, label=None):
+        """
+        Convenience function that wraps `find_taxon`.
+        """
+        self.find_taxon(elem_id=elem_id, label=label, update=True)
+            
     def all_taxa_bitmask(self):
         """
         Returns mask of all taxa.

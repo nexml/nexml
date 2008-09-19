@@ -424,8 +424,7 @@ class CharacterDataCell(base.Annotated):
         if result is NotImplemented:
             return result
         return not result
-        
-        
+                
 class CharacterDataVector(list, taxa.TaxonLinked):
     """
     A list of character data values.
@@ -452,8 +451,6 @@ class CharacterDataVector(list, taxa.TaxonLinked):
         else:
             return ''
 
-
-#class CharacterDataMatrix(utils.OrderedCaselessDict, base.Annotated):
 class CharacterDataMatrix(dict, base.Annotated):
     """
     An annotable dictionary with Taxon objects as keys and 
@@ -494,9 +491,7 @@ class CharacterDataMatrix(dict, base.Annotated):
 #                 key = self.keys()[idx]
 #         # force normal index error
 #         return utils.OrderedCaselessDict.__setitem__(self, key, value)                    
-        
-       
-                       
+                              
 class CharactersBlock(taxa.TaxaLinked):
     """
     Character data container/manager manager.
