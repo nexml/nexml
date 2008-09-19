@@ -122,6 +122,16 @@ class StateAlphabet(base.IdTagged, list):
                 return state
         raise Exception("State with %s value of '%s' not defined" % (attr_name, str(value)))
     
+    def state_index_for_symbol(self, symbol):
+        """
+        Returns index of the StateAlphabetElement object corresponding to
+        the given symbol.
+        """
+        for idx, state in enumerate(self):
+            if state.symbol == symbol:
+                return idx
+        raise Exception("State with symbol of '%s' not defined" % symbol)
+    
     def state_for_symbol(self, symbol):
         """
         Returns a StateAlphabetElement object corresponding to given symbol.
