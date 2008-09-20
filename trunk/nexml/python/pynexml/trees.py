@@ -499,12 +499,17 @@ class Node(taxa.TaxonLinked):
         self.__child_nodes.append(node)
         return node
 
-    def new_child(self, elem_id, edge_length=None):
+    def new_child(self, elem_id=None, edge_length=None, node_label=None, node_taxon=None):
         """
         Convenience class to create and add a new child to this node.
         """
         node = self.__class__()
-        node.elem_id = elem_id
+        if elem_id is not None:
+            node.elem_id = elem_id
+        if node_label is not None:
+            node.label = node_label
+        if node_taxon is not None:
+            node.taxon = node_taxon
         return self.add_child(node, edge_length)
 
     def remove_child(self, node):
@@ -526,16 +531,16 @@ class Node(taxa.TaxonLinked):
         
     ## Basic node metrics ##
 
-    def height(self):
+    def distance_from_root(self):
         """
         Sum of edge lengths from root. Right now, 'root' is taken to
         be a node with no parent node.
         """
         if self.parent_node and self.edge.length != None:
-            if self.parent_node.height == None:
+            if self.parent_node.distance_from_root == None:
                 return float(self.edge.length)
             else:
-                height = float(self.edge.length)
+                distance_from_root = float(self.edge.length)
                 par_node = self.parent_node
                 # The root is identified when a node with no
                 # parent is encountered. If we want to use some
@@ -543,9 +548,9 @@ class Node(taxa.TaxonLinked):
                 # is True), we modify it here.
                 while par_node:
                     if par_node.edge.length != None:
-                        height = height + float(par_node.edge.length)
+                        distance_from_root = distance_from_root + float(par_node.edge.length)
                     par_node = par_node.parent_node
-                return height                    
+                return distance_from_root                    
         elif not self.parent_node and self.edge.length != None:
             return float(self.edge.length)
         elif self.parent_node and self.edge.length == None:
@@ -568,7 +573,7 @@ class Node(taxa.TaxonLinked):
         else:
             return 0
     
-    def depth(self):
+    def distance_from_tip(self):
         """
         Sum of edge lengths from tip to node. If tree is not ultrametric
         (i.e., descendent edges have different lengths), then count the
@@ -577,9 +582,14 @@ class Node(taxa.TaxonLinked):
         if not self.__child_nodes:
             return 0.0
         else:
-            max_depth = max([(ch.depth() + ch.edge.length) \
-                                   for ch in self.__child_nodes])
-            return float(max_depth)
+            distance_from_tips = []
+            for ch in self.__child_nodes:
+                if ch.edge.length is not None:
+                    curr_edge_length = ch.edge.length
+                else:
+                    curr_edge_length = 0.0
+                distance_from_tips.append(ch.distance_from_tip() + curr_edge_length)                    
+            return float(max(distance_from_tips))
 
     def leaf_nodes(self):
         """
