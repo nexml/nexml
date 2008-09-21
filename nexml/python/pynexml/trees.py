@@ -403,7 +403,7 @@ class Node(taxa.TaxonLinked):
         self.__edge = None        
         self.__child_nodes = []        
         self.__parent_node = None        
-        self.__next_sib = None
+#         self.__next_sib = None
         if edge is not None:
             self.edge = edge
         else:
@@ -451,16 +451,16 @@ class Node(taxa.TaxonLinked):
         Side effects: 
             - sets the parent of each child node to this node
             - sets the tail node of each child to self
-            - sets the next_sib of each child correctly
+#             - sets the next_sib of each child correctly
         """
         self.__child_nodes = child_nodes
         for nidx in range(len(self.__child_nodes)):
             self.__child_nodes[nidx].parent = self
             self.__child_nodes[nidx].edge.tail_node = self
-            if nidx < len(self.__child_nodes)-1:
-                self.__child_nodes[nidx].next_sib = self.__child_nodes[nidx+1]
-            else:
-                self.__child_nodes[nidx].next_sib = None
+#             if nidx < len(self.__child_nodes)-1:
+#                 self.__child_nodes[nidx].next_sib = self.__child_nodes[nidx+1]
+#             else:
+#                 self.__child_nodes[nidx].next_sib = None
     
     def _get_parent_node(self):
         """Returns the parent node of this node."""
@@ -473,15 +473,15 @@ class Node(taxa.TaxonLinked):
         
     parent_node = property(_get_parent_node, _set_parent_node)
 
-    def _get_next_sib(self):
-        """Returns the next sibling of this node."""
-        return self.__next_sib
-    
-    def _set_next_sib(self, next_sib):
-        """Sets the next sibling of this node."""
-        self.__next_sib = next_sib
-        
-    next_sib = property(_get_next_sib, _set_next_sib)
+#     def _get_next_sib(self):
+#         """Returns the next sibling of this node."""
+#         return self.__next_sib
+#     
+#     def _set_next_sib(self, next_sib):
+#         """Sets the next sibling of this node."""
+#         self.__next_sib = next_sib
+#         
+#     next_sib = property(_get_next_sib, _set_next_sib)
 
     def add_child(self, node, edge_length=None):
         """
@@ -494,8 +494,8 @@ class Node(taxa.TaxonLinked):
         node.edge.tail_node = self
         if edge_length != None:
             node.edge.length = edge_length
-        if len(self.__child_nodes) > 0:
-            self.__child_nodes[-1].next_sib = node
+#         if len(self.__child_nodes) > 0:
+#             self.__child_nodes[-1].next_sib = node
         self.__child_nodes.append(node)
         return node
 
@@ -522,8 +522,8 @@ class Node(taxa.TaxonLinked):
             node.parent_node = None
             node.edge.tail_node = None
             index = self.__child_nodes.index(node)
-            if index > 0:
-                self.__child_nodes[index-1].next_sib = None
+#             if index > 0:
+#                 self.__child_nodes[index-1].next_sib = None
             self.__child_nodes.remove(node)
         else:
             raise Exception("Tried to remove an non-existing or null node")
