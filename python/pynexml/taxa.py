@@ -162,6 +162,12 @@ class TaxaBlock(list, base.IdTagged):
         Convenience function that wraps `find_taxon`.
         """
         self.find_taxon(elem_id=elem_id, label=label, update=True)
+        
+    def complement_split_bitmask(self, split):
+        """
+        Returns complement of the split bitmask.
+        """
+        return split ^ self.all_taxa_bitmask()
             
     def all_taxa_bitmask(self):
         """
