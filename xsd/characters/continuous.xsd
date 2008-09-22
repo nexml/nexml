@@ -3,6 +3,7 @@
     xmlns:xs="http://www.w3.org/2001/XMLSchema" 
     targetNamespace="http://www.nexml.org/1.0"
     xmlns="http://www.nexml.org/1.0" 
+    xmlns:sawsdl="http://www.w3.org/ns/sawsdl" 
     xmlns:xml="http://www.w3.org/XML/1998/namespace">
     <xs:annotation>
         <xs:documentation>
@@ -24,7 +25,7 @@
         <xs:restriction base="xs:float"/>
     </xs:simpleType>   
     
-    <xs:complexType name="ContinuousChar">
+    <xs:complexType name="ContinuousChar" sawsdl:modelReference="http://evolutionaryontology-dev.nescent.org/cdao.owl#ContinuousCharacter">
         <xs:annotation>
             <xs:documentation> 
                 A concrete implementation of the char element, which requires
@@ -60,7 +61,7 @@
         </xs:complexContent>
     </xs:complexType>
     
-    <xs:complexType name="ContinuousObs" abstract="false">
+    <xs:complexType name="ContinuousObs" abstract="false" sawsdl:modelReference="http://evolutionaryontology-dev.nescent.org/cdao.owl#ContinuousStateDatum">
         <xs:annotation>
             <xs:documentation> 
                 This is a single cell in a matrix containing a continuous

@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.nexml.org/1.0"
-    xmlns="http://www.nexml.org/1.0" xmlns:xml="http://www.w3.org/XML/1998/namespace">
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+	targetNamespace="http://www.nexml.org/1.0"
+	xmlns:sawsdl="http://www.w3.org/ns/sawsdl"
+    xmlns="http://www.nexml.org/1.0" 
+    xmlns:xml="http://www.w3.org/XML/1998/namespace">
     <xs:include schemaLocation="abstractcharacters.xsd"/>
     
     <xs:annotation>
@@ -30,7 +33,7 @@
         </xs:restriction>
     </xs:simpleType>
     
-    <xs:complexType name="AAChar">
+    <xs:complexType name="AAChar" sawsdl:modelReference="http://evolutionaryontology-dev.nescent.org/cdao.owl#AminoAcidResidueCharacter">
         <xs:annotation>
             <xs:documentation> 
                 A concrete implementation of the AbstractChar element. In this implementation
@@ -67,7 +70,7 @@
         </xs:complexContent>
     </xs:complexType>
     
-    <xs:complexType name="AAObs" abstract="false">
+    <xs:complexType name="AAObs" abstract="false" sawsdl:modelReference="http://evolutionaryontology-dev.nescent.org/cdao.owl#AminoAcidResidueStateDatum">
         <xs:annotation>
             <xs:documentation> 
             	This is a single cell in a matrix containing
