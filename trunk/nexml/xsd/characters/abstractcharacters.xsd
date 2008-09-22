@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.nexml.org/1.0"
+<xs:schema 
+	xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:sawsdl="http://www.w3.org/ns/sawsdl" 
+	targetNamespace="http://www.nexml.org/1.0"
     xmlns="http://www.nexml.org/1.0">
     <xs:annotation>
         <xs:documentation>
@@ -144,7 +147,7 @@
         <xs:restriction base="xs:positiveInteger"/>
     </xs:simpleType>
 
-    <xs:complexType name="AbstractChar" abstract="true">
+    <xs:complexType name="AbstractChar" abstract="true" sawsdl:modelReference="http://evolutionaryontology-dev.nescent.org/cdao.owl#Character">
         <xs:annotation>
             <xs:documentation> 
                 The AbstractChar type is the superclass for a column definition, which may
@@ -297,7 +300,7 @@
         </xs:complexContent>
     </xs:complexType>    
     
-    <xs:complexType name="AbstractBlock" abstract="true">
+    <xs:complexType name="AbstractBlock" abstract="true" sawsdl:modelReference="http://evolutionaryontology-dev.nescent.org/cdao.owl#CharacterStateDataMatrix">
         <xs:annotation>
             <xs:documentation>
                 The AbstractBlock is the superclass for blocks that contain
