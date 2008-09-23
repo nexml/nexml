@@ -1,41 +1,36 @@
 <!-- TITLE: nexml - phylogenetic data as xml -->
 <!-- HEADING: Overview -->
-<div id="my_div"></div>  
-<script type="text/javascript">
-	initialize_ajax();
-	PhyloWidget.useFull(); // Use PhyloWidget Full 
-	var params = { width:530, height:300, tree:'PhyloWidget', search:'a' };
-	PhyloWidget.writeWidget(params); // Immediately inserts the applet code directly into the current document.
-</script>	
-<form>
-	<input type="text" name="tree_id" id="tree_id" value="16299"></input>
-    <input type="button" value="Draw this Tree of Life clade" onclick="fetch_tree()"></input>
-</form>
-<h3 class="headerstyle">
-    Nexml in action: AJAX + PhyloWidget
-</h3>
-<p>
-	The <a rel="nofollow" href="http://www.phylowidget.org">PhyloWidget</a> applet
-	above demonstrates how nexml can be used in a web context: when you click
-	the 'Draw this Tree of Life clade' button, an AJAX request is sent to the 
-	nexml.org server. From there, a request is passed on to the 
-	<a href="http://www.tolweb.org" rel="nofollow">Tree of Life</a> server. The
-	ToL responds with its XML format, which is transformed into nexml on the
-	nexml.org server, where it is returned to the AJAX request. Your web browser 
-	then parses this nexml and passes it into the applet, where it is visualized.
-	To find the taxon ID of your favourite clade, visit the 
-	<a href="http://tolweb.org/tree/home.pages/groupsearch.html" rel="nofollow">
-	Tree of Life group search</a> page. (<em>Applet not working?</em> try the 
-	PhyloWidget <a href="http://www.phylowidget.org/troubleshooting.html" rel="nofollow">
-	troubleshooting</a> section.)
-</p>
-<h3 class="headerstyle">
-    So what is Nexml anyway?
-</h3>
-<p class="internallink">
-
-  [ <a href="#top">Back to top</a> ]
-</p>
+<div class="hiddenWidget" style="display:none">
+	<div id="my_div"></div>  
+	<script type="text/javascript">
+		initialize_ajax();
+		PhyloWidget.useFull(); // Use PhyloWidget Full 
+		var params = { width:530, height:300, tree:'PhyloWidget', search:'a' };
+		PhyloWidget.writeWidget(params); // Immediately inserts the applet code directly into the current document.
+	</script>	
+	<form>
+		<input type="text" name="tree_id" id="tree_id" value="16299"></input>
+	    <input type="button" value="Draw this Tree of Life clade" onclick="fetch_tree()"></input>
+	</form>
+	<h3 class="headerstyle">
+	    Nexml in action: AJAX + PhyloWidget
+	</h3>
+	<p>
+		The <a rel="nofollow" href="http://www.phylowidget.org">PhyloWidget</a> applet
+		above demonstrates how nexml can be used in a web context: when you click
+		the 'Draw this Tree of Life clade' button, an AJAX request is sent to the 
+		nexml.org server. From there, a request is passed on to the 
+		<a href="http://www.tolweb.org" rel="nofollow">Tree of Life</a> server. The
+		ToL responds with its XML format, which is transformed into nexml on the
+		nexml.org server, where it is returned to the AJAX request. Your web browser 
+		then parses this nexml and passes it into the applet, where it is visualized.
+		To find the taxon ID of your favourite clade, visit the 
+		<a href="http://tolweb.org/tree/home.pages/groupsearch.html" rel="nofollow">
+		Tree of Life group search</a> page. (<em>Applet not working?</em> try the 
+		PhyloWidget <a href="http://www.phylowidget.org/troubleshooting.html" rel="nofollow">
+		troubleshooting</a> section.)
+	</p>
+</div>
 <p>
     The <a rel="nofollow" href="http://www.citeulike.org/user/rvosa/article/2011773">
     NEXUS file format</a> is a commonly used format for 
@@ -45,7 +40,9 @@
     problems</a>. Meanwhile, new technologies around the
     <a rel="nofollow" href="http://www.w3.org/XML/">XML</a> standard have
     emerged. These technologies have the potential to greatly
-    simplify, and improve robustness, in the processing of phylogenetic data:
+    simplify, and improve robustness, in the processing of phylogenetic data (for 
+    a quick visual demonstration of the integration of NeXML with web services
+    and client-side AJAX scripting, <a href="#" onclick="toggleClassDisplay('hiddenWidget')">click here</a>):
 </p>
 <ul>
 <li class="rss">
