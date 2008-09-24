@@ -8,7 +8,7 @@
 		var params = { width:530, height:300, tree:'PhyloWidget', search:'a' };
 		PhyloWidget.writeWidget(params); // Immediately inserts the applet code directly into the current document.
 	</script>	
-	<form>
+	<form action="#">
 		<input type="text" name="tree_id" id="tree_id" value="16299"></input>
 	    <input type="button" value="Draw this Tree of Life clade" onclick="fetch_tree()"></input>
 	</form>
@@ -121,32 +121,32 @@
         Secondly, we're implementing nexml read/write abilities in a number of 
         software packages:<br/>
         <br/>
-        <img class="app" src="<% paths.strip(paths.include('mesquite.gif')) %>"/>
+        <img class="app" alt="Mesquite" src="<% paths.strip(paths.include('mesquite.gif')) %>"/>
         <a rel="nofollow" href="http://mesquiteproject.org">Mesquite</a> now supports reading
         and writing of nexml. This implementation has been developed by Peter Midford and Rutger
         Vos.<br/>
         <br/>
-        <img class="app" src="<% paths.strip(paths.include('dambe.gif')) %>"/>
+        <img class="app" alt="DAMBE" src="<% paths.strip(paths.include('dambe.gif')) %>"/>
         At the most recent EvoInfo meeting, Xuhua Xia demonstrated 
         <a rel="nofollow" href="http://dambe.bio.uottawa.ca/dambe.asp">DAMBE</a>'s abilities
         to read and write nexml data transparently.<br/>
         <br/>
-        <img class="app" src="<% paths.strip(paths.include('Rlogo.jpg')) %>"/>
+        <img class="app" alt="R" src="<% paths.strip(paths.include('Rlogo.jpg')) %>"/>
         The <a rel="nofollow" href="https://r-forge.r-project.org/projects/phylobase/">phylobase</a>
         package for <a rel="nofollow" href="http://www.r-project.org/">R</a> reads and writes
         tree descriptions, with character matrices under way. This implementation
         is being developed by Aaron Mackey.<br/>
         <br/>
-        <img class="app" src="<% paths.strip(paths.include('paup.gif')) %>"/>
+        <img class="app" alt="paup" src="<% paths.strip(paths.include('paup.gif')) %>"/>
         David Swofford has started implementing nexml I/O for 
         <a rel="nofollow" href="http://paup.csit.fsu.edu/">paup</a>. This implementation uses
         C++ bindings analogous to xmlbeans.<br/>
         <br/>
-        <img class="app" src="<% paths.strip(paths.include('python.jpg')) %>"/>
+        <img class="app" alt="python" src="<% paths.strip(paths.include('python.jpg')) %>"/>
         Jeet Sukumaran has implemented nexml I/O for python, in a package
         tentatively called pyNexml.<br/>
         <br/>
-        <img class="app" src="<% paths.strip(paths.include('BioPerlLogo.png')) %>"/>
+        <img class="app" alt="BioPerl" src="<% paths.strip(paths.include('BioPerlLogo.png')) %>"/>
         Weigang Qiu has started implementing nexml I/O for 
         <a rel="nofollow" href="http://www.bioperl.org">BioPerl</a>'s TreeIO and
         AlignIO interfaces, which under the hood reuse Rutger Vos's 
