@@ -94,7 +94,16 @@ public class Datum extends Listable implements TaxonLinker, TypeSafeData {
 	}
 	
 	public void insert(String chars) throws ObjectMismatch {
-		super.insert(this.getTypeObject().split(chars));
+		String[] splitChars = this.getTypeObject().split(chars);
+		Vector clean = new Vector();
+		for ( int i = 0; i < splitChars.length; i++ ) {
+			if ( ! splitChars[i].matches(" ") ) {
+				clean.add(splitChars[i]);
+			}
+		}
+		String[] noSpaces = new String[clean.size()];
+		clean.copyInto(noSpaces);
+ 		super.insert(noSpaces);
 	}
 	
 	public String toXml() throws ObjectMismatch {
