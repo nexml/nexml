@@ -14,6 +14,7 @@ import org.biophylo.Mediators.*;
 public class Nexml implements Parsers {
 	private static HashMap factory = null;
 	private static ObjectMediator om = ObjectMediator.getInstance();
+	private static Logger logger = Logger.getInstance();
 	
 	public Nexml () {
 		if ( factory == null ) {
@@ -121,10 +122,14 @@ public class Nexml implements Parsers {
 		if ( charElts.getLength() == 0) return charBlocks;
 		for ( int i = 0; i < charElts.getLength(); i++ ) {
 			Matrix charObj = (Matrix)objFromElement((Element)charElts.item(i));
-			String type = ((Element)charElts.item(i)).getAttributeNS("http://www.w3.org/2001/XMLSchema-instance", "type");
-			type.replaceAll("[a-z]+:", "");
-			type.replaceAll("Cells", "");
-			type.replaceAll("Seqs", "");
+			String type = ((Element)charElts.item(i)).getAttribute("xsi:type");
+			int start = type.indexOf(":");
+			int finish = type.lastIndexOf("Seqs");
+			if ( finish == -1 ) {
+				finish = type.lastIndexOf("Cells");
+			}
+			type = type.substring(start + 1, finish);
+			logger.info(type);
 			Datatype to = Datatype.getInstance(type);
 			charObj.setTypeObject(to);
 			String otus = ((Element)charElts.item(i)).getAttribute("otus");
@@ -171,10 +176,11 @@ public class Nexml implements Parsers {
 			Datum datum = (Datum)objFromElement((Element)row.item(i));
 			String otuId = ((Element)row.item(i)).getAttribute("otu");
 			datum.setGeneric("otu", otuId);
+			datum.setTypeObject(charObj.getTypeObject());
 			String[] chars = new String[colIndices.size()];
 			charObj.insert(datum);
 			NodeList cell = ((Element)row.item(i)).getElementsByTagName("cell");
-			if ( cell != null ) {
+			if ( cell.getLength() != 0 ) {
 				for ( int j = 0; j < cell.getLength(); j++ ) {
 					String charId = ((Element)cell.item(j)).getAttribute("char");
 					String stateId = ((Element)cell.item(j)).getAttribute("state");
