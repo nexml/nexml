@@ -20,6 +20,14 @@ public class Rna extends Datatype {
 		{1,1,1,1,},
 	};	
 	
+	public boolean isValueConstrained() {
+		return true;
+	}	
+	
+	public boolean isSequential() {
+		return true;
+	}	
+	
 	public Rna() {
 		this.alphabet = "ACGUMRWSYKVHDBXN";
 		this.missing = '?';

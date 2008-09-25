@@ -6,6 +6,14 @@ public class Restriction extends Datatype {
 		{0,1},
 	};	
 	
+	public boolean isValueConstrained() {
+		return true;
+	}	
+	
+	public boolean isSequential() {
+		return true;
+	}	
+	
 	public Restriction() {
 		this.alphabet = "01";
 		this.lookup = restrictionLookup;

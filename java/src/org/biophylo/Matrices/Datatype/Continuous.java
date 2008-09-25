@@ -18,7 +18,15 @@ public class Continuous extends Datatype {
 			sb.append(chars[i]);
 		}
 		return sb.toString();
-	}	
+	}
+	
+	public boolean isValueConstrained() {
+		return true;
+	}
+	
+	public boolean isSequential() {
+		return false;
+	}
 	
 	public boolean isValid(String charsString) {
 		String[] chars = this.split(charsString.toUpperCase());

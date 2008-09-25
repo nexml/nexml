@@ -144,6 +144,10 @@ public abstract class Datatype extends XMLWritable {
 		return true;
 	}
 	
+	public abstract boolean isValueConstrained();
+	
+	public abstract boolean isSequential();
+	
 	public boolean isSame(Datatype that) {		
 		if ( !this.getType().equals(that.getType()) ) {
 			return false;
@@ -201,7 +205,7 @@ public abstract class Datatype extends XMLWritable {
 	public String toXml() throws ObjectMismatch {
 		StringBuffer sb = new StringBuffer();
 		int[][] lookup = this.getLookup();
-		if ( lookup != null ) {
+		if ( lookup != null && ! this.isValueConstrained() ) {
 			sb.append(this.getXmlTag(false));
 			final HashMap idForState = this.getIdsForStates();
 			class Sorter implements Comparator {
