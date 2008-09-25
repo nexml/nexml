@@ -189,7 +189,7 @@ public class Matrix extends Listable implements TypeSafeData, TaxaLinker {
 			}
 			sb.append("<char id=\"c");
 			sb.append(i);
-			if ( statesId != null ) {
+			if ( statesId != null && ! this.getTypeObject().isValueConstrained() ) {
 				sb.append("\" states=\"");
 				sb.append(statesId);
 			}

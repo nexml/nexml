@@ -39,6 +39,14 @@ public class Dna extends Datatype {
 		{1,1,1,1,},
 	};	
 	
+	public boolean isValueConstrained() {
+		return true;
+	}	
+	
+	public boolean isSequential() {
+		return true;
+	}	
+	
 	public Dna() {
 		this.alphabet = "ACGTMRWSYKVHDBXN";
 		this.missing = '?';

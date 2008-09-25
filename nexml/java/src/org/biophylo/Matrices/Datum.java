@@ -121,17 +121,18 @@ public class Datum extends Listable implements TaxonLinker, TypeSafeData {
 		StringBuffer sb = new StringBuffer();
 		sb.append(this.getXmlTag(false));
 		if ( ! compact ) {
+			Datatype to = this.getTypeObject();
 			for ( int i = 0; i < chars.length; i++ ) {
 				if ( !missing.equals(chars[i]) && !gap.equals(chars[i]) ) {
 					String c, s;
-					if ( charIds != null && charIds[i] != null ) {
+					if ( charIds != null && charIds[i] != null && ! to.isSequential() ) {
 						c = charIds[i];
 					}
 					else {
 						c = ""+i;
 					}
 					String ucChar = chars[i].toUpperCase();
-					if ( idsForStates != null && idsForStates.containsKey(ucChar) ) {
+					if ( idsForStates != null && idsForStates.containsKey(ucChar) && ! to.isValueConstrained() ) {
 						s = "s" + (String)idsForStates.get(ucChar);
 					}
 					else {
