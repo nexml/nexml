@@ -43,28 +43,22 @@ public abstract class Datatype extends XMLWritable {
 	
 	public void setLookup(HashMap lookup) {
 		int firstDimension = lookup.size();
-		int secondDimension = 0;
 		String[] keys = new String[firstDimension];
 		lookup.keySet().toArray(keys);
-		for ( int i = 0; i < keys.length; i++ ) {
-			int valSize = ((Vector)lookup.get(keys[i])).size();
-			if ( valSize > secondDimension ) {
-				secondDimension = valSize;
-			}
-		}
 		StringBuffer sb = new StringBuffer();
 		for ( int i = 0; i < keys.length; i++ ) {
 			sb.append(keys[i]);
 		}
+		
 		this.alphabet = sb.toString();
-		int[][] intLookup = new int[firstDimension][secondDimension];
+		int[][] intLookup = new int[firstDimension][firstDimension];
 		for ( int i = 0; i < keys.length; i++ ) {
 			Vector values = (Vector)lookup.get(keys[i]);
 			for ( int j = 0; j < values.size(); j++ ) {
 				int k = this.alphabet.indexOf((String)values.get(j));
 				intLookup[i][k] = 1;
 			}
-			for ( int j = 0; j < secondDimension; j++ ) {
+			for ( int j = 0; j < firstDimension; j++ ) {
 				if ( intLookup[i][j] != 1 ) {
 					intLookup[i][j] = 0;
 				}
@@ -120,8 +114,9 @@ public abstract class Datatype extends XMLWritable {
 	}
 	
 	public HashMap getIdsForStates() {
-		HashMap result = new HashMap();
+		HashMap result = null;
 		if ( this.lookup != null ) {
+			result = new HashMap();
 			for ( int i = 0; i < this.lookup.length; i++ ) {
 				String symbol = this.alphabet.substring(i, i+1);
 				result.put(symbol, ""+(i+1));
