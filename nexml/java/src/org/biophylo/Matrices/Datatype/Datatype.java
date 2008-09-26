@@ -12,6 +12,7 @@ public abstract class Datatype extends XMLWritable {
 	public static Datatype getInstance(String type) {
 		String base = "org.biophylo.Matrices.Datatype.";
 		Datatype dt = null;
+		logger.info("Instantiating for data type " + type);
 		try {
 			dt = (Datatype)Class.forName(base+type).newInstance();
 		} catch (Exception e) {
