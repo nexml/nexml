@@ -189,6 +189,18 @@ def _from_nexml_dict_value(value, value_type):
         parsed_value = value
     return parsed_value
 
+def iterate_over_trees(file=None):
+    """
+    Generator to iterate over trees in file without retaining any in memory.
+    """
+    xml_doc = xmlparser.xml_document(filesrc=file)
+    dataset = datasets.Dataset()
+    nexml_reader = NexmlReader()
+    nexml_reader.parse_taxa_blocks(xml_doc, dataset)
+    nx_tree_parser = _NexmlTreesParser()
+    for trees_idx, trees_element in enumerate(xml_doc.getiterator('trees')):
+        for tree in nx_tree_parser.parse_trees(trees_element, dataset, trees_idx, yield_tree=True):
+            yield tree
 class NexmlReader(datasets.Reader):
     """
     Implements thinterface for handling NEXML files.
@@ -369,7 +381,8 @@ class _NexmlTreesParser(_NexmlElementParser):
         Given an XmlElement object representing a NEXML treeblock,
         self.nxtrees (corresponding to a `nex:trees` element), this
         will construct and return a TreesBlock object defined by the
-        underlying NEXML. 
+        underlying NEXML. If `yield_tree` is True, then each tree is yielded,
+        *AND NOT ADDED TO THE DATASET* and nothing is returned at the end.
         """
         elem_id = nxtrees.get('id', "Trees" + str(trees_idx))
         label = nxtrees.get('label', None)
@@ -449,7 +462,10 @@ class _NexmlTreesParser(_NexmlElementParser):
                     ### should we make this node the seed node by rerooting the tree here? ###
             else:
                 treeobj.seed_node.edge = None
-            trees_block.append(treeobj)
+            if yield_tree:
+                yield treeobj
+            else:
+                trees_block.append(treeobj)
 
     def parse_nodes(self, tree_element, taxa_block, node_factory):
         """
