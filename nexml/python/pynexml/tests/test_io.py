@@ -46,7 +46,7 @@ class NexmlTest(unittest.TestCase):
 		Runs through test suite.
 		"""
 		log_message("Starting nexml parsing tests ...")
-		test_filenames = ['comprehensive.xml']
+		test_filenames = ['comprehensive.xml',  'trees.xml']
 		for test_filename in test_filenames:
 			self.read_file(test_filename)
         
