@@ -206,7 +206,7 @@ class Taxon(base.IdTagged):
     def __init__(self, elem_id=None, label=None): 
         """
         Initializes by calling base class.
-        """
+        """       
         base.IdTagged.__init__(self, elem_id=elem_id, label=label)
 
     def __str__(self):
