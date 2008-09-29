@@ -3,7 +3,7 @@
 ############################################################################
 ##  nexml.py
 ##
-##  Part of the PyNexml phylogenetic data parsing library.
+##  Part of the PyNexml phylogenetic computation library.
 ##
 ##  Copyright 2007 Jeet Sukumaran and Mark T. Holder.
 ##
@@ -18,7 +18,7 @@
 ##  GNU General Public License for more details.
 ##
 ##  You should have received a copy of the GNU General Public License along
-##  with this program. If not, see <http://www.gnu.org/licenses/>.
+##  with this programm. If not, see <http://www.gnu.org/licenses/>.
 ##
 ############################################################################
 
@@ -188,24 +188,25 @@ def _from_nexml_dict_value(value, value_type):
         # what else to do?
         parsed_value = value
     return parsed_value
-
+        
 def iterate_over_trees(file=None):
     """
     Generator to iterate over trees in file without retaining any in memory.
     """
-    xml_doc = xmlparser.xml_document(filesrc=file)
+    xml_doc = xmlparser.xml_document(file=file)
     dataset = datasets.Dataset()
     nexml_reader = NexmlReader()
     nexml_reader.parse_taxa_blocks(xml_doc, dataset)
     nx_tree_parser = _NexmlTreesParser()
     for trees_idx, trees_element in enumerate(xml_doc.getiterator('trees')):
-        for tree in nx_tree_parser.parse_trees(trees_element, dataset, trees_idx, yield_tree=True):
+        for tree in nx_tree_parser.parse_trees(trees_element, dataset, trees_idx, add_to_trees_block=False):
             yield tree
+
 class NexmlReader(datasets.Reader):
     """
     Implements thinterface for handling NEXML files.
     """
-
+    
     def __init__(self):
         """
         `tree_factory` is a DendroPy TreeFactory class or derived
@@ -217,7 +218,7 @@ class NexmlReader(datasets.Reader):
 
     ## Implementation of the datasets.Reader interface ##
 
-    def read_dataset(self, fileobj, dataset=None):
+    def read_dataset(self, src, dataset=None):
         """
         Instantiates and returns a DataSet object based on the
         NEXML-formatted contents read from the file descriptor object
@@ -225,10 +226,10 @@ class NexmlReader(datasets.Reader):
         used to instantiate objects.
         """
         start = time.clock()
-        xmldoc = xmlparser.XmlDocument(filesrc=fileobj)
+        xml_doc = xmlparser.xml_document(file=src)
         self.load_time = time.clock() - start
         start = time.clock()
-        dataset = self.parse_dataset(xmldoc, dataset)
+        dataset = self.parse_dataset(xml_doc, dataset)
         self.parse_time = time.clock() - start
         return dataset
 
@@ -236,7 +237,7 @@ class NexmlReader(datasets.Reader):
 
     def parse_dataset(self, xml_doc, dataset):
         """
-        Given an XMLDocument, parses the XmlElement representation of
+        Given an xml_document, parses the XmlElement representation of
         taxon sets, character matrices, and trees into a DataSet object.
         """
         if dataset is None:
@@ -248,7 +249,7 @@ class NexmlReader(datasets.Reader):
         
     def parse_taxa_blocks(self, xml_doc, dataset):
         """
-        Given an XMLDocument, parses the XmlElement representation of
+        Given an xml_document, parses the XmlElement representation of
         taxon sets into a TaxaBlocks objects.
         """
         nxt = _NexmlTaxaParser(self.taxa_block_factory, self.taxon_factory)
@@ -257,7 +258,7 @@ class NexmlReader(datasets.Reader):
         
     def parse_char_blocks(self, xml_doc, dataset):
         """
-        Given an XMLDocument, parses the XmlElement representation of
+        Given an xml_document, parses the XmlElement representation of
         character sequences into a list of CharacterMatrix objects.
         """
         nxc = _NexmlCharBlockParser()
@@ -266,13 +267,14 @@ class NexmlReader(datasets.Reader):
 
     def parse_trees_blocks(self, xml_doc, dataset):
         """
-        Given an XmlDocument object, parses the XmlElement structural
+        Given an xml_document object, parses the XmlElement structural
         representations of a set of NEXML treeblocks (`nex:trees`) and
         returns a TreesBlocks object corresponding to the NEXML.
         """
-        nxt = _NexmlTreesParser(self.trees_block_factory, self.tree_factory, self.node_factory, self.edge_factory)
+        nx_tree_parser = _NexmlTreesParser(self.trees_block_factory, self.tree_factory, self.node_factory, self.edge_factory)
         for trees_idx, trees_element in enumerate(xml_doc.getiterator('trees')):
-            nxt.parse_trees(trees_element, dataset, trees_idx)
+            for tree in nx_tree_parser.parse_trees(trees_element, dataset, trees_idx, add_to_trees_block=True):
+                pass
 
 class _NexmlElementParser(object):
     """
@@ -376,13 +378,13 @@ class _NexmlTreesParser(_NexmlElementParser):
         else:
             self.edge_factory = edge_factory
 
-    def parse_trees(self, nxtrees, dataset, trees_idx=None):
+    def parse_trees(self, nxtrees, dataset, trees_idx=None, add_to_trees_block=True):
         """
         Given an XmlElement object representing a NEXML treeblock,
         self.nxtrees (corresponding to a `nex:trees` element), this
         will construct and return a TreesBlock object defined by the
-        underlying NEXML. If `yield_tree` is True, then each tree is yielded,
-        *AND NOT ADDED TO THE DATASET* and nothing is returned at the end.
+        underlying NEXML. If `add_to_trees_block` is False, then each tree,
+        *IS NOT ADDED TO THE DATASET*.
         """
         elem_id = nxtrees.get('id', "Trees" + str(trees_idx))
         label = nxtrees.get('label', None)
@@ -413,13 +415,15 @@ class _NexmlTreesParser(_NexmlElementParser):
                 # this check if tail node id is specified
                 if edge.tail_node_id and edge.tail_node_id not in nodes:
                     msg = 'Edge "%s" specifies a non-defined ' \
-                          'source node ("%s")' % (edge.elem_id,
-                                                  edge.tail_node_id)
+                          'source node ("%s")\nCurrent nodes: %s' % (edge.elem_id,
+                                                                     edge.tail_node_id,
+                                                                     (','.join([n for n in nodes])))
                     raise Exception(msg)
                 if edge.head_node_id not in nodes:
                     msg = 'Edge "%s" specifies a non-defined ' \
-                          'target node ("%s")' % (edge.elem_id,
-                                                  edge.head_node_id)
+                          'target node ("%s")\nCurrent nodes: %s' % (edge.elem_id,
+                                                                     edge.head_node_id,
+                                                                     (','.join([n.elem_id for n in nodes])))
                     raise Exception(msg)
 
                 if edge.head_node_id and edge.tail_node_id:
@@ -454,18 +458,18 @@ class _NexmlTreesParser(_NexmlElementParser):
             if rootedge:
                 if rootedge.head_node_id not in nodes:
                     msg = 'Edge "%s" specifies a non-defined ' \
-                          'target node ("%s")' % (edge.elem_id,
-                                                  edge.head_node_id)
+                          'target node ("%s")\nCurrent nodes: %s' % (edge.elem_id,
+                                                                     edge.head_node_id,
+                                                                     (','.join([n.elem_id for n in nodes])))
                     raise Exception(msg)
                 else:
                     nodes[rootedge.head_node_id].edge = rootedge
                     ### should we make this node the seed node by rerooting the tree here? ###
             else:
                 treeobj.seed_node.edge = None
-            if yield_tree:
-                yield treeobj
-            else:
-                trees_block.append(treeobj)
+            if add_to_trees_block:
+               trees_block.append(treeobj)
+            yield treeobj
 
     def parse_nodes(self, tree_element, taxa_block, node_factory):
         """
@@ -1159,7 +1163,7 @@ class NexmlWriter(datasets.Writer):
 def basic_test():
     source = "tests/sources/comprehensive.xml"
     nexmlr = NexmlReader()
-    dataset = nexmlr.get_dataset(source)                
+    dataset = nexmlr.read_dataset(source)                
     target = "tests/output/parsed.xml"                
     nexmlw = NexmlWriter()
     print
