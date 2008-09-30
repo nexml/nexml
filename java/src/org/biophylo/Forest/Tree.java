@@ -7,7 +7,7 @@ import org.biophylo.Util.Exceptions.*;
 import java.math.*;
 
 public class Tree extends Listable {
-	
+	private static Logger logger = Logger.getInstance();
 	public Tree () {
 		super();
 		this.container = CONSTANT.FOREST;
@@ -84,8 +84,10 @@ public class Tree extends Listable {
 	}
 	
 	public String toXml () throws ObjectMismatch {
+		logger.debug("writing tree to xml");
 		String xsi_type = "nex:IntTree";
 		Containable[] contents = this.getEntities();
+		logger.debug("tree contains " + contents.length + " nodes");
 		for ( int i = 0; i < contents.length; i++ ) {
 			double bl = ((Node)contents[i]).getBranchLength();
 			if ( Math.round(bl) != bl ) {

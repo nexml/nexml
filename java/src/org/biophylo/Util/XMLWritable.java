@@ -5,8 +5,10 @@ import java.util.*;
 import org.biophylo.Util.Exceptions.*;
 import org.biophylo.Taxa.*;
 import org.biophylo.*;
+import org.biophylo.Util.*;
 
 public class XMLWritable extends Base {
+	private static Logger logger = Logger.getInstance();
 	protected String tag;
 	protected HashMap attributes;
 	protected String xmlId;
@@ -152,6 +154,8 @@ public class XMLWritable extends Base {
 	}
 	
 	public String toXml () throws ObjectMismatch {
+		logger.VERBOSE(4);
+		logger.debug("writing object "+this+" to xml");
 		String xml = null;
 		if ( this instanceof Listable ) {
 			StringBuffer sb = new StringBuffer();
