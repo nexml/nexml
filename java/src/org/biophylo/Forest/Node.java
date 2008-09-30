@@ -10,7 +10,7 @@ import java.util.*;
 import java.math.*;
 
 public class Node extends Containable implements TaxonLinker {
-	private static Logger logger = new Logger();
+	private static Logger logger = Logger.getInstance();
 	protected Node parent;
 	Vector children;
 	protected double branch_length; 
@@ -503,11 +503,11 @@ public class Node extends Containable implements TaxonLinker {
 		if ( length != 0 ) {
 			String target = nodes[0].getXmlId();
 			String id = "edge" + nodes[0].getId();
-			sb.append("<rootedge target=\"");
-			sb.append(target);
-			sb.append("\" id=\"");
+			sb.append("<rootedge id=\"");
 			sb.append(id);
-			sb.append("\" length=\"");
+			sb.append("\" target=\"");
+			sb.append(target);
+			sb.append("\" length=\"");			
 			if ( roundAsInt ) {
 				sb.append(new Double(length).intValue());
 			}

@@ -154,7 +154,6 @@ public class XMLWritable extends Base {
 	}
 	
 	public String toXml () throws ObjectMismatch {
-		logger.VERBOSE(4);
 		logger.debug("writing object "+this+" to xml");
 		String xml = null;
 		if ( this instanceof Listable ) {
