@@ -2,6 +2,7 @@ package org.biophylo.Forest;
 import org.biophylo.*;
 import org.biophylo.Mediators.TaxaMediator;
 import org.biophylo.Util.*;
+import org.biophylo.Util.Exceptions.ObjectMismatch;
 import org.biophylo.Taxa.*;
 public class Forest extends Listable implements TaxaLinker {
 	private static TaxaMediator taxaMediator = TaxaMediator.getInstance();
@@ -19,7 +20,7 @@ public class Forest extends Listable implements TaxaLinker {
 			sb.append("\n");
 		}
 		return sb.toString();
-	}
+	}	
 	public void setTaxa(Taxa taxa) {
 		taxaMediator.setLink(taxa.getId(), this.getId());
 	}

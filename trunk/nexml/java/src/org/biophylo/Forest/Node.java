@@ -10,6 +10,7 @@ import java.util.*;
 import java.math.*;
 
 public class Node extends Containable implements TaxonLinker {
+	private static Logger logger = new Logger();
 	protected Node parent;
 	Vector children;
 	protected double branch_length; 
@@ -21,6 +22,7 @@ public class Node extends Containable implements TaxonLinker {
 		this.container = CONSTANT.TREE;
 		this.children = new Vector();
 		this.tag = "node";
+		this.parent = null;
 	}
 	
 	public void unsetTaxon() {
@@ -224,7 +226,12 @@ public class Node extends Containable implements TaxonLinker {
 	}
 
 	public boolean isRoot() {
-		return this.getParent() == null ? true : false;
+		if ( this.getParent() == null ) {
+			return true;
+		}
+		else {
+			return false;
+		}
 	}
 	
 	public boolean isFirst() {
@@ -472,6 +479,7 @@ public class Node extends Containable implements TaxonLinker {
 	}
 	
 	public String toXml(boolean roundAsInt) throws ObjectMismatch {
+		logger.debug("writing node to xml");
 		Node[] desc = this.getDescendants();
 		Node[] nodes = new Node[desc.length+1];
 		nodes[0] = this;
@@ -506,7 +514,7 @@ public class Node extends Containable implements TaxonLinker {
 			else {
 				sb.append(length);
 			}
-			sb.append("\"/>\"");
+			sb.append("\"/>");
 		}
 		for ( int i = 1; i < nodes.length; i++ ) {
 			String source = nodes[i].getParent().getXmlId();
@@ -521,7 +529,6 @@ public class Node extends Containable implements TaxonLinker {
 			sb.append(id);
 			if ( bl != 0 ) {
 				sb.append("\" length=\"");
-				//sb.append(bl);
 				if ( roundAsInt ) {
 					sb.append(Math.round(bl));
 				}
