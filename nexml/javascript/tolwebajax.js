@@ -2,7 +2,7 @@
         	var tree;        	
             var xmlHttp;        	
         	var logger   = Phylo.Util.Logger;
-        	var base     = 'http://' + top.location.host + '/nexml/phylows/tolweb/';
+        	var base     = 'http://' + top.location.host + '/nexml/phylows/tolweb/Tree/ToLWeb:';
         	var constant = Phylo.Util.CONSTANT;   
             function initialize_ajax() {
                 try {

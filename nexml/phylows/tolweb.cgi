@@ -20,9 +20,18 @@ use Bio::Phylo::Forest;
 use HTML::Entities;
 use constant URL => 'http://tolweb.org/onlinecontributors/app?service=external&page=xml/TreeStructureService&node_id=';
 
-if ( $ENV{'PATH_INFO'} and $ENV{'PATH_INFO'} =~ m|/([0-9]+)$| ) {
+if ( $ENV{'QUERY_STRING'} =~ /wsdl/ ) {
+	my $file = $0;
+	$file =~ s/\.cgi$/.wsdl/;
+	open my $fh, '<', $file or die $!;
+	my $wsdl = do { local $/; <$fh>};
+	print "Content-type: text/xml\n\n" . $wsdl;
+	exit 0; 	
+}
+if ( $ENV{'PATH_INFO'} and $ENV{'PATH_INFO'} =~ m|Tree/ToLWeb:([0-9]+)$| ) {
 	my $nexml;
-	my $url = URL . $1;	
+	my $id = $1;
+	my $url = URL . $id;	
 	eval {
 		my $tree = parse(
 			'-format' => 'tolweb',
@@ -31,7 +40,7 @@ if ( $ENV{'PATH_INFO'} and $ENV{'PATH_INFO'} =~ m|/([0-9]+)$| ) {
 		$tree->set_generic(
 			'dict' => {
 				'source'  => [ 'uri' => encode_entities($url) ],
-				'webpage' => [ 'uri' => 'http://tolweb.org' . $ENV{'PATH_INFO'} ]
+				'webpage' => [ 'uri' => 'http://tolweb.org/' . $id ]
 			}
 		);
 		$nexml = unparse(
@@ -47,6 +56,6 @@ if ( $ENV{'PATH_INFO'} and $ENV{'PATH_INFO'} =~ m|/([0-9]+)$| ) {
 	}		
 }
 else {
-	die "$ENV{'PATH_INFO'} => not a valid tolweb ID!";
+	die "$ENV{'PATH_INFO'} => not a valid tolweb ID! URL needs to be /Tree/ToLWeb:{id}";
 }
 
