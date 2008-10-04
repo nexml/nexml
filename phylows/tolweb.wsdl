@@ -13,7 +13,10 @@
 			</xsd:import>
 		</xsd:schema>
 	</wsdl:types>
-	<wsdl:message name="TreeRequest"></wsdl:message>
+	<wsdl:message name="TreeRequest">
+		<wsdl:part name="NameSpace" type="xsd:string"></wsdl:part>
+		<wsdl:part name="Identifier" type="xsd:integer"></wsdl:part>
+	</wsdl:message>
 	<wsdl:message name="TreeResponse">
 		<wsdl:part name="nexml" type="nex:Nexml" />
 	</wsdl:message>
@@ -26,12 +29,12 @@
 	<wsdl:binding name="tolwebHTTP" type="tns:tolweb">
 		<http:binding verb="GET" />
 		<wsdl:operation name="Tree">
-			<http:operation location="/Tree/ToLWeb:{id}" />
+			<http:operation location="Tree/(NameSpace):(Identifier)" />
 			<wsdl:input>
-				<http:urlEncoded />
+				<http:urlReplacement/>
 			</wsdl:input>
 			<wsdl:output>
-				<mime:content type="text/xml" />
+				<mime:content type="text/xml" part="nexml" />
 			</wsdl:output>
 		</wsdl:operation>
 	</wsdl:binding>
