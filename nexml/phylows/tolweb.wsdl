@@ -9,7 +9,7 @@
 	<wsdl:types>
 		<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
 			<xsd:import namespace="http://www.nexml.org/1.0"
-				schemaLocation="../xsd/nexml.xsd">
+				schemaLocation="http://www.nexml.org/1.0/nexml.xsd">
 			</xsd:import>
 		</xsd:schema>
 	</wsdl:types>
