@@ -14,8 +14,7 @@
 		</xsd:schema>
 	</wsdl:types>
 	<wsdl:message name="TreeRequest">
-		<wsdl:part name="NameSpace" type="xsd:string"></wsdl:part>
-		<wsdl:part name="Identifier" type="xsd:integer"></wsdl:part>
+		<wsdl:part name="ToLWebTreeID" type="xsd:integer"></wsdl:part>
 	</wsdl:message>
 	<wsdl:message name="TreeResponse">
 		<wsdl:part name="nexml" type="nex:Nexml" />
@@ -29,7 +28,7 @@
 	<wsdl:binding name="tolwebHTTP" type="tns:tolweb">
 		<http:binding verb="GET" />
 		<wsdl:operation name="Tree">
-			<http:operation location="Tree/(NameSpace):(Identifier)" />
+			<http:operation location="Tree/ToLWeb:(ToLWebTreeID)" />
 			<wsdl:input>
 				<http:urlReplacement/>
 			</wsdl:input>
