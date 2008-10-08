@@ -243,12 +243,12 @@ Also see the website: L<http://www.nexml.org>
 =cut
 
 package util::siteFactory;
-use vars '$AUTOLOAD';
+use vars qw'$AUTOLOAD $VARIABLE_SERVER_NAME';
 use File::Spec::Functions;
 use Template;
 
 my %defaults = (
-	'hostname' => $ENV{'SERVER_NAME'},
+	'hostname' => $VARIABLE_SERVER_NAME ? $ENV{'SERVER_NAME'} : 'www.nexml.org',
 	'prefix'   => $ENV{'DOCUMENT_ROOT'},
 	'subtree'  => $ENV{'SCRIPT_URL'},
 	'include'  => catdir( $ENV{'DOCUMENT_ROOT'}, 'nexml', 'html', 'include' ),
