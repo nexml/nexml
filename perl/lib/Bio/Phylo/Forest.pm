@@ -6,7 +6,7 @@ use Bio::Phylo::Listable;
 use Bio::Phylo::Taxa;
 use Bio::Phylo::Taxa::TaxaLinker;
 use Bio::Phylo::Taxa::Taxon;
-use Bio::Phylo::Util::CONSTANT qw(_NONE_ _FOREST_);
+use Bio::Phylo::Util::CONSTANT qw(_NONE_ _FOREST_ _PROJECT_);
 use Bio::Phylo::Util::Exceptions 'throw';
 use Bio::Phylo::Factory;
 use vars qw(@ISA);
@@ -27,7 +27,7 @@ This class has no internal state, no cleanup is necessary.
 	my $logger             = __PACKAGE__->get_logger;
 	my $factory            = Bio::Phylo::Factory->new;
 	my $CONSTANT_TYPE      = _FOREST_;
-	my $CONTAINER_CONSTANT = _NONE_;
+	my $CONTAINER_CONSTANT = _PROJECT_;
 
 =head1 NAME
 
