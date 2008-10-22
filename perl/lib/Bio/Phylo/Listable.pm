@@ -741,6 +741,12 @@ Tests if argument can be inserted in invocant.
 				$obj_container = $obj->_container;
 			};			
 			if ( $@ or $self_type != $obj_container ) {
+				if ( not $@ ) {
+					$logger->info(" $self $self_type != $obj $obj_container");
+				}
+				else {
+					$logger->info($@);
+				}
 				return 0;
 			}
 		}
