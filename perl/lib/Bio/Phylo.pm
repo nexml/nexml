@@ -261,26 +261,27 @@ Sets invocant name.
 
     sub set_name {
         my ( $self, $name ) = @_;
-
-        # strip spaces
-        $name =~ s/^\s*(.*?)\s*$/$1/;
-
-        # check for bad characters
-        if ( $name =~ m/(?:;|,|:|\(|\)|\s)/ ) {
-
-            # had bad characters, but in quotes
-            if ( $name =~ m/^(['"])/ && $name =~ m/$1$/ ) {
-                $logger->info("$name had bad characters, but was quoted");
-            }
-
-            # had unquoted bad characters
-            else {
-            	throw 'BadString' => "$self '$name' has unquoted bad characters";
-            }
-        }
-
-        # notify user
-        $logger->info("setting name '$name'");
+		if ( $name ) {
+	        # strip spaces
+	        $name =~ s/^\s*(.*?)\s*$/$1/;
+	
+	        # check for bad characters
+	        if ( $name =~ m/(?:;|,|:|\(|\)|\s)/ ) {
+	
+	            # had bad characters, but in quotes
+	            if ( $name =~ m/^(['"])/ && $name =~ m/$1$/ ) {
+	                $logger->info("$name had bad characters, but was quoted");
+	            }
+	
+	            # had unquoted bad characters
+	            else {
+	            	throw 'BadString' => "$self '$name' has unquoted bad characters";
+	            }
+	        }
+	
+	        # notify user
+	        $logger->info("setting name '$name'");
+		}
         $name{$$self} = $name;
         return $self;
     }
