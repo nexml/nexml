@@ -93,7 +93,12 @@ sub _obj_from_elt {
 		$obj->set_generic( 'dict' => $dict_hash );
 	}
 	my $tag = $elt->tag;
-	$logger->debug( $self->_pos . " processed <$tag id=\"$id\"/>" );
+	if ( defined $id ) {
+		$logger->debug( $self->_pos . " processed <$tag id=\"$id\"/>" );
+	}
+	else {
+		$logger->debug( $self->_pos . " processed <$tag/>" );
+	}
 	return ( $obj, $id );
 }
 
@@ -114,7 +119,8 @@ sub _new {
 		'TwigHandlers' => {
 			'otus'       => sub { &_handle_otus(   @_, $self ) },
 			'characters' => sub { &_handle_chars(  @_, $self ) },
-			'trees'      => sub { &_handle_forest( @_, $self ) },			
+			'trees'      => sub { &_handle_forest( @_, $self ) },
+			'nex:nexml'  => sub { &_handle_nexml(  @_, $self ) },			
 		}		
 	);
 	return $self;
@@ -154,11 +160,44 @@ sub _from_both {
 
 	# we're done, now order the blocks
 	my $ordered_blocks = $self->{'_blocks'};
+	
+	# prepare the requested return...
+	my $temp_project = pop( @{ $ordered_blocks } ); # nexml root tag is processed last!
+	
+	# ...which is either a provided project object...
+	if ( $opt{'-project'} ) {
+		$opt{'-project'}->set_generic( $temp_project->get_generic );
+		$opt{'-project'}->insert( @{ $ordered_blocks } );
+		# reset everything in its initial state: Bio::Phylo::IO caches parsers
+		$self->_init;
+		return $opt{'-project'};
+	}
+	
+	# ... a newly created one...
+	elsif ( $opt{'-as_project'} ) {
+		$temp_project->insert( @{ $ordered_blocks } );
+		# reset everything in its initial state: Bio::Phylo::IO caches parsers
+		$self->_init;
+		return $temp_project;
+	}
+	
+	# ... or (default) a list of data objects...
+	else {
+		# reset everything in its initial state: Bio::Phylo::IO caches parsers
+		$self->_init;		
+		return $ordered_blocks;
+	}
+}
 
-	# reset everything in its initial state: Bio::Phylo::IO caches parsers
-	$self->_init;
-
-	return $ordered_blocks;
+# element handler
+sub _handle_nexml {
+	my ( $twig, $nexml_elt, $self ) = @_;
+	my ( $project_obj, $project_id ) = $self->_obj_from_elt( $nexml_elt, 'project' );
+	push @{ $self->{'_blocks'} }, $project_obj;
+	$logger->info( $self->_pos . " Processed nexml element" );
+	if ( $nexml_elt->att('version') != 1.0 ) {
+		throw 'BadFormat' => 'Wrong version number, can only handle 1.0: ' . $nexml_elt->att('version');
+	}
 }
 
 # element handler
