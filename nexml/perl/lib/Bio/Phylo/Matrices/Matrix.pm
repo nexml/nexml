@@ -863,12 +863,10 @@ Serializes matrix to nexus format.
 		my $string = sprintf "BEGIN %s;\n",
 		  $args{'-data_block'} ? 'DATA' : 'CHARACTERS';
 		$string .=
-		    "[!\n\tCharacters block written by "
+		    "[! Characters block written by "
 		  . ref($self) . " "
-		  . $self->VERSION . "\n\ton "
-		  . localtime() . " from object "
-		  . $self->get_internal_name . " (id: "
-		  . $self->get_id . ") \n]\n";
+		  . $self->VERSION . " on "
+		  . localtime() . " ]\n";
 
 		# write links
 		if ( $args{'-links'} ) {
