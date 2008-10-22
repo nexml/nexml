@@ -277,10 +277,10 @@ public class InterpretNEXML extends FileInterpreterI {
 	
 	private org.biophylo.Taxa.Taxon findEquivalentTaxon(Taxon mesTaxon,org.biophylo.Taxa.Taxa xmlTaxa) {
 		org.biophylo.Taxa.Taxon xmlTaxon = null;
-		String mesTaxonId = mesTaxon.getUniqueID();
+		int mesTaxonIndex = mesTaxon.getNumber();
 		org.biophylo.Containable[] conts = xmlTaxa.getEntities();
 		TAXON: for ( int i = 0; i < conts.length; i++ ) {
-			if ( mesTaxonId.equals(conts[i].getGeneric("MesquiteUniqueID")) ) {
+			if ( mesTaxonIndex == ((Integer)conts[i].getGeneric("MesquiteUniqueID")).intValue() ) {
 				xmlTaxon = (org.biophylo.Taxa.Taxon)conts[i];
 				break TAXON;
 			}
@@ -391,7 +391,7 @@ public class InterpretNEXML extends FileInterpreterI {
 			for ( int j = 0; j < mesTaxa.getNumTaxa(); j++ ) {
 				org.biophylo.Taxa.Taxon xmlTaxon = new org.biophylo.Taxa.Taxon();
 				xmlTaxon.setName(mesTaxa.getTaxonName(j));
-				xmlTaxon.setGeneric("MesquiteUniqueID",mesTaxa.getUniqueID(j));
+				xmlTaxon.setGeneric("MesquiteUniqueID",new Integer(j));
 				try {
 					xmlTaxa.insert(xmlTaxon);
 				} catch ( Exception e ) {
