@@ -22,6 +22,7 @@ deleteme*
 \.includepath
 Doxyfile
 lib\/Bio\/Tools\/Run\/MrBayes\.pm
+lib\/Bio\/Phylo\/BranchClust\.pm
 lib\/xs*
 lib\/util*
 README.html
