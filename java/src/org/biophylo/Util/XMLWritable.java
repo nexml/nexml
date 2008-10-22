@@ -6,12 +6,62 @@ import org.biophylo.Util.Exceptions.*;
 import org.biophylo.Taxa.*;
 import org.biophylo.*;
 import org.biophylo.Util.*;
+import org.w3c.dom.*;
+import org.w3c.dom.ls.*;
+import javax.xml.parsers.*;
+import javax.xml.transform.dom.*;
+import javax.xml.transform.*;
+import javax.xml.stream.*;
+import javax.xml.transform.stream.*;
 
 public class XMLWritable extends Base {
 	private static Logger logger = Logger.getInstance();
 	protected String tag;
 	protected HashMap attributes;
 	protected String xmlId;
+	
+	public static String elementToString(Element el) {		
+		DOMImplementation impl = el.getOwnerDocument().getImplementation();
+		DOMImplementationLS factory = (DOMImplementationLS) impl.getFeature("LS", "3.0");
+		LSSerializer serializer = factory.createLSSerializer();
+		return serializer.writeToString(el);		
+	}
+	
+	public static Element createElement(String tag) {
+		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+		DocumentBuilder db = null;
+		try {
+			db = dbf.newDocumentBuilder();
+		} catch ( Exception e ) {
+			e.printStackTrace();
+		}
+		DOMImplementation di = db.getDOMImplementation();
+        Document doc = di.createDocument(null, "WFDB", null);
+        Element el = doc.createElement(tag);
+        return el;		
+	}
+	
+	public static Element createElement(String tag,HashMap attributes) {
+		Element el = createElement(tag);
+        if ( attributes != null ) {
+	        Object[] keys = attributes.keySet().toArray();
+	        for ( int i = 0; i < keys.length; i++ ) {
+	        	el.setAttribute((String)keys[i], (String)attributes.get(keys[i]));
+	        }
+        }
+        return el;
+	}
+	
+	public static Element createElement(String tag, HashMap attributes, String text) {
+		Element el = createElement(tag,attributes);
+		el.setTextContent(text);
+		return el;
+	}
+	
+	public static Element createElement(String tag,String text) {
+		Element el = createElement(tag,null,text);
+		return el;
+	}
 	
 	public void setTag(String tag) {
 		this.tag = tag;
@@ -62,7 +112,7 @@ public class XMLWritable extends Base {
 		if ( dict != null ) {
 			sb.append("><dict>");
 			keys = dict.keySet().toArray();
-			for ( int i = 0; i < keys.length; i++ ) {
+			for ( int i = 0; i < keys.length; i++ ) {				
 				sb.append("<key>");
 				sb.append((String)keys[i]);
 				sb.append("</key>");
