@@ -82,7 +82,19 @@ sub _from_both {
             }
         }
     }
-    return $taxa;
+    if ( $opts{'-project'} ) {
+    	$opts{'-project'}->insert($taxa);
+    	return $opts{'-project'};    	
+    }
+    elsif ( $opts{'-as_project'} ) {
+    	require Bio::Phylo::Project;
+    	my $proj = Bio::Phylo::Project->new;
+    	$proj->insert($taxa);
+    	return $proj;
+    }
+    else {
+    	return $taxa;
+    }
 }
 
 =head1 SEE ALSO
