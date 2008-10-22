@@ -25,6 +25,7 @@ BEGIN {
       	_CHARSTATE_ 
       	_CHARSTATESEQ_ 
       	_MATRIXROW_
+      	_PROJECT_
       	looks_like_number
       	looks_like_object
 		looks_like_hash
@@ -49,6 +50,7 @@ BEGIN {
                 _CHARSTATE_ 
                 _CHARSTATESEQ_ 
                 _MATRIXROW_
+                _PROJECT_
             )
         ],
         'funtions' => [
@@ -79,6 +81,7 @@ sub _MATRICES_  () { 9  }
 sub _SEQUENCE_  () { 10 }
 sub _ALIGNMENT_ () { 11 }
 sub _CHAR_      () { 12 }
+sub _PROJECT_   () { 9  }
 
 sub _CHARSTATE_    () { 13 }
 sub _CHARSTATESEQ_ () { 14 }
