@@ -232,7 +232,7 @@ sub _from_handle {
         }
     }
 
-    return $self->_post_process;
+    return $self->_post_process(@_);
 }
 
 # makes array reference of strings, one string per line, from input
@@ -508,9 +508,28 @@ sub _post_process {
     	else {
     		$self->{$key} = $defaults{$key};
     	}
-    }    
+    }   
     
-    return $blocks;
+    # prepare return value:
+    my %args = @_;
+    
+    #... could be a provided project object...
+    if ( $args{'-project'} ) {
+    	$args{'-project'}->insert( @{ $blocks } );
+    	return $args{'-project'};
+    } 
+    
+    # ... or one we create de novo...
+    elsif ( $args{'-as_project'} ) {
+    	my $proj = $factory->create_project;
+    	$proj->insert( @{ $blocks } );
+    	return $proj;
+    }
+    
+    # ... or a flat list of data objects...
+    else {
+    	return $blocks;
+    }
 }
 
 =begin comment
@@ -975,7 +994,7 @@ sub _trees {
 sub _translate {
     my $self = shift;
     my $i = $self->{'_i'}; 
-    if ( $i == 1 ) {
+    if ( $i && $i == 1 ) {
         $logger->info( "starting translation table" );
     }
     if ( !$i && $_[0] =~ m/^\d+$/ ) {
