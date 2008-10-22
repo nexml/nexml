@@ -129,7 +129,23 @@ sub _from_both {
 	$self->{'_node_of'}   = {};
 	$self->{'_parent_of'} = {}; 	
 
-	return $tree;
+	if ( $opt{'-project'} ) {
+		my $forest = $factory->create_forest;
+		$forest->insert($tree);
+		my $taxa = $forest->make_taxa;
+		$opt{'-project'}->insert($taxa,$forest);
+		return $opt{'-project'};
+	}
+	elsif ( $opt{'-as_project'} ) {
+		my $forest = $factory->create_forest;
+		my $taxa = $forest->make_taxa;
+		my $proj = $factory->create_project;
+		$proj->insert($taxa,$forest);
+		return $proj;
+	}
+	else {
+		return $tree;
+	}
 }
 
 sub _handle_node {
