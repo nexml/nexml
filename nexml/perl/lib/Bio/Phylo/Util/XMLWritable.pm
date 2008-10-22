@@ -58,7 +58,7 @@ xml element structure called <node/>
 
 	sub set_tag {
 		my ( $self, $tag ) = @_;
-		if ( $tag =~ qr/^[a-zA-Z]+$/ ) {
+		if ( $tag =~ qr/^[a-zA-Z]+\:?[a-zA-Z]*$/ ) {
 			$tag{ $self->get_id } = $tag;
 			return $self;
 		}
