@@ -137,7 +137,22 @@ sub _from_both {
             $matrix->insert($datum);
         }
     }
-    return $matrix;
+    
+    if ( $opts{'-project'} ) {
+    	my $taxa = $matrix->make_taxa();
+    	$opts{'-project'}->insert($taxa,$matrix);
+    	return $opts{'-project'};
+    }
+    elsif ( $opts{'-as_project'} ) {
+    	require Bio::Phylo::Project;
+    	my $proj = Bio::Phylo::Project->new;
+    	my $taxa = $matrix->make_taxa();
+    	$proj->insert($taxa,$matrix);
+    	return $proj;
+    }
+    else {
+    	return $matrix;
+    }
 }
 
 =head1 SEE ALSO
