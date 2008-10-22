@@ -102,7 +102,21 @@ sub _from_both {
     }
 
     # done
-    return $forest;
+    if ( $args{'-project'} ) {
+    	my $taxa = $forest->make_taxa;
+    	$args{'-project'}->insert($taxa,$forest);
+    	return $args{'-project'};
+    }
+    elsif ( $args{'-as_project'} ) {
+    	my $taxa = $forest->make_taxa;
+    	require Bio::Phylo::Project;
+    	my $proj = Bio::Phylo::Project->new;
+    	$proj->insert($taxa,$forest);
+    	return $proj;
+    }
+    else {
+    	return $forest;
+    }
 }
 
 =begin comment
