@@ -9,6 +9,7 @@ import org.biophylo.*;
 import org.biophylo.Util.Exceptions.*;
 import org.biophylo.Util.*;
 import java.util.*;
+import org.w3c.dom.Element;
 
 public class Matrix extends Listable implements TypeSafeData, TaxaLinker {
 	private Datatype typeObject;
@@ -28,7 +29,7 @@ public class Matrix extends Listable implements TypeSafeData, TaxaLinker {
 	
 	private void initialize (String type) {
 		this.typeObject = Datatype.getInstance(type);
-		this.container = CONSTANT.MATRICES;
+		this.container = CONSTANT.PROJECT;
 		this.type = CONSTANT.MATRIX;
 		this.charlabels = new Vector();	
 		this.tag = "characters";
@@ -141,6 +142,56 @@ public class Matrix extends Listable implements TypeSafeData, TaxaLinker {
 		return this.toXml(false);
 	}
 	
+	public Element toXmlElement() throws ObjectMismatch {
+		return toXmlElement(false);
+	}
+	
+	public Element toXmlElement (boolean compact) throws ObjectMismatch {
+		if ( getDocument() == null ) {
+			setDocument(createDocument());
+		}		
+		String type = getType();
+		String xsi_type = compact ? "nex:"+type+"Seqs" : "nex:"+type+"Cells";
+		HashMap idsForStates = null;
+		setAttributes("xsi:type", xsi_type);
+		Element charsElt = createElement(getTag(),getAttributes(),getDocument());
+		if ( ! compact ) {
+			Element format = createElement("format",getDocument());
+			Datatype to = getTypeObject();
+			idsForStates = to.getIdsForStates();
+			to.setDocument(getDocument());
+			Element toElt = to.toXmlElement();
+			if ( toElt != null ) {
+				format.appendChild(toElt);
+			}
+			Vector charElts = null;
+			if ( idsForStates != null ) {
+				charElts = charLabelsToElement(to.getXmlId());
+			}
+			else {
+				charElts = charLabelsToElement(null);
+			}
+			for ( int i = 0; i < charElts.size(); i++ ) {
+				format.appendChild((Element)charElts.get(i));
+			}
+			charsElt.appendChild(format);
+		}
+		Element matrixElt = createElement("matrix",getDocument());
+		int nchar = getNchar();
+		String[] charIds = new String[nchar];
+		for ( int i = 0; i < nchar; i++ ) {
+			charIds[i] = "c" + ( i + 1 );
+		}
+		Containable[] rows = getEntities();
+		for ( int i = 0; i < rows.length; i++ ) {
+			Datum datum = (Datum)rows[i];
+			datum.setDocument(getDocument());
+			matrixElt.appendChild(datum.toXmlElement(idsForStates, charIds, compact));
+		}
+		charsElt.appendChild(matrixElt);
+		return charsElt;
+	}
+	
 	public String toXml(boolean compact) throws ObjectMismatch {
 		String type = this.getType();
 		String xsi_type = compact ? "nex:"+type+"Seqs" : "nex:"+type+"Cells";
@@ -177,6 +228,29 @@ public class Matrix extends Listable implements TypeSafeData, TaxaLinker {
 		sb.append('>');
 		return sb.toString();		
 	}
+	
+	private Vector charLabelsToElement(String statesId) {
+		Vector labels = getCharLabels();
+		Vector elements = new Vector();
+		int nchar = getNchar();
+		for ( int i = 0; i < nchar; i++ ) {
+			String label = null;
+			if ( ! labels.isEmpty() ) {
+				label = (String)labels.get(i-1);
+			}
+			HashMap charAttrs = new HashMap();
+			charAttrs.put("id", "c"+i);
+			if ( statesId != null && ! getTypeObject().isValueConstrained() ) {
+				charAttrs.put("states", statesId);
+			}
+			if ( label != null ) {
+				charAttrs.put("label", label);
+			}
+			Element charElt = createElement("char",charAttrs,getDocument());
+			elements.add(charElt);			
+		}
+		return elements;
+	}	
 	
 	private String writeCharLabels(String statesId) {
 		StringBuffer sb = new StringBuffer();
