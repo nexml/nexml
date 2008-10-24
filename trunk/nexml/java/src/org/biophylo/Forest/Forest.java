@@ -9,7 +9,7 @@ public class Forest extends Listable implements TaxaLinker {
 	public Forest () {
 		super();
 		this.type = CONSTANT.FOREST;
-		this.container = CONSTANT.NONE;
+		this.container = CONSTANT.PROJECT;
 		this.tag = "trees";
 	}
 	public String toNewick() {
