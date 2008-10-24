@@ -12,21 +12,34 @@ import org.w3c.dom.Element;
 
 import org.biophylo.Util.Exceptions.*;
 
+/**
+ * @author rvosa
+ *
+ */
 public class Datum extends Listable implements TaxonLinker, TypeSafeData {
 	private Datatype typeObject;
 	private static TaxaMediator taxaMediator = TaxaMediator.getInstance();
 	private static Logger logger = Logger.getInstance();
 	
+	/**
+	 * 
+	 */
 	public Datum () {
 		super();
 		this.initialize("Standard");
 	}
 	
+	/**
+	 * @param type
+	 */
 	public Datum (String type) {
 		super();
 		this.initialize(type);
 	}
 	
+	/**
+	 * @param type
+	 */
 	private void initialize(String type) {
 		this.typeObject = Datatype.getInstance(type);
 		this.type = CONSTANT.DATUM;
@@ -34,66 +47,115 @@ public class Datum extends Listable implements TaxonLinker, TypeSafeData {
 		this.tag = "row";
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.biophylo.Taxa.TaxonLinker#getTaxon()
+	 */
 	public Taxon getTaxon() {
 		return (Taxon)taxaMediator.getLink(this.getId());
 	}
 
+	/* (non-Javadoc)
+	 * @see org.biophylo.Taxa.TaxonLinker#setTaxon(org.biophylo.Taxa.Taxon)
+	 */
 	public void setTaxon(Taxon taxon) {
 		taxaMediator.setLink(taxon.getId(), this.getId());
 	}
 
+	/* (non-Javadoc)
+	 * @see org.biophylo.Taxa.TaxonLinker#unsetTaxon()
+	 */
 	public void unsetTaxon() {
 		taxaMediator.removeLink(-1, this.getId());
 	}
 
+	/* (non-Javadoc)
+	 * @see org.biophylo.Matrices.TypeSafeData#getGap()
+	 */
 	public char getGap() {
 		return this.getTypeObject().getGap();
 	}
 
+	/* (non-Javadoc)
+	 * @see org.biophylo.Matrices.TypeSafeData#getLookup()
+	 */
 	public int[][] getLookup() {
 		return this.getTypeObject().getLookup();
 	}
 
+	/* (non-Javadoc)
+	 * @see org.biophylo.Matrices.TypeSafeData#getMissing()
+	 */
 	public char getMissing() {
 		return this.getTypeObject().getMissing();
 	}
 
+	/* (non-Javadoc)
+	 * @see org.biophylo.Matrices.TypeSafeData#getType()
+	 */
 	public String getType() {
 		return this.getTypeObject().getType();
 	}
 
+	/* (non-Javadoc)
+	 * @see org.biophylo.Matrices.TypeSafeData#getTypeObject()
+	 */
 	public Datatype getTypeObject() {
 		return this.typeObject;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.biophylo.Matrices.TypeSafeData#setGap(char)
+	 */
 	public void setGap(char gap) {
 		this.getTypeObject().setGap(gap);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.biophylo.Matrices.TypeSafeData#setLookup(int[][])
+	 */
 	public void setLookup(int[][] lookup) {
 		this.getTypeObject().setLookup(lookup);
 	}
 	
+	/**
+	 * @param lookup
+	 */
 	public void setLookup(HashMap lookup) {
 		this.getTypeObject().setLookup(lookup);
 	}	
 
+	/* (non-Javadoc)
+	 * @see org.biophylo.Matrices.TypeSafeData#setMissing(char)
+	 */
 	public void setMissing(char missing) {
 		this.getTypeObject().setMissing(missing);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.biophylo.Matrices.TypeSafeData#setTypeObject(org.biophylo.Matrices.Datatype.Datatype)
+	 */
 	public void setTypeObject(Datatype typeObject) {
 		this.typeObject = typeObject;
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.biophylo.Listable#canContain(java.lang.Object)
+	 */
 	public boolean canContain(Object charsString) {
 		return this.getTypeObject().isValid((String)charsString);
 	}
 	
+	/**
+	 * @return
+	 */
 	public String[] getChar() {
 		return this.getStringEntities();
 	}
 	
+	/**
+	 * @param chars
+	 * @throws ObjectMismatch
+	 */
 	public void insert(String chars) throws ObjectMismatch {
 		String[] splitChars = this.getTypeObject().split(chars);
 		Vector clean = new Vector();
@@ -107,10 +169,13 @@ public class Datum extends Listable implements TaxonLinker, TypeSafeData {
  		super.insert(noSpaces);
 	}
 	
-	public String toXml() throws ObjectMismatch {
-		return this.toXml(null,null,false);
-	}
-	
+	/**
+	 * @param idsForStates
+	 * @param charIds
+	 * @param compact
+	 * @return
+	 * @throws ObjectMismatch
+	 */
 	public Element toXmlElement(HashMap idsForStates, String[] charIds, boolean compact) throws ObjectMismatch {
 		Taxon taxon = getTaxon();
 		if ( taxon != null ) {
@@ -157,6 +222,13 @@ public class Datum extends Listable implements TaxonLinker, TypeSafeData {
 		return theElement;
 	}
 	
+	/**
+	 * @param idsForStates
+	 * @param charIds
+	 * @param compact
+	 * @return
+	 * @throws ObjectMismatch
+	 */
 	public String toXml(HashMap idsForStates, String[] charIds, boolean compact) throws ObjectMismatch {
 		Taxon taxon = this.getTaxon();
 		if ( taxon != null ) {
