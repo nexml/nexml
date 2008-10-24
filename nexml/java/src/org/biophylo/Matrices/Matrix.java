@@ -17,16 +17,25 @@ public class Matrix extends Listable implements TypeSafeData, TaxaLinker {
 	private static Logger logger = Logger.getInstance();
 	private Vector charlabels;
 	
+	/**
+	 * 
+	 */
 	public Matrix() {
 		super();
 		this.initialize("Standard");
 	}	
 	
+	/**
+	 * @param type
+	 */
 	public Matrix(String type) {
 		super();
 		this.initialize(type);
 	}	
 	
+	/**
+	 * @param type
+	 */
 	private void initialize (String type) {
 		this.typeObject = Datatype.getInstance(type);
 		this.container = CONSTANT.PROJECT;
@@ -35,6 +44,9 @@ public class Matrix extends Listable implements TypeSafeData, TaxaLinker {
 		this.tag = "characters";
 	}
 	
+	/**
+	 * @return
+	 */
 	public Vector getCharLabels() {
 		int nchar = this.getNchar();
 		logger.info("nchar: "+nchar);
@@ -44,58 +56,100 @@ public class Matrix extends Listable implements TypeSafeData, TaxaLinker {
 		return this.charlabels;
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.biophylo.Matrices.TypeSafeData#getGap()
+	 */
 	public char getGap() {
 		return this.getTypeObject().getGap();
 	}
 
+	/* (non-Javadoc)
+	 * @see org.biophylo.Matrices.TypeSafeData#getLookup()
+	 */
 	public int[][] getLookup() {
 		return this.getTypeObject().getLookup();
 	}
 
+	/* (non-Javadoc)
+	 * @see org.biophylo.Matrices.TypeSafeData#getMissing()
+	 */
 	public char getMissing() {
 		return this.getTypeObject().getMissing();
 	}
 
+	/* (non-Javadoc)
+	 * @see org.biophylo.Matrices.TypeSafeData#getType()
+	 */
 	public String getType() {
 		return this.getTypeObject().getType();
 	}
 
+	/* (non-Javadoc)
+	 * @see org.biophylo.Matrices.TypeSafeData#getTypeObject()
+	 */
 	public Datatype getTypeObject() {
 		return this.typeObject;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.biophylo.Matrices.TypeSafeData#setGap(char)
+	 */
 	public void setGap(char gap) {
 		this.getTypeObject().setGap(gap);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.biophylo.Matrices.TypeSafeData#setLookup(int[][])
+	 */
 	public void setLookup(int[][] lookup) {
 		this.getTypeObject().setLookup(lookup);
 	}
 	
+	/**
+	 * @param lookup
+	 */
 	public void setLookup(HashMap lookup) {
 		this.getTypeObject().setLookup(lookup);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.biophylo.Matrices.TypeSafeData#setMissing(char)
+	 */
 	public void setMissing(char missing) {
 		this.getTypeObject().setMissing(missing);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.biophylo.Matrices.TypeSafeData#setTypeObject(org.biophylo.Matrices.Datatype.Datatype)
+	 */
 	public void setTypeObject(Datatype typeObject) {
 		this.typeObject = typeObject;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.biophylo.Taxa.TaxaLinker#getTaxa()
+	 */
 	public Taxa getTaxa() {
 		return (Taxa)taxaMediator.getLink(this.getId());
 	}
 
+	/* (non-Javadoc)
+	 * @see org.biophylo.Taxa.TaxaLinker#setTaxa(org.biophylo.Taxa.Taxa)
+	 */
 	public void setTaxa(Taxa taxa) {
 		taxaMediator.setLink(taxa.getId(), this.getId());
 	}
 
+	/* (non-Javadoc)
+	 * @see org.biophylo.Taxa.TaxaLinker#unsetTaxa()
+	 */
 	public void unsetTaxa() {
 		taxaMediator.removeLink(-1, this.getId());
 	}
 	
+	/**
+	 * @return
+	 */
 	public int getNchar() {
 		Containable[] rows = this.getEntities();
 		int nchar = 0;
@@ -108,6 +162,9 @@ public class Matrix extends Listable implements TypeSafeData, TaxaLinker {
 		return nchar;
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.biophylo.Listable#canContain(java.lang.Object)
+	 */
 	public boolean canContain(Object obj) {
 		if ( this.type() != ((Containable)obj).container() ) {
 			return false;
@@ -122,6 +179,9 @@ public class Matrix extends Listable implements TypeSafeData, TaxaLinker {
 		}
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.biophylo.Listable#insert(java.lang.Object)
+	 */
 	public void insert(Object obj) throws ObjectMismatch {
 		if ( this.canContain(obj) ) {
 			((TypeSafeData)obj).setTypeObject(this.getTypeObject());
@@ -132,20 +192,27 @@ public class Matrix extends Listable implements TypeSafeData, TaxaLinker {
 		}
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.biophylo.Listable#insert(java.lang.Object[])
+	 */
 	public void insert(Object[] obj) throws ObjectMismatch {
 		for ( int i = 0; i < obj.length; i++ ) {
 			this.insert(obj[i]);
 		}
 	}
 	
-	public String toXml () throws ObjectMismatch {
-		return this.toXml(false);
-	}
-	
+	/* (non-Javadoc)
+	 * @see org.biophylo.Util.XMLWritable#toXmlElement()
+	 */
 	public Element toXmlElement() throws ObjectMismatch {
 		return toXmlElement(false);
 	}
 	
+	/**
+	 * @param compact
+	 * @return
+	 * @throws ObjectMismatch
+	 */
 	public Element toXmlElement (boolean compact) throws ObjectMismatch {
 		if ( getDocument() == null ) {
 			setDocument(createDocument());
@@ -192,43 +259,20 @@ public class Matrix extends Listable implements TypeSafeData, TaxaLinker {
 		return charsElt;
 	}
 	
+	/**
+	 * @param compact
+	 * @return
+	 * @throws ObjectMismatch
+	 */
 	public String toXml(boolean compact) throws ObjectMismatch {
-		String type = this.getType();
-		String xsi_type = compact ? "nex:"+type+"Seqs" : "nex:"+type+"Cells";
-		HashMap idsForStates = null;
-		this.setAttributes("xsi:type", xsi_type);
-		StringBuffer sb = new StringBuffer();
-		sb.append(this.getXmlTag(false));
-		if ( ! compact ) {
-			sb.append("<format>");
-			Datatype to = this.getTypeObject();
-			idsForStates = to.getIdsForStates();
-			sb.append(to.toXml());
-			if ( idsForStates != null ) {
-				sb.append(this.writeCharLabels(to.getXmlId()));
-			}
-			else {
-				sb.append(this.writeCharLabels(null));
-			}
-			sb.append("</format>");
-		}
-		sb.append("<matrix>");
-		int nchar = this.getNchar();
-		String[] charIds = new String[nchar];
-		for ( int i = 0; i < nchar; i++ ) {
-			charIds[i] = "c" + ( i + 1 );
-		}
-		Containable[] rows = this.getEntities();
-		for ( int i = 0; i < rows.length; i++ ) {
-			sb.append(((Datum)rows[i]).toXml(idsForStates,charIds,compact));
-		}
-		sb.append("</matrix>");
-		sb.append("</");
-		sb.append(this.getTag());
-		sb.append('>');
-		return sb.toString();		
+		Element theElt = toXmlElement(compact);
+		return elementToString(theElt);
 	}
 	
+	/**
+	 * @param statesId
+	 * @return
+	 */
 	private Vector charLabelsToElement(String statesId) {
 		Vector labels = getCharLabels();
 		Vector elements = new Vector();
@@ -252,6 +296,10 @@ public class Matrix extends Listable implements TypeSafeData, TaxaLinker {
 		return elements;
 	}	
 	
+	/**
+	 * @param statesId
+	 * @return
+	 */
 	private String writeCharLabels(String statesId) {
 		StringBuffer sb = new StringBuffer();
 		Vector labels = this.getCharLabels();
