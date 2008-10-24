@@ -8,6 +8,7 @@ import org.biophylo.Taxa.TaxonLinker;
 import org.biophylo.Util.*;
 import org.biophylo.*;
 import java.util.*;
+import org.w3c.dom.Element;
 
 import org.biophylo.Util.Exceptions.*;
 
@@ -108,6 +109,52 @@ public class Datum extends Listable implements TaxonLinker, TypeSafeData {
 	
 	public String toXml() throws ObjectMismatch {
 		return this.toXml(null,null,false);
+	}
+	
+	public Element toXmlElement(HashMap idsForStates, String[] charIds, boolean compact) throws ObjectMismatch {
+		Taxon taxon = getTaxon();
+		if ( taxon != null ) {
+			setAttributes("otu",taxon.getXmlId());
+		}
+		String[] chars = getChar();
+		String missing = "" + getMissing();
+		String gap = "" + getGap();
+		if ( getDocument() == null ) {
+			setDocument(createDocument());
+		}
+		Element theElement = createElement(getTag(),getAttributes(),getDocument());
+		if ( ! compact ) {
+			Datatype to = getTypeObject();
+			for ( int i = 0; i < chars.length; i++ ) {
+				if ( !missing.equals(chars[i]) && !gap.equals(chars[i]) ) {
+					HashMap charState = new HashMap();
+					String c, s;
+					if ( charIds != null && charIds[i] != null && ! to.isSequential() ) {
+						charState.put("char", charIds[i]);
+					}
+					else {
+						charState.put("char", ""+i);
+					}
+					String ucChar = chars[i].toUpperCase();
+					if ( idsForStates != null && idsForStates.containsKey(ucChar) && ! to.isValueConstrained() ) {
+						charState.put("state", "s" + (String)idsForStates.get(ucChar));
+					}
+					else {
+						charState.put("state", ucChar);
+					}
+					theElement.appendChild(createElement("cell",charState,getDocument()));
+				}
+			}
+		}
+		else {
+			String[] ucChars = new String[chars.length];
+			for ( int i = 0; i < ucChars.length; i++ ) {
+				ucChars[i] = chars[i].toUpperCase();
+			}
+			String seq = this.getTypeObject().join(ucChars);
+			theElement.appendChild(createElement("seq",seq,getDocument()));
+		}		
+		return theElement;
 	}
 	
 	public String toXml(HashMap idsForStates, String[] charIds, boolean compact) throws ObjectMismatch {
