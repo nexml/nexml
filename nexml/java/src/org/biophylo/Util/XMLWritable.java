@@ -6,6 +6,7 @@ import org.biophylo.Util.Exceptions.*;
 import org.biophylo.Taxa.*;
 import org.biophylo.*;
 import org.w3c.dom.*;
+
 import javax.xml.parsers.*;
 import javax.xml.transform.dom.*;
 import javax.xml.transform.*;
@@ -15,10 +16,14 @@ import java.io.*;
 public class XMLWritable extends Base {
 	private static Logger logger = Logger.getInstance();
 	protected String tag;
-	protected HashMap attributes;
+	protected Map attributes;
 	protected String xmlId;
 	protected Document doc;
 	
+	/**
+	 * @param el
+	 * @return
+	 */
 	public static String elementToString(Element el) {	
 		Source source = new DOMSource(el);
 		StringWriter stringWriter = new StringWriter();
@@ -33,14 +38,23 @@ public class XMLWritable extends Base {
 		return stringWriter.getBuffer().toString();
 	}
 	
+	/**
+	 * @return
+	 */
 	public Document getDocument () {
 		return this.doc;
 	}
 	
+	/**
+	 * @param doc
+	 */
 	public void setDocument (Document doc) {
 		this.doc = doc;
 	}
 	
+	/**
+	 * @return
+	 */
 	public Document createDocument () {
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		DocumentBuilder db = null;
@@ -54,6 +68,11 @@ public class XMLWritable extends Base {
         return doc;
 	}
 	
+	/**
+	 * @param tag
+	 * @param doc
+	 * @return
+	 */
 	public static Element createElement(String tag,Document doc) {
 		if ( doc == null ) {
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -70,7 +89,13 @@ public class XMLWritable extends Base {
         return el;		
 	}
 	
-	public static Element createElement(String tag,HashMap attributes,Document doc) {
+	/**
+	 * @param tag
+	 * @param attributes
+	 * @param doc
+	 * @return
+	 */
+	public static Element createElement(String tag,Map attributes,Document doc) {
 		Element el = createElement(tag,doc);
         if ( attributes != null ) {
 	        Object[] keys = attributes.keySet().toArray();
@@ -81,22 +106,41 @@ public class XMLWritable extends Base {
         return el;
 	}
 	
-	public static Element createElement(String tag, HashMap attributes, String text,Document doc) {
+	/**
+	 * @param tag
+	 * @param attributes
+	 * @param text
+	 * @param doc
+	 * @return
+	 */
+	public static Element createElement(String tag, Map attributes, String text,Document doc) {
 		Element el = createElement(tag,attributes,doc);
 		el.setTextContent(text);
 		return el;
 	}
 	
+	/**
+	 * @param tag
+	 * @param text
+	 * @param doc
+	 * @return
+	 */
 	public static Element createElement(String tag,String text,Document doc) {
 		Element el = createElement(tag,null,text,doc);
 		return el;
 	}
 	
+	/**
+	 * @param tag
+	 */
 	public void setTag(String tag) {
 		this.tag = tag;
 	}
 	
-	public void setAttributes(HashMap attributes) {
+	/**
+	 * @param attributes
+	 */
+	public void setAttributes(Map attributes) {
 		if ( this.attributes != null ) {
 			Object[] keys = attributes.keySet().toArray();
 			for ( int i = 0; i < keys.length; i++ ) {
@@ -108,6 +152,10 @@ public class XMLWritable extends Base {
 		}
 	}
 	
+	/**
+	 * @param key
+	 * @param value
+	 */
 	public void setAttributes(String key,String value) {
 		if ( this.attributes == null ) {
 			this.attributes = new HashMap();
@@ -115,16 +163,27 @@ public class XMLWritable extends Base {
 		this.attributes.put(key, value);
 	}
 	
+	/**
+	 * @param xmlId
+	 */
 	public void setXmlId(String xmlId) {
 		this.xmlId = xmlId;
 	}
 	
+	/**
+	 * @return
+	 */
 	public String getTag () {
 		return this.tag;
 	}
 	
+	/**
+	 * @param closeMe
+	 * @return
+	 * @throws ObjectMismatch
+	 */
 	public String getXmlTag(boolean closeMe) throws ObjectMismatch {
-		HashMap attrs = this.getAttributes();
+		Map attrs = this.getAttributes();
 		String tag = this.getTag();
 		StringBuffer sb = new StringBuffer();
 		sb.append('<');
@@ -177,6 +236,9 @@ public class XMLWritable extends Base {
 		return sb.toString();
 	}
 	
+	/**
+	 * @return
+	 */
 	public String getRootOpenTag () {
 		StringBuffer sb = new StringBuffer();
 		sb.append("<nex:nexml version=\"1.0\" generator=\"");
@@ -190,10 +252,16 @@ public class XMLWritable extends Base {
 		return sb.toString();		
 	}
 	
+	/**
+	 * @return
+	 */
 	public String getRootCloseTag() {
 		return "</nex:nexml>";
 	}
 
+	/**
+	 * @return
+	 */
 	public String getXmlId() {
 		if ( this.xmlId != null ) {
 			return this.xmlId;
@@ -203,8 +271,12 @@ public class XMLWritable extends Base {
 		}
 	}
 	
-	public HashMap getAttributes () throws ObjectMismatch{
-		HashMap attrs = this.attributes;
+	/**
+	 * @return
+	 * @throws ObjectMismatch
+	 */
+	public Map getAttributes () throws ObjectMismatch{
+		Map attrs = this.attributes;
 		if ( attrs == null ) {
 			attrs = new HashMap();
 		}
@@ -232,9 +304,13 @@ public class XMLWritable extends Base {
 		return attrs;
 	}
 	
+	/**
+	 * @return
+	 * @throws ObjectMismatch
+	 */
 	public Element toXmlElement () throws ObjectMismatch {
 		Element theElt = createElement(getTag(),getAttributes(),getDocument());
-		HashMap dict = (HashMap)getGeneric("dict");
+		Map dict = (Map)getGeneric("dict");
 		if ( dict != null ) {
 			theElt.appendChild(dictToXmlElement(dict));
 		}
@@ -253,7 +329,11 @@ public class XMLWritable extends Base {
 		return theElt;
 	}
 	
-	public Element dictToXmlElement(HashMap dict) {
+	/**
+	 * @param dict
+	 * @return
+	 */
+	public Element dictToXmlElement(Map dict) {
 		Element currentDict = createElement("dict",getDocument());
 		Object[] keys = dict.keySet().toArray();
 		for ( int i = 0; i < keys.length; i++ ) {
@@ -262,7 +342,7 @@ public class XMLWritable extends Base {
 			currentDict.appendChild(createElement("key",key,getDocument()));
 			String valueType = (String)value.get(0);
 			if ( valueType.equals("dict") ) {
-				HashMap childDict = (HashMap)value.get(1);
+				Map childDict = (Map)value.get(1);
 				currentDict.appendChild(dictToXmlElement(childDict));
 			}
 			else if ( valueType.indexOf("vector") > 0 ){
@@ -286,28 +366,12 @@ public class XMLWritable extends Base {
 	}
 	
 	
-	public String toXml () throws ObjectMismatch {
-		logger.debug("writing object "+this+" to xml");
-		String xml = null;
-		if ( this instanceof Listable ) {
-			StringBuffer sb = new StringBuffer();
-			Containable[] ents = ((Listable)this).getEntities();
-			for ( int i = 0; i < ents.length; i++ ) {
-				sb.append(ents[i].toXml());
-			}
-			xml = sb.toString();
-		}
-		if ( xml != null ) {
-			StringBuffer sb = new StringBuffer();
-			sb.append(this.getXmlTag(false));
-			sb.append(xml);
-			sb.append("</");
-			sb.append(this.getTag());
-			sb.append('>');
-			return sb.toString();
-		}
-		else {
-			return this.getXmlTag(true);
-		}
+	/**
+	 * @return
+	 * @throws ObjectMismatch
+	 */
+	public final String toXml () throws ObjectMismatch {
+		Element theElt = toXmlElement();
+		return elementToString(theElt);	
 	}
 }
