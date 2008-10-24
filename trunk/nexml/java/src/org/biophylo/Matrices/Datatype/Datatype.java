@@ -1,7 +1,10 @@
 package org.biophylo.Matrices.Datatype;
+
 import java.util.*;
 import org.biophylo.Util.*;
 import org.biophylo.Util.Exceptions.*;
+import org.w3c.dom.Element;
+
 public abstract class Datatype extends XMLWritable {
 	private static Logger logger = Logger.getInstance();
 	protected String alphabet;
@@ -202,7 +205,57 @@ public abstract class Datatype extends XMLWritable {
 		}
 		return sb.toString();
 	}
-	
+
+	public Element toXmlElement() throws ObjectMismatch {
+		Element toElt = null;
+		int[][] lookup = this.getLookup();
+		if ( lookup != null && ! this.isValueConstrained() ) {
+			toElt = createElement(getTag(),getDocument());
+			final HashMap idForState = this.getIdsForStates();
+			class Sorter implements Comparator {
+				public int compare (Object obja, Object objb) {
+					return Integer.parseInt((String)idForState.get(obja)) 
+						- Integer.parseInt((String)idForState.get(objb));
+				}
+			}
+			Object[] tmp = idForState.keySet().toArray();
+			String[] states = new String[tmp.length];
+			for ( int i = 0; i < tmp.length; i++ ) {
+				states[i] = (String)tmp[i];
+			}
+			Arrays.sort(states, new Sorter());
+			for ( int i = 0; i < states.length; i++ ) {
+				int stateId = Integer.parseInt((String)idForState.get(states[i]));
+				idForState.put(states[i], "s"+stateId);
+			}
+			for ( int i = 0; i < states.length; i++ ) {
+				String stateId = (String)idForState.get(states[i]);
+				String[] mapping = this.getAmbiguitySymbols(states[i]);
+				if ( mapping.length > 1 ) {
+					HashMap stateAttrs = new HashMap();
+					stateAttrs.put("id", stateId);
+					stateAttrs.put("symbol", states[i]);
+					Element stateElt = createElement("state",stateAttrs,getDocument());
+					for ( int j = 0; j < mapping.length; j++ ) {
+						HashMap mappingAttrs = new HashMap();
+						mappingAttrs.put("state", idForState.get(mapping[j]));
+						mappingAttrs.put("mstaxa", "uncertainty");
+						Element mappingElt = createElement("mapping",mappingAttrs,getDocument());
+						stateElt.appendChild(mappingElt);
+					}
+					toElt.appendChild(stateElt);
+				}
+				else {
+					HashMap stateAttrs = new HashMap();
+					stateAttrs.put("id", stateId);
+					stateAttrs.put("symbol", states[i]);
+					toElt.appendChild(createElement("state",stateAttrs,getDocument()));
+				}
+			}
+		}		
+		return toElt;
+	}
+
 	public String toXml() throws ObjectMismatch {
 		StringBuffer sb = new StringBuffer();
 		int[][] lookup = this.getLookup();
