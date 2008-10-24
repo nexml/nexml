@@ -13,6 +13,13 @@ public class CONSTANT {
 	public static final int MATRIX   = 8;
 	public static final int MATRICES = 9;
 	public static final int PROJECT  = 10;
+	
+	/**
+	 * @param obj
+	 * @param constant
+	 * @return
+	 * @throws Generic
+	 */
 	public static final boolean looksLikeObject(Containable obj, int constant) throws Generic {
 		if ( obj.type() == constant ) {
 			return true;
