@@ -17,6 +17,9 @@ public class Node extends Containable implements TaxonLinker {
 	protected double branch_length; 
 	private static TaxaMediator taxaMediator = TaxaMediator.getInstance();
 	
+	/**
+	 * 
+	 */
 	public Node () {
 		super();
 		this.type = CONSTANT.NODE;
@@ -26,44 +29,72 @@ public class Node extends Containable implements TaxonLinker {
 		this.parent = null;
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.biophylo.Taxa.TaxonLinker#unsetTaxon()
+	 */
 	public void unsetTaxon() {
 		int linkerId = this.getId();
 		taxaMediator.removeLink(-1, linkerId);
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.biophylo.Taxa.TaxonLinker#setTaxon(org.biophylo.Taxa.Taxon)
+	 */
 	public void setTaxon (Taxon taxon) {
 		int taxonId = taxon.getId();
 		int linkerId = this.getId();
 		taxaMediator.setLink(taxonId, linkerId);
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.biophylo.Taxa.TaxonLinker#getTaxon()
+	 */
 	public Taxon getTaxon () {
 		int linkerId = this.getId();
 		return (Taxon)taxaMediator.getLink(linkerId);
 	}
 	
+	/**
+	 * @param parent
+	 */
 	public void setParent(Node parent) { // XXX node mediator
 		this.parent = parent;
 	}
 	
+	/**
+	 * @return
+	 */
 	public Node getParent() { // XXX node mediator
 		return this.parent;
 	}	
 	
+	/**
+	 * @param child
+	 */
 	public void setChild(Node child) { // XXX node mediator
 		this.children.add(child);
 	}	
 	
+	/**
+	 * @return
+	 */
 	public Node[] getChildren() { // XXX node mediator
 		Node[] result = new Node[this.children.size()];
 		this.children.copyInto(result);
 		return result;
 	}
 	
+	/**
+	 * @param index
+	 * @return
+	 */
 	public Node getChild(int index) {
 		return this.getChildren()[index];
 	}
 	
+	/**
+	 * @return
+	 */
 	public Node getFirstDaughter() {
 		Node[] children = this.getChildren();
 		if ( children.length != 0 ) {
@@ -74,6 +105,9 @@ public class Node extends Containable implements TaxonLinker {
 		}
 	}
 	
+	/**
+	 * @return
+	 */
 	public Node getLastDaughter() {
 		Node[] children = this.getChildren();
 		if ( children.length != 0 ) {
@@ -84,6 +118,9 @@ public class Node extends Containable implements TaxonLinker {
 		}
 	}
 	
+	/**
+	 * @return
+	 */
 	public Node getNextSister () {
 		if ( ! this.isRoot() ) {
 			Node[] sisters = this.getSisters();
@@ -98,6 +135,9 @@ public class Node extends Containable implements TaxonLinker {
 		return null;
 	}
 	
+	/**
+	 * @return
+	 */
 	public Node getPreviousSister() {
 		if ( ! this.isRoot() ) {
 			Node[] siblings = this.getParent().getChildren();
@@ -110,6 +150,9 @@ public class Node extends Containable implements TaxonLinker {
 		return null;		
 	}
 	
+	/**
+	 * @return
+	 */
 	public Node[] getAncestors () {
 		Vector ancestors = new Vector();
 		Node n = this.getParent();
@@ -122,6 +165,9 @@ public class Node extends Containable implements TaxonLinker {
 		return result;
 	}
 	
+	/**
+	 * @return
+	 */
 	public Node[] getSisters(){
 		Node parent = this.getParent();
 		if ( parent != null ) {
@@ -132,6 +178,9 @@ public class Node extends Containable implements TaxonLinker {
 		}		
 	}
 	
+	/**
+	 * @return
+	 */
 	public Node[] getDescendants() {
 		class NodeCollector implements Visitor {
 			public Vector result = new Vector();
@@ -149,6 +198,9 @@ public class Node extends Containable implements TaxonLinker {
 		return result;
 	}
 	
+	/**
+	 * @return
+	 */
 	public Node[] getTerminals() {		
 		Vector terminals = new Vector();
 		Node[] desc = this.getDescendants();
@@ -162,6 +214,9 @@ public class Node extends Containable implements TaxonLinker {
 		return result;
 	}
 	
+	/**
+	 * @return
+	 */
 	public Node[] getInternals() {
 		Vector internals = new Vector();
 		Node[] desc = this.getDescendants();
@@ -175,6 +230,10 @@ public class Node extends Containable implements TaxonLinker {
 		return result;
 	}	
 	
+	/**
+	 * @param node
+	 * @return
+	 */
 	public Node getMrca(Node node) {
 		Node[] myAnc = this.getAncestors();
 		Node[] otherAnc = this.getAncestors();
@@ -190,6 +249,9 @@ public class Node extends Containable implements TaxonLinker {
 		return mrca;
 	}
 	
+	/**
+	 * @return
+	 */
 	public Node getLeftmostTerminal () {
 		Node node = this;
 		Node lmt = null;
@@ -200,6 +262,9 @@ public class Node extends Containable implements TaxonLinker {
 		return lmt;
 	}
 	
+	/**
+	 * @return
+	 */
 	public Node getRightmostTerminal() {
 		Node node = this;
 		Node rmt = null;
@@ -210,22 +275,37 @@ public class Node extends Containable implements TaxonLinker {
 		return rmt;		
 	}
 	
+	/**
+	 * @param branch_length
+	 */
 	public void setBranchLength(double branch_length) {
 		this.branch_length = branch_length;
 	}
 	
+	/**
+	 * @return
+	 */
 	public double getBranchLength() {
 		return this.branch_length;
 	}
 	
+	/**
+	 * @return
+	 */
 	public boolean isTerminal() {
 		return this.getChildren().length == 0 ? true : false;
 	}
 	
+	/**
+	 * @return
+	 */
 	public boolean isInternal () {
 		return ! this.isTerminal();
 	}
 
+	/**
+	 * @return
+	 */
 	public boolean isRoot() {
 		if ( this.getParent() == null ) {
 			return true;
@@ -235,14 +315,24 @@ public class Node extends Containable implements TaxonLinker {
 		}
 	}
 	
+	/**
+	 * @return
+	 */
 	public boolean isFirst() {
 		return this.getPreviousSister() == null ? true : false;
 	}
 	
+	/**
+	 * @return
+	 */
 	public boolean isLast() {
 		return this.getNextSister() == null ? true : false;
 	}
 	
+	/**
+	 * @param ancestor
+	 * @return
+	 */
 	public boolean isDescendantOf(Node ancestor) {
 		Node[] anc = this.getAncestors();
 		for ( int i = 0; i < anc.length; i++ ) {
@@ -253,10 +343,18 @@ public class Node extends Containable implements TaxonLinker {
 		return false;
 	}
 	
+	/**
+	 * @param descendant
+	 * @return
+	 */
 	public boolean isAncestorOf(Node descendant) {
 		return descendant.isDescendantOf(this);
 	}
 	
+	/**
+	 * @param sister
+	 * @return
+	 */
 	public boolean isSisterOf(Node sister) {
 		Node[] sisters = this.getSisters();
 		for ( int i = 0; i < sisters.length; i++ ) {
@@ -267,6 +365,10 @@ public class Node extends Containable implements TaxonLinker {
 		return false;
 	}
 	
+	/**
+	 * @param parent
+	 * @return
+	 */
 	public boolean isChildOf(Node parent) {
 		if ( ! this.isRoot() ) {
 			return this.getParent().getId() == parent.getId();
@@ -274,10 +376,18 @@ public class Node extends Containable implements TaxonLinker {
 		return false;
 	}
 	
+	/**
+	 * @param child
+	 * @return
+	 */
 	public boolean isParentOf(Node child) {
 		return child.isChildOf(this);
 	}
 	
+	/**
+	 * @param nodes
+	 * @return
+	 */
 	public boolean isOutgroupOf(Node[] nodes) {
 		for ( int i = 0; i < nodes.length; i++ ) {
 			for ( int j = i+1; j < nodes.length; j++ ) {
@@ -290,6 +400,9 @@ public class Node extends Containable implements TaxonLinker {
 		return true;	
 	}
 	
+	/**
+	 * @return
+	 */
 	public double calcPathToRoot() {
 		double path = 0;
 		Node[] anc = this.getAncestors();
@@ -299,6 +412,9 @@ public class Node extends Containable implements TaxonLinker {
 		return path;
 	}
 	
+	/**
+	 * @return
+	 */
 	public int calcNodesToRoot() {
 		Node[] anc = this.getAncestors();
 		if ( anc != null ) {
@@ -309,6 +425,9 @@ public class Node extends Containable implements TaxonLinker {
 		}
 	}
 	
+	/**
+	 * @return
+	 */
 	public int calcMaxNodesToTips() {
 		Node[] tips = this.getTerminals();
 		int maxnodes = 0;
@@ -326,6 +445,9 @@ public class Node extends Containable implements TaxonLinker {
 		return maxnodes;
 	}
 	
+	/**
+	 * @return
+	 */
 	public int calcMinNodesToTips() {
 		Node[] tips = this.getTerminals();
 		int minnodes = 0;
@@ -345,6 +467,9 @@ public class Node extends Containable implements TaxonLinker {
 		return minnodes;
 	}
 	
+	/**
+	 * @return
+	 */
 	public double calcMaxPathToTips() {
 		double maxpath = 0;
 		Node[] desc = this.getDescendants();
@@ -362,6 +487,9 @@ public class Node extends Containable implements TaxonLinker {
 		return maxpath;
 	}
 	
+	/**
+	 * @return
+	 */
 	public double calcMinPathToTips () {
 		double minpath = 0;
 		boolean uninit = true;
@@ -381,6 +509,10 @@ public class Node extends Containable implements TaxonLinker {
 		return minpath;
 	}
 	
+	/**
+	 * @param node
+	 * @return
+	 */
 	public double calcPatristicDistance (Node node) {
 		double dist = 0;
 		Node mrca = this.getMrca(node);
@@ -397,6 +529,10 @@ public class Node extends Containable implements TaxonLinker {
 		return dist;
 	}
 	
+	/**
+	 * @param node
+	 * @return
+	 */
 	public int calcNodalDistance (Node node) {
 		int dist = 0;
 		Node mrca = this.getMrca(node);
@@ -413,6 +549,9 @@ public class Node extends Containable implements TaxonLinker {
 		return dist;
 	}
 	
+	/**
+	 * @param args
+	 */
 	public void visitDepthFirst(HashMap args) {
 		this.process(args,"pre");
 		Node fd = this.getFirstDaughter();
@@ -437,6 +576,9 @@ public class Node extends Containable implements TaxonLinker {
 		this.process(args, "post");
 	}	
 	
+	/**
+	 * @return
+	 */
 	public String toNewick() {
 		final StringBuffer newick = new StringBuffer();
 		class PreDaughterWriter implements Visitor {
@@ -473,149 +615,42 @@ public class Node extends Containable implements TaxonLinker {
 		this.visitDepthFirst(args);
 		newick.append(";");
 		return newick.toString();
-	}	
-	
-	public String toXml() throws ObjectMismatch {
-		return this.toXml(false);
 	}
 	
-	public Element toXmlElement() throws ObjectMismatch {
-		return toXmlElement(false);
-	}
-	
-	public Element toXmlElement(boolean roundAsInt) throws ObjectMismatch {
-		logger.debug("writing node to xml");
-		Node[] desc = this.getDescendants();
-		Node[] nodes = new Node[desc.length+1];
-		nodes[0] = this;
-		HashMap treeAttrs = new HashMap();
-		treeAttrs.put("xmlns:xsi","http://www.w3.org/2001/XMLSchema-instance");
-		if ( roundAsInt ) {
-			treeAttrs.put("xsi:type", "nex:IntTree");
+	/**
+	 * @param roundAsInt
+	 * @return
+	 */
+	public Element edgeToXmlElement (boolean roundAsInt) {
+		HashMap attrs = new HashMap();
+		attrs.put("id", "edge" + getId());
+		attrs.put("target", getXmlId());
+		String tagName = null;
+		if ( isRoot() ) {
+			if ( getBranchLength() != 0 ) {
+				tagName = "rootedge";
+			}
+			else {
+				return null;
+			}
 		}
 		else {
-			treeAttrs.put("xsi:type", "nex:FloatTree");
-		}		
-		Element treeElt = createElement("tree",treeAttrs,getDocument());
-		for ( int i = 0; i < desc.length; i++ ) {
-			nodes[i+1] = desc[i];
+			tagName = "edge";
+			attrs.put("source", getParent().getXmlId() );
 		}
-		for ( int i = 0; i < nodes.length; i++ ) {
-			Taxon taxon = nodes[i].getTaxon();
-			HashMap attrs = new HashMap();
-			if ( taxon != null ) {
-				attrs.put("otu", taxon.getXmlId());
-			}
-			if ( nodes[i].isRoot() ) {
-				attrs.put("root", "true");
-			}
-			nodes[i].setAttributes(attrs);
-			Element nodeElt = createElement(nodes[i].getTag(),nodes[i].getAttributes(),getDocument());
-			if ( nodes[i].getGeneric("dict") != null ) {
-				HashMap dict = (HashMap)nodes[i].getGeneric("dict");
-				nodeElt.appendChild(dictToXmlElement(dict));
-			}
-			treeElt.appendChild(nodeElt);
+		if ( roundAsInt ) {
+			attrs.put("length", ""+Math.round(getBranchLength()));
 		}
-		double length = nodes[0].getBranchLength();
-		if ( length != 0 ) {
-			HashMap attrs = new HashMap();
-			attrs.put("id", "edge" + nodes[0].getId());
-			attrs.put("target", nodes[0].getXmlId());		
-			if ( roundAsInt ) {
-				attrs.put("length", ""+new Double(length).intValue());
-			}
-			else {
-				attrs.put("length", ""+length);
-			}
-			treeElt.appendChild(createElement("rootedge",attrs,getDocument()));
+		else {
+			attrs.put("length", ""+getBranchLength());
 		}
-		for ( int i = 1; i < nodes.length; i++ ) {
-			HashMap attrs = new HashMap();
-			attrs.put("source", nodes[i].getParent().getXmlId());
-			attrs.put("target", nodes[i].getXmlId());
-			attrs.put("id", "edge" + nodes[i].getId());
-			double bl = nodes[i].getBranchLength();
-			if ( bl != 0 ) {
-				if ( roundAsInt ) {
-					attrs.put("length", ""+Math.round(bl));
-				}
-				else {
-					attrs.put("length", ""+bl);
-				}				
-			}
-			treeElt.appendChild(createElement("edge",attrs,getDocument()));
-		}
-		return treeElt;
+		return createElement(tagName,attrs,getDocument());
 	}	
 	
-	public String toXml(boolean roundAsInt) throws ObjectMismatch {
-		/*
-		logger.debug("writing node to xml");
-		Node[] desc = this.getDescendants();
-		Node[] nodes = new Node[desc.length+1];
-		nodes[0] = this;
-		StringBuffer sb = new StringBuffer();
-		for ( int i = 0; i < desc.length; i++ ) {
-			nodes[i+1] = desc[i];
-		}
-		for ( int i = 0; i < nodes.length; i++ ) {
-			Taxon taxon = nodes[i].getTaxon();
-			HashMap attrs = new HashMap();
-			if ( taxon != null ) {
-				attrs.put("otu", taxon.getXmlId());
-			}
-			if ( nodes[i].isRoot() ) {
-				attrs.put("root", "true");
-			}
-			nodes[i].setAttributes(attrs);
-			sb.append(nodes[i].getXmlTag(true));
-		}
-		double length = nodes[0].getBranchLength();
-		if ( length != 0 ) {
-			String target = nodes[0].getXmlId();
-			String id = "edge" + nodes[0].getId();
-			sb.append("<rootedge id=\"");
-			sb.append(id);
-			sb.append("\" target=\"");
-			sb.append(target);
-			sb.append("\" length=\"");			
-			if ( roundAsInt ) {
-				sb.append(new Double(length).intValue());
-			}
-			else {
-				sb.append(length);
-			}
-			sb.append("\"/>");
-		}
-		for ( int i = 1; i < nodes.length; i++ ) {
-			String source = nodes[i].getParent().getXmlId();
-			String target = nodes[i].getXmlId();
-			String id = "edge" + nodes[i].getId();
-			double bl = nodes[i].getBranchLength();
-			sb.append("<edge source=\"");
-			sb.append(source);
-			sb.append("\" target=\"");
-			sb.append(target);
-			sb.append("\" id=\"");
-			sb.append(id);
-			if ( bl != 0 ) {
-				sb.append("\" length=\"");
-				if ( roundAsInt ) {
-					sb.append(Math.round(bl));
-				}
-				else {
-					sb.append(bl);
-				}				
-			}
-			sb.append("\"/>");
-		}
-		return sb.toString();
-		*/
-		Element theElt = toXmlElement();
-		return elementToString(theElt);		
-	}
-	
+	/**
+	 * @param args
+	 * @param key
+	 */
 	private void process(HashMap args,String key) {
 		if ( args.containsKey(key) ) {
 			if ( args.get(key) instanceof Visitor ) {
@@ -624,6 +659,9 @@ public class Node extends Containable implements TaxonLinker {
 		}
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.biophylo.Base#finalize()
+	 */
 	protected void finalize() throws Throwable {
 	  //do finalization here
 		taxaMediator.removeLink(-1, this.getId());
