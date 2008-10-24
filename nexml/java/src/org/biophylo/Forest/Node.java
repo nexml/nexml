@@ -5,6 +5,7 @@ import org.biophylo.Visitor;
 import org.biophylo.Taxa.*;
 import org.biophylo.Mediators.*;
 import org.biophylo.Util.Exceptions.*;
+import org.w3c.dom.*;
 
 import java.util.*;
 import java.math.*;
@@ -478,7 +479,78 @@ public class Node extends Containable implements TaxonLinker {
 		return this.toXml(false);
 	}
 	
+	public Element toXmlElement() throws ObjectMismatch {
+		return toXmlElement(false);
+	}
+	
+	public Element toXmlElement(boolean roundAsInt) throws ObjectMismatch {
+		logger.debug("writing node to xml");
+		Node[] desc = this.getDescendants();
+		Node[] nodes = new Node[desc.length+1];
+		nodes[0] = this;
+		HashMap treeAttrs = new HashMap();
+		treeAttrs.put("xmlns:xsi","http://www.w3.org/2001/XMLSchema-instance");
+		if ( roundAsInt ) {
+			treeAttrs.put("xsi:type", "nex:IntTree");
+		}
+		else {
+			treeAttrs.put("xsi:type", "nex:FloatTree");
+		}		
+		Element treeElt = createElement("tree",treeAttrs,getDocument());
+		for ( int i = 0; i < desc.length; i++ ) {
+			nodes[i+1] = desc[i];
+		}
+		for ( int i = 0; i < nodes.length; i++ ) {
+			Taxon taxon = nodes[i].getTaxon();
+			HashMap attrs = new HashMap();
+			if ( taxon != null ) {
+				attrs.put("otu", taxon.getXmlId());
+			}
+			if ( nodes[i].isRoot() ) {
+				attrs.put("root", "true");
+			}
+			nodes[i].setAttributes(attrs);
+			Element nodeElt = createElement(nodes[i].getTag(),nodes[i].getAttributes(),getDocument());
+			if ( nodes[i].getGeneric("dict") != null ) {
+				HashMap dict = (HashMap)nodes[i].getGeneric("dict");
+				nodeElt.appendChild(dictToXmlElement(dict));
+			}
+			treeElt.appendChild(nodeElt);
+		}
+		double length = nodes[0].getBranchLength();
+		if ( length != 0 ) {
+			HashMap attrs = new HashMap();
+			attrs.put("id", "edge" + nodes[0].getId());
+			attrs.put("target", nodes[0].getXmlId());		
+			if ( roundAsInt ) {
+				attrs.put("length", ""+new Double(length).intValue());
+			}
+			else {
+				attrs.put("length", ""+length);
+			}
+			treeElt.appendChild(createElement("rootedge",attrs,getDocument()));
+		}
+		for ( int i = 1; i < nodes.length; i++ ) {
+			HashMap attrs = new HashMap();
+			attrs.put("source", nodes[i].getParent().getXmlId());
+			attrs.put("target", nodes[i].getXmlId());
+			attrs.put("id", "edge" + nodes[i].getId());
+			double bl = nodes[i].getBranchLength();
+			if ( bl != 0 ) {
+				if ( roundAsInt ) {
+					attrs.put("length", ""+Math.round(bl));
+				}
+				else {
+					attrs.put("length", ""+bl);
+				}				
+			}
+			treeElt.appendChild(createElement("edge",attrs,getDocument()));
+		}
+		return treeElt;
+	}	
+	
 	public String toXml(boolean roundAsInt) throws ObjectMismatch {
+		/*
 		logger.debug("writing node to xml");
 		Node[] desc = this.getDescendants();
 		Node[] nodes = new Node[desc.length+1];
@@ -539,6 +611,9 @@ public class Node extends Containable implements TaxonLinker {
 			sb.append("\"/>");
 		}
 		return sb.toString();
+		*/
+		Element theElt = toXmlElement();
+		return elementToString(theElt);		
 	}
 	
 	private void process(HashMap args,String key) {
