@@ -12,6 +12,9 @@ import org.w3c.dom.*;
 public class Project extends Listable {
 	private static Logger logger = Logger.getInstance();
 	
+	/**
+	 * 
+	 */
 	public Project () {
 		super();
 		this.container = CONSTANT.NONE;
@@ -19,6 +22,10 @@ public class Project extends Listable {
 		this.tag = "nex:nexml";
 	}
 	
+	/**
+	 * @param constant
+	 * @return
+	 */
 	private Vector getObject(int constant) {
 		Vector result = new Vector();
 		Containable[] ents = this.getEntities();
@@ -30,6 +37,9 @@ public class Project extends Listable {
 		return result;
 	}
 	
+	/**
+	 * @return
+	 */
 	public Taxa[] getTaxa() {
 		Vector objects = getObject(CONSTANT.TAXA);
 		Taxa[] taxa = new Taxa[objects.size()];
@@ -37,6 +47,9 @@ public class Project extends Listable {
 		return taxa;
 	}
 	
+	/**
+	 * @return
+	 */
 	public Forest[] getForests() {
 		Vector objects = getObject(CONSTANT.FOREST);
 		Forest[] forest = new Forest[objects.size()];
@@ -44,6 +57,9 @@ public class Project extends Listable {
 		return forest;
 	}
 	
+	/**
+	 * @return
+	 */
 	public Matrix[] getMatrices() {
 		Vector objects = getObject(CONSTANT.MATRIX);
 		Matrix[] matrices = new Matrix[objects.size()];
@@ -51,11 +67,9 @@ public class Project extends Listable {
 		return matrices;
 	}
 	
-	public String toXml () throws ObjectMismatch {
-		Element theElt = toXmlElement();
-		return elementToString(theElt);
-	}
-	
+	/* (non-Javadoc)
+	 * @see org.biophylo.Util.XMLWritable#toXmlElement()
+	 */
 	public Element toXmlElement () throws ObjectMismatch {
 		HashMap attrs = new HashMap();
 		String className = this.getClass().getName();
