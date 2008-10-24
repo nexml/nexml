@@ -9,6 +9,9 @@ public class Taxa extends Listable {
 	private static TaxaMediator taxaMediator = TaxaMediator.getInstance();
 	private static Logger logger = Logger.getInstance();
 	
+	/**
+	 * 
+	 */
 	public Taxa () {
 		super();
 		this.type = CONSTANT.TAXA;
@@ -16,14 +19,23 @@ public class Taxa extends Listable {
 		this.tag = "otus";
 	}
 	
+	/**
+	 * @param forest
+	 */
 	public void setForest(Forest forest) {
 		forest.setTaxa(this);
 	}
 	
+	/**
+	 * @param forest
+	 */
 	public void unsetForest(Forest forest) {
 		forest.unsetTaxa();
 	}
 	
+	/**
+	 * @return
+	 */
 	public Forest[] getForests () {
 		Vector tl = taxaMediator.getLink(this.getId(), CONSTANT.FOREST);
 		for ( int i = 0; i < tl.size(); i++ ) {
@@ -34,6 +46,9 @@ public class Taxa extends Listable {
 		return f;
 	}
 	
+	/**
+	 * @return
+	 */
 	public int getNtax() {
 		return this.getEntities().length;
 	}
