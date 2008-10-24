@@ -9,6 +9,10 @@ import org.w3c.dom.*;
 
 public class Tree extends Listable {
 	private static Logger logger = Logger.getInstance();
+	
+	/**
+	 * 
+	 */
 	public Tree () {
 		super();
 		this.container = CONSTANT.FOREST;
@@ -16,6 +20,9 @@ public class Tree extends Listable {
 		this.tag = "tree";
 	}
 	
+	/**
+	 * @return
+	 */
 	public Node[] getTerminals() {
 		Node root = this.getRoot();
 		if ( root != null ) {
@@ -24,6 +31,9 @@ public class Tree extends Listable {
 		return null;
 	}
 
+	/**
+	 * @return
+	 */
 	public Node[] getInternals() {
 		Node root = this.getRoot();
 		if ( root != null ) {
@@ -32,6 +42,9 @@ public class Tree extends Listable {
 		return null;
 	}	
 	
+	/**
+	 * @return
+	 */
 	public Node getRoot() {
 		Containable[] nodes = this.getEntities();
 		for ( int i = 0; i < nodes.length; i++ ) {
@@ -43,6 +56,10 @@ public class Tree extends Listable {
 		return null;
 	}
 	
+	/**
+	 * @param nodes
+	 * @return
+	 */
 	public Node getMrca(Node[] nodes) {
 		Node mrca = null;
 		for ( int i = 0; i < nodes.length; i++ ) {
@@ -56,6 +73,9 @@ public class Tree extends Listable {
 		return mrca;
 	}
 	
+	/**
+	 * @return
+	 */
 	public boolean isBinary () {
 		Node[] internals = this.getInternals();
 		if ( internals != null ) {
@@ -69,6 +89,9 @@ public class Tree extends Listable {
 		return false;
 	}
 	
+	/**
+	 * @param args
+	 */
 	public void visitDepthFirst (HashMap args) {
 		Node root = this.getRoot();
 		if ( root != null ) {
@@ -76,6 +99,9 @@ public class Tree extends Listable {
 		}
 	}
 	
+	/**
+	 * @return
+	 */
 	public String toNewick () {
 		Node root = this.getRoot();
 		if ( root != null ) {
@@ -84,15 +110,20 @@ public class Tree extends Listable {
 		return "";
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.biophylo.Util.XMLWritable#toXmlElement()
+	 */
 	public Element toXmlElement () throws ObjectMismatch {
 		logger.debug("writing tree to xml");
 		String xsi_type = "nex:IntTree";
+		boolean roundAsInt = true;
 		Containable[] contents = this.getEntities();
 		logger.debug("tree contains " + contents.length + " nodes");
 		for ( int i = 0; i < contents.length; i++ ) {
 			double bl = ((Node)contents[i]).getBranchLength();
 			if ( Math.round(bl) != bl ) {
 				xsi_type = "nex:FloatTree";
+				roundAsInt = false;
 				break;
 			}
 		}
@@ -103,54 +134,21 @@ public class Tree extends Listable {
 			Element dictElt = dictToXmlElement(dict);
 			treeElt.appendChild(dictElt);
 		}
-		Node root = this.getRoot();		
-		if ( root != null ) {
-			root.setDocument(getDocument());
-			Element rootElt = null;
-			if ( xsi_type.equals("nex:IntTree") ) {
-				rootElt = root.toXmlElement(true);
+		Containable[] nodes = this.getEntities();
+		for ( int i = 0; i < nodes.length; i++ ) {
+			nodes[i].setDocument(getDocument());
+			if ( ((Node)nodes[i]).isRoot() ) {
+				((Node)nodes[i]).setAttributes("root", "true");
 			}
-			else {
-				rootElt = root.toXmlElement();
-			}
-			if ( rootElt != null ) {
-				NodeList childNodes = rootElt.getChildNodes();
-				for ( int i = 0; i < childNodes.getLength(); i++ ) {
-					treeElt.appendChild((Element)childNodes.item(i));
-				}
+			treeElt.appendChild(nodes[i].toXmlElement());
+		}
+		for ( int i = 0; i < nodes.length; i++ ) {
+			Element edgeElt = ((Node)nodes[i]).edgeToXmlElement(roundAsInt);
+			if ( edgeElt != null ) {
+				treeElt.appendChild(edgeElt);
 			}
 		}
 		return treeElt;
-	}	
-	
-	public String toXml () throws ObjectMismatch {
-		logger.debug("writing tree to xml");
-		String xsi_type = "nex:IntTree";
-		Containable[] contents = this.getEntities();
-		logger.debug("tree contains " + contents.length + " nodes");
-		for ( int i = 0; i < contents.length; i++ ) {
-			double bl = ((Node)contents[i]).getBranchLength();
-			if ( Math.round(bl) != bl ) {
-				xsi_type = "nex:FloatTree";
-				break;
-			}
-		}
-		this.setAttributes("xsi:type", xsi_type);
-		StringBuffer sb = new StringBuffer();
-		sb.append(this.getXmlTag(false));
-		Node root = this.getRoot();
-		if ( root != null ) {
-			if ( xsi_type.equals("nex:IntTree") ) {
-				sb.append(root.toXml(true));
-			}
-			else {
-				sb.append(root.toXml());
-			}
-		}
-		sb.append("</");
-		sb.append(this.getTag());
-		sb.append('>');
-		return sb.toString();
 	}
 	
 	
