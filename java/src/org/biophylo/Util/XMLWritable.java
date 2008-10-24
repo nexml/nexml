@@ -5,29 +5,43 @@ import java.util.*;
 import org.biophylo.Util.Exceptions.*;
 import org.biophylo.Taxa.*;
 import org.biophylo.*;
-import org.biophylo.Util.*;
 import org.w3c.dom.*;
-import org.w3c.dom.ls.*;
 import javax.xml.parsers.*;
 import javax.xml.transform.dom.*;
 import javax.xml.transform.*;
-import javax.xml.stream.*;
 import javax.xml.transform.stream.*;
+import java.io.*;
 
 public class XMLWritable extends Base {
 	private static Logger logger = Logger.getInstance();
 	protected String tag;
 	protected HashMap attributes;
 	protected String xmlId;
+	protected Document doc;
 	
-	public static String elementToString(Element el) {		
-		DOMImplementation impl = el.getOwnerDocument().getImplementation();
-		DOMImplementationLS factory = (DOMImplementationLS) impl.getFeature("LS", "3.0");
-		LSSerializer serializer = factory.createLSSerializer();
-		return serializer.writeToString(el);		
+	public static String elementToString(Element el) {	
+		Source source = new DOMSource(el);
+		StringWriter stringWriter = new StringWriter();
+		Result result = new StreamResult(stringWriter);
+		TransformerFactory factory = TransformerFactory.newInstance();
+		try {
+			Transformer transformer = factory.newTransformer();
+			transformer.transform(source, result);
+		} catch ( Exception e ) {
+			logger.fatal(e.getMessage());
+		}
+		return stringWriter.getBuffer().toString();
 	}
 	
-	public static Element createElement(String tag) {
+	public Document getDocument () {
+		return this.doc;
+	}
+	
+	public void setDocument (Document doc) {
+		this.doc = doc;
+	}
+	
+	public Document createDocument () {
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		DocumentBuilder db = null;
 		try {
@@ -35,14 +49,29 @@ public class XMLWritable extends Base {
 		} catch ( Exception e ) {
 			e.printStackTrace();
 		}
-		DOMImplementation di = db.getDOMImplementation();
-        Document doc = di.createDocument(null, "WFDB", null);
+		DOMImplementation di = db.getDOMImplementation();		
+        Document doc = di.createDocument(null, "nexml", null);
+        return doc;
+	}
+	
+	public static Element createElement(String tag,Document doc) {
+		if ( doc == null ) {
+			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+			DocumentBuilder db = null;
+			try {
+				db = dbf.newDocumentBuilder();
+			} catch ( Exception e ) {
+				e.printStackTrace();
+			}
+			DOMImplementation di = db.getDOMImplementation();		
+	        doc = di.createDocument(null, "nexml", null);
+		}
         Element el = doc.createElement(tag);
         return el;		
 	}
 	
-	public static Element createElement(String tag,HashMap attributes) {
-		Element el = createElement(tag);
+	public static Element createElement(String tag,HashMap attributes,Document doc) {
+		Element el = createElement(tag,doc);
         if ( attributes != null ) {
 	        Object[] keys = attributes.keySet().toArray();
 	        for ( int i = 0; i < keys.length; i++ ) {
@@ -52,14 +81,14 @@ public class XMLWritable extends Base {
         return el;
 	}
 	
-	public static Element createElement(String tag, HashMap attributes, String text) {
-		Element el = createElement(tag,attributes);
+	public static Element createElement(String tag, HashMap attributes, String text,Document doc) {
+		Element el = createElement(tag,attributes,doc);
 		el.setTextContent(text);
 		return el;
 	}
 	
-	public static Element createElement(String tag,String text) {
-		Element el = createElement(tag,null,text);
+	public static Element createElement(String tag,String text,Document doc) {
+		Element el = createElement(tag,null,text,doc);
 		return el;
 	}
 	
@@ -202,6 +231,60 @@ public class XMLWritable extends Base {
 		}
 		return attrs;
 	}
+	
+	public Element toXmlElement () throws ObjectMismatch {
+		Element theElt = createElement(getTag(),getAttributes(),getDocument());
+		HashMap dict = (HashMap)getGeneric("dict");
+		if ( dict != null ) {
+			theElt.appendChild(dictToXmlElement(dict));
+		}
+		if ( this instanceof Listable ) {
+			Containable[] ents = ((Listable)this).getEntities();
+			Document doc = getDocument();
+			if ( doc == null ) {
+				doc = createDocument();
+				setDocument(doc);
+			}
+			for ( int i = 0; i < ents.length; i++ ) {
+				ents[i].setDocument(doc);
+				theElt.appendChild(ents[i].toXmlElement());
+			}
+		}
+		return theElt;
+	}
+	
+	public Element dictToXmlElement(HashMap dict) {
+		Element currentDict = createElement("dict",getDocument());
+		Object[] keys = dict.keySet().toArray();
+		for ( int i = 0; i < keys.length; i++ ) {
+			String key = (String)keys[i];
+			Vector value = (Vector)dict.get(keys[i]);
+			currentDict.appendChild(createElement("key",key,getDocument()));
+			String valueType = (String)value.get(0);
+			if ( valueType.equals("dict") ) {
+				HashMap childDict = (HashMap)value.get(1);
+				currentDict.appendChild(dictToXmlElement(childDict));
+			}
+			else if ( valueType.indexOf("vector") > 0 ){
+				StringBuffer sb = new StringBuffer();
+				for ( int j = 1; j < value.size(); j++ ) {
+					sb.append(value.get(j));
+					if ( j < ( value.size() - 1 ) ) {
+						sb.append(' ');
+					}
+				}
+				currentDict.appendChild(createElement(valueType,sb.toString(),getDocument()));
+			}
+			else if ( valueType.equals("any") ) {
+				currentDict.appendChild((Element)value.get(1));				
+			}
+			else {
+				currentDict.appendChild(createElement(valueType,(String)value.get(1),getDocument()));
+			}
+		}		
+		return currentDict;
+	}
+	
 	
 	public String toXml () throws ObjectMismatch {
 		logger.debug("writing object "+this+" to xml");
