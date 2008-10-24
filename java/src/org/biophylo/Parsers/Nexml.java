@@ -16,6 +16,9 @@ public class Nexml implements Parsers {
 	private static ObjectMediator om = ObjectMediator.getInstance();
 	private static Logger logger = Logger.getInstance();
 	
+	/**
+	 * 
+	 */
 	public Nexml () {
 		if ( factory == null ) {
 			factory = new HashMap();
@@ -29,6 +32,9 @@ public class Nexml implements Parsers {
 		}
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.biophylo.Parsers.Parsers#parse(java.io.InputStream)
+	 */
 	public Object[] parse(InputStream data) {
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		DocumentBuilder db = null;
@@ -71,6 +77,10 @@ public class Nexml implements Parsers {
 		return theBlocks;
 	}
 	
+	/**
+	 * @param taxaBlocks
+	 * @param treeBlocks
+	 */
 	private static void resolveTreeTaxa(HashMap taxaBlocks,Vector treeBlocks){
 		for ( int i = 0; i < treeBlocks.size(); i++ ) {
 			String otusIdRef = (String)((Forest)treeBlocks.get(i)).getGeneric("otus");
@@ -96,6 +106,11 @@ public class Nexml implements Parsers {
 			}
 		}
 	}
+	
+	/**
+	 * @param taxaBlocks
+	 * @param charBlocks
+	 */
 	private static void resolveMatrixTaxa(HashMap taxaBlocks,Vector charBlocks){
 		for ( int i = 0; i < charBlocks.size(); i++ ) {
 			String otusIdRef = (String)((Matrix)charBlocks.get(i)).getGeneric("otus");
@@ -117,6 +132,11 @@ public class Nexml implements Parsers {
 		}		
 	}
 	
+	/**
+	 * @param charElts
+	 * @return
+	 * @throws ObjectMismatch
+	 */
 	private static Vector processCharacters(NodeList charElts) throws ObjectMismatch {
 		Vector charBlocks = new Vector();
 		if ( charElts.getLength() == 0) return charBlocks;
@@ -170,6 +190,13 @@ public class Nexml implements Parsers {
 		return charBlocks;
 	}
 	
+	/**
+	 * @param matrixElt
+	 * @param symbolOfId
+	 * @param colIndices
+	 * @param charObj
+	 * @throws ObjectMismatch
+	 */
 	private static void processMatrix(Element matrixElt,HashMap symbolOfId,HashMap colIndices,Matrix charObj) throws ObjectMismatch {
 		NodeList row = matrixElt.getElementsByTagName("row");
 		for ( int i = 0; i < row.getLength(); i++ ) {
@@ -215,6 +242,11 @@ public class Nexml implements Parsers {
 		}		
 	}
 	
+	/**
+	 * @param elts
+	 * @param symbolOfId
+	 * @param lookup
+	 */
 	private static void resolveMapping(NodeList elts,HashMap symbolOfId,HashMap lookup) {
 		for ( int i = 0; i < elts.getLength(); i++ ) {
 			String symbol = ((Element)elts.item(i)).getAttribute("symbol");
@@ -236,6 +268,11 @@ public class Nexml implements Parsers {
 		}
 	}
 	
+	/**
+	 * @param treeElt
+	 * @return
+	 * @throws ObjectMismatch
+	 */
 	private static Tree processTree(Element treeElt) throws ObjectMismatch {
 		Tree treeObj = (Tree)objFromElement(treeElt);
 		HashMap sourceOf = new HashMap();
@@ -289,6 +326,11 @@ public class Nexml implements Parsers {
 		return treeObj;
 	}
 	
+	/**
+	 * @param treesElts
+	 * @return
+	 * @throws ObjectMismatch
+	 */
 	private static Vector processTrees(NodeList treesElts) throws ObjectMismatch {
 		Vector result = new Vector();
 		if(treesElts==null) return result;
@@ -306,6 +348,10 @@ public class Nexml implements Parsers {
 		return result;
 	}
 	
+	/**
+	 * @param otusElts
+	 * @return
+	 */
 	private static HashMap processOtus(NodeList otusElts) {
 		HashMap taxaBlocks = new HashMap();
 		for ( int i = 0; i < otusElts.getLength(); i++ ) {
@@ -324,6 +370,10 @@ public class Nexml implements Parsers {
 		return taxaBlocks;
 	}
 	
+	/**
+	 * @param elt
+	 * @return
+	 */
 	private static XMLWritable objFromElement(Element elt) {
 		String tagName = elt.getTagName();
 		XMLWritable obj = null;
@@ -344,6 +394,10 @@ public class Nexml implements Parsers {
 		return obj;
 	}
 	
+	/**
+	 * @param elt
+	 * @return
+	 */
 	private static HashMap parseDict(Element elt) {
 		HashMap result = new HashMap();
 		NodeList children = elt.getChildNodes();
