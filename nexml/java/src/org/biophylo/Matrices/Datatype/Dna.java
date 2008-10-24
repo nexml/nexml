@@ -39,14 +39,23 @@ public class Dna extends Datatype {
 		{1,1,1,1,},
 	};	
 	
+	/* (non-Javadoc)
+	 * @see org.biophylo.Matrices.Datatype.Datatype#isValueConstrained()
+	 */
 	public boolean isValueConstrained() {
 		return true;
 	}	
 	
+	/* (non-Javadoc)
+	 * @see org.biophylo.Matrices.Datatype.Datatype#isSequential()
+	 */
 	public boolean isSequential() {
 		return true;
 	}	
 	
+	/**
+	 * 
+	 */
 	public Dna() {
 		this.alphabet = "ACGTMRWSYKVHDBXN";
 		this.missing = '?';
