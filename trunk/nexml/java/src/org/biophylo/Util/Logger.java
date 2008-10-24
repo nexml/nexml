@@ -4,51 +4,95 @@ public class Logger {
 	private static Logger instance = null;
 	private int level;
 	private Vector listeners;
+	
+	/**
+	 * 
+	 */
 	protected Logger() {
 		this.level = 2;
 		this.listeners = new Vector();
 		this.listeners.add(new DefaultListener());
 	}
+	
+	/**
+	 * @return
+	 */
 	public static Logger getInstance() {
 		if(instance == null) {
 			instance = new Logger();
 		}
 	    return instance;
 	}
+	
+	/**
+	 * @param level
+	 */
 	public void VERBOSE(int level) {
 		this.level = level;
 	}
+	
+	/**
+	 * @param msg
+	 */
 	public void fatal(String msg) {
 		if ( this.level >= 0 ) {			
 			this.broadcast(msg);
 		}
 	}
+	
+	/**
+	 * @param msg
+	 */
 	public void error(String msg) {
 		if ( this.level >= 1 ) {
 			this.broadcast(msg);
 		}
 	}
+	
+	/**
+	 * @param msg
+	 */
 	public void warn (String msg) {
 		if ( this.level >= 2 ) {
 			this.broadcast(msg);
 		}
 	}
+	
+	/**
+	 * @param msg
+	 */
 	public void info (String msg) {
 		if ( this.level >= 3 ) {
 			this.broadcast(msg);
 		}
 	}
+	
+	/**
+	 * @param msg
+	 */
 	public void debug (String msg) {
 		if ( this.level >= 4 ) {
 			this.broadcast(msg);
 		}
 	}
+	
+	/**
+	 * @param listener
+	 */
 	public void addListener(LogListener listener) {
 		this.listeners.add(listener);
 	}
+	
+	/**
+	 * @param listener
+	 */
 	public void removeListener(LogListener listener) {
 		this.listeners.remove(listener);
 	}
+	
+	/**
+	 * @param msg
+	 */
 	private void broadcast (String msg) {
 		Throwable stack = new Throwable();
 		StackTraceElement[] stes = stack.getStackTrace();
@@ -71,6 +115,10 @@ class DefaultListener implements LogListener {
 	int methodI = 2;
 	int fileI = 3;
 	int lineI = 4;
+	
+	/* (non-Javadoc)
+	 * @see org.biophylo.Util.LogListener#notify(java.lang.String[])
+	 */
 	public void notify (String[] msg) {
 		System.err.println(
 			msg[levelI]
