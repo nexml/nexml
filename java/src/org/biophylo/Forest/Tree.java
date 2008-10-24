@@ -5,6 +5,7 @@ import org.biophylo.Util.*;
 import org.biophylo.*;
 import org.biophylo.Util.Exceptions.*;
 import java.math.*;
+import org.w3c.dom.*;
 
 public class Tree extends Listable {
 	private static Logger logger = Logger.getInstance();
@@ -82,6 +83,45 @@ public class Tree extends Listable {
 		}
 		return "";
 	}
+	
+	public Element toXmlElement () throws ObjectMismatch {
+		logger.debug("writing tree to xml");
+		String xsi_type = "nex:IntTree";
+		Containable[] contents = this.getEntities();
+		logger.debug("tree contains " + contents.length + " nodes");
+		for ( int i = 0; i < contents.length; i++ ) {
+			double bl = ((Node)contents[i]).getBranchLength();
+			if ( Math.round(bl) != bl ) {
+				xsi_type = "nex:FloatTree";
+				break;
+			}
+		}
+		this.setAttributes("xsi:type", xsi_type);
+		Element treeElt = createElement(getTag(),getAttributes(),getDocument());
+		if ( getGeneric("dict") != null ) {
+			HashMap dict = (HashMap)getGeneric("dict");
+			Element dictElt = dictToXmlElement(dict);
+			treeElt.appendChild(dictElt);
+		}
+		Node root = this.getRoot();		
+		if ( root != null ) {
+			root.setDocument(getDocument());
+			Element rootElt = null;
+			if ( xsi_type.equals("nex:IntTree") ) {
+				rootElt = root.toXmlElement(true);
+			}
+			else {
+				rootElt = root.toXmlElement();
+			}
+			if ( rootElt != null ) {
+				NodeList childNodes = rootElt.getChildNodes();
+				for ( int i = 0; i < childNodes.getLength(); i++ ) {
+					treeElt.appendChild((Element)childNodes.item(i));
+				}
+			}
+		}
+		return treeElt;
+	}	
 	
 	public String toXml () throws ObjectMismatch {
 		logger.debug("writing tree to xml");
