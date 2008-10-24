@@ -2,6 +2,7 @@ package org.biophylo;
 import org.biophylo.*;
 import org.biophylo.Util.Exceptions.*;
 import java.util.*;
+import org.w3c.dom.*;
 
 public abstract class Listable extends Containable {
 
@@ -15,6 +16,14 @@ public abstract class Listable extends Containable {
 	public void insert (Object[] obj) throws ObjectMismatch {
 		for ( int i = 0; i < obj.length; i++ ) {
 			if ( this.canContain(obj[i])) {
+				if ( obj[i] instanceof Containable ) {
+					Document doc = getDocument();
+					if ( doc == null ) {
+						doc = createDocument();
+						setDocument(doc);
+					}
+					((Containable)obj[i]).setDocument(doc);
+				}
 				this.entities.add(obj[i]);
 			}
 			else {
