@@ -10,17 +10,30 @@ public class TaxaMediator {
 	private ObjectMediator object;
 	private HashMap objectsForTaxon;
 	private HashMap taxonForObject;
+	
+	/**
+	 * 
+	 */
 	protected TaxaMediator() {
 	     this.object = ObjectMediator.getInstance();
 	     this.objectsForTaxon = new HashMap(); // key is taxon ID
 	     this.taxonForObject = new HashMap(); // key is taxonlinker id
 	}
+	
+	/**
+	 * @return
+	 */
 	public static TaxaMediator getInstance() {
 		if(instance == null) {
 			instance = new TaxaMediator();
 		}
 	    return instance;
 	}
+	
+	/**
+	 * @param taxonId
+	 * @param linkerId
+	 */
 	public void setLink(int taxonId,int linkerId) {
 		Integer lId = new Integer(linkerId);
 		Integer tId = new Integer(taxonId);
@@ -32,6 +45,11 @@ public class TaxaMediator {
 		}
 		((HashMap)this.objectsForTaxon.get(tId)).put(lId, type);
 	}
+	
+	/**
+	 * @param linkerId
+	 * @return
+	 */
 	public Containable getLink(int linkerId) {
 		Integer lId = new Integer(linkerId);
 		if ( this.taxonForObject.containsKey(lId) ) {
@@ -40,6 +58,12 @@ public class TaxaMediator {
 		}
 		return null;
 	}
+	
+	/**
+	 * @param taxonId
+	 * @param type
+	 * @return
+	 */
 	public Vector getLink(int taxonId, int type) {
 		Integer tId = new Integer(taxonId);
 		if ( this.objectsForTaxon.containsKey(tId) ) {
@@ -66,6 +90,11 @@ public class TaxaMediator {
 		}
 		return null;
 	}
+	
+	/**
+	 * @param taxonId
+	 * @param linkerId
+	 */
 	public void removeLink(int taxonId, int linkerId) {
 		logger.info("removing link " + taxonId + " => " + linkerId);
 		Integer tId = new Integer(taxonId);
