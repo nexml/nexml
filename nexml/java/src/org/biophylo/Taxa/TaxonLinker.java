@@ -1,7 +1,19 @@
 package org.biophylo.Taxa;
 
 public interface TaxonLinker {
+	
+	/**
+	 * @return
+	 */
 	public Taxon getTaxon();
+	
+	/**
+	 * @param taxon
+	 */
 	public void setTaxon(Taxon taxon);
+	
+	/**
+	 * 
+	 */
 	public void unsetTaxon();
 }
