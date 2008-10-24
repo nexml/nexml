@@ -12,6 +12,10 @@ public abstract class Datatype extends XMLWritable {
 	protected char gap;
 	protected int[][] lookup;
 	
+	/**
+	 * @param type
+	 * @return
+	 */
 	public static Datatype getInstance(String type) {
 		String base = "org.biophylo.Matrices.Datatype.";
 		Datatype dt = null;
@@ -25,26 +29,44 @@ public abstract class Datatype extends XMLWritable {
 		return dt;
 	}
 	
+	/**
+	 * @param missing
+	 */
 	public void setMissing(char missing) {
 		this.missing = missing;
 	}
 	
+	/**
+	 * @return
+	 */
 	public char getMissing() {
 		return this.missing;
 	}
 	
+	/**
+	 * @param gap
+	 */
 	public void setGap(char gap) {
 		this.gap = gap;
 	}
 	
+	/**
+	 * @return
+	 */
 	public char getGap() {
 		return this.gap;
 	}
 	
+	/**
+	 * @param lookup
+	 */
 	public void setLookup(int[][] lookup) {
 		this.lookup = lookup;
 	}
 	
+	/**
+	 * @param lookup
+	 */
 	public void setLookup(HashMap lookup) {
 		int firstDimension = lookup.size();
 		String[] keys = new String[firstDimension];
@@ -71,18 +93,31 @@ public abstract class Datatype extends XMLWritable {
 		this.lookup = intLookup;
 	}
 	
+	/**
+	 * @return
+	 */
 	public int[][] getLookup() {
 		return this.lookup;
 	}
 	
+	/**
+	 * @param alphabet
+	 */
 	public void setAlphabet(String alphabet) {
 		this.alphabet = alphabet;
 	}
 	
+	/**
+	 * @return
+	 */
 	public String getAlphabet() {
 		return this.alphabet;
 	}
 	
+	/**
+	 * @param states
+	 * @return
+	 */
 	public char getSymbolForStates(char[] states) {
 		int[][] thisLookup = this.getLookup();		
 		if ( thisLookup != null ) {
@@ -113,10 +148,16 @@ public abstract class Datatype extends XMLWritable {
 		}
 	}	
 	
+	/**
+	 * @return
+	 */
 	public String getType() {
 		return this.getClass().getSimpleName();
 	}
 	
+	/**
+	 * @return
+	 */
 	public HashMap getIdsForStates() {
 		HashMap result = null;
 		if ( this.lookup != null ) {
@@ -129,6 +170,10 @@ public abstract class Datatype extends XMLWritable {
 		return result;
 	}	
 	
+	/**
+	 * @param charsString
+	 * @return
+	 */
 	public boolean isValid(String charsString) {
 		logger.info("validating "+charsString);
 		String[] chars = this.split(charsString.toUpperCase());
@@ -148,10 +193,20 @@ public abstract class Datatype extends XMLWritable {
 		return true;
 	}
 	
+	/**
+	 * @return
+	 */
 	public abstract boolean isValueConstrained();
 	
+	/**
+	 * @return
+	 */
 	public abstract boolean isSequential();
 	
+	/**
+	 * @param that
+	 * @return
+	 */
 	public boolean isSame(Datatype that) {		
 		if ( !this.getType().equals(that.getType()) ) {
 			return false;
@@ -189,6 +244,10 @@ public abstract class Datatype extends XMLWritable {
 		return true;
 	}	
 	
+	/**
+	 * @param chars
+	 * @return
+	 */
 	public String[] split(String chars) {
 		String[] temp = chars.split("");
 		String[] result = new String[temp.length-1];
@@ -198,6 +257,10 @@ public abstract class Datatype extends XMLWritable {
 		return result;
 	}
 	
+	/**
+	 * @param chars
+	 * @return
+	 */
 	public String join(String[] chars) {
 		StringBuffer sb = new StringBuffer();
 		for ( int i = 0; i < chars.length; i++ ) {
@@ -206,6 +269,9 @@ public abstract class Datatype extends XMLWritable {
 		return sb.toString();
 	}
 
+	/* (non-Javadoc)
+	 * @see org.biophylo.Util.XMLWritable#toXmlElement()
+	 */
 	public Element toXmlElement() throws ObjectMismatch {
 		Element toElt = null;
 		int[][] lookup = this.getLookup();
@@ -255,60 +321,11 @@ public abstract class Datatype extends XMLWritable {
 		}		
 		return toElt;
 	}
-
-	public String toXml() throws ObjectMismatch {
-		StringBuffer sb = new StringBuffer();
-		int[][] lookup = this.getLookup();
-		if ( lookup != null && ! this.isValueConstrained() ) {
-			sb.append(this.getXmlTag(false));
-			final HashMap idForState = this.getIdsForStates();
-			class Sorter implements Comparator {
-				public int compare (Object obja, Object objb) {
-					return Integer.parseInt((String)idForState.get(obja)) 
-						- Integer.parseInt((String)idForState.get(objb));
-				}
-			}
-			Object[] tmp = idForState.keySet().toArray();
-			String[] states = new String[tmp.length];
-			for ( int i = 0; i < tmp.length; i++ ) {
-				states[i] = (String)tmp[i];
-			}
-			Arrays.sort(states, new Sorter());
-			for ( int i = 0; i < states.length; i++ ) {
-				int stateId = Integer.parseInt((String)idForState.get(states[i]));
-				idForState.put(states[i], "s"+stateId);
-			}
-			for ( int i = 0; i < states.length; i++ ) {
-				String stateId = (String)idForState.get(states[i]);
-				String[] mapping = this.getAmbiguitySymbols(states[i]);
-				if ( mapping.length > 1 ) {
-					sb.append("<state id=\"");
-					sb.append(stateId);
-					sb.append("\" symbol=\"");
-					sb.append(states[i]);
-					sb.append("\">");
-					for ( int j = 0; j < mapping.length; j++ ) {
-						sb.append("<mapping state=\"");
-						sb.append(idForState.get(mapping[j]));
-						sb.append("\" mstaxa=\"uncertainty\"/>");
-					}
-					sb.append("</state>");
-				}
-				else {
-					sb.append("<state id=\"");
-					sb.append(stateId);
-					sb.append("\" symbol=\"");
-					sb.append(states[i]);
-					sb.append("\"/>");
-				}
-			}
-			sb.append("</");
-			sb.append(this.getTag());
-			sb.append('>');
-		}		
-		return sb.toString();
-	}
 	
+	/**
+	 * @param symbol
+	 * @return
+	 */
 	private String[] getAmbiguitySymbols(String symbol) {
 		if ( this.alphabet == null || this.lookup == null ) {
 			return null;
