@@ -6,12 +6,20 @@ import org.biophylo.Util.Exceptions.ObjectMismatch;
 import org.biophylo.Taxa.*;
 public class Forest extends Listable implements TaxaLinker {
 	private static TaxaMediator taxaMediator = TaxaMediator.getInstance();
+	
+	/**
+	 * 
+	 */
 	public Forest () {
 		super();
 		this.type = CONSTANT.FOREST;
 		this.container = CONSTANT.PROJECT;
 		this.tag = "trees";
 	}
+		
+	/**
+	 * @return
+	 */
 	public String toNewick() {
 		StringBuffer sb = new StringBuffer();
 		Containable[] trees = this.getEntities();
@@ -21,12 +29,24 @@ public class Forest extends Listable implements TaxaLinker {
 		}
 		return sb.toString();
 	}	
+	
+	/* (non-Javadoc)
+	 * @see org.biophylo.Taxa.TaxaLinker#setTaxa(org.biophylo.Taxa.Taxa)
+	 */
 	public void setTaxa(Taxa taxa) {
 		taxaMediator.setLink(taxa.getId(), this.getId());
 	}
+	
+	/* (non-Javadoc)
+	 * @see org.biophylo.Taxa.TaxaLinker#unsetTaxa()
+	 */
 	public void unsetTaxa() {
 		taxaMediator.removeLink(-1, this.getId());
 	}
+	
+	/* (non-Javadoc)
+	 * @see org.biophylo.Taxa.TaxaLinker#getTaxa()
+	 */
 	public Taxa getTaxa () {
 		return (Taxa)taxaMediator.getLink(this.getId());
 	}
