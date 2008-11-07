@@ -23,16 +23,39 @@ function parse(args) {
 	var char_blocks = process_characters(xmlDoc.getElementsByTagName("characters"));
 	resolve_tree_taxa(taxa_blocks,tree_blocks);
 	resolve_matrix_taxa(taxa_blocks,char_blocks);
-	for ( var key in taxa_blocks ) {
-		result.push(taxa_blocks[key]);
+	if ( args["as_project"] || args["project"] ) {
+		var tmp = obj_from_elt(xmlDoc.getElementsByTagName("nex:nexml")[0]);
+		var project;
+		if ( args["project"] ) {
+			project = args["project"];
+			project.set_generic(tmp.get_generic("dict"));
+		}
+		else {
+			project = tmp;
+		}
+		for ( var key in taxa_blocks ) {
+			project.insert(taxa_blocks[key]);
+		}
+		for ( var i in char_blocks ) {
+			project.insert(char_blocks[i]);
+		}
+		for ( var i in tree_blocks ) {
+			project.insert(tree_blocks[i]);
+		}	
+		return project;	
 	}
-	for ( var i in char_blocks ) {
-		result.push(char_blocks[i]);
+	else {
+		for ( var key in taxa_blocks ) {
+			result.push(taxa_blocks[key]);
+		}
+		for ( var i in char_blocks ) {
+			result.push(char_blocks[i]);
+		}
+		for ( var i in tree_blocks ) {
+			result.push(tree_blocks[i]);
+		}
+		return result;
 	}
-	for ( var i in tree_blocks ) {
-		result.push(tree_blocks[i]);
-	}
-	return result;
 }
 Phylo.Parsers.Nexml.parse = parse;
 
@@ -322,6 +345,7 @@ function obj_from_elt (elt) {
 		case 'node'       : return new Phylo.Forest.Node(args);
 		case 'characters' : return new Phylo.Matrices.Matrix(args);
 		case 'row'        : return new Phylo.Matrices.Datum(args);
+		case 'nex:nexml'  : return new Phylo.Project(args);
 		default : throw new Phylo.Util.Exceptions.API("Can't create object from element " + tag_name);
 	}
 }
