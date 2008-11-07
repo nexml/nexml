@@ -4,19 +4,18 @@ function Matrix (args) {
 	args["tag"] = "characters";	
     this.TypeSafeData(args);
     this._type      = Phylo.Util.CONSTANT._MATRIX_;
-    this._container = Phylo.Util.CONSTANT._NONE_;
+    this._container = Phylo.Util.CONSTANT._PROJECT_;
     return this;
 }
 Phylo.Matrices.Matrix = Matrix;
-copyPrototypeMI(
+Phylo.Util.CONSTANT.copyPrototypeMI(
 	Phylo.Matrices.Matrix,[
 		Phylo.Matrices.TypeSafeData,
 		Phylo.Taxa.TaxaLinker
 	]
 );
-var proto = Phylo.Matrices.Matrix.prototype;
 
-proto.set_state_labels = function(statelabels) {
+Phylo.Matrices.Matrix.prototype.set_state_labels = function(statelabels) {
 	// it's an array ref, but what about its contents?
 	if ( statelabels instanceof Array ) {
 		for ( var i in statelabels ) {
@@ -38,7 +37,7 @@ proto.set_state_labels = function(statelabels) {
 	return this;
 };
 
-proto.set_charlabels = function(charlabels) {
+Phylo.Matrices.Matrix.prototype.set_charlabels = function(charlabels) {
 	if ( charlabels != null && ! charlabels instanceof Array ) {
 		throw new Phylo.Util.Exceptions.BadArgs(
 			"charlabels must be an array"
@@ -49,12 +48,12 @@ proto.set_charlabels = function(charlabels) {
 	return this;
 };
 
-proto.set_gapmode = function(gapmode) {
+Phylo.Matrices.Matrix.prototype.set_gapmode = function(gapmode) {
 	this.gapmode = gapmode;
 	return this;
 };
 
-proto.set_matchchar = function(match) {
+Phylo.Matrices.Matrix.prototype.set_matchchar = function(match) {
 	var missing = this.get_missing();
 	var gap = this.get_gap();
 	if ( match == missing ) {
@@ -73,33 +72,33 @@ proto.set_matchchar = function(match) {
 	return this;
 };
 
-proto.set_polymorphism = function(polymorphism) {
+Phylo.Matrices.Matrix.prototype.set_polymorphism = function(polymorphism) {
 	this.polymorphism = polymorphism;
 	return this;
 };
 
-proto.set_respectcase = function (respectcase) {
+Phylo.Matrices.Matrix.prototype.set_respectcase = function (respectcase) {
 	this.respectcase = respectcase;
 	return this;
 };
 
-proto.get_statelabels = function() {
+Phylo.Matrices.Matrix.prototype.get_statelabels = function() {
 	return this.statelabels || [];
 };
 
-proto.get_charlabels = function () {
+Phylo.Matrices.Matrix.prototype.get_charlabels = function () {
 	return this.charlabels || [];	
 };
 
-proto.get_gapmode = function () {
+Phylo.Matrices.Matrix.prototype.get_gapmode = function () {
 	return this.gapmode;
 };
 
-proto.get_matchchar = function () {
+Phylo.Matrices.Matrix.prototype.get_matchchar = function () {
 	return this.matchchar || '.';
 };
 
-proto.get_nchar = function() {
+Phylo.Matrices.Matrix.prototype.get_nchar = function() {
 	var nchar = 0;
 	var rows = this.get_entities();
 	for ( var i in rows ) {
@@ -110,19 +109,19 @@ proto.get_nchar = function() {
 	return nchar;
 };
 
-proto.get_ntax = function() {
+Phylo.Matrices.Matrix.prototype.get_ntax = function() {
 	return this.get_entities().length;
 };
 
-proto.get_polymorphism = function(){
+Phylo.Matrices.Matrix.prototype.get_polymorphism = function(){
 	return this.polymorphism;
 };
 
-proto.get_respectcase = function () {
+Phylo.Matrices.Matrix.prototype.get_respectcase = function () {
 	return this.respectcase;
 };
 
-proto.check_taxa = function () {
+Phylo.Matrices.Matrix.prototype.check_taxa = function () {
 	var taxa = this.get_taxa();
 	if ( taxa ) {
 		var taxa_names = {};
@@ -161,14 +160,14 @@ proto.check_taxa = function () {
 	return this;
 };
 
-proto.validate = function () {
+Phylo.Matrices.Matrix.prototype.validate = function () {
 	var rows = this.get_entities();
 	for ( var i in rows ) {
 		rows[i].validate();
 	}
 };
 
-proto.insert = function(obj) {
+Phylo.Matrices.Matrix.prototype.insert = function(obj) {
 	if ( obj._container() != this._type() ) {
 		throw new Phylo.Util.Exceptions.ObjectMismatch('object not a datum object!');
 	}
@@ -203,7 +202,7 @@ function keys (obj) {
 	return theKeys;
 }
 
-proto.to_xml = function(args) {
+Phylo.Matrices.Matrix.prototype.to_xml = function(args) {
 	if(args==null) args = {};
 	var ids_for_states;
 	var type = this.get_type();

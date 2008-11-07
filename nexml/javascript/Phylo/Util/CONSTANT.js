@@ -19,8 +19,9 @@ Phylo.Util.CONSTANT._CHAR_         = function() { return 12; }
 Phylo.Util.CONSTANT._CHARSTATE_    = function() { return 13; }
 Phylo.Util.CONSTANT._CHARSTATESEQ_ = function() { return 14; }
 Phylo.Util.CONSTANT._MATRIXROW_    = function() { return 15; }
+Phylo.Util.CONSTANT._PROJECT_      = function() { return 16; }
 
-function looks_like_object (obj,constant) {
+Phylo.Util.CONSTANT.looks_like_object = function (obj,constant) {
     if ( obj._type() == constant() ) {
         return true;
     }
@@ -29,7 +30,7 @@ function looks_like_object (obj,constant) {
     }
 }
 
-function copyPrototype( descendant, parent ) {
+Phylo.Util.CONSTANT.copyPrototype = function ( descendant, parent ) {
 	try {
 	    var sConstructor = parent.toString();
 	    var aMatch = sConstructor.match( /\s*function (.*)\(/ );
@@ -44,7 +45,7 @@ function copyPrototype( descendant, parent ) {
 	}
 }
 
-function copyPrototypeMI( descendant, parents ) {
+Phylo.Util.CONSTANT.copyPrototypeMI = function ( descendant, parents ) {
 	try {
 		for ( var i = 0; i < parents.length; i++ ) {
 			var parent = parents[i];

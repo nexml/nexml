@@ -18,10 +18,9 @@ function TypeSafeData(args) {
 }
 //alert(TypeSafeData);
 Phylo.Matrices['TypeSafeData'] = TypeSafeData;
-copyPrototype(Phylo.Matrices.TypeSafeData,Phylo.Listable);
-var proto = Phylo.Matrices.TypeSafeData.prototype;
+Phylo.Util.CONSTANT.copyPrototype(Phylo.Matrices.TypeSafeData,Phylo.Listable);
 
-proto.set_type = function(arg) {
+Phylo.Matrices.TypeSafeData.prototype.set_type = function(arg) {
 	var args;
 	if ( arg instanceof Object ) {
 		args = arg;
@@ -40,7 +39,7 @@ proto.set_type = function(arg) {
 	return this;	
 };
 
-proto.set_missing = function (missing) {
+Phylo.Matrices.TypeSafeData.prototype.set_missing = function (missing) {
 	if ( this['get_matchchar'] && missing == this.get_matchchar() ) {
 		throw new Phylo.Util.Exceptions.BadArgs(
 			"Missing character '"+missing+"' already in use as match character"
@@ -51,7 +50,7 @@ proto.set_missing = function (missing) {
 	return this;
 };
 
-proto.set_gap = function (gap) {
+Phylo.Matrices.TypeSafeData.prototype.set_gap = function (gap) {
 	if ( this['get_matchchar'] && gap == this.get_matchchar() ) {
 		throw new Phylo.Util.Exceptions.BadArgs(
 			"Gap character '"+gap+"' already in use as match character"
@@ -62,13 +61,13 @@ proto.set_gap = function (gap) {
 	return this;
 };
 
-proto.set_lookup = function(lookup) {
+Phylo.Matrices.TypeSafeData.prototype.set_lookup = function(lookup) {
 	this.get_type_object().set_lookup(lookup);
 	this.validate();
 	return this;
 };
 
-proto.set_type_object = function(type_object) {
+Phylo.Matrices.TypeSafeData.prototype.set_type_object = function(type_object) {
 	this.type_object = type_object;
 	try {
 		this.validate();
@@ -84,27 +83,27 @@ proto.set_type_object = function(type_object) {
 	return this;
 };
 
-proto.get_type = function() {
+Phylo.Matrices.TypeSafeData.prototype.get_type = function() {
 	return this.get_type_object().get_type();
 };
 
-proto.get_missing = function() {
+Phylo.Matrices.TypeSafeData.prototype.get_missing = function() {
 	return this.get_type_object().get_missing();
 };
 
-proto.get_gap = function() {
+Phylo.Matrices.TypeSafeData.prototype.get_gap = function() {
 	return this.get_type_object().get_gap();
 };
 
-proto.get_lookup = function() {
+Phylo.Matrices.TypeSafeData.prototype.get_lookup = function() {
 	return this.get_type_object().get_lookup();
 };
 
-proto.get_type_object = function() {
+Phylo.Matrices.TypeSafeData.prototype.get_type_object = function() {
 	return this.type_object;
 };
 
-proto.validate = function() {
+Phylo.Matrices.TypeSafeData.prototype.validate = function() {
 	throw new Phylo.Util.Exceptions.NotImplemented('Not implemented!');
 };
 

@@ -34,230 +34,229 @@ Phylo.Forest.DrawTree = function (args) {
 	return this;
 	
 }
-copyPrototype(Phylo.Forest.DrawTree,Phylo.Forest.Tree);
-var proto = Phylo.Forest.DrawTree.prototype;
+Phylo.Util.CONSTANT.copyPrototype(Phylo.Forest.DrawTree,Phylo.Forest.Tree);
 
-proto.set_width = function (width) { // XXX
+Phylo.Forest.DrawTree.prototype.set_width = function (width) { // XXX
     this.width = width;
     this._redraw();
     return this;
 };
 
-proto.set_height = function (height) { // XXX
+Phylo.Forest.DrawTree.prototype.set_height = function (height) { // XXX
     this.height = height;
     this._redraw();
     return this;
 };
 
-proto.set_node_radius = function (node_radius) {
+Phylo.Forest.DrawTree.prototype.set_node_radius = function (node_radius) {
     this.node_radius = node_radius;
     this._apply_to_nodes('node_radius',node_radius);
     return this;
 };
 
-proto.set_node_colour = function (node_colour) {
+Phylo.Forest.DrawTree.prototype.set_node_colour = function (node_colour) {
     this.node_colour = node_colour;
     this._apply_to_nodes('node_colour',node_colour);
     return this;
 };
 
-proto.set_node_shape = function (node_shape) {
+Phylo.Forest.DrawTree.prototype.set_node_shape = function (node_shape) {
     this.node_shape = node_shape;
     this._apply_to_nodes('node_shape',node_shape);
     return this;
 };
 
-proto.set_node_image = function (node_image) {
+Phylo.Forest.DrawTree.prototype.set_node_image = function (node_image) {
     this.node_image = node_image;
     this._apply_to_nodes('node_image',node_image);
     return this;
 };
 
-proto.set_branch_color = function (branch_color) {
+Phylo.Forest.DrawTree.prototype.set_branch_color = function (branch_color) {
     this.branch_color = branch_color;
     this._apply_to_nodes('branch_color',branch_color);
     return this;
 };
 
-proto.set_branch_shape = function (branch_shape) {
+Phylo.Forest.DrawTree.prototype.set_branch_shape = function (branch_shape) {
     this.branch_shape = branch_shape;
     this._apply_to_nodes('branch_shape',branch_shape);
     return this;
 };
 
-proto.set_branch_width = function (branch_width) {
+Phylo.Forest.DrawTree.prototype.set_branch_width = function (branch_width) {
     this.branch_width = branch_width;
     this._apply_to_nodes('branch_width',branch_width);
     return this;
 };
 
-proto.set_branch_style = function (branch_style) {
+Phylo.Forest.DrawTree.prototype.set_branch_style = function (branch_style) {
     this.branch_style = branch_style;
     this._apply_to_nodes('branch_style',branch_style);
     return this;
 };
 
-proto.set_font_face = function (font_face) {
+Phylo.Forest.DrawTree.prototype.set_font_face = function (font_face) {
     this.font_face = font_face;
     this._apply_to_nodes('font_face',font_face);
     return this;
 };
 
-proto.set_font_size = function (font_size) {
+Phylo.Forest.DrawTree.prototype.set_font_size = function (font_size) {
     this.font_size = font_size;
     this._apply_to_nodes('font_size',font_size);
     return this;
 };
 
-proto.set_font_style = function (font_style) {
+Phylo.Forest.DrawTree.prototype.set_font_style = function (font_style) {
     this.font_style = font_style;
     this._apply_to_nodes('font_style',font_style);
     return this;
 };
 
-proto.set_margin = function (margin) { // XXX
+Phylo.Forest.DrawTree.prototype.set_margin = function (margin) { // XXX
     this.margin = margin;
     this._redraw();
     return this;
 };
 
-proto.set_margin_top = function (margin_top) { // XXX
+Phylo.Forest.DrawTree.prototype.set_margin_top = function (margin_top) { // XXX
     this.margin_top = margin_top;
     this._redraw();
     return this;
 };
 
-proto.set_margin_bottom = function (margin_bottom) { //XXX
+Phylo.Forest.DrawTree.prototype.set_margin_bottom = function (margin_bottom) { //XXX
     this.margin_bottom = margin_bottom;
     this._redraw();
     return this;
 };
 
-proto.set_margin_left = function (margin_left) { //XXX
+Phylo.Forest.DrawTree.prototype.set_margin_left = function (margin_left) { //XXX
     this.margin_left = margin_left;
     this._redraw();
     return this;
 };
 
-proto.set_margin_right = function (margin_right) { //XXX
+Phylo.Forest.DrawTree.prototype.set_margin_right = function (margin_right) { //XXX
     this.margin_right = margin_right;
     this._redraw();
     return this;
 };
 
-proto.set_padding = function (padding) { //XXX
+Phylo.Forest.DrawTree.prototype.set_padding = function (padding) { //XXX
     this.padding = padding;
     this._redraw();
     return this;
 };
 
-proto.set_padding_top = function (padding_top) { //XXX
+Phylo.Forest.DrawTree.prototype.set_padding_top = function (padding_top) { //XXX
     this.padding_top = padding_top;
     this._redraw();
     return this;
 };
 
-proto.set_padding_bottom = function (padding_bottom) { //XXX
+Phylo.Forest.DrawTree.prototype.set_padding_bottom = function (padding_bottom) { //XXX
     this.padding_bottom = padding_bottom;
     this._redraw();
     return this;
 };
 
-proto.set_padding_left = function (padding_left) { //XXX
+Phylo.Forest.DrawTree.prototype.set_padding_left = function (padding_left) { //XXX
     this.padding_left = padding_left;
     this._redraw();
     return this;
 };
 
-proto.set_padding_right = function (padding_right) { //XXX
+Phylo.Forest.DrawTree.prototype.set_padding_right = function (padding_right) { //XXX
     this.padding_right = padding_right;
     this._redraw();
     return this;
 };
 
-proto.set_mode = function (mode) { //XXX
+Phylo.Forest.DrawTree.prototype.set_mode = function (mode) { //XXX
     this.mode = mode;
     this._redraw();
     return this;
 };
 
-proto.set_shape = function (shape) {
+Phylo.Forest.DrawTree.prototype.set_shape = function (shape) {
     this.shape = shape;
     return this;
 };
 
-proto.set_text_horiz_offset = function (text_horiz_offset) { //XXX
+Phylo.Forest.DrawTree.prototype.set_text_horiz_offset = function (text_horiz_offset) { //XXX
     this.text_horiz_offset = text_horiz_offset;
     this._apply_to_nodes('text_horiz_offset',text_horiz_offset);
     return this;
 };
 
-proto.set_text_vert_offset = function (text_vert_offset) { //XXX
+Phylo.Forest.DrawTree.prototype.set_text_vert_offset = function (text_vert_offset) { //XXX
     this.text_vert_offset = text_vert_offset;
     this._apply_to_nodes('text_vert_offset',text_vert_offset); 
     return this;
 };
 
-proto.get_width = function () { return this.width };
+Phylo.Forest.DrawTree.prototype.get_width = function () { return this.width };
 
-proto.get_height = function () { return this.height };
+Phylo.Forest.DrawTree.prototype.get_height = function () { return this.height };
 
-proto.get_node_radius = function () { return this.node_radius };
+Phylo.Forest.DrawTree.prototype.get_node_radius = function () { return this.node_radius };
 
-proto.get_node_colour = function () { return this.node_colour };
+Phylo.Forest.DrawTree.prototype.get_node_colour = function () { return this.node_colour };
 
-proto.get_node_shape = function () { return this.node_shape };
+Phylo.Forest.DrawTree.prototype.get_node_shape = function () { return this.node_shape };
 
-proto.get_node_image = function () { return this.node_image };
+Phylo.Forest.DrawTree.prototype.get_node_image = function () { return this.node_image };
 
-proto.get_branch_color = function () { return this.branch_color };
+Phylo.Forest.DrawTree.prototype.get_branch_color = function () { return this.branch_color };
 
-proto.get_branch_shape = function () { return this.branch_shape };
+Phylo.Forest.DrawTree.prototype.get_branch_shape = function () { return this.branch_shape };
 
-proto.get_branch_width = function () { return this.branch_width };
+Phylo.Forest.DrawTree.prototype.get_branch_width = function () { return this.branch_width };
 
-proto.get_branch_style = function () { return this.branch_style };
+Phylo.Forest.DrawTree.prototype.get_branch_style = function () { return this.branch_style };
 
-proto.get_font_face = function () { return this.font_face };
+Phylo.Forest.DrawTree.prototype.get_font_face = function () { return this.font_face };
 
-proto.get_font_size = function () { return this.font_size };
+Phylo.Forest.DrawTree.prototype.get_font_size = function () { return this.font_size };
 
-proto.get_font_style = function () { return this.font_style };
+Phylo.Forest.DrawTree.prototype.get_font_style = function () { return this.font_style };
 
-proto.get_margin = function () { return this.margin };
+Phylo.Forest.DrawTree.prototype.get_margin = function () { return this.margin };
 
-proto.get_margin_top = function () { return this.margin_top };
+Phylo.Forest.DrawTree.prototype.get_margin_top = function () { return this.margin_top };
 
-proto.get_margin_bottom = function () { return this.margin_bottom };
+Phylo.Forest.DrawTree.prototype.get_margin_bottom = function () { return this.margin_bottom };
 
-proto.get_margin_left = function () { return this.margin_left };
+Phylo.Forest.DrawTree.prototype.get_margin_left = function () { return this.margin_left };
 
-proto.get_margin_right = function () { return this.margin_right };
+Phylo.Forest.DrawTree.prototype.get_margin_right = function () { return this.margin_right };
 
-proto.get_padding = function () { return this.padding };
+Phylo.Forest.DrawTree.prototype.get_padding = function () { return this.padding };
 
-proto.get_padding_top = function () { return this.padding_top };
+Phylo.Forest.DrawTree.prototype.get_padding_top = function () { return this.padding_top };
 
-proto.get_padding_bottom = function () { return this.padding_bottom };
+Phylo.Forest.DrawTree.prototype.get_padding_bottom = function () { return this.padding_bottom };
 
-proto.get_padding_left = function () { return this.padding_left };
+Phylo.Forest.DrawTree.prototype.get_padding_left = function () { return this.padding_left };
 
-proto.get_padding_right = function () { return this.padding_right };
+Phylo.Forest.DrawTree.prototype.get_padding_right = function () { return this.padding_right };
 
-proto.get_mode = function () { 
+Phylo.Forest.DrawTree.prototype.get_mode = function () { 
 	if ( this.mode == null ) {
 		this.mode = 'cladogram';
 	} 
 	return this.mode;
 };
 
-proto.get_shape = function () { return this.shape };
+Phylo.Forest.DrawTree.prototype.get_shape = function () { return this.shape };
 
-proto.get_text_horiz_offset = function () { return this.text_horiz_offset };
+Phylo.Forest.DrawTree.prototype.get_text_horiz_offset = function () { return this.text_horiz_offset };
 
-proto.get_text_vert_offset = function () { return this.text_vert_offset };
+Phylo.Forest.DrawTree.prototype.get_text_vert_offset = function () { return this.text_vert_offset };
 
-proto._redraw = function () {
+Phylo.Forest.DrawTree.prototype._redraw = function () {
 	var tips_seen  = 0;
 	var total_tips = this.calc_number_of_terminals();
 	var tallest    = this.get_root().calc_max_path_to_tips();
@@ -291,6 +290,6 @@ proto._redraw = function () {
 	});	
 };
 
-proto._apply_to_nodes = function (property,value) {
+Phylo.Forest.DrawTree.prototype._apply_to_nodes = function (property,value) {
 	this.visit( function(n) { n[property] = value; } );	
 };
