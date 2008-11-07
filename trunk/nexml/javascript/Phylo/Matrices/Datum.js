@@ -9,21 +9,20 @@ function Datum (args) {
 	return this;
 }	
 Phylo.Matrices.Datum = Datum;
-copyPrototypeMI(
+Phylo.Util.CONSTANT.copyPrototypeMI(
 	Phylo.Matrices.Datum,[
 		Phylo.Matrices.TypeSafeData,
 		Phylo.Taxa.TaxonLinker
 	]
 );
-var proto = Phylo.Matrices.Datum.prototype;
 
-proto.set_weight = function(weight) {
+Phylo.Matrices.Datum.prototype.set_weight = function(weight) {
 	if(weight==null) weight = 1;
 	this.weight = weight;
 	return this;
 };
 
-proto.set_char = function(args) {
+Phylo.Matrices.Datum.prototype.set_char = function(args) {
 	var data = [];
 	for ( var i = 0; i < args.length; i++ ) {
 	    var arg = args[i];
@@ -67,13 +66,13 @@ proto.set_char = function(args) {
 	return this;
 };
 
-proto.set_position = function(pos) {
+Phylo.Matrices.Datum.prototype.set_position = function(pos) {
 	if(pos==null) pos = 1;
 	this.position = parseInt(pos);
 	return this;
 };
 
-proto.set_annotation = function(opt) {
+Phylo.Matrices.Datum.prototype.set_annotation = function(opt) {
 	if (opt != null) {
 		if ( ! opt['char'] ) {
 			throw new Phylo.Util.Exceptions.BadArgs("No character to annotate specified!");
@@ -104,7 +103,7 @@ proto.set_annotation = function(opt) {
 	return this;
 };
 
-proto.set_annotations = function(anno){
+Phylo.Matrices.Datum.prototype.set_annotations = function(anno){
 	if (anno) {
 		var max_index = this.get_length() - 1;
 		for ( var i in anno.length ) {
@@ -130,19 +129,19 @@ proto.set_annotations = function(anno){
 	return this;
 };
 
-proto.get_weight = function () {
+Phylo.Matrices.Datum.prototype.get_weight = function () {
 	return this.weight ? this.weight : 1;
 };
 
-proto.get_char = function () {
+Phylo.Matrices.Datum.prototype.get_char = function () {
 	return this.get_entities();
 };
 
-proto.get_position = function () {
+Phylo.Matrices.Datum.prototype.get_position = function () {
 	return this.position ? this.position : 1;
 };
 
-proto.get_annotation = function (opt) {
+Phylo.Matrices.Datum.prototype.get_annotation = function (opt) {
 	if (opt){
 		if ( ! opt["char"] ) {
 			throw new Phylo.Util.Exceptions.BadArgs("No character to return annotation for specified!");
@@ -169,11 +168,11 @@ proto.get_annotation = function (opt) {
 	}
  };
 
-proto.get_annotations = function () {
+Phylo.Matrices.Datum.prototype.get_annotations = function () {
 	return this.annotations ? this.annotations : [];
 };
 
-proto.get_length = function () {
+Phylo.Matrices.Datum.prototype.get_length = function () {
 	if ( this['_get_container'] ) {
 		var matrix = this._get_container();
 		if ( matrix ) {
@@ -188,19 +187,19 @@ proto.get_length = function () {
 	}
 };
 
-proto.get_by_index = function(index) {
+Phylo.Matrices.Datum.prototype.get_by_index = function(index) {
     var offset = this.get_position() - 1;
     if (offset > index) return this.get_type_object().get_missing();
     var val = this.entities[index-offset];
 	return val != null ? val : this.get_type_object().get_missing();
 };
 
-proto.can_contain = function(data) {
+Phylo.Matrices.Datum.prototype.can_contain = function(data) {
 	return this.get_type_object().is_valid(data);
 };
 
 
-proto.calc_state_counts = function (args) {
+Phylo.Matrices.Datum.prototype.calc_state_counts = function (args) {
 	var counts = {};
 	if (args) {
 		var tfocus = {};
@@ -233,13 +232,13 @@ proto.calc_state_counts = function (args) {
 	return counts;		
 };
 
-proto.reverse = function() {
+Phylo.Matrices.Datum.prototype.reverse = function() {
 	var chars = this.get_chars();
 	this.clear();
 	this.insert(chars.reverse());
 };
 
-proto.concat = function(data) {
+Phylo.Matrices.Datum.prototype.concat = function(data) {
 	var newchars = [];
 	var self_chars = this.get_char();
 	var self_i = this.get_position() - 1;
@@ -263,13 +262,13 @@ proto.concat = function(data) {
     this.set_char(newchars);
 };
 
-proto.validate = function () {
+Phylo.Matrices.Datum.prototype.validate = function () {
 	if ( !this.get_type_object().is_valid(this) ) {
 		throw new Phylo.Util.Exceptions.InvalidData('Invalid data!');
 	}
 };
 
-proto.to_xml = function (args) {
+Phylo.Matrices.Datum.prototype.to_xml = function (args) {
 	if(args==null) args = {};
 	var char_ids  = args["chars"];
 	var state_ids = args["states"];

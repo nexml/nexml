@@ -5,7 +5,7 @@ function XMLWritable (args) {
     return this;
 }
 Phylo.Util.XMLWritable = XMLWritable;
-copyPrototype(Phylo.Util.XMLWritable,Base);
+Phylo.Util.CONSTANT.copyPrototype(Phylo.Util.XMLWritable,Base);
 
 Phylo.Util.XMLWritable.prototype.set_tag = function(tag) {
     this.tag = tag;

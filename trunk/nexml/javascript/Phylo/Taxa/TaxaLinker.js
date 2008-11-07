@@ -5,7 +5,7 @@ function TaxaLinker () {
 Phylo.Taxa.TaxaLinker = TaxaLinker;
 
 Phylo.Taxa.TaxaLinker.prototype.set_taxa = function(taxa) {
-    if ( taxa != null && looks_like_object( taxa, Phylo.Util.CONSTANT._TAXA_ ) ) {
+    if ( taxa != null && Phylo.Util.CONSTANT.looks_like_object( taxa, Phylo.Util.CONSTANT._TAXA_ ) ) {
         Phylo.Mediators.TaxaMediator.set_link( {
             "one"  : taxa, 
             "many" : this

@@ -7,5 +7,5 @@ function Matrices (args) {
     return this;
 }
 Phylo.Matrices = Matrices;
-copyPrototype(Phylo.Matrices,Phylo.Listable);
+Phylo.Util.CONSTANT.copyPrototype(Phylo.Matrices,Phylo.Listable);
 })()

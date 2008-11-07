@@ -6,54 +6,53 @@ function Listable (args) {
     return this;
 }
 Phylo.Listable = Listable;
-copyPrototype(Phylo.Listable,Phylo.Util.XMLWritable);
-var proto = Phylo.Listable.prototype;
+Phylo.Util.CONSTANT.copyPrototype(Phylo.Listable,Phylo.Util.XMLWritable);
 
-proto.get_entities = function() {
+Phylo.Listable.prototype.get_entities = function() {
     return this.entities;
 }
 
-proto.first = function() {
+Phylo.Listable.prototype.first = function() {
     var i = 0;
     this.index = i;
     return this.entities[i];
 }
 
-proto.last = function() {
+Phylo.Listable.prototype.last = function() {
     var i = this.entities.length - 1;
     this.index = i;
     return this.entities[i];
 }
 
-proto.last_index = function() {
+Phylo.Listable.prototype.last_index = function() {
     return this.entities.length - 1;
 }
 
-proto.current = function() {
+Phylo.Listable.prototype.current = function() {
     return this.entities[ this.index ];
 }
 
-proto.current_index = function() {
+Phylo.Listable.prototype.current_index = function() {
     return this.index;
 }
 
-proto.next = function() {
+Phylo.Listable.prototype.next = function() {
     var i = this.index + 1;
     this.index = i;
     return this.entities[i];
 }
 
-proto.previous = function() {
+Phylo.Listable.prototype.previous = function() {
     var i = this.index - 1;
     this.index = i;
     return this.entities[i];
 }
 
-proto.exists = function(i) {
+Phylo.Listable.prototype.exists = function(i) {
     return Boolean(this.entities[i]);
 }
 
-proto.contains = function(obj) {
+Phylo.Listable.prototype.contains = function(obj) {
     var ents = this.get_entities();
     for ( var i = 0; i < ents.length; i++ ) {
         if ( ents[i].get_id == obj.get_id ) {
@@ -63,7 +62,7 @@ proto.contains = function(obj) {
     return false;
 }
 
-proto.can_contain = function(array) {
+Phylo.Listable.prototype.can_contain = function(array) {
     if ( array instanceof Array ) {
         for ( var i = 0; i < array.length; i++ ) {
             if ( this._type != array[i]._container ) {
@@ -79,7 +78,7 @@ proto.can_contain = function(array) {
     return true;
 }
 
-proto.insert = function(array) {
+Phylo.Listable.prototype.insert = function(array) {
     if ( this.can_contain(array) ) {
         if ( array instanceof Array ) {
             for ( var i = 0; i < array.length; i++ ) {
@@ -95,7 +94,7 @@ proto.insert = function(array) {
     }
 }
 
-proto.insert_at_index = function(obj,i) {
+Phylo.Listable.prototype.insert_at_index = function(obj,i) {
     if ( this.can_contain(obj) ) {
         this.entities[i] = obj;
     }
@@ -116,22 +115,22 @@ proto.insert_at_index = function(obj,i) {
 // }
 
 
-proto.clear = function() {
+Phylo.Listable.prototype.clear = function() {
     this.entities = [];
     this.index = 0;
 }
 
-proto.visit = function(func) {
+Phylo.Listable.prototype.visit = function(func) {
     for ( var i = 0; i < this.entities.length; i++ ) {
         func( this.entities[i] );
     }
 }
 
-proto.get_by_index = function(i) {
+Phylo.Listable.prototype.get_by_index = function(i) {
     return this.entities[i];
 }
 
-proto.get_index_of = function(obj) {
+Phylo.Listable.prototype.get_index_of = function(obj) {
     var ents = this.entities;
     for ( var i = 0; i < ents.length; i++ ) {
         if ( ents[i].get_id() == obj.get_id() ) {
@@ -141,7 +140,7 @@ proto.get_index_of = function(obj) {
     return null;
 }
 
-proto.get_by_regular_expression = function(obj) {
+Phylo.Listable.prototype.get_by_regular_expression = function(obj) {
     var regex  = obj["match"];
     var method = obj["value"];
     var result = [];
