@@ -3,34 +3,34 @@ Phylo.Taxa = function (args) {
 	args["tag"] = "otus";	
     this.Listable(args);
     this._type      = Phylo.Util.CONSTANT._TAXA_;
-    this._container = Phylo.Util.CONSTANT._NONE_;
+    this._container = Phylo.Util.CONSTANT._PROJECT_;
     return this;
 }
-copyPrototype(Phylo.Taxa,Phylo.Listable);
+Phylo.Util.CONSTANT.copyPrototype(Phylo.Taxa,Phylo.Listable);
 
 Phylo.Taxa.prototype.set_forest = function (forest) {
-    if ( looks_like_object(forest,Phylo.Util.CONSTANT._FOREST_) ) {
+    if ( Phylo.Util.CONSTANT.looks_like_object(forest,Phylo.Util.CONSTANT._FOREST_) ) {
         forest.set_taxa(this);
     }
     return this;
 };
 
 Phylo.Taxa.prototype.set_matrix = function (matrix) {
-    if ( looks_like_object(matrix,Phylo.Util.CONSTANT._MATRIX_) ) {
+    if ( Phylo.Util.CONSTANT.looks_like_object(matrix,Phylo.Util.CONSTANT._MATRIX_) ) {
         matrix.set_taxa(this);
     }
     return this;
 };
 
 Phylo.Taxa.prototype.unset_forest = function(forest) {
-    if ( looks_like_object(forest,Phylo.Util.CONSTANT._FOREST_) ) {
+    if ( Phylo.Util.CONSTANT.looks_like_object(forest,Phylo.Util.CONSTANT._FOREST_) ) {
         forest.unset_taxa();
     }
     return this;
 };
 
 Phylo.Taxa.prototype.unset_matrix = function(matrix) {
-    if ( looks_like_object(matrix,Phylo.Util.CONSTANT._MATRIX_) ) {
+    if ( Phylo.Util.CONSTANT.looks_like_object(matrix,Phylo.Util.CONSTANT._MATRIX_) ) {
         matrix.unset_taxa();
     }
     return this;

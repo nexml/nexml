@@ -119,17 +119,16 @@ function Datatype (args) {
     return this;
 }
 Phylo.Matrices.Datatype = Datatype;
-copyPrototype(Phylo.Matrices.Datatype,Phylo.Util.XMLWritable);
-var proto = Phylo.Matrices.Datatype.prototype;
+Phylo.Util.CONSTANT.copyPrototype(Phylo.Matrices.Datatype,Phylo.Util.XMLWritable);
 
-proto.set_lookup = function (lookup) {
+Phylo.Matrices.Datatype.prototype.set_lookup = function (lookup) {
 	if ( fields.lookup[this.type] != null ) {
 		this.lookup = lookup;
 	}
 	return this;
 };
 
-proto.set_missing = function (missing) {
+Phylo.Matrices.Datatype.prototype.set_missing = function (missing) {
 	if ( this.missing != null ) {
 		if ( this.gap != missing ) {
 			this.missing = missing;
@@ -147,7 +146,7 @@ proto.set_missing = function (missing) {
 	}
 };
 
-proto.set_gap = function (gap) {
+Phylo.Matrices.Datatype.prototype.set_gap = function (gap) {
 	if ( this.gap != null ) {
 		if ( this.missing != gap ) {
 			this.gap = gap;
@@ -165,11 +164,11 @@ proto.set_gap = function (gap) {
 	}
 };
 
-proto.get_type = function () {
+Phylo.Matrices.Datatype.prototype.get_type = function () {
 	return this.type;
 };
 
-proto.get_ids_for_states = function (with_prefix) {
+Phylo.Matrices.Datatype.prototype.get_ids_for_states = function (with_prefix) {
 	if ( this.lookup ) {
 		var i = 1;
 		var ids_for_states = {};
@@ -211,7 +210,7 @@ proto.get_ids_for_states = function (with_prefix) {
 	}
 };
 
-proto.get_symbol_for_states = function (syms) {
+Phylo.Matrices.Datatype.prototype.get_symbol_for_states = function (syms) {
     var lookup = this.get_lookup();
     if ( lookup ) {
         var lookup_syms = lookup.keys();
@@ -263,7 +262,7 @@ proto.get_symbol_for_states = function (syms) {
     }
 };
 
-proto.get_lookup = function () {
+Phylo.Matrices.Datatype.prototype.get_lookup = function () {
     if ( this.loookup ) {
         return this.lookup;
     }
@@ -273,15 +272,15 @@ proto.get_lookup = function () {
     }
 };
 
-proto.get_missing = function () {
+Phylo.Matrices.Datatype.prototype.get_missing = function () {
 	return this.missing ? this.missing : '?';
 };
 
-proto.get_gap = function () {
+Phylo.Matrices.Datatype.prototype.get_gap = function () {
 	return this.gap ? this.gap : '-';
 };
 
-proto.is_valid = function (arg) {//(args) {
+Phylo.Matrices.Datatype.prototype.is_valid = function (arg) {//(args) {
 	var data = [];
 	//for ( var i in args ) {
 	    //var arg = args[i];
@@ -329,7 +328,7 @@ function keys (obj) {
 	return theKeys;
 }
 
-proto.is_same = function (model) {
+Phylo.Matrices.Datatype.prototype.is_same = function (model) {
 	if ( this.get_id() == model.get_id() ) return true;
 	if ( this.get_type() != model.get_type() ) return false;
 	// check strings
@@ -384,7 +383,7 @@ proto.is_same = function (model) {
 	return true;       
 };
 
-proto.split = function (str) {
+Phylo.Matrices.Datatype.prototype.split = function (str) {
 	if ( this.type == 'Continuous' ) {
 		return str.split(' ');
 	}
@@ -398,7 +397,7 @@ proto.split = function (str) {
 	}
 };
 
-proto.join = function (array) {
+Phylo.Matrices.Datatype.prototype.join = function (array) {
 	if ( this.type == 'Continuous' ) {
 		return array.join(' ');
 	}
@@ -452,7 +451,7 @@ function range ( low, high, step ) {
     return matrix;
 }
 
-proto.to_xml = function(args) {
+Phylo.Matrices.Datatype.prototype.to_xml = function(args) {
 	var xml = '';
 	var normalized = {};
 	if (args != null) normalized = args;

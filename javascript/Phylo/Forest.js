@@ -4,9 +4,9 @@ Phylo.Forest = function (args) {
     this.Listable(args);
     this.TaxaLinker(args);
     this._type      = Phylo.Util.CONSTANT._FOREST_;
-    this._container = Phylo.Util.CONSTANT._NONE_;
+    this._container = Phylo.Util.CONSTANT._PROJECT_;
     return this;
 }
-copyPrototypeMI(Phylo.Forest,[Phylo.Listable,Phylo.Taxa.TaxaLinker]);
+Phylo.Util.CONSTANT.copyPrototypeMI(Phylo.Forest,[Phylo.Listable,Phylo.Taxa.TaxaLinker]);
 
 Phylo.Forest.prototype.check_taxa = function () {};

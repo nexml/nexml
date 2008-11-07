@@ -3,7 +3,7 @@ Phylo.Taxa.TaxonLinker = function () {
 }
 
 Phylo.Taxa.TaxonLinker.prototype.set_taxon = function(taxon) {
-    if ( taxon != null && looks_like_object( taxon, Phylo.Util.CONSTANT._TAXON_ ) ) {
+    if ( taxon != null && Phylo.Util.CONSTANT.looks_like_object( taxon, Phylo.Util.CONSTANT._TAXON_ ) ) {
         Phylo.Mediators.TaxaMediator.set_link( {
             "one"  : taxon, 
             "many" : this

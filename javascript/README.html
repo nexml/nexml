@@ -1,4 +1,3 @@
-<script type="text/javascript" src="phylolib.js" onload="phylolib()"></script>
 <h3 class="headerstyle">Nexml JavaScript libraries</h3>
 <p>The JS libraries are a port of a subset of Bio::Phylo's
 functionality. In particular, they implement most of the
@@ -171,6 +170,22 @@ Some neat things are possible, for example:</p>
 <ul>
     <li class="rss">
         <a onclick="execute(['example4','example5'])" href="#example5">Click to evaluate code up to here.</a>
+    </li>
+</ul>
+<h3 class="headerstyle">The Project object</h3>
+<pre id="example6">
+	// the project object is a convenient container to clump data together
+	var p = new Phylo.Project();
+	Phylo.IO.parse({
+		'format'  :'nexml',
+		'string'  : xml,
+		'project' : p,
+	});
+	alert(p.to_xml());
+</pre>
+<ul>
+    <li class="rss">
+        <a onclick="execute(['example4','example5','example6'])" href="#example6">Click to evaluate code up to here.</a>
     </li>
 </ul>
 <script type="text/javascript">
