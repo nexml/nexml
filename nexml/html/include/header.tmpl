@@ -48,27 +48,10 @@
                 <% INSERT 'functions.js' %>
                 <% INSERT 'schema.js' %>
             //]]>
-        </script>
-        <script type="text/javascript" src="/nexml/javascript/Phylo/Util/CONSTANT.js"></script>     
-        <script type="text/javascript" src="/nexml/javascript/Phylo/Util/Exceptions.js"></script>       
-        <script type="text/javascript" src="/nexml/javascript/Phylo/Util/Logger.js"></script>        
-        <script type="text/javascript" src="/nexml/javascript/Phylo/Mediators/TaxaMediator.js"></script>                
-        <script type="text/javascript" src="/nexml/javascript/Phylo.js"></script>        
-        <script type="text/javascript" src="/nexml/javascript/Phylo/Util/XMLWritable.js"></script> 
-        <script type="text/javascript" src="/nexml/javascript/Phylo/Listable.js"></script>
-        <script type="text/javascript" src="/nexml/javascript/Phylo/Taxa.js"></script>       
-        <script type="text/javascript" src="/nexml/javascript/Phylo/Taxa/TaxaLinker.js"></script>                         
-        <script type="text/javascript" src="/nexml/javascript/Phylo/Taxa/Taxon.js"></script>       
-        <script type="text/javascript" src="/nexml/javascript/Phylo/Taxa/TaxonLinker.js"></script>                       
-        <script type="text/javascript" src="/nexml/javascript/Phylo/Forest.js"></script>       
-        <script type="text/javascript" src="/nexml/javascript/Phylo/Forest/Tree.js"></script>        
-        <script type="text/javascript" src="/nexml/javascript/Phylo/Forest/Node.js"></script>         
-        <script type="text/javascript" src="/nexml/javascript/Phylo/Forest/DrawTree.js"></script>        
-        <script type="text/javascript" src="/nexml/javascript/Phylo/Forest/DrawNode.js"></script>        
-        <script type="text/javascript" src="/nexml/javascript/Phylo/IO.js"></script>        
-        <script type="text/javascript" src="/nexml/javascript/Phylo/Parsers/Nexml.js"></script>
+        </script>  
+        <script type="text/javascript" src="/nexml/javascript/phylolib.js" onload="Phylo.Initialize()"></script>
         <script type="text/javascript" src="/nexml/javascript/tolwebajax.js"></script>
-        <script type="text/javascript" src="/nexml/javascript/phylowidget.js"></script>        
+        <script type="text/javascript" src="/nexml/javascript/phylowidget.js"></script>
         <% IF favicon %>
             <link rel="shortcut icon" href="<% favicon %>" />
         <% ELSE %>
