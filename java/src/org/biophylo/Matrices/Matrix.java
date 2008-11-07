@@ -283,7 +283,7 @@ public class Matrix extends Listable implements TypeSafeData, TaxaLinker {
 				label = (String)labels.get(i-1);
 			}
 			HashMap charAttrs = new HashMap();
-			charAttrs.put("id", "c"+i);
+			charAttrs.put("id", "c"+(i+1));
 			if ( statesId != null && ! getTypeObject().isValueConstrained() ) {
 				charAttrs.put("states", statesId);
 			}
