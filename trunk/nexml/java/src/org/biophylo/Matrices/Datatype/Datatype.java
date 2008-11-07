@@ -276,7 +276,7 @@ public abstract class Datatype extends XMLWritable {
 		Element toElt = null;
 		int[][] lookup = this.getLookup();
 		if ( lookup != null && ! this.isValueConstrained() ) {
-			toElt = createElement(getTag(),getDocument());
+			toElt = createElement(getTag(),getAttributes(),getDocument());
 			final HashMap idForState = this.getIdsForStates();
 			class Sorter implements Comparator {
 				public int compare (Object obja, Object objb) {

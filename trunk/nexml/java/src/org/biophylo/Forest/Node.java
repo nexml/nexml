@@ -14,7 +14,8 @@ public class Node extends Containable implements TaxonLinker {
 	private static Logger logger = Logger.getInstance();
 	protected Node parent;
 	Vector children;
-	protected double branch_length; 
+	protected double branchLength; 
+	protected boolean branchLengthDefined;
 	private static TaxaMediator taxaMediator = TaxaMediator.getInstance();
 	
 	/**
@@ -278,15 +279,23 @@ public class Node extends Containable implements TaxonLinker {
 	/**
 	 * @param branch_length
 	 */
-	public void setBranchLength(double branch_length) {
-		this.branch_length = branch_length;
+	public void setBranchLength(double branchLength) {
+		this.branchLength = branchLength;
+		this.branchLengthDefined = true;
 	}
 	
 	/**
 	 * @return
 	 */
 	public double getBranchLength() {
-		return this.branch_length;
+		return this.branchLength;
+	}
+	
+	/**
+	 * @return
+	 */
+	public boolean isBranchLengthDefined() {
+		return this.branchLengthDefined;
 	}
 	
 	/**
@@ -627,7 +636,7 @@ public class Node extends Containable implements TaxonLinker {
 		attrs.put("target", getXmlId());
 		String tagName = null;
 		if ( isRoot() ) {
-			if ( getBranchLength() != 0 ) {
+			if ( isBranchLengthDefined() ) {
 				tagName = "rootedge";
 			}
 			else {
@@ -638,11 +647,13 @@ public class Node extends Containable implements TaxonLinker {
 			tagName = "edge";
 			attrs.put("source", getParent().getXmlId() );
 		}
-		if ( roundAsInt ) {
-			attrs.put("length", ""+Math.round(getBranchLength()));
-		}
-		else {
-			attrs.put("length", ""+getBranchLength());
+		if ( isBranchLengthDefined() ) {
+			if ( roundAsInt ) {
+				attrs.put("length", ""+Math.round(getBranchLength()));
+			}
+			else {
+				attrs.put("length", ""+getBranchLength());
+			}
 		}
 		return createElement(tagName,attrs,getDocument());
 	}	
