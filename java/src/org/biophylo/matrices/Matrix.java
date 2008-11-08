@@ -9,7 +9,6 @@ import org.biophylo.*;
 import org.biophylo.util.exceptions.*;
 import org.biophylo.util.*;
 import java.util.*;
-import org.w3c.dom.Element;
 
 public class Matrix extends Listable implements TypeSafeData, TaxaLinker {
 	private Datatype typeObject;
@@ -38,10 +37,10 @@ public class Matrix extends Listable implements TypeSafeData, TaxaLinker {
 	 */
 	private void initialize (String type) {
 		this.typeObject = Datatype.getInstance(type);
-		this.container = CONSTANT.PROJECT;
-		this.type = CONSTANT.MATRIX;
+		mContainer = CONSTANT.PROJECT;
+		mType = CONSTANT.MATRIX;
 		this.charlabels = new Vector();	
-		this.tag = "characters";
+		mTag = "characters";
 	}
 	
 	/**
@@ -201,49 +200,26 @@ public class Matrix extends Listable implements TypeSafeData, TaxaLinker {
 		}
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.biophylo.Util.XMLWritable#toXmlElement()
-	 */
-	public Element toXmlElement() throws ObjectMismatch {
-		return toXmlElement(false);
-	}
-	
-	/**
-	 * @param compact
-	 * @return
-	 * @throws ObjectMismatch
-	 */
-	public Element toXmlElement (boolean compact) throws ObjectMismatch {
-		if ( getDocument() == null ) {
-			setDocument(createDocument());
-		}		
+	public void generateXml(StringBuffer sb, boolean compact) throws ObjectMismatch {
 		String type = getType();
 		String xsi_type = compact ? "nex:"+type+"Seqs" : "nex:"+type+"Cells";
 		HashMap idsForStates = null;
 		setAttributes("xsi:type", xsi_type);
-		Element charsElt = createElement(getTag(),getAttributes(),getDocument());
+		getXmlTag(sb, false);
 		if ( ! compact ) {
-			Element format = createElement("format",getDocument());
+			sb.append("<format>");
 			Datatype to = getTypeObject();
 			idsForStates = to.getIdsForStates();
-			to.setDocument(getDocument());
-			Element toElt = to.toXmlElement();
-			if ( toElt != null ) {
-				format.appendChild(toElt);
-			}
-			Vector charElts = null;
+			to.generateXml(sb);
 			if ( idsForStates != null ) {
-				charElts = charLabelsToElement(to.getXmlId());
+				generateXmlCharLabels(sb,to.getXmlId());
 			}
 			else {
-				charElts = charLabelsToElement(null);
+				generateXmlCharLabels(sb,null);
 			}
-			for ( int i = 0; i < charElts.size(); i++ ) {
-				format.appendChild((Element)charElts.get(i));
-			}
-			charsElt.appendChild(format);
+			sb.append("</format>");
 		}
-		Element matrixElt = createElement("matrix",getDocument());
+		sb.append("<matrix>");
 		int nchar = getNchar();
 		String[] charIds = new String[nchar];
 		for ( int i = 0; i < nchar; i++ ) {
@@ -251,77 +227,28 @@ public class Matrix extends Listable implements TypeSafeData, TaxaLinker {
 		}
 		Containable[] rows = getEntities();
 		for ( int i = 0; i < rows.length; i++ ) {
-			Datum datum = (Datum)rows[i];
-			datum.setDocument(getDocument());
-			matrixElt.appendChild(datum.toXmlElement(idsForStates, charIds, compact));
+			((Datum)rows[i]).generateXml(sb, idsForStates, charIds, compact);
 		}
-		charsElt.appendChild(matrixElt);
-		return charsElt;
+		sb.append("</matrix>").append("</").append(getTag()).append('>');	
 	}
 	
-	/**
-	 * @param compact
-	 * @return
-	 * @throws ObjectMismatch
-	 */
-	public String toXml(boolean compact) throws ObjectMismatch {
-		Element theElt = toXmlElement(compact);
-		return elementToString(theElt);
-	}
-	
-	/**
-	 * @param statesId
-	 * @return
-	 */
-	private Vector charLabelsToElement(String statesId) {
+	private void generateXmlCharLabels(StringBuffer sb,String statesId) {
 		Vector labels = getCharLabels();
-		Vector elements = new Vector();
 		int nchar = getNchar();
-		for ( int i = 0; i < nchar; i++ ) {
-			String label = null;
-			if ( ! labels.isEmpty() ) {
-				label = (String)labels.get(i-1);
-			}
-			HashMap charAttrs = new HashMap();
-			charAttrs.put("id", "c"+(i+1));
-			if ( statesId != null && ! getTypeObject().isValueConstrained() ) {
-				charAttrs.put("states", statesId);
-			}
-			if ( label != null ) {
-				charAttrs.put("label", label);
-			}
-			Element charElt = createElement("char",charAttrs,getDocument());
-			elements.add(charElt);			
-		}
-		return elements;
-	}	
-	
-	/**
-	 * @param statesId
-	 * @return
-	 */
-	private String writeCharLabels(String statesId) {
-		StringBuffer sb = new StringBuffer();
-		Vector labels = this.getCharLabels();
-		int nchar = this.getNchar();
 		for ( int i = 1; i <= nchar; i++ ) {
 			String label = null;
 			if ( ! labels.isEmpty() ) {
 				label = (String)labels.get(i-1);
 			}
-			sb.append("<char id=\"c");
-			sb.append(i);
-			if ( statesId != null && ! this.getTypeObject().isValueConstrained() ) {
-				sb.append("\" states=\"");
-				sb.append(statesId);
+			sb.append("<char id=\"c").append(i);
+			if ( statesId != null && ! getTypeObject().isValueConstrained() ) {
+				sb.append("\" states=\"").append(statesId);
 			}
 			if ( label != null ) {
-				sb.append("\" label=\"");
-				sb.append(label);
+				sb.append("\" label=\"").append(label);
 			}
 			sb.append("\"/>");
 		}
-		return sb.toString();
 	}
 
 }

@@ -15,9 +15,9 @@ public class Tree extends Listable {
 	 */
 	public Tree () {
 		super();
-		this.container = CONSTANT.FOREST;
-		this.type = CONSTANT.TREE;
-		this.tag = "tree";
+		mContainer = CONSTANT.FOREST;
+		mType = CONSTANT.TREE;
+		mTag = "tree";
 	}
 	
 	/**
@@ -110,45 +110,23 @@ public class Tree extends Listable {
 		return "";
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.biophylo.Util.XMLWritable#toXmlElement()
-	 */
-	public Element toXmlElement () throws ObjectMismatch {
-		logger.debug("writing tree to xml");
+	public void generateXml(StringBuffer sb,boolean compact) throws ObjectMismatch {
 		String xsi_type = "nex:IntTree";
-		boolean roundAsInt = true;
-		Containable[] contents = this.getEntities();
-		logger.debug("tree contains " + contents.length + " nodes");
+		Containable[] contents = getEntities();
 		for ( int i = 0; i < contents.length; i++ ) {
 			double bl = ((Node)contents[i]).getBranchLength();
 			if ( Math.round(bl) != bl ) {
 				xsi_type = "nex:FloatTree";
-				roundAsInt = false;
 				break;
 			}
 		}
-		this.setAttributes("xsi:type", xsi_type);
-		Element treeElt = createElement(getTag(),getAttributes(),getDocument());
-		if ( getGeneric("dict") != null ) {
-			HashMap dict = (HashMap)getGeneric("dict");
-			Element dictElt = dictToXmlElement(dict);
-			treeElt.appendChild(dictElt);
+		setAttributes("xsi:type", xsi_type);
+		getXmlTag(sb, false);
+		Node root = getRoot();
+		if ( root != null ) {
+			root.generateXml(sb, xsi_type.equals("nex:IntTree"));
 		}
-		Containable[] nodes = this.getEntities();
-		for ( int i = 0; i < nodes.length; i++ ) {
-			nodes[i].setDocument(getDocument());
-			if ( ((Node)nodes[i]).isRoot() ) {
-				((Node)nodes[i]).setAttributes("root", "true");
-			}
-			treeElt.appendChild(nodes[i].toXmlElement());
-		}
-		for ( int i = 0; i < nodes.length; i++ ) {
-			Element edgeElt = ((Node)nodes[i]).edgeToXmlElement(roundAsInt);
-			if ( edgeElt != null ) {
-				treeElt.appendChild(edgeElt);
-			}
-		}
-		return treeElt;
+		sb.append("</").append(getTag()).append('>');
 	}
 	
 	

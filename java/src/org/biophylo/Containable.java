@@ -1,20 +1,20 @@
 package org.biophylo;
 import org.biophylo.util.*;
 public abstract class Containable extends XMLWritable {	
-	protected int container;
-	protected int type;
+	protected int mContainer;
+	protected int mType;
 	
 	/**
 	 * @return
 	 */
 	public int container () {
-		return this.container;
+		return mContainer;
 	}
 	
 	/**
 	 * @return
 	 */
 	public int type () {
-		return this.type;
+		return mType;
 	}
 }

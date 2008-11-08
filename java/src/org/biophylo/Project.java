@@ -17,9 +17,10 @@ public class Project extends Listable {
 	 */
 	public Project () {
 		super();
-		this.container = CONSTANT.NONE;
-		this.type = CONSTANT.PROJECT;
-		this.tag = "nex:nexml";
+		mContainer = CONSTANT.NONE;
+		mType = CONSTANT.PROJECT;
+		mTag = "nex:nexml";
+		mHasXmlId = false;
 	}
 	
 	/**
@@ -30,7 +31,7 @@ public class Project extends Listable {
 		Vector result = new Vector();
 		Containable[] ents = this.getEntities();
 		for ( int i = 0; i < ents.length; i++ ) {
-			if ( ents[i].type == constant ) {
+			if ( ents[i].mType == constant ) {
 				result.add(ents[i]);
 			}
 		}
@@ -65,42 +66,32 @@ public class Project extends Listable {
 		Matrix[] matrices = new Matrix[objects.size()];
 		objects.copyInto(matrices);
 		return matrices;
-	}
+	}	
 	
-	/* (non-Javadoc)
-	 * @see org.biophylo.Util.XMLWritable#toXmlElement()
-	 */
-	public Element toXmlElement () throws ObjectMismatch {
+	public void generateXml(StringBuffer sb,boolean compact) throws ObjectMismatch {
 		HashMap attrs = new HashMap();
-		String className = this.getClass().getName();
-		double version = this.VERSION;
+		String className = getClass().getName();
+		double version = VERSION;
 		attrs.put("version", "1.0");
 		attrs.put("generator", className + " v." + version);
 		attrs.put("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
 		attrs.put("xmlns:xml", "http://www.w3.org/XML/1998/namespace");
 		attrs.put("xmlns:nex", "http://www.nexml.org/1.0");	
 		attrs.put("xsi:schemaLocation", "http://www.nexml.org/1.0 http://www.nexml.org/1.0/nexml.xsd");
-		setDocument(createDocument());
-		Element projElt = createElement("nex:nexml",attrs,getDocument());
-		if ( getGeneric("dict") != null ) {
-			HashMap dict = (HashMap)getGeneric("dict");
-			projElt.appendChild(dictToXmlElement(dict));
-		}
+		setAttributes(attrs);
+		getXmlTag(sb, false);		
 		Taxa[] theTaxa = getTaxa();
 		for ( int i = 0; i < theTaxa.length; i++ ) {
-			theTaxa[i].setDocument(getDocument());
-			projElt.appendChild(theTaxa[i].toXmlElement());
+			theTaxa[i].generateXml(sb,compact);
 		}
 		Matrix[] theMatrix = getMatrices();
 		for ( int i = 0; i < theMatrix.length; i++ ) {
-			theMatrix[i].setDocument(getDocument());
-			projElt.appendChild(theMatrix[i].toXmlElement());
+			theMatrix[i].generateXml(sb, compact);
 		}
 		Forest[] theForest = getForests();
 		for ( int i = 0; i < theForest.length; i++ ) {
-			theForest[i].setDocument(getDocument());
-			projElt.appendChild(theForest[i].toXmlElement());
-		}		
-		return projElt;
+			theForest[i].generateXml(sb,compact);
+		}	
+		sb.append("</").append(getTag()).append('>');
 	}
 }
