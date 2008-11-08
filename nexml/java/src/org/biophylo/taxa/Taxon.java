@@ -13,9 +13,9 @@ public class Taxon extends Containable {
 	 * 
 	 */
 	public Taxon () {
-		this.type = CONSTANT.TAXON;
-		this.container = CONSTANT.TAXA;
-		this.tag = "otu";
+		mType = CONSTANT.TAXON;
+		mContainer = CONSTANT.TAXA;
+		mTag = "otu";
 	}
 	
 	/**

@@ -12,9 +12,9 @@ public class Forest extends Listable implements TaxaLinker {
 	 */
 	public Forest () {
 		super();
-		this.type = CONSTANT.FOREST;
-		this.container = CONSTANT.PROJECT;
-		this.tag = "trees";
+		mType = CONSTANT.FOREST;
+		mContainer = CONSTANT.PROJECT;
+		mTag = "trees";
 	}
 		
 	/**
@@ -22,7 +22,7 @@ public class Forest extends Listable implements TaxaLinker {
 	 */
 	public String toNewick() {
 		StringBuffer sb = new StringBuffer();
-		Containable[] trees = this.getEntities();
+		Containable[] trees = getEntities();
 		for ( int i = 0; i < trees.length; i++ ) {
 			sb.append(((Tree)trees[i]).toNewick());
 			sb.append("\n");

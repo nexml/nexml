@@ -42,9 +42,9 @@ public class Datum extends Listable implements TaxonLinker, TypeSafeData {
 	 */
 	private void initialize(String type) {
 		this.typeObject = Datatype.getInstance(type);
-		this.type = CONSTANT.DATUM;
-		this.container = CONSTANT.MATRIX;
-		this.tag = "row";
+		mType = CONSTANT.DATUM;
+		mContainer = CONSTANT.MATRIX;
+		mTag = "row";
 	}
 	
 	/* (non-Javadoc)
@@ -176,71 +176,17 @@ public class Datum extends Listable implements TaxonLinker, TypeSafeData {
 	 * @return
 	 * @throws ObjectMismatch
 	 */
-	public Element toXmlElement(HashMap idsForStates, String[] charIds, boolean compact) throws ObjectMismatch {
+	public void generateXml(StringBuffer sb,Map idsForStates, String[] charIds, boolean compact) throws ObjectMismatch {
 		Taxon taxon = getTaxon();
 		if ( taxon != null ) {
-			setAttributes("otu",taxon.getXmlId());
+			setAttributes("otu", taxon.getXmlId());
 		}
 		String[] chars = getChar();
-		String missing = "" + getMissing();
-		String gap = "" + getGap();
-		if ( getDocument() == null ) {
-			setDocument(createDocument());
-		}
-		Element theElement = createElement(getTag(),getAttributes(),getDocument());
+		String missing = ""+getMissing();
+		String gap = ""+getGap();
+		getXmlTag(sb, false);
 		if ( ! compact ) {
 			Datatype to = getTypeObject();
-			for ( int i = 0; i < chars.length; i++ ) {
-				if ( !missing.equals(chars[i]) && !gap.equals(chars[i]) ) {
-					HashMap charState = new HashMap();
-					String c, s;
-					if ( charIds != null && charIds[i] != null && ! to.isSequential() ) {
-						charState.put("char", charIds[i]);
-					}
-					else {
-						charState.put("char", ""+i);
-					}
-					String ucChar = chars[i].toUpperCase();
-					if ( idsForStates != null && idsForStates.containsKey(ucChar) && ! to.isValueConstrained() ) {
-						charState.put("state", "s" + (String)idsForStates.get(ucChar));
-					}
-					else {
-						charState.put("state", ucChar);
-					}
-					theElement.appendChild(createElement("cell",charState,getDocument()));
-				}
-			}
-		}
-		else {
-			String[] ucChars = new String[chars.length];
-			for ( int i = 0; i < ucChars.length; i++ ) {
-				ucChars[i] = chars[i].toUpperCase();
-			}
-			String seq = this.getTypeObject().join(ucChars);
-			theElement.appendChild(createElement("seq",seq,getDocument()));
-		}		
-		return theElement;
-	}
-	
-	/**
-	 * @param idsForStates
-	 * @param charIds
-	 * @param compact
-	 * @return
-	 * @throws ObjectMismatch
-	 */
-	public String toXml(HashMap idsForStates, String[] charIds, boolean compact) throws ObjectMismatch {
-		Taxon taxon = this.getTaxon();
-		if ( taxon != null ) {
-			this.setAttributes("otu", taxon.getXmlId());
-		}
-		String[] chars = this.getChar();
-		String missing = ""+this.getMissing();
-		String gap = ""+this.getGap();
-		StringBuffer sb = new StringBuffer();
-		sb.append(this.getXmlTag(false));
-		if ( ! compact ) {
-			Datatype to = this.getTypeObject();
 			for ( int i = 0; i < chars.length; i++ ) {
 				if ( !missing.equals(chars[i]) && !gap.equals(chars[i]) ) {
 					String c, s;
@@ -257,11 +203,7 @@ public class Datum extends Listable implements TaxonLinker, TypeSafeData {
 					else {
 						s = ucChar;
 					}
-					sb.append("<cell char=\"");
-					sb.append(c);
-					sb.append("\" state=\"");
-					sb.append(s);
-					sb.append("\"/>");
+					sb.append("<cell char=\"").append(c).append("\" state=\"").append(s).append("\"/>");
 				}
 			}
 		}
@@ -271,14 +213,9 @@ public class Datum extends Listable implements TaxonLinker, TypeSafeData {
 				ucChars[i] = chars[i].toUpperCase();
 			}
 			String seq = this.getTypeObject().join(ucChars);
-			sb.append("<seq>");
-			sb.append(seq);
-			sb.append("</seq>");
+			sb.append("<seq>").append(seq).append("</seq>");
 		}
-		sb.append("</");
-		sb.append(this.getTag());
-		sb.append('>');
-		return sb.toString();
+		sb.append("</").append(getTag()).append('>');	
 	}
 
 }

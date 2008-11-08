@@ -17,7 +17,7 @@ public abstract class Datatype extends XMLWritable {
 	 * @return
 	 */
 	public static Datatype getInstance(String type) {
-		String base = "org.biophylo.Matrices.Datatype.";
+		String base = "org.biophylo.matrices.datatype.";
 		Datatype dt = null;
 		logger.info("Instantiating for data type " + type);
 		try {
@@ -25,7 +25,7 @@ public abstract class Datatype extends XMLWritable {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		dt.tag = "states";
+		dt.mTag = "states";
 		return dt;
 	}
 	
@@ -268,16 +268,12 @@ public abstract class Datatype extends XMLWritable {
 		}
 		return sb.toString();
 	}
-
-	/* (non-Javadoc)
-	 * @see org.biophylo.Util.XMLWritable#toXmlElement()
-	 */
-	public Element toXmlElement() throws ObjectMismatch {
-		Element toElt = null;
-		int[][] lookup = this.getLookup();
-		if ( lookup != null && ! this.isValueConstrained() ) {
-			toElt = createElement(getTag(),getAttributes(),getDocument());
-			final HashMap idForState = this.getIdsForStates();
+	
+	public void generateXml(StringBuffer sb) throws ObjectMismatch {
+		int[][] lookup = getLookup();
+		if ( lookup != null && ! isValueConstrained() ) {
+			getXmlTag(sb, false);
+			final HashMap idForState = getIdsForStates();
 			class Sorter implements Comparator {
 				public int compare (Object obja, Object objb) {
 					return Integer.parseInt((String)idForState.get(obja)) 
@@ -295,32 +291,22 @@ public abstract class Datatype extends XMLWritable {
 				idForState.put(states[i], "s"+stateId);
 			}
 			for ( int i = 0; i < states.length; i++ ) {
-				String stateId = (String)idForState.get(states[i]);
-				String[] mapping = this.getAmbiguitySymbols(states[i]);
+				String id = (String)idForState.get(states[i]);
+				String[] mapping = getAmbiguitySymbols(states[i]);
 				if ( mapping.length > 1 ) {
-					HashMap stateAttrs = new HashMap();
-					stateAttrs.put("id", stateId);
-					stateAttrs.put("symbol", states[i]);
-					Element stateElt = createElement("state",stateAttrs,getDocument());
+					sb.append("<state id=\"").append(id).append("\" symbol=\"").append(states[i]).append("\">");
 					for ( int j = 0; j < mapping.length; j++ ) {
-						HashMap mappingAttrs = new HashMap();
-						mappingAttrs.put("state", idForState.get(mapping[j]));
-						mappingAttrs.put("mstaxa", "uncertainty");
-						Element mappingElt = createElement("mapping",mappingAttrs,getDocument());
-						stateElt.appendChild(mappingElt);
+						sb.append("<mapping state=\"").append(idForState.get(mapping[j])).append("\" mstaxa=\"uncertainty\"/>");
 					}
-					toElt.appendChild(stateElt);
+					sb.append("</state>");
 				}
 				else {
-					HashMap stateAttrs = new HashMap();
-					stateAttrs.put("id", stateId);
-					stateAttrs.put("symbol", states[i]);
-					toElt.appendChild(createElement("state",stateAttrs,getDocument()));
+					sb.append("<state id=\"").append(id).append("\" symbol=\"").append(states[i]).append("\"/>");
 				}
 			}
-		}		
-		return toElt;
-	}
+			sb.append("</").append(getTag()).append('>');
+		}	
+	}	
 	
 	/**
 	 * @param symbol
