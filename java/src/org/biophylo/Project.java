@@ -1,12 +1,12 @@
 package org.biophylo;
 import org.biophylo.Listable;
-import org.biophylo.Util.CONSTANT;
-import org.biophylo.Util.Logger;
-import org.biophylo.Util.Exceptions.*;
+import org.biophylo.util.CONSTANT;
+import org.biophylo.util.Logger;
+import org.biophylo.util.exceptions.*;
 import java.util.*;
-import org.biophylo.Taxa.*;
-import org.biophylo.Matrices.*;
-import org.biophylo.Forest.*;
+import org.biophylo.taxa.*;
+import org.biophylo.matrices.*;
+import org.biophylo.forest.*;
 import org.w3c.dom.*;
 
 public class Project extends Listable {
