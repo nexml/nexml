@@ -3,24 +3,24 @@ import org.biophylo.*;
 import java.util.*;
 
 public class ObjectMediator {
-	private static ObjectMediator instance = null;
-	private Vector object;
+	private static ObjectMediator mInstance = null;
+	private Vector mObject;
 	
 	/**
 	 * 
 	 */
 	protected ObjectMediator() {
-	     this.object = new Vector();
+		mObject = new Vector();
 	}
 	
 	/**
 	 * @return
 	 */
 	public static ObjectMediator getInstance() {
-		if(instance == null) {
-			instance = new ObjectMediator();
+		if( mInstance == null ) {
+			mInstance = new ObjectMediator();
 		}
-	    return instance;
+	    return mInstance;
 	}
 	
 	/**
@@ -28,7 +28,7 @@ public class ObjectMediator {
 	 */
 	public void register(Base obj) {
 		int id = obj.getId();
-		this.object.add(id, obj);
+		mObject.add(id, obj);
 	}
 	
 	/**
@@ -36,13 +36,13 @@ public class ObjectMediator {
 	 * @return
 	 */
 	public Base getObjectById(int id) {
-		return (Base)this.object.get(id);
+		return (Base)mObject.get(id);
 	}
 	
 	/**
 	 * @param obj
 	 */
 	public void unregister(Base obj) {
-		this.object.remove(obj);
+		mObject.remove(obj);
 	}
 }

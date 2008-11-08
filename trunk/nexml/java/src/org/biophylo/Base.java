@@ -11,11 +11,11 @@ import java.lang.reflect.*;
  *
  */
 public abstract class Base {
-	private String name;
-	private Map generic;
-	private int id;	
+	private String mName;
+	private Map mGeneric;
+	private int mId;	
 	private static Logger logger = Logger.getInstance();
-	private IDPool pool = IDPool.getInstance();
+	private static IDPool pool = IDPool.getInstance();
 	private static ObjectMediator objectMediator = ObjectMediator.getInstance();
 	public static final double VERSION = 0.1;
 	
@@ -23,23 +23,23 @@ public abstract class Base {
 	 * 
 	 */
 	public Base () {
-		this.id = pool.makeId();
-		this.generic = new HashMap();
+		mId = pool.makeId();
+		mGeneric = new HashMap();
 		objectMediator.register(this);
 	}
 	
 	/**
 	 * @param name
 	 */
-	public void setName(String name) {
-		this.name = name;
+	public void setName(String pName) {
+		mName = pName;
 	}
 	
 	/**
 	 * @param generic
 	 */
-	public void setGeneric(Map generic) {
-		this.generic = generic;
+	public void setGeneric(Map pGeneric) {
+		mGeneric = pGeneric;
 	}
 	
 	/**
@@ -47,17 +47,17 @@ public abstract class Base {
 	 * @param value
 	 */
 	public void setGeneric(Object key, Object value) {
-		if ( this.generic == null ) {
-			this.generic = new HashMap();
+		if ( mGeneric == null ) {
+			mGeneric = new HashMap();
 		}
-		this.generic.put(key, value);
+		mGeneric.put(key, value);
 	}
 	
 	/**
 	 * @return
 	 */
 	public String getName() {
-		return this.name;
+		return mName;
 	}
 	
 	/**
@@ -71,7 +71,7 @@ public abstract class Base {
 	 * @return
 	 */
 	public Map getGeneric () {
-		return this.generic;
+		return mGeneric;
 	}
 	
 	/**
@@ -79,14 +79,14 @@ public abstract class Base {
 	 * @return
 	 */
 	public Object getGeneric (Object key) {
-		return this.generic.get(key);
+		return mGeneric.get(key);
 	}
 	
 	/**
 	 * @return
 	 */
 	public int getId() {
-		return this.id;
+		return mId;
 	}
 	
 	/**

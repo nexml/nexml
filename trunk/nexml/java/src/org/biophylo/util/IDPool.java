@@ -1,30 +1,30 @@
 package org.biophylo.util;
 
 public class IDPool {
-	private static IDPool instance = null;
-	private int counter;
+	private static IDPool mInstance = null;
+	private int mCounter;
 	
 	/**
 	 * 
 	 */
 	protected IDPool() {
-	     this.counter = 0;
+		mCounter = 0;
 	}
 	
 	/**
 	 * @return
 	 */
 	public static IDPool getInstance() {
-		if(instance == null) {
-			instance = new IDPool();
+		if ( mInstance == null ) {
+			mInstance = new IDPool();
 		}
-	    return instance;
+	    return mInstance;
 	}
 	
 	/**
 	 * @return
 	 */
 	public int makeId () {
-		return this.counter++;
+		return mCounter++;
 	}
 }

@@ -7,10 +7,9 @@ import org.biophylo.taxa.*;
 import org.biophylo.*;
 
 public class XMLWritable extends Base {
-	private static Logger logger = Logger.getInstance();
 	protected String mTag;
-	protected Map attributes;
-	protected String xmlId;
+	private Map mAttributes;
+	private String mXmlId;
 	protected boolean mHasXmlId = true;
 
 	
@@ -24,15 +23,15 @@ public class XMLWritable extends Base {
 	/**
 	 * @param attributes
 	 */
-	public void setAttributes(Map attributes) {
-		if ( this.attributes != null ) {
-			Object[] keys = attributes.keySet().toArray();
+	public void setAttributes(Map pAttributes) {
+		if ( mAttributes != null ) {
+			Object[] keys = pAttributes.keySet().toArray();
 			for ( int i = 0; i < keys.length; i++ ) {
-				this.attributes.put(keys[i], attributes.get(keys[i]));
+				mAttributes.put(keys[i], pAttributes.get(keys[i]));
 			}
 		}
 		else {
-			this.attributes = attributes;
+			mAttributes = pAttributes;
 		}
 	}
 	
@@ -41,17 +40,17 @@ public class XMLWritable extends Base {
 	 * @param value
 	 */
 	public void setAttributes(String key,String value) {
-		if ( attributes == null ) {
-			attributes = new HashMap();
+		if ( mAttributes == null ) {
+			mAttributes = new HashMap();
 		}
-		attributes.put(key, value);
+		mAttributes.put(key, value);
 	}
 	
 	/**
 	 * @param xmlId
 	 */
-	public void setXmlId(String xmlId) {
-		this.xmlId = xmlId;
+	public void setXmlId(String pXmlId) {
+		mXmlId = pXmlId;
 	}
 	
 	/**
@@ -105,11 +104,11 @@ public class XMLWritable extends Base {
 	 * @return
 	 */
 	public String getXmlId() {
-		if ( this.xmlId != null ) {
-			return this.xmlId;
+		if ( mXmlId != null ) {
+			return mXmlId;
 		}
 		else {
-			return this.getTag() + this.getId();
+			return getTag() + getId();
 		}
 	}
 	
@@ -118,7 +117,7 @@ public class XMLWritable extends Base {
 	 * @throws ObjectMismatch
 	 */
 	public Map getAttributes () throws ObjectMismatch{
-		Map attrs = this.attributes;
+		Map attrs = mAttributes;
 		if ( attrs == null ) {
 			attrs = new HashMap();
 		}
