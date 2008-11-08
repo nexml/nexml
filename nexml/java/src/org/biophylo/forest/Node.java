@@ -12,10 +12,10 @@ import java.math.*;
 
 public class Node extends Containable implements TaxonLinker {
 	private static Logger logger = Logger.getInstance();
-	protected Node parent;
-	Vector children;
-	protected double branchLength; 
-	protected boolean branchLengthDefined;
+	protected Node mParent;
+	protected Vector mChildren;
+	protected double mBranchLength; 
+	protected boolean mBranchLengthDefined;
 	private static TaxaMediator taxaMediator = TaxaMediator.getInstance();
 	
 	/**
@@ -25,9 +25,9 @@ public class Node extends Containable implements TaxonLinker {
 		super();
 		mType = CONSTANT.NODE;
 		mContainer = CONSTANT.TREE;
-		this.children = new Vector();
+		mChildren = new Vector();
 		mTag = "node";
-		this.parent = null;
+		mParent = null;
 	}
 	
 	/* (non-Javadoc)
@@ -59,29 +59,29 @@ public class Node extends Containable implements TaxonLinker {
 	 * @param parent
 	 */
 	public void setParent(Node parent) { // XXX node mediator
-		this.parent = parent;
+		mParent = parent;
 	}
 	
 	/**
 	 * @return
 	 */
 	public Node getParent() { // XXX node mediator
-		return this.parent;
+		return mParent;
 	}	
 	
 	/**
 	 * @param child
 	 */
 	public void setChild(Node child) { // XXX node mediator
-		this.children.add(child);
+		mChildren.add(child);
 	}	
 	
 	/**
 	 * @return
 	 */
 	public Node[] getChildren() { // XXX node mediator
-		Node[] result = new Node[this.children.size()];
-		this.children.copyInto(result);
+		Node[] result = new Node[mChildren.size()];
+		mChildren.copyInto(result);
 		return result;
 	}
 	
@@ -280,22 +280,22 @@ public class Node extends Containable implements TaxonLinker {
 	 * @param branch_length
 	 */
 	public void setBranchLength(double branchLength) {
-		this.branchLength = branchLength;
-		this.branchLengthDefined = true;
+		mBranchLength = branchLength;
+		mBranchLengthDefined = true;
 	}
 	
 	/**
 	 * @return
 	 */
 	public double getBranchLength() {
-		return this.branchLength;
+		return mBranchLength;
 	}
 	
 	/**
 	 * @return
 	 */
 	public boolean isBranchLengthDefined() {
-		return this.branchLengthDefined;
+		return mBranchLengthDefined;
 	}
 	
 	/**
