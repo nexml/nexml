@@ -6,14 +6,14 @@ import org.w3c.dom.*;
 
 public abstract class Listable extends Containable {
 
-	private Vector entities;
+	private Vector mEntities;
 	
 	/**
 	 * 
 	 */
 	public Listable() {
 		super();
-		this.entities = new Vector();
+		mEntities = new Vector();
 	}
 	
 	/**
@@ -23,7 +23,7 @@ public abstract class Listable extends Containable {
 	public void insert (Object[] obj) throws ObjectMismatch {
 		for ( int i = 0; i < obj.length; i++ ) {
 			if ( canContain(obj[i])) {
-				this.entities.add(obj[i]);
+				mEntities.add(obj[i]);
 			}
 			else {
 				throw new ObjectMismatch();
@@ -36,8 +36,8 @@ public abstract class Listable extends Containable {
 	 * @throws ObjectMismatch
 	 */
 	public void insert (Object obj) throws ObjectMismatch {
-		if ( this.canContain(obj) ) {
-			this.entities.add(obj);
+		if ( canContain(obj) ) {
+			mEntities.add(obj);
 		}
 		else {
 			throw new ObjectMismatch();
@@ -50,7 +50,7 @@ public abstract class Listable extends Containable {
 	 */
 	public boolean canContain (Object[] obj) {
 		for ( int i = 0; i < obj.length; i++ ) {
-			if ( ! this.canContain(obj[i]) ) {
+			if ( ! canContain(obj[i]) ) {
 				return false;
 			}
 		}
@@ -61,21 +61,21 @@ public abstract class Listable extends Containable {
 	 * 
 	 */
 	public void clear () {
-		this.entities.clear();
+		mEntities.clear();
 	}
 	
 	/**
 	 * @return
 	 */
 	public Containable first () {
-		return (Containable)this.entities.firstElement();
+		return (Containable)mEntities.firstElement();
 	}
 	
 	/**
 	 * @return
 	 */
 	public Containable last () {
-		return (Containable)this.entities.lastElement();
+		return (Containable)mEntities.lastElement();
 	}
 	
 	/**
@@ -83,15 +83,15 @@ public abstract class Listable extends Containable {
 	 * @return
 	 */
 	public boolean canContain (Object obj) {
-		return this.type() == ((Containable)obj).container();
+		return type() == ((Containable)obj).container();
 	}	
 	
 	/**
 	 * @param visitor
 	 */
 	public void visit (Visitor visitor) {	
-		for ( int i = 0; i < this.entities.size(); i++ ) {
-			visitor.visit((Containable)this.entities.get(i));
+		for ( int i = 0; i < mEntities.size(); i++ ) {
+			visitor.visit((Containable)mEntities.get(i));
 		}		
 	}
 	
@@ -100,22 +100,22 @@ public abstract class Listable extends Containable {
 	 * @return
 	 */
 	public boolean contains (Containable obj) {
-		return this.entities.contains(obj);
+		return mEntities.contains(obj);
 	}
 	
 	/**
 	 * @param obj
 	 */
 	public void delete (Containable obj) {
-		this.entities.remove(obj);
+		mEntities.remove(obj);
 	}
 	
 	/**
 	 * @return
 	 */
 	public Containable[] getEntities () {
-		Containable[] ents = new Containable[this.entities.size()];
-		this.entities.copyInto(ents);
+		Containable[] ents = new Containable[mEntities.size()];
+		mEntities.copyInto(ents);
 		return ents;
 	}
 	
@@ -123,8 +123,8 @@ public abstract class Listable extends Containable {
 	 * @return
 	 */
 	public String[] getStringEntities() {
-		String[] ents = new String[this.entities.size()];
-		this.entities.copyInto(ents);
+		String[] ents = new String[mEntities.size()];
+		mEntities.copyInto(ents);
 		return ents;
 	}
 	
@@ -133,7 +133,7 @@ public abstract class Listable extends Containable {
 	 * @return
 	 */
 	public Containable getByIndex (int index) {
-		return (Containable)this.entities.get(index);
+		return (Containable)mEntities.get(index);
 	}
 	
 }

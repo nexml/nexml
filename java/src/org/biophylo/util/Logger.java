@@ -1,42 +1,42 @@
 package org.biophylo.util;
 import java.util.*;
 public class Logger {
-	private static Logger instance = null;
-	private int level;
-	private Vector listeners;
+	private static Logger mInstance = null;
+	private int mLevel;
+	private Vector mListeners;
 	
 	/**
 	 * 
 	 */
 	protected Logger() {
-		this.level = 2;
-		this.listeners = new Vector();
-		this.listeners.add(new DefaultListener());
+		mLevel = 2;
+		mListeners = new Vector();
+		mListeners.add(new DefaultListener());
 	}
 	
 	/**
 	 * @return
 	 */
 	public static Logger getInstance() {
-		if(instance == null) {
-			instance = new Logger();
+		if(mInstance == null) {
+			mInstance = new Logger();
 		}
-	    return instance;
+	    return mInstance;
 	}
 	
 	/**
 	 * @param level
 	 */
-	public void VERBOSE(int level) {
-		this.level = level;
+	public void VERBOSE(int pLevel) {
+		mLevel = pLevel;
 	}
 	
 	/**
 	 * @param msg
 	 */
 	public void fatal(String msg) {
-		if ( this.level >= 0 ) {			
-			this.broadcast(msg);
+		if ( mLevel >= 0 ) {			
+			broadcast(msg);
 		}
 	}
 	
@@ -44,8 +44,8 @@ public class Logger {
 	 * @param msg
 	 */
 	public void error(String msg) {
-		if ( this.level >= 1 ) {
-			this.broadcast(msg);
+		if ( mLevel >= 1 ) {
+			broadcast(msg);
 		}
 	}
 	
@@ -53,8 +53,8 @@ public class Logger {
 	 * @param msg
 	 */
 	public void warn (String msg) {
-		if ( this.level >= 2 ) {
-			this.broadcast(msg);
+		if ( mLevel >= 2 ) {
+			broadcast(msg);
 		}
 	}
 	
@@ -62,8 +62,8 @@ public class Logger {
 	 * @param msg
 	 */
 	public void info (String msg) {
-		if ( this.level >= 3 ) {
-			this.broadcast(msg);
+		if ( mLevel >= 3 ) {
+			broadcast(msg);
 		}
 	}
 	
@@ -71,8 +71,8 @@ public class Logger {
 	 * @param msg
 	 */
 	public void debug (String msg) {
-		if ( this.level >= 4 ) {
-			this.broadcast(msg);
+		if ( mLevel >= 4 ) {
+			broadcast(msg);
 		}
 	}
 	
@@ -80,14 +80,14 @@ public class Logger {
 	 * @param listener
 	 */
 	public void addListener(LogListener listener) {
-		this.listeners.add(listener);
+		mListeners.add(listener);
 	}
 	
 	/**
 	 * @param listener
 	 */
 	public void removeListener(LogListener listener) {
-		this.listeners.remove(listener);
+		mListeners.remove(listener);
 	}
 	
 	/**
@@ -104,8 +104,8 @@ public class Logger {
 		fullMsg[3] = ste.getFileName();
 		fullMsg[4] = ""+ ste.getLineNumber();
 		
-		for ( int i = 0; i < this.listeners.size(); i++ ) {
-			((LogListener)this.listeners.get(i)).notify(fullMsg);
+		for ( int i = 0; i < mListeners.size(); i++ ) {
+			((LogListener)mListeners.get(i)).notify(fullMsg);
 		}
 	}
 }

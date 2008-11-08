@@ -5,29 +5,29 @@ import org.biophylo.util.*;
 import org.biophylo.*;
 
 public class TaxaMediator {
-	private static TaxaMediator instance = null;
+	private static TaxaMediator mInstance = null;
 	private static Logger logger = Logger.getInstance();
-	private ObjectMediator object;
-	private HashMap objectsForTaxon;
-	private HashMap taxonForObject;
+	private ObjectMediator mObject;
+	private HashMap mObjectsForTaxon;
+	private HashMap mTaxonForObject;
 	
 	/**
 	 * 
 	 */
 	protected TaxaMediator() {
-	     this.object = ObjectMediator.getInstance();
-	     this.objectsForTaxon = new HashMap(); // key is taxon ID
-	     this.taxonForObject = new HashMap(); // key is taxonlinker id
+		mObject = ObjectMediator.getInstance();
+		mObjectsForTaxon = new HashMap(); // key is taxon ID
+		mTaxonForObject = new HashMap(); // key is taxonlinker id
 	}
 	
 	/**
 	 * @return
 	 */
 	public static TaxaMediator getInstance() {
-		if(instance == null) {
-			instance = new TaxaMediator();
+		if( mInstance == null ) {
+			mInstance = new TaxaMediator();
 		}
-	    return instance;
+	    return mInstance;
 	}
 	
 	/**
@@ -37,13 +37,13 @@ public class TaxaMediator {
 	public void setLink(int taxonId,int linkerId) {
 		Integer lId = new Integer(linkerId);
 		Integer tId = new Integer(taxonId);
-		Containable obj = (Containable)this.object.getObjectById(linkerId);
+		Containable obj = (Containable)mObject.getObjectById(linkerId);
 		Integer type = new Integer(obj.type());
-		this.taxonForObject.put(lId, tId);
-		if ( ! this.objectsForTaxon.containsKey(tId) ) {
-			this.objectsForTaxon.put(tId, new HashMap());
+		mTaxonForObject.put(lId, tId);
+		if ( ! mObjectsForTaxon.containsKey(tId) ) {
+			mObjectsForTaxon.put(tId, new HashMap());
 		}
-		((HashMap)this.objectsForTaxon.get(tId)).put(lId, type);
+		((HashMap)mObjectsForTaxon.get(tId)).put(lId, type);
 	}
 	
 	/**
@@ -52,9 +52,9 @@ public class TaxaMediator {
 	 */
 	public Containable getLink(int linkerId) {
 		Integer lId = new Integer(linkerId);
-		if ( this.taxonForObject.containsKey(lId) ) {
-			Integer taxonId = (Integer)this.taxonForObject.get(lId);
-			return (Containable)this.object.getObjectById(taxonId.intValue());
+		if ( mTaxonForObject.containsKey(lId) ) {
+			Integer taxonId = (Integer)mTaxonForObject.get(lId);
+			return (Containable)mObject.getObjectById(taxonId.intValue());
 		}
 		return null;
 	}
@@ -66,9 +66,9 @@ public class TaxaMediator {
 	 */
 	public Vector getLink(int taxonId, int type) {
 		Integer tId = new Integer(taxonId);
-		if ( this.objectsForTaxon.containsKey(tId) ) {
-			logger.debug("contains taxon id " + taxonId + " (" + this.object.getObjectById(taxonId) + ")");
-			HashMap objects = (HashMap)this.objectsForTaxon.get(tId);
+		if ( mObjectsForTaxon.containsKey(tId) ) {
+			logger.debug("contains taxon id " + taxonId + " (" + mObject.getObjectById(taxonId) + ")");
+			HashMap objects = (HashMap)mObjectsForTaxon.get(tId);
 			logger.debug("HashMap: " + objects);
 			Integer objType = new Integer(type);
 			logger.debug("Requested object type " + type);
@@ -81,7 +81,7 @@ public class TaxaMediator {
 					logger.debug("Inspecting obj "+keys[i]+ " => type "+((Integer)objects.get(key)).intValue());
 					if ( ((Integer)objects.get(key)).intValue() == type ) {
 						logger.debug("Found object id "+key.toString());
-						result.add(this.object.getObjectById(key.intValue()));
+						result.add(mObject.getObjectById(key.intValue()));
 					}
 				}
 				return result;
@@ -99,16 +99,16 @@ public class TaxaMediator {
 		logger.info("removing link " + taxonId + " => " + linkerId);
 		Integer tId = new Integer(taxonId);
 		Integer lId = new Integer(linkerId);
-		if ( this.objectsForTaxon.containsKey(tId) ) {
-			if ( ((HashMap)this.objectsForTaxon.get(tId)).containsKey(lId) ) {
-				((HashMap)this.objectsForTaxon.get(tId)).remove(lId);
+		if ( mObjectsForTaxon.containsKey(tId) ) {
+			if ( ((HashMap)mObjectsForTaxon.get(tId)).containsKey(lId) ) {
+				((HashMap)mObjectsForTaxon.get(tId)).remove(lId);
 			}
 			else {
-				this.objectsForTaxon.remove(tId);
+				mObjectsForTaxon.remove(tId);
 			}
 		}
-		if ( this.taxonForObject.containsKey(lId) ) {
-			this.taxonForObject.remove(lId);
+		if ( mTaxonForObject.containsKey(lId) ) {
+			mTaxonForObject.remove(lId);
 		}
 	}
 }

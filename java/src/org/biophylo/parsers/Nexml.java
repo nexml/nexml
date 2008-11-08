@@ -12,7 +12,7 @@ import org.biophylo.matrices.*;
 import org.biophylo.matrices.datatype.*;
 import org.biophylo.mediators.*;
 public class Nexml implements Parsers {
-	private static HashMap factory = null;
+	private static HashMap mFactory = null;
 	private static ObjectMediator om = ObjectMediator.getInstance();
 	private static Logger logger = Logger.getInstance();
 	
@@ -20,15 +20,15 @@ public class Nexml implements Parsers {
 	 * 
 	 */
 	public Nexml () {
-		if ( factory == null ) {
-			factory = new HashMap();
-			factory.put("otus", org.biophylo.taxa.Taxa.class);
-			factory.put("otu", org.biophylo.taxa.Taxon.class);
-			factory.put("characters", org.biophylo.matrices.Matrix.class);
-			factory.put("row", org.biophylo.matrices.Datum.class);
-			factory.put("trees", org.biophylo.forest.Forest.class);
-			factory.put("tree", org.biophylo.forest.Tree.class);
-			factory.put("node", org.biophylo.forest.Node.class);
+		if ( mFactory == null ) {
+			mFactory = new HashMap();
+			mFactory.put("otus", org.biophylo.taxa.Taxa.class);
+			mFactory.put("otu", org.biophylo.taxa.Taxon.class);
+			mFactory.put("characters", org.biophylo.matrices.Matrix.class);
+			mFactory.put("row", org.biophylo.matrices.Datum.class);
+			mFactory.put("trees", org.biophylo.forest.Forest.class);
+			mFactory.put("tree", org.biophylo.forest.Tree.class);
+			mFactory.put("node", org.biophylo.forest.Node.class);
 		}
 	}
 	
@@ -378,7 +378,7 @@ public class Nexml implements Parsers {
 		String tagName = elt.getTagName();
 		XMLWritable obj = null;
 		try {
-			obj = (XMLWritable)((Class)factory.get(tagName)).newInstance();
+			obj = (XMLWritable)((Class)mFactory.get(tagName)).newInstance();
 		} catch ( Exception e ) {
 			e.printStackTrace();
 		}
