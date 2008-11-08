@@ -9,7 +9,7 @@ public class IO {
 	 * @return
 	 */
 	public static Object[] parse(String format, InputStream data) {
-		String base = "org.biophylo.Parsers.";
+		String base = "org.biophylo.parsers.";
 		Parsers p = null;
 		try {
 			p = (Parsers)Class.forName(base+format).newInstance();			
