@@ -23,10 +23,10 @@ public class Node extends Containable implements TaxonLinker {
 	 */
 	public Node () {
 		super();
-		this.type = CONSTANT.NODE;
-		this.container = CONSTANT.TREE;
+		mType = CONSTANT.NODE;
+		mContainer = CONSTANT.TREE;
 		this.children = new Vector();
-		this.tag = "node";
+		mTag = "node";
 		this.parent = null;
 	}
 	
@@ -626,36 +626,59 @@ public class Node extends Containable implements TaxonLinker {
 		return newick.toString();
 	}
 	
-	/**
-	 * @param roundAsInt
-	 * @return
-	 */
-	public Element edgeToXmlElement (boolean roundAsInt) {
-		HashMap attrs = new HashMap();
-		attrs.put("id", "edge" + getId());
-		attrs.put("target", getXmlId());
-		String tagName = null;
-		if ( isRoot() ) {
-			if ( isBranchLengthDefined() ) {
-				tagName = "rootedge";
-			}
-			else {
-				return null;
-			}
+	public void generateXml(StringBuffer sb, boolean roundAsInt) throws ObjectMismatch {
+		logger.debug("writing node to xml");
+		Node[] desc = this.getDescendants();
+		Node[] nodes = new Node[desc.length+1];
+		nodes[0] = this;
+		for ( int i = 0; i < desc.length; i++ ) {
+			nodes[i+1] = desc[i];
 		}
-		else {
-			tagName = "edge";
-			attrs.put("source", getParent().getXmlId() );
+		for ( int i = 0; i < nodes.length; i++ ) {
+			Taxon taxon = nodes[i].getTaxon();
+			HashMap attrs = new HashMap();
+			if ( taxon != null ) {
+				attrs.put("otu", taxon.getXmlId());
+			}
+			if ( nodes[i].isRoot() ) {
+				attrs.put("root", "true");
+			}
+			nodes[i].setAttributes(attrs);
+			nodes[i].getXmlTag(sb, true);
 		}
-		if ( isBranchLengthDefined() ) {
+		double length = nodes[0].getBranchLength();
+		if ( length != 0 ) {
+			String target = nodes[0].getXmlId();
+			String id = "edge" + nodes[0].getId();
+			sb.append("<rootedge id=\"").append(id).append("\" target=\"").append(target);
+			sb.append("\" length=\"");			
 			if ( roundAsInt ) {
-				attrs.put("length", ""+Math.round(getBranchLength()));
+				sb.append(new Double(length).intValue());
 			}
 			else {
-				attrs.put("length", ""+getBranchLength());
+				sb.append(length);
 			}
+			sb.append("\"/>");
 		}
-		return createElement(tagName,attrs,getDocument());
+		for ( int i = 1; i < nodes.length; i++ ) {
+			String source = nodes[i].getParent().getXmlId();
+			String target = nodes[i].getXmlId();
+			String id = "edge" + nodes[i].getId();
+			double bl = nodes[i].getBranchLength();
+			sb.append("<edge source=\"").append(source).append("\" target=\"").append(target);
+			sb.append("\" id=\"");
+			sb.append(id);
+			if ( bl != 0 ) {
+				sb.append("\" length=\"");
+				if ( roundAsInt ) {
+					sb.append(Math.round(bl));
+				}
+				else {
+					sb.append(bl);
+				}				
+			}
+			sb.append("\"/>");
+		}		
 	}	
 	
 	/**

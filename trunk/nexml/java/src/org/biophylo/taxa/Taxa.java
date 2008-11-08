@@ -14,9 +14,9 @@ public class Taxa extends Listable {
 	 */
 	public Taxa () {
 		super();
-		this.type = CONSTANT.TAXA;
-		this.container = CONSTANT.PROJECT;
-		this.tag = "otus";
+		mType = CONSTANT.TAXA;
+		mContainer = CONSTANT.PROJECT;
+		mTag = "otus";
 	}
 	
 	/**

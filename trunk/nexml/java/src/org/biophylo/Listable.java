@@ -22,15 +22,7 @@ public abstract class Listable extends Containable {
 	 */
 	public void insert (Object[] obj) throws ObjectMismatch {
 		for ( int i = 0; i < obj.length; i++ ) {
-			if ( this.canContain(obj[i])) {
-				if ( obj[i] instanceof Containable ) {
-					Document doc = getDocument();
-					if ( doc == null ) {
-						doc = createDocument();
-						setDocument(doc);
-					}
-					((Containable)obj[i]).setDocument(doc);
-				}
+			if ( canContain(obj[i])) {
 				this.entities.add(obj[i]);
 			}
 			else {
