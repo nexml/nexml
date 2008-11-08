@@ -1,6 +1,6 @@
 package org.biophylo;
 import org.biophylo.*;
-import org.biophylo.Util.Exceptions.*;
+import org.biophylo.util.exceptions.*;
 import java.util.*;
 import org.w3c.dom.*;
 
