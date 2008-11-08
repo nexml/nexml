@@ -218,27 +218,27 @@ public class InterpretNEXML extends FileInterpreterI {
 	public boolean exportFile(MesquiteFile file, String arguments) { //if file is null, consider whole project open to export
 		logger.VERBOSE(2);
 		Arguments args = new Arguments(new Parser(arguments), true);
-		java.util.Vector xmlBlocks = new java.util.Vector();
 		ListableVector mesTaxas = getProject().getTaxas();
-		writeTaxaBlocks(xmlBlocks,mesTaxas);
-		writeCharacterBlocks(xmlBlocks,getProject().getCharacterMatrices());
-		for ( int i = 0; i < mesTaxas.size(); i++ ) {
-			Listable[] treeVectors = getProject().getCompatibleFileElements(TreeVector.class, mesTaxas.elementAt(i));
-			writeTreeBlocks(xmlBlocks,treeVectors);
-		}
-		StringBuffer outputBuffer = new StringBuffer();	
-		outputBuffer.append(((org.biophylo.util.XMLWritable)xmlBlocks.get(0)).getRootOpenTag());
-		for ( int i = 0; i < xmlBlocks.size(); i++ ) {
-			try {
-				outputBuffer.append(((org.biophylo.util.XMLWritable)xmlBlocks.get(i)).toXml());
-			} catch ( Exception e ) {
-				logger.fatal(e.getMessage());
-				e.printStackTrace();
+		org.biophylo.Project xmlProject = convertMesquiteProject(getProject());
+		StringBuffer outputBuffer = new StringBuffer();			
+		try {
+			writeTaxaBlocks(xmlProject,mesTaxas);
+			writeCharacterBlocks(xmlProject,getProject().getCharacterMatrices());
+			for ( int i = 0; i < mesTaxas.size(); i++ ) {
+				Listable[] treeVectors = getProject().getCompatibleFileElements(TreeVector.class, mesTaxas.elementAt(i));
+				writeTreeBlocks(xmlProject,treeVectors);
 			}
+			xmlProject.generateXml(outputBuffer, false);
+		} catch ( Exception e ) {
+			e.printStackTrace();
 		}
-		outputBuffer.append(((org.biophylo.util.XMLWritable)xmlBlocks.get(0)).getRootCloseTag());
 		saveExportedFileWithExtension(outputBuffer, arguments, "xml");
 		return true;
+	}
+	
+	private org.biophylo.Project convertMesquiteProject(MesquiteProject mesProject) {
+		org.biophylo.Project xmlProject = new org.biophylo.Project();
+		return xmlProject;
 	}
 	
 	private org.biophylo.matrices.datatype.Datatype makeTypeObject(String dataType) {
@@ -264,15 +264,16 @@ public class InterpretNEXML extends FileInterpreterI {
 		return to;
 	}
 	
-	private org.biophylo.taxa.Taxa findEquivalentTaxa(Taxa mesTaxa,java.util.Vector xmlBlocks) {
-		org.biophylo.taxa.Taxa xmlTaxa = null;
-		TAXA: for ( int j = 0; j < xmlBlocks.size(); j++ ) {
-			if ( mesTaxa.getUniqueID().equals(((org.biophylo.taxa.Taxa)xmlBlocks.get(j)).getGeneric("MesquiteUniqueID")) ) {
-				xmlTaxa = (org.biophylo.taxa.Taxa)xmlBlocks.get(j);
+	private org.biophylo.taxa.Taxa findEquivalentTaxa(Taxa mesTaxa,org.biophylo.Project xmlProject) {
+		org.biophylo.taxa.Taxa[] xmlTaxa = xmlProject.getTaxa();
+		org.biophylo.taxa.Taxa xmlTaxaBlock = null;
+		TAXA: for ( int i = 0; i < xmlTaxa.length; i++ ) {
+			if ( mesTaxa.getUniqueID().equals(xmlTaxa[i].getGeneric("MesquiteUniqueID")) ) {
+				xmlTaxaBlock = xmlTaxa[i];
 				break TAXA;
 			}
 		}
-		return xmlTaxa;
+		return xmlTaxaBlock;
 	}
 	
 	private org.biophylo.taxa.Taxon findEquivalentTaxon(Taxon mesTaxon,org.biophylo.taxa.Taxa xmlTaxa) {
@@ -288,7 +289,7 @@ public class InterpretNEXML extends FileInterpreterI {
 		return xmlTaxon;
 	}
 		
-	private void writeCharacterBlocks(java.util.Vector xmlBlocks,ListableVector mesCharacters) {
+	private void writeCharacterBlocks(org.biophylo.Project xmlProject,ListableVector mesCharacters) throws org.biophylo.util.exceptions.ObjectMismatch {
 		logger.debug("Going to write characters");
 		for ( int i = 0; i < mesCharacters.size(); i++ ) {
 			CharacterData mesData = (CharacterData)mesCharacters.elementAt(i);			
@@ -297,7 +298,7 @@ public class InterpretNEXML extends FileInterpreterI {
     		org.biophylo.matrices.Matrix xmlMatrix = new org.biophylo.matrices.Matrix();
     		xmlMatrix.setTypeObject(to);
     		Taxa mesTaxa = mesData.getTaxa();
-    		org.biophylo.taxa.Taxa xmlTaxa = findEquivalentTaxa(mesTaxa,xmlBlocks);
+    		org.biophylo.taxa.Taxa xmlTaxa = findEquivalentTaxa(mesTaxa,xmlProject);
     		xmlMatrix.setTaxa(xmlTaxa);
     		int nchar = mesData.getNumChars();
     		for ( int j = 0; j < mesData.getNumTaxa(); j++ ) {
@@ -325,17 +326,17 @@ public class InterpretNEXML extends FileInterpreterI {
     			Taxon mesTaxon = mesData.getTaxa().getTaxon(j);
     			xmlDatum.setTaxon(findEquivalentTaxon(mesTaxon,xmlTaxa));
     		}
-    		xmlBlocks.add(xmlMatrix);    		
+    		xmlProject.insert(xmlMatrix);		
 		}
 	}
 	
-	private void writeTreeBlocks(java.util.Vector xmlBlocks,Listable[] treeVectors) {
+	private void writeTreeBlocks(org.biophylo.Project xmlProject,Listable[] treeVectors)  throws org.biophylo.util.exceptions.ObjectMismatch {
 		logger.debug("Going to write trees");
 		for ( int i = 0; i < treeVectors.length; i++ ) {	
 			logger.debug("Writing tree block " + i);
 			TreeVector mesTrees = (TreeVector)treeVectors[i];
 			Taxa mesTaxa = mesTrees.getTaxa();
-			org.biophylo.taxa.Taxa xmlTaxa = findEquivalentTaxa(mesTaxa,xmlBlocks);
+			org.biophylo.taxa.Taxa xmlTaxa = findEquivalentTaxa(mesTaxa,xmlProject);
 			org.biophylo.forest.Forest xmlForest = new org.biophylo.forest.Forest();
 			xmlForest.setTaxa(xmlTaxa);
 			xmlForest.setName(mesTrees.getName());
@@ -356,7 +357,7 @@ public class InterpretNEXML extends FileInterpreterI {
 					e.printStackTrace();
 				}
 			}
-			xmlBlocks.add(xmlForest);
+			xmlProject.insert(xmlForest);
 		}		
 	}
 	
@@ -382,7 +383,7 @@ public class InterpretNEXML extends FileInterpreterI {
 	}
 	
 	
-	private void writeTaxaBlocks(java.util.Vector xmlBlocks,ListableVector mesTaxas) {
+	private void writeTaxaBlocks(org.biophylo.Project xmlProject,ListableVector mesTaxas) throws org.biophylo.util.exceptions.ObjectMismatch {
 		for ( int i = 0; i < mesTaxas.size(); i++ ) {
 			org.biophylo.taxa.Taxa xmlTaxa = new org.biophylo.taxa.Taxa();
 			Taxa mesTaxa = (Taxa)mesTaxas.elementAt(i);
@@ -397,8 +398,8 @@ public class InterpretNEXML extends FileInterpreterI {
 				} catch ( Exception e ) {
 					logln(e.getMessage());
 				}
-			}			
-			xmlBlocks.add(xmlTaxa);
+			}	
+			xmlProject.insert(xmlTaxa);
 		}		
 	}
 
