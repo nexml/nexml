@@ -1,5 +1,5 @@
 package org.biophylo;
-import org.biophylo.Util.*;
+import org.biophylo.util.*;
 public abstract class Containable extends XMLWritable {	
 	protected int container;
 	protected int type;

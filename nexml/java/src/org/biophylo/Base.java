@@ -2,8 +2,8 @@
  * 
  */
 package org.biophylo;
-import org.biophylo.Util.*;
-import org.biophylo.Mediators.*;
+import org.biophylo.util.*;
+import org.biophylo.mediators.*;
 import java.util.*;
 import java.lang.reflect.*;
 /**
