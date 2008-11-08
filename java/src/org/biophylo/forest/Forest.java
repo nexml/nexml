@@ -1,9 +1,9 @@
-package org.biophylo.Forest;
+package org.biophylo.forest;
 import org.biophylo.*;
-import org.biophylo.Mediators.TaxaMediator;
-import org.biophylo.Util.*;
-import org.biophylo.Util.Exceptions.ObjectMismatch;
-import org.biophylo.Taxa.*;
+import org.biophylo.mediators.TaxaMediator;
+import org.biophylo.util.*;
+import org.biophylo.util.exceptions.ObjectMismatch;
+import org.biophylo.taxa.*;
 public class Forest extends Listable implements TaxaLinker {
 	private static TaxaMediator taxaMediator = TaxaMediator.getInstance();
 	

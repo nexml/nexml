@@ -1,5 +1,5 @@
-package org.biophylo.Matrices;
-import org.biophylo.Matrices.Datatype.*;
+package org.biophylo.matrices;
+import org.biophylo.matrices.datatype.*;
 public interface TypeSafeData {
 	/**
 	 * @return

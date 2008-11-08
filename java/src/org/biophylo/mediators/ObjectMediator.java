@@ -1,4 +1,4 @@
-package org.biophylo.Mediators;
+package org.biophylo.mediators;
 import org.biophylo.*;
 import java.util.*;
 

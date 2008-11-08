@@ -1,4 +1,4 @@
-package org.biophylo.Taxa;
+package org.biophylo.taxa;
 
 public interface TaxaLinker {
 	/**

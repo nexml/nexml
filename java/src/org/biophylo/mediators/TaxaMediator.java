@@ -1,7 +1,7 @@
-package org.biophylo.Mediators;
+package org.biophylo.mediators;
 import java.util.*;
-import org.biophylo.Taxa.*;
-import org.biophylo.Util.*;
+import org.biophylo.taxa.*;
+import org.biophylo.util.*;
 import org.biophylo.*;
 
 public class TaxaMediator {

@@ -1,8 +1,8 @@
 import org.biophylo.*;
-import org.biophylo.Util.*;
-import org.biophylo.Taxa.*;
-import org.biophylo.Forest.*;
-import org.biophylo.Matrices.*;
+import org.biophylo.util.*;
+import org.biophylo.taxa.*;
+import org.biophylo.forest.*;
+import org.biophylo.matrices.*;
 import java.io.*;
 import java.util.*;
 public class test {
