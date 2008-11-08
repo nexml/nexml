@@ -1,8 +1,8 @@
-package org.biophylo.Taxa;
-import org.biophylo.Mediators.TaxaMediator;
-import org.biophylo.Util.*;
+package org.biophylo.taxa;
+import org.biophylo.mediators.TaxaMediator;
+import org.biophylo.util.*;
 import org.biophylo.Listable;
-import org.biophylo.Forest.*;
+import org.biophylo.forest.*;
 import java.util.*;
 
 public class Taxa extends Listable {

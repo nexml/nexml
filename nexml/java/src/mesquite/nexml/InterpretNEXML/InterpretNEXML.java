@@ -41,7 +41,7 @@ import mesquite.lib.duties.TreesManager;
  *
  */
 public class InterpretNEXML extends FileInterpreterI {
-	private static org.biophylo.Util.Logger logger = org.biophylo.Util.Logger.getInstance();
+	private static org.biophylo.util.Logger logger = org.biophylo.util.Logger.getInstance();
 	/*.................................................................................................................*/
 	public boolean startJob(String arguments, Object condition, boolean hiredByName) {
  		return true;  //make this depend on taxa reader being found?)
@@ -81,14 +81,14 @@ public class InterpretNEXML extends FileInterpreterI {
 		Object[] blocks = org.biophylo.IO.parse("Nexml", fs);
 		for ( int i = 0; i < blocks.length; i++ ) {
 			switch ( ((org.biophylo.Containable)blocks[i]).type() ) {
-				case org.biophylo.Util.CONSTANT.TAXA   : readTaxaBlocks(project,file,(org.biophylo.Taxa.Taxa)blocks[i]);            break;
-				case org.biophylo.Util.CONSTANT.FOREST : readTreeBlocks(project,file,(org.biophylo.Forest.Forest)blocks[i]);        break;
-				case org.biophylo.Util.CONSTANT.MATRIX : readCharacterBlocks(project,file,(org.biophylo.Matrices.Matrix)blocks[i]); break;
+				case org.biophylo.util.CONSTANT.TAXA   : readTaxaBlocks(project,file,(org.biophylo.taxa.Taxa)blocks[i]);            break;
+				case org.biophylo.util.CONSTANT.FOREST : readTreeBlocks(project,file,(org.biophylo.forest.Forest)blocks[i]);        break;
+				case org.biophylo.util.CONSTANT.MATRIX : readCharacterBlocks(project,file,(org.biophylo.matrices.Matrix)blocks[i]); break;
 			}
 		}
 	}
 	
-	private void readCharacterBlocks (MesquiteProject project, MesquiteFile file, org.biophylo.Matrices.Matrix xmlMatrix) {		
+	private void readCharacterBlocks (MesquiteProject project, MesquiteFile file, org.biophylo.matrices.Matrix xmlMatrix) {		
 		String xmlDataType = xmlMatrix.getType();
 		String mesDataType = null;
 		if ( xmlDataType.equals("Continuous") ) {
@@ -111,19 +111,19 @@ public class InterpretNEXML extends FileInterpreterI {
 		}
 	}
 	
-	private void buildMatrix(String dataType,org.biophylo.Matrices.Matrix xmlMatrix,MesquiteFile file) {
+	private void buildMatrix(String dataType,org.biophylo.matrices.Matrix xmlMatrix,MesquiteFile file) {
 		CharactersManager charTask = (CharactersManager)findElementManager(CharacterData.class);
 		mesquite.lib.Taxa linkedTaxa = getProject().getTaxa(xmlMatrix.getTaxa().getInternalName());
 		mesquite.lib.characters.CharacterData mesData = charTask.newCharacterData(linkedTaxa, 0, dataType);
 		org.biophylo.Containable[] xmlDatum = xmlMatrix.getEntities();
 		for ( int i = 0; i < xmlDatum.length; i++ ) {
-			org.biophylo.Taxa.Taxon xmlTaxon = ((org.biophylo.Matrices.Datum)xmlDatum[i]).getTaxon();
+			org.biophylo.taxa.Taxon xmlTaxon = ((org.biophylo.matrices.Datum)xmlDatum[i]).getTaxon();
 			String name = xmlTaxon.getName();
 			if ( name == null || name.equals("") ) {
 				name = xmlTaxon.getInternalName();
 			}
 			int mesTaxon = mesData.getTaxa().getTaxon(name).getNumber();
-			String[] xmlChars = ((org.biophylo.Matrices.Datum)xmlDatum[i]).getChar();
+			String[] xmlChars = ((org.biophylo.matrices.Datum)xmlDatum[i]).getChar();
 			for ( int j = 0; j < xmlChars.length; j++ ) {
 				CharacterState cs = null;
         		if ( mesData instanceof ContinuousData ) {
@@ -144,7 +144,7 @@ public class InterpretNEXML extends FileInterpreterI {
 		mesData.addToFile(file, getProject(), null);		
 	}
 	
-	private void readTaxaBlocks (MesquiteProject project, MesquiteFile file, org.biophylo.Taxa.Taxa xmlTaxa) {
+	private void readTaxaBlocks (MesquiteProject project, MesquiteFile file, org.biophylo.taxa.Taxa xmlTaxa) {
 		TaxaManager taxaTask = (TaxaManager)findElementManager(mesquite.lib.Taxa.class);
 		int ntax = xmlTaxa.getNtax();
         mesquite.lib.Taxa mesTaxa = taxaTask.makeNewTaxa(getProject().getTaxas().getUniqueName(xmlTaxa.getXmlId()), ntax, false);
@@ -152,7 +152,7 @@ public class InterpretNEXML extends FileInterpreterI {
         mesTaxa.addToFile(file, getProject(), taxaTask);
         for ( int i = 0; i < ntax; i++ ) {
         	mesquite.lib.Taxon mesTaxon = mesTaxa.getTaxon(i);
-        	org.biophylo.Taxa.Taxon xmlTaxon = (org.biophylo.Taxa.Taxon)xmlTaxa.getByIndex(i);
+        	org.biophylo.taxa.Taxon xmlTaxon = (org.biophylo.taxa.Taxon)xmlTaxa.getByIndex(i);
         	mesTaxon.setUniqueID(xmlTaxon.getXmlId());
         	String name = xmlTaxon.getName();
         	if ( name==null || name.equals("") ) name = xmlTaxon.getInternalName();
@@ -160,7 +160,7 @@ public class InterpretNEXML extends FileInterpreterI {
         }		
 	}
 	
-	private void readTreeBlocks (MesquiteProject project, MesquiteFile file, org.biophylo.Forest.Forest xmlForest) {
+	private void readTreeBlocks (MesquiteProject project, MesquiteFile file, org.biophylo.forest.Forest xmlForest) {
 		TreesManager treeTask = (TreesManager)findElementManager(TreeVector.class);
 		mesquite.lib.Taxa referencedTaxa = getProject().getTaxa(xmlForest.getTaxa().getInternalName());
 		TreeVector mesTreevector = treeTask.makeNewTreeBlock(referencedTaxa, xmlForest.getInternalName(), file);
@@ -169,14 +169,14 @@ public class InterpretNEXML extends FileInterpreterI {
 			MesquiteTree mesTree = new MesquiteTree(referencedTaxa);
 			mesTreevector.addElement(mesTree, false);
 			mesTree.setName(xmlTree[i].getInternalName());			
-			org.biophylo.Forest.Node xmlRoot = ((org.biophylo.Forest.Tree)xmlTree[i]).getRoot();
+			org.biophylo.forest.Node xmlRoot = ((org.biophylo.forest.Tree)xmlTree[i]).getRoot();
 			buildTree(xmlRoot,xmlRoot.getChildren(),mesTree.getRoot(),mesTree);
 		}
 		mesTreevector.addToFile(file, getProject(), treeTask);
 	}
 	
-	private void buildTree(org.biophylo.Forest.Node xmlRoot, org.biophylo.Forest.Node[] xmlChildren, int mesRoot, MesquiteTree mesTree) {
-		org.biophylo.Taxa.Taxon xmlTaxon = xmlRoot.getTaxon();
+	private void buildTree(org.biophylo.forest.Node xmlRoot, org.biophylo.forest.Node[] xmlChildren, int mesRoot, MesquiteTree mesTree) {
+		org.biophylo.taxa.Taxon xmlTaxon = xmlRoot.getTaxon();
 		if ( xmlTaxon != null ) {
 			String name = xmlTaxon.getName();
 			if ( name == null || name.equals("") ) {
@@ -227,36 +227,36 @@ public class InterpretNEXML extends FileInterpreterI {
 			writeTreeBlocks(xmlBlocks,treeVectors);
 		}
 		StringBuffer outputBuffer = new StringBuffer();	
-		outputBuffer.append(((org.biophylo.Util.XMLWritable)xmlBlocks.get(0)).getRootOpenTag());
+		outputBuffer.append(((org.biophylo.util.XMLWritable)xmlBlocks.get(0)).getRootOpenTag());
 		for ( int i = 0; i < xmlBlocks.size(); i++ ) {
 			try {
-				outputBuffer.append(((org.biophylo.Util.XMLWritable)xmlBlocks.get(i)).toXml());
+				outputBuffer.append(((org.biophylo.util.XMLWritable)xmlBlocks.get(i)).toXml());
 			} catch ( Exception e ) {
 				logger.fatal(e.getMessage());
 				e.printStackTrace();
 			}
 		}
-		outputBuffer.append(((org.biophylo.Util.XMLWritable)xmlBlocks.get(0)).getRootCloseTag());
+		outputBuffer.append(((org.biophylo.util.XMLWritable)xmlBlocks.get(0)).getRootCloseTag());
 		saveExportedFileWithExtension(outputBuffer, arguments, "xml");
 		return true;
 	}
 	
-	private org.biophylo.Matrices.Datatype.Datatype makeTypeObject(String dataType) {
-		org.biophylo.Matrices.Datatype.Datatype to = null;			
+	private org.biophylo.matrices.datatype.Datatype makeTypeObject(String dataType) {
+		org.biophylo.matrices.datatype.Datatype to = null;			
 		if ( dataType.equalsIgnoreCase(DNAData.DATATYPENAME) ) {
-			to = org.biophylo.Matrices.Datatype.Datatype.getInstance("Dna");		
+			to = org.biophylo.matrices.datatype.Datatype.getInstance("Dna");		
 		}
 		else if ( dataType.equalsIgnoreCase(RNAData.DATATYPENAME) ) {
-			to = org.biophylo.Matrices.Datatype.Datatype.getInstance("Rna");    			
+			to = org.biophylo.matrices.datatype.Datatype.getInstance("Rna");    			
 		}    		
 		else if ( dataType.equalsIgnoreCase(ProteinData.DATATYPENAME) ) {
-			to = org.biophylo.Matrices.Datatype.Datatype.getInstance("Protein");     			
+			to = org.biophylo.matrices.datatype.Datatype.getInstance("Protein");     			
 		}
 		else if ( dataType.equalsIgnoreCase(ContinuousData.DATATYPENAME) ) {
-			to = org.biophylo.Matrices.Datatype.Datatype.getInstance("Continuous");      			
+			to = org.biophylo.matrices.datatype.Datatype.getInstance("Continuous");      			
 		}
 		else if ( dataType.equalsIgnoreCase(CategoricalData.DATATYPENAME) ) {
-			to = org.biophylo.Matrices.Datatype.Datatype.getInstance("Standard");     			
+			to = org.biophylo.matrices.datatype.Datatype.getInstance("Standard");     			
 		}
 		if ( to == null ) {
 			logger.fatal("No data type object for " + dataType);
@@ -264,24 +264,24 @@ public class InterpretNEXML extends FileInterpreterI {
 		return to;
 	}
 	
-	private org.biophylo.Taxa.Taxa findEquivalentTaxa(Taxa mesTaxa,java.util.Vector xmlBlocks) {
-		org.biophylo.Taxa.Taxa xmlTaxa = null;
+	private org.biophylo.taxa.Taxa findEquivalentTaxa(Taxa mesTaxa,java.util.Vector xmlBlocks) {
+		org.biophylo.taxa.Taxa xmlTaxa = null;
 		TAXA: for ( int j = 0; j < xmlBlocks.size(); j++ ) {
-			if ( mesTaxa.getUniqueID().equals(((org.biophylo.Taxa.Taxa)xmlBlocks.get(j)).getGeneric("MesquiteUniqueID")) ) {
-				xmlTaxa = (org.biophylo.Taxa.Taxa)xmlBlocks.get(j);
+			if ( mesTaxa.getUniqueID().equals(((org.biophylo.taxa.Taxa)xmlBlocks.get(j)).getGeneric("MesquiteUniqueID")) ) {
+				xmlTaxa = (org.biophylo.taxa.Taxa)xmlBlocks.get(j);
 				break TAXA;
 			}
 		}
 		return xmlTaxa;
 	}
 	
-	private org.biophylo.Taxa.Taxon findEquivalentTaxon(Taxon mesTaxon,org.biophylo.Taxa.Taxa xmlTaxa) {
-		org.biophylo.Taxa.Taxon xmlTaxon = null;
+	private org.biophylo.taxa.Taxon findEquivalentTaxon(Taxon mesTaxon,org.biophylo.taxa.Taxa xmlTaxa) {
+		org.biophylo.taxa.Taxon xmlTaxon = null;
 		int mesTaxonIndex = mesTaxon.getNumber();
 		org.biophylo.Containable[] conts = xmlTaxa.getEntities();
 		TAXON: for ( int i = 0; i < conts.length; i++ ) {
 			if ( mesTaxonIndex == ((Integer)conts[i].getGeneric("MesquiteUniqueID")).intValue() ) {
-				xmlTaxon = (org.biophylo.Taxa.Taxon)conts[i];
+				xmlTaxon = (org.biophylo.taxa.Taxon)conts[i];
 				break TAXON;
 			}
 		}		
@@ -293,16 +293,16 @@ public class InterpretNEXML extends FileInterpreterI {
 		for ( int i = 0; i < mesCharacters.size(); i++ ) {
 			CharacterData mesData = (CharacterData)mesCharacters.elementAt(i);			
 			String dataType = mesData.getDataTypeName();
-			org.biophylo.Matrices.Datatype.Datatype to = makeTypeObject(dataType);			
-    		org.biophylo.Matrices.Matrix xmlMatrix = new org.biophylo.Matrices.Matrix();
+			org.biophylo.matrices.datatype.Datatype to = makeTypeObject(dataType);			
+    		org.biophylo.matrices.Matrix xmlMatrix = new org.biophylo.matrices.Matrix();
     		xmlMatrix.setTypeObject(to);
     		Taxa mesTaxa = mesData.getTaxa();
-    		org.biophylo.Taxa.Taxa xmlTaxa = findEquivalentTaxa(mesTaxa,xmlBlocks);
+    		org.biophylo.taxa.Taxa xmlTaxa = findEquivalentTaxa(mesTaxa,xmlBlocks);
     		xmlMatrix.setTaxa(xmlTaxa);
     		int nchar = mesData.getNumChars();
     		for ( int j = 0; j < mesData.getNumTaxa(); j++ ) {
     			CharacterState[] mesChars = mesData.getCharacterStateArray(j, 0, nchar);
-    			org.biophylo.Matrices.Datum xmlDatum = new org.biophylo.Matrices.Datum();
+    			org.biophylo.matrices.Datum xmlDatum = new org.biophylo.matrices.Datum();
     			xmlDatum.setTypeObject(to);
     			String[] chars = new String[nchar];
     			boolean hasStates = false;
@@ -335,16 +335,16 @@ public class InterpretNEXML extends FileInterpreterI {
 			logger.debug("Writing tree block " + i);
 			TreeVector mesTrees = (TreeVector)treeVectors[i];
 			Taxa mesTaxa = mesTrees.getTaxa();
-			org.biophylo.Taxa.Taxa xmlTaxa = findEquivalentTaxa(mesTaxa,xmlBlocks);
-			org.biophylo.Forest.Forest xmlForest = new org.biophylo.Forest.Forest();
+			org.biophylo.taxa.Taxa xmlTaxa = findEquivalentTaxa(mesTaxa,xmlBlocks);
+			org.biophylo.forest.Forest xmlForest = new org.biophylo.forest.Forest();
 			xmlForest.setTaxa(xmlTaxa);
 			xmlForest.setName(mesTrees.getName());
 			int ntrees = mesTrees.getNumberOfTrees();
 			for ( int j = 0; j < ntrees; j++ ) {
 				logger.debug("Writing tree " + j);
 				Tree mesTree = mesTrees.getTree(j);
-				org.biophylo.Forest.Tree xmlTree = new org.biophylo.Forest.Tree();
-				org.biophylo.Forest.Node xmlRoot = new org.biophylo.Forest.Node();
+				org.biophylo.forest.Tree xmlTree = new org.biophylo.forest.Tree();
+				org.biophylo.forest.Node xmlRoot = new org.biophylo.forest.Node();
 				xmlTree.setName(mesTree.getName());
 				int mesRoot = mesTree.getRoot();
 				try {
@@ -360,7 +360,7 @@ public class InterpretNEXML extends FileInterpreterI {
 		}		
 	}
 	
-	private void buildXmlTree(Tree mesTree,org.biophylo.Forest.Tree xmlTree,int mesNode,org.biophylo.Forest.Node xmlNode,org.biophylo.Forest.Node xmlParentNode,org.biophylo.Taxa.Taxa xmlTaxa) throws org.biophylo.Util.Exceptions.ObjectMismatch {
+	private void buildXmlTree(Tree mesTree,org.biophylo.forest.Tree xmlTree,int mesNode,org.biophylo.forest.Node xmlNode,org.biophylo.forest.Node xmlParentNode,org.biophylo.taxa.Taxa xmlTaxa) throws org.biophylo.util.exceptions.ObjectMismatch {
 		xmlNode.setBranchLength(mesTree.getBranchLength(mesNode));
 		xmlNode.setName(mesTree.getNodeLabel(mesNode));
 		xmlTree.insert(xmlNode);
@@ -368,7 +368,7 @@ public class InterpretNEXML extends FileInterpreterI {
 			int[] mesTaxonNumber = mesTree.getTerminalTaxa(mesNode);
 			Taxa mesTaxa = mesTree.getTaxa();
 			Taxon mesTaxon = mesTaxa.getTaxon(mesTaxonNumber[0]);
-			org.biophylo.Taxa.Taxon xmlTaxon = findEquivalentTaxon(mesTaxon,xmlTaxa);
+			org.biophylo.taxa.Taxon xmlTaxon = findEquivalentTaxon(mesTaxon,xmlTaxa);
 			xmlNode.setTaxon(xmlTaxon);		
 		}
 		xmlNode.setParent(xmlParentNode);
@@ -376,7 +376,7 @@ public class InterpretNEXML extends FileInterpreterI {
 			xmlParentNode.setChild(xmlNode);			
 		}		
 		for (int d = mesTree.firstDaughterOfNode(mesNode); mesTree.nodeExists(d); d = mesTree.nextSisterOfNode(d)) {
-			org.biophylo.Forest.Node xmlChild = new org.biophylo.Forest.Node();
+			org.biophylo.forest.Node xmlChild = new org.biophylo.forest.Node();
 			buildXmlTree(mesTree,xmlTree,d,xmlChild,xmlNode,xmlTaxa);
 		}
 	}
@@ -384,12 +384,12 @@ public class InterpretNEXML extends FileInterpreterI {
 	
 	private void writeTaxaBlocks(java.util.Vector xmlBlocks,ListableVector mesTaxas) {
 		for ( int i = 0; i < mesTaxas.size(); i++ ) {
-			org.biophylo.Taxa.Taxa xmlTaxa = new org.biophylo.Taxa.Taxa();
+			org.biophylo.taxa.Taxa xmlTaxa = new org.biophylo.taxa.Taxa();
 			Taxa mesTaxa = (Taxa)mesTaxas.elementAt(i);
 			xmlTaxa.setName(mesTaxa.getName());
 			xmlTaxa.setGeneric("MesquiteUniqueID",mesTaxa.getUniqueID());
 			for ( int j = 0; j < mesTaxa.getNumTaxa(); j++ ) {
-				org.biophylo.Taxa.Taxon xmlTaxon = new org.biophylo.Taxa.Taxon();
+				org.biophylo.taxa.Taxon xmlTaxon = new org.biophylo.taxa.Taxon();
 				xmlTaxon.setName(mesTaxa.getTaxonName(j));
 				xmlTaxon.setGeneric("MesquiteUniqueID",new Integer(j));
 				try {

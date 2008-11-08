@@ -1,6 +1,6 @@
-package org.biophylo.Util;
+package org.biophylo.util;
 import org.biophylo.*;
-import org.biophylo.Util.Exceptions.*;
+import org.biophylo.util.exceptions.*;
 
 public class CONSTANT {
 	public static final int NONE     = 1;

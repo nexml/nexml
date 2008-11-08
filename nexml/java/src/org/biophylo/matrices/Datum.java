@@ -1,16 +1,16 @@
-package org.biophylo.Matrices;
+package org.biophylo.matrices;
 
 import org.biophylo.Listable;
-import org.biophylo.Matrices.Datatype.Datatype;
-import org.biophylo.Mediators.TaxaMediator;
-import org.biophylo.Taxa.Taxon;
-import org.biophylo.Taxa.TaxonLinker;
-import org.biophylo.Util.*;
+import org.biophylo.matrices.datatype.Datatype;
+import org.biophylo.mediators.TaxaMediator;
+import org.biophylo.taxa.Taxon;
+import org.biophylo.taxa.TaxonLinker;
+import org.biophylo.util.*;
 import org.biophylo.*;
 import java.util.*;
 import org.w3c.dom.Element;
 
-import org.biophylo.Util.Exceptions.*;
+import org.biophylo.util.exceptions.*;
 
 /**
  * @author rvosa

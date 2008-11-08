@@ -1,9 +1,9 @@
-package org.biophylo.Util;
+package org.biophylo.util;
 
 import org.biophylo.Base;
 import java.util.*;
-import org.biophylo.Util.Exceptions.*;
-import org.biophylo.Taxa.*;
+import org.biophylo.util.exceptions.*;
+import org.biophylo.taxa.*;
 import org.biophylo.*;
 import org.w3c.dom.*;
 

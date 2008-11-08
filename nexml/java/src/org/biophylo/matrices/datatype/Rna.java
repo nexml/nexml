@@ -1,4 +1,4 @@
-package org.biophylo.Matrices.Datatype;
+package org.biophylo.matrices.datatype;
 
 public class Rna extends Datatype {
 	private static int[][] rnalookup = { 

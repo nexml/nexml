@@ -1,4 +1,4 @@
-package org.biophylo.Util;
+package org.biophylo.util;
 
 public interface LogListener {
 	/**

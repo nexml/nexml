@@ -1,16 +1,16 @@
-package org.biophylo.Parsers;
+package org.biophylo.parsers;
 import javax.xml.parsers.*;
 import java.io.*;
 import org.w3c.dom.*;
 import java.util.*;
-import org.biophylo.Util.*;
-import org.biophylo.Taxa.*;
-import org.biophylo.Forest.*;
-import org.biophylo.Util.Exceptions.*;
+import org.biophylo.util.*;
+import org.biophylo.taxa.*;
+import org.biophylo.forest.*;
+import org.biophylo.util.exceptions.*;
 import org.biophylo.*;
-import org.biophylo.Matrices.*;
-import org.biophylo.Matrices.Datatype.*;
-import org.biophylo.Mediators.*;
+import org.biophylo.matrices.*;
+import org.biophylo.matrices.datatype.*;
+import org.biophylo.mediators.*;
 public class Nexml implements Parsers {
 	private static HashMap factory = null;
 	private static ObjectMediator om = ObjectMediator.getInstance();
@@ -22,13 +22,13 @@ public class Nexml implements Parsers {
 	public Nexml () {
 		if ( factory == null ) {
 			factory = new HashMap();
-			factory.put("otus", org.biophylo.Taxa.Taxa.class);
-			factory.put("otu", org.biophylo.Taxa.Taxon.class);
-			factory.put("characters", org.biophylo.Matrices.Matrix.class);
-			factory.put("row", org.biophylo.Matrices.Datum.class);
-			factory.put("trees", org.biophylo.Forest.Forest.class);
-			factory.put("tree", org.biophylo.Forest.Tree.class);
-			factory.put("node", org.biophylo.Forest.Node.class);
+			factory.put("otus", org.biophylo.taxa.Taxa.class);
+			factory.put("otu", org.biophylo.taxa.Taxon.class);
+			factory.put("characters", org.biophylo.matrices.Matrix.class);
+			factory.put("row", org.biophylo.matrices.Datum.class);
+			factory.put("trees", org.biophylo.forest.Forest.class);
+			factory.put("tree", org.biophylo.forest.Tree.class);
+			factory.put("node", org.biophylo.forest.Node.class);
 		}
 	}
 	
@@ -282,7 +282,7 @@ public class Nexml implements Parsers {
 		HashMap nodeById = new HashMap();
 		NodeList nodeElts = treeElt.getElementsByTagName("node");
 		for ( int i = 0; i < nodeElts.getLength(); i++ ) {
-			org.biophylo.Forest.Node nodeObj = (org.biophylo.Forest.Node)objFromElement((Element)nodeElts.item(i));
+			org.biophylo.forest.Node nodeObj = (org.biophylo.forest.Node)objFromElement((Element)nodeElts.item(i));
 			String id = nodeObj.getXmlId();
 			treeObj.insert(nodeObj);
 			nodeById.put(id, nodeObj);
@@ -306,22 +306,22 @@ public class Nexml implements Parsers {
 		for ( int i = 0; i < entities.length; i++ ) {
 			String id = entities[i].getXmlId();
 			if ( sourceOf.containsKey(id) ) {
-				org.biophylo.Forest.Node parentNode = (org.biophylo.Forest.Node)nodeById.get((String)sourceOf.get(id));
-				((org.biophylo.Forest.Node)entities[i]).setParent(parentNode);
-				parentNode.setChild((org.biophylo.Forest.Node)entities[i]);
+				org.biophylo.forest.Node parentNode = (org.biophylo.forest.Node)nodeById.get((String)sourceOf.get(id));
+				((org.biophylo.forest.Node)entities[i]).setParent(parentNode);
+				parentNode.setChild((org.biophylo.forest.Node)entities[i]);
 			}
 			if ( lengthOf.containsKey(id) ) {
-				((org.biophylo.Forest.Node)entities[i]).setBranchLength(Double.parseDouble((String)lengthOf.get(id)));
+				((org.biophylo.forest.Node)entities[i]).setBranchLength(Double.parseDouble((String)lengthOf.get(id)));
 			}
 			if ( otuOf.containsKey(id) ) {
-				((org.biophylo.Forest.Node)entities[i]).setGeneric("otu",(String)otuOf.get(id));
+				((org.biophylo.forest.Node)entities[i]).setGeneric("otu",(String)otuOf.get(id));
 			}
 		}
 		if ( treeElt.getElementsByTagName("rootedge").getLength() > 0 ) {
 			Element rootEdge = (Element)treeElt.getElementsByTagName("rootedge").item(0);
 			String target = rootEdge.getAttribute("target");
 			String bl = rootEdge.getAttribute("length");
-			((org.biophylo.Forest.Node)nodeById.get(target)).setBranchLength(Double.parseDouble(bl));
+			((org.biophylo.forest.Node)nodeById.get(target)).setBranchLength(Double.parseDouble(bl));
 		}
 		return treeObj;
 	}
