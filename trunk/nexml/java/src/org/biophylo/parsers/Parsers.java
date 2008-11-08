@@ -1,4 +1,4 @@
-package org.biophylo.Parsers;
+package org.biophylo.parsers;
 import java.io.*;
 public interface Parsers {
 	/**

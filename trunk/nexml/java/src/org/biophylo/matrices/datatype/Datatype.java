@@ -1,8 +1,8 @@
-package org.biophylo.Matrices.Datatype;
+package org.biophylo.matrices.datatype;
 
 import java.util.*;
-import org.biophylo.Util.*;
-import org.biophylo.Util.Exceptions.*;
+import org.biophylo.util.*;
+import org.biophylo.util.exceptions.*;
 import org.w3c.dom.Element;
 
 public abstract class Datatype extends XMLWritable {

@@ -1,4 +1,4 @@
-package org.biophylo.Util;
+package org.biophylo.util;
 import java.util.*;
 public class Logger {
 	private static Logger instance = null;

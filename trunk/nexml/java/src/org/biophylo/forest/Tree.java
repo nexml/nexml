@@ -1,9 +1,9 @@
-package org.biophylo.Forest;
+package org.biophylo.forest;
 import java.util.*;
 import org.biophylo.Listable;
-import org.biophylo.Util.*;
+import org.biophylo.util.*;
 import org.biophylo.*;
-import org.biophylo.Util.Exceptions.*;
+import org.biophylo.util.exceptions.*;
 import java.math.*;
 import org.w3c.dom.*;
 

@@ -1,10 +1,10 @@
-package org.biophylo.Forest;
-import org.biophylo.Util.*;
+package org.biophylo.forest;
+import org.biophylo.util.*;
 import org.biophylo.Containable;
 import org.biophylo.Visitor;
-import org.biophylo.Taxa.*;
-import org.biophylo.Mediators.*;
-import org.biophylo.Util.Exceptions.*;
+import org.biophylo.taxa.*;
+import org.biophylo.mediators.*;
+import org.biophylo.util.exceptions.*;
 import org.w3c.dom.*;
 
 import java.util.*;

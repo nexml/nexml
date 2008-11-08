@@ -1,4 +1,4 @@
-package org.biophylo.Matrices.Datatype;
+package org.biophylo.matrices.datatype;
 
 /*
 'A' => [A---],

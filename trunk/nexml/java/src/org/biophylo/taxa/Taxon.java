@@ -1,10 +1,10 @@
-package org.biophylo.Taxa;
-import org.biophylo.Util.*;
+package org.biophylo.taxa;
+import org.biophylo.util.*;
 import org.biophylo.*;
-import org.biophylo.Forest.*;
-import org.biophylo.Matrices.*;
-import org.biophylo.Mediators.ObjectMediator;
-import org.biophylo.Mediators.TaxaMediator;
+import org.biophylo.forest.*;
+import org.biophylo.matrices.*;
+import org.biophylo.mediators.ObjectMediator;
+import org.biophylo.mediators.TaxaMediator;
 import java.util.*;
 public class Taxon extends Containable {
 	private static TaxaMediator taxaMediator = TaxaMediator.getInstance();
