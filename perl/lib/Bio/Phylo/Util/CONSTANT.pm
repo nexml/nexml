@@ -26,6 +26,8 @@ BEGIN {
       	_CHARSTATESEQ_ 
       	_MATRIXROW_
       	_PROJECT_
+      	_ANNOTATION_
+      	_DICTIONARY_
       	looks_like_number
       	looks_like_object
 		looks_like_hash
@@ -51,6 +53,8 @@ BEGIN {
                 _CHARSTATESEQ_ 
                 _MATRIXROW_
                 _PROJECT_
+                _ANNOTATION_
+                _DICTIONARY_
             )
         ],
         'funtions' => [
@@ -86,6 +90,8 @@ sub _PROJECT_   () { 9  }
 sub _CHARSTATE_    () { 13 }
 sub _CHARSTATESEQ_ () { 14 }
 sub _MATRIXROW_    () { 15 }
+sub _ANNOTATION_   () { 16 }
+sub _DICTIONARY_   () { 17 }
 
 # this is a drop in replacement for Scalar::Util's function
 my $looks_like_number;
