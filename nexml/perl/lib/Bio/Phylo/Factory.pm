@@ -4,16 +4,18 @@ use Bio::Phylo::Util::Exceptions 'throw';
 use Bio::Phylo::Util::CONSTANT qw'looks_like_hash looks_like_class';
 
 my %class = (
-    'taxa'    => 'Bio::Phylo::Taxa',
-    'taxon'   => 'Bio::Phylo::Taxa::Taxon',
-    'datum'   => 'Bio::Phylo::Matrices::Datum',
-    'matrix'  => 'Bio::Phylo::Matrices::Matrix',
-    'forest'  => 'Bio::Phylo::Forest',
-    'node'    => 'Bio::Phylo::Forest::Node',
-    'tree'    => 'Bio::Phylo::Forest::Tree',
-    'logger'  => 'Bio::Phylo::Util::Logger',
-    'drawer'  => 'Bio::Phylo::Treedrawer',
-    'project' => 'Bio::Phylo::Project',
+    'taxa'       => 'Bio::Phylo::Taxa',
+    'taxon'      => 'Bio::Phylo::Taxa::Taxon',
+    'datum'      => 'Bio::Phylo::Matrices::Datum',
+    'matrix'     => 'Bio::Phylo::Matrices::Matrix',
+    'forest'     => 'Bio::Phylo::Forest',
+    'node'       => 'Bio::Phylo::Forest::Node',
+    'tree'       => 'Bio::Phylo::Forest::Tree',
+    'logger'     => 'Bio::Phylo::Util::Logger',
+    'drawer'     => 'Bio::Phylo::Treedrawer',
+    'project'    => 'Bio::Phylo::Project',
+    'dictionary' => 'Bio::Phylo::Dictionary',
+    'annotation' => 'Bio::Phylo::Annotation',
 );
 
 =head1 NAME
