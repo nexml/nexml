@@ -3,19 +3,17 @@ package Bio::Phylo::Util::XMLWritable;
 use strict;
 use Bio::Phylo;
 use Bio::Phylo::Util::Exceptions 'throw';
+use Bio::Phylo::Util::CONSTANT qw(_DICTIONARY_ looks_like_object);
 use vars '@ISA';
 use UNIVERSAL 'isa';
 @ISA=qw(Bio::Phylo);
 
-my $logger = __PACKAGE__->get_logger;
+{
 
-my @fields = \( 
-	my ( 
-		%tag, 
-		%id,
-		%attributes,
-    ) 
-);
+    my $logger = __PACKAGE__->get_logger;
+    my $DICTIONARY_CONSTANT = _DICTIONARY_;
+    
+    my @fields = \( my ( %tag, %id, %attributes, %identifiable, %dictionaries ) );
 
 =head1 NAME
 
@@ -38,6 +36,78 @@ override.
 =head2 MUTATORS
 
 =over
+
+=item add_dictionary()
+
+ Type    : Mutator
+ Title   : add_dictionary
+ Usage   : $obj->add_dictionary($dict);
+ Function: Adds a dictionary attachment to the object
+ Returns : $self
+ Args    : Bio::Phylo::Dictionary
+
+=cut
+
+    sub add_dictionary {
+        my ( $self, $dict ) = @_;
+        if ( looks_like_object $dict, $DICTIONARY_CONSTANT ) {
+            my $id = $self->get_id;
+            if ( not $dictionaries{$id} ) {
+                $dictionaries{$id} = [];
+            }
+            push @{ $dictionaries{$id} }, $dict;
+        }
+        return $self;
+    }
+
+=item remove_dictionary()
+
+ Type    : Mutator
+ Title   : remove_dictionary
+ Usage   : $obj->remove_dictionary($dict);
+ Function: Removes a dictionary attachment from the object
+ Returns : $self
+ Args    : Bio::Phylo::Dictionary
+
+=cut
+
+    sub remove_dictionary {
+        my ( $self, $dict ) = @_;
+        my $id = $self->get_id;
+        my $dict_id = $dict->get_id;
+        if ( $dictionaries{$id} ) {
+            DICT: for my $i ( 0 .. $#{ $dictionaries{$id} } ) {
+                if ( $dictionaries{$id}->[$i]->get_id == $dict_id ) {
+                    splice @{ $dictionaries{$id} }, $i, 1;
+                    last DICT;
+                }
+            }
+        }
+        return $self;
+    }
+
+=item set_identifiable()
+
+By default, all XMLWritable objects are identifiable when serialized,
+i.e. they have a unique id attribute. However, in some cases a serialized
+object may not have an id attribute (governed by the nexml schema). For
+such objects, id generation can be explicitly disabled using this method.
+Typically, this is done internally - you will probably never use this method.
+
+ Type    : Mutator
+ Title   : set_identifiable
+ Usage   : $obj->set_tag(0);
+ Function: Enables/disables id generation
+ Returns : $self
+ Args    : BOOLEAN
+
+=cut
+
+    sub set_identifiable {
+        my $self = shift;
+        $identifiable{ $self->get_id } = !!shift;
+        return $self;
+    }
 
 =item set_tag()
 
@@ -137,6 +207,25 @@ the purpose of round-tripping nexml info sets.
 
 =over
 
+=item get_dictionaries()
+
+Retrieves the dictionaries for the element.
+
+ Type    : Accessor
+ Title   : get_dictionaries
+ Usage   : my @dicts = @{ $obj->get_dictionaries };
+ Function: Retrieves the dictionaries for the element.
+ Returns : An array ref of Bio::Phylo::Dictionary objects
+ Args    : None.
+
+=cut
+
+    sub get_dictionaries {
+        my $self = shift;
+        my $id = $self->get_id;
+        return $dictionaries{$id} || [];
+    }
+
 =item get_tag()
 
 Retrieves tag name for the element.
@@ -176,7 +265,9 @@ Retrieves tag string
 		for my $key ( keys %attrs ) {
 			$xml .= ' ' . $key . '="' . $attrs{$key} . '"';
 		}
-		if ( my $dict = $self->get_generic('dict') ) {
+		my $dict = $self->get_generic('dict');
+		my $dictionaries = $self->get_dictionaries;
+		if ( $dict ) {
 			$xml .= '><dict>';
 			for my $key ( keys %{$dict} ) {
 				$xml.= '<key>' . $key . '</key>';
@@ -187,7 +278,12 @@ Retrieves tag string
 			$xml .= '</dict>';
 			$xml .= "</$tag>" if $closeme;
 		}
-		else {
+		if ( @{ $dictionaries } ) {
+		    $xml .= '>';
+		    $xml .= $_->to_xml for @{ $dictionaries };
+		    $xml .= "</$tag>" if $closeme;
+		}
+		if ( not @{ $dictionaries } and not $dict ) {
 			$xml .= $closeme ? '/>' : '>';
 		}
 		return $xml;
@@ -232,7 +328,7 @@ Retrieves tag string
 =cut
 
 	sub get_root_close_tag {
-return '</nex:nexml>';
+        return '</nex:nexml>';
 	}
 
 =item get_attributes()
@@ -259,6 +355,9 @@ Retrieves attributes for the element.
 		if ( not exists $attrs->{'id'} ) {
 			$attrs->{'id'} = $self->get_xml_id;
 		}
+		if ( not $self->is_identifiable ) {
+		    delete $attrs->{'id'};
+		}
 		if ( $self->can('get_taxa') ) {
 			if ( my $taxa = $self->get_taxa ) {
 				$attrs->{'otus'} = $taxa->get_xml_id;
@@ -275,7 +374,13 @@ Retrieves attributes for the element.
 				$logger->info("No linked taxon found");
 			}
 		}
-		return $attrs;
+		my $arg = shift;
+		if ( $arg ) {
+		    return $attrs->{$arg};
+		}
+		else {
+		    return $attrs;
+		}
 	}
 
 =item get_xml_id()
@@ -300,6 +405,33 @@ Retrieves xml id for the element.
 			return $self->get_tag . $self->get_id;
 		}
 	}
+
+=back
+
+=head2 TESTS
+
+=over
+
+=item is_identifiable()
+
+By default, all XMLWritable objects are identifiable when serialized,
+i.e. they have a unique id attribute. However, in some cases a serialized
+object may not have an id attribute (governed by the nexml schema). This
+method indicates whether that is the case.
+
+ Type    : Test
+ Title   : is_identifiable
+ Usage   : if ( $obj->is_identifiable ) { ... }
+ Function: Indicates whether IDs are generated
+ Returns : BOOLEAN
+ Args    : NONE
+
+=cut
+
+    sub is_identifiable {
+        my $self = shift;
+        return $identifiable{ $self->get_id };
+    }
 
 =back
 
@@ -356,5 +488,7 @@ Also see the manual: L<Bio::Phylo::Manual> and L<http://rutgervos.blogspot.com>.
  $Id$
 
 =cut
+
+}
 
 1;
