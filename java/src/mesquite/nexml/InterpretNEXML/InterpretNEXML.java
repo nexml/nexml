@@ -20,6 +20,7 @@ import mesquite.lib.MesquiteFile;
 import mesquite.lib.MesquiteInteger;
 import mesquite.lib.MesquiteProject;
 import mesquite.lib.MesquiteThread;
+import mesquite.lib.MesquiteTrunk;
 import mesquite.lib.Tree;
 import mesquite.lib.MesquiteTree;
 import mesquite.lib.Parser;
@@ -218,6 +219,7 @@ public class InterpretNEXML extends FileInterpreterI {
 	public boolean exportFile(MesquiteFile file, String arguments) { //if file is null, consider whole project open to export
 		logger.VERBOSE(2);
 		Arguments args = new Arguments(new Parser(arguments), true);
+		MesquiteProject mesProject = getProject();
 		ListableVector mesTaxas = getProject().getTaxas();
 		org.biophylo.Project xmlProject = convertMesquiteProject(getProject());
 		StringBuffer outputBuffer = new StringBuffer();			
@@ -388,7 +390,12 @@ public class InterpretNEXML extends FileInterpreterI {
 			org.biophylo.taxa.Taxa xmlTaxa = new org.biophylo.taxa.Taxa();
 			Taxa mesTaxa = (Taxa)mesTaxas.elementAt(i);
 			xmlTaxa.setName(mesTaxa.getName());
-			xmlTaxa.setGeneric("MesquiteUniqueID",mesTaxa.getUniqueID());
+			String mesTaxaUID = mesTaxa.getUniqueID();
+			if ( mesTaxaUID == null ) {
+				mesTaxaUID = MesquiteTrunk.getUniqueIDBase() + Taxa.totalCreated;
+				mesTaxa.setUniqueID(mesTaxaUID);
+			}
+			xmlTaxa.setGeneric("MesquiteUniqueID",mesTaxaUID);
 			for ( int j = 0; j < mesTaxa.getNumTaxa(); j++ ) {
 				org.biophylo.taxa.Taxon xmlTaxon = new org.biophylo.taxa.Taxon();
 				xmlTaxon.setName(mesTaxa.getTaxonName(j));
