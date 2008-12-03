@@ -12,6 +12,26 @@ public class XMLWritable extends Base {
 	private String mXmlId;
 	protected boolean mHasXmlId = true;
 
+	/**
+	 * 
+	 * @param s
+	 * @return
+	 */
+	private String XMLEntityEncode(String s) {
+		StringBuffer buf = new StringBuffer();
+		int len = (s == null ? -1 : s.length());
+		for ( int i = 0; i < len; i++ ) {
+			char c = s.charAt(i);
+			if (c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z' || c >= '0' && c <= '9' || c == '_' || c == '-' || c == '.') {
+				buf.append(c);
+			} 
+			else {
+				buf.append("&#" + (int) c + ";");
+			}
+		}
+		return buf.toString();
+	}
+	
 	
 	/**
 	 * @param tag
@@ -21,6 +41,7 @@ public class XMLWritable extends Base {
 	}
 	
 	/**
+	 * Sets attributes as a Map
 	 * @param attributes
 	 */
 	public void setAttributes(Map pAttributes) {
@@ -36,6 +57,7 @@ public class XMLWritable extends Base {
 	}
 	
 	/**
+	 * Sets a key/value attribute pair.
 	 * @param key
 	 * @param value
 	 */
@@ -47,6 +69,9 @@ public class XMLWritable extends Base {
 	}
 	
 	/**
+	 * Sets the value of the id attribute of generated xml.
+	 * Under normal circumstances you would never use this
+	 * method, as xml ids are generated internally.
 	 * @param xmlId
 	 */
 	public void setXmlId(String pXmlId) {
@@ -54,12 +79,18 @@ public class XMLWritable extends Base {
 	}
 	
 	/**
-	 * @return
+	 * @return the element name that the invocant serializes into
 	 */
 	public String getTag () {
 		return mTag;
 	}
 	
+	/**
+	 * 
+	 * @param sb
+	 * @param closeMe
+	 * @throws ObjectMismatch
+	 */
 	public void getXmlTag(StringBuffer sb,boolean closeMe) throws ObjectMismatch {
 		Map attrs = getAttributes();
 		String tag = getTag();
@@ -122,7 +153,7 @@ public class XMLWritable extends Base {
 			attrs = new HashMap();
 		}
 		if ( !attrs.containsKey("label") && getName() != null ) {
-			attrs.put("label", getName());
+			attrs.put("label", XMLEntityEncode(getName()));
 		}
 		if ( this.mHasXmlId && !attrs.containsKey("id") ) {
 			attrs.put("id", getXmlId());
@@ -145,6 +176,12 @@ public class XMLWritable extends Base {
 		return attrs;
 	}
 	
+	/**
+	 * 
+	 * @param sb
+	 * @param compact
+	 * @throws ObjectMismatch
+	 */
 	public void generateXml(StringBuffer sb,boolean compact) throws ObjectMismatch {
 		if ( this instanceof Listable ) {
 			getXmlTag(sb,false);
@@ -170,6 +207,11 @@ public class XMLWritable extends Base {
 		return sb.toString();
 	}
 	
+	/**
+	 * 
+	 * @return
+	 * @throws ObjectMismatch
+	 */
 	public final String toXml () throws ObjectMismatch {
 		StringBuffer sb = new StringBuffer();
 		generateXml(sb,true);
