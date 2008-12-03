@@ -346,11 +346,24 @@ Retrieves attributes for the element.
 
 =cut
 
+	my $XMLEntityEncode = sub {
+		my $buf = '';
+		for my $c ( split //, shift ) {
+			if ( $c =~ /(?:[a-zA-Z0-9]|-|_|\.)/ ) {
+				$buf .= $c;
+			}
+			else {
+				$buf .= '&#' . ord($c) . ';';
+			}			
+		}
+		return $buf;
+	};
+
 	sub get_attributes {
 		my $self = shift;
 		my $attrs = $attributes{ $self->get_id } || {};
 		if ( not exists $attrs->{'label'} and my $label = $self->get_name ) {
-			$attrs->{'label'} = $label;
+			$attrs->{'label'} = $XMLEntityEncode->($label);
 		}
 		if ( not exists $attrs->{'id'} ) {
 			$attrs->{'id'} = $self->get_xml_id;
