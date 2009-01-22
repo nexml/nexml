@@ -1,7 +1,6 @@
 package org.biophylo;
 import java.io.*;
 import org.biophylo.parsers.*;
-import org.biophylo.matrices.datatype.Datatype;
 public class IO {
 	/**
 	 * @param format

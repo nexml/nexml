@@ -1,8 +1,6 @@
 package org.biophylo;
-import org.biophylo.*;
 import org.biophylo.util.exceptions.*;
 import java.util.*;
-import org.w3c.dom.*;
 
 public abstract class Listable extends Containable {
 
