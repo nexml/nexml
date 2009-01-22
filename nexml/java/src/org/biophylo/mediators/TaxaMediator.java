@@ -1,6 +1,5 @@
 package org.biophylo.mediators;
 import java.util.*;
-import org.biophylo.taxa.*;
 import org.biophylo.util.*;
 import org.biophylo.*;
 

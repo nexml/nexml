@@ -6,9 +6,7 @@ import org.biophylo.mediators.TaxaMediator;
 import org.biophylo.taxa.Taxon;
 import org.biophylo.taxa.TaxonLinker;
 import org.biophylo.util.*;
-import org.biophylo.*;
 import java.util.*;
-import org.w3c.dom.Element;
 
 import org.biophylo.util.exceptions.*;
 
