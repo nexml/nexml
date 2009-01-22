@@ -3,7 +3,6 @@ import org.biophylo.util.*;
 import org.biophylo.*;
 import org.biophylo.forest.*;
 import org.biophylo.matrices.*;
-import org.biophylo.mediators.ObjectMediator;
 import org.biophylo.mediators.TaxaMediator;
 import java.util.*;
 public class Taxon extends Containable {
