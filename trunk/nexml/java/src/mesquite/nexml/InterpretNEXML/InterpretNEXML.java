@@ -8,30 +8,24 @@ import java.io.FileInputStream;
 import mesquite.categ.lib.CategoricalData;
 import mesquite.categ.lib.CategoricalState;
 import mesquite.categ.lib.DNAData;
-import mesquite.categ.lib.DNAState;
 import mesquite.categ.lib.ProteinData;
 import mesquite.categ.lib.RNAData;
 import mesquite.cont.lib.ContinuousData;
 import mesquite.cont.lib.ContinuousState;
 import mesquite.lib.Arguments;
-import mesquite.lib.ExporterDialog;
 import mesquite.lib.Listable;
 import mesquite.lib.MesquiteFile;
-import mesquite.lib.MesquiteInteger;
 import mesquite.lib.MesquiteProject;
-import mesquite.lib.MesquiteThread;
 import mesquite.lib.MesquiteTrunk;
 import mesquite.lib.Tree;
 import mesquite.lib.MesquiteTree;
 import mesquite.lib.Parser;
-import mesquite.lib.StringUtil;
 import mesquite.lib.Taxa;
 import mesquite.lib.Taxon;
 import mesquite.lib.TreeVector;
 import mesquite.lib.ListableVector;
 import mesquite.lib.characters.CharacterData;
 import mesquite.lib.characters.CharacterState;
-import mesquite.lib.characters.CharacterStates;
 import mesquite.lib.duties.CharactersManager;
 import mesquite.lib.duties.FileInterpreterI;
 import mesquite.lib.duties.TaxaManager;
@@ -72,7 +66,7 @@ public class InterpretNEXML extends FileInterpreterI {
 
 /*.................................................................................................................*/
 	public void readFile(MesquiteProject project, MesquiteFile file, String arguments) {
-		logger.VERBOSE(2);
+		logger.VERBOSE(4);
 		FileInputStream fs = null;
 		try {
 			fs = new FileInputStream(file.getPath());
