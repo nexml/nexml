@@ -296,7 +296,7 @@ sub _handle_chars {
 
 	# create matrix object, send extra constructor args
 	my $type = $characters_elt->att('xsi:type');
-	$type =~ s/^nex:(.*?)(?:Cells|Seqs)/$1/;
+	$type =~ s/^.+?:(.*?)(?:Cells|Seqs)/$1/;
 	my %args = ( '-type' => $type );
 	my ( $matrix_obj, $matrix_id ) = $self->_obj_from_elt( $characters_elt, 'matrix', %args );
 	my $taxa_idref = $self->_set_otus_for_obj( $characters_elt, $matrix_obj );
