@@ -12,6 +12,7 @@ NEXML_XSD_PREFIXES = \
 	characters/restriction \
 	characters/rna \
 	characters/standard \
+	external/sawsdl \
 	external/xlink \
 	external/xml \
 	meta/annotations \
@@ -33,6 +34,7 @@ NEXML_XSD_FULL_PATHS = \
 	$(abs_top_srcdir)/xsd/characters/restriction.xsd \
 	$(abs_top_srcdir)/xsd/characters/rna.xsd \
 	$(abs_top_srcdir)/xsd/characters/standard.xsd \
+	$(abs_top_srcdir)/xsd/external/sawsdl.xsd \
 	$(abs_top_srcdir)/xsd/external/xlink.xsd \
 	$(abs_top_srcdir)/xsd/external/xml.xsd \
 	$(abs_top_srcdir)/xsd/meta/annotations.xsd \
@@ -54,6 +56,7 @@ FILES_FROM_NEXML_XSD = 			\
 	characters/restriction.hxx \
 	characters/rna.hxx \
 	characters/standard.hxx \
+	external/sawsdl.hxx \
 	external/xlink.hxx \
 	external/xml.hxx \
 	meta/annotations.hxx \
@@ -73,6 +76,7 @@ FILES_FROM_NEXML_XSD = 			\
 	characters/restriction.cxx \
 	characters/rna.cxx \
 	characters/standard.cxx \
+	external/sawsdl.cxx \
 	external/xlink.cxx \
 	external/xml.cxx \
 	meta/annotations.cxx \
