@@ -34,23 +34,27 @@ my $code = '201 Created'; # will hold code as per http://users.sdsc.edu/~lcchan/
 my @lines; # will hold lines in the file
 my $title = 'nexml'; # will say "valid" or "invalid"
 my $fac = util::siteFactory->new;
+$logger->debug("created helper objects");
 
 ####################################################################################################
 # PARSING
 
 my $file = $q->upload('file') || shift(@ARGV); # file name can also be provided on command line
 if ( not defined $file ) {
+	$logger->error("couldn't fetch file name from query string or command line");
 	$@ = 'No file specified';
 }
 else {
-	my $filename;
+	my $filename;	
 	( $filename, @lines ) = read_file( $file );
-	
+	$logger->debug("read file '$file', copied contents to '$filename'");
 	eval { 
+		my @cmd = make_java_cmd($filename);
 		close STDERR;
-		open STDERR, '>', 'validator.log';
-		system( make_java_cmd( $filename ) );
-		close STDERR;
+		open STDERR, '>', 'validator.log';	
+		$logger->debug("executing java validator");	
+		my $output = system(@cmd);
+		close STDERR;		
 		open my $fh, '<', 'validator.log' or die $!;
 		while(<$fh>) {
 			my $logline = $_;
@@ -167,8 +171,9 @@ sub make_java_cmd {
 		"-Dxml=$xml",
 		"-Dxsd=$xsd",
 		"-Dns=$ns",
-		'validator.XmlValidator',
+		'validator.XmlValidator'
 	);
+	$logger->debug("created java validator invocation");
 	return @cmd;
 }
 
@@ -185,17 +190,23 @@ sub make_java_cmd {
 
 sub read_file {
 	my $file = shift;
+	$logger->debug("going to read file '$file'");
 	my @lines;
 	if ( fileno( $file ) ) {
+		$logger->debug("reading from handle");
 		@lines = <$file>;
 	}
 	else {
+		$logger->debug("going to open handle");
 		open my $fh, '<', $file or die "Can't open file to validate: $!";
+		$logger->debug("reading from handle");
 		@lines = <$fh>;
 		close $fh;
 	}
 	my ( $fh, $filename ) = File::Temp::tempfile;
+	$logger->debug("created temporary file '$filename'");
 	$fh->print( @lines );
+	$logger->debug("copied uploaded data to '$filename'");
 	$fh->close;
 	return $filename, @lines;
 }
@@ -215,6 +226,9 @@ sub read_file {
 
 sub make_log_message {
     my ( $level, $msg, $line ) = @_;
+    if ( $line ) {
+    	$msg .= " (line $line)";
+    }
     return {
     	'level' => lc($level),
     	'msg'   => $msg,
@@ -240,6 +254,10 @@ sub get_logger {
 	$logger->VERBOSE( 
 		'-level' => 4, 
 		'-class' => 'Bio::Phylo::Parsers::Nexml' 
+	);
+	$logger->VERBOSE(
+		'-level' => 4,
+		'-class' => 'main',
 	);
 	
 	# attach a listener that passes log messages thru make_html_msg closure and pushes onto stack
