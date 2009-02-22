@@ -281,7 +281,13 @@ sub create_plain_template {
 	    'OUTPUT_PATH'  => $self->prefix,
     );	
     my %template_args = ( %template_defaults, @_ );
-    return Template->new( %template_args );
+    my $template = Template->new( %template_args );
+    if ( not $template ) {
+    	die "Couldn't instantiate Template";
+    }
+    else {
+    	return $template;
+    }
 }
 
 sub create_site_template {
