@@ -1,6 +1,7 @@
 #!/usr/bin/perl
 use lib '../../site/lib';
 use lib '../../../perllib';
+use lib '../../../perllib/arch';
 use strict;
 use warnings;
 use CGI;
