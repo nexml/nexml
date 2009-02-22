@@ -53,10 +53,7 @@ sub new {
 		'-tag'        => 'nex:nexml',
 		'-attributes' => {
 			'version'   => '1.0',
-			'generator' => "$class v.$version",
-			'xmlns:xsi' => 'http://www.w3.org/2001/XMLSchema-instance',
-			'xmlns:xml' => 'http://www.w3.org/XML/1998/namespace',
-			'xmlns:nex' => 'http://www.nexml.org/1.0',			
+			'generator' => "$class v.$version",			
 			'xsi:schemaLocation' => 'http://www.nexml.org/1.0 http://www.nexml.org/1.0/nexml.xsd',
 		}
 	);
@@ -163,13 +160,13 @@ Serializes invocant to XML.
 	
 	sub to_xml {
 		my $self = shift;
-		my $xml = $self->get_root_open_tag;
+		my $xml = $self->get_xml_tag;
 		my @linked = ( @{ $self->get_forests }, @{ $self->get_matrices } );
 		my %taxa = map { $_->get_id => $_ } @{ $self->get_taxa }, map { $_->make_taxa } @linked;
 		for ( values %taxa, @linked ) {
 			$xml .= $_->to_xml(@_);
 		}
-		$xml .= $self->get_root_close_tag;
+		$xml .= '</' . $self->get_tag . '>';
 		eval { require XML::Twig };
 		if ( not $@ ) {
 			my $twig = XML::Twig->new( 'pretty_print' => 'indented' );
