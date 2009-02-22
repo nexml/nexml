@@ -2331,9 +2331,9 @@ Serializes subtree subtended by invocant to newick string.
 This object inherits from L<Bio::Phylo::Taxa::TaxonLinker>, so methods
 defined there are also applicable here.
 
-=item L<Bio::Phylo::Util::Listable>
+=item L<Bio::Phylo::Listable>
 
-This object inherits from L<Bio::Phylo::Util::Listable>, so methods
+This object inherits from L<Bio::Phylo::Listable>, so methods
 defined there are also applicable here.
 
 =item L<Bio::Phylo::Manual>
