@@ -7,13 +7,13 @@ use vars '@ISA';
 @ISA=qw(Bio::Phylo::Listable);
 {    
     sub new { 
-        return shift->SUPER::new( '-tag' => 'dict', '-identifiable' => 0, @_ ); 
+        return shift->SUPER::new( '-tag' => 'dict', @_ ); 
     }   
     sub add_dictionary {
         throw 'BadArgs' => "Can't attach dictionaries recursively"
     }
     my $TYPE_CONSTANT      = _DICTIONARY_;
-    my $CONTAINER_CONSTANT = _NONE_;
+    my $CONTAINER_CONSTANT = _DICTIONARY_;
     sub _type      { $TYPE_CONSTANT }
     sub _container { $CONTAINER_CONSTANT }     
 }
