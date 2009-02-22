@@ -4,6 +4,8 @@ use CGI::Carp 'fatalsToBrowser';
 BEGIN {
     use lib '../perl/lib';
     use lib '../site/lib';
+	use lib '../../../perllib';
+	use lib '../../../perllib/arch';	    
 }
 use lib '/Users/rvosa/CIPRES-and-deps/cipres/build/lib/perl/lib';
 use strict;
