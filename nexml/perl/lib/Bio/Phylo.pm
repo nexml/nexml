@@ -225,7 +225,20 @@ for the methods, but "set_" has been replaced with a dash "-", e.g. the method
 				# backward compat fixes:
 				$mutator =~ s/^set_pos$/set_position/;
 				$mutator =~ s/^set_matrix$/set_raw/;
-				$self->$mutator($value);
+				eval {
+					$self->$mutator($value);
+				};
+				if ( $@ ) {
+					if ( UNIVERSAL::can($@,'rethrow') ) {
+						$@->rethrow;
+					}
+					elsif ( not ref($@) and $@ =~ /^Can't locate object method / ) {
+						throw 'BadArgs' => "The named argument '${key}' cannot be passed to the constructor";
+					}
+					else {
+						throw 'Generic' => $@;
+					}
+				}
 			}
         }
 
