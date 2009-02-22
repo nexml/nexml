@@ -3,7 +3,7 @@ package Bio::Phylo::Util::XMLWritable;
 use strict;
 use Bio::Phylo;
 use Bio::Phylo::Util::Exceptions 'throw';
-use Bio::Phylo::Util::CONSTANT qw(_DICTIONARY_ looks_like_object);
+use Bio::Phylo::Util::CONSTANT qw(_DICTIONARY_ looks_like_object looks_like_hash);
 use vars '@ISA';
 use UNIVERSAL 'isa';
 @ISA=qw(Bio::Phylo);
@@ -12,7 +12,12 @@ use UNIVERSAL 'isa';
 
     my $logger = __PACKAGE__->get_logger;
     my $DICTIONARY_CONSTANT = _DICTIONARY_;
-    
+    my %namespaces = (
+    	'nex' => 'http://www.nexml.org/1.0',
+    	'xml' => 'http://www.w3.org/XML/1998/namespace',
+    	'xsi' => 'http://www.w3.org/2001/XMLSchema-instance',
+    	'rdf' => 'http://www.w3.org/1999/02/22-rdf-syntax-ns'
+    );
     my @fields = \( my ( %tag, %id, %attributes, %identifiable, %dictionaries ) );
 
 =head1 NAME
@@ -25,17 +30,46 @@ Bio::Phylo::Util::XMLWritable - Superclass for objects that stringify to xml
 
 =head1 DESCRIPTION
 
-This class implements a single method, 'to_xml', that writes the invocant to
-an xml string. Objects that subclass this class (all biological data objects
-in Bio::Phylo) therefore can be written to xml. The 'to_xml' method sometimes
-yields ugly (but valid) results, so subclasses may choose to provide their own
-override.
+This is the superclass for all objects that can be serialized to NeXML 
+(L<http://www.nexml.org>).
 
 =head1 METHODS
 
 =head2 MUTATORS
 
 =over
+
+=item set_namespaces()
+
+ Type    : Mutator
+ Title   : set_namespaces
+ Usage   : $obj->set_namespaces( 'dwc' => 'http://www.namespaceTBD.org/darwin2' );
+ Function: Adds one or more prefix/namespace pairs
+ Returns : $self
+ Args    : One or more prefix/namespace pairs, as even-sized list, 
+           or as a hash reference, i.e.:
+           $obj->set_namespaces( 'dwc' => 'http://www.namespaceTBD.org/darwin2' );
+           or
+           $obj->set_namespaces( { 'dwc' => 'http://www.namespaceTBD.org/darwin2' } );
+ Notes   : This is a global for the XMLWritable class, so that in a recursive
+ 		   to_xml call the outermost element contains the namespace definitions.
+
+=cut
+
+	sub set_namespaces {
+		my $self = shift;
+		if ( scalar(@_) == 1 and ref($_[0]) eq 'HASH' ) {
+			my $hash = shift;
+			for my $key ( keys %{ $hash } ) {
+				$namespaces{$key} = $hash->{$key};
+			}
+		}
+		elsif ( my %hash = looks_like_hash @_ ) {
+			for my $key ( keys %hash ) {
+				$namespaces{$key} = $hash{$key};
+			}			
+		}
+	}
 
 =item add_dictionary()
 
@@ -162,15 +196,17 @@ Assigns attributes for the element.
 		else {
 			throw 'OddHash' => 'Arguments are not even key/value pairs';	
 		}		
-		if ( my $hash = $attributes{ $self->get_id } ) {
-			for my $key ( keys %attrs ) {
-				$hash->{$key} = $attrs{$key};
+		my $hash = $attributes{ $self->get_id } || {};
+		for my $key ( keys %attrs ) {
+			if ( $key =~ m/^(.+?):.*$/ ) {
+				my $prefix = $1;
+				if ( not exists $namespaces{$prefix} ) {
+					throw 'BadString' => "Prefix '$prefix' is not bound to a namespace";
+				}
 			}
-			$attributes{ $self->get_id } = $hash;
+			$hash->{$key} = $attrs{$key};
 		}
-		else {
-			$attributes{ $self->get_id } = \%attrs;
-		}
+		$attributes{ $self->get_id } = $hash;
 		return $self;
 	}
 
@@ -206,6 +242,30 @@ the purpose of round-tripping nexml info sets.
 =head2 ACCESSORS
 
 =over
+
+=item get_namespaces()
+
+ Type    : Accessor
+ Title   : get_namespaces
+ Usage   : my %ns = %{ $obj->get_namespaces };
+ Function: Retrieves the known namespaces
+ Returns : A hash of prefix/namespace key/value pairs, or
+           a single namespace if a single, optional
+           prefix was provided as argument
+ Args    : Optional - a namespace prefix
+
+=cut
+
+	sub get_namespaces { 
+		my ($self,$prefix) = @_;
+		if ( $prefix ) {
+			return $namespaces{$prefix};
+		}
+		else {
+			my %tmp_namespaces = %namespaces;
+			return \%tmp_namespaces;
+		} 
+	}
 
 =item get_dictionaries()
 
@@ -289,48 +349,6 @@ Retrieves tag string
 		return $xml;
 	}
 
-=item get_root_open_tag()
-
-Retrieves tag string
-
- Type    : Accessor
- Title   : get_root_open_tag
- Usage   : my $str = $obj->get_root_open_tag;
- Function: Gets the nexml root tag
- Returns : A tag, i.e. pointy brackets
- Args    : 
-
-=cut
-
-	sub get_root_open_tag {
-		my $class = __PACKAGE__;
-		my $version = $Bio::Phylo::VERSION;
-return qq'<nex:nexml 
-	version="1.0" 
-	generator="$class v.$version" 
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:xml="http://www.w3.org/XML/1998/namespace"
-	xsi:schemaLocation="http://www.nexml.org/1.0 http://www.nexml.org/1.0/nexml.xsd"
-	xmlns:nex="http://www.nexml.org/1.0">';
-	}
-
-=item get_root_close_tag()
-
-Retrieves tag string
-
- Type    : Accessor
- Title   : get_root_close_tag
- Usage   : my $str = $obj->get_root_close_tag;
- Function: Gets the nexml root tag
- Returns : A tag, i.e. pointy brackets
- Args    : 
-
-=cut
-
-	sub get_root_close_tag {
-        return '</nex:nexml>';
-	}
-
 =item get_attributes()
 
 Retrieves attributes for the element.
@@ -358,10 +376,44 @@ Retrieves attributes for the element.
 		}
 		return $buf;
 	};
+	
+	my $add_namespaces_to_attributes = sub {
+		my ( $self, $attrs ) = @_;
+		my $i = 0;
+		my $inside_to_xml_recursion = 0;
+		CHECK_RECURSE: while ( my @frame = caller($i) ) {
+			if ( $frame[3] =~ m/::to_xml$/ ) {
+				$inside_to_xml_recursion++;
+				last CHECK_RECURSE if $inside_to_xml_recursion > 1;
+			}
+			$i++;
+		}
+		if ( $inside_to_xml_recursion <= 1 ) {
+			my $tmp_namespaces = $self->get_namespaces;
+			for my $ns ( keys %{ $tmp_namespaces } ) {
+				$attrs->{'xmlns:' . $ns} = $tmp_namespaces->{$ns};
+			}			
+		}	
+		return $attrs;	
+	};
+	
+	my $flatten_attributes = sub {
+		my $self = shift;
+		my $tempattrs = $attributes{ $self->get_id };
+		my $attrs;
+		if ( $tempattrs ) {
+			my %deref = %{ $tempattrs };
+			$attrs = \%deref;
+		}
+		else {
+			$attrs = {};
+		}
+		return $attrs;		
+	};
 
 	sub get_attributes {
 		my $self = shift;
-		my $attrs = $attributes{ $self->get_id } || {};
+		my $attrs = $flatten_attributes->($self);
 		if ( not exists $attrs->{'label'} and my $label = $self->get_name ) {
 			$attrs->{'label'} = $XMLEntityEncode->($label);
 		}
@@ -373,7 +425,7 @@ Retrieves attributes for the element.
 		}
 		if ( $self->can('get_taxa') ) {
 			if ( my $taxa = $self->get_taxa ) {
-				$attrs->{'otus'} = $taxa->get_xml_id;
+				$attrs->{'otus'} = $taxa->get_xml_id if UNIVERSAL::isa($taxa,'Bio::Phylo');
 			}
 			else {
 				throw 'ObjectMismatch' => "$self can link to a taxa element, but doesn't";
@@ -387,6 +439,7 @@ Retrieves attributes for the element.
 				$logger->info("No linked taxon found");
 			}
 		}
+		$attrs = $add_namespaces_to_attributes->($self,$attrs);
 		my $arg = shift;
 		if ( $arg ) {
 		    return $attrs->{$arg};
