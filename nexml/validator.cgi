@@ -38,7 +38,6 @@ $logger->debug("created helper objects");
 
 ####################################################################################################
 # PARSING
-
 my $file = $q->upload('file') || shift(@ARGV); # file name can also be provided on command line
 if ( not defined $file ) {
 	$logger->error("couldn't fetch file name from query string or command line");
@@ -50,29 +49,25 @@ else {
 	$logger->debug("read file '$file', copied contents to '$filename'");
 	eval { 
 		my @cmd = make_java_cmd($filename);
-		close STDERR;
-		open STDERR, '>', 'validator.log';	
-		$logger->debug("executing java validator");	
-		my $output = system(@cmd);
-		close STDERR;		
+		$logger->info("executing java validator");		
+		my $output = `@cmd &> validator.log`;
 		open my $fh, '<', 'validator.log' or die $!;
 		while(<$fh>) {
 			my $logline = $_;
 			chomp($logline);
 			if ( $logline =~ qr/^\[(.*?)\] :(\d+?):\d+?: (.*)$/ ) {
-				my ( $level, $line, $msg ) = ( lc( $1 ), $2, $3 );
-				if ( $level =~ qr/error/ ) {
-					throw( 'API' => $msg, 'line' => $line );
-				}
-				else {
-					push @logmessages, make_log_message( $level, $msg, $line );
-				}
+				my ( $level, $line, $msg ) = ( lc( $1 ), $2, $3 );				
+				if ( $level eq 'error' ) {
+					Bio::Phylo::Util::Exceptions::API->throw( 
+						'line'  => $line, 
+						'error' => $msg
+					);
+				}				
+				push @logmessages, make_log_message( $level, $msg, $line );
 			}			
 		}
-		parse( 
-			'-format' => 'nexml', 
-			'-file'   => $filename,
-		) 
+		$logger->info("executing perl validator");
+		parse( '-format' => 'nexml', '-file' => $filename ); 
 	};
 }
 if ( $@ ) {
@@ -84,10 +79,12 @@ if ( $@ ) {
     else {
     	( $error, $line ) = ( $@, 1 );
     }
+    $logger->error($error);
     push @logmessages, make_log_message( 'fatal', $error, $line );
     $title .= ': FAIL';
 }
 else {
+	$logger->info('validation succeeded');
 	$title .= ': SUCCESS';
 }
 
