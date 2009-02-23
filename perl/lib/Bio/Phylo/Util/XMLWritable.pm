@@ -201,7 +201,7 @@ Assigns attributes for the element.
 			if ( $key =~ m/^(.+?):.*$/ ) {
 				my $prefix = $1;
 				if ( not exists $namespaces{$prefix} ) {
-					throw 'BadString' => "Prefix '$prefix' is not bound to a namespace";
+					$logger->warn("Prefix '$prefix' is not bound to a namespace");
 				}
 			}
 			$hash->{$key} = $attrs{$key};
@@ -228,12 +228,12 @@ the purpose of round-tripping nexml info sets.
 
 	sub set_xml_id {
 		my ( $self, $id ) = @_;
-		if ( $id =~ qr/^[a-zA-Z][a-zA-Z0-9]*$/ ) {
+		if ( $id =~ qr/^[a-zA-Z][a-zA-Z0-9\-_\.]*$/ ) {
 			$id{ $self->get_id } = $id;
 			return $self;
 		}
 		else {
-			throw 'BadString' => "'$id' is not a valid xml NCName";
+			throw 'BadString' => "'$id' is not a valid xml NCName for $self";
 		}
 	}
 
