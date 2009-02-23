@@ -65,6 +65,38 @@ sub _pos {
 	join ':', ( $t->current_line, $t->current_column, $t->current_byte );
 }
 
+sub _process_attributes {
+	my ( $self, $elt, $obj ) = @_;
+	my $atts;
+	eval { $atts = $elt->atts };
+	if ( $@ ) { throw API => $@ }
+
+	# XXX move id to xml writable property?
+	my $id = $elt->att('id');
+	if ( $id ) {
+		$obj->set_xml_id($id);
+		delete $atts->{$id};
+	}
+
+	# XXX move label to xml writable property?
+	my $label = $elt->att('label');
+	if ( $label ) {
+		$obj->set_name($label);
+		delete $atts->{$label};
+	}
+	
+	for my $key ( keys %{ $atts } ) {
+		if ( $key =~ /^xmlns:(.+)$/ ) {
+			my $ns = $1;
+			my $uri = $atts->{$key};
+			$obj->set_namespaces( $ns => $uri );
+		}
+		else {
+			$obj->set_attributes( $key => $atts->{$key} );
+		}
+	}	
+}
+
 # nice 'n' generic: we provide an element and a class,
 # from the class we instantiate a new object, we set
 # the element id in the generic slot of the object.
@@ -79,19 +111,14 @@ sub _obj_from_elt {
 	my $method = "create_$class";
 	my $obj = $factory->$method( %args );
 
-	# TODO move id to xml writable property?
-	my $id = $elt->att('id');
-	$obj->set_name($id);
 
-	# TODO move label to xml writable property?
-	my $label = $elt->att('label');
-	$obj->set_desc($label) if $label;
-
-	# TODO move dict to xml writable property?
+	# XXX move dict to xml writable property?
 	for my $dict_elt ( $elt->children('dict') ) {
-		my $dict_hash = $self->_process_dictionary($dict_elt);
-		$obj->set_generic( 'dict' => $dict_hash );
+		my $dict = $self->_process_dictionary($dict_elt);
+		$obj->add_dictionary($dict);
 	}
+	$self->_process_attributes($elt,$obj);
+	my $id = $elt->att('id');
 	my $tag = $elt->tag;
 	if ( defined $id ) {
 		$logger->debug( $self->_pos . " processed <$tag id=\"$id\"/>" );
@@ -175,7 +202,7 @@ sub _from_both {
 	
 	# ... a newly created one...
 	elsif ( $opt{'-as_project'} ) {
-		$temp_project->insert( @{ $ordered_blocks } );
+		$temp_project->insert( @{ $ordered_blocks } ) if scalar(@{ $ordered_blocks });
 		# reset everything in its initial state: Bio::Phylo::IO caches parsers
 		$self->_init;
 		return $temp_project;
@@ -618,54 +645,91 @@ sub _process_listnode {
 # in an element that maps onto a Bio::Phylo object
 sub _process_dictionary {
 	my ( $self, $dict_elt ) = @_;
-	my $dict     = {};
-	my @children = $dict_elt->children;
+	my $dict     = $factory->create_dictionary;
+	my @children = $dict_elt->children;	
+	$self->_process_attributes($dict_elt,$dict);
 
 	# loop over items two at a time, i.e. key/value
-	for ( my $i = 0 ; $i <= $#children ; $i += 2 ) {
-		my $key        = $children[$i]->text;
-		my $value      = $children[ $i + 1 ];
-		my $value_type = $value->tag;
-
-		# simple types, no any or nested dict
-		if ( $value_type !~ qr/^(?:dict|any)/ ) {
-			my $value_text = $value->text;
-
-			# simple value
-			if ( $value_type !~ qr/vector$/ ) {
-				$dict->{$key} = [ $value_type, $value_text ];
+	for my $child ( @children ) {
+		my $value_type = $child->tag;
+		if ( $value_type ne 'dict' ) {
+			my $key = $child->att('id');		
+			my $anno = $factory->create_annotation( 
+				'-tag'    => $value_type,
+				'-xml_id' => $key 
+			);
+			$self->_process_attributes($child,$anno);
+	
+			# simple types, no any or nested dict
+			if ( $value_type !~ qr/^(?:dict|any)/ ) {
+				# simple value
+				if ( $value_type !~ qr/vector$/ ) {
+					$anno->set_value($child->text);
+				}
+				# vector value
+				else {
+					$anno->set_value( [ split /\s+/, $child->text ] );
+				}
 			}
-
-			# vector value
-			else {
-				$dict->{$key} = [ $value_type, [ split /\s+/, $value_text ] ];
+	
+			# any type can have arbitrary attributes
+			elsif ( $value_type eq 'any' ) {
+				$anno->set_value( [ $child->children ] );
 			}
-		}
-
-		# any type can have arbitrary attributes
-		elsif ( $value_type eq 'any' ) {
-			my @names = $value->att_names;
-
-			# store attributes, e.g. xmlns:h
-			my $any = {};
-			for my $name (@names) {
-				$any->{$name} = $value->att($name);
-			}
-			$dict->{$key} = [ $any, $value ];
+			$dict->insert($anno);
 		}
 
 		# nested dictionary, recurse
 		elsif ( $value_type eq 'dict' ) {
-			$dict->{$key} = [ 'dict', $self->_process_dictionary($value) ];
-		}
-
-		# nested dictionary list, recurse
-		elsif ( $value_type eq 'dictvector' ) {
-			my @dicts;
-			push @dicts, $self->_process_dictionary($_) for $value->children;
-			$dict->{$key} = [ 'dictvector', \@dicts ];
+			$dict->insert($self->_process_dictionary($child));
 		}
 	}
+
+#	# loop over items two at a time, i.e. key/value
+#	for ( my $i = 0 ; $i <= $#children ; $i += 2 ) {
+#		my $key        = $children[$i]->text;
+#		my $value      = $children[ $i + 1 ];
+#		my $value_type = $value->tag;
+#
+#		# simple types, no any or nested dict
+#		if ( $value_type !~ qr/^(?:dict|any)/ ) {
+#			my $value_text = $value->text;
+#
+#			# simple value
+#			if ( $value_type !~ qr/vector$/ ) {
+#				$dict->{$key} = [ $value_type, $value_text ];
+#			}
+#
+#			# vector value
+#			else {
+#				$dict->{$key} = [ $value_type, [ split /\s+/, $value_text ] ];
+#			}
+#		}
+#
+#		# any type can have arbitrary attributes
+#		elsif ( $value_type eq 'any' ) {
+#			my @names = $value->att_names;
+#
+#			# store attributes, e.g. xmlns:h
+#			my $any = {};
+#			for my $name (@names) {
+#				$any->{$name} = $value->att($name);
+#			}
+#			$dict->{$key} = [ $any, $value ];
+#		}
+#
+#		# nested dictionary, recurse
+#		elsif ( $value_type eq 'dict' ) {
+#			$dict->{$key} = [ 'dict', $self->_process_dictionary($value) ];
+#		}
+#
+#		# nested dictionary list, recurse
+#		elsif ( $value_type eq 'dictvector' ) {
+#			my @dicts;
+#			push @dicts, $self->_process_dictionary($_) for $value->children;
+#			$dict->{$key} = [ 'dictvector', \@dicts ];
+#		}
+#	}
 	return $dict;
 }
 1;
