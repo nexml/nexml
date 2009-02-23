@@ -12,7 +12,7 @@ ok( $taxon->set_desc('This is a taxon description'), '2 enter description' );
 ok( $taxon->get_desc,                                '3 fetch description' );
 
 eval { $taxon->set_name(':') };
-ok( UNIVERSAL::isa( $@, 'Bio::Phylo::Util::Exceptions::BadString' ), '4 enter bad name' );
+ok( $taxon->get_name eq ':', '4 enter bad name' );
 
 ok( $taxon->_container,                              '5 container' );
 ok( $taxon->_type,                                   '6 container type' );

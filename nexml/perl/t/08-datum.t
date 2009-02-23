@@ -13,7 +13,7 @@ $datum->VERBOSE( -level => 0 );
 
 # the name method
 eval { $datum->set_name(':') };
-ok( $@->isa('Bio::Phylo::Util::Exceptions::BadString'),                   '2 bad name' );
+ok( $datum->get_name eq ':',                   '2 bad name' );
 ok( $datum->set_name('OK'),                                               '3 good name' );
 ok( $datum->get_name,                                                     '4 retrieve name' );
 

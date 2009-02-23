@@ -279,17 +279,18 @@ Sets invocant name.
 	        $name =~ s/^\s*(.*?)\s*$/$1/;
 	
 	        # check for bad characters
-	        if ( $name =~ m/(?:;|,|:|\(|\)|\s)/ ) {
+	        if ( $name =~ m/(?:;|,|:|\(|\)|&|<|>\s)/ ) {
+	        	$logger->warn("the name '$name' might be invalid for some data formats");
 	
-	            # had bad characters, but in quotes
-	            if ( $name =~ m/^(['"])/ && $name =~ m/$1$/ ) {
-	                $logger->info("$name had bad characters, but was quoted");
-	            }
-	
-	            # had unquoted bad characters
-	            else {
-	            	throw 'BadString' => "$self '$name' has unquoted bad characters";
-	            }
+#	            # had bad characters, but in quotes
+#	            if ( $name =~ m/^(['"])/ && $name =~ m/$1$/ ) {
+#	                $logger->info("$name had bad characters, but was quoted");
+#	            }
+#	
+#	            # had unquoted bad characters
+#	            else {
+#	            	throw 'BadString' => "$self '$name' has unquoted bad characters";
+#	            }
 	        }
 	
 	        # notify user
