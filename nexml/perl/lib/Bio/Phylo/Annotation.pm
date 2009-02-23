@@ -185,7 +185,7 @@ Serializes object to an xml string
         	
         	else {
         		my $concatenated = '';
-        		my @values;
+        		my ( @values, @raw_values );
         		if ( ref($value) eq 'ARRAY' ) {
         			@values = @{ $value };
         		}
@@ -198,16 +198,21 @@ Serializes object to an xml string
 		        	# XML::DOM2 => xmlify, XML::DOMBacked => as_xml,
 		        	# XML::Handler => dump_tree, XML::Element => as_XML
 		        	# XML::API => _as_string, XML::Code => code
-	
-		        	my @methods = qw(to_xml toString sprint _as_string code xmlify as_xml dump_tree as_XML);
-		        	SERIALIZER: for my $method ( @methods ) {
-		        		if ( can($v,$method) ) {
-		        			$concatenated .= $v->$method;
-		        			last SERIALIZER;
-		        		}
+		        	
+		        	if ( ref($v) ) {
+			        	my @methods = qw(to_xml toString sprint _as_string code xmlify as_xml dump_tree as_XML);
+			        	SERIALIZER: for my $method ( @methods ) {
+			        		if ( can($v,$method) ) {
+			        			$concatenated .= $v->$method;
+			        			last SERIALIZER;
+			        		}
+			        	}
+		        	}
+		        	else {
+		        		push @raw_values, $v;
 		        	}
         		}
-        		$value = $concatenated;
+        		$value = scalar(@raw_values) ? join(' ',@raw_values) : $concatenated;
         	}
         }
         my $type = $self->get_tag;
