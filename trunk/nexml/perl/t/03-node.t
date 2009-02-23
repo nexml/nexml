@@ -29,7 +29,7 @@ eval { $node->get('BAD!') };
 ok( UNIVERSAL::isa( $@, 'Bio::Phylo::Util::Exceptions::UnknownMethod' ),'13 ! get ' );
 
 eval { $node->set_name(':();,') };
-ok( UNIVERSAL::isa( $@, 'Bio::Phylo::Util::Exceptions::BadString' ),    '14 ! name ' );
+ok( $node->get_name eq ':();,',    '14 ! name ' );
 
 eval { $node->set_branch_length('BAD!') };
 ok( UNIVERSAL::isa( $@, 'Bio::Phylo::Util::Exceptions::BadNumber' ),    '15 ! branch_length ' );
