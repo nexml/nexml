@@ -6,6 +6,7 @@ use Scalar::Util qw(blessed weaken);
 use Bio::Phylo::Util::Exceptions 'throw';
 use Bio::Phylo::Util::XMLWritable;
 use Bio::Phylo::Util::CONSTANT qw(:all);
+use Bio::Phylo::Factory;
 use UNIVERSAL qw(isa can);
 
 # classic @ISA manipulation, not using 'base'
@@ -13,6 +14,7 @@ use UNIVERSAL qw(isa can);
 {
 
 	my $logger = __PACKAGE__->get_logger;
+	my $fac    = Bio::Phylo::Factory->new;
 	
 	my ( $DATUM,  $NODE,  $MATRIX,  $TREE  ) = 
 	   ( _DATUM_, _NODE_, _MATRIX_, _TREE_ );
@@ -23,6 +25,7 @@ use UNIVERSAL qw(isa can);
 			%entities, # XXX strong reference
 			%index,
 			%listeners,
+			%sets,
 		) 
 	);
 
@@ -137,7 +140,7 @@ Inserts argument object in invocant container at argument index.
 			if ( can( $obj, '_set_container' ) ) {
 				$obj->_set_container($self);
 			}
-			$self->notify_listeners;			
+			$self->notify_listeners( 'insert_at_index', $obj );			
 			return $self;
 		}
 		else {
@@ -298,6 +301,32 @@ Returns a reference to an array of objects contained by the listable object.
 		return $entities{$$self} || [];
 	}
 
+=item get_index_of()
+
+Returns the index of the argument in the list,
+or undef if the list doesn't contain the argument
+
+ Type    : Generic query
+ Title   : get_index_of
+ Usage   : my $i = $listable->get_index_of($obj)
+ Function: Returns the index of the argument in the list,
+           or undef if the list doesn't contain the argument
+ Returns : An index or undef
+ Args    : A contained object
+
+=cut
+
+	sub get_index_of {
+		my ( $self, $obj ) = @_;
+		my $id = $obj->get_id;
+		my $i = 0;
+		for my $ent ( @{ $self->get_entities } ) {
+			return $i if $ent->get_id == $id;
+			$i++;
+		}
+		return undef;
+	}
+
 =item contains()
 
 Tests whether the invocant object contains the argument object.
@@ -317,14 +346,19 @@ Tests whether the invocant object contains the argument object.
 	sub contains {
 		my ( $self, $obj ) = @_;
 		if ( blessed $obj ) {
+			my $id = $obj->get_id;
 			for my $ent ( @{ $self->get_entities } ) {
 				next     if not $ent;
-				return 1 if $ent->get_id == $obj->get_id;
+				return 1 if $ent->get_id == $id;
 			}
 			return 0;
 		}
 		else {
-			throw 'BadArgs' => "\"$obj\" is not a blessed object!";
+			#throw 'BadArgs' => "\"$obj\" is not a blessed object!";
+			for my $ent ( @{ $self->get_entities } ) {
+				next if not $ent;
+				return 1 if $ent eq $obj
+			} 
 		}
 	}
 
@@ -859,6 +893,198 @@ Clones invocant.
 		return $self->SUPER::clone(%subs);
 	
 	}
+
+=back
+
+=head2 SETS MANAGEMENT
+
+Many Bio::Phylo objects are segmented, i.e. they contain one or more subparts 
+of the same type. For example, a matrix contains multiple rows; each row 
+contains multiple cells; a tree contains nodes, and so on. (Segmented objects
+all inherit from Bio::Phylo::Listable, i.e. the class whose documentation you're
+reading here.) In many cases it is useful to be able to define subsets of the 
+contents of segmented objects, for example sets of taxon objects inside a taxa 
+block. The Bio::Phylo::Listable object allows this through a number of methods 
+(add_set, remove_set, add_to_set, remove_from_set etc.). Those methods delegate 
+the actual management of the set contents to the L<Bio::Phylo::Set> object. 
+Consult the documentation for L<Bio::Phylo::Set> for a code sample.
+
+=over
+
+=item add_set()
+
+ Type    : Mutator
+ Title   : add_set
+ Usage   : $obj->add_set($set)
+ Function: Associates a Bio::Phylo::Set object with the invocant
+ Returns : Invocant
+ Args    : A Bio::Phylo::Set object
+
+=cut
+
+	# here we create a listener that updates the set
+	# object when the associated container changes
+	my $create_set_listeners = sub {
+		my ( $self, $set ) = @_;
+		my $listener = sub {
+			my ( $listable, $method, $obj ) = @_;
+			if ( $method eq 'delete' ) {
+				$listable->remove_from_set( $obj, $set );
+			}
+			elsif ( $method eq 'clear' ) {
+				$set->clear;
+			}						
+		};
+		return $listener;
+	};
+
+    sub add_set {
+        my ( $self, $set ) = @_;;
+        my $listener = $create_set_listeners->($self,$set);
+        $self->set_listener($listener);
+        my $id = $self->get_id;
+        $sets{$id} = {} if not $sets{$id};
+        my $setid = $set->get_id;
+        $sets{$id}->{$setid} = $set;
+        return $self;
+    }
+
+=item remove_set()
+
+ Type    : Mutator
+ Title   : remove_set
+ Usage   : $obj->remove_set($set)
+ Function: Removes association between a Bio::Phylo::Set object and the invocant
+ Returns : Invocant
+ Args    : A Bio::Phylo::Set object
+
+=cut    
+
+    sub remove_set {
+        my ( $self, $set ) = @_;
+        my $id = $self->get_id;        
+        $sets{$id} = {} if not $sets{$id};
+        my $setid = $set->get_id;
+        delete $sets{$id}->{$setid};
+        return $self;        
+    }
+
+=item get_sets()
+
+ Type    : Accessor
+ Title   : get_sets
+ Usage   : my @sets = @{ $obj->get_sets() };
+ Function: Retrieves all associated Bio::Phylo::Set objects
+ Returns : Invocant
+ Args    : None
+
+=cut 
+
+    sub get_sets {
+        my $self = shift;
+        my $id = $self->get_id;        
+        $sets{$id} = {} if not $sets{$id};
+        return [ values %{ $sets{$id} } ];
+    }
+
+=item is_in_set()
+
+ Type    : Test
+ Title   : is_in_set
+ Usage   : @do_something if $listable->is_in_set($obj,$set);
+ Function: Returns whether or not the first argument is listed in the second argument
+ Returns : Boolean
+ Args    : $obj - an object that may, or may not be in $set
+           $set - the Bio::Phylo::Set object to query
+ Notes   : This method makes two assumptions:
+           i) the $set object is associated with the invocant,
+              i.e. add_set($set) has been called previously
+           ii) the $obj object is part of the invocant
+           If either assumption is violated a warning message
+           is printed.
+
+=cut 
+
+    sub is_in_set {
+        my ( $self, $obj, $set ) = @_;
+        if ( $sets{ $self->get_id }->{ $set->get_id } ) {
+            my $i = $self->get_index_of($obj);
+            if ( defined $i ) {
+                return $set->get_by_index($i) ? 1 : 0;
+            }
+            else {
+                $logger->warn("Container doesn't contain that object.");
+            }            
+        }
+        else {
+            $logger->warn("That set is not associated with this container.");
+        }
+    }
+
+=item add_to_set()
+
+ Type    : Mutator
+ Title   : add_to_set
+ Usage   : $listable->add_to_set($obj,$set);
+ Function: Adds first argument to the second argument
+ Returns : Invocant
+ Args    : $obj - an object to add to $set
+           $set - the Bio::Phylo::Set object to add to
+ Notes   : this method assumes that $obj is already 
+           part of the invocant. If that assumption is
+           violated a warning message is printed.
+
+=cut 
+
+    sub add_to_set {
+        my ( $self, $obj, $set ) = @_;
+        my $id = $self->get_id;
+        $sets{$id} = {} if not $sets{$id};        
+        my $i = $self->get_index_of($obj);
+        if ( defined $i ) {
+            $set->insert_at_index( 1 => $i );
+            my $set_id = $set->get_id;
+            if ( not exists $sets{$id}->{$set_id} ) {
+            	my $listener = $create_set_listeners->($self,$set);
+            	$self->set_listener($listener);
+            }
+            $sets{$id}->{$set_id} = $set;
+        }
+        else {
+            $logger->warn("Container doesn't contain the object you're adding to the set.");
+        }
+        return $self;
+    }
+
+=item remove_from_set()
+
+ Type    : Mutator
+ Title   : remove_from_set
+ Usage   : $listable->remove_from_set($obj,$set);
+ Function: Removes first argument from the second argument
+ Returns : Invocant
+ Args    : $obj - an object to remove from $set
+           $set - the Bio::Phylo::Set object to remove from
+ Notes   : this method assumes that $obj is already 
+           part of the invocant. If that assumption is
+           violated a warning message is printed.
+
+=cut
+
+    sub remove_from_set {
+        my ( $self, $obj, $set ) = @_;
+        my $id = $self->get_id;
+        $sets{$id} = {} if not $sets{$id};        
+        my $i = $self->get_index_of($obj);
+        if ( defined $i ) {
+            $set->insert_at_index( $i => 0 );
+            $sets{$id}->{ $set->get_id } = $set;
+        }   
+        else {
+        	$logger->warn("Container doesn't contain the object you're adding to the set.");
+        }
+        return $self;
+    }
 
 =begin comment
 
