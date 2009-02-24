@@ -23,8 +23,8 @@ sets of taxon objects inside a taxa block. The Bio::Phylo::Listable object
 allows this through a number of methods (add_set, remove_set, add_to_set,
 remove_from_set etc.). Those methods delegate the actual management of the set
 contents to the Bio::Phylo::Set object, the class whose documentation you're
-reading now. Consult the documentation for L<Bio::Phylo::Listable> for more
-information on how to use this feature.
+reading now. Consult the documentation for L<Bio::Phylo::Listable/SETS MANAGEMENT> 
+for more information on how to use this feature.
 
 =head1 METHODS
 
@@ -94,8 +94,8 @@ Tests if argument can be inserted in invocant.
 
 Also see the manual: L<Bio::Phylo::Manual> and L<http://rutgervos.blogspot.com>.
 
-Consult the documentation for L<Bio::Phylo::Listable> for more info on how to
-define subsets of the contents of segmented objects.
+Consult the documentation for L<Bio::Phylo::Listable/SETS MANAGEMENT> for more info 
+on how to define subsets of the contents of segmented objects.
 
 =head2 Superclasses
 
