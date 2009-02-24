@@ -3,7 +3,9 @@
 	targetNamespace="http://www.nexml.org/1.0"
 	xmlns:xml="http://www.w3.org/XML/1998/namespace"
 	xmlns="http://www.nexml.org/1.0"
-	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sawsdl="http://www.w3.org/ns/sawsdl">
+	xmlns:xlink="http://www.w3.org/1999/xlink" 
+	xmlns:sawsdl="http://www.w3.org/ns/sawsdl"
+	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
 	
 	<xs:annotation>
 		<xs:documentation>
@@ -85,10 +87,11 @@
 				information on the xml and xlink attributes.
 			</xs:documentation>
 		</xs:annotation>
-		<xs:sequence />
+		<xs:sequence />		
 		<xs:attributeGroup ref="xml:specialAttrs" />
 		<xs:attribute ref="xlink:href" use="optional" />
 		<xs:attribute name="class" type="IDVector" use="optional" />
+		<xs:anyAttribute namespace="##any" processContents="skip" />
 	</xs:complexType>
 
 	<!-- dict data structure -->
