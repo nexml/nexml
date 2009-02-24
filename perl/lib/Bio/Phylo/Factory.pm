@@ -16,6 +16,7 @@ my %class = (
     'project'    => 'Bio::Phylo::Project',
     'dictionary' => 'Bio::Phylo::Dictionary',
     'annotation' => 'Bio::Phylo::Annotation',
+    'set'        => 'Bio::Phylo::Set',
 );
 
 =head1 NAME
