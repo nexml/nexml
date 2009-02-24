@@ -526,6 +526,39 @@ Gets state at argument index.
         my $val = $self->SUPER::get_by_index( $index - $offset );
         return defined $val ? $val : $self->get_type_object->get_missing;
     }
+    
+=item get_index_of()
+
+Returns the index of the first occurrence of the 
+state observation in the datum or undef if the datum 
+doesn't contain the argument
+
+ Type    : Generic query
+ Title   : get_index_of
+ Usage   : my $i = $datum->get_index_of($state)
+ Function: Returns the index of the first occurrence of the 
+           state observation in the datum or undef if the datum 
+		   doesn't contain the argument
+ Returns : An index or undef
+ Args    : A contained object
+
+=cut
+
+	sub get_index_of {
+		my ( $self, $obj ) = @_;
+		my $is_numerical = $self->get_type =~ m/^(Continuous|Standard|Restriction)$/;
+		my $i = 0;
+		for my $ent ( @{ $self->get_entities } ) {
+			if ( $is_numerical ) {
+				return $i if $obj == $ent;
+			}
+			else {
+				return $i if $obj eq $ent;
+			}
+			$i++;
+		}
+		return undef;
+	}    
 
 =back
 
