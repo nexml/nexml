@@ -15,7 +15,7 @@
 				<key>uri</key>
 				<dict>
 					<key>url</key>
-					<url>http://localhost/cgi-bin/rest.pl/analysis</url>
+					<uri>http://localhost/cgi-bin/rest.pl/analysis</uri>
 					<key>has-reference-prefix</key>
 					<boolean>false</boolean>
 				</dict>
@@ -51,7 +51,7 @@
 				<key>uri</key>
 				<dict>
 					<key>url</key>
-					<url>http://localhost/cgi-bin/rest.pl/matrix</url>
+					<uri>http://localhost/cgi-bin/rest.pl/matrix</uri>
 					<key>has-reference-suffix</key>
 					<boolean>true</boolean>
 				</dict>
@@ -116,7 +116,7 @@
 				<key>uri</key>
 				<dict>
 					<key>url</key>
-					<url>http://localhost/cgi-bin/rest.pl/tree</url>
+					<uri>http://localhost/cgi-bin/rest.pl/tree</uri>
 					<key>has-reference-suffix</key>
 					<boolean>true</boolean>
 				</dict>
@@ -155,7 +155,7 @@
 				<key>uri</key>
 				<dict>
 					<key>url</key>
-					<url>http://localhost/cgi-bin/rest.pl/analysis</url>
+					<uri>http://localhost/cgi-bin/rest.pl/analysis</uri>
 					<key>has-reference-suffix</key>
 					<boolean>true</boolean>
 				</dict>
