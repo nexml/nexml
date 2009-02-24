@@ -18,7 +18,7 @@
                 <key>uri</key>
                 <dict>
                     <key>url</key>
-                    <url>http://localhost/cgi-bin/ti.pl/analysis</url>
+                    <uri>http://localhost/cgi-bin/ti.pl/analysis</uri>
                     <key>has-reference-suffix</key>
                     <boolean>false</boolean>
                 </dict>
@@ -46,7 +46,7 @@
                 <key>uri</key>
                 <dict>
                     <key>url</key>
-                    <url>http://localhost/cgi-bin/ti.pl/matrix/</url>
+                    <uri>http://localhost/cgi-bin/ti.pl/matrix/</uri>
                     <key>has-reference-suffix</key>
                     <boolean>true</boolean>
                 </dict>
@@ -97,7 +97,7 @@
                 <key>uri</key>
                 <dict>
                     <key>url</key>
-                    <url>http://localhost/cgi-bin/ti.pl/tree/</url>
+                    <uri>http://localhost/cgi-bin/ti.pl/tree/</uri>
                     <key>has-reference-suffix</key>
                     <boolean>true</boolean>
                 </dict>
@@ -128,7 +128,7 @@
                 <key>uri</key>
                 <dict>
                     <key>url</key>
-                    <url>http://localhost/cgi-bin/ti.pl/analysis/</url>
+                    <uri>http://localhost/cgi-bin/ti.pl/analysis/</uri>
                     <key>has-reference-suffix</key>
                     <boolean>true</boolean>
                 </dict>
