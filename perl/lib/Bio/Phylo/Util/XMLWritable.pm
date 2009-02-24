@@ -325,25 +325,26 @@ Retrieves tag string
 		for my $key ( keys %attrs ) {
 			$xml .= ' ' . $key . '="' . $attrs{$key} . '"';
 		}
-		my $dict = $self->get_generic('dict');
+		my $has_contents = 0;
 		my $dictionaries = $self->get_dictionaries;
-		if ( $dict ) {
-			$xml .= '><dict>';
-			for my $key ( keys %{$dict} ) {
-				$xml.= '<key>' . $key . '</key>';
-				my @val = @{ $dict->{$key} };
-				my $tag = shift @val;
-				$xml .= "<$tag>@val</$tag>";
-			}
-			$xml .= '</dict>';
-			$xml .= "</$tag>" if $closeme;
-		}
 		if ( @{ $dictionaries } ) {
 		    $xml .= '>';
 		    $xml .= $_->to_xml for @{ $dictionaries };
-		    $xml .= "</$tag>" if $closeme;
+		    $has_contents++;
+		    
 		}
-		if ( not @{ $dictionaries } and not $dict ) {
+		if ( UNIVERSAL::can($self,'get_sets') ) {
+			my $sets = $self->get_sets;
+			if ( @{ $sets } ) {
+				$xml .= '>' if not @{ $dictionaries };
+				$xml .= $_->to_xml for @{ $sets };
+				$has_contents++;
+			}
+		}
+		if ( $has_contents ) {
+			$xml .= "</$tag>" if $closeme;
+		}
+		else {
 			$xml .= $closeme ? '/>' : '>';
 		}
 		return $xml;
@@ -420,7 +421,22 @@ Retrieves attributes for the element.
 		if ( not exists $attrs->{'id'} ) {
 			$attrs->{'id'} = $self->get_xml_id;
 		}
-		if ( not $self->is_identifiable ) {
+		if ( UNIVERSAL::can( $self, '_get_container') ) {
+			my $container = $self->_get_container;
+			if ( UNIVERSAL::can( $self, 'get_tree' ) ) {
+				$container = $self->get_tree;
+			}
+			if ( $container ) {
+				my @classes;
+				for my $set ( @{ $container->get_sets } ) {
+					if ( $container->is_in_set($self,$set) ) {
+						push @classes, $set->get_xml_id;
+					}
+				} 
+				$attrs->{'class'} = join ' ', @classes if scalar(@classes);
+			}
+		}
+		if ( defined $self->is_identifiable and not $self->is_identifiable ) {
 		    delete $attrs->{'id'};
 		}
 		if ( $self->can('get_taxa') ) {
@@ -523,7 +539,9 @@ Serializes invocant to XML.
 	    my $xml = '';
 		if ( $self->can('get_entities') ) {
 			for my $ent ( @{ $self->get_entities } ) {
-				$xml .= "\n" . $ent->to_xml;
+				if ( UNIVERSAL::can($ent,'to_xml') ) {					
+					$xml .= "\n" . $ent->to_xml;
+				}
 			}
 		}
 		if ( $xml ) {
