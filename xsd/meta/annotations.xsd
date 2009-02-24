@@ -29,6 +29,7 @@
 	<!-- the following types define attachments for objects -->
 
 	<!-- first define complex dict values -->
+	
 	<xs:simpleType name="IntegerVector">
 		<xs:list itemType="xs:integer" />
 	</xs:simpleType>
@@ -44,7 +45,7 @@
 	<xs:simpleType name="DateVector">
 		<xs:list itemType="xs:dateTime" />
 	</xs:simpleType>
-	<xs:simpleType name="UrlVector">
+	<xs:simpleType name="URIVector">
 		<xs:list itemType="xs:anyURI" />
 	</xs:simpleType>
 	<xs:simpleType name="IDVector">
@@ -105,7 +106,7 @@
 						type="xs:string" />
 					<xs:choice minOccurs="1" maxOccurs="1">
 						<xs:element name="base64"
-							type="xs:base64Binary" />
+							type="xs:base64Binary"/>
 						<xs:element name="base64vector"
 							type="Base64Vector" />
 						<xs:element name="date" type="xs:dateTime" />
@@ -124,10 +125,9 @@
 						<xs:element name="string" type="xs:string" />
 						<xs:element name="stringvector"
 							type="StringVector" />
-						<xs:element name="url" type="xs:anyURI" />
-						<xs:element name="urlvector" type="UrlVector" />
+						<xs:element name="uri" type="xs:anyURI" />
+						<xs:element name="urivector" type="URIVector" />
 						<xs:element name="dict" type="Dict" />
-						<xs:element name="dictvector" type="DictVector" />
 						<xs:element name="any" type="xs:anyType"
 							form="unqualified" />
 					</xs:choice>
