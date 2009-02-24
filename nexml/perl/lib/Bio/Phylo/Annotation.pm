@@ -61,8 +61,6 @@ dictionaries.
 
 =item new()
 
-Factory constructor.
-
  Type    : Constructor
  Title   : new
  Usage   : my $anno = Bio::Phylo::Annotation->new;
