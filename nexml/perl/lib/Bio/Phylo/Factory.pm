@@ -86,7 +86,7 @@ sub new {
  Title   : create
  Usage   : my $foo = $fac->create('Foo::Class');
  Function: Creates an instance of $class, with constructor arguments %args
- Returns : A Bio::Phylo::Forest object.
+ Returns : A Bio::Phylo::* object.
  Args    : $class, a class name (required),
            %args, constructor arguments (optional)
 
@@ -98,6 +98,40 @@ sub create {
     if ( looks_like_class $class ) {
         return $class->new(@_);
     }
+}
+
+=item register_class()
+
+Registers the argument class name such that subsequently
+the factory can instantiates objects of that class. For
+example, if you register Foo::Bar, the factory will be 
+able to instantiate objects through the create_bar()
+method. 
+
+ Type    : Factory methods
+ Title   : register_class
+ Usage   : $fac->register_class('Foo::Bar');
+ Function: Registers a class name for instantiation
+ Returns : Invocant
+ Args    : $class, a class name (required)
+
+=cut
+
+sub register_class {
+	my ( $self, $class ) = @_;
+    my $path = $class;
+    $path =~ s|::|/|g;
+    $path .= '.pm';
+    if ( not $INC{$path} ) {
+        eval { require $path };
+		if ( $@ ) {
+			throw 'BadArgs' => "Can't register $class - $@";
+		}        
+    }
+	my $short = $class;
+	$short =~ s/.*://;
+	$class{lc $short} = $class;
+	return $self;
 }
 
 sub AUTOLOAD {
