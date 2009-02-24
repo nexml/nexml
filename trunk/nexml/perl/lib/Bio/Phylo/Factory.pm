@@ -125,7 +125,7 @@ sub register_class {
     if ( not $INC{$path} ) {
         eval { require $path };
 		if ( $@ ) {
-			throw 'BadArgs' => "Can't register $class - $@";
+			throw 'ExtensionError' => "Can't register $class - $@";
 		}        
     }
 	my $short = $class;
