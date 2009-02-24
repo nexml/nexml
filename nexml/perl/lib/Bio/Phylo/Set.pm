@@ -10,7 +10,17 @@ Bio::Phylo::Set - Object to manage subsets of the contents of listable container
 
 =head1 SYNOPSIS
 
- # no direct usage
+ use Bio::Phylo::Forest;
+ use Bio::Phylo::Forest::Tree;
+ use Bio::Phylo::Set;
+ 
+ my $forest = Bio::Phylo::Forest->new;
+ my $tree = Bio::Phylo::Forest::Tree->new;
+ $forest->insert($tree);
+ 
+ my $set = Bio::Phylo::Set->new( -name => 'TreeSet1' );
+ $forest->add_set($set);
+ $forest->add_to_set($tree,$set); # $tree is now part of TreeSet1
 
 =head1 DESCRIPTION
 
@@ -46,9 +56,6 @@ for more information on how to use this feature.
  		   a method. The method name is changed such that,
  		   in order to access the set_value($val) method
  		   in the constructor, you would pass -value => $val
- Notes   : This constructor is typically not used directly,
-           it is called by the listable object whose contents
-           are being managed in sets.
 
 =cut
 
