@@ -55,7 +55,8 @@ sub new {
 			'version'   => '1.0',
 			'generator' => "$class v.$version",			
 			'xsi:schemaLocation' => 'http://www.nexml.org/1.0 http://www.nexml.org/1.0/nexml.xsd',
-		}
+		},
+		'-identifiable' => 0,
 	);
 	return $class->SUPER::new(%args,@_);
 }
