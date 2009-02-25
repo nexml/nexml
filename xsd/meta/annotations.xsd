@@ -105,37 +105,165 @@
 		<xs:complexContent>
 			<xs:extension base="Base">
 				<xs:sequence minOccurs="1" maxOccurs="unbounded">
-					<xs:element name="key" minOccurs="1" maxOccurs="1"
-						type="xs:string" />
 					<xs:choice minOccurs="1" maxOccurs="1">
-						<xs:element name="base64"
-							type="xs:base64Binary"/>
-						<xs:element name="base64vector"
-							type="Base64Vector" />
-						<xs:element name="date" type="xs:dateTime" />
-						<xs:element name="datevector" type="DateVector" />
-						<xs:element name="boolean" type="xs:boolean" />
-						<xs:element name="booleanvector"
-							type="BooleanVector" />
-						<xs:element name="float" type="xs:float" />
-						<xs:element name="floatvector"
-							type="FloatVector" />
-						<xs:element name="id" type="xs:ID" />
-						<xs:element name="idvector" type="IDVector" />
-						<xs:element name="integer" type="xs:integer" />
-						<xs:element name="integervector"
-							type="IntegerVector" />
-						<xs:element name="string" type="xs:string" />
-						<xs:element name="stringvector"
-							type="StringVector" />
-						<xs:element name="uri" type="xs:anyURI" />
-						<xs:element name="urivector" type="URIVector" />
+						<xs:element name="base64">
+							<xs:complexType>
+							    <xs:simpleContent>
+							      <xs:extension base="xs:base64Binary">
+							        <xs:attribute name="id" type="xs:NCName" use="required" />
+							      </xs:extension>
+							    </xs:simpleContent>
+							  </xs:complexType>							
+						</xs:element>
+						<xs:element name="base64vector">
+							<xs:complexType>
+							    <xs:simpleContent>
+							      <xs:extension base="Base64Vector">
+							        <xs:attribute name="id" type="xs:NCName" use="required" />
+							      </xs:extension>
+							    </xs:simpleContent>
+							  </xs:complexType>					
+						</xs:element>
+						<xs:element name="date">
+							<xs:complexType>
+							    <xs:simpleContent>
+							      <xs:extension base="xs:dateTime">
+							        <xs:attribute name="id" type="xs:NCName" use="required" />
+							      </xs:extension>
+							    </xs:simpleContent>
+							  </xs:complexType>							
+						</xs:element>
+						<xs:element name="datevector">
+							<xs:complexType>
+							    <xs:simpleContent>
+							      <xs:extension base="DateVector">
+							        <xs:attribute name="id" type="xs:NCName" use="required" />
+							      </xs:extension>
+							    </xs:simpleContent>
+							  </xs:complexType>							
+						</xs:element>
+						<xs:element name="boolean">
+							<xs:complexType>
+							    <xs:simpleContent>
+							      <xs:extension base="xs:boolean">
+							        <xs:attribute name="id" type="xs:NCName" use="required" />
+							      </xs:extension>
+							    </xs:simpleContent>
+							  </xs:complexType>							
+						</xs:element>
+						<xs:element name="booleanvector">
+							<xs:complexType>
+							    <xs:simpleContent>
+							      <xs:extension base="BooleanVector">
+							        <xs:attribute name="id" type="xs:NCName" use="required" />
+							      </xs:extension>
+							    </xs:simpleContent>
+							  </xs:complexType>							
+						</xs:element>
+						<xs:element name="float">
+							<xs:complexType>
+							    <xs:simpleContent>
+							      <xs:extension base="xs:float">
+							        <xs:attribute name="id" type="xs:NCName" use="required" />
+							      </xs:extension>
+							    </xs:simpleContent>
+							  </xs:complexType>						
+						</xs:element>
+						<xs:element name="floatvector">
+							<xs:complexType>
+							    <xs:simpleContent>
+							      <xs:extension base="FloatVector">
+							        <xs:attribute name="id" type="xs:NCName" use="required" />
+							      </xs:extension>
+							    </xs:simpleContent>
+							  </xs:complexType>												
+						</xs:element>
+						<xs:element name="id">
+							<xs:complexType>
+							    <xs:simpleContent>
+							      <xs:extension base="xs:ID">
+							        <xs:attribute name="id" type="xs:NCName" use="required" />
+							      </xs:extension>
+							    </xs:simpleContent>
+							  </xs:complexType>						
+						</xs:element>
+						<xs:element name="idvector">
+							<xs:complexType>
+							    <xs:simpleContent>
+							      <xs:extension base="IDVector">
+							        <xs:attribute name="id" type="xs:NCName" use="required" />
+							      </xs:extension>
+							    </xs:simpleContent>
+							  </xs:complexType>						
+						</xs:element>
+						<xs:element name="integer">
+							<xs:complexType>
+							    <xs:simpleContent>
+							      <xs:extension base="xs:integer">
+							        <xs:attribute name="id" type="xs:NCName" use="required" />
+							      </xs:extension>
+							    </xs:simpleContent>
+							  </xs:complexType>						
+						</xs:element>
+						<xs:element name="integervector">
+							<xs:complexType>
+							    <xs:simpleContent>
+							      <xs:extension base="IntegerVector">
+							        <xs:attribute name="id" type="xs:NCName" use="required" />
+							      </xs:extension>
+							    </xs:simpleContent>
+							  </xs:complexType>							
+						</xs:element>
+						<xs:element name="string">
+							<xs:complexType>
+							    <xs:simpleContent>
+							      <xs:extension base="xs:string">
+							        <xs:attribute name="id" type="xs:NCName" use="required" />
+							      </xs:extension>
+							    </xs:simpleContent>
+							  </xs:complexType>						
+						</xs:element>
+						<xs:element name="stringvector">
+							<xs:complexType>
+							    <xs:simpleContent>
+							      <xs:extension base="StringVector">
+							        <xs:attribute name="id" type="xs:NCName" use="required" />
+							      </xs:extension>
+							    </xs:simpleContent>
+							  </xs:complexType>							
+						</xs:element>
+						<xs:element name="uri">
+							<xs:complexType>
+							    <xs:simpleContent>
+							      <xs:extension base="xs:anyURI">
+							        <xs:attribute name="id" type="xs:NCName" use="required" />
+							      </xs:extension>
+							    </xs:simpleContent>
+							  </xs:complexType>							
+						</xs:element>
+						<xs:element name="urivector">
+							<xs:complexType>
+							    <xs:simpleContent>
+							      <xs:extension base="URIVector">
+							        <xs:attribute name="id" type="xs:NCName" use="required" />
+							      </xs:extension>
+							    </xs:simpleContent>
+							  </xs:complexType>						
+						</xs:element>
 						<xs:element name="dict" type="Dict" />
 						<xs:element name="dictvector" type="DictVector" />
-						<xs:element name="any" type="xs:anyType"
-							form="unqualified" />
+						<xs:element name="any" form="unqualified">
+							<xs:complexType>						
+								<xs:complexContent>								
+									<xs:extension base="xs:anyType">
+										<xs:attribute name="id" type="xs:NCName" use="required" />
+									</xs:extension>									
+								</xs:complexContent>
+							</xs:complexType>
+						</xs:element>
 					</xs:choice>
 				</xs:sequence>
+				<xs:attribute name="id" type="xs:NCName" use="required" />
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
