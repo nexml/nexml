@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xs:schema 
-  xmlns:xs="http://www.w3.org/2001/XMLSchema" 
-  targetNamespace="http://www.nexml.org/1.0"
-  xmlns="http://www.nexml.org/1.0">
+<xs:schema xmlns="http://www.nexml.org/1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.nexml.org/1.0">
   <xs:annotation>
     <xs:documentation>
       This module constitutes in effect the 'main' class of the nexml schema.
@@ -33,7 +30,7 @@
       </xs:documentation>
     </xs:annotation>
     <xs:restriction base="xs:decimal">
-      <xs:pattern value="1\.0"/>
+      <xs:pattern value="0\.8"/>
     </xs:restriction>
   </xs:simpleType>
   
@@ -45,12 +42,12 @@
     </xs:annotation>
     <xs:complexContent>
       <xs:extension base="Annotated">
-        <xs:sequence minOccurs="0" maxOccurs="unbounded">
-          <xs:element name="otus" type="Taxa" minOccurs="1" maxOccurs="unbounded"/>        
-          <xs:sequence minOccurs="0" maxOccurs="unbounded">
+        <xs:sequence maxOccurs="unbounded" minOccurs="0">
+          <xs:element maxOccurs="unbounded" minOccurs="1" name="otus" type="Taxa"/>        
+          <xs:sequence maxOccurs="unbounded" minOccurs="0">
             <xs:choice>
-              <xs:element name="characters" type="AbstractBlock" minOccurs="0" maxOccurs="unbounded"/>                                                                 
-              <xs:element name="trees" type="Trees" minOccurs="0" maxOccurs="unbounded">
+              <xs:element maxOccurs="unbounded" minOccurs="0" name="characters" type="AbstractBlock"/>                                                                 
+              <xs:element maxOccurs="unbounded" minOccurs="0" name="trees" type="Trees">
                 <xs:key name="tree">
                   <xs:selector xpath="./tree"/>
                   <xs:field xpath="@id"/>
