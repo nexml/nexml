@@ -7,13 +7,11 @@ BEGIN {
     $ENV{ $Config{'ldlibpthname'} } = '../expat/lib';
 }
 BEGIN {
-    use lib $ENV{'DOCUMENT_ROOT'} . '/lib/lib/perl5/site_perl/5.8.6/darwin-thread-multi-2level/';
-    use lib $ENV{'DOCUMENT_ROOT'} . '/lib/lib/perl5/site_perl/';
+    use lib $ENV{'DOCUMENT_ROOT'} . '/perllib';
+    use lib $ENV{'DOCUMENT_ROOT'} . '/perllib/arch';
     unshift @INC, $ENV{'DOCUMENT_ROOT'} . '/nexml/perl/lib';
-    unshift @INC, $ENV{'DOCUMENT_ROOT'} . '/nexml/site/lib'; 
-    unshift @INC, '../perl/lib';   
-    unshift @INC, '../site/lib';
-    push @INC, '/Users/rvosa/CIPRES-and-deps/cipres/build/lib/perl/lib';
+    unshift @INC, $ENV{'DOCUMENT_ROOT'} . '/nexml/site/lib';
+    unshift @INC, '/Users/rvosa/CIPRES-and-deps/cipres/build/lib/perl/lib';
 }
 use strict;
 use warnings;
@@ -26,7 +24,7 @@ use Scalar::Util qw(looks_like_number);
 use HTML::Entities;
 use Bio::Phylo::Factory;
 use Bio::Phylo::IO 'unparse';
-use constant URL => 'http://timetree.org/time_query.php?';
+use constant URL => 'http://www.timetree.org/time_query.php?';
 
 my $cgi = CGI->new;
 my $lua = LWP::UserAgent->new;
