@@ -1,7 +1,10 @@
 use strict;
 use Test::More tests => 9;
 use Bio::Phylo::IO 'parse';
+use Bio::Phylo::Util::Logger;
 
+my $logger = Bio::Phylo::Util::Logger->new;
+$logger->VERBOSE( -level => 0 );
 my $tree;
 my @tips = (
     "Methanococcus_voltae",
