@@ -53,6 +53,9 @@ This is the superclass for all objects that can be serialized to NeXML
            $obj->set_namespaces( { 'dwc' => 'http://www.namespaceTBD.org/darwin2' } );
  Notes   : This is a global for the XMLWritable class, so that in a recursive
  		   to_xml call the outermost element contains the namespace definitions.
+ 		   This method can also be called as a static class method, i.e.
+ 		   Bio::Phylo::Util::XMLWritable->set_namespaces(
+ 		   'dwc' => 'http://www.namespaceTBD.org/darwin2');
 
 =cut
 
