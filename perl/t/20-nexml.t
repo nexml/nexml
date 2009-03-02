@@ -23,7 +23,7 @@ my $taxa = parse( '-format' => 'nexml', '-file' => "$XML_PATH/taxa.xml" )->[0];
 my @ids      = qw(t1 t2 t3 t4 t5);
 my @children = @{ $taxa->get_entities };
 for my $i ( 0 .. $#children ) {
-	ok( $ids[$i] eq $children[$i]->get_name, "$ids[$i]" );
+	ok( $ids[$i] eq $children[$i]->get_xml_id, "$ids[$i]" );
 }
 
 # here we parse a file with taxon elements and a trees element
@@ -53,17 +53,17 @@ for my $tree ( @{ $forest->get_entities } ) {
 	for my $node ( @{ $tree->get_entities } ) {
 		my $id = $node->get_name;
 		if ( $id eq 'n4' ) {
-			my $dict  = $node->get_generic('dict');
-			my $value = $dict->{'has_tag'};
-			ok( $value->[0] eq 'boolean', "dict value type is boolean" );
-			ok( $value->[1], "dict boolean value is true" );
+			my $dict  = $node->get_dictionaries->[0];
+			my $value = $dict->first;
+			ok( $value->get_tag eq 'boolean', "dict value type is boolean" );
+			ok( $value->get_value, "dict boolean value is true" );
 		}
 		if ( $node->is_internal ) {
 			ok( exists $internals{$id}, "$id is an internal node" );
 		}
 		else {
 			ok( exists $terminals{$id}, "$id is a terminal node" );
-			ok( $node->get_taxon->get_name eq $taxon_of{$id},
+			ok( $node->get_taxon->get_xml_id eq $taxon_of{$id},
 				"taxon if $id is $taxon_of{$id}" );
 		}
 		if ( my $parent = $node->get_parent ) {
@@ -122,7 +122,7 @@ for my $block (@$blocks) {
 	my $rows = $block->get_entities;
 	my $type = uc $block->get_type;
 	for my $i ( 0 .. $#{$rows} ) {
-		ok( $rows->[$i]->get_taxon->get_name eq 't' . ( $i + 1 ),
+		ok( $rows->[$i]->get_taxon->get_xml_id eq 't' . ( $i + 1 ),
 			"found linked taxon" );
 		if ( exists $raw_matrices->{$type} ) {
 			my @chars = $rows->[$i]->get_char;
