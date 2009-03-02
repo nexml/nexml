@@ -3,6 +3,7 @@ use strict;
 use Bio::Phylo::IO;
 use Bio::Phylo::Util::Exceptions 'throw';
 use Bio::Phylo::Factory;
+use Bio::Phylo::Util::XMLWritable;
 use UNIVERSAL 'isa';
 use Data::Dumper;
 use vars qw(@ISA $VERSION);
@@ -143,12 +144,31 @@ sub _new {
 	# here we put the two together, i.e. create the actual XML::Twig object
 	# with its handlers, and create a reference to it in the parser object
 	$self->{'_twig'} = XML::Twig->new( 
+		
+		# These handlers are called when the subtree is fully loaded, which
+		# means we can traverse it
 		'TwigHandlers' => {
 			'otus'       => sub { &_handle_otus(   @_, $self ) },
 			'characters' => sub { &_handle_chars(  @_, $self ) },
 			'trees'      => sub { &_handle_forest( @_, $self ) },
 			'nex:nexml'  => sub { &_handle_nexml(  @_, $self ) },			
-		}		
+		},
+		
+		# These handlers are called when the element opens, that is the
+		# subtree hasn't been loaded yet - but the attributes have been,
+		# so we can read in the namespaces here.
+		'StartTagHandlers' => {
+		    '_all_' => sub {
+		        my ( $twig, $elt ) = @_;
+		        for my $att_name ( $elt->att_names ) {
+		            if ( $att_name =~ /^xmlns:(.+)$/ ) {
+		                my $prefix = $1;
+		                my $ns = $elt->att($att_name);
+		                Bio::Phylo::Util::XMLWritable->set_namespaces( $prefix => $ns );
+		            }
+		        }
+		    }
+		},
 	);
 	return $self;
 }
