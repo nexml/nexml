@@ -132,6 +132,14 @@ Tree constructor from Bio::Tree::TreeI argument.
 			$self = $fac->create_tree;
 			bless $self, $class;
 			$self = $self->_recurse( $bptree->get_root_node );
+			
+			# copy name
+			my $name = $bptree->id;
+			$self->set_name( $name ) if defined $name;
+			
+			# copy score
+			my $score = $bptree->score;
+			$self->set_score( $score ) if defined $score;
 		}
 		else {
 			throw 'ObjectMismatch' => 'Not a bioperl tree!';
@@ -2398,7 +2406,7 @@ sub find_node {
    $self->visit(
         sub {
             my $node = shift;
-            push @nodes, $node if $node->$field eq $value;
+            push @nodes, $node if $node->$field and $node->$field eq $value;
         }
    );
    if ( wantarray) { 
