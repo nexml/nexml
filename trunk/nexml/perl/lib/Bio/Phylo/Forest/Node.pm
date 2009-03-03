@@ -221,7 +221,7 @@ Node constructor from bioperl L<Bio::Tree::NodeI> argument.
 		
 		# copy bootstrap
 		my $bootstrap = $bpnode->bootstrap;
-		$node->set_generic( 'bootstrap' => $bootstrap ) if defined $bootstrap;
+		$node->set_score( $bootstrap ) if defined $bootstrap and looks_like_number $bootstrap;
 		
 		# copy other tags
 		for my $tag ( $bpnode->get_all_tags ) {
@@ -2444,9 +2444,9 @@ sub description {
 }
 
 sub bootstrap {
-	my $self = shift;
-	if ( @_ ) {
-		$self->set_score(shift);
+	my ( $self, $bs ) = @_;
+	if ( defined $bs && looks_like_number $bs ) {
+		$self->set_score($bs);
 	}
 	return $self->get_score;
 }
