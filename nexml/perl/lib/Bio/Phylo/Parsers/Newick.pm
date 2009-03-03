@@ -3,11 +3,13 @@ package Bio::Phylo::Parsers::Newick;
 use strict;
 use Bio::Phylo::IO;
 use Bio::Phylo;
+use Bio::Phylo::Factory;
 use vars qw(@ISA);
 @ISA=qw(Bio::Phylo::IO);
 
 no warnings 'recursion';
 
+my $fac = Bio::Phylo::Factory->new;
 my $logger = Bio::Phylo->get_logger;
 
 *_from_handle = \&_from_both;
@@ -61,19 +63,19 @@ sub _new {
 sub _from_both {
     my $self  = shift;
     my %args  = @_;
+
+    my $string;    
     
-    # turn string into pseudo-handle
+    # we want to remove all line breaks
     if ( $args{'-string'} ) {
-        require IO::String;
-        $args{'-handle'} = IO::String->new( $args{'-string'} );
-        $logger->debug("creating handle from string");
-    }
-    
-    # just concatenate
-    my $string;
-    while ( my $line = $args{-handle}->getline ) {
-        chomp( $line );
-        $string .= $line;
+        $string = $args{'-string'};
+        $string =~ s/\r|\n|\r\n//g;
+    }    
+    elsif ( $args{'-handle'} ) {
+        while ( my $line = $args{'-handle'}->getline ) {
+            chomp( $line );
+            $string .= $line;
+        }
     }
     $logger->debug("concatenated lines");                   
     
@@ -81,8 +83,7 @@ sub _from_both {
     my @trees = $self->_split( $string );
     
     # lazy loading, we only want the forest *now*
-    require Bio::Phylo::Forest;
-    my $forest = Bio::Phylo::Forest->new;    
+    my $forest = $fac->create_forest;
     
     # parse trees
     for my $tree ( @trees ) {
@@ -109,8 +110,7 @@ sub _from_both {
     }
     elsif ( $args{'-as_project'} ) {
     	my $taxa = $forest->make_taxa;
-    	require Bio::Phylo::Project;
-    	my $proj = Bio::Phylo::Project->new;
+    	my $proj = $fac->create_project;
     	$proj->insert($taxa,$forest);
     	return $proj;
     }
@@ -179,9 +179,7 @@ sub _split {
 sub _parse_string {
     my ( $self, $string ) = @_;
     $logger->debug("going to parse tree string '$string'");
-    require Bio::Phylo::Forest::Tree;
-    require Bio::Phylo::Forest::Node;
-    my $tree = Bio::Phylo::Forest::Tree->new;
+    my $tree = $fac->create_tree;
     my $remainder = $string;
     my $token;
     my @tokens;
@@ -194,7 +192,7 @@ sub _parse_string {
     for ( $i = $#tokens; $i >= 0; $i-- ) {
         last if $tokens[$i] eq ';';
     }
-    my $root = Bio::Phylo::Forest::Node->new;
+    my $root = $fac->create_node;
     $tree->insert( $root );
     $self->_parse_node_data( $root, @tokens[ 0 .. ( $i - 1 ) ] );
     $self->_parse_clade( $tree, $root, @tokens[ 0 .. ( $i - 1 ) ] );
@@ -216,7 +214,7 @@ sub _parse_clade {
             }
         }
         elsif ( $tokens[$i] eq ',' && $depth == 1 ) {
-            my $node = Bio::Phylo::Forest::Node->new;
+            my $node = $fac->create_node;
             $root->set_child( $node );
             $tree->insert( $node );
             $self->_parse_node_data( $node, @clade );
@@ -228,7 +226,7 @@ sub _parse_clade {
             $depth--;
             if ( $depth == 0 ) {
                 @remainder = @tokens[ ( $i + 1 ) .. $#tokens ];
-                my $node = Bio::Phylo::Forest::Node->new;
+                my $node = $fac->create_node;
                 $root->set_child( $node );
                 $tree->insert( $node );
                 $self->_parse_node_data( $node, @clade );
@@ -400,13 +398,13 @@ sub _token_handler {
         $name = $token;
     }
     if ( $name =~ m/^([^:()]*?)\s*:\s*(.*)$/o ) {
-        $node = Bio::Phylo::Forest::Node->new(
+        $node = $fac->create_node(
             '-name'          => $1,
             '-branch_length' => $2,
         );
     }
     else {
-        $node = Bio::Phylo::Forest::Node->new( '-name' => $name, );
+        $node = $fac->create_node( '-name' => $name, );
     }
     return $node, $clade;
 }
