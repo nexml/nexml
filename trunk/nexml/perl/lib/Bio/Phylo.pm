@@ -37,7 +37,7 @@ require Bio::Phylo::Mediators::TaxaMediator;
 # Include the revision number from CIPRES subversion in $VERSION
 my $rev = '$Id$';
 $rev =~ s/^[^\d]+(\d+)\b.*$/$1/;
-$VERSION = "0.17_RC7";
+$VERSION = "0.17_RC8";
 $VERSION .= "_$rev";
 {
     my $taxamediator = 'Bio::Phylo::Mediators::TaxaMediator';
