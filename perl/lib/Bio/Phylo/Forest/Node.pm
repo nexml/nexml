@@ -190,20 +190,43 @@ Node constructor from bioperl L<Bio::Tree::NodeI> argument.
            from a bioperl node object.
  Returns : Bio::Phylo::Forest::Node
  Args    : An objects that implements Bio::Tree::NodeI
+ Notes   : The following BioPerl properties are copied:
+           BioPerl output:        Bio::Phylo output:
+           ------------------------------------------------
+           id                     get_name
+           branch_length          get_branch_length
+           description            get_desc
+           bootstrap              get_generic('bootstrap')
+           
+           In addition all BioPerl tags and values are copied
+           to set_generic( 'tag' => 'value' );
 
 =cut
 
 	sub new_from_bioperl {
 		my ( $class, $bpnode ) = @_;
 		my $node = $class->new;
-		$node->set_name( $bpnode->id );
-		$node->set_branch_length( $bpnode->branch_length );
-		$node->set_desc( $bpnode->description );
-		$node->set_generic( 'bootstrap' => $bpnode->bootstrap );
-		my @k = $bpnode->get_all_tags;
-		my @v = $bpnode->get_tag_values;
-		for my $i ( 0 .. $#k ) {
-			$node->set_generic( $k[$i] => $v[$i] );
+		
+		# copy name
+		my $name = $bpnode->id;
+		$node->set_name( $name ) if defined $name;
+		
+		# copy branch length
+		my $branch_length = $bpnode->branch_length;
+		$node->set_branch_length( $branch_length ) if defined $branch_length;
+		
+		# copy description
+		my $desc = $bpnode->description;
+		$node->set_desc( $desc ) if defined $desc;
+		
+		# copy bootstrap
+		my $bootstrap = $bpnode->bootstrap;
+		$node->set_generic( 'bootstrap' => $bootstrap ) if defined $bootstrap;
+		
+		# copy other tags
+		for my $tag ( $bpnode->get_all_tags ) {
+		    my @values = $bpnode->get_tag_values( $tag );
+			$node->set_generic( $tag => \@values );
 		}
 		return $node;
 	}
