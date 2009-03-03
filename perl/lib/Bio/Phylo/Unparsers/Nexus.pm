@@ -140,8 +140,7 @@ sub _to_string {
 
 =item L<Bio::Phylo::IO>
 
-The newick unparser is called by the L<Bio::Phylo::IO> object.
-Look there to learn how to unparse newick strings.
+The nexus serializer is called by the L<Bio::Phylo::IO> object.
 
 =item L<Bio::Phylo::Manual>
 

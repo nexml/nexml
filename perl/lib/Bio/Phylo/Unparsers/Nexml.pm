@@ -18,34 +18,13 @@ if ( $@ ) {
 
 =head1 NAME
 
-Bio::Phylo::Unparsers::Nexus - Unparses nexus matrices. No serviceable parts
-inside.
+Bio::Phylo::Unparsers::Nexml - Serializes Bio::Phylo objects to NeXML. No 
+serviceable parts inside.
 
 =head1 DESCRIPTION
 
-This module turns a L<Bio::Phylo::Matrices::Matrix> object into a nexus
-formatted matrix. It is called by the L<Bio::Phylo::IO> facade, don't call it
-directly. You can pass the following additional arguments to the unparse call:
-	
-	# an array reference of matrix, forest and taxa objects:
-	-phylo => [ $block1, $block2 ]
-	
-	# the arguments that can be passed for matrix objects, 
-	# refer to Bio::Phylo::Matrices::Matrix::to_nexus:
-	-matrix_args => {}
-
-	# the arguments that can be passed for forest objects, 
-	# refer to Bio::Phylo::Forest::to_nexus:
-	-forest_args => {}
-
-	# the arguments that can be passed for taxa objects, 
-	# refer to Bio::Phylo::Taxa::to_nexus:
-	-taxa_args => {}	
-	
-	OR:
-	
-	# for backward compatibility:
-	-phylo => $matrix	
+This module serializes Taxa objects, Forest objects and Matrix objects
+to NeXML.
 
 =begin comment
 
@@ -172,8 +151,7 @@ sub _to_string {
 
 =item L<Bio::Phylo::IO>
 
-The newick unparser is called by the L<Bio::Phylo::IO> object.
-Look there to learn how to unparse newick strings.
+The NeXML serializer is called by the L<Bio::Phylo::IO> object.
 
 =item L<Bio::Phylo::Manual>
 
