@@ -640,7 +640,16 @@ to second argument.
 =cut
 
 	sub is_monophyletic {
-		my ( $tree, $nodes, $outgroup ) = @_;
+		my $tree = shift;
+		my ( $nodes, $outgroup );
+		if ( @_ == 2 ) {
+		    ( $nodes, $outgroup ) = @_;
+		}
+		elsif ( @_ == 4 ) {
+		    my %args = @_;
+		    $nodes = $args{'-nodes'};
+		    $outgroup = $args{'-outgroup'};
+		}		
 		for my $i ( 0 .. $#{$nodes} ) {
 			for my $j ( ( $i + 1 ) .. $#{$nodes} ) {
 				my $mrca = $nodes->[$i]->get_mrca( $nodes->[$j] );
@@ -648,6 +657,39 @@ to second argument.
 			}
 		}
 		return 1;
+	}
+
+=item is_paraphyletic()
+
+ Type    : Test
+ Title   : is_paraphyletic
+ Usage   : if ( $tree->is_paraphyletic(\@nodes,$node) ){ }
+ Function: Tests whether or not a given set of nodes are paraphyletic
+           (representing the full clade) given an outgroup
+ Returns : [-1,0,1] , -1 if the group is not monophyletic
+                       0 if the group is not paraphyletic
+                       1 if the group is paraphyletic
+ Args    : Array ref of node objects which are in the tree,
+           Outgroup to compare the nodes to
+
+=cut
+
+	sub is_paraphyletic {
+		my $tree = shift;
+		my ( $nodes, $outgroup );
+		if ( @_ == 2 ) {
+		    ( $nodes, $outgroup ) = @_;
+		}
+		elsif ( @_ == 4 ) {
+		    my %args = @_;
+		    $nodes = $args{'-nodes'};
+		    $outgroup = $args{'-outgroup'};
+		}
+		return -1 if ! $tree->is_monophyletic($nodes,$outgroup);
+		my @all = ( @{ $nodes }, $outgroup );
+		my $mrca = $tree->get_mrca(\@all);
+		my $tips = $mrca->get_terminals;
+		return scalar @{ $tips } == scalar @all ? 0 : 1;
 	}
 
 =item is_clade()
@@ -1787,7 +1829,7 @@ Prunes argument nodes from invocant.
 		}
 		my %names_to_delete = map { $_ => 1 } @{ $tips };
 		my %names_to_keep;
-		for my $tip ( @{ $self->get_terminals } ) {
+		for my $tip ( @{ $self->get_entities } ) {
 		    my $name = $tip->get_internal_name;
 		    if ( not $names_to_delete{$name} ) {
 		        $names_to_keep{$name} = 1;
@@ -1831,7 +1873,7 @@ Keeps argument nodes from invocant (i.e. prunes all others).
 		}
 		my %keep_taxa = map { $_ => 1 } @{ $tips };
 		my @taxa_to_prune;
-		for my $tip ( @{ $tree->get_terminals } ) {
+		for my $tip ( @{ $tree->get_entities } ) {
 		    my $name = $tip->get_internal_name;
 		    push @taxa_to_prune, $name if not exists $keep_taxa{$name};
 		}
@@ -2255,17 +2297,21 @@ sub get_nodes {
 	my @nodes;
 	if ( @_ ) {
 		my %args = @_;
-		if ( $args{'order'} and $args{'order'} =~ m/^b/ ) {
+		if ( $args{'-order'} and $args{'-order'} =~ m/^b/ ) {
 			$order = 'breadth';
 		}
 	}
-	if ( my $root = $self->get_root ) {		
-		my $method = "visit_${order}_first";
-		$root->$method(
-			'-post' => sub { push @nodes, shift }
-		);
+	if ( my $root = $self->get_root ) {	
+        if ( $order eq 'depth' ) {      
+            $root->visit_depth_first(
+                -pre => sub { push @nodes, shift }
+            );
+        }
+        else {
+            $root->visit_level_order( sub { push @nodes, shift } ); # XXX bioperl is wrong
+        }
 	}
-	return wantarray ? @nodes : \@nodes;
+	return @nodes;
 }
 
 sub set_root {
@@ -2333,4 +2379,130 @@ sub _parse_newick {
 	}
 	$tree->DESTROY;
 	$forest->DESTROY;
+}
+
+sub find_node {
+   my $self = shift;
+   if( ! @_ ) { 
+       $logger->warn("Must request a either a string or field and string when searching");
+   }
+   my ( $field, $value );
+   if ( @_ == 1 ) {
+        ( $field, $value ) = ( 'id', shift );
+   }
+   elsif ( @_ == 2 ) {
+        ( $field, $value ) = @_;
+        $field =~ s/^-//;
+   }
+   my @nodes;
+   $self->visit(
+        sub {
+            my $node = shift;
+            push @nodes, $node if $node->$field eq $value;
+        }
+   );
+   if ( wantarray) { 
+       return @nodes;
+   } 
+   else { 
+       if( @nodes > 1 ) { 
+	        $logger->warn("More than 1 node found but caller requested scalar, only returning first node");
+       }
+       return shift @nodes;
+   }   
+}
+
+sub verbose {
+    my ( $self, $level ) = @_;
+    $level = 0 if $level < 0;
+    $self->VERBOSE( -level => $level );
+}
+
+sub reroot {
+    my ( $self, $node ) = @_;
+    my $id = $node->get_id;
+    my $new_root = $node->set_root_below;
+    if ( $new_root ) {
+        my @children = grep { $_->get_id != $id } @{ $new_root->get_children };
+        $node->set_child($_) for @children;
+        return 1;    
+    }
+    else {
+        return 0;
+    }
+}
+
+sub remove_Node {
+    my ( $self, $node ) = @_;
+    if ( not ref $node ) {
+        ($node) = grep { $_->get_name eq $node } @{ $self->get_entities };
+    }
+    if ( $node->is_terminal ) {
+        $node->get_parent->prune_child( $node );
+    }
+    else {
+        $node->collapse;
+    }
+    $self->delete($node);
+}
+
+sub splice {
+    my ( $self, @args ) = @_;
+    if ( ref($args[0]) ) {
+        $_->collapse for @args;
+    }
+    else {
+        my %args = @args;
+        my ( @keep, @remove );
+        for my $key ( keys %args ) {
+            if ( $key =~ /^-keep_(.+)$/ ) {
+                my $field = $1;
+                my %val;
+                if ( ref $args{$key} ) {
+                    %val = map { $_ => 1 } @{ $args{$key} };
+                }
+                else {
+                    %val = ( $args{$key} => 1 );
+                }
+                push @keep, grep { $val{ $_->$field } } @{ $self->get_entities };
+            }
+            elsif ( $key =~ /^-remove_(.+)$/ ) {
+                my $field = $1;
+                my %val;
+                if ( ref $args{$key} ) {
+                    %val = map { $_ => 1 } @{ $args{$key} };
+                }
+                else {
+                    %val = ( $args{$key} => 1 );
+                }
+                push @remove, grep { $val{ $_->$field } } @{ $self->get_entities };           
+            }
+        }
+        my @netto;
+        REMOVE: for my $remove ( @remove ) {
+            for my $keep ( @keep ) {
+                next REMOVE if $remove->get_id == $keep->get_id;
+            }
+            push @netto, $remove;
+        }
+        my @names = map { $_->id } @netto;
+        my @keep_names = map { $_->id } @keep;
+        if ( @names ) {
+            $self->prune_tips(\@names);
+        }
+        elsif ( @keep_names ) {
+            $self->keep_tips( \@keep_names );
+        }
+    }
+}
+
+sub move_id_to_bootstrap {
+    my $self = shift;
+    $self->visit( 
+        sub { 
+            my $node = shift; 
+            $node->bootstrap( $node->id ) if defined $node->id;
+            $node->id("");
+        } 
+    );
 }
