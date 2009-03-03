@@ -2490,7 +2490,8 @@ sub get_all_tags {
 
 sub get_tag_values{
 	my ( $self, $tag ) = @_;
-	return $self->get_generic($tag);
+	my $values = $self->get_generic($tag);
+	return ref $values ? @{ $values } : $values;
 }
 
 sub has_tag{
