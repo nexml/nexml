@@ -28,3 +28,4 @@ lib\/xs*
 lib\/util*
 README.html
 build.sh
+t\/21-bioperl-tree\.t
