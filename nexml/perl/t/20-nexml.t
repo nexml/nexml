@@ -9,7 +9,7 @@ BEGIN {
 }
 use strict;
 use warnings;
-use Bio::Phylo::IO 'parse';
+use Bio::Phylo::IO qw'parse unparse';
 use Bio::Phylo::Util::Logger;
 use XML::Twig;
 use Data::Dumper;
@@ -25,6 +25,8 @@ my @children = @{ $taxa->get_entities };
 for my $i ( 0 .. $#children ) {
 	ok( $ids[$i] eq $children[$i]->get_xml_id, "$ids[$i]" );
 }
+
+ok( unparse( '-format' => 'nexml', '-phylo' => $taxa ), "serialized taxa" );
 
 # here we parse a file with taxon elements and a trees element
 my $blocks    = parse( '-format' => 'nexml', '-file' => "$XML_PATH/trees.xml" );
@@ -74,8 +76,11 @@ for my $tree ( @{ $forest->get_entities } ) {
 }
 ok( $forest->first->calc_symdiff( $forest->last ) == 0,
 	"identical topologies, symdiff == 0" );
+
+ok( unparse( '-format' => 'nexml', '-phylo' => $forest ), "serialized forest" );	
+
 # here we parse a file with two character matrices, one continuous, one standard
-$blocks = parse( -format => 'nexml', -file => "$XML_PATH/characters.xml" );
+$blocks = parse( '-format' => 'nexml', '-file' => "$XML_PATH/characters.xml" );
 my $raw_matrices = {
 	'CONTINUOUS' => [
 		[
@@ -141,4 +146,5 @@ for my $block (@$blocks) {
 			}
 		}
 	}
+	ok( unparse( '-format' => 'nexml', '-phylo' => $block ), "serialized $block" );
 }
