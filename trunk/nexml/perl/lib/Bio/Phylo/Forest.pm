@@ -1,11 +1,8 @@
 # $Id$
 package Bio::Phylo::Forest;
 use strict;
-#use warnings FATAL => 'all';
 use Bio::Phylo::Listable;
-use Bio::Phylo::Taxa;
 use Bio::Phylo::Taxa::TaxaLinker;
-use Bio::Phylo::Taxa::Taxon;
 use Bio::Phylo::Util::CONSTANT qw(_NONE_ _FOREST_ _PROJECT_);
 use Bio::Phylo::Util::Exceptions 'throw';
 use Bio::Phylo::Factory;

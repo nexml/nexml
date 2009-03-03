@@ -1,11 +1,12 @@
 # $Id$
 package Bio::Phylo::Parsers::Taxlist;
 use strict;
-use Bio::Phylo::Taxa;
-use Bio::Phylo::Taxa::Taxon;
+use Bio::Phylo::Factory;
 use Bio::Phylo::IO;
 use vars qw(@ISA);
 @ISA=qw(Bio::Phylo::IO);
+
+my $fac = Bio::Phylo::Factory->new;
 
 =head1 NAME
 
@@ -65,12 +66,12 @@ sub _from_both {
     if ( !$opts{'-fieldsep'} ) {
         $opts{'-fieldsep'} = "\n";
     }
-    my $taxa = Bio::Phylo::Taxa->new;
+    my $taxa = $fac->create_taxa;
     if ( $opts{'-handle'} ) {
         while ( readline $opts{'-handle'} ) {
             chomp;
             if ($_) {
-                $taxa->insert( Bio::Phylo::Taxa::Taxon->new( -name => $_ ) );
+                $taxa->insert( $fac->create_taxon( -name => $_ ) );
             }
         }
     }
@@ -78,7 +79,7 @@ sub _from_both {
         foreach ( split /$opts{'-fieldsep'}/, $opts{'-string'} ) {
             chomp;
             if ($_) {
-                $taxa->insert( Bio::Phylo::Taxa::Taxon->new( -name => $_ ) );
+                $taxa->insert( $fac->create_taxon( -name => $_ ) );
             }
         }
     }
@@ -87,8 +88,7 @@ sub _from_both {
     	return $opts{'-project'};    	
     }
     elsif ( $opts{'-as_project'} ) {
-    	require Bio::Phylo::Project;
-    	my $proj = Bio::Phylo::Project->new;
+    	my $proj = $fac->create_project;
     	$proj->insert($taxa);
     	return $proj;
     }

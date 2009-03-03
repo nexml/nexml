@@ -2,15 +2,13 @@
 package Bio::Phylo::Parsers::Table;
 use strict;
 use Bio::Phylo::IO;
-use Bio::Phylo::Matrices::Matrix;
-use Bio::Phylo::Matrices::Datum;
-use Bio::Phylo::Taxa;
-use Bio::Phylo::Taxa::Taxon;
+use Bio::Phylo::Factory;
 use vars qw(@ISA);
 
 # classic @ISA manipulation, not using 'base'
 @ISA = qw(Bio::Phylo::IO);
 
+my $fac = Bio::Phylo::Factory->new;
 my $logger = Bio::Phylo->get_logger;
 
 =head1 NAME
@@ -75,10 +73,10 @@ sub _new {
 sub _from_both {
     my $self   = shift;
     my %opts   = @_;
-    my $matrix = Bio::Phylo::Matrices::Matrix->new(
+    my $matrix = $fac->create_matrix(
         '-type' => $opts{'-type'},
     );
-    my $taxa   = Bio::Phylo::Taxa->new;
+    my $taxa   = $fac->create_taxa;
     $taxa->set_matrix($matrix);
     $matrix->set_taxa($taxa);
     my ( $fieldre, $linere );
@@ -109,9 +107,9 @@ sub _from_both {
         while ( readline( $opts{'-handle'} ) ) {
             chomp;
             my @temp = split( $fieldre, $_ );
-            my $taxon = Bio::Phylo::Taxa::Taxon->new( '-name' => $temp[0], );
+            my $taxon = $fac->create_taxon( '-name' => $temp[0], );
             $taxa->insert($taxon);
-            my $datum = Bio::Phylo::Matrices::Datum->new(
+            my $datum = $fac->create_datum(
                 '-name'  => $temp[0],
                 '-type'  => uc $opts{'-type'},
                 '-char'  => [ @temp[ 1, -1 ] ],
@@ -124,9 +122,9 @@ sub _from_both {
     elsif ( $opts{'-string'} ) {
         foreach my $line ( split( $linere, $opts{'-string'} ) ) {
             my @temp = split( $fieldre, $line );
-            my $taxon = Bio::Phylo::Taxa::Taxon->new( '-name' => $temp[0], );
+            my $taxon = $fac->create_taxon( '-name' => $temp[0], );
             $taxa->insert($taxon);
-            my $datum = Bio::Phylo::Matrices::Datum->new(
+            my $datum = $fac->create_datum(
                 '-name' => $temp[0],
                 '-type' => uc $opts{'-type'},
                 #'-char' => [ @temp[ 1 .. $#temp ] ],
@@ -144,8 +142,7 @@ sub _from_both {
     	return $opts{'-project'};
     }
     elsif ( $opts{'-as_project'} ) {
-    	require Bio::Phylo::Project;
-    	my $proj = Bio::Phylo::Project->new;
+    	my $proj = $fac->create_project;
     	my $taxa = $matrix->make_taxa();
     	$proj->insert($taxa,$matrix);
     	return $proj;
