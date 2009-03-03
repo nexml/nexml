@@ -23,6 +23,7 @@ deleteme*
 Doxyfile
 lib\/Bio\/Tools\/Run\/MrBayes\.pm
 lib\/Bio\/Phylo\/BranchClust\.pm
+lib\/Bio\/Phylo\/Article\.pod
 lib\/xs*
 lib\/util*
 README.html
