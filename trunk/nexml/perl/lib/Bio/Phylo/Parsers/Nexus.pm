@@ -6,7 +6,6 @@ use Bio::Phylo::IO qw(parse);
 use Bio::Phylo::Util::CONSTANT qw(:objecttypes);
 use Bio::Phylo::Util::Exceptions qw(throw);
 use UNIVERSAL qw(isa);
-use IO::String;
 use vars qw(@ISA);
 
 # TODO: handle mixed? distances, splits, bipartitions
@@ -159,7 +158,7 @@ sub _new {
 
 =cut
 
-# trickery to get it to parse strings as well, uses IO::String
+# trickery to get it to parse strings as well
 *_from_string = \&_from_handle;
 
 sub _from_handle {
@@ -243,13 +242,15 @@ sub _stringify {
     my %opts = @_;
     my @lines;
     if ( $opts{'-string'} ) {
-        $opts{'-handle'} = IO::String->new( $opts{'-string'} );
-        $logger->info( "nexus data was a string, faking handle access" );
+        @lines = split /\n|\r|\r\n/, $opts{'-string'};
+        $logger->info( "nexus data was a string, split on line breaks" );
     }
-    while ( my $line = readline( $opts{'-handle'} ) ) {
-        push @lines, $line;
-        chomp( $line );
-        $logger->debug( "read line: $line" );
+    elsif ( $opts{'-handle'} ) {
+        while ( my $line = readline( $opts{'-handle'} ) ) {
+            push @lines, $line;
+            chomp( $line );
+            $logger->debug( "read line: $line" );
+        }
     }
     return \@lines;
 }
