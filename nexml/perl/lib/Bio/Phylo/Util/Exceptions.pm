@@ -128,7 +128,12 @@ sub throw (@) {
 	else {
 		my $type = shift;
 		my $class = __PACKAGE__ . '::' . $type;
-		$self = $class->new( 'error' => shift, @_ );
+		if ( $class->isa('Bio::Phylo::Util::Exceptions') ) {
+			$self = $class->new( 'error' => shift, @_ );
+		}
+		else {
+			$self = Bio::Phylo::Util::Exceptions::Generic->new( 'error' => shift, @_ );
+		}
 	}
 # 	if ( not $ENV{'PERL_DL_NONLAZY'} ) {
 # 		require Bio::Phylo;
