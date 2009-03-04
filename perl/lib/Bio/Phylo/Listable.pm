@@ -31,7 +31,7 @@ use UNIVERSAL qw(isa can);
 
 =head1 NAME
 
-Bio::Phylo::Listable - Parent class for listable/iterator objects.
+Bio::Phylo::Listable - List of things, super class for many objects
 
 =head1 SYNOPSIS
 

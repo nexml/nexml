@@ -9,8 +9,7 @@ use vars qw(@ISA);
 
 =head1 NAME
 
-Bio::Phylo::Unparsers::Nexus - Unparses nexus matrices. No serviceable parts
-inside.
+Bio::Phylo::Unparsers::Nexus - Serializer used by Bio::Phylo::IO, no serviceable parts inside
 
 =head1 DESCRIPTION
 

@@ -9,8 +9,7 @@ use vars qw(@ISA);
 
 =head1 NAME
 
-Bio::Phylo::Unparsers::Newick - Unparses newick trees. No serviceable parts
-inside.
+Bio::Phylo::Unparsers::Newick - Serializer used by Bio::Phylo::IO, no serviceable parts inside
 
 =head1 DESCRIPTION
 

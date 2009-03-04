@@ -11,7 +11,7 @@ my $logger = Bio::Phylo->get_logger;
 
 =head1 NAME
 
-Bio::Phylo::Treedrawer - An object-oriented facade for drawing trees.
+Bio::Phylo::Treedrawer - Visualizer of tree shapes
 
 =head1 SYNOPSIS
 

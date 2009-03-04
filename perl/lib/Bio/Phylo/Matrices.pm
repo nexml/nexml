@@ -24,7 +24,7 @@ This class has no internal state, no cleanup is necessary.
 
 =head1 NAME
 
-Bio::Phylo::Matrices - Holds a set of matrix objects.
+Bio::Phylo::Matrices - Container of matrix objects
 
 =head1 SYNOPSIS
 

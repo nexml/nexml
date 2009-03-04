@@ -18,8 +18,7 @@ if ( $@ ) {
 
 =head1 NAME
 
-Bio::Phylo::Unparsers::Nexml - Serializes Bio::Phylo objects to NeXML. No 
-serviceable parts inside.
+Bio::Phylo::Unparsers::Nexml - Serializer used by Bio::Phylo::IO, no serviceable parts inside
 
 =head1 DESCRIPTION
 

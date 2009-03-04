@@ -29,16 +29,15 @@ my $LOADED_WRAPPERS = 0;
 
 =head1 NAME
 
-Bio::Phylo::Matrices::Datum - The character state sequence object.
+Bio::Phylo::Matrices::Datum - Character state sequence
 
 =head1 SYNOPSIS
 
- use Bio::Phylo::Matrices::Matrix;
- use Bio::Phylo::Matrices::Datum;
- use Bio::Phylo::Taxa::Taxon;
+ use Bio::Phylo::Factory;
+ my $fac = Bio::Phylo::Factory->new;
 
  # instantiating a datum object...
- my $datum = Bio::Phylo::Matrices::Datum->new(
+ my $datum = $fac->create_datum(
     -name   => 'Tooth comb size,
     -type   => 'STANDARD',
     -desc   => 'number of teeth in lower jaw comb',
@@ -48,13 +47,13 @@ Bio::Phylo::Matrices::Datum - The character state sequence object.
  );
 
  # ...and linking it to a taxon object
- my $taxon = Bio::Phylo::Taxa::Taxon->new(
+ my $taxon = $fac->create_taxon(
      -name => 'Lemur_catta'
  );
  $datum->set_taxon( $taxon );
 
  # instantiating a matrix...
- my $matrix = Bio::Phylo::Matrices::Matrix->new;
+ my $matrix = $fac->create_matrix;
 
  # ...and insert datum in matrix
  $matrix->insert($datum);

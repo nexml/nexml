@@ -20,15 +20,11 @@ BEGIN {
 
 =head1 NAME
 
-Bio::Phylo::IO - Input and output of phylogenetic data.
+Bio::Phylo::IO - Front end for parsers and serializers
 
 =head1 SYNOPSIS
 
-B<Import the module, optionally with functions.>
-
- use Bio::Phylo::IO 'parse';
-
-B<Parsing nexus files.>
+ use Bio::Phylo::IO qw(parse unparse);
 
  # returns an unblessed array reference of block objects,
  # i.e. taxa, matrix or forest objects
@@ -43,8 +39,14 @@ B<Parsing nexus files.>
         # do something with the taxa
     }
  }
-
-B<Parsing newick strings.>
+ 
+ # returns a Bio::Phylo::Project object
+ my $project = parse(
+ 	'-file'       => $file,
+ 	'-format'     => 'nexus',
+ 	'-as_project' => 1
+ )
+ my ($taxa) = @{ $project->get_taxa };
 
  # parsing a tree from a newick string
  my $tree_string = '(((A,B),C),D);';
@@ -60,8 +62,6 @@ B<Parsing newick strings.>
 
  # prints 'Bio::Phylo::Forest::Tree'
  print ref $tree, "\n";
-
-B<Parsing tab (or otherwise-) delimited tables.>
 
  # parsing a table
  my $table_string = qq(A,1,2|B,1,2|C,2,2|D,2,1);
@@ -82,8 +82,6 @@ B<Parsing tab (or otherwise-) delimited tables.>
  # prints 'Bio::Phylo::Matrices::Matrix'
  print ref $matrix, "\n"; 
 
-B<Parsing lists of taxa.>
-
  # parsing a list of taxa
  my $taxa_string = 'A:B:C:D';
  my $taxa = Bio::Phylo::IO->parse(
@@ -101,9 +99,7 @@ B<Parsing lists of taxa.>
  # likewise for matrix  
  $matrix->cross_reference($taxa);
 
-B<Writing "Pagel" format files.>
-
- print Bio::Phylo::IO->unparse(
+ print unparse(
 
     # pass the tree object, 
     # crossreferenced to taxa, which
@@ -123,11 +119,11 @@ B<Writing "Pagel" format files.>
 
 =head1 DESCRIPTION
 
-The IO module is the unified front end for parsing and unparsing phylogenetic
+The IO module is the front end for parsing and serializing phylogenetic
 data objects. It is a non-OO module that optionally exports the 'parse' and
 'unparse' subroutines into the caller's namespace, using the
 C<< use Bio::Phylo::IO qw(parse unparse); >> directive. Alternatively, you can
-call the subroutines as class methods, as in the synopsis. The C<< parse >> and
+call the subroutines as class methods. The C<< parse >> and
 C<< unparse >> subroutines load and dispatch the appropriate sub-modules at
 runtime, depending on the '-format' argument.
 

@@ -10,7 +10,7 @@ my $fac = Bio::Phylo::Factory->new;
 
 =head1 NAME
 
-Bio::Phylo::Parsers::Taxlist - Parses lists of taxon names. No serviceable parts
+Bio::Phylo::Parsers::Taxlist - Parser used by Bio::Phylo::IO, no serviceable parts inside
 inside.
 
 =head1 DESCRIPTION

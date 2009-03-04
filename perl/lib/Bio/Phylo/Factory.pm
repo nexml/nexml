@@ -17,11 +17,12 @@ my %class = (
     'dictionary' => 'Bio::Phylo::Dictionary',
     'annotation' => 'Bio::Phylo::Annotation',
     'set'        => 'Bio::Phylo::Set',
+    'generator'  => 'Bio::Phylo::Generator',
 );
 
 =head1 NAME
 
-Bio::Phylo::Factory - Object to instantiate other objects.
+Bio::Phylo::Factory - Creator of objects, reduces hardcoded class names in code
 
 =head1 SYNOPSIS
 

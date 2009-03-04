@@ -6,32 +6,31 @@ use Bio::Phylo::Util::CONSTANT '_NONE_';
 
 =head1 NAME
 
-Bio::Phylo::Set - Object to manage subsets of the contents of listable containers 
+Bio::Phylo::Set - Subset of the parts inside a container 
 
 =head1 SYNOPSIS
 
- use Bio::Phylo::Forest;
- use Bio::Phylo::Forest::Tree;
- use Bio::Phylo::Set;
+ use Bio::Phylo::Factory;
+ my $fac = Bio::Phylo::Factory->new;
  
- my $forest = Bio::Phylo::Forest->new;
- my $tree = Bio::Phylo::Forest::Tree->new;
+ my $forest = $fac->create_forest;
+ my $tree = $fac->create_tree;
  $forest->insert($tree);
  
- my $set = Bio::Phylo::Set->new( -name => 'TreeSet1' );
+ my $set = $fac->create_set( -name => 'TreeSet1' );
  $forest->add_set($set);
  $forest->add_to_set($tree,$set); # $tree is now part of TreeSet1
 
 =head1 DESCRIPTION
 
-Many Bio::Phylo objects are segmented, i.e. they contain one or more subparts 
+Many Bio::Phylo objects are segmented: they contain one or more subparts 
 of the same type. For example, a matrix contains multiple rows; each row 
-contains multiple cells; a tree contains nodes, and so on. (Segmented objects
-all inherit from L<Bio::Phylo::Listable>.) In many cases it is useful to be
+contains multiple cells; a tree contains nodes, and so on. Segmented objects
+all inherit from L<Bio::Phylo::Listable>. In many cases it is useful to be
 able to define subsets of the contents of segmented objects, for example
 sets of taxon objects inside a taxa block. The Bio::Phylo::Listable object
 allows this through a number of methods (add_set, remove_set, add_to_set,
-remove_from_set etc.). Those methods delegate the actual management of the set
+remove_from_set and so on). Those methods delegate the actual management of the set
 contents to the Bio::Phylo::Set object, the class whose documentation you're
 reading now. Consult the documentation for L<Bio::Phylo::Listable/SETS MANAGEMENT> 
 for more information on how to use this feature.
