@@ -131,7 +131,7 @@ Datum constructor from Bio::Seq argument.
         
         # copy seq string
         my $seqstring = $seq->seq;
-        if ( $seqstring =~ /\S/ ) {
+        if ( $seqstring and $seqstring =~ /\S/ ) {
         	eval { $self->set_char( $seqstring ) };
         	if ( $@ and UNIVERSAL::isa($@,'Bio::Phylo::Util::Exceptions::InvalidData') ) {
         		$logger->error(
