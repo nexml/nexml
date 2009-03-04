@@ -241,7 +241,7 @@ Also see the manual: L<Bio::Phylo::Manual> and L<http://rutgervos.blogspot.com>.
 
 =head1 REVISION
 
- $Id: Annotation.pm 604 2008-09-05 17:32:28Z rvos $
+ $Id$
 
 =cut
     
