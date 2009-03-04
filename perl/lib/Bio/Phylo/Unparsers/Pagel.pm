@@ -131,6 +131,8 @@ sub _to_string {
     return $string;
 }
 
+# podinherit_insert_token
+
 =head1 SEE ALSO
 
 =over

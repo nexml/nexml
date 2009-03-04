@@ -933,6 +933,8 @@ Serializes datum to nexml format.
 
 }
 
+# podinherit_insert_token
+
 =back
 
 =head1 SEE ALSO

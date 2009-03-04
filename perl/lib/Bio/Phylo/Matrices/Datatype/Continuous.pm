@@ -168,6 +168,8 @@ Joins array ref of characters to a space-separated string.
 
 	$MISSING = '?';
 
+# podinherit_insert_token
+
 =back
 
 =head1 SEE ALSO

@@ -669,6 +669,8 @@ Writes data type definitions to xml
 		return $xml;	
 	}
 
+# podinherit_insert_token
+
 =back
 
 =head1 SEE ALSO

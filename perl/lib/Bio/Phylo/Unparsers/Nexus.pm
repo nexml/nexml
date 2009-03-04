@@ -133,6 +133,8 @@ sub _to_string {
 
 }
 
+# podinherit_insert_token
+
 =head1 SEE ALSO
 
 =over

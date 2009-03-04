@@ -151,6 +151,8 @@ sub _from_both {
     }
 }
 
+# podinherit_insert_token
+
 =head1 SEE ALSO
 
 =over

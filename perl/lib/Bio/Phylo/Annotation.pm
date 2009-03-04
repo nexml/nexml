@@ -217,7 +217,9 @@ Serializes object to an xml string
         $xml .= "<${type} id=\"${key}\">" . $value . "</${type}>";
         return $xml;
     }
-    
+
+# podinherit_insert_token
+
 =back
 
 =head1 SEE ALSO
