@@ -5,9 +5,10 @@ use strict;
 use Bio::Phylo::Factory;
 use Bio::Phylo::Taxa::TaxaLinker;
 use Bio::Phylo::IO qw(unparse);
-use Bio::Phylo::Util::CONSTANT qw(:objecttypes);
+use Bio::Phylo::Util::CONSTANT qw(:objecttypes looks_like_hash);
 use Bio::Phylo::Util::Exceptions qw(throw);
 use Bio::Phylo::Matrices::TypeSafeData;
+use Bio::Phylo::Matrices::Datum;
 use UNIVERSAL qw(isa);
 @ISA = qw(
   Bio::Phylo::Matrices::TypeSafeData
@@ -202,29 +203,37 @@ Matrix constructor from Bio::Align::AlignI argument.
 =cut
 	
 	sub new_from_bioperl {
-	    my ( $class, $aln ) = @_;
+	    my ( $class, $aln, @args ) = @_;
 		if ( isa( $aln, 'Bio::Align::AlignI' ) ) {
 		    $aln->unmatch;
 		    $aln->map_chars('\.','-');
 		    my @seqs = $aln->each_seq;
-			my $self = $class->SUPER::new( 
-			    '-tag'       => 'characters',
-			    '-type'      => $seqs[0] ? $seqs[0]->alphabet : 'dna',
-                '-missing'   => $aln->missing_char,
-                '-gap'       => $aln->gap_char,
-                '-matchchar' => $aln->match_char,
-			);
-			my $to = $self->get_type_object;
-			bless $self, $class;
+		    my ( $type, $missing, $gap, $matchchar ); 
+		    if ( $seqs[0] ) {
+		    	$type = $seqs[0]->alphabet || $seqs[0]->_guess_alphabet || 'dna';
+		    }
+		    else {
+		    	$type = 'dna';
+		    }
+			my $self = $factory->create_matrix( 
+				'-type' => $type,
+				'-special_symbols' => {
+			    	'-missing'   => $aln->missing_char || '?',
+			    	'-matchchar' => $aln->match_char   || '.',
+			    	'-gap'       => $aln->gap_char     || '-',					
+				},
+				@args 
+			);			
+			# XXX create raw getter/setter pairs for annotation, accession, consensus_meta source
+			for my $field ( qw(description accession id annotation consensus_meta score source) ) {
+				$self->$field( $aln->$field );
+			}			
+			my $to = $self->get_type_object;			
             for my $seq ( @seqs ) {
-                $self->insert( 
-                    $factory->create_datum( 
-                        '-type_object' => $to,
-                        '-char'        => $seq->seq,
-                        '-name'        => $seq->display_id,
-                        '-desc'        => $seq->desc,                                        
-                    )
-                );
+            	my $datum = Bio::Phylo::Matrices::Datum->new_from_bioperl(
+            		$seq, '-type_object' => $to
+            	);                                         	
+                $self->insert($datum);
             }
             return $self;
 		}
@@ -238,6 +247,80 @@ Matrix constructor from Bio::Align::AlignI argument.
 =head2 MUTATORS
 
 =over
+
+=item set_special_symbols
+
+Sets three special symbols in one call
+
+ Type    : Mutator
+ Title   : set_special_symbols
+ Usage   : $matrix->set_special_symbols( 
+ 		       -missing   => '?', 
+ 		       -gap       => '-', 
+ 		       -matchchar => '.' 
+ 		   );
+ Function: Assigns state labels.
+ Returns : $self
+ Args    : Three args (with distinct $x, $y and $z):
+  		       -missing   => $x, 
+ 		       -gap       => $y, 
+ 		       -matchchar => $z
+ Notes   : This method is here to ensure
+           you don't accidentally use the
+           same symbol for missing AND gap
+
+=cut
+
+	sub set_special_symbols {
+		my $self = shift;
+		my %args;
+		if ( ( @_ == 1 && ref($_[0]) eq 'HASH' && ( %args = %{$_[0]} ) ) || ( %args = looks_like_hash @_ ) ) {
+			if ( ! defined $args{'-missing'} || ! defined $args{'-gap'} || ! defined $args{'-matchchar'} ) {
+				throw 'BadArgs' => 'Need -missing => $x, -gap => $y, -matchchar => $z arguments, not '."@_";
+			}
+			my %values = map { $_ => 1 } values %args;
+			my @values = keys %values;
+			if ( scalar @values < 3 ) {
+				throw 'BadArgs' => 'Symbols must be distinct, not ' . join(', ', values %args);
+			}
+			my %old_special_symbols = ( 
+				$self->get_missing   => 'set_missing',
+				$self->get_gap       => 'set_gap',
+				$self->get_matchchar => 'set_matchchar',
+			);	
+			my %new_special_symbols = (
+				$args{'-missing'}    => 'set_missing',
+				$args{'-gap'}        => 'set_gap',
+				$args{'-matchchar'}  => 'set_matchchar',
+			);
+			my %dummies;
+			while ( %new_special_symbols ) {
+				for my $sym ( keys %new_special_symbols ) {
+					if ( not $old_special_symbols{$sym} ) {
+						my $method = $new_special_symbols{$sym};
+						$self->$method($sym);
+						delete $new_special_symbols{$sym};
+					}
+					elsif ( $old_special_symbols{$sym} eq $new_special_symbols{$sym} ) {
+						delete $new_special_symbols{$sym};
+					}
+					else {
+						DUMMY: for my $dummy ( qw(! @ # $ % ^ & *) ) {
+							if ( ! $new_special_symbols{$dummy} && ! $old_special_symbols{$dummy} && ! $dummies{$dummy} ) {
+								my $method = $old_special_symbols{$sym};
+								$self->$method($dummy);
+								$dummies{$dummy} = 1;
+								delete $old_special_symbols{$sym};
+								$old_special_symbols{$dummy} = $method;
+								last DUMMY;
+							}
+						}
+					}
+				}
+			}
+		}
+		return $self;
+	}
 
 =item set_statelabels()
 
@@ -452,6 +535,28 @@ Defines matrix case sensitivity interpretation.
 =head2 ACCESSORS
 
 =over
+
+=item get_special_symbols()
+
+Retrieves hash ref for missing, gap and matchchar symbols
+
+ Type    : Accessor
+ Title   : get_special_symbols
+ Usage   : my %syms = %{ $matrix->get_special_symbols };
+ Function: Retrieves special symbols
+ Returns : HASH ref, e.g. { -missing => '?', -gap => '-', -matchchar => '.' }
+ Args    : None.
+
+=cut
+
+	sub get_special_symbols {
+		my $self = shift;
+		return {
+			'-missing'   => $self->get_missing,
+			'-matchchar' => $self->get_matchchar,
+			'-gap'       => $self->get_gap
+		};
+	}
 
 =item get_statelabels()
 
@@ -685,6 +790,11 @@ Clones invocant.
 				
 		# we'll clone datum objects, so no raw copying
 		$subs{'set_raw'} = sub {};
+		
+		# we'll use the set/get_special_symbols method
+		$subs{'set_missing'}   = sub {};
+		$subs{'set_gap'}       = sub {};
+		$subs{'set_matchchar'} = sub {};
 		
 		return $self->SUPER::clone(%subs);
 	
@@ -1233,6 +1343,46 @@ Also see the manual: L<Bio::Phylo::Manual> and L<http://rutgervos.blogspot.com>.
 
 __DATA__
 
+my %CONSERVATION_GROUPS = (
+            'strong' => [ qw(
+						 STA
+						 NEQK
+						 NHQK
+						 NDEQ
+						 QHRK
+						 MILV
+						 MILF
+						 HY
+						 FYW )],
+				'weak' => [ qw(
+                      CSA
+					       ATV
+					       SAG
+					       STNK
+					       STPA
+					       SGND
+					       SNDEQK
+					       NDEQHK
+					       NEQHRK
+					       FVLIM
+					       HFY )],);
+
+sub description {
+	my ( $self, $desc ) = @_;
+	if ( defined $desc ) {
+		$self->set_desc( $desc );
+	}
+	return $self->get_desc;
+}
+
+sub score {
+	my ( $self, $score ) = @_;
+	if ( defined $score ) {
+		$self->set_score( $score );
+	}
+	return $self->get_score;
+}
+
 sub add_seq {
     my ( $self, $seq, $order ) = @_;
     $self->insert( $seq );
@@ -1350,8 +1500,80 @@ sub uppercase {
     }
 }
 
+# from simplealign
 sub match_line {
- $logger->warn 
+	my ($self,$matchlinechar, $strong, $weak) = @_;
+	my %matchchars = ('match'    => $matchlinechar || '*',
+							  'weak'     => $weak          || '.',
+							  'strong'   => $strong        || ':',
+							  'mismatch' => ' ',
+						  );
+
+	my @seqchars;
+	my $alphabet;
+	foreach my $seq ( $self->each_seq ) {
+		push @seqchars, [ split(//, uc ($seq->seq)) ];
+		$alphabet = $seq->alphabet unless defined $alphabet;
+	}
+	my $refseq = shift @seqchars;
+	# let's just march down the columns
+	my $matchline;
+ POS:
+	foreach my $pos ( 0..$self->length ) {
+		my $refchar = $refseq->[$pos];
+		my $char = $matchchars{'mismatch'};
+		unless( defined $refchar ) {
+			last if $pos == $self->length; # short circuit on last residue
+			# this in place to handle jason's soon-to-be-committed
+			# intron mapping code
+			goto bottom;
+		}
+		my %col = ($refchar => 1);
+		my $dash = ($refchar eq '-' || $refchar eq '.' || $refchar eq ' ');
+		foreach my $seq ( @seqchars ) {
+			next if $pos >= scalar @$seq;
+			$dash = 1 if( $seq->[$pos] eq '-' || $seq->[$pos] eq '.' ||
+							  $seq->[$pos] eq ' ' );
+			$col{$seq->[$pos]}++ if defined $seq->[$pos];
+		}
+		my @colresidues = sort keys %col;
+
+		# if all the values are the same
+		if( $dash ) { $char =  $matchchars{'mismatch'} }
+		elsif( @colresidues == 1 ) { $char = $matchchars{'match'} }
+		elsif( $alphabet eq 'protein' ) { # only try to do weak/strong
+			# matches for protein seqs
+	    TYPE:
+			foreach my $type ( qw(strong weak) ) {
+				# iterate through categories
+				my %groups;
+				# iterate through each of the aa in the col
+				# look to see which groups it is in
+				foreach my $c ( @colresidues ) {
+					foreach my $f ( grep { index($_,$c) >= 0 } @{$CONSERVATION_GROUPS{$type}} ) {
+						push @{$groups{$f}},$c;
+					}
+				}
+			 GRP:
+				foreach my $cols ( values %groups ) {
+					@$cols = sort @$cols;
+					# now we are just testing to see if two arrays
+					# are identical w/o changing either one
+					# have to be same len
+					next if( scalar @$cols != scalar @colresidues );
+					# walk down the length and check each slot
+					for($_=0;$_ < (scalar @$cols);$_++ ) {
+						next GRP if( $cols->[$_] ne $colresidues[$_] );
+					}
+					$char = $matchchars{$type};
+					last TYPE;
+				}
+			}
+		}
+	 bottom:
+		$matchline .= $char;
+	}
+	return $matchline;
 }
 
 sub match {
@@ -1363,6 +1585,7 @@ sub match {
         $self->set_matchchar('.');
     }
     $match = $self->get_matchchar;
+    my $lookup = $self->get_type_object->get_lookup->{$match} = [ $match ];    
     my @seqs = @{ $self->get_entities };
     my @firstseq = $seqs[0]->get_char;
     for my $i ( 1 .. $#seqs ) {
@@ -1433,14 +1656,33 @@ sub gap_char {
 }
 
 sub symbol_chars {
-    my $self = shift;
-    my $to = $self->get_type_object;
-    my $lookup = $to->get_lookup;
-    return keys %{ $lookup };
+    my ( $self, $includeextra ) = @_;
+	my %seen;
+	for my $row ( @{ $self->get_entities } ) {
+		my @char = $row->get_char;
+		$seen{$_} = 1 for @char;
+	}
+    return keys %seen if $includeextra;
+    my $special_values = $self->get_special_symbols;
+    my %special_keys   = map { $_ => 1 } values %{ $special_values };
+    return grep { ! $special_keys{$_} } keys %seen;
 }
 
 sub consensus_string {
- $logger->warn 
+	my $self = shift;
+	my $to = $self->get_type_object;
+	my $ntax = $self->get_ntax;
+	my $nchar = $self->get_nchar;
+	my @consensus;
+	for my $i ( 0 .. $ntax - 1 ) {
+		my ( @column, %column );
+		for my $j ( 0 .. $nchar - 1 ) {
+			$column{ $self->get_by_index($i)->get_by_index($j) } = 1;
+		}
+		@column = keys %column;
+		push @consensus, $to->get_symbol_for_states(@column);
+	}
+	return join '', @consensus;
 }
 
 sub consensus_iupac {
@@ -1462,9 +1704,130 @@ sub no_sequences {
 
 sub percentage_identity { $logger->warn }
 
-sub overall_percentage_identity { $logger->warn }
+# from simplealign
+sub average_percentage_identity{
+   my ($self,@args) = @_;
 
-sub average_percentage_identity { $logger->warn }
+   my @alphabet = ('A','B','C','D','E','F','G','H','I','J','K','L','M',
+                   'N','O','P','Q','R','S','T','U','V','W','X','Y','Z');
+
+   my ($len, $total, $subtotal, $divisor, $subdivisor, @seqs, @countHashes);
+
+   if (! $self->is_flush()) {
+       throw 'Generic' => "All sequences in the alignment must be the same length";
+   }
+
+   @seqs = $self->each_seq();
+   $len = $self->length();
+
+   # load the each hash with correct keys for existence checks
+
+   for( my $index=0; $index < $len; $index++) {
+       foreach my $letter (@alphabet) {
+       		$countHashes[$index] = {} if not $countHashes[$index];
+	   $countHashes[$index]->{$letter} = 0;
+       }
+   }
+   foreach my $seq (@seqs)  {
+       my @seqChars = split //, $seq->seq();
+       for( my $column=0; $column < @seqChars; $column++ ) {
+	   my $char = uc($seqChars[$column]);
+	   if (exists $countHashes[$column]->{$char}) {
+	       $countHashes[$column]->{$char}++;
+	   }
+       }
+   }
+
+   $total = 0;
+   $divisor = 0;
+   for(my $column =0; $column < $len; $column++) {
+       my %hash = %{$countHashes[$column]};
+       $subdivisor = 0;
+       foreach my $res (keys %hash) {
+	   $total += $hash{$res}*($hash{$res} - 1);
+	   $subdivisor += $hash{$res};
+       }
+       $divisor += $subdivisor * ($subdivisor - 1);
+   }
+   return $divisor > 0 ? ($total / $divisor )*100.0 : 0;
+}
+
+# from simplealign
+sub overall_percentage_identity{
+   my ($self, $length_measure) = @_;
+
+   my @alphabet = ('A','B','C','D','E','F','G','H','I','J','K','L','M',
+                   'N','O','P','Q','R','S','T','U','V','W','X','Y','Z');
+
+   my ($len, $total, @seqs, @countHashes);
+
+   my %enum = map {$_ => 1} qw (align short long);
+
+   throw 'Generic' => "Unknown argument [$length_measure]" 
+       if $length_measure and not $enum{$length_measure};
+   $length_measure ||= 'align';
+
+   if (! $self->is_flush()) {
+       throw 'Generic' => "All sequences in the alignment must be the same length";
+   }
+
+   @seqs = $self->each_seq();
+   $len = $self->length();
+
+   # load the each hash with correct keys for existence checks
+   for( my $index=0; $index < $len; $index++) {
+       foreach my $letter (@alphabet) {
+       		$countHashes[$index] = {} if not $countHashes[$index];
+	   $countHashes[$index]->{$letter} = 0;
+       }
+   }
+   foreach my $seq (@seqs)  {
+       my @seqChars = split //, $seq->seq();
+       for( my $column=0; $column < @seqChars; $column++ ) {
+	   my $char = uc($seqChars[$column]);
+	   if (exists $countHashes[$column]->{$char}) {
+	       $countHashes[$column]->{$char}++;
+	   }
+       }
+   }
+
+   $total = 0;
+   for(my $column =0; $column < $len; $column++) {
+       my %hash = %{$countHashes[$column]};
+       foreach ( values %hash ) {
+	   next if( $_ == 0 );
+	   $total++ if( $_ == scalar @seqs );
+	   last;
+       }
+   }
+
+   if ($length_measure eq 'short') {
+       ## find the shortest length
+       $len = 0;
+       foreach my $seq ($self->each_seq) {
+           my $count = $seq->seq =~ tr/[A-Za-z]//;
+           if ($len) {
+               $len = $count if $count < $len;
+           } else {
+               $len = $count;
+           }
+       }
+   }
+   elsif ($length_measure eq 'long') {
+       ## find the longest length
+       $len = 0;
+       foreach my $seq ($self->each_seq) {
+           my $count = $seq->seq =~ tr/[A-Za-z]//;
+           if ($len) {
+               $len = $count if $count > $len;
+           } else {
+               $len = $count;
+           }
+       }
+   }
+
+   return ($total / $len ) * 100.0;
+}
 
 sub column_from_residue_number {
     my ( $self, $seqname, $resnumber ) = @_;
@@ -1481,18 +1844,116 @@ sub column_from_residue_number {
     }
 }
 
-sub displayname { 
-    my ( $self, $name ) = @_;
-    return $name;
+sub displayname {
+    my ( $self, $name, $disname ) = @_;
+	my $seq;
+	$self->visit( sub{ $seq = $_[0] if $_[0]->get_nse eq $name } );
+    $self->throw("No sequence with name [$name]") unless $seq;
+	my $disnames = $self->get_generic( 'displaynames' ) || {};
+    if ( $disname and  $name ) {
+    	$disnames->{$name} = $disname;
+		return $disname;
+    }
+    elsif( defined $disnames->{$name} ) {
+		return  $disnames->{$name};
+    } 
+    else {
+		return $name;
+    }
 }
 
-sub maxdisplayname_length { $logger->warn }
+# from SimpleAlign
+sub maxdisplayname_length {
+    my $self = shift;
+    my $maxname = (-1);
+    my ($seq,$len);
+    foreach $seq ( $self->each_seq() ) {
+		$len = CORE::length $self->displayname($seq->get_nse());	
+		if( $len > $maxname ) {
+		    $maxname = $len;
+		}
+    }
+    return $maxname;
+}
+
+# from SimpleAlign
+sub set_displayname_flat {
+    my $self = shift;
+    my ($nse,$seq);
+
+    foreach $seq ( $self->each_seq() ) {
+	$nse = $seq->get_nse();
+	$self->displayname($nse,$seq->id());
+    }
+    return 1;
+}
 
 sub set_displayname_count { $logger->warn }
 
-sub set_displayname_flat { $logger->warn }
-
 sub set_displayname_normal { $logger->warn }
+
+sub accession {
+	my ( $self, $acc ) = @_;
+	if ( defined $acc ) {
+		$self->set_generic( 'accession' => $acc );
+	}
+	return $self->get_generic( 'accession' );
+}
+
+sub source {
+	my ( $self, $source ) = @_;
+	if ( defined $source ) {
+		$self->set_generic( 'source' => $source );
+	}
+	return $self->get_generic( 'source' );
+}
+
+sub annotation {
+	my ( $self, $anno ) = @_;
+	if ( defined $anno ) {
+		$self->set_generic( 'annotation' => $anno );
+	}
+	return $self->get_generic( 'annotation' );
+}
+
+sub consensus_meta {
+	my ( $self, $meta ) = @_;
+	if ( defined $meta ) {
+		$self->set_generic( 'consensus_meta' => $meta );
+	}
+	return $self->get_generic( 'consensus_meta' );
+}
+
+# XXX this might be removed, and instead inherit from SimpleAlign
+sub max_metaname_length {
+    my $self = shift;
+    my $maxname = (-1);
+    my ($seq,$len);
+    
+    # check seq meta first
+    for $seq ( $self->each_seq() ) {
+        next if !$seq->isa('Bio::Seq::MetaI' || !$seq->meta_names);
+        for my $mtag ($seq->meta_names) {
+            $len = CORE::length $mtag;
+            if( $len > $maxname ) {
+                $maxname = $len;
+            }
+        }
+    }
+    
+    # alignment meta
+    for my $meta ($self->consensus_meta) {
+        next unless $meta;
+        for my $name ($meta->meta_names) {
+            $len = CORE::length $name;
+            if( $len > $maxname ) {
+                $maxname = $len;
+            }
+        }
+    }
+
+    return $maxname;
+}
 
 
 
