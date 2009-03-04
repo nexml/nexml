@@ -18,7 +18,7 @@ use CGI::Carp 'fatalsToBrowser';
 use Bio::Phylo::IO qw(parse unparse);
 use Bio::Phylo::Forest;
 use HTML::Entities;
-use constant URL => 'http://tolweb.org/onlinecontributors/app?service=external&page=xml/TreeStructureService&node_id=';
+use constant URL => 'http://150.135.239.5/onlinecontributors/app?service=external&page=xml/TreeStructureService&node_id=';
 
 if ( $ENV{'QUERY_STRING'} =~ /wsdl/ ) {
 	my $file = $0;
