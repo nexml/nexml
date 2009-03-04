@@ -1090,9 +1090,11 @@ Tree constructor.
         return $text_vert_offset{$id};
     }
 
-=begin comment()
+=begin comment
 
 This method re-computes the node coordinates
+
+=end comment
 
 =cut
 
@@ -1129,9 +1131,11 @@ This method re-computes the node coordinates
         );
     }
 
-=begin comment()
+=begin comment
 
 This method applies settings for nodes globally.
+
+=end comment
 
 =cut
 
