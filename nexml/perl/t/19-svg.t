@@ -1,4 +1,4 @@
-# $Id: 19-svg.t 4444 2007-08-21 13:04:36Z rvosa $
+# $Id$
 use Test::More;
 BEGIN {
     eval { require SVG };
