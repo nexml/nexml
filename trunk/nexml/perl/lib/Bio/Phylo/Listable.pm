@@ -1110,6 +1110,8 @@ Consult the documentation for L<Bio::Phylo::Set> for a code sample.
 	}
 }
 
+# podinherit_insert_token
+
 =back
 
 =head1 SEE ALSO

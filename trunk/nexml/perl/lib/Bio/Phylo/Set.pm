@@ -94,6 +94,8 @@ Tests if argument can be inserted in invocant.
     sub _type { $NONE }
 }
 
+# podinherit_insert_token
+
 =back
 
 =head1 SEE ALSO

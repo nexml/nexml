@@ -2271,6 +2271,8 @@ Serializes object to JSON string
 
 	sub _type { $TYPE_CONSTANT }
 
+# podinherit_insert_token
+
 =back
 
 =head1 SEE ALSO

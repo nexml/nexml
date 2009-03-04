@@ -87,6 +87,8 @@ L<Bio::Phylo::Util::Exceptions>).
         throw 'BadArgs' => "Can't attach dictionaries to other dictionaries"
     }
 
+# podinherit_insert_token
+
 =back
 
 =head1 SEE ALSO

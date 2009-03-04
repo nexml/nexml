@@ -373,6 +373,8 @@ Serializes invocant to nexus format.
 
     sub _type { $TYPE }
 
+# podinherit_insert_token
+
 =back
 
 =head1 SEE ALSO

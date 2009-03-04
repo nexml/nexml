@@ -409,6 +409,8 @@ sub _token_handler {
     return $node, $clade;
 }
 
+# podinherit_insert_token
+
 =head1 SEE ALSO
 
 =over
