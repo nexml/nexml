@@ -980,7 +980,7 @@ changes. If you can localize the bug to particular package file (i.e. a *.pm fil
 from this release), please include the REVISION tag for that file in your bug
 report. It is a string such as this one:
 
-  $Id: Manual.pod 4676 2007-10-12 06:44:50Z rvosa $
+  $Id$
 
 =head1 AUTHORS
 
