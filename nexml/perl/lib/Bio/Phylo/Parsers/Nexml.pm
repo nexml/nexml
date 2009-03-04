@@ -16,12 +16,14 @@ if ( $@ ) {
 
 =head1 NAME
 
-Bio::Phylo::Parsers::Nexml - Parses nexml data. No serviceable parts inside.
+Bio::Phylo::Parsers::Nexml - Parser used by Bio::Phylo::IO, no serviceable parts inside
 
 =head1 DESCRIPTION
 
 This module parses nexml data. It is called by the L<Bio::Phylo::IO> facade,
-don't call it directly.
+don't call it directly. In addition to parsing from files, handles or strings (which
+are specified by the -file, -handle and -string arguments) this parser can also parse
+xml directly from a url (-url => $phylows_output), provided you have L<LWP> installed.
 
 =head1 SEE ALSO
 
@@ -202,8 +204,12 @@ sub _from_both {
 	my %opt = @_;
 
 	# XML::Twig doesn't care if we parse from a handle or a string
-	my $xml = $opt{'-handle'} || $opt{'-string'};
-	$self->{'_twig'}->parse($xml);
+	if ( my $xml = $opt{'-handle'} || $opt{'-string'} ) {
+		$self->{'_twig'}->parse($xml);
+	}
+	elsif ( my $url = $opt{'-url'} ) {
+		$self->{'_twig'}->parseurl($url);
+	}
 
 	# we're done, now order the blocks
 	my $ordered_blocks = $self->{'_blocks'};

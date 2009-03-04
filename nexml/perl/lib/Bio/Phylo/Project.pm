@@ -8,17 +8,17 @@ use strict;
 
 =head1 NAME
 
-Bio::Phylo::Project - Container object to collect related data
+Bio::Phylo::Project - Container for related data
 
 =head1 SYNOPSIS
 
- use Bio::Phylo::Project;
  use Bio::Phylo::Factory;
- my $fac = Bio::Phylo::Factory->new;
- my $proj = Bio::Phylo::Project->new;
- $proj->insert($fac->create_taxa);
- $proj->insert($fac->create_matrix);
- $proj->insert($fac->create_forest)
+ my $fac  = Bio::Phylo::Factory->new;
+ my $proj = $fac->create_project;
+ my $taxa = $fac->create_taxa;
+ $proj->insert($taxa);
+ $proj->insert($fac->create_matrix->set_taxa($taxa));
+ $proj->insert($fac->create_forest->set_taxa($taxa));
  print $proj->to_xml;
 
 =head1 DESCRIPTION

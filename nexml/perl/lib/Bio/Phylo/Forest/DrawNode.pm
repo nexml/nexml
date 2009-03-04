@@ -28,7 +28,7 @@ use vars '@ISA';
 
 =head1 NAME
 
-Bio::Phylo::Forest::DrawNode - A tree node object with extra methods for tree drawing.
+Bio::Phylo::Forest::DrawNode - Tree node with extra methods for tree drawing
 
 =head1 SYNOPSIS
 

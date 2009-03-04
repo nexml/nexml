@@ -7,7 +7,7 @@ use vars qw($LOOKUP @ISA $MISSING $GAP);
 
 =head1 NAME
 
-Bio::Phylo::Matrices::Datatype::Rna - Datatype subclass,
+Bio::Phylo::Matrices::Datatype::Rna - Validator subclass,
 no serviceable parts inside
 
 =head1 DESCRIPTION

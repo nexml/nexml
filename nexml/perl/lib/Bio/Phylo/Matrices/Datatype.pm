@@ -15,8 +15,7 @@ use vars '@ISA';
 
 =head1 NAME
 
-Bio::Phylo::Matrices::Datatype - Superclass for objects that validate
-character data.
+Bio::Phylo::Matrices::Datatype - Validator of character state data
 
 =head1 SYNOPSIS
 
@@ -28,12 +27,12 @@ This is a superclass for objects that validate character data. Objects that
 inherit from this class (typically those in the
 Bio::Phylo::Matrices::Datatype::* namespace) can check strings and arrays of
 character data for invalid symbols, and split and join strings and arrays
-in a way appropriate for the type (i.e. on whitespace for continuous data,
-on single characters for categorical data). The datatype objects are used by
+in a way appropriate for the type (on whitespace for continuous data,
+on single characters for categorical data).
 L<Bio::Phylo::Matrices::Matrix> objects and L<Bio::Phylo::Matrices::Datum>
-objects in an arrangement akin to the Delegation design pattern
-(e.g. see L<http://www.c2.com/cgi/wiki?DelegationPattern>). There is really no
-normal usage in which you'd have to deal with this object directly.
+internally delegate validation of their contents to these datatype objects;
+there is no normal usage in which you'd have to deal with datatype objects 
+directly.
 
 =head1 METHODS
 

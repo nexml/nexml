@@ -89,7 +89,7 @@ $VERSION .= "_$rev";
 
 =head1 NAME
 
-Bio::Phylo - Phylogenetic analysis using perl.
+Bio::Phylo - Phylogenetic analysis using perl
 
 =head1 SYNOPSIS
 
@@ -117,22 +117,12 @@ objects in the Bio::Phylo release that inherit from this base class (which you n
 wouldn't use directly).
 
 For general information on how to use Bio::Phylo, consult the manual
-(L<Bio::Phylo::Manual>); for information on using Bio::Phylo in combination with
-Bioperl (L<http://www.bioperl.org>) and Bio::Nexus
-(L<http://search.cpan.org/~tjhladish/Bio-NEXUS>), consult the object
-compatibility document (L<Bio::ObjectCompat>).
+(L<Bio::Phylo::Manual>).
 
 If you come here because you are trying to debug a problem you run into in
 using Bio::Phylo, you may be interested in the "exceptions" system as discussed
 in L<Bio::Phylo::Util::Exceptions>. In addition, you may find the logging system
 in L<Bio::Phylo::Util::Logger> of use to localize problems.
-
-Documentation on the various scripts included in this release is embedded in
-their respective source files, which, like all L<perldoc> can be viewed in
-various ways using the nroff-like formatter C<perldoc> F<<filename>> or using
-one of the many pod2* convertors such as pod2text, pod2html, pod2latex and so
-on. In addition, the scripts generally have a B<-h> or B<--help> or B<-?>
-option.
 
 =head1 METHODS
 
@@ -142,24 +132,23 @@ option.
 
 =item new()
 
-The Bio::Phylo root object itself, and thus its constructor, is rarely, if ever,
-used directly. Rather, many other objects in Bio::Phylo inherit its methods,
-and call its constructor internally. The arguments shown here can thus also be
-passed to any of the child classes' constructors, which will pass them on up the 
-inheritance tree. Generally, constructors in Bio::Phylo subclasses can process
-as arguments all methods that have set_* in their names. The arguments are named
-for the methods, but "set_" has been replaced with a dash "-", e.g. the method
-"set_name" becomes the argument "-name" in the constructor.
+The Bio::Phylo root constructor, is rarely used directly. Rather, many other 
+objects in Bio::Phylo internally go up the inheritance tree to this constructor. 
+The arguments shown here can therefore also be passed to any of the child 
+classes' constructors, which will pass them on up the inheritance tree. Generally, 
+constructors in Bio::Phylo subclasses can process as arguments all methods that 
+have set_* in their names. The arguments are named for the methods, but "set_" 
+has been replaced with a dash "-", e.g. the method "set_name" becomes the 
+argument "-name" in the constructor.
 
  Type    : Constructor
  Title   : new
  Usage   : my $phylo = Bio::Phylo->new;
  Function: Instantiates Bio::Phylo object
- Returns : a Bio::Phylo object
- Args    : -name    => (object name)
-           -desc    => (object description)
-           -score   => (numerical score)
-           -generic => (generic key/value pair, hash ref)
+ Returns : a Bio::Phylo object 
+ Args    : Optional, any number of setters. For example,
+ 		   Bio::Phylo->new( -name => $name )
+ 		   will call set_name( $name ) internally
 
 =cut
 

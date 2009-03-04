@@ -28,15 +28,14 @@ This class has no internal state, no cleanup is necessary.
 
 =head1 NAME
 
-Bio::Phylo::Forest - The forest object, a set of phylogenetic trees.
+Bio::Phylo::Forest - Container for tree objects
 
 =head1 SYNOPSIS
 
- use Bio::Phylo::Forest;
- use Bio::Phylo::Forest::Tree;
- 
- my $forest = Bio::Phylo::Forest->new;
- my $tree = Bio::Phylo::Forest::Tree->new;
+ use Bio::Phylo::Factory;
+ my $fac = Bio::Phylo::Factory->new;
+ my $forest = $fac->create_forest;
+ my $tree = $fac->create_tree;
  $forest->insert($tree);
  print $forest->to_nexus;
 

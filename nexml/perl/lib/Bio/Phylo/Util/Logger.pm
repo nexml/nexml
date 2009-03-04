@@ -127,7 +127,7 @@ CODE_TEMPLATE
 
 =head1 NAME
 
-Bio::Phylo::Util::Logger - Logging for Bio::Phylo.
+Bio::Phylo::Util::Logger - Logger of internal messages of several severity levels 
 
 =head1 SYNOPSIS
 

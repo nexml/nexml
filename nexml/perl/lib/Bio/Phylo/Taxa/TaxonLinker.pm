@@ -13,15 +13,15 @@ use strict;
 
 =head1 NAME
 
-Bio::Phylo::Taxa::TaxonLinker - Superclass for objects that link to taxon objects.
+Bio::Phylo::Taxa::TaxonLinker - Superclass for objects that link to taxon objects
 
 =head1 SYNOPSIS
 
- use Bio::Phylo::Forest::Node;
- use Bio::Phylo::Taxa::Taxon;
+ use Bio::Phylo::Factory;
+ my $fac = Bio::Phylo::Factory->new;
 
- my $node  = Bio::Phylo::Forest::Node->new;
- my $taxon = Bio::Phylo::Taxa::Taxon->new;
+ my $node  = $fac->create_node;
+ my $taxon = $fac->create_taxon;
 
  # just to show who's what
  if ( $node->isa('Bio::Phylo::Taxa::TaxonLinker') ) { 

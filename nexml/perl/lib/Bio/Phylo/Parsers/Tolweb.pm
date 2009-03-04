@@ -15,12 +15,14 @@ if ( $@ ) {
 
 =head1 NAME
 
-Bio::Phylo::Parsers::Tolweb - Parses Tree of Life xml feed data. No serviceable parts inside.
+Bio::Phylo::Parsers::Tolweb - Parser used by Bio::Phylo::IO, no serviceable parts inside
 
 =head1 DESCRIPTION
 
 This module parses Tree of Life data. It is called by the L<Bio::Phylo::IO> facade,
-don't call it directly.
+don't call it directly. In addition to parsing from files, handles or strings (which
+are specified by the -file, -handle and -string arguments) this parser can also parse
+xml directly from a url (-url => $tolweb_output), provided you have L<LWP> installed.
 
 =head1 SEE ALSO
 

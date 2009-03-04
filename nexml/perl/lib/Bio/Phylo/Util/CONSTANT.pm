@@ -160,13 +160,12 @@ __END__
 
 =head1 NAME
 
-Bio::Phylo::Util::CONSTANT - This package defines global constants and utility
-functions that operate on them.
+Bio::Phylo::Util::CONSTANT - Global constants and utility functions
 
 =head1 DESCRIPTION
 
 This package defines globals used in the Bio::Phylo libraries. The constants
-are called internally by the other packages. There is no direct usage. In
+are called internally by the other packages, they have no direct usage. In
 addition, several useful subroutines are optionally exported, which are
 described below.
 
@@ -176,7 +175,7 @@ The following subroutines are utility functions that can be imported using:
 
  use Bio::Phylo::Util::CONSTANT ':functions';
 
-The subroutines use prototypes for more concise semantics, e.g.:
+The subroutines use prototypes for more concise syntax, e.g.:
 
  looks_like_number $num;
  looks_like_object $obj, $const;

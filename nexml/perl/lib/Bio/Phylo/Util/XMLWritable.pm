@@ -22,7 +22,7 @@ use UNIVERSAL 'isa';
 
 =head1 NAME
 
-Bio::Phylo::Util::XMLWritable - Superclass for objects that stringify to xml
+Bio::Phylo::Util::XMLWritable - Superclass for objects that serialize to NeXML
 
 =head1 SYNOPSIS
 

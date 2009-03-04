@@ -10,7 +10,7 @@ use vars '@ISA';
 
 =head1 NAME
 
-Bio::Phylo::Matrices::Datatype::Mixed - Datatype subclass,
+Bio::Phylo::Matrices::Datatype::Mixed - Validator subclass,
 no serviceable parts inside
 
 =head1 DESCRIPTION

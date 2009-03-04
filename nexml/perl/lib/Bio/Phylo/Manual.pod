@@ -1,6 +1,6 @@
 =head1 NAME
 
-Bio::Phylo::Manual - Bio::Phylo user guide.
+Bio::Phylo::Manual - High-level user guide
 
 =head1 DESCRIPTION
 

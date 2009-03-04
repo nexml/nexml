@@ -13,7 +13,7 @@ use Bio::Phylo::Util::Exceptions 'throw';
 
 =head1 NAME
 
-Bio::Phylo::Annotation - Segment in an object to annotate other objects with.
+Bio::Phylo::Annotation - Single key/value annotation, used within dictionary
 
 =head1 SYNOPSIS
 

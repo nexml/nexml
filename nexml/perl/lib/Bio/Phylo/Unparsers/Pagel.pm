@@ -9,8 +9,7 @@ use vars qw(@ISA);
 
 =head1 NAME
 
-Bio::Phylo::Unparsers::Pagel - Unparses pagel data files. No serviceable parts
-inside.
+Bio::Phylo::Unparsers::Pagel - Serializer used by Bio::Phylo::IO, no serviceable parts inside
 
 =head1 DESCRIPTION
 
@@ -30,11 +29,26 @@ offspring name, parent name, branch length, character state(s).
 
 =back
 
+Here is an example of what the output might look like:
+
+ 4 2
+ A,n1,0.000000,1,2
+ B,n1,0.000000,1,2
+ n1,n2,0.000000
+ C,n2,0.000000,2,2
+ n2,n3,0.000000
+ D,n3,0.000000,2,1
+
+To the unparse() function pass a tree object as value of the '-phylo'
+argument. The tips in this tree must be linked to taxon objects, and
+the taxon objects must be linked to datum objects whose character
+state sequences are to be serialized.
+
 During unparsing, the tree is randomly resolved, and branch lengths are
 formatted to %f floats (i.e. integers, decimal point, integers).
 
 The pagel module is called by the L<Bio::Phylo::IO> object, so
-look there to learn how to create Pagel formatted files.
+look there to learn about parsing and serializing in general.
 
 =begin comment
 

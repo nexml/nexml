@@ -12,15 +12,15 @@ my $TYPE_CONSTANT = _TAXA_;
 
 =head1 NAME
 
-Bio::Phylo::Taxa::TaxaLinker - Superclass for objects that link to taxa objects.
+Bio::Phylo::Taxa::TaxaLinker - Superclass for objects that link to taxa objects
 
 =head1 SYNOPSIS
 
- use Bio::Phylo::Matrices::Matrix;
- use Bio::Phylo::Taxa;
+ use Bio::Phylo::Factory;
+ my $fac = Bio::Phylo::Factory->new;
 
- my $matrix = Bio::Phylo::Matrices::Matrix->new;
- my $taxa = Bio::Phylo::Taxa->new;
+ my $matrix = $fac->create_matrix;
+ my $taxa = $fac->create_taxa;
 
  if ( $matrix->isa('Bio::Phylo::Taxa::TaxaLinker') ) {
     $matrix->set_taxa( $taxa );

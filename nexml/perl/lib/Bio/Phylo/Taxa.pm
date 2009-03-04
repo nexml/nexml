@@ -29,22 +29,22 @@ This class has no internal state, no cleanup is necessary.
 
 =head1 NAME
 
-Bio::Phylo::Taxa - An object-oriented module for managing taxa.
+Bio::Phylo::Taxa - Container of taxon objects
 
 =head1 SYNOPSIS
 
- use Bio::Phylo::Taxa;
- use Bio::Phylo::Taxa::Taxon;
+ use Bio::Phylo::Factory;
+ my $fac = Bio::Phylo::Factory->new;
 
  # A mesquite-style default
  # taxa block for 10 taxa.
- my $taxa  = Bio::Phylo::Taxa->new;
+ my $taxa  = $fac->create_taxa;
  for my $i ( 1 .. 10 ) {
-     my $taxon = Bio::Phylo::Taxa::Taxon->new(
-         '-name' => 'taxon_' . $i,
-     );
-     $taxa->insert( $taxon );
+     $taxa->insert( $fac->create_taxon( '-name' => "taxon_${i}" ) );
  }
+ 
+ # prints a taxa block in nexus format
+ print $taxa->to_nexus;
 
 =head1 DESCRIPTION
 
