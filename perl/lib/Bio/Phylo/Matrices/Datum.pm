@@ -109,6 +109,56 @@ Datum object constructor.
         return $self;
     }
 
+=item new_from_bioperl()
+
+Datum constructor from Bio::Seq argument.
+
+ Type    : Constructor
+ Title   : new_from_bioperl
+ Usage   : my $datum = 
+           Bio::Phylo::Matrices::Datum->new_from_bioperl($seq);
+ Function: Instantiates a 
+           Bio::Phylo::Matrices::Datum object.
+ Returns : A Bio::Phylo::Matrices::Datum object.
+ Args    : A Bio::Seq (or similar) object
+
+=cut
+    
+    sub new_from_bioperl {
+    	my ( $class, $seq, @args ) = @_;
+    	my $type = $seq->alphabet || $seq->_guess_alphabet || 'dna';
+    	my $self = $class->new( '-type' => $type, @args );
+        
+        # copy seq string
+        my $seqstring = $seq->seq;
+        if ( $seqstring =~ /\S/ ) {
+        	eval { $self->set_char( $seqstring ) };
+        	if ( $@ and UNIVERSAL::isa($@,'Bio::Phylo::Util::Exceptions::InvalidData') ) {
+        		$logger->error(
+        			"\nAn exception of type Bio::Phylo::Util::Exceptions::InvalidData was caught\n\n".
+        			$@->description                                                                  .
+        			"\n\nThe BioPerl sequence object contains invalid data ($seqstring)\n"           .
+        			"I cannot store this string, I will continue instantiating an empty object.\n"   .
+        			"---------------------------------- STACK ----------------------------------\n"  .
+        			$@->trace->as_string                                                             .
+        			"\n--------------------------------------------------------------------------"
+        		);
+        	}
+        }                
+        
+        # copy name
+        my $name = $seq->display_id;
+        $self->set_name( $name ) if defined $name;
+                
+        # copy desc
+        my $desc = $seq->desc;   
+        $self->set_desc( $desc ) if defined $desc;   
+        for my $field ( qw(start end strand) ) {
+        	$self->$field( $seq->$field );
+        } 	
+        return $self;
+    }
+
 =back
 
 =head2 MUTATORS
@@ -915,6 +965,19 @@ Also see the manual: L<Bio::Phylo::Manual> and L<http://rutgervos.blogspot.com>.
 1;
 __DATA__
 
+my $DEFAULT_NAME = 'DEFAULT';
+
+sub meta_names {
+    my ($self) = @_;
+    my @r;
+    my $names = $self->get_generic('meta') || {};
+    foreach  ( sort keys %{ $names } ) {
+        push (@r, $_) unless $_ eq $DEFAULT_NAME;
+    }
+    unshift @r, $DEFAULT_NAME if $names->{$DEFAULT_NAME};
+    return @r;
+}
+
 sub get_SeqFeatures { $logger->warn }
 
 sub get_all_SeqFeatures { $logger->warn }
@@ -925,6 +988,48 @@ sub seq {
     my $self = shift;
     my $seq = $self->get_char;
     return $seq;
+}
+
+# from primary seq
+sub subseq {
+   my ($self,$start,$end,$replace) = @_;
+
+   if( ref($start) && $start->isa('Bio::LocationI') ) {
+       my $loc = $start;
+       $replace = $end; # do we really use this anywhere? scary. HL
+       my $seq = "";
+       foreach my $subloc ($loc->each_Location()) {
+	   my $piece = $self->subseq($subloc->start(),
+				     $subloc->end(), $replace);
+	   if($subloc->strand() < 0) {
+	       $piece = Bio::PrimarySeq->new('-seq' => $piece)->revcom()->seq();
+	   }
+	   $seq .= $piece;
+       }
+       return $seq;
+   } elsif(  defined  $start && defined $end ) {
+       if( $start > $end ){
+	   $self->throw("Bad start,end parameters. Start [$start] has to be ".
+			"less than end [$end]");
+       }
+       if( $start <= 0 ) {
+	   $self->throw("Bad start parameter ($start). Start must be positive.");
+       }
+       if( $end > $self->length ) {
+	   $self->throw("Bad end parameter ($end). End must be less than the total length of sequence (total=".$self->length.")");
+       }
+
+       # remove one from start, and then length is end-start
+       $start--;
+       if( defined $replace ) {
+	   return substr( $self->seq(), $start, ($end-$start), $replace);
+       } else {
+	   return substr( $self->seq(), $start, ($end-$start));
+       }
+   } else {
+       $self->warn("Incorrect parameters to subseq - must be two integers or a Bio::LocationI object. Got:", $self,$start,$end,$replace);
+       return;
+   }
 }
 
 sub write_GFF { $logger->warn }
@@ -967,10 +1072,50 @@ sub primary_id { $logger->warn }
 
 sub revcom { $logger->warn }
 
-sub subseq { $logger->warn }
-
 sub translate { $logger->warn }
 
 sub trunc { $logger->warn }
 
-sub get_nse { shift->get_name }
+sub get_nse{
+   my ($self,$char1,$char2) = @_;
+
+   $char1 ||= "/";
+   $char2 ||= "-";
+
+   $self->throw("Attribute id not set") unless defined($self->id());
+   $self->throw("Attribute start not set") unless defined($self->start());
+   $self->throw("Attribute end not set") unless defined($self->end());
+
+   return $self->id() . $char1 . $self->start . $char2 . $self->end ;
+
+}
+
+sub strand {
+	my ( $self, $strand ) = @_;
+	if ( defined $strand ) {
+		$self->set_generic( 'strand' => $strand );
+	}
+	return $self->get_generic( 'strand' );
+}
+
+sub start {
+	my ( $self, $start ) = @_;
+	if ( defined $start ) {
+		$self->set_position( $start );
+	}
+	return $self->get_position;
+}
+
+sub end {
+	my ( $self, $end ) = @_;
+	if ( defined $end ) {
+		$self->set_generic( 'end' => $end );
+	}
+	$end = $self->get_generic( 'end' );
+	if ( defined $end ) {
+		return $end;
+	}
+	else {
+		return scalar( @{ $self->get_entities } ) + $self->get_position - 1;
+	}
+}
