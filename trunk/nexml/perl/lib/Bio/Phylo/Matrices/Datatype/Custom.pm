@@ -6,7 +6,7 @@ use vars qw(@ISA);
 
 =head1 NAME
 
-Bio::Phylo::Matrices::Datatype::Custom - Datatype subclass,
+Bio::Phylo::Matrices::Datatype::Custom - Validator subclass,
 no serviceable parts inside
 
 =head1 DESCRIPTION

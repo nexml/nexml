@@ -20,13 +20,13 @@ use vars qw(@ISA);
 
 =head1 NAME
 
-Bio::Phylo::Taxa::Taxon - The operational taxonomic unit.
+Bio::Phylo::Taxa::Taxon - Operational taxonomic unit
 
 =head1 SYNOPSIS
 
  use Bio::Phylo::IO qw(parse);
- use Bio::Phylo::Taxa;
- use Bio::Phylo::Taxa::Taxon;
+ use Bio::Phylo::Factory;
+ my $fac = Bio::Phylo::Factory->new;
 
  # array of names
  my @apes = qw(
@@ -47,11 +47,11 @@ Bio::Phylo::Taxa::Taxon - The operational taxonomic unit.
  )->first;
 
  # instantiate taxa object
- my $taxa = Bio::Phylo::Taxa->new;
+ my $taxa = $fac->create_taxa;
 
  # instantiate taxon objects, insert in taxa object
  foreach( @apes ) {
-    my $taxon = Bio::Phylo::Taxa::Taxon->new(
+    my $taxon = $fac->create_taxon(
         -name => $_,
     );
     $taxa->insert($taxon);

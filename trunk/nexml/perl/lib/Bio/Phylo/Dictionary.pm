@@ -9,7 +9,7 @@ use vars '@ISA';
 
 =head1 NAME
 
-Bio::Phylo::Dictionary - An object to annotate other objects with.
+Bio::Phylo::Dictionary - Container for annotations, attaches to other objects
 
 =head1 SYNOPSIS
 

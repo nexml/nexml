@@ -288,7 +288,7 @@ __END__
 
 =head1 NAME
 
-Bio::Phylo::Util::Exceptions - Exception classes for Bio::Phylo.
+Bio::Phylo::Util::Exceptions - Errors ($@) that are objects
 
 =head1 SYNOPSIS
 
@@ -301,10 +301,15 @@ Bio::Phylo::Util::Exceptions - Exception classes for Bio::Phylo.
  };
 
  # have an error
- if ( $@ && UNIVERSAL::isa( $@, 'Bio::Phylo::Util::Exception' ) ) {
+ if ( my $e = Bio::Phylo::Util::Exceptions::BadNumber->caught ) {
 
     # print out where the error came from
     print $@->trace->as_string;
+    
+    # caught() returns $@, so $e and $@ are the 
+    # same object in this example. 
+    # Therefore, the same thing would be:
+    print $e->trace->as_string;
  }
 
 =head1 DESCRIPTION

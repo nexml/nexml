@@ -17,7 +17,7 @@ my $logger = Bio::Phylo->get_logger;
 
 =head1 NAME
 
-Bio::Phylo::Parsers::Newick - Parses newick trees. No serviceable parts inside.
+Bio::Phylo::Parsers::Newick - Parser used by Bio::Phylo::IO, no serviceable parts inside
 
 =head1 DESCRIPTION
 

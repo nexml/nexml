@@ -13,8 +13,7 @@ my $logger = Bio::Phylo->get_logger;
 
 =head1 NAME
 
-Bio::Phylo::Parsers::Table - Parses tab- (or otherwise) delimited matrices. No
-serviceable parts inside.
+Bio::Phylo::Parsers::Table - Parser used by Bio::Phylo::IO, no serviceable parts inside
 
 =head1 DESCRIPTION
 

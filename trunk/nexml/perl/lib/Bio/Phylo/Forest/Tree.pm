@@ -46,7 +46,7 @@ my $LOADED_WRAPPERS = 0;
 
 =head1 NAME
 
-Bio::Phylo::Forest::Tree - The tree object.
+Bio::Phylo::Forest::Tree - Phylogenetic tree
 
 =head1 SYNOPSIS
 

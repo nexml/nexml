@@ -15,7 +15,7 @@ use Bio::Phylo::Util::Exceptions;
 
 =head1 NAME
 
-Bio::Phylo::Mediators::TaxaMediator - Mediator class to manage links between objects.
+Bio::Phylo::Mediators::TaxaMediator - Mediator for links between taxa and other objects
 
 =head1 SYNOPSIS
 

@@ -15,7 +15,7 @@ use Bio::Phylo;
 
 =head1 NAME
 
-Bio::Phylo::Mediators::NodeMediator - Mediator class to manage links between nodes.
+Bio::Phylo::Mediators::NodeMediator - Mediator for links between tree nodes
 
 =head1 SYNOPSIS
 

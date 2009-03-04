@@ -44,24 +44,23 @@ my $LOADED_WRAPPERS = 0;
 
 =head1 NAME
 
-Bio::Phylo::Matrices::Matrix - Character state matrix.
+Bio::Phylo::Matrices::Matrix - Character state matrix
 
 =head1 SYNOPSIS
 
- use Bio::Phylo::Matrices::Matrix;
- use Bio::Phylo::Taxa;
- use Bio::Phylo::Taxa::Taxon;
+ use Bio::Phylo::Factory;
+ my $fac = Bio::Phylo::Factory->new;
 
  # instantiate taxa object
- my $taxa = Bio::Phylo::Taxa->new();
+ my $taxa = $fac->create_taxa;
  for ( 'Homo sapiens', 'Pan paniscus', 'Pan troglodytes' ) {
-     $taxa->insert( Bio::Phylo::Taxa::Taxon->new( '-name' => $_ ) );
+     $taxa->insert( $fac->create_taxon( '-name' => $_ ) );
  }
 
  # instantiate matrix object, 'standard' data type. All categorical
  # data types follow semantics like this, though with different
  # symbols in lookup table and matrix
- my $standard_matrix = Bio::Phylo::Matrices::Matrix->new(
+ my $standard_matrix = $fac->create_matrix(
      '-type'   => 'STANDARD',
      '-taxa'   => $taxa,
      '-lookup' => { 

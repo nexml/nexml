@@ -7,8 +7,7 @@ use vars qw(@ISA);
 
 =head1 NAME
 
-Bio::Phylo::Unparsers::Mrp - Unparses a forest object into an MRP matrix. No
-serviceable parts inside.
+Bio::Phylo::Unparsers::Mrp - Serializer used by Bio::Phylo::IO, no serviceable parts inside
 
 =head1 DESCRIPTION
 

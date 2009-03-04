@@ -20,12 +20,13 @@ Math::Random->import('random_exponential');
 
 =head1 NAME
 
-Bio::Phylo::Generator - Generates random trees.
+Bio::Phylo::Generator - Generator of tree topologies
 
 =head1 SYNOPSIS
 
- use Bio::Phylo::Generator;
- my $gen = Bio::Phylo::Generator->new;
+ use Bio::Phylo::Factory;
+ my $fac = Bio::Phylo::Factory->new;
+ my $gen = $fac->create_generator;
  my $trees = $gen->gen_rand_pure_birth( 
      '-tips'  => 10, 
      '-model' => 'yule',

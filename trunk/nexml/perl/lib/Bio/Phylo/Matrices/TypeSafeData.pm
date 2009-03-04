@@ -17,8 +17,8 @@ use vars '@ISA';
     
 =head1 NAME
 
-Bio::Phylo::Matrices::TypeSafeData - Superclass for objects that hold
-character data.
+Bio::Phylo::Matrices::TypeSafeData - Superclass for objects that contain
+character data
 
 =head1 SYNOPSIS
 

@@ -94,7 +94,7 @@ my %defaults = (
 
 =head1 NAME
 
-Bio::Phylo::Parsers::Nexus - Parses nexus files. No serviceable parts inside.
+Bio::Phylo::Parsers::Nexus - Parser used by Bio::Phylo::IO, no serviceable parts inside
 
 =head1 DESCRIPTION
 

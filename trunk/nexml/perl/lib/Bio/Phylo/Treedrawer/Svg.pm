@@ -21,8 +21,8 @@ my %colors;
 
 =head1 NAME
 
-Bio::Phylo::Treedrawer::Svg - Creates svg tree drawings. No serviceable parts
-inside.
+Bio::Phylo::Treedrawer::Svg - Graphics format writer used by treedrawer, no serviceable parts
+inside
 
 =head1 DESCRIPTION
 
