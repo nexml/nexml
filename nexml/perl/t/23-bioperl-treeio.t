@@ -2,7 +2,6 @@ use strict;
 use Test::More;
 use Bio::Phylo::Forest::Tree;
 use Bio::Phylo::Util::Logger;
-use strict;
 BEGIN {
     eval { require Bio::TreeIO };
     if ( $@ ) {
