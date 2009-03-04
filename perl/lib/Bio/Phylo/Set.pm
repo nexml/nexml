@@ -117,7 +117,7 @@ defined there are also applicable here.
 
 =head1 REVISION
 
- $Id: Listable.pm 677 2008-10-22 02:19:41Z rvos $
+ $Id$
 
 =cut
 
