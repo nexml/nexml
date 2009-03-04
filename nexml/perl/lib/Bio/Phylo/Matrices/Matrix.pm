@@ -305,7 +305,7 @@ Sets three special symbols in one call
 						delete $new_special_symbols{$sym};
 					}
 					else {
-						DUMMY: for my $dummy ( qw(! @ # $ % ^ & *) ) {
+						DUMMY: for my $dummy ( qw(! @ $ % ^ & *) ) {
 							if ( ! $new_special_symbols{$dummy} && ! $old_special_symbols{$dummy} && ! $dummies{$dummy} ) {
 								my $method = $old_special_symbols{$sym};
 								$self->$method($dummy);
