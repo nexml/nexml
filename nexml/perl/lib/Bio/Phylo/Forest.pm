@@ -505,6 +505,8 @@ Serializer to nexus format.
 
 	sub _type { $CONSTANT_TYPE }
 
+# podinherit_insert_token
+
 =back
 
 =head1 SEE ALSO

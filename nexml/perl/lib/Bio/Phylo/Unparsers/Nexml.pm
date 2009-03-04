@@ -144,6 +144,8 @@ sub _to_string {
 	return $nexml_string;
 }
 
+# podinherit_insert_token
+
 =head1 SEE ALSO
 
 =over

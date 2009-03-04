@@ -1127,6 +1127,8 @@ sub _semicolon {
     }
 }
 
+# podinherit_insert_token
+
 =head1 SEE ALSO
 
 =over

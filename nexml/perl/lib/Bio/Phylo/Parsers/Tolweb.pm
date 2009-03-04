@@ -24,6 +24,8 @@ don't call it directly. In addition to parsing from files, handles or strings (w
 are specified by the -file, -handle and -string arguments) this parser can also parse
 xml directly from a url (-url => $tolweb_output), provided you have L<LWP> installed.
 
+# podinherit_insert_token
+
 =head1 SEE ALSO
 
 =over

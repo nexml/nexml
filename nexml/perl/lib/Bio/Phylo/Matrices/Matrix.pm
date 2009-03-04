@@ -1307,6 +1307,8 @@ Creates a taxa block from the objects contents if none exists yet.
 		}
 	}
 
+# podinherit_insert_token
+
 =back
 
 =head1 SEE ALSO

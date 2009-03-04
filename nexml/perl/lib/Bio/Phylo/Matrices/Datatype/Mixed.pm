@@ -300,6 +300,8 @@ Returns true if argument only contains valid characters
 
 }
 
+# podinherit_insert_token
+
 =back
 
 =head1 SEE ALSO
