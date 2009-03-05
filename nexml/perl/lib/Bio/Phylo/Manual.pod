@@ -933,10 +933,6 @@ versions of Bio::Phylo.
 
 =over
 
-=item Scripts
-
-Change the utility scripts, add to them.
-
 =item More DNA sequence methods
 
 Such as C<$seq->complement;>. This would imply larger constant translation 
@@ -958,8 +954,7 @@ more.
 
 The eventual aim of the Bio::Phylo project is to glue together the phylogenetics 
 aspects of BioPerl (L<http://www.bioperl.org>), L<Bio::NEXUS> and the CIPRES
-project (L<http://www.phylo.org>). Refer to the L<Bio::ObjectCompat> document
-for discussion on this issue.
+project (L<http://www.phylo.org>).
 
 =back
 
@@ -1003,7 +998,7 @@ for comments and requests.
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright 2005-2007 Rutger A. Vos, All Rights Reserved. This program is free
+Copyright 2005-2009 Rutger A. Vos, All Rights Reserved. This program is free
 software; you can redistribute it and/or modify it under the same terms as Perl
 itself.
 
