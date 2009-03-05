@@ -1165,9 +1165,11 @@ This method applies settings for nodes globally.
 		}
 	}
 
-# podinherit_insert_token
-
 =back
+
+=cut
+
+# podinherit_insert_token
 
 =head1 SEE ALSO
 

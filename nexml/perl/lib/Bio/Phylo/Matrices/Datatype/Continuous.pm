@@ -144,7 +144,7 @@ Splits string of characters on whitespaces.
 
 	sub split {
 		my ( $self, $string ) = @_;
-		my @array = CORE::split /\s+/, $string;
+		my @array = CORE::split( /\s+/, $string );
 		return \@array;
 	}
 
@@ -168,9 +168,11 @@ Joins array ref of characters to a space-separated string.
 
 	$MISSING = '?';
 
-# podinherit_insert_token
-
 =back
+
+=cut
+
+# podinherit_insert_token
 
 =head1 SEE ALSO
 

@@ -15,6 +15,8 @@ The Bio::Phylo::Matrices::Datatype::* classes are used to validated data
 contained by L<Bio::Phylo::Matrices::Matrix> and L<Bio::Phylo::Matrices::Datum>
 objects.
 
+=cut
+
 # podinherit_insert_token
 
 =head1 SEE ALSO
