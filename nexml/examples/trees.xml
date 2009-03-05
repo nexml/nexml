@@ -4,7 +4,7 @@
 	and the taxa element refer to the file taxa.xml.
 -->
 <nex:nexml 
-	version="1.0" 
+	version="0.8" 
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:xml="http://www.w3.org/XML/1998/namespace"
 	xsi:schemaLocation="http://www.nexml.org/1.0 ../xsd/nexml.xsd"
@@ -46,9 +46,8 @@
 			<node id="n2" label="n2" otu="t1"/>
 			<node id="n3" label="n3"/>
 			<node id="n4" label="n4">
-				<dict>
-					<key>has_tag</key>
-					<boolean>true</boolean>
+				<dict id="dict1">
+					<boolean id="has_tag">true</boolean>
 				</dict>
 			</node>
 			<node id="n5" label="n5" otu="t3"/>
@@ -73,9 +72,8 @@
 			<node id="n2" label="n2" otu="t1"/>
 			<node id="n3" label="n3"/>
 			<node id="n4" label="n4">
-				<dict>
-					<key>has_tag</key>
-					<boolean>true</boolean>
+				<dict id="dict2">
+					<boolean id="has_tag">true</boolean>
 				</dict>
 			</node>
 			<node id="n5" label="n5" otu="t3"/>
