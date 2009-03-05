@@ -133,7 +133,7 @@ Typically, this is done internally - you will probably never use this method.
 
  Type    : Mutator
  Title   : set_identifiable
- Usage   : $obj->set_tag(0);
+ Usage   : $obj->set_identifiable(0);
  Function: Enables/disables id generation
  Returns : $self
  Args    : BOOLEAN
