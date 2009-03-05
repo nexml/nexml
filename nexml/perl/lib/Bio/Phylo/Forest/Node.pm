@@ -239,7 +239,7 @@ Node constructor from bioperl L<Bio::Tree::NodeI> argument.
 
 =item prune_child()
 
-Sets argument as invocant's parent.
+Removes argument child node (and its descendants) from invocants children.
 
  Type    : Mutator
  Title   : prune_child
