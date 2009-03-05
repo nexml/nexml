@@ -132,7 +132,7 @@ my $vars = $fac->create_template_vars(
 );
 
 # write http header
-$q->header(
+print $q->header(
     '-type'   => 'text/html', 
     '-status' => "400 $status",
 );
