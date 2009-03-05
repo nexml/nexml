@@ -2343,9 +2343,11 @@ Serializes subtree subtended by invocant to newick string.
 
 	sub _container { $CONTAINER_CONSTANT }
 
-# podinherit_insert_token
-
 =back
+
+=cut
+
+# podinherit_insert_token
 
 =head1 SEE ALSO
 

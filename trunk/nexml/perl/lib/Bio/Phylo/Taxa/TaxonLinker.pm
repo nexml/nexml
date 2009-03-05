@@ -127,9 +127,11 @@ Retrieves the Bio::Phylo::Taxa::Taxon object linked to the invocant.
 		#$logger->debug("cleaning up '$self'");
 	}
 
-# podinherit_insert_token
-
 =back
+
+=cut
+
+# podinherit_insert_token
 
 =head1 SEE ALSO
 
