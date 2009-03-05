@@ -564,9 +564,11 @@ Serializes invocant to XML.
 		} 
 	}
 
-# podinherit_insert_token
-
 =back
+
+=cut
+
+# podinherit_insert_token
 
 =head1 SEE ALSO
 

@@ -324,9 +324,11 @@ Taxon destructor.
 
     sub _type { $TYPE_CONSTANT }
 
-# podinherit_insert_token
-
 =back
+
+=cut
+
+# podinherit_insert_token
 
 =head1 SEE ALSO
 

@@ -211,9 +211,11 @@ Serializes invocant to NEXUS.
 	
 	sub _type { $TYPE }
 
-# podinherit_insert_token
-
 =back
+
+=cut
+
+# podinherit_insert_token
 
 =head1 SEE ALSO
 
