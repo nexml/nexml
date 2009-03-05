@@ -843,14 +843,16 @@ Serializes datum to nexml format.
  Args    : -chars   => [] # optional, an array ref of character IDs
            -states  => {} # optional, a hash ref of state IDs
            -symbols => {} # optional, a hash ref of symbols
+           -special => {} # optional, a hash ref of special symbol IDs
 
 =cut
 
 	sub to_xml {
 		my $self = shift;
 		my %args = looks_like_hash @_;
-		my $char_ids = $args{'-chars'};
+		my $char_ids  = $args{'-chars'};
 		my $state_ids = $args{'-states'};
+		my $special   = $args{'-special'};
 		if ( my $taxon = $self->get_taxon ) {
 			$self->set_attributes( 'otu' => $taxon->get_xml_id );
 		}
@@ -875,6 +877,22 @@ Serializes datum to nexml format.
 						$s = uc $char[$i];
 					}
 					$xml .= sprintf('<cell char="%s" state="%s" />', $c, $s);
+				}
+				elsif ( $missing eq $char[$i] or $gap eq $char[$i] ) {
+					my ( $c, $s );
+					if ( $char_ids and $char_ids->[$i] ) {
+						$c = $char_ids->[$i];
+					}
+					else {
+						$c = $i;
+					}
+					if ( $special and $special->{$char[$i]} ) {
+						$s = $special->{$char[$i]};
+					}
+					else {
+						$s = $char[$i];
+					}
+					$xml .= sprintf('<cell char="%s" state="%s" />', $c, $s);				
 				}
 			}
 		}

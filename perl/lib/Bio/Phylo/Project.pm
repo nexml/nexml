@@ -52,7 +52,7 @@ sub new {
 	my %args = (
 		'-tag'        => 'nex:nexml',
 		'-attributes' => {
-			'version'   => '1.0',
+			'version'   => '0.8',
 			'generator' => "$class v.$version",			
 			'xsi:schemaLocation' => 'http://www.nexml.org/1.0 http://www.nexml.org/1.0/nexml.xsd',
 		},
