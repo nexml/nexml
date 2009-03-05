@@ -140,6 +140,9 @@ $q->header(
 # write results
 $template->process( 'validator.tmpl', $vars ) || die $template->error();
 
+# clean up temp file
+unlink $filename;
+
 sub read_file {
 	my $file  = shift;
 	my $bytes = 0;	
