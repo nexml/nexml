@@ -252,8 +252,8 @@ sub _handle_nexml {
 	my ( $project_obj, $project_id ) = $self->_obj_from_elt( $nexml_elt, 'project' );
 	push @{ $self->{'_blocks'} }, $project_obj;
 	$logger->info( $self->_pos . " Processed nexml element" );
-	if ( $nexml_elt->att('version') != 1.0 ) {
-		throw 'BadFormat' => 'Wrong version number, can only handle 1.0: ' . $nexml_elt->att('version');
+	if ( $nexml_elt->att('version') != 0.8 ) {
+		throw 'BadFormat' => 'Wrong version number, can only handle 0.8: ' . $nexml_elt->att('version');
 	}
 }
 

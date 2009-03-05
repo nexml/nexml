@@ -835,7 +835,7 @@ Serializes matrix to nexml format.
 			$ids_for_states = $to->get_ids_for_states(1);
 			
 			# write state definitions
-			$xml .= $to->to_xml($normalized);
+			$xml .= $to->to_xml($normalized,$self->get_polymorphism);
 			
 			# write column definitions
 			if ( %{ $ids_for_states } ) {
@@ -855,11 +855,13 @@ Serializes matrix to nexml format.
 		}
 		
 		# write rows
+		my $special = $self->get_type_object->get_ids_for_special_symbols(1);
 		for my $row ( @{ $self->get_entities } ) {
 			$xml .= "\n" . $row->to_xml(
 				'-states'  => $ids_for_states,
 				'-chars'   => \@char_ids,
 				'-symbols' => $normalized,
+				'-special' => $special,
 				%args,
 			);
 		}

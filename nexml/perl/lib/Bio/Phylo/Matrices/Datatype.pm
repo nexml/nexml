@@ -245,6 +245,40 @@ Gets data type as string.
         return $type;
     }
 
+=item get_ids_for_special_symbols()
+
+Gets state-to-id mapping for missing and gap symbols
+
+ Type    : Accessor
+ Title   : get_ids_for_special_symbols
+ Usage   : my %ids = %{ $obj->get_ids_for_special_symbols };
+ Function: Returns state-to-id mapping
+ Returns : A hash reference, keyed on symbol, with UID values
+ Args    : Optional, a boolean:
+           true  => prefix state ids with 's'
+           false => keep ids numerical
+
+
+=cut
+
+    sub get_ids_for_special_symbols {
+        my $self = shift;
+        my $ids_for_states = $self->get_ids_for_states;
+        my @indices = sort { $a <=> $b } values %{ $ids_for_states };
+        my $max_id = $indices[-1];
+        my ( $missing, $gap ) = ( $self->get_missing, $self->get_gap );
+        my $ids_for_special_symbols = {};
+        if ( $_[0] ) {
+            $ids_for_special_symbols->{$gap}     = 's' . ++$max_id;        
+            $ids_for_special_symbols->{$missing} = 's' . ++$max_id;
+        }
+        else {
+            $ids_for_special_symbols->{$gap}     = ++$max_id;        
+            $ids_for_special_symbols->{$missing} = ++$max_id;     
+        }
+        return $ids_for_special_symbols;
+    }
+
 =item get_ids_for_states()
 
 Gets state-to-id mapping
@@ -252,9 +286,11 @@ Gets state-to-id mapping
  Type    : Accessor
  Title   : get_ids_for_states
  Usage   : my %ids = %{ $obj->get_ids_for_states };
- Function: Returns the object's datatype
- Returns : A hash reference, keyed on state, with UID values
- Args    : None
+ Function: Returns state-to-id mapping
+ Returns : A hash reference, keyed on symbol, with UID values
+ Args    : Optional, a boolean:
+           true  => prefix state ids with 's'
+           false => keep ids numerical
 
 =cut
     
@@ -635,38 +671,64 @@ Writes data type definitions to xml
 	sub to_xml {
 		my $self = shift;	
 		my $xml = '';
-		my $normalized = {};
-		$normalized = shift if @_;
-		if ( my $lookup = $self->get_lookup ) {
+		my $normalized   = $_[0] || {};
+		my $polymorphism = $_[1];
+		if ( my $lookup  = $self->get_lookup ) {
 			$xml .= "\n" . $self->get_xml_tag;
 			my $id_for_state = $self->get_ids_for_states;
-			my @states = sort { $id_for_state->{$a} <=> $id_for_state->{$b} } keys %{ $id_for_state };
+			my @states = sort  { $id_for_state->{$a} <=> $id_for_state->{$b} } 
+			             keys %{ $id_for_state };
+			my $max_id = 0;
 			for my $state ( @states ) {
 				my $state_id = $id_for_state->{ $state };
 				$id_for_state->{ $state } = 's' . $state_id;
+				$max_id = $state_id;
 			}
 			for my $state ( @states ) {
-				my $state_id = $id_for_state->{ $state };
-				my @mapping = @{ $lookup->{$state} };
-				my $symbol = exists $normalized->{$state} ? $normalized->{$state} : $state;
-				
-				# has ambiguity mappings
-				if ( scalar @mapping > 1 ) {
-					$xml .= "\n" . sprintf('<state id="%s" symbol="%s">', $state_id, $symbol);
-					for my $map ( @mapping ) {
-						$xml .= "\n" . sprintf( '<mapping state="%s" mstaxa="uncertainty"/>', $id_for_state->{ $map } );
-					}
-					$xml .= "\n</state>";
-				}
-				
-				# no ambiguity
-				else {
-					$xml .= "\n" . sprintf('<state id="%s" symbol="%s"/>', $state_id, $symbol);
-				}
+			    $xml .= $self->_state_to_xml( 
+			        $state, 
+			        $id_for_state, 
+			        $lookup, 
+			        $normalized, 
+			        $polymorphism 
+			    );
 			}
+			my ( $missing, $gap ) = ( $self->get_missing, $self->get_gap );
+			my $special = $self->get_ids_for_special_symbols;
+			$xml .= sprintf('<uncertain_state_set id="s%s" symbol="%s">', $special->{$gap}, $gap);
+			$xml .= '</uncertain_state_set>';
+			$xml .= sprintf('<uncertain_state_set id="s%s" symbol="%s">', $special->{$missing}, $missing);
+			$xml .= sprintf('<member state="%s"/>', $id_for_state->{$_}) for @states;
+			$xml .= sprintf('<member state="s%s"/>', $special->{$gap});			
+			$xml .= '</uncertain_state_set>';			
+			
 			$xml .= "\n</states>";
 		}	
 		return $xml;	
+	}
+	
+	sub _state_to_xml {
+	    my ( $self, $state, $id_for_state, $lookup, $normalized, $polymorphism ) = @_;
+        my $state_id = $id_for_state->{ $state };
+        my @mapping = @{ $lookup->{$state} };
+        my $symbol = exists $normalized->{$state} ? $normalized->{$state} : $state;
+        my $xml = '';
+    
+        # has ambiguity mappings
+        if ( scalar @mapping > 1 ) {
+            my $tag = $polymorphism ? 'polymorphic_state_set' : 'uncertain_state_set';
+            $xml .= "\n" . sprintf('<%s id="%s" symbol="%s">', $tag, $state_id, $symbol);
+            for my $map ( @mapping ) {
+                $xml .= "\n" . sprintf( '<member state="%s"/>', $id_for_state->{ $map } );
+            }
+            $xml .= "\n</${tag}>";
+        }
+        
+        # no ambiguity
+        else {
+            $xml .= "\n" . sprintf('<state id="%s" symbol="%s"/>', $state_id, $symbol);
+        }
+        return $xml;
 	}
 
 =back
