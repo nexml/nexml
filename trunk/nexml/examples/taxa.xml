@@ -37,7 +37,7 @@
 		  http://en.wikipedia.org/wiki/XLink
 -->
 <nex:nexml 
-	version="1.0"
+	version="0.8"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.nexml.org/1.0 ../xsd/nexml.xsd"
 	xmlns:nex="http://www.nexml.org/1.0"
@@ -58,9 +58,8 @@
 		be used. I'm using it because this example file *is* under
 		svn, and I find these Id keywords useful metadata.	
 	-->
-    <dict xsi:type="nex:RCSId">
-    	<key>id</key>
-    	<string>$Id: taxa.xml 201 2007-11-12 13:03:38Z rutgeraldo $</string>
+    <dict id="dict1">
+    	<string id="id">$Id: taxa.xml 201 2007-11-12 13:03:38Z rutgeraldo $</string>
     </dict>
 	<!--
 		The taxa element is analogous to the taxa block in nexus

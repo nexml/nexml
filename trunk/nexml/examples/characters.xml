@@ -7,35 +7,19 @@
     refer to 'taxa.xml' 
 -->
 <nex:nexml 
-    version="1.0" 
+    version="0.8" 
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.nexml.org/1.0 ../xsd/nexml.xsd"
     xmlns:nex="http://www.nexml.org/1.0">
     
     <!-- revision control metadata -->
-    <dict xsi:type="nex:RCSAuthor">
-        <key>author</key>
-        <string>$Author$</string>
-    </dict>
-    <dict xsi:type="nex:RCSDate">
-        <key>date</key>
-        <string>$Date$</string>
-    </dict>    
-    <dict xsi:type="nex:RCSHeader">
-        <key>header</key>
-        <string>$Header: $</string>
-    </dict>    
-    <dict xsi:type="nex:RCSId">
-        <key>id</key>
-        <string>$Id$</string>
-    </dict>    
-    <dict xsi:type="nex:RCSRev">
-        <key>rev</key>
-        <string>$Rev$</string>
-    </dict>  
-    <dict xsi:type="nex:RCSURL">
-        <key>url</key>
-        <string>$URL$</string>
+    <dict id="dict1">
+        <string id="author">$Author$</string>
+        <string id="date">$Date$</string>
+        <string id="header">$Header: $</string>
+        <string id="id">$Id$</string>
+        <string id="rev">$Rev$</string>
+        <string id="url">$URL$</string>
     </dict>          
     
     <!--  
