@@ -16,7 +16,7 @@ BEGIN {
 use strict;
 use CGI::Carp 'fatalsToBrowser';
 use Bio::Phylo::IO qw(parse unparse);
-use Bio::Phylo::Forest;
+use Bio::Phylo::Factory;
 use HTML::Entities;
 use constant URL => 'http://150.135.239.5/onlinecontributors/app?service=external&page=xml/TreeStructureService&node_id=';
 
@@ -30,23 +30,32 @@ if ( $ENV{'QUERY_STRING'} =~ /wsdl/ ) {
 }
 if ( $ENV{'PATH_INFO'} and $ENV{'PATH_INFO'} =~ m|Tree/ToLWeb:([0-9]+)$| ) {
 	my $nexml;
-	my $id = $1;
+	my $id  = $1;
 	my $url = URL . $id;	
+	my $fac = Bio::Phylo::Factory->new;
 	eval {
 		my $tree = parse(
 			'-format' => 'tolweb',
 			'-url'    => $url
 		);
-		$tree->set_generic(
-			'dict' => {
-				'source'  => [ 'uri' => encode_entities($url) ],
-				'webpage' => [ 'uri' => 'http://tolweb.org/' . $id ]
-			}
+		my ( $forest, $project ) = ( $fac->create_forest, $fac->create_project );
+		my $dict = $fac->create_dictionary;		
+		$forest->insert( $tree );
+		$project->insert( $forest );
+		$dict->insert(
+		    $fac->create_annotation( 
+		        '-xml_id' => 'source',
+		        '-tag'    => 'uri',
+		        '-value'  => encode_entities($url),
+		    ),
+		    $fac->create_annotation( 
+		        '-xml_id' => 'webpage',
+		        '-tag'    => 'uri',
+		        '-value'  => 'http://tolweb.org/' . $id,
+		    ),		    
 		);
-		$nexml = unparse(
-			'-format' => 'nexml',
-			'-phylo'  => Bio::Phylo::Forest->new->insert($tree)
-		) 
+		$forest->add_dictionary( $dict );
+		$nexml = $project->to_xml; 
 	};
 	if ( $nexml and not $@ ) {
 		print "Content-type: text/xml\n\n" . $nexml;			
