@@ -695,12 +695,14 @@ Writes data type definitions to xml
 			}
 			my ( $missing, $gap ) = ( $self->get_missing, $self->get_gap );
 			my $special = $self->get_ids_for_special_symbols;
-			$xml .= sprintf('<uncertain_state_set id="s%s" symbol="%s">', $special->{$gap}, $gap);
-			$xml .= '</uncertain_state_set>';
-			$xml .= sprintf('<uncertain_state_set id="s%s" symbol="%s">', $special->{$missing}, $missing);
-			$xml .= sprintf('<member state="%s"/>', $id_for_state->{$_}) for @states;
-			$xml .= sprintf('<member state="s%s"/>', $special->{$gap});			
-			$xml .= '</uncertain_state_set>';			
+			if ( %{ $special } ) {
+				$xml .= sprintf('<uncertain_state_set id="s%s" symbol="%s">', $special->{$gap}, '-');
+				$xml .= '</uncertain_state_set>';
+				$xml .= sprintf('<uncertain_state_set id="s%s" symbol="%s">', $special->{$missing}, '?');
+				$xml .= sprintf('<member state="%s"/>', $id_for_state->{$_}) for @states;
+				$xml .= sprintf('<member state="s%s"/>', $special->{$gap});			
+				$xml .= '</uncertain_state_set>';	
+			}		
 			
 			$xml .= "\n</states>";
 		}	
