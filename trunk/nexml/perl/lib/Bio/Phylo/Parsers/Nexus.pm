@@ -90,6 +90,7 @@ my %defaults = (
 	'#nexus'           => \&_nexus,
 	'link'             => \&_link,
 	';'                => \&_semicolon,
+	'interleave'       => \&_interleave,
 );
 
 =head1 NAME
@@ -565,6 +566,15 @@ sub _taxa {
     else {
         $self->{'_current'} = 'link';  # because of 'link taxa = blah' construct
     }
+}
+
+sub _interleave {
+	my $self = shift;
+	my $token = shift;
+	$logger->info( "perhaps we'll need to parse interleaved" );
+	if ( defined $token and uc($token) eq 'NO' ) {
+		$logger->info( "no, we don't need to parse interleaved" );
+	}
 }
 
 sub _title {
