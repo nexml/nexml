@@ -161,7 +161,7 @@
             </xs:documentation>
         </xs:annotation>
         <xs:restriction base="AbstractTokenList">
-            <xs:pattern value="[0-9]+(\s[0-9]+)*"></xs:pattern>
+            <xs:pattern value="[0-9\-\?]+(\s[0-9\-\?]+)*"></xs:pattern>
         </xs:restriction>
     </xs:simpleType>    
     
@@ -233,7 +233,7 @@
             <xs:restriction base="AbstractSeqs">
                 <xs:sequence minOccurs="1" maxOccurs="1">
                     <xs:element name="dict" minOccurs="0" maxOccurs="unbounded" type="Dict"/>
-                    <xs:element name="format" minOccurs="0" maxOccurs="1" type="StandardFormat"/>
+                    <xs:element name="format" minOccurs="1" maxOccurs="1" type="StandardFormat"/>
                     <xs:element name="matrix" minOccurs="1" maxOccurs="1" type="StandardSeqMatrix"/>
                 </xs:sequence>
             </xs:restriction>
