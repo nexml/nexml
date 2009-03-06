@@ -163,7 +163,7 @@
             <xs:restriction base="AbstractSeqs">
                 <xs:sequence minOccurs="1" maxOccurs="1">
                     <xs:element name="dict" minOccurs="0" maxOccurs="unbounded" type="Dict"/>
-                    <xs:element name="format" minOccurs="0" maxOccurs="1" type="ContinuousFormat"/>
+                    <xs:element name="format" minOccurs="1" maxOccurs="1" type="ContinuousFormat"/>
                     <xs:element name="matrix" minOccurs="1" maxOccurs="1" type="ContinuousSeqMatrix"/>
                 </xs:sequence>
             </xs:restriction>

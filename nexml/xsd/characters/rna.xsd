@@ -30,7 +30,7 @@
             </xs:documentation>
         </xs:annotation>
         <xs:restriction base="AbstractSymbol">
-            <xs:pattern value="[ABCDGHKMNRSUVWXY]"/>
+            <xs:pattern value="[\-\?ABCDGHKMNRSUVWXY]"/>
             <xs:length value="1"/>
         </xs:restriction>
     </xs:simpleType>
@@ -38,50 +38,90 @@
         
         The following types would be used if we explicitly defined ambiguity mappings,
         allowed states, etc. But we don't, because we use the IUPAC symbols anyway. 
-        
-        <xs:complexType name="DNAMapping">
+     -->
+    <xs:complexType name="RNAMapping">
+    	<xs:annotation>
+    		<xs:documentation>
+    			An IUPAC ambiguity mapping.
+    		</xs:documentation>
+    	</xs:annotation>
+    	<xs:complexContent>
+    		<xs:restriction base="AbstractMapping" />
+    	</xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="RNAState">
         <xs:annotation>
-        <xs:documentation>An IUPAC ambiguity mapping.</xs:documentation>
+            <xs:documentation> 
+                This is a concrete implementation of the state element, which requires
+                a symbol element, in this case restricted to RNAToken, i.e. a single IUPAC nucleotide
+                symbol, and optional mapping elements to refer to other states.
+            </xs:documentation>
         </xs:annotation>
         <xs:complexContent>
-        <xs:restriction base="AbstractMapping"/>            
+            <xs:restriction base="AbstractState">
+                <xs:sequence minOccurs="1" maxOccurs="1"/>
+                <xs:attribute name="symbol" type="RNAToken" use="required"></xs:attribute>                
+            </xs:restriction>
         </xs:complexContent>
-        </xs:complexType>
-        
-        <xs:complexType name="DNAState">
+    </xs:complexType>
+
+    <xs:complexType name="RNAUncertainStateSet">
         <xs:annotation>
-        <xs:documentation> 
-        This is a concrete implementation of the state element, which requires
-        a symbol element, in this case restricted to DNAToken, i.e. a single IUPAC nucleotide
-        symbol, and optional mapping elements to refer to other states.
-        </xs:documentation>
+            <xs:documentation> 
+                The AbstractState type is the superclass for a state definition.
+                The element encloses a required AbstractSymbol element that in restricted concrete
+                subclasses must be of a sensible type such as a single IUPAC character. It may
+                enclose zero or more AbstractMapping elements to resolve ambiguities.
+            </xs:documentation>
         </xs:annotation>
         <xs:complexContent>
-        <xs:restriction base="AbstractState">
-        <xs:sequence minOccurs="1" maxOccurs="1">
-        <xs:element name="dict" minOccurs="0" maxOccurs="unbounded" type="Dict"/>
-        <xs:element name="symbol" type="DNAToken" minOccurs="1" maxOccurs="1"/>
-        <xs:element name="mapping" type="DNAMapping" minOccurs="0" maxOccurs="unbounded"/>
-        </xs:sequence>
-        </xs:restriction>
+            <xs:restriction base="AbstractUncertainStateSet">
+                <xs:sequence minOccurs="1" maxOccurs="1">
+                    <xs:element name="member" type="RNAMapping" minOccurs="0" maxOccurs="unbounded"/>
+                </xs:sequence>
+                <xs:attribute name="symbol" type="RNAToken" use="required"></xs:attribute>                
+            </xs:restriction>
         </xs:complexContent>
-        </xs:complexType>
-        
-        <xs:complexType name="DNAStates">
+    </xs:complexType> 
+
+   <xs:complexType name="RNAPolymorphicStateSet">
         <xs:annotation>
-        <xs:documentation>
-        A container for a set of states.
-        </xs:documentation>
+            <xs:documentation> 
+                The AbstractState type is the superclass for a state definition.
+                The element encloses a required AbstractSymbol element that in restricted concrete
+                subclasses must be of a sensible type such as a single IUPAC character. It may
+                enclose zero or more AbstractMapping elements to resolve ambiguities.
+            </xs:documentation>
         </xs:annotation>
         <xs:complexContent>
-        <xs:restriction base="AbstractStates">
-        <xs:sequence minOccurs="1" maxOccurs="1">
-        <xs:element name="dict" minOccurs="0" maxOccurs="unbounded" type="Dict"/>
-        <xs:element name="state" type="DNAState" minOccurs="0" maxOccurs="unbounded"/>
-        </xs:sequence>
-        </xs:restriction>
+            <xs:restriction base="AbstractPolymorphicStateSet">
+                <xs:sequence minOccurs="1" maxOccurs="1">
+                    <xs:element name="member" type="RNAMapping" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element name="uncertain_state_set" type="RNAUncertainStateSet" minOccurs="0" maxOccurs="unbounded"/>
+                </xs:sequence>
+                <xs:attribute name="symbol" type="RNAToken" use="required"></xs:attribute>                
+            </xs:restriction>
+        </xs:complexContent>
+    </xs:complexType> 
+        
+    <xs:complexType name="RNAStates">
+        <xs:annotation>
+            <xs:documentation>
+                A container for a set of states.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:restriction base="AbstractStates">
+                <xs:sequence minOccurs="1" maxOccurs="1">
+                    <xs:element name="dict" minOccurs="0" maxOccurs="unbounded" type="Dict"/>
+                    <xs:element name="state" type="RNAState" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element name="polymorphic_state_set" type="RNAPolymorphicStateSet" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element name="uncertain_state_set" type="RNAUncertainStateSet" minOccurs="0" maxOccurs="unbounded"/>                    
+                </xs:sequence>
+            </xs:restriction>
         </xs:complexContent>        
-        </xs:complexType> -->
+    </xs:complexType>
     
     <xs:complexType name="RNAChar" sawsdl:modelReference="http://evolutionaryontology-dev.nescent.org/cdao.owl#RNAResidueCharacter">
         <xs:annotation>
@@ -98,7 +138,7 @@
                     <xs:element name="dict" minOccurs="0" maxOccurs="unbounded" type="Dict"/>
                 </xs:sequence>       
                 <xs:attribute name="tokens" type="MSTokenLength" use="prohibited"/>                         
-                <xs:attribute name="states" type="xs:NCName" use="prohibited"/>
+                <xs:attribute name="states" type="xs:NCName" use="required"/>
                 <xs:attribute name="codon" type="CodonPosition" use="optional"/>
                 <xs:attribute name="id" type="xs:NCName" use="required"/>
             </xs:restriction>
@@ -113,7 +153,7 @@
         <xs:complexContent>
             <xs:restriction base="AbstractFormat">
                 <xs:sequence minOccurs="1" maxOccurs="1">
-                    <!--     <xs:element name="states" type="DNAStates" minOccurs="0" maxOccurs="0"/> -->
+                    <xs:element name="states" type="RNAStates" minOccurs="1" maxOccurs="unbounded"/>
                     <xs:element name="char" type="RNAChar" minOccurs="1" maxOccurs="unbounded"/>
                 </xs:sequence>
             </xs:restriction>
@@ -130,8 +170,8 @@
                 <xs:sequence minOccurs="1" maxOccurs="1">
                     <xs:element name="dict" minOccurs="0" maxOccurs="unbounded" type="Dict"/>
                 </xs:sequence>
-                <xs:attribute name="char" use="required" type="xs:nonNegativeInteger"/>
-                <xs:attribute name="state" use="required" type="RNAToken"/>
+                <xs:attribute name="char" use="required" type="xs:NCName"/>
+                <xs:attribute name="state" use="required" type="xs:NCName"/>
             </xs:restriction>
         </xs:complexContent>
     </xs:complexType>
@@ -143,7 +183,7 @@
             </xs:documentation>
         </xs:annotation>
         <xs:restriction base="AbstractSeq">
-            <xs:pattern value="[ABCDGHKMNRSUVWXY\s]*"/>
+            <xs:pattern value="[\-\?ABCDGHKMNRSUVWXY\s]*"/>
         </xs:restriction>
     </xs:simpleType>
     
@@ -215,7 +255,7 @@
             <xs:restriction base="AbstractSeqs">
                 <xs:sequence minOccurs="1" maxOccurs="1">
                     <xs:element name="dict" minOccurs="0" maxOccurs="unbounded" type="Dict"/>
-                    <xs:element name="format" minOccurs="0" maxOccurs="1" type="RNAFormat"/>
+                    <xs:element name="format" minOccurs="1" maxOccurs="1" type="RNAFormat"/>
                     <xs:element name="matrix" minOccurs="1" maxOccurs="1" type="RNASeqMatrix"/>
                 </xs:sequence>
             </xs:restriction>
