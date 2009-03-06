@@ -49,21 +49,32 @@ if ( $response->is_success ) {
     $tre->parse( $content );
     $tre->eof;
     find_tbody( $tre, $dates );
-    my $forest = $fac->create_forest;
-    my $taxa   = $fac->create_taxa;
-    my $taxona = $fac->create_taxon( '-xml_id' => 'taxona' );
-    my $taxonb = $fac->create_taxon( '-xml_id' => 'taxonb' );
+    my $project = $fac->create_project;
+    my $forest  = $fac->create_forest;
+    my $taxa    = $fac->create_taxa;
+    my $taxona  = $fac->create_taxon( '-xml_id' => 'taxona' );
+    my $taxonb  = $fac->create_taxon( '-xml_id' => 'taxonb' );
+    $project->insert( $taxa, $forest );
     $taxa->insert( $taxona, $taxonb );
     $forest->set_taxa( $taxa );
     for my $date ( @{ $dates } ) {
-        my $tree = $fac->create_tree;        
-        my %dict = (
-            'genes'  => [ 'string' => $date->genes  ],
-            'data'   => [ 'string' => $date->data   ],     
-            'source' => [ 'string' => $date->source ],
-            'pub'    => [ 'uri'    => encode_entities($pubmed . $date->pub . '&dopt=Abstract') ]                               
+        my $tree = $fac->create_tree;   
+        my $dict = $fac->create_dictionary;
+        for my $field ( qw(genes data source) ) {
+            $dict->insert( 
+                $fac->create_annotation( 
+                    '-xml_id' => $field, '-tag' => 'string', '-value' => $date->$field
+                ) 
+            );
+        }
+        $dict->insert(
+            $fac->create_annotation(
+                '-xml_id' => 'pub', 
+                '-tag'    => 'uri', 
+                '-value'  => encode_entities($pubmed . $date->pub . '&dopt=Abstract'),
+            )
         );
-        $tree->set_generic( 'dict' => \%dict );
+        $tree->add_dictionary( $dict );
         my $root = $fac->create_node;
         $tree->insert($root);
         my $node_a = $fac->create_node( 
@@ -82,7 +93,7 @@ if ( $response->is_success ) {
         $forest->insert( $tree );
     }
     print "Content-type: text/xml\n\n";
-    print unparse( '-format' => 'nexml', '-phylo' => $forest );
+    print $project->to_xml;
 }
 else {
     die $response->status_line;
