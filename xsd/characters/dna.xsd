@@ -28,7 +28,7 @@
             </xs:documentation>
         </xs:annotation>
         <xs:restriction base="AbstractSymbol">
-            <xs:pattern value="[ABCDGHKMNRSTVWXY]"/>
+            <xs:pattern value="[ABCDGHKMNRSTVWXY\-\?]"/>
             <xs:length value="1"/>
         </xs:restriction>
     </xs:simpleType>
@@ -56,10 +56,50 @@
         </xs:annotation>
         <xs:complexContent>
             <xs:restriction base="AbstractState">
-                <xs:sequence minOccurs="1" maxOccurs="1"/>                
+                <xs:sequence minOccurs="1" maxOccurs="1"/>
+                <xs:attribute name="symbol" type="DNAToken" use="required"></xs:attribute>                
             </xs:restriction>
         </xs:complexContent>
     </xs:complexType>
+    
+    <xs:complexType name="DNAUncertainStateSet">
+        <xs:annotation>
+            <xs:documentation> 
+                The AbstractState type is the superclass for a state definition.
+                The element encloses a required AbstractSymbol element that in restricted concrete
+                subclasses must be of a sensible type such as a single IUPAC character. It may
+                enclose zero or more AbstractMapping elements to resolve ambiguities.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:restriction base="AbstractUncertainStateSet">
+                <xs:sequence minOccurs="1" maxOccurs="1">
+                    <xs:element name="member" type="DNAMapping" minOccurs="0" maxOccurs="unbounded"/>
+                </xs:sequence>
+                <xs:attribute name="symbol" type="DNAToken" use="required"></xs:attribute>                
+            </xs:restriction>
+        </xs:complexContent>
+    </xs:complexType>    
+    
+    <xs:complexType name="DNAPolymorphicStateSet">
+        <xs:annotation>
+            <xs:documentation> 
+                The AbstractState type is the superclass for a state definition.
+                The element encloses a required AbstractSymbol element that in restricted concrete
+                subclasses must be of a sensible type such as a single IUPAC character. It may
+                enclose zero or more AbstractMapping elements to resolve ambiguities.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:restriction base="AbstractPolymorphicStateSet">
+                <xs:sequence minOccurs="1" maxOccurs="1">
+                    <xs:element name="member" type="DNAMapping" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element name="uncertain_state_set" type="DNAUncertainStateSet" minOccurs="0" maxOccurs="unbounded"/>
+                </xs:sequence>
+                <xs:attribute name="symbol" type="DNAToken" use="required"></xs:attribute>                
+            </xs:restriction>
+        </xs:complexContent>
+    </xs:complexType>       
 
     <xs:complexType name="DNAStates">
         <xs:annotation>
@@ -72,6 +112,8 @@
                 <xs:sequence minOccurs="1" maxOccurs="1">
                     <xs:element name="dict" minOccurs="0" maxOccurs="unbounded" type="Dict"/>
                     <xs:element name="state" type="DNAState" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element name="polymorphic_state_set" type="DNAPolymorphicStateSet" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element name="uncertain_state_set" type="DNAUncertainStateSet" minOccurs="0" maxOccurs="unbounded"/>                    
                 </xs:sequence>
             </xs:restriction>
         </xs:complexContent>        
@@ -93,7 +135,7 @@
                     <xs:element name="dict" minOccurs="0" maxOccurs="unbounded" type="Dict"/>
                 </xs:sequence>    
                 <xs:attribute name="tokens" type="MSTokenLength" use="prohibited"/>                            
-                <xs:attribute name="states" type="xs:NCName" use="prohibited"/>
+                <xs:attribute name="states" type="xs:NCName" use="required"/>
                 <xs:attribute name="codon" type="CodonPosition" use="optional"/>
                 <xs:attribute name="id" type="xs:NCName" use="required"/>
             </xs:restriction>
@@ -108,6 +150,7 @@
         <xs:complexContent>
             <xs:restriction base="AbstractFormat">
                 <xs:sequence minOccurs="1" maxOccurs="1">
+                    <xs:element name="states" type="DNAStates" minOccurs="1" maxOccurs="unbounded"/>                
                     <xs:element name="char" type="DNAChar" minOccurs="1" maxOccurs="unbounded"/>
                 </xs:sequence>
             </xs:restriction>
@@ -126,8 +169,8 @@
                 <xs:sequence minOccurs="1" maxOccurs="1">
                     <xs:element name="dict" minOccurs="0" maxOccurs="unbounded" type="Dict"/>
                 </xs:sequence>
-                <xs:attribute name="char" use="required" type="xs:nonNegativeInteger"/>
-                <xs:attribute name="state" use="required" type="DNAToken"/>
+                <xs:attribute name="char" use="required" type="xs:NCName"/>
+                <xs:attribute name="state" use="required" type="xs:NCName"/>
             </xs:restriction>
         </xs:complexContent>
     </xs:complexType>
@@ -139,7 +182,7 @@
             </xs:documentation>
         </xs:annotation>
         <xs:restriction base="AbstractSeq">
-            <xs:pattern value="[ABCDGHKMNRSTVWXY\s]*"/>
+            <xs:pattern value="[\-\?ABCDGHKMNRSTVWXY\s]*"/>
         </xs:restriction>
     </xs:simpleType>
 
@@ -211,7 +254,7 @@
             <xs:restriction base="AbstractSeqs">
                 <xs:sequence minOccurs="1" maxOccurs="1">
                     <xs:element name="dict" minOccurs="0" maxOccurs="unbounded" type="Dict"/>
-                    <xs:element name="format" minOccurs="0" maxOccurs="1" type="DNAFormat"/>
+                    <xs:element name="format" minOccurs="1" maxOccurs="1" type="DNAFormat"/>
                     <xs:element name="matrix" minOccurs="1" maxOccurs="1" type="DNASeqMatrix"/>
                 </xs:sequence>
             </xs:restriction>
@@ -228,7 +271,7 @@
             <xs:restriction base="AbstractCells">
                 <xs:sequence minOccurs="1" maxOccurs="1">
                     <xs:element name="dict" minOccurs="0" maxOccurs="unbounded" type="Dict"/>
-                    <xs:element name="format" minOccurs="0" maxOccurs="1" type="DNAFormat"/>
+                    <xs:element name="format" minOccurs="1" maxOccurs="1" type="DNAFormat"/>
                     <xs:element name="matrix" minOccurs="1" maxOccurs="1" type="DNAObsMatrix"/>                   
                 </xs:sequence>
             </xs:restriction>

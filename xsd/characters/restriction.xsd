@@ -36,8 +36,8 @@
             <xs:restriction base="AbstractMapping"/>            
         </xs:complexContent>
     </xs:complexType>
-    
-    <xs:complexType name="StandardState">
+    -->
+    <xs:complexType name="RestrictionState">
         <xs:annotation>
             <xs:documentation> This is a concrete implementation of the state element, which requires
                 a symbol element, in this case restricted to integers, and optional mapping
@@ -45,16 +45,13 @@
         </xs:annotation>
         <xs:complexContent>
             <xs:restriction base="AbstractState">
-                <xs:sequence minOccurs="1" maxOccurs="1">
-                    <xs:element name="dict" minOccurs="0" maxOccurs="unbounded" type="Dict"/>
-                    <xs:element name="symbol" type="StandardToken" minOccurs="1" maxOccurs="1"/>
-                    <xs:element name="mapping" type="StandardMapping" minOccurs="0" maxOccurs="unbounded"/>
-                </xs:sequence>
+                <xs:sequence minOccurs="1" maxOccurs="1"/>
+                <xs:attribute name="symbol" type="RestrictionToken" use="required"/>                
             </xs:restriction>
         </xs:complexContent>
     </xs:complexType>
-    
-    <xs:complexType name="StandardStates">
+
+    <xs:complexType name="RestrictionStates">
         <xs:annotation>
             <xs:documentation>
                 A container for a set of states.
@@ -64,12 +61,12 @@
             <xs:restriction base="AbstractStates">
                 <xs:sequence minOccurs="1" maxOccurs="1">
                     <xs:element name="dict" minOccurs="0" maxOccurs="unbounded" type="Dict"/>
-                    <xs:element name="state" type="StandardState" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element name="state" type="RestrictionState" minOccurs="2" maxOccurs="2"/>
                 </xs:sequence>
             </xs:restriction>
         </xs:complexContent>        
     </xs:complexType>
-    -->
+
     <xs:complexType name="RestrictionChar">
         <xs:annotation>
             <xs:documentation> 
@@ -83,7 +80,7 @@
                     <xs:element name="dict" minOccurs="0" maxOccurs="unbounded" type="Dict"/>
                 </xs:sequence>    
                 <xs:attribute name="tokens" type="MSTokenLength" use="prohibited"/>            
-                <xs:attribute name="states" type="xs:NCName" use="prohibited"/>
+                <xs:attribute name="states" type="xs:NCName" use="required"/>
                 <xs:attribute name="codon" type="CodonPosition" use="prohibited"/>
                 <xs:attribute name="id" type="xs:NCName" use="required"/>
             </xs:restriction>
@@ -98,7 +95,7 @@
         <xs:complexContent>
             <xs:restriction base="AbstractFormat">
                 <xs:sequence minOccurs="1" maxOccurs="1">
-<!--                    <xs:element name="states" type="StandardStates" minOccurs="1" maxOccurs="unbounded"/> -->
+                    <xs:element name="states" type="RestrictionStates" minOccurs="1" maxOccurs="unbounded"/>
                     <xs:element name="char" type="RestrictionChar" minOccurs="1" maxOccurs="unbounded"/>
                 </xs:sequence>
             </xs:restriction>
@@ -117,8 +114,8 @@
                 <xs:sequence minOccurs="1" maxOccurs="1">
                     <xs:element name="dict" minOccurs="0" maxOccurs="unbounded" type="Dict"/>
                 </xs:sequence>
-                <xs:attribute name="char" use="required" type="xs:nonNegativeInteger"/>
-                <xs:attribute name="state" use="required" type="RestrictionToken"/>
+                <xs:attribute name="char" use="required" type="xs:NCName"/>
+                <xs:attribute name="state" use="required" type="xs:NCName"/>
             </xs:restriction>
         </xs:complexContent>
     </xs:complexType>
@@ -210,7 +207,7 @@
             <xs:restriction base="AbstractSeqs">
                 <xs:sequence minOccurs="1" maxOccurs="1">
                     <xs:element name="dict" minOccurs="0" maxOccurs="unbounded" type="Dict"/>
-                    <xs:element name="format" minOccurs="0" maxOccurs="1" type="RestrictionFormat"/>
+                    <xs:element name="format" minOccurs="1" maxOccurs="1" type="RestrictionFormat"/>
                     <xs:element name="matrix" minOccurs="1" maxOccurs="1" type="RestrictionSeqMatrix"/>
                 </xs:sequence>
             </xs:restriction>
