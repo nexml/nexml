@@ -163,7 +163,7 @@ sub _handle_node {
 		$self->{'_parent_of'}->{$id} = $parent->att('ID');
 	}
 	$self->{'_tree'}->insert($node_obj);
-	my %dict;
+	my $dict = $factory->create_dictionary;
 	for my $child_elt ( $node_elt->children ) {		
 		if ( $child_elt->tag eq 'NODES' or $child_elt->tag eq 'OTHERNAMES' ) {
 			next;
@@ -174,21 +174,45 @@ sub _handle_node {
 			}			
 		}
 		elsif ( $child_elt->tag eq 'DESCRIPTION' ) {
-			$node_obj->set_desc($child_elt->text);
+		    $dict->insert(
+		        $factory->create_annotation(
+		            '-tag'    => 'string',
+		            '-value'  => $child_elt->text,
+		            '-xml_id' => 'description',
+		        )
+		    );
 		}
 		elsif ( my $text = $child_elt->text ) {
-			$dict{$child_elt->tag} = [ 'string', $text ];
+		    $dict->insert(
+		        $factory->create_annotation(
+		            '-tag'    => 'string',
+		            '-value'  => $text,
+		            '-xml_id' => $child_elt->tag,
+		        )
+		    );
 		}		
 	}
 	for my $att_name ( $node_elt->att_names ) {
 		if ( $att_name eq 'COMBINATION_DATE' ) {
-			$dict{$att_name} = [ 'string', $node_elt->att($att_name) ];
+		    $dict->insert(
+		        $factory->create_annotation(
+                    '-tag'    => 'string',
+                    '-value'  => $node_elt->att($att_name),
+                    '-xml_id' => $att_name,
+		        )
+		    );
 		}
 		else {
-			$dict{$att_name} = [ 'integer', $node_elt->att($att_name) ];
+		    $dict->insert(
+		        $factory->create_annotation(
+		            '-tag'    => 'integer',
+		            '-value'  => $node_elt->att($att_name),
+		            '-xml_id' => $att_name,
+		        )
+		    );
 		}
 	}
-	$node_obj->set_generic( 'dict' => \%dict );
+	$node_obj->add_dictionary( $dict );
 	$twig->purge;
 }
 
