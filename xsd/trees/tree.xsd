@@ -118,6 +118,7 @@
         <xs:complexContent>
             <xs:restriction base="AbstractTree">
                 <xs:sequence minOccurs="1" maxOccurs="1">
+                	<xs:element name="dict" type="Dict" minOccurs="0" maxOccurs="unbounded"/>                	
                     <xs:element minOccurs="1" maxOccurs="unbounded" name="node" type="TreeNode"/>
                     <xs:element minOccurs="0" maxOccurs="1" name="rootedge" type="TreeFloatRootEdge"/>
                     <xs:element minOccurs="1" maxOccurs="unbounded" name="edge" type="TreeFloatEdge"/>
@@ -135,6 +136,7 @@
         <xs:complexContent>
             <xs:restriction base="AbstractTree">
                 <xs:sequence minOccurs="1" maxOccurs="1">
+					<xs:element name="dict" type="Dict" minOccurs="0" maxOccurs="unbounded"/>                
                     <xs:element minOccurs="1" maxOccurs="unbounded" name="node" type="TreeNode"/>
                     <xs:element minOccurs="0" maxOccurs="1" name="rootedge" type="TreeIntRootEdge"/>
                     <xs:element minOccurs="1" maxOccurs="unbounded" name="edge" type="TreeIntEdge"/>
