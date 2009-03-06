@@ -353,6 +353,7 @@ sub _handle_chars {
 
 	# create matrix object, send extra constructor args
 	my $type = $characters_elt->att('xsi:type');
+	my $compact = $type =~ /Seqs$/;
 	$type =~ s/^.+?:(.*?)(?:Cells|Seqs)/$1/;
 	my %args = ( '-type' => $type );
 	my ( $matrix_obj, $matrix_id ) = $self->_obj_from_elt( $characters_elt, 'matrix', %args );
@@ -371,8 +372,9 @@ sub _handle_chars {
 	for my $row_elt ( $matrix_elt->children('row') ) {
 		( $row_obj, $chars_hash ) = $self->_process_row( $row_elt, $def_hash, $def_array, %args );
 		my @chars;
-		if ( @{$def_array} ) {
+		if ( not $compact ) {
 			my $missing = $row_obj->get_missing;
+			my $i = 0;
 			for my $def_id ( @{$def_array} ) {
 				if ( exists $chars_hash->{$def_id} ) {
 					push @chars, $chars_hash->{$def_id};
