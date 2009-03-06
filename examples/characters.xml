@@ -48,10 +48,20 @@
         xml:lang, xml:id, xlink:href and class) as the taxa element. 
     -->
     <characters otus="taxa1" id="m1" xsi:type="nex:RestrictionSeqs">
+    	<format>
+	      <states id="states3">
+	        <state id="s1" symbol="0"/>
+	        <state id="s2" symbol="1"/>
+	      </states>
+	      <char id="c1" states="states3"/>
+	      <char id="c2" states="states3"/>
+	      <char id="c3" states="states3"/>
+	      <char id="c4" states="states3"/>
+        </format>
+        <matrix>
         <!--
             The matrix element is a container for row elements. 
-        -->
-        <matrix>
+        -->        
             <!--
                 Each row element must have an id and a reference
                 to a taxon element that precedes it. 
@@ -219,7 +229,107 @@
         parsers might otherwise complain) but have no meaning.
     -->
     <characters otus="taxa1" id="c3" xsi:type="nex:DnaSeqs" label="DNA sequences">
-        <matrix>
+    <format>
+    	<states id="states7">
+    		<state id="s1" symbol="A" />
+    		<state id="s2" symbol="C" />
+    		<state id="s3" symbol="G" />
+    		<state id="s4" symbol="T" />
+    		<uncertain_state_set id="s5" symbol="K">
+    			<member state="s3" />
+    			<member state="s4" />
+    		</uncertain_state_set>
+    		<uncertain_state_set id="s6" symbol="M">
+    			<member state="s1" />
+    			<member state="s2" />
+    		</uncertain_state_set>
+    		<uncertain_state_set id="s7" symbol="R">
+    			<member state="s1" />
+    			<member state="s3" />
+    		</uncertain_state_set>
+    		<uncertain_state_set id="s8" symbol="S">
+    			<member state="s2" />
+    			<member state="s3" />
+    		</uncertain_state_set>
+    		<uncertain_state_set id="s9" symbol="W">
+    			<member state="s1" />
+    			<member state="s4" />
+    		</uncertain_state_set>
+    		<uncertain_state_set id="s10" symbol="Y">
+    			<member state="s2" />
+    			<member state="s4" />
+    		</uncertain_state_set>
+    		<uncertain_state_set id="s11" symbol="B">
+    			<member state="s2" />
+    			<member state="s3" />
+    			<member state="s4" />
+    		</uncertain_state_set>
+    		<uncertain_state_set id="s12" symbol="D">
+    			<member state="s1" />
+    			<member state="s3" />
+    			<member state="s4" />
+    		</uncertain_state_set>
+    		<uncertain_state_set id="s13" symbol="H">
+    			<member state="s1" />
+    			<member state="s2" />
+    			<member state="s4" />
+    		</uncertain_state_set>
+    		<uncertain_state_set id="s14" symbol="V">
+    			<member state="s1" />
+    			<member state="s2" />
+    			<member state="s3" />
+    		</uncertain_state_set>
+    		<uncertain_state_set id="s15" symbol="N">
+    			<member state="s3" />
+    			<member state="s1" />
+    			<member state="s4" />
+    			<member state="s2" />
+    		</uncertain_state_set>
+    		<uncertain_state_set id="s16" symbol="X">
+    			<member state="s3" />
+    			<member state="s1" />
+    			<member state="s4" />
+    			<member state="s2" />
+    		</uncertain_state_set>
+    		<uncertain_state_set id="s17" symbol="-" />
+    		<uncertain_state_set id="s18" symbol="?">
+    			<member state="s1" />
+    			<member state="s2" />
+    			<member state="s3" />
+    			<member state="s4" />
+    			<member state="s5" />
+    			<member state="s6" />
+    			<member state="s7" />
+    			<member state="s8" />
+    			<member state="s9" />
+    			<member state="s10" />
+    			<member state="s11" />
+    			<member state="s12" />
+    			<member state="s13" />
+    			<member state="s14" />
+    			<member state="s15" />
+    			<member state="s16" />
+    			<member state="s17" />
+    		</uncertain_state_set>
+    	</states>
+    	<char id="c1" states="states7" />
+    	<char id="c2" states="states7" />
+    	<char id="c3" states="states7" />
+    	<char id="c4" states="states7" />
+    	<char id="c5" states="states7" />
+    	<char id="c6" states="states7" />
+    	<char id="c7" states="states7" />
+    	<char id="c8" states="states7" />
+    	<char id="c9" states="states7" />
+    	<char id="c10" states="states7" />
+    	<char id="c11" states="states7" />
+    	<char id="c12" states="states7" />
+    	<char id="c13" states="states7" />
+    	<char id="c14" states="states7" />
+    	<char id="c15" states="states7" />
+    	<char id="c16" states="states7" />
+    </format>
+    <matrix>
             <row otu="t1" id="r1">
                 <seq>A C G C T C G C A T C G C A T C G C G A</seq>
             </row>
@@ -235,6 +345,110 @@
         RNA only differs from the previous example by using U instead of T 
     -->
     <characters otus="taxa1" id="rnaseqs4" xsi:type="nex:RnaSeqs" label="RNA sequences">
+    <format>
+      <states id="states3">
+        <state id="s1" symbol="A"/>
+        <state id="s2" symbol="C"/>
+        <state id="s3" symbol="G"/>
+        <state id="s4" symbol="U"/>
+        <uncertain_state_set id="s5" symbol="K">
+          <member state="s3"/>
+          <member state="s4"/>
+        </uncertain_state_set>
+        <uncertain_state_set id="s6" symbol="M">
+          <member state="s1"/>
+          <member state="s2"/>
+        </uncertain_state_set>
+        <uncertain_state_set id="s7" symbol="R">
+          <member state="s1"/>
+          <member state="s3"/>
+        </uncertain_state_set>
+        <uncertain_state_set id="s8" symbol="S">
+          <member state="s2"/>
+          <member state="s3"/>
+        </uncertain_state_set>
+        <uncertain_state_set id="s9" symbol="W">
+          <member state="s1"/>
+          <member state="s4"/>
+        </uncertain_state_set>
+        <uncertain_state_set id="s10" symbol="Y">
+          <member state="s2"/>
+          <member state="s4"/>
+        </uncertain_state_set>
+        <uncertain_state_set id="s11" symbol="B">
+          <member state="s2"/>
+          <member state="s3"/>
+          <member state="s4"/>
+        </uncertain_state_set>
+        <uncertain_state_set id="s12" symbol="D">
+          <member state="s1"/>
+          <member state="s3"/>
+          <member state="s4"/>
+        </uncertain_state_set>
+        <uncertain_state_set id="s13" symbol="H">
+          <member state="s1"/>
+          <member state="s2"/>
+          <member state="s4"/>
+        </uncertain_state_set>
+        <uncertain_state_set id="s14" symbol="V">
+          <member state="s1"/>
+          <member state="s2"/>
+          <member state="s3"/>
+        </uncertain_state_set>
+        <uncertain_state_set id="s15" symbol="N">
+          <member state="s3"/>
+          <member state="s1"/>
+          <member state="s4"/>
+          <member state="s2"/>
+        </uncertain_state_set>
+        <uncertain_state_set id="s16" symbol="X">
+          <member state="s3"/>
+          <member state="s1"/>
+          <member state="s4"/>
+          <member state="s2"/>
+        </uncertain_state_set>
+        <uncertain_state_set id="s17" symbol="-"/>
+        <uncertain_state_set id="s18" symbol="?">
+          <member state="s1"/>
+          <member state="s2"/>
+          <member state="s3"/>
+          <member state="s4"/>
+          <member state="s5"/>
+          <member state="s6"/>
+          <member state="s7"/>
+          <member state="s8"/>
+          <member state="s9"/>
+          <member state="s10"/>
+          <member state="s11"/>
+          <member state="s12"/>
+          <member state="s13"/>
+          <member state="s14"/>
+          <member state="s15"/>
+          <member state="s16"/>
+          <member state="s17"/>
+        </uncertain_state_set>
+      </states>
+      <char id="c1" states="states3"/>
+      <char id="c2" states="states3"/>
+      <char id="c3" states="states3"/>
+      <char id="c4" states="states3"/>
+      <char id="c5" states="states3"/>
+      <char id="c6" states="states3"/>
+      <char id="c7" states="states3"/>
+      <char id="c8" states="states3"/>
+      <char id="c9" states="states3"/>
+      <char id="c10" states="states3"/>
+      <char id="c11" states="states3"/>
+      <char id="c12" states="states3"/>
+      <char id="c13" states="states3"/>
+      <char id="c14" states="states3"/>
+      <char id="c15" states="states3"/>
+      <char id="c16" states="states3"/>
+      <char id="c17" states="states3"/>
+      <char id="c18" states="states3"/>
+      <char id="c19" states="states3"/>
+      <char id="c20" states="states3"/>    
+      </format>
         <matrix>
             <row otu="t1" id="r1">
                 <seq>ACGCUCGCAUCGCAUCGCGA</seq>
@@ -251,6 +465,13 @@
         A more compact example of encoding of continuous characters as raw sequences.    
     -->
     <characters otus="taxa1" id="c5" xsi:type="nex:ContinuousSeqs" label="Continuous sequences">
+	    <format>
+	      <char id="c1"/>
+	      <char id="c2"/>
+	      <char id="c3"/>
+	      <char id="c4"/>
+	      <char id="c5"/>	      	      
+	    </format>    
         <matrix>
             <row id="r1" otu="t1">
                 <seq>-1.545414144070023 -2.3905621575431044 -2.9610221833467265 0.7868662069161243 0.22968509237534918</seq>
@@ -275,6 +496,34 @@
         here are the same as the symbol attributes used in characters block m2, earlier.    
     -->
     <characters otus="taxa1" id="c6" xsi:type="nex:StandardSeqs" label="Standard sequences">
+        <format>
+            <!--
+                The first elements inside a format element are stateset
+                definitions. In this example, there is a set of four
+                states, each tagged with an id. The symbol attribute is
+                a shorthand token. 
+            -->
+            <states id="states1">
+                <state id="s1" symbol="1"/>                                
+                <state id="s2" symbol="2"/>                
+                <state id="s3" symbol="3"/>                 
+                <polymorphic_state_set symbol="4" id="s4">                    
+                    <member state="s1"/>
+                    <member state="s2"/>                    
+                </polymorphic_state_set>
+                <uncertain_state_set symbol="5" id="s5">
+                    <member state="s3"/>
+                    <member state="s1"/>
+                </uncertain_state_set>      
+            </states>
+            <!--
+                The matrix in this example contains two columns, both
+                referring to the same stateset - and so cells in both
+                columns can occupy one of four states. 
+             -->
+            <char states="states1" id="c1"/>
+            <char states="states1" id="c2"/>
+        </format>    
         <matrix>
             <row id="r1" otu="t1">
                 <seq>1 2</seq>
