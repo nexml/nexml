@@ -32,11 +32,15 @@ if ( not defined $file ) {
 	die 'No file specified';
 }
 my ( $filename, @lines ) = read_file( $file );
+eval {
 $project = parse( 
 	'-file'       => $filename, 
 	'-format'     => $q->param('informat'),
 	'-as_project' => 1, 
 );		
+};
+die $@ if $@;
+
 
 print "Content-type: text/xml\n\n";
 print $project->to_xml( '-compact' => $q->param('mode') eq 'compact' );
