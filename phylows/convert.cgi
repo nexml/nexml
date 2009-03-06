@@ -1,16 +1,15 @@
 #!/usr/bin/perl
-# $Id: validator.cgi 424 2008-02-07 05:06:10Z rvos $
+# $Id$
 BEGIN {
     use Config;
     $ENV{ $Config{'ldlibpthname'} } = '../expat/lib';
 }
 BEGIN {
-    use lib $ENV{'DOCUMENT_ROOT'} . '/lib/lib/perl5/site_perl/5.8.6/darwin-thread-multi-2level/';
-    use lib $ENV{'DOCUMENT_ROOT'} . '/lib/lib/perl5/site_perl/';
+    use lib $ENV{'DOCUMENT_ROOT'} . '/perllib';
     unshift @INC, $ENV{'DOCUMENT_ROOT'} . '/nexml/perl/lib';
     unshift @INC, $ENV{'DOCUMENT_ROOT'} . '/nexml/site/lib'; 
-    unshift @INC, '../perl/lib';   
-    unshift @INC, '../site/lib';
+#    unshift @INC, '../perl/lib';   
+#    unshift @INC, '../site/lib';
     push @INC, '/Users/rvosa/CIPRES-and-deps/cipres/build/lib/perl/lib';
 }
 use strict;
@@ -28,60 +27,19 @@ my $q = CGI->new; # the CGI object, parses request parameters, generates respons
 
 # process file
 my $file = $q->upload('file') || shift(@ARGV); # file name can also be provided on command line
-my ( $blocks, $error, $line );
+my ( $project, $error, $line );
 if ( not defined $file ) {
-	$@ = 'No file specified';
+	die 'No file specified';
 }
-else {
-	my ( $filename, @lines ) = read_file( $file );
-	eval {
-		$blocks = parse( 
-			'-file'   => $filename, 
-			'-format' => $q->param('informat') 
-		);		
-	};	
-}
-
-# create output
-if ( $@ ) {
-    warn $@;
-    if ( blessed $@ ) {
-    	( $error, $line ) = ( $@->error, $@->line );
-    }
-    else {
-    	( $error, $line ) = ( $@, 1 );
-    }
-}
-else {
-	
-}
+my ( $filename, @lines ) = read_file( $file );
+$project = parse( 
+	'-file'       => $filename, 
+	'-format'     => $q->param('informat'),
+	'-as_project' => 1, 
+);		
 
 print "Content-type: text/xml\n\n";
-if ( blessed $blocks ) {
-	
-}
-else {
-	my %args;
-	if ( $q->param('mode') eq 'compact' ) {
-		$args{'-compact'} = 1;
-	}
-	my $xml = '';
-	$xml .= $blocks->[0]->get_root_open_tag;
-	for my $block ( @{ $blocks } ) {
-		my $tmp;
-		eval {
-			$tmp = $block->to_xml(%args);
-		};
-		if ( $@ ) {
-			warn $@;
-		}
-		else {
-			$xml .= $tmp;
-		}
-	} 
-	$xml .= $blocks->[0]->get_root_close_tag;
-	print $xml; 
-}
+print $project->to_xml( '-compact' => $q->param('mode') eq 'compact' );
 
 =head1 SUBROUTINES
 
