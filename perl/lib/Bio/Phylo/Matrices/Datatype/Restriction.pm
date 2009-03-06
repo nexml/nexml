@@ -16,6 +16,33 @@ The Bio::Phylo::Matrices::Datatype::* classes are used to validate data
 contained by L<Bio::Phylo::Matrices::Matrix> and L<Bio::Phylo::Matrices::Datum>
 objects.
 
+=head2 METHODS
+
+=over
+
+=item get_ids_for_special_symbols()
+
+Gets state-to-id mapping for missing and gap symbols
+
+ Type    : Accessor
+ Title   : get_ids_for_special_symbols
+ Usage   : my %ids = %{ $obj->get_ids_for_special_symbols };
+ Function: Returns state-to-id mapping
+ Returns : An empty hash reference
+ Args    : None
+ Notes   : This method is here as an override
+           because restriction site data has
+           no missing or gap symbols, just
+           presence/absence
+
+=cut
+
+    sub get_ids_for_special_symbols {
+        return {};
+    }
+
+=back
+
 =cut
 
 # podinherit_insert_token
