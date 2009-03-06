@@ -826,26 +826,22 @@ Serializes matrix to nexml format.
 		my $xml = $self->get_xml_tag;
 		my $normalized = $self->_normalize_symbols;
 		
-		# skip <format/> block in compact mode
-		if ( not $args{'-compact'} ) {
-			
-			# the format block
-			$xml .= "\n<format>";
-			my $to = $self->get_type_object;
-			$ids_for_states = $to->get_ids_for_states(1);
-			
-			# write state definitions
-			$xml .= $to->to_xml($normalized,$self->get_polymorphism);
-			
-			# write column definitions
-			if ( %{ $ids_for_states } ) {
-				$xml .= $self->_write_char_labels( $to->get_xml_id );
-			}
-			else {
-				$xml .= $self->_write_char_labels();
-			}
-			$xml .= "\n</format>";
+		# the format block
+		$xml .= "\n<format>";
+		my $to = $self->get_type_object;
+		$ids_for_states = $to->get_ids_for_states(1);
+		
+		# write state definitions
+		$xml .= $to->to_xml($normalized,$self->get_polymorphism);
+		
+		# write column definitions
+		if ( %{ $ids_for_states } ) {
+			$xml .= $self->_write_char_labels( $to->get_xml_id );
 		}
+		else {
+			$xml .= $self->_write_char_labels();
+		}
+		$xml .= "\n</format>";
 		
 		# the matrix block
 		$xml .= "\n<matrix>";
