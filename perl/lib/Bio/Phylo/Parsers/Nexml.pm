@@ -614,7 +614,15 @@ sub _process_listtree {
 			);
 		}
 
-		$node_by_id{$node_id}->set_parent( $node_by_id{$parent_id} );
+		if ( not $node_by_id{$node_id}->get_parent ) {
+			$node_by_id{$node_id}->set_parent( $node_by_id{$parent_id} );
+		}
+		else {
+			throw(
+				'API'  => sprintf("node '%s' already has parent '%s' in tree '%s'", $node_id, $parent_id, $tree_id),
+				'line' => $self->{'_twig'}->parser->current_line
+			);
+		}
 		if ( defined( my $length = $edge_elt->att('length') ) ) {
 			$node_by_id{$node_id}->set_branch_length($length);
 		}
