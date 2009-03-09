@@ -112,27 +112,27 @@ sub _to_string {
 		}
 	);
 	eval {
-		my $taxa_elt = $parse_twig->parse($taxa_obj->to_xml);
+		my $taxa_elt = $parse_twig->parse($taxa_obj->to_xml(%{$self->{TAXA_ARGS}}));
 		$taxa_elt->root->paste($nexml_root);
 	};
-	die $@, $taxa_obj->to_xml if $@;
+	die $@, $taxa_obj->to_xml(${$self->{TAXA_ARGS}}) if $@;
 
     if ( $taxa_obj->get_matrices ) {
         for my $characters_obj ( reverse @{ $taxa_obj->get_matrices } ) {
             eval {
-                my $characters_elt = $parse_twig->parse($characters_obj->to_xml); 
+                my $characters_elt = $parse_twig->parse($characters_obj->to_xml(%{$self->{MATRIX_ARGS}})); 
                 $characters_elt->root->paste( 'last_child', $nexml_root );
             };
-            die $@, $characters_obj->to_xml if $@;
+            die $@, $characters_obj->to_xml(%{$self->{MATRIX_ARGS}}) if $@;
         }
 	}
 	if ( $taxa_obj->get_forests ) {
         for my $forest_obj ( reverse @{ $taxa_obj->get_forests } ) {		
             eval {
-                my $forest_elt = $parse_twig->parse($forest_obj->to_xml);
+                my $forest_elt = $parse_twig->parse($forest_obj->to_xml(%{$self->{FOREST_ARGS}}));
                 $forest_elt->root->paste( 'last_child', $nexml_root );
             };
-            die $@, $forest_obj->to_xml if $@;
+            die $@, $forest_obj->to_xml(%{$self->{FOREST_ARGS}}) if $@;
         }
 	}
 	$nexml_twig->set_root($nexml_root);
