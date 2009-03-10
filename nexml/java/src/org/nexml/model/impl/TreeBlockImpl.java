@@ -1,16 +1,23 @@
 package org.nexml.model.impl;
 
 import org.nexml.model.Dictionary;
+import org.nexml.model.FloatEdge;
+import org.nexml.model.IntEdge;
 import org.nexml.model.Network;
 import org.nexml.model.Tree;
 import org.nexml.model.TreeBlock;
 
 public class TreeBlockImpl extends SetManager<Network> implements TreeBlock {
 
-	public Network createNetwork() {
-		Network network = new NetworkImpl();
+	public Network<IntEdge> createIntNetwork() {
+		Network<IntEdge> network = new IntNetworkImpl();
 		addThing(network);
 		return network;
+	}
+	
+	public Network<FloatEdge> createFloatNetwork() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	public Tree createTree() {

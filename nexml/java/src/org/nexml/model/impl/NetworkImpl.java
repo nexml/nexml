@@ -2,13 +2,13 @@ package org.nexml.model.impl;
 
 import org.nexml.model.Dictionary;
 import org.nexml.model.Edge;
+import org.nexml.model.Network;
 import org.nexml.model.NetworkObject;
 import org.nexml.model.Node;
-import org.nexml.model.Tree;
 
-public class NetworkImpl extends SetManager<NetworkObject> implements Tree {
+public abstract class NetworkImpl<E extends Edge> extends SetManager<NetworkObject> implements Network<E> {
 
-	public void addEdge(Edge edge) {
+	public void addEdge(E edge) {
 		// TODO Auto-generated method stub
 
 	}
@@ -47,11 +47,8 @@ public class NetworkImpl extends SetManager<NetworkObject> implements Tree {
 
 	}
 
-	public Edge createEdge() {
-		Edge edge = new EdgeImpl();
-		addThing(edge);
-		return edge;
-	}
+	abstract public E createEdge();
+
 
 	public Node createNode() {
 		Node node = new NodeImpl();
@@ -59,7 +56,7 @@ public class NetworkImpl extends SetManager<NetworkObject> implements Tree {
 		return node;
 	}
 
-	public Edge getEdge(String edgeId) {
+	public E getEdge(String edgeId) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -69,7 +66,7 @@ public class NetworkImpl extends SetManager<NetworkObject> implements Tree {
 		return null;
 	}
 
-	public void removeEdge(Edge edge) {
+	public void removeEdge(E edge) {
 		// TODO Auto-generated method stub
 
 	}

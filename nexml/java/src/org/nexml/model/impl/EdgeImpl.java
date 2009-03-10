@@ -1,18 +1,22 @@
 package org.nexml.model.impl;
 
-import java.math.BigDecimal;
-
 import org.nexml.model.Edge;
 import org.nexml.model.Node;
 
-public class EdgeImpl extends NexmlWritableImpl implements Edge {
-	private Node mSource, mTarget;
-	
-	private BigDecimal mLength;
+public abstract class EdgeImpl extends NexmlWritableImpl implements Edge {
 
-	@Override
-	String getTagName() {
-		return "edge";
+	private Node mSource;
+
+	private Node mTarget;
+
+	protected Number mLength;
+
+	protected Number getLengthAsNumber() {
+		return mLength;
+	}
+
+	protected void setLengthAsNumber(Number length) {
+		mLength = length;
 	}
 
 	public Node getSource() {
@@ -29,6 +33,12 @@ public class EdgeImpl extends NexmlWritableImpl implements Edge {
 
 	public void setTarget(Node target) {
 		mTarget = target;
+	}
+
+
+	@Override
+	String getTagName() {
+		return "edge";
 	}
 
 }
