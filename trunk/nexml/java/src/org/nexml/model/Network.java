@@ -1,13 +1,13 @@
 package org.nexml.model;
 
-public interface Network extends NexmlWritable {
-	Edge createEdge();
+public interface Network<E extends Edge> extends NexmlWritable {
+	E createEdge();
 
-	void addEdge(Edge edge);
+	void addEdge(E edge);
 	
-	Edge getEdge(String edgeId);
+	E getEdge(String edgeId);
 	
-	void removeEdge(Edge edge);
+	void removeEdge(E edge);
 
 	Node createNode();
 

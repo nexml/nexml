@@ -1,7 +1,9 @@
 package org.nexml.model;
 
 public interface TreeBlock extends OTUsLinkable {
-	Network createNetwork();
+	Network<IntEdge> createIntNetwork();
+
+	Network<FloatEdge> createFloatNetwork();
 
 	Tree createTree();
 }
