@@ -2,7 +2,7 @@ package org.nexml.model.impl;
 
 import org.nexml.model.NexmlWritable;
 
-public abstract class NexmlWritableImpl implements NexmlWritable {
+abstract class NexmlWritableImpl implements NexmlWritable {
 
 	public String getLabel() {
 		// TODO Auto-generated method stub
