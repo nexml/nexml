@@ -1,5 +1,5 @@
 package org.nexml.model;
 
-public interface TreeBlock extends OTUsLinkable {
+public interface TreeBlock extends OTUsLinkable, Segmented {
 
 }
