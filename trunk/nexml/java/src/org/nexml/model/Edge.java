@@ -1,6 +1,6 @@
 package org.nexml.model;
 
-public interface Edge extends NexmlWritable {
+public interface Edge extends NetworkObject {
 	Node getSource();
 
 	void setSource(Node source);

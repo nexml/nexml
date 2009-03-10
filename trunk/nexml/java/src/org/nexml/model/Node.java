@@ -1,5 +1,5 @@
 package org.nexml.model;
 
-public interface Node extends OTULinkable {
+public interface Node extends NetworkObject {
 
 }
