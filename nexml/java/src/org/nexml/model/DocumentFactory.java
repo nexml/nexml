@@ -2,7 +2,7 @@ package org.nexml.model;
 
 import java.io.InputStream;
 
-public class Documents {
+public class DocumentFactory {
 	static public Document createDocument() {
 		//TODO: configurable createor
 		return null;
