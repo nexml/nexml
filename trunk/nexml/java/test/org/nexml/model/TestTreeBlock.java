@@ -19,5 +19,12 @@ public class TestTreeBlock {
 		
 		edge.setLength(34);
 		Assert.assertEquals("edge.setLength should be 34", 34, edge.getLength().intValue());
+
+		OTUs mammals = doc.createOTUs();
+
+		OTU chimp = mammals.createOTU();
+		chimp.setLabel("chimp");
+		node2.setOTU(chimp);
+		Assert.assertEquals("node2.getOTU should be chimp", chimp, node2.getOTU()); 
 	}
 }
