@@ -16,8 +16,9 @@ public class TreeBlockImpl extends SetManager<Network> implements TreeBlock {
 	}
 	
 	public Network<FloatEdge> createFloatNetwork() {
-		// TODO Auto-generated method stub
-		return null;
+		Network<FloatEdge> network = new FloatNetworkImpl();
+		addThing(network);
+		return network;
 	}
 
 	public Tree createTree() {
