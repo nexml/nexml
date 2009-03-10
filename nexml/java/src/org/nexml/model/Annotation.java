@@ -1,5 +1,14 @@
 package org.nexml.model;
 
-public interface Annotation extends NexmlWritable {
+/**
+ * TODO: discuss with group. 
+ */
+public interface Annotation<T, U> extends NexmlWritable {
+	T getKey();
 
+	void setKey(T key);
+
+	U getValue();
+
+	void setValue(U value);
 }
