@@ -4,4 +4,5 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.nexml.org/1.0 ../xsd/nexml.xsd"
     xmlns:xi="http://www.w3.org/2003/XInclude"
-    xmlns:nex="http://www.nexml.org/1.0"/>
+    xmlns:nex="http://www.nexml.org/1.0"
+    xmlns="http://www.nexml.org/1.0"/>

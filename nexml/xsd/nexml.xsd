@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xs:schema xmlns="http://www.nexml.org/1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.nexml.org/1.0">
+<xs:schema 
+	xmlns="http://www.nexml.org/1.0" 
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+	targetNamespace="http://www.nexml.org/1.0"
+	elementFormDefault="qualified">
   <xs:annotation>
     <xs:documentation>
       This module constitutes in effect the 'main' class of the nexml schema.

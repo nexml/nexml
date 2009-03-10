@@ -42,7 +42,8 @@
 	xsi:schemaLocation="http://www.nexml.org/1.0 ../xsd/nexml.xsd"
 	xmlns:nex="http://www.nexml.org/1.0"
 	generator="mesquite"
-	xmlns:xlink="http://www.w3.org/1999/xlink">
+	xmlns:xlink="http://www.w3.org/1999/xlink"
+	xmlns="http://www.nexml.org/1.0">
 	<!--
 		Dictionary attachments are permitted as first children
 		of the root element - and most other elements. This 
