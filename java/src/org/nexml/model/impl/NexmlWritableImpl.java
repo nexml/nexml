@@ -11,7 +11,6 @@ abstract class NexmlWritableImpl implements NexmlWritable {
 
 	public void setLabel(String label) {
 		// TODO Auto-generated method stub
-
 	}
 	
 	abstract String getTagName();
