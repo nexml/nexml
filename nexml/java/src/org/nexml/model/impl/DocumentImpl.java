@@ -22,7 +22,7 @@ public class DocumentImpl extends NexmlWritableImpl implements Document {
 		return null;
 	}
 
-	public void addDictionary(Dictionary dictionary) {
+	public void setDictionary(Dictionary dictionary) {
 		// TODO Auto-generated method stub
 
 	}
