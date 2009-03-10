@@ -361,9 +361,13 @@ sub _handle_chars {
 
 	# create character definitions, if any
 	my ( $def_hash, $def_array ) = ( {}, [] );
+	my $lookup;
 	if ( my $definitions_elt = $characters_elt->first_child('format') ) {
-		( $def_hash, $def_array ) = $self->_process_definitions($definitions_elt);
+		( $def_hash, $def_array, $lookup ) = $self->_process_definitions($definitions_elt);
 	}
+	$matrix_obj->get_type_object->set_lookup( $lookup );
+	delete $args{'-type'};
+	$args{'-type_object'} = $matrix_obj->get_type_object;
 
 	# create row objects
 	# rows are actually stored inside the <matrix/> element
@@ -408,6 +412,7 @@ sub _handle_chars {
 sub _process_definitions {
 	my ( $self, $format_elt ) = @_;
 	my ( $states_hash, $chars_hash, $states_array ) = ( {}, {}, [] );
+	my $lookup = {};
 
 	# here we iterate over state set definitions, i.e. each
 	# $states_elt <states/> describes a set of mappings
@@ -418,7 +423,31 @@ sub _process_definitions {
 		my $process_state = sub {
 			my $elt = shift;
 			my ( $id, $sym ) = ( $elt->att('id'), $elt->att('symbol') );
-			$states_hash->{$states_id}->{$id} = $sym;  
+			$states_hash->{$states_id}->{$id} = $sym;
+			my @children = $elt->children('member');
+			if ( @children ) {
+				$lookup->{$sym} = [];
+				for my $child ( @children ) {
+					my $child_id = $child->att('state');
+					my $child_sym = $states_hash->{$states_id}->{$child_id};
+					if ( not defined $child_id ) {
+						throw ( 
+							'API'  => "Need reference to fundamental state by set '$id'",
+							'line' => $self->{'_twig'}->parser->current_line 
+						);
+					}
+					if ( not exists $states_hash->{$states_id}->{$child_id} ) {
+						throw ( 
+							'API'  => "Couldn't find fundamental state '$child_id'",
+							'line' => $self->{'_twig'}->parser->current_line 
+						);
+					}
+					push @{ $lookup->{$sym} }, $child_sym;
+				}
+			}  
+			else {
+				$lookup->{$sym} = [ $sym ];
+			}
 		};
 
 		# here we iterate of state definitions, i.e. each
@@ -428,17 +457,9 @@ sub _process_definitions {
 		}		
 		for my $polymorphic_state_set_elt ( $states_elt->children('polymorphic_state_set') ) {
 			$process_state->($polymorphic_state_set_elt);
-			# TODO
-			for my $member_elt ( $polymorphic_state_set_elt->children('member') ) {
-				
-			}
 		}
 		for my $uncertain_state_set_elt ( $states_elt->children('uncertain_state_set') ) {
 			$process_state->($uncertain_state_set_elt);
-			# TODO
-			for my $member_elt ( $uncertain_state_set_elt->children('member') ) {
-				
-			}			
 		}
 	}
 	
@@ -464,7 +485,7 @@ sub _process_definitions {
 		push @$states_array, $char_id;
 	}
 
-	return ( $chars_hash, $states_array );
+	return ( $chars_hash, $states_array, $lookup );
 }
 
 sub _process_row {
