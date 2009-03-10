@@ -1,17 +1,17 @@
 package org.nexml.model;
 
+
 /**
- * All are annotatable.
- * 
- * @author Sam Donnelly
+ * All {@code NexmlWritable}s are annotatable.
  */
 public interface NexmlWritable {
-	String getId();
-	void setId(String pId);
-
 	String getLabel();
+
 	void setLabel(String pLabel);
 
-	String getTagName();
-	void setTagName(String pTagName);
+	Dictionary getDictionary();
+	
+	void addDictionary(Dictionary pDictionary);
+	
+	
 }
