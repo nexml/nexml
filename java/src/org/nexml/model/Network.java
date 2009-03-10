@@ -1,5 +1,5 @@
 package org.nexml.model;
 
-public interface Network extends Segmented<NetworkObject> {
+public interface Network extends NexmlWritable {
  	void addEdge(Edge edge);
 }
