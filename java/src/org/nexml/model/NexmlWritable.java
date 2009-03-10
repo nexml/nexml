@@ -11,7 +11,8 @@ public interface NexmlWritable {
 
 	Dictionary getDictionary();
 	
-	void addDictionary(Dictionary dictionary);
-	
+	void setDictionary(Dictionary dictionary);
+
+	Dictionary createDictionary();
 	
 }

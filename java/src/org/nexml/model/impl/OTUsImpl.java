@@ -1,17 +1,14 @@
 package org.nexml.model.impl;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 import org.nexml.model.Dictionary;
 import org.nexml.model.OTU;
 import org.nexml.model.OTUs;
 
-public class OTUsImpl extends NexmlWritableImpl  implements OTUs {
+public class OTUsImpl extends SetManager implements OTUs {
 
-	private List<OTU> mOTUs = new ArrayList<OTU>();
 	
 	public void addDictionaryToSet(String setName, Dictionary dictionary) {
 		// TODO Auto-generated method stub
@@ -19,12 +16,11 @@ public class OTUsImpl extends NexmlWritableImpl  implements OTUs {
 	}
 
 	public void addOTU(OTU otu) {
-		mOTUs.add(otu);
+		addThing(otu);
 	}
 
 	public void addOTUToSet(String setName, OTU otu) {
-		// TODO Auto-generated method stub
-
+		addToSet(setName, otu);
 	}
 
 	public OTU createOTU() {
@@ -34,32 +30,23 @@ public class OTUsImpl extends NexmlWritableImpl  implements OTUs {
 	}
 
 	public void createOTUSet(String setName) {
-		// TODO Auto-generated method stub
-
+		createSet(setName);
 	}
 
 	public List<OTU> getAllOTUs() {
-		return mOTUs;
+		return getThings();
 	}
 
 	public List<OTU> getOTUsFromSet(String setName) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public Set<String> getSetNames() {
-		// TODO Auto-generated method stub
-		return null;
+		return getFromSet(setName);
 	}
 
 	public void removeDictionaryFromSet(String setName) {
 		// TODO Auto-generated method stub
-
 	}
 
 	public void removeOTU(OTU otu) {
-		// TODO Auto-generated method stub
-
+		removeThing(otu);
 	}
 
 	public void removeOTUFromSet(String setName, OTU otu) {
@@ -72,7 +59,7 @@ public class OTUsImpl extends NexmlWritableImpl  implements OTUs {
 		return null;
 	}
 
-	public void addDictionary(Dictionary dictionary) {
+	public void setDictionary(Dictionary dictionary) {
 		// TODO Auto-generated method stub
 
 	}
