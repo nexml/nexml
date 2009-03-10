@@ -17,6 +17,7 @@
 	<target name="compile">
 		<mkdir dir="${classfiles}"/>
 	    <javac srcdir="${src}" destdir="${classfiles}">
+	          <exclude name="**/mesquite/nexml/InterpretNEXML/*"/>
 	        <classpath refid="classpath"/>
 	    </javac>
 	</target>
