@@ -18,8 +18,7 @@ public class DocumentImpl extends NexmlWritableImpl implements Document {
 	}
 
 	public TreeBlock createTreeBlock() {
-		// TODO Auto-generated method stub
-		return null;
+		return new TreeBlockImpl();
 	}
 
 	public void setDictionary(Dictionary dictionary) {
