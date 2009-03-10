@@ -3,7 +3,8 @@
 	xmlns:xs="http://www.w3.org/2001/XMLSchema"
 	xmlns:sawsdl="http://www.w3.org/ns/sawsdl" 
 	targetNamespace="http://www.nexml.org/1.0"
-    xmlns="http://www.nexml.org/1.0">
+    xmlns="http://www.nexml.org/1.0"
+    elementFormDefault="qualified">
     <xs:annotation>
         <xs:documentation>
             This module defines the abstract superclasses for the components
@@ -105,6 +106,7 @@
         </xs:complexContent>
     </xs:complexType>     
     
+    <!-- TODO place constraint on symbol unicity -->
     <xs:complexType name="AbstractStates" abstract="true">
         <xs:annotation>
             <xs:documentation>

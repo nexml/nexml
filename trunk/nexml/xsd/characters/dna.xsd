@@ -4,7 +4,8 @@
 	targetNamespace="http://www.nexml.org/1.0"
     xmlns="http://www.nexml.org/1.0" 
     xmlns:sawsdl="http://www.w3.org/ns/sawsdl"
-    xmlns:xml="http://www.w3.org/XML/1998/namespace">
+    xmlns:xml="http://www.w3.org/XML/1998/namespace"
+    elementFormDefault="qualified">
     <xs:include schemaLocation="abstractcharacters.xsd"/>
     
     <xs:annotation>
