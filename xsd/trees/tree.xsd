@@ -2,7 +2,8 @@
 <xs:schema 
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
     targetNamespace="http://www.nexml.org/1.0"
-    xmlns="http://www.nexml.org/1.0">
+    xmlns="http://www.nexml.org/1.0"
+    elementFormDefault="qualified">
     <xs:annotation>
         <xs:documentation>
             This module defines the components of trees, graphs 

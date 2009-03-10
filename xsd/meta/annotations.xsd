@@ -5,7 +5,8 @@
 	xmlns="http://www.nexml.org/1.0"
 	xmlns:xlink="http://www.w3.org/1999/xlink" 
 	xmlns:sawsdl="http://www.w3.org/ns/sawsdl"
-	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+	elementFormDefault="qualified">
 	
 	<xs:annotation>
 		<xs:documentation>

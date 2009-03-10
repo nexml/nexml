@@ -54,6 +54,7 @@ sub new {
 		'-attributes' => {
 			'version'   => '0.8',
 			'generator' => "$class v.$version",			
+			'xmlns'     => 'http://www.nexml.org/1.0',			
 			'xsi:schemaLocation' => 'http://www.nexml.org/1.0 http://www.nexml.org/1.0/nexml.xsd',
 		},
 		'-identifiable' => 0,

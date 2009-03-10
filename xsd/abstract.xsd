@@ -4,7 +4,8 @@
     xmlns:xml="http://www.w3.org/XML/1998/namespace" 
     xmlns:xlink="http://www.w3.org/1999/xlink"
     targetNamespace="http://www.nexml.org/1.0"
-    xmlns="http://www.nexml.org/1.0">
+    xmlns="http://www.nexml.org/1.0"
+    elementFormDefault="qualified">
     
     <xs:include schemaLocation="meta/annotations.xsd"/>
     <xs:annotation>
