@@ -8,4 +8,5 @@ public interface Edge extends NetworkObject {
 	Node getTarget();
 
 	void setTarget(Node target);
+	
 }
