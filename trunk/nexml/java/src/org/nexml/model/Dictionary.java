@@ -1,5 +1,10 @@
 package org.nexml.model;
 
-public interface Dictionary extends NexmlWritable {
+import java.util.Set;
 
+//TODO: make this generic?
+public interface Dictionary extends NexmlWritable {
+	public void setAnnotations(Set<Annotation> annotations);
+
+	public Set<Annotation> getAnnotations();
 }
