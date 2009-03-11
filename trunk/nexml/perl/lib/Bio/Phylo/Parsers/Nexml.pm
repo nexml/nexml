@@ -78,14 +78,12 @@ sub _process_attributes {
 	eval { $atts = $elt->atts };
 	if ( $@ ) { throw API => $@ }
 
-	# XXX move id to xml writable property?
 	my $id = $elt->att('id');
 	if ( $id ) {
 		$obj->set_xml_id($id);
 		delete $atts->{$id};
 	}
 
-	# XXX move label to xml writable property?
 	my $label = $elt->att('label');
 	if ( $label ) {
 		$obj->set_name($label);
