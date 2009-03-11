@@ -24,8 +24,7 @@ public class CharacterStateSetImpl extends
 	}
 
 	public CharacterState createCharacterState() {
-		// TODO Auto-generated method stub
-		return null;
+		return new CharacterStateImpl();
 	}
 
 }
