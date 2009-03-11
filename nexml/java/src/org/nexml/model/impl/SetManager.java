@@ -12,7 +12,9 @@ public abstract class SetManager<T> extends NexmlWritableImpl {
 	private final List<T> mThings = new ArrayList<T>();
 
 	protected void addThing(T thing) {
-		mThings.add(thing);
+		if (!mThings.contains(thing)) {
+			mThings.add(thing);
+		}
 	}
 	
 	protected void removeThing(T thing) { 
