@@ -499,7 +499,17 @@ sub _process_row {
 		return ( $row_obj, $self->_process_cells( $row_elt, $def_hash, $def_array ) );		
 	}
 	else {
-		return ( $row_obj, $self->_process_seqs( $row_elt, $def_hash, $args{'-type'} ) );
+	    my $type;
+	    if ( $args{'-type'} ) {
+	        $type = $args{'-type'};
+	    }
+	    elsif ( $args{'-type_object'} ) {
+	        $type = $args{'-type_object'}->get_type;
+	    }
+	    else {
+	        $type = 'Standard';
+	    }
+		return ( $row_obj, $self->_process_seqs( $row_elt, $def_hash, $type ) );
 	}
 
 }
