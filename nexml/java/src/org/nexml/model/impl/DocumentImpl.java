@@ -1,5 +1,6 @@
 package org.nexml.model.impl;
 
+import org.nexml.model.CategoricalMatrix;
 import org.nexml.model.Dictionary;
 import org.nexml.model.Document;
 import org.nexml.model.Matrix;
@@ -41,8 +42,12 @@ public class DocumentImpl extends NexmlWritableImpl implements Document {
 	}
 
 	@Override
-	String getTagName() { 
-		return "nexml"; 
+	String getTagName() {
+		return "nexml";
 	}
-	
+
+	public CategoricalMatrix createCategoricalMatrix() {
+		return new CategoricalMatrixImpl();
+	}
+
 }

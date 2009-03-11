@@ -5,5 +5,7 @@ public interface Document extends NexmlWritable {
 
 	OTUs createOTUs();
 
-	Matrix createMatrix();
+	CategoricalMatrix createCategoricalMatrix();
+	
+	
 }
