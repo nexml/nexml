@@ -29,5 +29,11 @@ public class TestMatrix {
 		red.setSymbol(1);
 		Assert.assertEquals("red.getLabel should be red", "red", red.getLabel());
 		Assert.assertEquals("red.getSymbol should be 1", 1, red.getSymbol());
+
+		Character hairColor = categoricalMatrix.createCharacter();
+		
+		MatrixCell<CharacterState> cell = categoricalMatrix.getCell(chimp, hairColor);
+		cell.setValue(red);
+		Assert.assertEquals("cell.getValue should be red", red, cell.getValue()); 
 	}
 }
