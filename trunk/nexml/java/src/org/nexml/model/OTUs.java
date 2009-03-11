@@ -21,8 +21,6 @@ public interface OTUs extends Iterable<OTU>, NexmlWritable {
 	
 	void removeDictionaryFromSet(String setName);
 	
-	void addOTU(OTU otu);
-
 	void removeOTU(OTU otu);
 
 	List<OTU> getAllOTUs();

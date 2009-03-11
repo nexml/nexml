@@ -9,8 +9,7 @@ import org.nexml.model.TreeBlock;
 public class DocumentImpl extends NexmlWritableImpl implements Document {
 
 	public Matrix createMatrix() {
-		// TODO Auto-generated method stub
-		return null;
+		return new MatrixImpl();
 	}
 
 	public OTUs createOTUs() {
