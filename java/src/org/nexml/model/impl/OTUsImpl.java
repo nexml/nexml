@@ -7,7 +7,7 @@ import org.nexml.model.Dictionary;
 import org.nexml.model.OTU;
 import org.nexml.model.OTUs;
 
-public class OTUsImpl extends SetManager implements OTUs {
+public class OTUsImpl extends SetManager<OTU> implements OTUs {
 
 	
 	public void addDictionaryToSet(String setName, Dictionary dictionary) {
@@ -15,7 +15,7 @@ public class OTUsImpl extends SetManager implements OTUs {
 
 	}
 
-	public void addOTU(OTU otu) {
+	private void addOTU(OTU otu) {
 		addThing(otu);
 	}
 
@@ -57,26 +57,6 @@ public class OTUsImpl extends SetManager implements OTUs {
 	public Iterator<OTU> iterator() {
 		// TODO Auto-generated method stub
 		return null;
-	}
-
-	public void setDictionary(Dictionary dictionary) {
-		// TODO Auto-generated method stub
-
-	}
-
-	public Dictionary getDictionary() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public String getLabel() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public void setLabel(String label) {
-		// TODO Auto-generated method stub
-
 	}
 	
 	@Override

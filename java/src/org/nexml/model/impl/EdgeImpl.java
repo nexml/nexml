@@ -9,7 +9,7 @@ public abstract class EdgeImpl extends NexmlWritableImpl implements Edge {
 
 	private Node mTarget;
 
-	protected Number mLength;
+	private Number mLength;
 
 	protected Number getLengthAsNumber() {
 		return mLength;
