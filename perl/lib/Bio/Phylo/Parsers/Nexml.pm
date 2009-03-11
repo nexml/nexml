@@ -116,8 +116,6 @@ sub _obj_from_elt {
 	my $method = "create_$class";
 	my $obj = $factory->$method( %args );
 
-
-	# XXX move dict to xml writable property?
 	for my $dict_elt ( $elt->children('dict') ) {
 		my $dict = $self->_process_dictionary($dict_elt);
 		$obj->add_dictionary($dict);
