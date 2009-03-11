@@ -5,22 +5,27 @@ import java.util.Set;
 import org.nexml.model.CharacterState;
 import org.nexml.model.CharacterStateSet;
 
-public abstract class CharacterStateSetImpl<T extends CharacterState> extends
-		SetManager<CharacterState> implements CharacterStateSet<T> {
+public class CharacterStateSetImpl extends
+		SetManager<CharacterState> implements CharacterStateSet {
 
-	private Set<T> mCharacterStates;
+	private Set<CharacterState> mCharacterStates;
 
 	@Override
 	String getTagName() {
 		return "states";
 	}
 
-	public Set<T> getCharacterStates() {
+	public Set<CharacterState> getCharacterStates() {
 		return mCharacterStates;
 	}
 
-	public void setCharacterStates(Set<T> characterStates) {
+	public void setCharacterStates(Set<CharacterState> characterStates) {
 		mCharacterStates = characterStates;
+	}
+
+	public CharacterState createCharacterState() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
