@@ -248,8 +248,7 @@ sub _stringify {
     }
     elsif ( $opts{'-handle'} ) {
         while ( my $line = readline( $opts{'-handle'} ) ) {
-            push @lines, $line;
-            chomp( $line );
+            push @lines, grep { /\S/ } split( /\n|\r|\r\n/, $line );
             $logger->debug( "read line: $line" );
         }
     }
