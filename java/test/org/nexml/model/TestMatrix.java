@@ -24,6 +24,10 @@ public class TestMatrix {
 		Assert.assertEquals("characterStateSet should be in categoricalMatrix", characterStateSet,
 				categoricalMatrix.getCategoricalCharacterStateSets().iterator().next());
 		
-		
+		CharacterState red = characterStateSet.createCharacterState();
+		red.setLabel("red");
+		red.setSymbol(1);
+		Assert.assertEquals("red.getLabel should be red", "red", red.getLabel());
+		Assert.assertEquals("red.getSymbol should be 1", 1, red.getSymbol());
 	}
 }

@@ -5,7 +5,7 @@ import java.util.Set;
 import org.nexml.model.CharacterState;
 import org.nexml.model.CompoundCharacterState;
 
-public abstract class CompoundCharacterStateImpl extends NexmlWritableImpl
+public abstract class CompoundCharacterStateImpl extends CharacterStateImpl
 		implements CompoundCharacterState {
 	private Set<CharacterState> mCharacterStates;
 
