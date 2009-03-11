@@ -1,20 +1,17 @@
 package org.nexml.model;
 
+import java.util.Set;
+
 public interface Network<E extends Edge> extends NexmlWritable {
 	E createEdge();
 
-	void addEdge(E edge);
-	
-	E getEdge(String edgeId);
-	
 	void removeEdge(E edge);
+	
+	Set<E> getEdges();
 
 	Node createNode();
 
-	void addNode(Node node);
-	
-	Node getNode(String nodeId);
-	
 	void removeNode(Node node);
-	
+
+	Set<Node> getNodes();
 }
