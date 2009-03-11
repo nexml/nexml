@@ -15,4 +15,5 @@ public interface Matrix<T> extends OTUsLinkable {
 	Character createCharacter();
 	
 	void removeCharacter(Character character);
+	
 }

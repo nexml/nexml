@@ -1,5 +1,10 @@
 package org.nexml.model;
 
-public interface CategoricalMatrix extends Matrix<CategoricalCharacterState> {
-	CategoricalCharacterStateSet createCategoricalCharacterStateSet();
+import java.util.Set;
+
+public interface CategoricalMatrix extends Matrix<CharacterState> {
+
+	Set<CharacterStateSet> getCategoricalCharacterStateSets();
+	
+	CharacterStateSet createCategoricalCharacterStateSet();
 }
