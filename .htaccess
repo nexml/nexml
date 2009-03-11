@@ -119,6 +119,7 @@ AddType application/x-httpd-imap map
     AddDescription "LaTeX file" .tex
     AddDescription "Core dump" core
     AddDescription "Object file" .o
+    AddDescription "NEXUS file" .nex
 
     # moved down on purpose: seems to override longer *.t* descriptions
     # if it precedes them.
