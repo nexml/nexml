@@ -35,5 +35,7 @@ public class TestMatrix {
 		MatrixCell<CharacterState> cell = categoricalMatrix.getCell(chimp, hairColor);
 		cell.setValue(red);
 		Assert.assertEquals("cell.getValue should be red", red, cell.getValue()); 
+		
+		Assert.assertEquals("should be red", red, categoricalMatrix.getCell(chimp, hairColor).getValue());
 	}
 }
