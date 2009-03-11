@@ -15,11 +15,14 @@ public class TestMatrix {
 		OTU chimp = mammals.createOTU();
 		chimp.setLabel("chimp");
 		categoricalMatrix.setOTUs(mammals);
-		Assert.assertEquals("matrix.getOTUS should be mammals", mammals, categoricalMatrix
-				.getOTUs());
+		Assert.assertEquals("categoricalMatrix.getOTUS should be mammals",
+				mammals, categoricalMatrix.getOTUs());
 
 		CharacterStateSet characterStateSet = categoricalMatrix
 				.createCategoricalCharacterStateSet();
+
+		Assert.assertEquals("characterStateSet should be in categoricalMatrix", characterStateSet,
+				categoricalMatrix.getCategoricalCharacterStateSets().iterator().next());
 		
 		
 	}

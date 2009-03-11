@@ -2,11 +2,12 @@ package org.nexml.model;
 
 import java.util.Set;
 
-public interface CharacterStateSet<T extends CharacterState> extends
+public interface CharacterStateSet extends
 		NexmlWritable {
-	Set<T> getCharacterStates();
+	Set<CharacterState> getCharacterStates();
 
-	void setCharacterStates(Set<T> characterStates);
+	void setCharacterStates(Set<CharacterState> characterStates);
 
-	T createCharacterState();
+	CharacterState createCharacterState();
+	
 }
