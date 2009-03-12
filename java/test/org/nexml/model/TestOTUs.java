@@ -4,13 +4,21 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.junit.Assert;
 import org.junit.Test;
 
 public class TestOTUs {
 	@Test
 	public void makeOTUs() {
-		Document doc = DocumentFactory.createDocument();
+		Document doc = null;
+		try {
+			doc = DocumentFactory.createDocument();
+		} catch (ParserConfigurationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		OTUs mammals = doc.createOTUs();
 		OTU hippopotamus = mammals.createOTU();
 		hippopotamus.setLabel("hippo");
