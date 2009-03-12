@@ -140,8 +140,8 @@ class MolecularCharacterStateSetImpl extends CharacterStateSetImpl{
         vState.setStates(vSet);
         UncertainCharacterState nState = new UncertainCharacterStateImpl(document);
         DNAStateSet.getCharacterStates().add(nState);
-        tState.setLabel("s15");
-        tState.setSymbol("N");
+        nState.setLabel("s15");
+        nState.setSymbol("N");
         Set<CharacterState> nSet = new HashSet<CharacterState>(4);
         nSet.add(aState);
         nSet.add(cState);
@@ -181,6 +181,10 @@ class MolecularCharacterStateSetImpl extends CharacterStateSetImpl{
         unKnownSet.add(nState);
         unKnownSet.add(gapState);
         unKnownState.setStates(unKnownSet);   //want an empty set here, not null
+
+        for (CharacterState cs : DNAStateSet.getCharacterStates()){
+            System.out.println(cs.getSymbol());
+            }
 
         return (CharacterStateSet)DNAStateSet;
     }
