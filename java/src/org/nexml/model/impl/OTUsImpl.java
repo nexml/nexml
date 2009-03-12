@@ -1,7 +1,9 @@
 package org.nexml.model.impl;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
@@ -38,13 +40,15 @@ class OTUsImpl extends SetManager<OTU> implements OTUs {
 			NodeList nodes = (NodeList) result;
 			for (int i = 0; i < nodes.getLength(); i++) {
 				Element thisOTUElement = (Element) nodes.item(i);
+				String originalOTUId = thisOTUElement.getAttribute("id");
 				OTUImpl otu = new OTUImpl(getDocument(), thisOTUElement);
+				mOriginalOTUIds.put(originalOTUId, otu);
 				this.addOTU(otu);
 			}
 		} catch (XPathExpressionException e) {
 
 		}
-	}	
+	}
 
 	private void addOTU(OTU otu) {
 		addThing(otu);
@@ -92,13 +96,19 @@ class OTUsImpl extends SetManager<OTU> implements OTUs {
 		return getTagNameClass();
 	}
 
-    public void addAnnotationToSet(String setName, Annotation annotation) {
-        // TODO Auto-generated method stub
-        
-    }
+	public void addAnnotationToSet(String setName, Annotation annotation) {
+		// TODO Auto-generated method stub
 
-    public void removeAnnotationFromSet(Annotation annotation) {
-        // TODO Auto-generated method stub
-        
-    }
+	}
+
+	public void removeAnnotationFromSet(Annotation annotation) {
+		// TODO Auto-generated method stub
+
+	}
+
+	private Map<String, OTU> mOriginalOTUIds = new HashMap<String, OTU>();
+	
+	Map<String, OTU> getOriginalOTUIds() {
+		return mOriginalOTUIds;
+	}
 }

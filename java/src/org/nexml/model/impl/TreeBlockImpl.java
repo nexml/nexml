@@ -1,6 +1,7 @@
 package org.nexml.model.impl;
 
 import java.util.Iterator;
+import java.util.Map;
 
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
@@ -11,6 +12,7 @@ import javax.xml.xpath.XPathFactory;
 import org.nexml.model.FloatEdge;
 import org.nexml.model.IntEdge;
 import org.nexml.model.Network;
+import org.nexml.model.OTU;
 import org.nexml.model.Tree;
 import org.nexml.model.TreeBlock;
 import org.w3c.dom.Document;
@@ -33,7 +35,7 @@ public class TreeBlockImpl extends OTUsLinkableImpl<Network<?>> implements
 	 * set its xsi:type attribute to nex:IntNetwork
 	 * @author rvosa
 	 */
-	public TreeBlockImpl(Document document, Element item) {
+	public TreeBlockImpl(Document document, Element item, Map<String, OTU> originalOTUIds) {
 		super(document, item);
 
 		try {
@@ -50,7 +52,7 @@ public class TreeBlockImpl extends OTUsLinkableImpl<Network<?>> implements
 				if (thisTreeElement.getAttribute(XSI_PREFIX + ":type").equals(
 						NEX_PREFIX + ":IntTree")) {
 					TreeImpl<IntEdge> tree = new IntTreeImpl(document,
-							thisTreeElement);
+							thisTreeElement, originalOTUIds);
 					this.addThing(tree);
 				}
 			}

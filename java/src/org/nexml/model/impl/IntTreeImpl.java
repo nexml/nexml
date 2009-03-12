@@ -1,8 +1,11 @@
 package org.nexml.model.impl;
 
+import java.util.Map;
+
 import org.nexml.model.Edge;
 import org.nexml.model.IntEdge;
 import org.nexml.model.Node;
+import org.nexml.model.OTU;
 import org.nexml.model.Tree;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -13,8 +16,8 @@ class IntTreeImpl extends TreeImpl<IntEdge> implements Tree<IntEdge> {
 		super(document);
 	}
 
-	public IntTreeImpl(Document document, Element element) {
-		super(document, element);
+	public IntTreeImpl(Document document, Element element, Map<String, OTU> originalOTUIds) { 
+		super(document, element, originalOTUIds);
 	}
 
 	/**

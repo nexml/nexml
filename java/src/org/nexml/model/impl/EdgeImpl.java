@@ -10,8 +10,8 @@ abstract class EdgeImpl extends AnnotatableImpl implements Edge {
 	public EdgeImpl(Document document) {
 		super(document);
 	}
-	
-	public EdgeImpl(Document document, Element element) { 
+
+	public EdgeImpl(Document document, Element element) {
 		super(document, element);
 	}
 
@@ -54,6 +54,25 @@ abstract class EdgeImpl extends AnnotatableImpl implements Edge {
 
 	public static String getTagNameClass() {
 		return "edge";
+	}
+
+	/**
+	 * Constructs a <code>String</code> with all attributes in name = value
+	 * format.
+	 * 
+	 * @return a <code>String</code> representation of this object.
+	 */
+	@Override
+	public String toString() {
+		final String TAB = "    ";
+
+		String retValue = "";
+
+		retValue = "EdgeImpl ( " + super.toString() + TAB + "mSource = "
+				+ this.mSource + TAB + "mTarget = " + this.mTarget + TAB
+				+ "mLength = " + this.mLength + TAB + " )";
+
+		return retValue;
 	}
 
 }
