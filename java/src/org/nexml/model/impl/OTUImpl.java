@@ -21,7 +21,7 @@ class OTUImpl extends AnnotatableImpl implements OTU {
 	}
 
 	public OTUImpl(Document document, Element element) {
-		super(document);
+		super(document, element);
 
 	}
 

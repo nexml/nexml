@@ -73,10 +73,6 @@ class OTUsImpl extends SetManager<OTU> implements OTUs {
 		return getFromSet(setName);
 	}
 
-	public void removeDictionaryFromSet(String setName) {
-		// TODO Auto-generated method stub
-	}
-
 	public void removeOTU(OTU otu) {
 		removeThing(otu);
 	}
