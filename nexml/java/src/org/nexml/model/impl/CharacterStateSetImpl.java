@@ -77,7 +77,11 @@ class CharacterStateSetImpl extends
 		return uncertainCharacterStateImpl;
 	}
 
-    public CharacterState lookupCharacterStateByLabel(String label){
+    /**
+     * Makes working with predefined sets, (e.g. molecular) easier by allowing searching for states
+     * @author pmidford
+     */
+	public CharacterState lookupCharacterStateByLabel(String label){
         if (label == null){
             return null;
         }
@@ -89,6 +93,10 @@ class CharacterStateSetImpl extends
         return null;
     }
 
+    /**
+     * Makes working with predefined sets, (e.g. molecular) easier by allowing searching for states
+     * @author pmidford
+     */
     public CharacterState lookupCharacterStateBySymbol(String symbol){
         if (symbol == null){
             return null;
