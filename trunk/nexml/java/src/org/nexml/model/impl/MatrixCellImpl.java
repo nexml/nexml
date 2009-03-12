@@ -23,12 +23,18 @@ class MatrixCellImpl<T> extends AnnotatableImpl implements
 	}
 
 	/**
-	 * XXX This will die if T value is a number, in the case
-	 * of continuous matrices!!!
+	 * XXX Aargh!!!
 	 * @author rvosa
 	 */
 	public void setValue(T value) {
 		mValue = value;
-		getElement().setAttribute("state", ((CharacterState)value).getId());
+		if ( value instanceof Double ) {
+			// Continuous, i.e. Double
+			getElement().setAttribute("state", value.toString());
+		}
+		else {
+			// Categorical, i.e. CharacterState
+			getElement().setAttribute("state", ((CharacterState)value).getId());
+		}
 	}
 }

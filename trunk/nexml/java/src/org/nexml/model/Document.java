@@ -8,6 +8,8 @@ public interface Document extends NexmlWritable {
 	OTUs createOTUs();
 
 	CategoricalMatrix createCategoricalMatrix(OTUs otus);
+	
+	ContinuousMatrix createContinuousMatrix(OTUs otus);
 
 	List<OTUs> getOTUsList();
 
