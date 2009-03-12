@@ -48,4 +48,18 @@ class CategoricalMatrixImpl extends
 	private Element getMatrixElement() {
 		return mMatrixElement;
 	}
+
+    public CharacterStateSet getDNACharacterStateSet() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+    public CharacterStateSet getRNACharacterStateSet() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+    
+    public CharacterStateSet getProteinCharacterStateSet(){
+
+        return null;
+    }
 }
