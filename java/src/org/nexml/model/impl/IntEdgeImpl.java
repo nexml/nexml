@@ -30,14 +30,9 @@ class IntEdgeImpl extends EdgeImpl implements IntEdge {
 	 */
 	@Override
 	public String toString() {
-		final String TAB = "    ";
-
+		final String TAB = "|";
 		String retValue = "";
-
-		retValue = "IntEdgeImpl ( " + super.toString() + TAB
-
-		+ " )";
-
+		retValue = "IntEdgeImpl(" + super.toString() + TAB + ")";
 		return retValue;
 	}
 

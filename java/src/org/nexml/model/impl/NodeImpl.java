@@ -41,14 +41,10 @@ class NodeImpl extends OTULinkableImpl implements Node {
 	 */
 	@Override
 	public String toString() {
-		final String TAB = "    ";
-
+		final String TAB = "|";
 		String retValue = "";
-
-		retValue = "NodeImpl ( " + super.toString() + TAB + "mIsRoot = "
-				+ this.mIsRoot + TAB + " )";
-
+		retValue = "NodeImpl(" + getLabel() + TAB + "mIsRoot=" + this.mIsRoot
+				+ TAB + ")";
 		return retValue;
 	}
-
 }
