@@ -23,7 +23,8 @@ abstract class AnnotatableImpl extends NexmlWritableImpl implements Annotatable 
            return null;
        }
            
-       public void setAnnotationValue(String property, Object value) {
+       public void addAnnotationValue(String property, Object value) {
            //TODO
        }
+       
 }
