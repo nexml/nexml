@@ -69,8 +69,6 @@ public abstract class TreeImpl<E extends Edge> extends
 					for (NetworkObject networkObject : getThings()) {
 						if (networkObject instanceof Node) {
 							NodeImpl node = (NodeImpl) networkObject;
-							System.out.println(originalNodeIds.get(node) + ","
-									+ edge.getElement().getAttribute("source"));
 							if (originalNodeIds.get(node).equals(
 									edge.getElement().getAttribute("source"))) {
 								edge.setSource(node);
