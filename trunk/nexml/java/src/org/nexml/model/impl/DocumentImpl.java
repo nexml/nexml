@@ -62,6 +62,7 @@ public class DocumentImpl extends NexmlWritableImpl implements Document {
 		CategoricalMatrixImpl categoricalMatrix = new CategoricalMatrixImpl(getDocument());
 		getElement().appendChild(categoricalMatrix.getElement());
 		categoricalMatrix.setOTUs(otus);
+		categoricalMatrix.getElement().setAttributeNS(XSI_NS, XSI_PREFIX + ":type", NEX_PREFIX + ":StandardCells");				
 		return categoricalMatrix;
 	}
 
