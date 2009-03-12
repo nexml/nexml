@@ -10,4 +10,8 @@ public interface CharacterStateSet extends
 
 	CharacterState createCharacterState();
 	
+    public CharacterState lookupCharacterStateByLabel(String label);
+    
+    public CharacterState lookupCharacterStateBySymbol(String symbol);
+    
 }
