@@ -2,7 +2,7 @@ package org.nexml.model.impl;
 
 import org.nexml.model.UncertainCharacterState;
 
-public class UncertainCharacterStateImpl extends CompoundCharacterStateImpl
+class UncertainCharacterStateImpl extends CompoundCharacterStateImpl
 		implements UncertainCharacterState {
 
 	@Override

@@ -20,9 +20,14 @@ public class TreeBlockImpl extends OTUsLinkableImpl<Network<?>> implements TreeB
 		return network;
 	}
 
-	public Tree createTree() {
+	public Tree<IntEdge> createIntTree() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	public Tree<FloatEdge> createFloatTree() { 
+		// TODO Auto-generated method stub
+		return null;		
 	}
 
 	@Override
