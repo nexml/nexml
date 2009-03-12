@@ -44,7 +44,29 @@ public class TestParse {
 				System.out.println("    edge: " + edge);
 			}
 		}
-		System.out.println("nodeToEdge" + nodeToEdge);
+		Node brevParent = null;
+
+		for (IntEdge edge : tree.getEdges()) {
+			if (edge.getTarget().getLabel().equals("S. brevirostris")) {
+				brevParent = edge.getSource();
+			}
+		}
+
+		for (Node node : tree.getNodes()) {
+
+			if ("S. brevirostris".equals(node.getLabel())) {
+				tree.removeNode(node);
+			}
+
+			if ("S. megalops".equals(node.getLabel())) {
+				node.setLabel("S. megalopsTESTMODIFYLABEL");
+			}
+		}
+
+		Node newNode = tree.createNode();
+		newNode.setLabel("TEST_NEW_NODE");
+		Edge newEdge = tree.createEdge(brevParent, newNode);
+		newEdge.setLabel("TEST_NEW_EDGE");
 		System.out.println("xmlString: " + document.getXmlString());
 	}
 
