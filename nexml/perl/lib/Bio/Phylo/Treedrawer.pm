@@ -1,12 +1,13 @@
 # $Id$
 package Bio::Phylo::Treedrawer;
 use strict;
+use Bio::Phylo::Util::Logger;
 use Bio::Phylo::Util::Exceptions 'throw';
 use Bio::Phylo::Util::CONSTANT qw(_TREE_ looks_like_number looks_like_object looks_like_hash looks_like_class);
 my @fields = qw(WIDTH HEIGHT MODE SHAPE PADDING NODE_RADIUS TIP_RADIUS TEXT_HORIZ_OFFSET TEXT_VERT_OFFSET TEXT_WIDTH TREE _SCALEX _SCALEY SCALE FORMAT);
 
 my $tips = 0.000_000_000_000_01;
-my $logger = Bio::Phylo->get_logger;
+my $logger = Bio::Phylo::Util::Logger->new;
 
 
 =head1 NAME
