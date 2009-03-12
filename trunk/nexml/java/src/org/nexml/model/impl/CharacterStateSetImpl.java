@@ -33,4 +33,29 @@ class CharacterStateSetImpl extends
 		return new CharacterStateImpl(getDocument());
 	}
 
+    public CharacterState lookupCharacterStateByLabel(String label){
+        if (label == null){
+            return null;
+        }
+        for (CharacterState cs : getCharacterStates()){
+            if (label.equals(cs.getLabel())){
+                return cs;
+            }
+        }
+        return null;
+    }
+
+    public CharacterState lookupCharacterStateBySymbol(String symbol){
+        if (symbol == null){
+            return null;
+        }
+        for (CharacterState cs : getCharacterStates()){
+            if (symbol.equals(cs.getSymbol())){
+                return cs;
+            }
+        }
+        return null;
+    }
+
+	
 }
