@@ -1,33 +1,33 @@
 package org.nexml.model.impl;
 
+import java.util.Set;
 import java.util.UUID;
 
-import org.nexml.model.Dictionary;
-import org.nexml.model.NexmlWritable;
-
+import org.nexml.model.Annotatable;
+import org.nexml.model.Annotation;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-abstract class NexmlWritableImpl implements NexmlWritable {
+abstract class AnnotatableImpl implements Annotatable {
 	private Document mDocument = null;
 	private String mId;
-	private Dictionary mDictionary;
+	private Set<Annotation> mAnnotations;
 	private Element mElement;
 	protected static String XSI_NS = "http://www.w3.org/2001/XMLSchema-instance";
 	protected static String XSI_PREFIX = "xsi";
 	protected static String NEX_PREFIX = "nex";
 
-	protected NexmlWritableImpl() {
+	protected AnnotatableImpl() {
 	}
 	
-	public NexmlWritableImpl(Document document) {
+	public AnnotatableImpl(Document document) {
 		mId = "a" + UUID.randomUUID();
 		mDocument = document;
 		mElement = document.createElementNS(DEFAULT_NAMESPACE, getTagName());
 		getElement().setAttribute("id", getId());
 	}	
 	
-	public NexmlWritableImpl(Document document,Element element) {
+	public AnnotatableImpl(Document document,Element element) {
 		mId = "a" + UUID.randomUUID();
 		mDocument = document;
 		mElement = element;		
@@ -50,25 +50,19 @@ abstract class NexmlWritableImpl implements NexmlWritable {
 		getElement().setAttribute("label", label);
 	}
 	
-	public Dictionary getDictionary() { 
-		return mDictionary;
-	}
-
-	public void setDictionary(Dictionary dictionary) {
-		mDictionary = dictionary; 
-	}
-	
-	public Dictionary createDictionary() { 
-		// TODO method stub
-		return null;
-	}
-	
 	public String getId() { 
 		return mId;
 	}
 	
+	public Set<Object> getAnnotationValues(String property) {
+	 //TODO
+	    return null;
+	}
+	    
+	public void setAnnotationValue(String property, Object value) {
+	    //TODO
+	}
 	
 	abstract String getTagName();
-
 		
 }

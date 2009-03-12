@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.Set;
 import org.w3c.dom.Document;
 
-abstract class SetManager<T> extends NexmlWritableImpl {
+abstract class SetManager<T> extends AnnotatableImpl {
 
 	public SetManager(Document document) {
 		super(document);
