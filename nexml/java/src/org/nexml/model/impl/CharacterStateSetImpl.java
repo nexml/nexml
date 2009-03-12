@@ -15,7 +15,7 @@ class CharacterStateSetImpl extends
 		super(document);
 	}
 
-	private Set<CharacterState> mCharacterStates;
+	Set<CharacterState> mCharacterStates;
 
 	@Override
 	String getTagName() {
