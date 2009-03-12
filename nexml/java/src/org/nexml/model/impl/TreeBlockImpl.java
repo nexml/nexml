@@ -17,7 +17,7 @@ public class TreeBlockImpl extends OTUsLinkableImpl<Network<?>> implements TreeB
 		IntNetworkImpl network = new IntNetworkImpl(getDocument());
 		addThing(network);
 		getElement().appendChild(network.getElement());
-		network.getElement().setAttributeNS("http://www.w3.org/2001/XMLSchema-instance", "xsi:type", "nex:IntNetwork");
+		network.getElement().setAttributeNS(XSI_NS, XSI_PREFIX + ":type", "nex:IntNetwork");
 		return network;
 	}
 	
@@ -25,7 +25,7 @@ public class TreeBlockImpl extends OTUsLinkableImpl<Network<?>> implements TreeB
 		FloatNetworkImpl network = new FloatNetworkImpl(getDocument());
 		addThing(network);
 		getElement().appendChild(network.getElement());
-		network.getElement().setAttributeNS("http://www.w3.org/2001/XMLSchema-instance", "xsi:type", "nex:FloatNetwork");		
+		network.getElement().setAttributeNS(XSI_NS, XSI_PREFIX + ":type", "nex:FloatNetwork");		
 		return network;
 	}
 
@@ -37,14 +37,14 @@ public class TreeBlockImpl extends OTUsLinkableImpl<Network<?>> implements TreeB
 	public Tree<FloatEdge> createFloatTree() {
 		FloatTreeImpl tree = new FloatTreeImpl(getDocument());
 		getElement().appendChild(tree.getElement());
-		tree.getElement().setAttributeNS("http://www.w3.org/2001/XMLSchema-instance", "xsi:type", "nex:FloatTree");
+		tree.getElement().setAttributeNS(XSI_NS, XSI_PREFIX + ":type", "nex:FloatTree");
 		return tree;
 	}
 
 	public Tree<IntEdge> createIntTree() {
 		IntTreeImpl tree = new IntTreeImpl(getDocument());
 		getElement().appendChild(tree.getElement());
-		tree.getElement().setAttributeNS("http://www.w3.org/2001/XMLSchema-instance", "xsi:type", "nex:IntTree");		
+		tree.getElement().setAttributeNS(XSI_NS, XSI_PREFIX + ":type", "nex:IntTree");		
 		return tree;
 	}
 }
