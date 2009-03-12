@@ -64,13 +64,13 @@ abstract class EdgeImpl extends AnnotatableImpl implements Edge {
 	 */
 	@Override
 	public String toString() {
-		final String TAB = "    ";
+		final String TAB = "|";
 
 		String retValue = "";
 
-		retValue = "EdgeImpl ( " + super.toString() + TAB + "mSource = "
-				+ this.mSource + TAB + "mTarget = " + this.mTarget + TAB
-				+ "mLength = " + this.mLength + TAB + " )";
+		retValue = "EdgeImpl(" + super.toString() + TAB + "mSource="
+				+ this.mSource + TAB + "mTarget=" + this.mTarget + TAB
+				+ "mLength=" + this.mLength + TAB + ")";
 
 		return retValue;
 	}
