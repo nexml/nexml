@@ -4,9 +4,15 @@ import java.util.Set;
 
 import org.nexml.model.CharacterState;
 import org.nexml.model.CharacterStateSet;
+import org.w3c.dom.Document;
 
 class CharacterStateSetImpl extends
 		SetManager<CharacterState> implements CharacterStateSet {
+
+	public CharacterStateSetImpl(Document document) {
+		super(document);
+		// TODO Auto-generated constructor stub
+	}
 
 	private Set<CharacterState> mCharacterStates;
 
@@ -24,7 +30,7 @@ class CharacterStateSetImpl extends
 	}
 
 	public CharacterState createCharacterState() {
-		return new CharacterStateImpl();
+		return new CharacterStateImpl(getDocument());
 	}
 
 }

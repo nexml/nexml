@@ -9,9 +9,15 @@ import org.nexml.model.Character;
 import org.nexml.model.Matrix;
 import org.nexml.model.MatrixCell;
 import org.nexml.model.OTU;
+import org.w3c.dom.Document;
 
 class MatrixImpl<T> extends OTUsLinkableImpl<Character> implements
 		Matrix<T> {
+
+	public MatrixImpl(Document document) {
+		super(document);
+		// TODO Auto-generated constructor stub
+	}
 
 	private final Map<OTU, Map<Character, MatrixCell<T>>> mMatrixCells = new HashMap<OTU, Map<Character, MatrixCell<T>>>();
 
@@ -44,7 +50,7 @@ class MatrixImpl<T> extends OTUsLinkableImpl<Character> implements
 		}
 		MatrixCell<T> matrixCell = mMatrixCells.get(otu).get(character);
 		if (null == matrixCell) {
-			matrixCell = new MatrixCellImpl<T>();
+			matrixCell = new MatrixCellImpl<T>(getDocument());
 			Map<Character, MatrixCell<T>> row = mMatrixCells.get(otu);
 			row.put(character, matrixCell);
 		}
@@ -52,7 +58,7 @@ class MatrixImpl<T> extends OTUsLinkableImpl<Character> implements
 	}
 
 	public Character createCharacter() {
-		Character character = new CharacterImpl();
+		Character character = new CharacterImpl(getDocument());
 		addThing(character);
 		return character;
 	}
