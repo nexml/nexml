@@ -3,7 +3,7 @@ package org.nexml.model;
 import java.util.Set;
 
 public interface Network<E extends Edge> extends NexmlWritable {
-	E createEdge();
+	E createEdge(Node source, Node target);
 
 	void removeEdge(E edge);
 	
