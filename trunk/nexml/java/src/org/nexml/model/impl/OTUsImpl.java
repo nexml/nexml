@@ -29,7 +29,7 @@ class OTUsImpl extends SetManager<OTU> implements OTUs {
 	}
 
 	public OTU createOTU() {
-		OTU otu = new OTUImpl(getDocument());
+		OTUImpl otu = new OTUImpl(getDocument());
 		addOTU(otu);
 		getElement().appendChild(otu.getElement());
 		return otu;

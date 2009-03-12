@@ -24,7 +24,7 @@ public abstract class TreeImpl<E extends Edge> extends SetManager<NetworkObject>
 	abstract public E createEdge(Node source, Node target);
 
 	public Node createNode() {
-		Node node = new NodeImpl(getDocument());
+		NodeImpl node = new NodeImpl(getDocument());
 		addThing(node);
 		getElement().insertBefore(node.getElement(),getElement().getFirstChild());
 		return node;
@@ -53,12 +53,12 @@ public abstract class TreeImpl<E extends Edge> extends SetManager<NetworkObject>
 
 	public void removeEdge(Edge edge) {
 		removeThing(edge);
-		getElement().removeChild(edge.getElement());
+		getElement().removeChild(((EdgeImpl)edge).getElement());
 	}
 
 	public void removeNode(Node node) {
 		removeThing(node);
-		getElement().removeChild(node.getElement());
+		getElement().removeChild(((NodeImpl)node).getElement());
 	}
 
 }
