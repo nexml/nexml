@@ -6,8 +6,15 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import org.w3c.dom.Document;
 
 abstract class SetManager<T> extends NexmlWritableImpl {
+
+	public SetManager(Document document) {
+		super(document);
+		// TODO Auto-generated constructor stub
+	}
+
 	private final Map<String, Set<T>> mSets = new HashMap<String, Set<T>>();
 	private final List<T> mThings = new ArrayList<T>();
 

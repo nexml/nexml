@@ -14,7 +14,7 @@ public class FloatTreeImpl extends TreeImpl<FloatEdge> implements Tree<FloatEdge
 
 	@Override
 	public FloatEdge createEdge(Node source, Node target) {
-		FloatEdge floatEdge = new FloatEdgeImpl(getDocument()); 
+		FloatEdgeImpl floatEdge = new FloatEdgeImpl(getDocument()); 
 		addThing(floatEdge);
 		getElement().appendChild(floatEdge.getElement());	
 		floatEdge.setSource(source);

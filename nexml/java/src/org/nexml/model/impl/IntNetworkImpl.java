@@ -13,7 +13,7 @@ class IntNetworkImpl extends NetworkImpl<IntEdge> {
 
 	@Override
 	public IntEdge createEdge(Node source, Node target) { 
-		IntEdge intEdge = new IntEdgeImpl(getDocument());
+		IntEdgeImpl intEdge = new IntEdgeImpl(getDocument());
 		addThing(intEdge);
 		getElement().appendChild(intEdge.getElement());
 		intEdge.setSource(source);
