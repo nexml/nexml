@@ -4,7 +4,7 @@ import org.nexml.model.OTU;
 import org.nexml.model.OTULinkable;
 import org.w3c.dom.Document;
 
-abstract class OTULinkableImpl extends NexmlWritableImpl implements
+abstract class OTULinkableImpl extends AnnotatableImpl implements
 		OTULinkable {
 	
 	public OTULinkableImpl(Document document) {

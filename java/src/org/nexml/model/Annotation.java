@@ -1,14 +1,20 @@
 package org.nexml.model;
 
+
 /**
- * TODO: discuss with group. 
+ * <otu>
+ * <meta property="dc:name">Homer</meta>
+ * <meta property="dc:creator" resource="http://www.example.com/Homer"/>
+ * </otu>
  */
-public interface Annotation<T, U> extends NexmlWritable {
-	T getKey();
+public interface Annotation extends NexmlWritable {
+    
+	public String getProperty();
 
-	void setKey(T key);
+	public void setProperty(String property);
 
-	U getValue();
+	public Object getValue();
 
-	void setValue(U value);
+	public void setValue(Object value);
+
 }

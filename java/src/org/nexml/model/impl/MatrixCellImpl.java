@@ -3,7 +3,7 @@ package org.nexml.model.impl;
 import org.nexml.model.MatrixCell;
 import org.w3c.dom.Document;
 
-class MatrixCellImpl<T> extends NexmlWritableImpl implements
+class MatrixCellImpl<T> extends AnnotatableImpl implements
 		MatrixCell<T> {
 
 	public MatrixCellImpl(Document document) {

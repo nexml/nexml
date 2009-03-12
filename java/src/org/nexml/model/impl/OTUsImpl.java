@@ -3,7 +3,7 @@ package org.nexml.model.impl;
 import java.util.Iterator;
 import java.util.List;
 
-import org.nexml.model.Dictionary;
+import org.nexml.model.Annotation;
 import org.nexml.model.OTU;
 import org.nexml.model.OTUs;
 import org.w3c.dom.Document;
@@ -13,11 +13,6 @@ class OTUsImpl extends SetManager<OTU> implements OTUs {
 	
 	public OTUsImpl(Document document) {
 		super(document);		
-	}
-
-	public void addDictionaryToSet(String setName, Dictionary dictionary) {
-		// TODO Auto-generated method stub
-
 	}
 
 	private void addOTU(OTU otu) {
@@ -69,4 +64,14 @@ class OTUsImpl extends SetManager<OTU> implements OTUs {
 	String getTagName() { 
 		return "otus";
 	}
+
+    public void addAnnotationToSet(String setName, Annotation annotation) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    public void removeAnnotationFromSet(Annotation annotation) {
+        // TODO Auto-generated method stub
+        
+    }
 }

@@ -4,7 +4,7 @@ import org.nexml.model.Edge;
 import org.nexml.model.Node;
 import org.w3c.dom.Document;
 
-abstract class EdgeImpl extends NexmlWritableImpl implements Edge {
+abstract class EdgeImpl extends AnnotatableImpl implements Edge {
 
 	public EdgeImpl(Document document) {
 		super(document);
