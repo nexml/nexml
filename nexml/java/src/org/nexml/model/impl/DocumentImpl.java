@@ -69,10 +69,14 @@ public class DocumentImpl extends AnnotatableImpl implements Document {
 		getElement().setPrefix("nex");
 		getElement().removeAttribute("id");
 	}
+	
+	protected DocumentImpl(){}
 
-	protected DocumentImpl() {
-	}
-
+	/**
+	 * THis method creates an otus element and appends it 
+	 * to the document root.
+	 * @author rvosa
+	 */
 	public OTUs createOTUs() {
 		OTUsImpl otus = new OTUsImpl(getDocument());
 		mOtusList.add(otus);
@@ -80,6 +84,14 @@ public class DocumentImpl extends AnnotatableImpl implements Document {
 		return otus;
 	}
 
+	/**
+	 * This method creates a trees element and appends it to
+	 * the document root. Because NeXML requires that trees
+	 * elements have an id reference attribute to specify
+	 * the otus element it refers to, the equivalent OTUs
+	 * object needs to be passed in here.
+	 * @author rvosa
+	 */
 	public TreeBlock createTreeBlock(OTUs otus) {
 		TreeBlockImpl treeBlock = new TreeBlockImpl(getDocument());
 		mTreeBlockList.add(treeBlock);
@@ -93,6 +105,18 @@ public class DocumentImpl extends AnnotatableImpl implements Document {
 		return "nexml";
 	}
 
+	/**
+	 * This method creates the characters element and appends
+	 * it to the document root. Because NeXML requires that 
+	 * characters elements have an id reference attribute to specify
+	 * the otus element it refers to, the equivalent OTUs
+	 * object needs to be passed in here. In addition,
+	 * characters elements need to specify the concrete subclass
+	 * they implement (the xsi:type business). XXX Here, this
+	 * subclass is set to StandardCells. Hopefully we come up
+	 * with a better way to do this.
+	 * @author rvosa
+	 */
 	public CategoricalMatrix createCategoricalMatrix(OTUs otus) {
 		CategoricalMatrixImpl categoricalMatrix = new CategoricalMatrixImpl(
 				getDocument());
@@ -128,6 +152,18 @@ public class DocumentImpl extends AnnotatableImpl implements Document {
 
 	public List<TreeBlock> getTreeBlockList() {
 		return mTreeBlockList;
+	}
+	
+	public String getId() {
+		return null;
+	}
+	
+	public void setLabel(String label) {
+		
+	}
+	
+	public String getLabel() {
+		return null;
 	}
 
 }

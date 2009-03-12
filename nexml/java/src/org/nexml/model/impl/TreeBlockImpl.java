@@ -27,6 +27,12 @@ public class TreeBlockImpl extends OTUsLinkableImpl<Network<?>> implements
 		super(document);
 	}
 
+	/**
+	 * This method creates a network with edge lengths which
+	 * are integers. Here we also create a tree element, and
+	 * set its xsi:type attribute to nex:IntNetwork
+	 * @author rvosa
+	 */
 	public TreeBlockImpl(Document document, Element item) {
 		super(document, item);
 
@@ -62,6 +68,12 @@ public class TreeBlockImpl extends OTUsLinkableImpl<Network<?>> implements
 		return network;
 	}
 
+	/**
+	 * This method creates a network with edge lengths which
+	 * are floats. Here we also create a tree element, and
+	 * set its xsi:type attribute to nex:FloatNetwork
+	 * @author rvosa
+	 */
 	public Network<FloatEdge> createFloatNetwork() {
 		FloatNetworkImpl network = new FloatNetworkImpl(getDocument());
 		addThing(network);
@@ -76,6 +88,12 @@ public class TreeBlockImpl extends OTUsLinkableImpl<Network<?>> implements
 		return getTagNameClass();
 	}
 
+	/**
+	 * This method creates a tree with edge lengths which
+	 * are floats. Here we also create a tree element, and
+	 * set its xsi:type attribute to nex:FloatTree
+	 * @author rvosa
+	 */	
 	public Tree<FloatEdge> createFloatTree() {
 		FloatTreeImpl tree = new FloatTreeImpl(getDocument());
 		getElement().appendChild(tree.getElement());
@@ -84,6 +102,12 @@ public class TreeBlockImpl extends OTUsLinkableImpl<Network<?>> implements
 		return tree;
 	}
 
+	/**
+	 * This method creates a tree with edge lengths which
+	 * are ints. Here we also create a tree element, and
+	 * set its xsi:type attribute to nex:IntTree
+	 * @author rvosa
+	 */	
 	public Tree<IntEdge> createIntTree() {
 		IntTreeImpl tree = new IntTreeImpl(getDocument());
 		getElement().appendChild(tree.getElement());

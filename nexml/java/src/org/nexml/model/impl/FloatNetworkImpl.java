@@ -9,9 +9,14 @@ class FloatNetworkImpl extends NetworkImpl<FloatEdge> implements Network<FloatEd
 
 	public FloatNetworkImpl(Document document) {
 		super(document);
-		// TODO Auto-generated constructor stub
 	}
 
+	/**
+	 * This creates an edge element. Because edge elements
+	 * require source and target attributes, these need to
+	 * be passed in here.
+	 * @author rvosa
+	 */
 	@Override
 	public FloatEdge createEdge(Node source, Node target) {
 		FloatEdgeImpl floatEdge = new FloatEdgeImpl(getDocument()); 

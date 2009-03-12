@@ -1,9 +1,9 @@
 package org.nexml.model.impl;
 
-import java.util.Dictionary;
 import java.util.UUID;
 
 import org.nexml.model.NexmlWritable;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -17,33 +17,48 @@ abstract class NexmlWritableImpl implements NexmlWritable {
 
 	protected NexmlWritableImpl() {
 	}
-
+	
+	/**
+	 * This constructor is intended for situations where we create
+	 * a document from scratch: the DocumentFactory will pass in a
+	 * DOM Document object, and subsequently created objects will
+	 * all carry around a reference to it so that they can instantiate
+	 * Element objects from the right Document object and insert them
+	 * in the right location in the element tree. @author rvosa
+	 * @param document
+	 */
 	public NexmlWritableImpl(Document document) {
 		mId = "a" + UUID.randomUUID();
 		mDocument = document;
 		mElement = document.createElementNS(DEFAULT_NAMESPACE, getTagName());
 		getElement().setAttribute("id", getId());
-	}
-
-	public NexmlWritableImpl(Document document, Element element) {
+	}	
+	
+	/**
+	 * This constructor is intended for calls while we are traversing
+	 * an existing DOM tree: in this constructor we set up the references
+	 * between our Impl objects and their equivalent DOM Element objects
+	 * (so that we can modify them in place). We make one immediate 
+	 * modification to the Element object: we change the id attribute, so that
+	 * we don't have to worry about id clashes.
+	 * @param document
+	 * @param element
+	 */
+	public NexmlWritableImpl(Document document,Element element) {
 		mId = "a" + UUID.randomUUID();
 		mDocument = document;
-		mElement = element;
+		mElement = element;		
 		getElement().setAttribute("id", getId());
-	}
-
+	}	
+	
 	protected final Document getDocument() {
 		return mDocument;
 	}
-
+	
 	public final Element getElement() {
 		return mElement;
 	}
-
-	public final void setElement(Element element) {
-		mElement = element;
-	}
-
+	
 	public String getLabel() {
 		return getElement().getAttribute("label");
 	}
@@ -51,11 +66,13 @@ abstract class NexmlWritableImpl implements NexmlWritable {
 	public void setLabel(String label) {
 		getElement().setAttribute("label", label);
 	}
-
-	public String getId() {
+	
+	public String getId() { 
 		return mId;
 	}
-
+	
+	
 	abstract String getTagName();
 
+		
 }

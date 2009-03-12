@@ -8,7 +8,6 @@ class IntEdgeImpl extends EdgeImpl implements IntEdge {
 
 	public IntEdgeImpl(Document document) {
 		super(document);
-		// TODO Auto-generated constructor stub
 	}
 
 	public IntEdgeImpl(Document document, Element thisEdgeElement) {

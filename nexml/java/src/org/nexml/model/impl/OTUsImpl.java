@@ -44,7 +44,7 @@ class OTUsImpl extends SetManager<OTU> implements OTUs {
 		} catch (XPathExpressionException e) {
 
 		}
-	}
+	}	
 
 	private void addOTU(OTU otu) {
 		addThing(otu);
