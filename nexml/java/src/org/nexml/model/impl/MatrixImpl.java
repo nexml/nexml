@@ -105,6 +105,11 @@ class MatrixImpl<T> extends OTUsLinkableImpl<Character> implements
 	}	
 	
 	protected Element getFormatElement() {
+		if ( null == mFormatElement ) {
+			Element format = getDocument().createElement("format");
+			getElement().insertBefore(format, getElement().getFirstChild());
+			setFormatElement(format);
+		}
 		return mFormatElement;
 	}
 	
