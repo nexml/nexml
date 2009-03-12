@@ -3,7 +3,7 @@ package org.nexml.model.impl;
 import org.nexml.model.OTU;
 import org.nexml.model.OTULinkable;
 
-public abstract class OTULinkableImpl extends NexmlWritableImpl implements
+abstract class OTULinkableImpl extends NexmlWritableImpl implements
 		OTULinkable {
 	
 	private OTU mOTU;

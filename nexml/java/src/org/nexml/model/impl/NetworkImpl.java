@@ -8,7 +8,7 @@ import org.nexml.model.Network;
 import org.nexml.model.NetworkObject;
 import org.nexml.model.Node;
 
-public abstract class NetworkImpl<E extends Edge> extends SetManager<NetworkObject> implements Network<E> {
+abstract class NetworkImpl<E extends Edge> extends SetManager<NetworkObject> implements Network<E> {
 
 
 	@Override

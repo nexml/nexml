@@ -3,7 +3,7 @@ package org.nexml.model.impl;
 import org.nexml.model.Character;
 import org.nexml.model.CharacterStateSet;
 
-public class CharacterImpl extends NexmlWritableImpl implements Character {
+class CharacterImpl extends NexmlWritableImpl implements Character {
 
 	private CharacterStateSet mCharacterStateSet;
 

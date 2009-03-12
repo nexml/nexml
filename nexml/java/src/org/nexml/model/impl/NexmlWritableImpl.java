@@ -4,7 +4,6 @@ import java.util.UUID;
 
 import org.nexml.model.Dictionary;
 import org.nexml.model.NexmlWritable;
-
 abstract class NexmlWritableImpl implements NexmlWritable {
 
 	private String mLabel;

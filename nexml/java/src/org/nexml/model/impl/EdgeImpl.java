@@ -3,7 +3,7 @@ package org.nexml.model.impl;
 import org.nexml.model.Edge;
 import org.nexml.model.Node;
 
-public abstract class EdgeImpl extends NexmlWritableImpl implements Edge {
+abstract class EdgeImpl extends NexmlWritableImpl implements Edge {
 
 	private Node mSource;
 

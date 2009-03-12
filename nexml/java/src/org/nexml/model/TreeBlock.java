@@ -5,5 +5,7 @@ public interface TreeBlock extends OTUsLinkable {
 
 	Network<FloatEdge> createFloatNetwork();
 
-	Tree createTree();
+	Tree<IntEdge> createIntTree();
+	
+	Tree<FloatEdge> createFloatTree();
 }

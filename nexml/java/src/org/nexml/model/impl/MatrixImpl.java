@@ -10,7 +10,7 @@ import org.nexml.model.Matrix;
 import org.nexml.model.MatrixCell;
 import org.nexml.model.OTU;
 
-public class MatrixImpl<T> extends OTUsLinkableImpl<Character> implements
+class MatrixImpl<T> extends OTUsLinkableImpl<Character> implements
 		Matrix<T> {
 
 	private final Map<OTU, Map<Character, MatrixCell<T>>> mMatrixCells = new HashMap<OTU, Map<Character, MatrixCell<T>>>();
@@ -21,21 +21,25 @@ public class MatrixImpl<T> extends OTUsLinkableImpl<Character> implements
 	}
 
 	public List<MatrixCell<T>> getColumn(Character character) {
-		// TODO Auto-generated method stub
-		return null;
+		List<MatrixCell<T>> column = new ArrayList<MatrixCell<T>>();
+		for (Map<Character, MatrixCell<T>> characterToMatrixCell : mMatrixCells
+				.values()) {
+			column.add(characterToMatrixCell.get(character));
+		}
+		return column;
 	}
 
 	public List<MatrixCell<T>> getRow(OTU otu) {
 		Map<Character, MatrixCell<T>> charsToCells = mMatrixCells.get(otu);
-		List<MatrixCell<T>> matrixCells = new ArrayList<MatrixCell<T>>();
+		List<MatrixCell<T>> row = new ArrayList<MatrixCell<T>>();
 		for (Character character : getThings()) {
-			matrixCells.add(charsToCells.get(character));
+			row.add(charsToCells.get(character));
 		}
-		return matrixCells;
+		return row;
 	}
 
 	public MatrixCell<T> getCell(OTU otu, Character character) {
-		if (!mMatrixCells.containsKey(otu)) { 
+		if (!mMatrixCells.containsKey(otu)) {
 			mMatrixCells.put(otu, new HashMap<Character, MatrixCell<T>>());
 		}
 		MatrixCell<T> matrixCell = mMatrixCells.get(otu).get(character);
@@ -44,7 +48,6 @@ public class MatrixImpl<T> extends OTUsLinkableImpl<Character> implements
 			Map<Character, MatrixCell<T>> row = mMatrixCells.get(otu);
 			row.put(character, matrixCell);
 		}
-		
 		return matrixCell;
 	}
 
@@ -55,6 +58,10 @@ public class MatrixImpl<T> extends OTUsLinkableImpl<Character> implements
 	}
 
 	public void removeCharacter(Character character) {
-		// TODO Auto-generated method stub
+		removeThing(character);
+		for (Map<Character, MatrixCell<T>> characterToMatrixCell : mMatrixCells
+				.values()) {
+			characterToMatrixCell.remove(character);
+		}
 	}
 }
