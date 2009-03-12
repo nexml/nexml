@@ -14,6 +14,7 @@ import javax.xml.xpath.XPathFactory;
 import org.nexml.model.Edge;
 import org.nexml.model.NetworkObject;
 import org.nexml.model.Node;
+import org.nexml.model.OTU;
 import org.nexml.model.Tree;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -30,7 +31,8 @@ public abstract class TreeImpl<E extends Edge> extends
 		super(document);
 	}
 
-	public TreeImpl(Document document, Element element) {
+	public TreeImpl(Document document, Element element,
+			Map<String, OTU> originalOTUIds) {
 		super(document, element);
 
 		try {
@@ -51,6 +53,11 @@ public abstract class TreeImpl<E extends Edge> extends
 				if (thisNodeElement.getAttribute("root").equals("true")) {
 					node.setRoot(true);
 				}
+				if (originalOTUIds.containsKey(thisNodeElement
+						.getAttribute("otu"))) {
+					node.setOTU(originalOTUIds.get(thisNodeElement
+							.getAttribute("otu")));
+				}
 				this.addThing(node);
 			}
 
@@ -62,9 +69,11 @@ public abstract class TreeImpl<E extends Edge> extends
 			for (int i = 0; i < edges.getLength(); i++) {
 				Element thisEdgeElement = (Element) edges.item(i);
 				try {
-					Integer.parseInt(thisEdgeElement.getAttribute("length"));
+					Integer edgeLength = Integer.parseInt(thisEdgeElement.getAttribute("length"));
 					IntEdgeImpl edge = new IntEdgeImpl(document,
 							thisEdgeElement);
+					edge.setLength(edgeLength);
+					this.addThing(edge);
 					for (NetworkObject networkObject : getThings()) {
 						if (networkObject instanceof Node) {
 							NodeImpl node = (NodeImpl) networkObject;

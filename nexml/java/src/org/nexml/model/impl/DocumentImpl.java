@@ -2,7 +2,9 @@ package org.nexml.model.impl;
 
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Result;
@@ -22,6 +24,7 @@ import javax.xml.xpath.XPathFactory;
 import org.nexml.model.CategoricalMatrix;
 import org.nexml.model.ContinuousMatrix;
 import org.nexml.model.Document;
+import org.nexml.model.OTU;
 import org.nexml.model.OTUs;
 import org.nexml.model.TreeBlock;
 import org.w3c.dom.Element;
@@ -50,12 +53,13 @@ public class DocumentImpl extends AnnotatableImpl implements Document {
 			NodeList nodes = (NodeList) result;
 
 			OTUsImpl otus = new OTUsImpl(document, (Element) nodes.item(0));
+			Map<OTU, String> originalOTUIds = new HashMap<OTU, String>();
 			mOtusList.add(otus);
 			XPathExpression treesExpr = xpath.compile(this.getTagName() + "/"
 					+ TreeBlockImpl.getTagNameClass());
 			TreeBlockImpl treeBlock = new TreeBlockImpl(document,
 					(Element) ((NodeList) treesExpr.evaluate(document,
-							XPathConstants.NODESET)).item(0));
+							XPathConstants.NODESET)).item(0), otus.getOriginalOTUIds());
 			treeBlock.setOTUs(otus);
 			mTreeBlockList.add(treeBlock);
 
