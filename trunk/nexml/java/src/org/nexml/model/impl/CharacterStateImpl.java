@@ -3,7 +3,7 @@ package org.nexml.model.impl;
 import org.nexml.model.CharacterState;
 import org.w3c.dom.Document;
 
-class CharacterStateImpl extends NexmlWritableImpl implements
+class CharacterStateImpl extends AnnotatableImpl implements
 		CharacterState {
 
 	public CharacterStateImpl(Document document) {

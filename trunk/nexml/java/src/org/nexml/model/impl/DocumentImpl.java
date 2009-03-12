@@ -18,7 +18,7 @@ import org.nexml.model.OTUs;
 import org.nexml.model.TreeBlock;
 import org.w3c.dom.Element;
 
-public class DocumentImpl extends NexmlWritableImpl implements Document {
+public class DocumentImpl extends AnnotatableImpl implements Document {
 	
 	public DocumentImpl(org.w3c.dom.Document document) {
 		super(document);
