@@ -62,4 +62,5 @@ class CategoricalMatrixImpl extends
 
         return null;
     }
-}
+
+ }
