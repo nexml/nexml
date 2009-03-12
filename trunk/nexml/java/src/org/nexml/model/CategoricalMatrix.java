@@ -7,4 +7,10 @@ public interface CategoricalMatrix extends Matrix<CharacterState> {
 	Set<CharacterStateSet> getCharacterStateSets();
 	
 	CharacterStateSet createCharacterStateSet();
+	
+	CharacterStateSet getDNACharacterStateSet();
+	
+	CharacterStateSet getRNACharacterStateSet();
+	
+	CharacterStateSet getProteinCharacterStateSet();
 }
