@@ -6,13 +6,14 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
+
 public class TestMolecularMatrix {
 
     @Test
     public void testDNAMatrix() {
         Document doc = null;
         try {
-            doc = DocumentFactory.createDocument();
+            doc =  DocumentFactory.createDocument();
         } catch (ParserConfigurationException e) {
             e.printStackTrace();
         }
@@ -142,4 +143,200 @@ public class TestMolecularMatrix {
 
         
     }
+    
+    @Test
+    public void testProteinMatrix() {
+        Document doc = null;
+        try {
+            doc = DocumentFactory.createDocument();
+        } catch (ParserConfigurationException e) {
+            e.printStackTrace();
+        }
+        OTUs mammals = doc.createOTUs();
+        CategoricalMatrix categoricalMatrix = doc
+                .createCategoricalMatrix(mammals);
+        mammals.setLabel("mammals");
+        OTU chimp = mammals.createOTU();
+        chimp.setLabel("chimp");
+        categoricalMatrix.setOTUs(mammals);
+        Assert.assertEquals("categoricalMatrix.getOTUS should be mammals",
+                mammals, categoricalMatrix.getOTUs());
+
+        CharacterStateSet characterMolecularStateSet = categoricalMatrix.getProteinCharacterStateSet();
+
+//      Assert.assertEquals("characterStateSet should be in categoricalMatrix",
+//              characterMolecularStateSet, categoricalMatrix.getCharacterStateSets()
+//                      .iterator().next());
+
+
+        CharacterState aState = characterMolecularStateSet.lookupCharacterStateBySymbol("A");
+        CharacterState cState = characterMolecularStateSet.lookupCharacterStateBySymbol("C");
+        CharacterState dState = characterMolecularStateSet.lookupCharacterStateBySymbol("D");
+        CharacterState eState = characterMolecularStateSet.lookupCharacterStateBySymbol("E");
+        CharacterState fState = characterMolecularStateSet.lookupCharacterStateBySymbol("F");
+        CharacterState gState = characterMolecularStateSet.lookupCharacterStateBySymbol("G");
+        CharacterState hState = characterMolecularStateSet.lookupCharacterStateBySymbol("H");
+        CharacterState iState = characterMolecularStateSet.lookupCharacterStateBySymbol("I");
+        CharacterState kState = characterMolecularStateSet.lookupCharacterStateBySymbol("K");
+        CharacterState lState = characterMolecularStateSet.lookupCharacterStateBySymbol("L");
+        CharacterState mState = characterMolecularStateSet.lookupCharacterStateBySymbol("M");
+        CharacterState nState = characterMolecularStateSet.lookupCharacterStateBySymbol("N");
+        CharacterState pState = characterMolecularStateSet.lookupCharacterStateBySymbol("P");
+        CharacterState qState = characterMolecularStateSet.lookupCharacterStateBySymbol("Q");
+        CharacterState rState = characterMolecularStateSet.lookupCharacterStateBySymbol("R");
+        CharacterState sState = characterMolecularStateSet.lookupCharacterStateBySymbol("S");
+        CharacterState tState = characterMolecularStateSet.lookupCharacterStateBySymbol("T");
+        CharacterState vState = characterMolecularStateSet.lookupCharacterStateBySymbol("V");
+        CharacterState wState = characterMolecularStateSet.lookupCharacterStateBySymbol("W");
+        CharacterState yState = characterMolecularStateSet.lookupCharacterStateBySymbol("Y");
+        Assert.assertTrue("State containing A is not null", (aState != null));
+        Assert.assertTrue("State containing C is not null", (cState != null));
+        Assert.assertTrue("State containing D is not null", (dState != null));
+        Assert.assertTrue("State containing E is not null", (eState != null));
+        Assert.assertTrue("State containing F is not null", (fState != null));
+        Assert.assertTrue("State containing G is not null", (gState != null));
+        Assert.assertTrue("State containing H is not null", (hState != null));
+        Assert.assertTrue("State containing I is not null", (iState != null));
+        Assert.assertTrue("State containing K is not null", (kState != null));
+        Assert.assertTrue("State containing L is not null", (lState != null));
+        Assert.assertTrue("State containing M is not null", (mState != null));
+        Assert.assertTrue("State containing N is not null", (nState != null));
+        Assert.assertTrue("State containing P is not null", (pState != null));
+        Assert.assertTrue("State containing Q is not null", (qState != null));
+        Assert.assertTrue("State containing R is not null", (rState != null));
+        Assert.assertTrue("State containing S is not null", (sState != null));
+        Assert.assertTrue("State containing T is not null", (tState != null));
+        Assert.assertTrue("State containing V is not null", (vState != null));
+        Assert.assertTrue("State containing W is not null", (wState != null));
+        Assert.assertTrue("State containing Y is not null", (yState != null));
+        
+        
+        Character pos1 = categoricalMatrix.createCharacter(characterMolecularStateSet);
+        Character pos2 = categoricalMatrix.createCharacter(characterMolecularStateSet);
+        Character pos3 = categoricalMatrix.createCharacter(characterMolecularStateSet);
+        Character pos4 = categoricalMatrix.createCharacter(characterMolecularStateSet);
+        Character pos5 = categoricalMatrix.createCharacter(characterMolecularStateSet);
+        Character pos6 = categoricalMatrix.createCharacter(characterMolecularStateSet);
+        Character pos7 = categoricalMatrix.createCharacter(characterMolecularStateSet);
+        Character pos8 = categoricalMatrix.createCharacter(characterMolecularStateSet);
+        Character pos9 = categoricalMatrix.createCharacter(characterMolecularStateSet);
+        Character pos10 = categoricalMatrix.createCharacter(characterMolecularStateSet);
+        Character pos11 = categoricalMatrix.createCharacter(characterMolecularStateSet);
+        Character pos12 = categoricalMatrix.createCharacter(characterMolecularStateSet);
+        Character pos13 = categoricalMatrix.createCharacter(characterMolecularStateSet);
+        Character pos14 = categoricalMatrix.createCharacter(characterMolecularStateSet);
+        Character pos15 = categoricalMatrix.createCharacter(characterMolecularStateSet);
+        Character pos16 = categoricalMatrix.createCharacter(characterMolecularStateSet);
+        Character pos17= categoricalMatrix.createCharacter(characterMolecularStateSet);
+        Character pos18 = categoricalMatrix.createCharacter(characterMolecularStateSet);
+        Character pos19 = categoricalMatrix.createCharacter(characterMolecularStateSet);
+        Character pos20= categoricalMatrix.createCharacter(characterMolecularStateSet);
+
+        MatrixCell<CharacterState> cell1 = categoricalMatrix.getCell(chimp,pos1);
+        MatrixCell<CharacterState> cell2 = categoricalMatrix.getCell(chimp,pos2);
+        MatrixCell<CharacterState> cell3 = categoricalMatrix.getCell(chimp,pos3);
+        MatrixCell<CharacterState> cell4 = categoricalMatrix.getCell(chimp,pos4);
+        MatrixCell<CharacterState> cell5 = categoricalMatrix.getCell(chimp,pos5);
+        MatrixCell<CharacterState> cell6 = categoricalMatrix.getCell(chimp,pos6);
+        MatrixCell<CharacterState> cell7 = categoricalMatrix.getCell(chimp,pos7);
+        MatrixCell<CharacterState> cell8 = categoricalMatrix.getCell(chimp,pos8);
+        MatrixCell<CharacterState> cell9 = categoricalMatrix.getCell(chimp,pos9);
+        MatrixCell<CharacterState> cell10 = categoricalMatrix.getCell(chimp,pos10);
+        MatrixCell<CharacterState> cell11 = categoricalMatrix.getCell(chimp,pos11);
+        MatrixCell<CharacterState> cell12 = categoricalMatrix.getCell(chimp,pos12);
+        MatrixCell<CharacterState> cell13 = categoricalMatrix.getCell(chimp,pos13);
+        MatrixCell<CharacterState> cell14 = categoricalMatrix.getCell(chimp,pos14);
+        MatrixCell<CharacterState> cell15 = categoricalMatrix.getCell(chimp,pos15);
+        MatrixCell<CharacterState> cell16 = categoricalMatrix.getCell(chimp,pos16);
+        MatrixCell<CharacterState> cell17 = categoricalMatrix.getCell(chimp,pos17);
+        MatrixCell<CharacterState> cell18 = categoricalMatrix.getCell(chimp,pos18);
+        MatrixCell<CharacterState> cell19 = categoricalMatrix.getCell(chimp,pos19);
+        MatrixCell<CharacterState> cell20 = categoricalMatrix.getCell(chimp,pos20);
+
+        cell1.setValue(aState);
+        cell2.setValue(cState);
+        cell3.setValue(dState);
+        cell4.setValue(eState);
+        cell5.setValue(fState);
+        cell6.setValue(gState);
+        cell7.setValue(hState);
+        cell8.setValue(iState);
+        cell9.setValue(kState);
+        cell10.setValue(lState);
+        cell11.setValue(mState);
+        cell12.setValue(nState);
+        cell13.setValue(pState);
+        cell14.setValue(qState);
+        cell15.setValue(rState);
+        cell16.setValue(sState);
+        cell17.setValue(tState);
+        cell18.setValue(vState);
+        cell19.setValue(wState);
+        cell20.setValue(yState);
+        
+
+        Assert.assertEquals("cell1.getValue should be A",aState, cell1.getValue());
+        Assert.assertEquals("cell1.getValue.getSymbol() should be A","A", cell1.getValue().getSymbol());
+
+        Assert.assertEquals("cell2.getValue should be C",cState, cell2.getValue());
+        Assert.assertEquals("cell2.getValue.getSymbol() should be C","C", cell2.getValue().getSymbol());
+
+        Assert.assertEquals("cell3.getValue should be D",dState, cell3.getValue());
+        Assert.assertEquals("cell3.getValue.getSymbol() should be D","D", cell3.getValue().getSymbol());
+
+        Assert.assertEquals("cell4.getValue should be E",eState, cell4.getValue());
+        Assert.assertEquals("cell4.getValue.getSymbol() should be E","E", cell4.getValue().getSymbol());
+
+        Assert.assertEquals("cell5.getValue should be F",fState, cell5.getValue());
+        Assert.assertEquals("cell5.getValue.getSymbol() should be F","F", cell5.getValue().getSymbol());
+
+        Assert.assertEquals("cell6.getValue should be G",gState, cell6.getValue());
+        Assert.assertEquals("cell6.getValue.getSymbol() should be G","G", cell6.getValue().getSymbol());
+
+        Assert.assertEquals("cell7.getValue should be H",hState, cell7.getValue());
+        Assert.assertEquals("cell7.getValue.getSymbol() should be H","H", cell7.getValue().getSymbol());
+
+        Assert.assertEquals("cell8.getValue should be I",iState, cell8.getValue());
+        Assert.assertEquals("cell8.getValue.getSymbol() should be I","I", cell8.getValue().getSymbol());      
+        
+        Assert.assertEquals("cell9.getValue should be K",kState, cell9.getValue());
+        Assert.assertEquals("cell9.getValue.getSymbol() should be K","K", cell9.getValue().getSymbol());
+
+        Assert.assertEquals("cell10.getValue should be L",lState, cell10.getValue());
+        Assert.assertEquals("cell10.getValue.getSymbol() should be L","L", cell10.getValue().getSymbol());
+
+        Assert.assertEquals("cell11.getValue should be M",mState, cell11.getValue());
+        Assert.assertEquals("cell11.getValue.getSymbol() should be M","M", cell11.getValue().getSymbol());
+
+        Assert.assertEquals("cell12.getValue should be N",nState, cell12.getValue());
+        Assert.assertEquals("cell12.getValue.getSymbol() should be N","N", cell12.getValue().getSymbol());
+
+        Assert.assertEquals("cell13.getValue should be P",pState, cell13.getValue());
+        Assert.assertEquals("cell13.getValue.getSymbol() should be P","P", cell13.getValue().getSymbol());
+
+        Assert.assertEquals("cell14.getValue should be Q",qState, cell14.getValue());
+        Assert.assertEquals("cell14.getValue.getSymbol() should be Q","Q", cell14.getValue().getSymbol());
+
+        Assert.assertEquals("cell15.getValue should be R",rState, cell15.getValue());
+        Assert.assertEquals("cell15.getValue.getSymbol() should be R","R", cell15.getValue().getSymbol());
+
+        Assert.assertEquals("cell16.getValue should be S",sState, cell16.getValue());
+        Assert.assertEquals("cell16.getValue.getSymbol() should be S","S", cell16.getValue().getSymbol());
+
+        Assert.assertEquals("cell17.getValue should be T",tState, cell17.getValue());
+        Assert.assertEquals("cell17.getValue.getSymbol() should be T","T", cell17.getValue().getSymbol());
+
+        Assert.assertEquals("cell18.getValue should be V",vState, cell18.getValue());
+        Assert.assertEquals("cell18.getValue.getSymbol() should be V","V", cell18.getValue().getSymbol());
+
+        Assert.assertEquals("cell19.getValue should be W",wState, cell19.getValue());
+        Assert.assertEquals("cell19.getValue.getSymbol() should be W","W", cell19.getValue().getSymbol());
+
+        Assert.assertEquals("cell20.getValue should be Y",yState, cell20.getValue());
+        Assert.assertEquals("cell20.getValue.getSymbol() should be Y","Y", cell20.getValue().getSymbol());
+
+
+        
+    }
+
 }
