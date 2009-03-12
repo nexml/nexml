@@ -14,13 +14,12 @@ abstract class SetManager<T> extends AnnotatableImpl {
 
 	public SetManager(Document document) {
 		super(document);
-		// TODO Auto-generated constructor stub
 	}
 	
 	public SetManager(Document document, Element element) { 
 		super(document, element);
-	}
-
+	}	
+	
 	private final Map<String, Set<T>> mSets = new HashMap<String, Set<T>>();
 	private final List<T> mThings = new ArrayList<T>();
 

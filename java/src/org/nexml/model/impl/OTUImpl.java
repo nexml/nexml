@@ -17,7 +17,6 @@ class OTUImpl extends AnnotatableImpl implements OTU {
 
 	public OTUImpl(Document document) {
 		super(document);
-		// TODO Auto-generated constructor stub
 	}
 
 	public OTUImpl(Document document, Element element) {

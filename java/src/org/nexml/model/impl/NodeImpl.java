@@ -10,7 +10,6 @@ class NodeImpl extends OTULinkableImpl implements Node {
 	
 	public NodeImpl(Document document) {
 		super(document);
-		// TODO Auto-generated constructor stub
 	}
 
 	public NodeImpl(Document document, Element element) { 

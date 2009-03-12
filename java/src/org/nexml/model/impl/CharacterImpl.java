@@ -8,7 +8,6 @@ class CharacterImpl extends AnnotatableImpl implements Character {
 
 	public CharacterImpl(Document document) {
 		super(document);
-		// TODO Auto-generated constructor stub
 	}
 
 	private CharacterStateSet mCharacterStateSet;

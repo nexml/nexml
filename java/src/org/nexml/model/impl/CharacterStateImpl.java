@@ -8,7 +8,6 @@ class CharacterStateImpl extends AnnotatableImpl implements
 
 	public CharacterStateImpl(Document document) {
 		super(document);
-		// TODO Auto-generated constructor stub
 	}
 
 	private Object mSymbol;
@@ -22,8 +21,19 @@ class CharacterStateImpl extends AnnotatableImpl implements
 		return mSymbol;
 	}
 
+	/**
+	 * This method sets the symbol for a state definition. These
+	 * symbols are different types depending on the data type 
+	 * (as follows: DNA, RNA and AA have the IUPAC single character
+	 * codes, - and ? (i.e. Strings); Standard has Integers and ?;
+	 * Restriction has Integers (0 and 1). The approach taken here is
+	 * to just pass in Object and call toString() on it to set the
+	 * value of the symbol attribute on the state element.
+	 * @author rvosa
+	 */
 	public void setSymbol(Object symbol) {
 		mSymbol = symbol;
+		getElement().setAttribute("symbol", symbol.toString());
 	}
 
 }

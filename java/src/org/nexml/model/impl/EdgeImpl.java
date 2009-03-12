@@ -9,7 +9,6 @@ abstract class EdgeImpl extends AnnotatableImpl implements Edge {
 
 	public EdgeImpl(Document document) {
 		super(document);
-		// TODO Auto-generated constructor stub
 	}
 	
 	public EdgeImpl(Document document, Element element) { 

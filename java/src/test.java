@@ -1,62 +1,54 @@
-import org.biophylo.*;
-import org.biophylo.util.*;
-import org.biophylo.taxa.*;
-import org.biophylo.forest.*;
-import org.biophylo.matrices.*;
-import java.io.*;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
+
+import org.nexml.model.CategoricalMatrix;
+import org.nexml.model.CharacterStateSet;
+import org.nexml.model.CharacterState;
+import org.nexml.model.Character;
+import org.nexml.model.Document;
+import org.nexml.model.DocumentFactory;
+import org.nexml.model.FloatEdge;
+import org.nexml.model.Node;
+import org.nexml.model.OTU;
+import org.nexml.model.OTUs;
+import org.nexml.model.Tree;
+import org.nexml.model.TreeBlock;
+import org.nexml.model.UncertainCharacterState;
+
 public class test {
 
 	/**
 	 * @param args
 	 */
-	public static void main(String[] args) {						
-		Logger logger = Logger.getInstance();
-		logger.VERBOSE(2);
+	public static void main(String[] args) {
+		Document document = null;
 		try {
-			Project proj = new Project();
-			Taxa taxa = new Taxa();
-			Forest forest = new Forest();
-			Tree tre = new Tree();
-			Node root = new Node();
-			HashMap dict = new HashMap();
-			Vector value = new Vector();
-			value.add("string");
-			value.add("This is a tree");
-			dict.put("description", value);
-			tre.setGeneric("dict", dict);
-			tre.insert(root);
-			forest.insert(tre);
-			forest.setTaxa(taxa);
-			proj.insert(taxa);
-			proj.insert(forest);
-			Matrix matrix = new Matrix("Standard");
-			matrix.setTaxa(taxa);
-			proj.insert(matrix);
-			int max = 100;
-			StringBuffer sb = new StringBuffer();
-			for ( int i = 0; i < max; i++ ) {
-				sb.append(1);
-			}
-			for ( int i = 0; i < max; i++ ) {								
-				Taxon taxon = new Taxon();
-				Datum datum = new Datum("Standard");
-				datum.setTaxon(taxon);
-				datum.insert(sb.toString());
-				matrix.insert(datum);
-				Node node = new Node();
-				node.setTaxon(taxon);
-				root.setChild(node);
-				node.setParent(root);
-				node.setName("n"+i);
-				node.setBranchLength(1);
-				tre.insert(node);
-				taxa.insert(taxon);
-			}
-			System.out.println(proj.toXml());
+			document = DocumentFactory.createDocument();
 		} catch ( Exception e ) {
 			e.printStackTrace();
-		}
+		}			
+		OTUs otus = document.createOTUs();
+		otus.setLabel("bar");
+		OTU otu = otus.createOTU();
+		otu.setLabel("foo");
+		TreeBlock treeBlock = document.createTreeBlock(otus);
+		Tree<FloatEdge> tree = treeBlock.createFloatTree();
+		tree.setLabel("baz");
+		Node source = tree.createNode();
+		source.setOTU(otu);
+		Node target = tree.createNode();
+		FloatEdge edge = (FloatEdge)tree.createEdge(source,target);
+		edge.setLength(0.2342);
+		CategoricalMatrix categoricalMatrix = document.createCategoricalMatrix(otus);
+		CharacterStateSet characterStateSet = categoricalMatrix.createCharacterStateSet();
+		CharacterState characterState = characterStateSet.createCharacterState(1);
+		Set<CharacterState> members = new HashSet<CharacterState>();
+		members.add(characterState);
+		UncertainCharacterState uncertain = characterStateSet.createUncertainCharacterState(2, members);
+		Character character1 = categoricalMatrix.createCharacter(characterStateSet);
+		Character character2 = categoricalMatrix.createCharacter(characterStateSet);
+		categoricalMatrix.getCell(otu, character1).setValue(characterState);
+		categoricalMatrix.getCell(otu, character2).setValue(uncertain);
+		System.out.println(document.getXmlString());
 	}	
-	
 }
