@@ -1,11 +1,12 @@
 package org.nexml.model;
 
 public interface Document extends NexmlWritable {
-	TreeBlock createTreeBlock();
+	TreeBlock createTreeBlock(OTUs otus);
 
 	OTUs createOTUs();
 
-	CategoricalMatrix createCategoricalMatrix();
+	CategoricalMatrix createCategoricalMatrix(OTUs otus);
 	
+	String getXmlString();
 	
 }
