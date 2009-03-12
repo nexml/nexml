@@ -69,7 +69,8 @@ public abstract class TreeImpl<E extends Edge> extends
 			for (int i = 0; i < edges.getLength(); i++) {
 				Element thisEdgeElement = (Element) edges.item(i);
 				try {
-					Integer edgeLength = Integer.parseInt(thisEdgeElement.getAttribute("length"));
+					Integer edgeLength = Integer.parseInt(thisEdgeElement
+							.getAttribute("length"));
 					IntEdgeImpl edge = new IntEdgeImpl(document,
 							thisEdgeElement);
 					edge.setLength(edgeLength);
@@ -140,6 +141,12 @@ public abstract class TreeImpl<E extends Edge> extends
 	public void removeNode(Node node) {
 		removeThing(node);
 		getElement().removeChild(((NodeImpl) node).getElement());
+		//TODO: need to keep our tree connected.
+		for (Edge edge : getEdges()) {
+			if (node.equals(edge.getSource()) || node.equals(edge.getTarget())) {
+				removeEdge(edge);
+			}
+		}
 	}
 
 }
