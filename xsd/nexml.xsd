@@ -22,7 +22,8 @@
   <xs:include schemaLocation="taxa/taxa.xsd"/>
   <xs:include schemaLocation="characters/characters.xsd"/>
   <xs:include schemaLocation="trees/trees.xsd"/>
-  <xs:include schemaLocation="meta/meta.xsd"/>
+  <xs:include schemaLocation="meta/annotations.xsd"></xs:include>
+  <!-- xs:include schemaLocation="meta/meta.xsd"/-->
   <!--<xs:include schemaLocation="models/models.xsd"/>-->
   
   <xs:simpleType name="Nexml1_0">
