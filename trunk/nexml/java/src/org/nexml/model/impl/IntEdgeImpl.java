@@ -10,8 +10,8 @@ class IntEdgeImpl extends EdgeImpl implements IntEdge {
 		super(document);
 	}
 
-	public IntEdgeImpl(Document document, Element thisEdgeElement) {
-		super(document, thisEdgeElement);
+	public IntEdgeImpl(Document document, Element element) {
+		super(document, element);
 	}
 
 	public Integer getLength() {
@@ -21,4 +21,24 @@ class IntEdgeImpl extends EdgeImpl implements IntEdge {
 	public void setLength(Integer length) {
 		setLengthAsNumber(length);
 	}
+
+	/**
+	 * Constructs a <code>String</code> with all attributes in name = value
+	 * format.
+	 * 
+	 * @return a <code>String</code> representation of this object.
+	 */
+	@Override
+	public String toString() {
+		final String TAB = "    ";
+
+		String retValue = "";
+
+		retValue = "IntEdgeImpl ( " + super.toString() + TAB
+
+		+ " )";
+
+		return retValue;
+	}
+
 }
