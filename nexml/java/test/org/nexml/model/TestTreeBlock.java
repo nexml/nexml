@@ -38,6 +38,8 @@ public class TestTreeBlock {
 		node2.setOTU(chimp);
 		Assert.assertEquals("node2.getOTU should be chimp", chimp, node2
 				.getOTU());
+		
+		System.out.println("xmlstring: " + doc.getXmlString());
 
 	}
 

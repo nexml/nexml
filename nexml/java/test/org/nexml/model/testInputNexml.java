@@ -27,7 +27,8 @@ public class testInputNexml {
 			NodeList otus = document.getElementsByTagName("otu");
 			for (int i = 0; i < otus.getLength(); i++) {
 				Node otu = otus.item(i);
-				System.out.println("otu: " + otu.getNodeName() + "/" + otu.getAttributes().item(0));
+				System.out.println("otu: " + otu.getNodeName() + "/"
+						+ otu.getAttributes().item(0));
 			}
 		} catch (ParserConfigurationException e) {
 			// TODO Auto-generated catch block
