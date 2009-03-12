@@ -59,32 +59,35 @@ class CategoricalMatrixImpl extends
 		return character;
 	}	
 
-    public CharacterStateSet getDNACharacterStateSet() {
-        if (mMolecularCharacterStates == null){
-            mMolecularCharacterStates = new MolecularCharacterStateSetImpl(getDocument());
-        }
-        CharacterStateSet result = mMolecularCharacterStates.getDNAStateSet();
-        CharacterStateSetImpl characterStateSet = (CharacterStateSetImpl)result;
-        mCharacterStateSets.add(characterStateSet);
-        if ( null == getFormatElement() ) {
-            setFormatElement( getDocument().createElement("format") );
-            getElement().insertBefore( getFormatElement(), getElement().getFirstChild() );
-        }
-        getFormatElement().insertBefore( characterStateSet.getElement(), getFormatElement().getFirstChild() );
-        return result;
-    }
-    public CharacterStateSet getRNACharacterStateSet() {
+	public CharacterStateSet getDNACharacterStateSet() {
+	    if (mMolecularCharacterStates == null){
+	        mMolecularCharacterStates = new MolecularCharacterStateSetImpl(getDocument());
+	    }
+	    CharacterStateSet result = mMolecularCharacterStates.getDNAStateSet();
+	    CharacterStateSetImpl characterStateSet = (CharacterStateSetImpl)result;
+	    if (mCharacterStateSets.add(characterStateSet)){
+	        if ( null == getFormatElement() ) {
+	            setFormatElement( getDocument().createElement("format") );
+	            getElement().insertBefore( getFormatElement(), getElement().getFirstChild() );
+	        }
+	        getFormatElement().insertBefore( characterStateSet.getElement(), getFormatElement().getFirstChild() );
+	    }
+	    return result;
+	}
+
+	public CharacterStateSet getRNACharacterStateSet() {
         if (mMolecularCharacterStates == null){
             mMolecularCharacterStates = new MolecularCharacterStateSetImpl(getDocument());
         }
         CharacterStateSet result = mMolecularCharacterStates.getRNAStateSet();
         CharacterStateSetImpl characterStateSet = (CharacterStateSetImpl)result;
-        mCharacterStateSets.add(characterStateSet);
-        if ( null == getFormatElement() ) {
-            setFormatElement( getDocument().createElement("format") );
-            getElement().insertBefore( getFormatElement(), getElement().getFirstChild() );
+        if (mCharacterStateSets.add(characterStateSet)){
+            if ( null == getFormatElement() ) {
+                setFormatElement( getDocument().createElement("format") );
+                getElement().insertBefore( getFormatElement(), getElement().getFirstChild() );
+            }
+            getFormatElement().insertBefore( characterStateSet.getElement(), getFormatElement().getFirstChild() );
         }
-        getFormatElement().insertBefore( characterStateSet.getElement(), getFormatElement().getFirstChild() );
         return result;
      }
     
@@ -94,12 +97,13 @@ class CategoricalMatrixImpl extends
         }
         CharacterStateSet result = mMolecularCharacterStates.getProteinStateSet();
         CharacterStateSetImpl characterStateSet = (CharacterStateSetImpl)result;
-        mCharacterStateSets.add(characterStateSet);
-        if ( null == getFormatElement() ) {
-            setFormatElement( getDocument().createElement("format") );
-            getElement().insertBefore( getFormatElement(), getElement().getFirstChild() );
+        if (mCharacterStateSets.add(characterStateSet)){
+            if ( null == getFormatElement() ) {
+                setFormatElement( getDocument().createElement("format") );
+                getElement().insertBefore( getFormatElement(), getElement().getFirstChild() );
+            }
+            getFormatElement().insertBefore( characterStateSet.getElement(), getFormatElement().getFirstChild() );
         }
-        getFormatElement().insertBefore( characterStateSet.getElement(), getFormatElement().getFirstChild() );
         return result;
     }
 
