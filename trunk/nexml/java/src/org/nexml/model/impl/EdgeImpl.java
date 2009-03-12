@@ -3,6 +3,7 @@ package org.nexml.model.impl;
 import org.nexml.model.Edge;
 import org.nexml.model.Node;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 abstract class EdgeImpl extends AnnotatableImpl implements Edge {
 
@@ -10,7 +11,10 @@ abstract class EdgeImpl extends AnnotatableImpl implements Edge {
 		super(document);
 		// TODO Auto-generated constructor stub
 	}
-
+	
+	public EdgeImpl(Document document, Element element) { 
+		super(document, element);
+	}
 
 	private Node mSource;
 
@@ -44,9 +48,12 @@ abstract class EdgeImpl extends AnnotatableImpl implements Edge {
 		getElement().setAttribute("target", target.getId());
 	}
 
-
 	@Override
 	String getTagName() {
+		return getTagNameClass();
+	}
+
+	public static String getTagNameClass() {
 		return "edge";
 	}
 
