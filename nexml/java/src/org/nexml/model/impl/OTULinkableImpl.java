@@ -2,10 +2,16 @@ package org.nexml.model.impl;
 
 import org.nexml.model.OTU;
 import org.nexml.model.OTULinkable;
+import org.w3c.dom.Document;
 
 abstract class OTULinkableImpl extends NexmlWritableImpl implements
 		OTULinkable {
 	
+	public OTULinkableImpl(Document document) {
+		super(document);
+		// TODO Auto-generated constructor stub
+	}
+
 	private OTU mOTU;
 
 	public OTU getOTU() {
@@ -14,5 +20,6 @@ abstract class OTULinkableImpl extends NexmlWritableImpl implements
 
 	public void setOTU(OTU otu) {
 		mOTU = otu;
+		getElement().setAttribute("otu", otu.getId());
 	}
 }

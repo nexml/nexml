@@ -7,20 +7,27 @@ import org.nexml.model.Edge;
 import org.nexml.model.Network;
 import org.nexml.model.NetworkObject;
 import org.nexml.model.Node;
+import org.w3c.dom.Document;
 
 abstract class NetworkImpl<E extends Edge> extends SetManager<NetworkObject> implements Network<E> {
 
+
+	public NetworkImpl(Document document) {
+		super(document);
+		// TODO Auto-generated constructor stub
+	}
 
 	@Override
 	String getTagName() {
 		return "network";
 	}
 
-	abstract public E createEdge();
+	abstract public E createEdge(Node source, Node target);
 
 	public Node createNode() {
-		Node node = new NodeImpl();
+		Node node = new NodeImpl(getDocument());
 		addThing(node);
+		getElement().insertBefore(node.getElement(),getElement().getFirstChild());
 		return node;
 	}
 
@@ -38,6 +45,7 @@ abstract class NetworkImpl<E extends Edge> extends SetManager<NetworkObject> imp
 	
 	public void removeEdge(E edge) {
 		removeThing(edge);
+		getElement().removeChild(edge.getElement());
 	}
 
 	public Set<Node> getNodes() { 
@@ -53,6 +61,7 @@ abstract class NetworkImpl<E extends Edge> extends SetManager<NetworkObject> imp
 	
 	public void removeNode(Node node) {
 		removeThing(node);
+		getElement().removeChild(node.getElement());
 	}
 
 }

@@ -1,9 +1,15 @@
 package org.nexml.model.impl;
 
 import org.nexml.model.UncertainCharacterState;
+import org.w3c.dom.Document;
 
 class UncertainCharacterStateImpl extends CompoundCharacterStateImpl
 		implements UncertainCharacterState {
+
+	public UncertainCharacterStateImpl(Document document) {
+		super(document);
+		// TODO Auto-generated constructor stub
+	}
 
 	@Override
 	String getTagName() {
