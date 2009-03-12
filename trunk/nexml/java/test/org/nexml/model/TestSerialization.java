@@ -83,6 +83,21 @@ public class TestSerialization {
 		categoricalMatrix.getCell(otu, character2).setValue(uncertain);
 		
 		/**
+		 * Create a molecular matrix
+		 */
+        CategoricalMatrix DNAMatrix = nexmlDocument.createCategoricalMatrix(otus);
+        DNAMatrix.setLabel("Molecular Matrix");
+        CharacterStateSet DNAStateSet = categoricalMatrix.getDNACharacterStateSet();
+        CharacterState aState = DNAStateSet.lookupCharacterStateBySymbol("A");
+        CharacterState bState = DNAStateSet.lookupCharacterStateBySymbol("B");
+        Character pos1 = DNAMatrix.createCharacter(DNAStateSet);
+        DNAMatrix.getCell(otu, pos1).setValue(aState);
+        Character pos2 = DNAMatrix.createCharacter(DNAStateSet);
+        DNAMatrix.getCell(otu, pos2).setValue(bState);
+        Character pos3 = DNAMatrix.createCharacter(DNAStateSet);
+        DNAMatrix.getCell(otu, pos3).setValue(aState);
+        
+		/**
 		 * Now we're going to validate the output, so first we need
 		 * to jump through the xml parsing hoops.
 		 */
@@ -105,6 +120,7 @@ public class TestSerialization {
 		 */
 		InputStream is = null;
 		try {
+		    System.out.println("Buffer Contains: " + nexmlDocument.getXmlString());
 			is = new ByteArrayInputStream(nexmlDocument.getXmlString().getBytes("UTF-8"));
 		} catch (UnsupportedEncodingException e1) {
 			Assert.assertFalse(e1.getMessage(), false);
