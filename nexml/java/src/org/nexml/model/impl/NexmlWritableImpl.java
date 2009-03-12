@@ -13,6 +13,8 @@ abstract class NexmlWritableImpl implements NexmlWritable {
 	private String mId;
 	private Dictionary mDictionary;
 	private Element mElement;
+	protected static String XSI_NS = "http://www.w3.org/2001/XMLSchema-instance";
+	protected static String XSI_PREFIX = "xsi";
 
 	protected NexmlWritableImpl() {
 	}
