@@ -24,7 +24,6 @@ import javax.xml.xpath.XPathFactory;
 import org.nexml.model.CategoricalMatrix;
 import org.nexml.model.ContinuousMatrix;
 import org.nexml.model.Document;
-import org.nexml.model.OTU;
 import org.nexml.model.OTUs;
 import org.nexml.model.TreeBlock;
 import org.w3c.dom.Element;
@@ -52,17 +51,29 @@ public class DocumentImpl extends AnnotatableImpl implements Document {
 			Object result = otusExpr.evaluate(document, XPathConstants.NODESET);
 			NodeList nodes = (NodeList) result;
 
-			OTUsImpl otus = new OTUsImpl(document, (Element) nodes.item(0));
-			Map<OTU, String> originalOTUIds = new HashMap<OTU, String>();
-			mOtusList.add(otus);
+			Map<String, OTUsImpl> originalOTUsIds = new HashMap<String, OTUsImpl>();
+
+			for (int i = 0; i < nodes.getLength(); i++) {
+				String originalOTUsId = ((Element) nodes.item(i))
+						.getAttribute("id");
+				OTUsImpl otus = new OTUsImpl(document, (Element) nodes.item(i));
+				originalOTUsIds.put(originalOTUsId, otus);
+				mOtusList.add(otus);
+			}
 			XPathExpression treesExpr = xpath.compile(this.getTagName() + "/"
 					+ TreeBlockImpl.getTagNameClass());
-			TreeBlockImpl treeBlock = new TreeBlockImpl(document,
-					(Element) ((NodeList) treesExpr.evaluate(document,
-							XPathConstants.NODESET)).item(0), otus.getOriginalOTUIds());
-			treeBlock.setOTUs(otus);
-			mTreeBlockList.add(treeBlock);
-
+			NodeList treeBlockNodes = (NodeList) treesExpr.evaluate(document,
+					XPathConstants.NODESET);
+			for (int i = 0; i < treeBlockNodes.getLength(); i++) {
+				Element treeBlockElement = (Element) treeBlockNodes.item(i);
+				TreeBlockImpl treeBlock = new TreeBlockImpl(document,
+						treeBlockElement, originalOTUsIds.get(
+								treeBlockElement.getAttribute("otus"))
+								.getOriginalOTUIds());
+				treeBlock.setOTUs(originalOTUsIds.get(treeBlock.getElement()
+						.getAttribute("otus")));
+				mTreeBlockList.add(treeBlock);
+			}
 		} catch (XPathExpressionException e) {
 			throw new RuntimeException(e);
 		}
@@ -74,12 +85,13 @@ public class DocumentImpl extends AnnotatableImpl implements Document {
 		getElement().setPrefix("nex");
 		getElement().removeAttribute("id");
 	}
-	
-	protected DocumentImpl(){}
+
+	protected DocumentImpl() {
+	}
 
 	/**
-	 * THis method creates an otus element and appends it 
-	 * to the document root.
+	 * THis method creates an otus element and appends it to the document root.
+	 * 
 	 * @author rvosa
 	 */
 	public OTUs createOTUs() {
@@ -90,11 +102,11 @@ public class DocumentImpl extends AnnotatableImpl implements Document {
 	}
 
 	/**
-	 * This method creates a trees element and appends it to
-	 * the document root. Because NeXML requires that trees
-	 * elements have an id reference attribute to specify
-	 * the otus element it refers to, the equivalent OTUs
-	 * object needs to be passed in here.
+	 * This method creates a trees element and appends it to the document root.
+	 * Because NeXML requires that trees elements have an id reference attribute
+	 * to specify the otus element it refers to, the equivalent OTUs object
+	 * needs to be passed in here.
+	 * 
 	 * @author rvosa
 	 */
 	public TreeBlock createTreeBlock(OTUs otus) {
@@ -111,15 +123,14 @@ public class DocumentImpl extends AnnotatableImpl implements Document {
 	}
 
 	/**
-	 * This method creates the characters element and appends
-	 * it to the document root. Because NeXML requires that 
-	 * characters elements have an id reference attribute to specify
-	 * the otus element it refers to, the equivalent OTUs
-	 * object needs to be passed in here. In addition,
-	 * characters elements need to specify the concrete subclass
-	 * they implement (the xsi:type business). XXX Here, this
-	 * subclass is set to StandardCells. Hopefully we come up
-	 * with a better way to do this.
+	 * This method creates the characters element and appends it to the document
+	 * root. Because NeXML requires that characters elements have an id
+	 * reference attribute to specify the otus element it refers to, the
+	 * equivalent OTUs object needs to be passed in here. In addition,
+	 * characters elements need to specify the concrete subclass they implement
+	 * (the xsi:type business). XXX Here, this subclass is set to StandardCells.
+	 * Hopefully we come up with a better way to do this.
+	 * 
 	 * @author rvosa
 	 */
 	public CategoricalMatrix createCategoricalMatrix(OTUs otus) {
@@ -131,19 +142,18 @@ public class DocumentImpl extends AnnotatableImpl implements Document {
 				XSI_PREFIX + ":type", NEX_PREFIX + ":StandardCells");
 		return categoricalMatrix;
 	}
-	
+
 	/**
-	 * This method creates the characters element and appends
-	 * it to the document root. Because NeXML requires that 
-	 * characters elements have an id reference attribute to specify
-	 * the otus element it refers to, the equivalent OTUs
-	 * object needs to be passed in here. In addition,
-	 * characters elements need to specify the concrete subclass
-	 * they implement (the xsi:type business). XXX Here, this
-	 * subclass is set to ContinuousCells. Hopefully we come up
-	 * with a better way to do this.
+	 * This method creates the characters element and appends it to the document
+	 * root. Because NeXML requires that characters elements have an id
+	 * reference attribute to specify the otus element it refers to, the
+	 * equivalent OTUs object needs to be passed in here. In addition,
+	 * characters elements need to specify the concrete subclass they implement
+	 * (the xsi:type business). XXX Here, this subclass is set to
+	 * ContinuousCells. Hopefully we come up with a better way to do this.
+	 * 
 	 * @author rvosa
-	 */	
+	 */
 	public ContinuousMatrix createContinuousMatrix(OTUs otus) {
 		ContinuousMatrixImpl continuousMatrix = new ContinuousMatrixImpl(
 				getDocument());
@@ -152,7 +162,7 @@ public class DocumentImpl extends AnnotatableImpl implements Document {
 		continuousMatrix.getElement().setAttributeNS(XSI_NS,
 				XSI_PREFIX + ":type", NEX_PREFIX + ":ContinuousCells");
 		return continuousMatrix;
-	}	
+	}
 
 	public String getXmlString() {
 		StringWriter stringWriter = new StringWriter();
@@ -180,15 +190,15 @@ public class DocumentImpl extends AnnotatableImpl implements Document {
 	public List<TreeBlock> getTreeBlockList() {
 		return mTreeBlockList;
 	}
-	
+
 	public String getId() {
 		return null;
 	}
-	
+
 	public void setLabel(String label) {
-		
+
 	}
-	
+
 	public String getLabel() {
 		return null;
 	}

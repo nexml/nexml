@@ -18,6 +18,8 @@ public class TestParse {
 		Assert.assertEquals("should be an int tree", "'the tree'", document
 				.getTreeBlockList().get(0).iterator().next().getLabel());
 		TreeBlock treeBlock = document.getTreeBlockList().get(0);
+		Assert.assertEquals("should have same OTU in both", document
+				.getOTUsList().get(0), treeBlock.getOTUs());
 		Tree<IntEdge> tree = (Tree<IntEdge>) treeBlock.iterator().next();
 		boolean foundRoot = false;
 		for (Node node : tree.getNodes()) {
@@ -37,6 +39,10 @@ public class TestParse {
 		Map<Node, List<IntEdge>> nodeToEdge = new HashMap<Node, List<IntEdge>>();
 		for (Node node : tree.getNodes()) {
 			findEdges(node, tree, nodeToEdge);
+			System.out.println("node: " + node);
+			for (IntEdge edge : nodeToEdge.get(node)) {
+				System.out.println("    edge: " + edge);
+			}
 		}
 		System.out.println("nodeToEdge" + nodeToEdge);
 		System.out.println("xmlString: " + document.getXmlString());
