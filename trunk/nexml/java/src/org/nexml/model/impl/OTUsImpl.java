@@ -6,10 +6,15 @@ import java.util.List;
 import org.nexml.model.Dictionary;
 import org.nexml.model.OTU;
 import org.nexml.model.OTUs;
+import org.w3c.dom.Document;
 
 class OTUsImpl extends SetManager<OTU> implements OTUs {
 
 	
+	public OTUsImpl(Document document) {
+		super(document);		
+	}
+
 	public void addDictionaryToSet(String setName, Dictionary dictionary) {
 		// TODO Auto-generated method stub
 
@@ -24,8 +29,9 @@ class OTUsImpl extends SetManager<OTU> implements OTUs {
 	}
 
 	public OTU createOTU() {
-		OTU otu = new OTUImpl();
+		OTU otu = new OTUImpl(getDocument());
 		addOTU(otu);
+		getElement().appendChild(otu.getElement());
 		return otu;
 	}
 

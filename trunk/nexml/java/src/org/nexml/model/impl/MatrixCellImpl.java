@@ -1,9 +1,15 @@
 package org.nexml.model.impl;
 
 import org.nexml.model.MatrixCell;
+import org.w3c.dom.Document;
 
 class MatrixCellImpl<T> extends NexmlWritableImpl implements
 		MatrixCell<T> {
+
+	public MatrixCellImpl(Document document) {
+		super(document);
+		// TODO Auto-generated constructor stub
+	}
 
 	private T mValue;
 
