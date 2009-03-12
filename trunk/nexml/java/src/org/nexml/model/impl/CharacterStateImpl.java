@@ -2,7 +2,7 @@ package org.nexml.model.impl;
 
 import org.nexml.model.CharacterState;
 
-public class CharacterStateImpl extends NexmlWritableImpl implements
+class CharacterStateImpl extends NexmlWritableImpl implements
 		CharacterState {
 
 	private Object mSymbol;

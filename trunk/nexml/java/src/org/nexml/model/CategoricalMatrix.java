@@ -4,7 +4,7 @@ import java.util.Set;
 
 public interface CategoricalMatrix extends Matrix<CharacterState> {
 
-	Set<CharacterStateSet> getCategoricalCharacterStateSets();
+	Set<CharacterStateSet> getCharacterStateSets();
 	
-	CharacterStateSet createCategoricalCharacterStateSet();
+	CharacterStateSet createCharacterStateSet();
 }

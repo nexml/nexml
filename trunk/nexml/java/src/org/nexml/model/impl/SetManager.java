@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public abstract class SetManager<T> extends NexmlWritableImpl {
+abstract class SetManager<T> extends NexmlWritableImpl {
 	private final Map<String, Set<T>> mSets = new HashMap<String, Set<T>>();
 	private final List<T> mThings = new ArrayList<T>();
 

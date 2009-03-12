@@ -1,6 +1,6 @@
 package org.nexml.model.impl;
 
-public class PolymorphicCharacterStateImpl extends CompoundCharacterStateImpl {
+class PolymorphicCharacterStateImpl extends CompoundCharacterStateImpl {
 
 	@Override
 	String getTagName() {

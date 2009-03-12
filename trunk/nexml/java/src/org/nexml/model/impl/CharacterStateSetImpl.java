@@ -5,7 +5,7 @@ import java.util.Set;
 import org.nexml.model.CharacterState;
 import org.nexml.model.CharacterStateSet;
 
-public class CharacterStateSetImpl extends
+class CharacterStateSetImpl extends
 		SetManager<CharacterState> implements CharacterStateSet {
 
 	private Set<CharacterState> mCharacterStates;

@@ -7,7 +7,7 @@ import org.nexml.model.Dictionary;
 import org.nexml.model.OTU;
 import org.nexml.model.OTUs;
 
-public class OTUsImpl extends SetManager<OTU> implements OTUs {
+class OTUsImpl extends SetManager<OTU> implements OTUs {
 
 	
 	public void addDictionaryToSet(String setName, Dictionary dictionary) {

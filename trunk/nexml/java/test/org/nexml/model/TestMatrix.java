@@ -19,10 +19,10 @@ public class TestMatrix {
 				mammals, categoricalMatrix.getOTUs());
 
 		CharacterStateSet characterStateSet = categoricalMatrix
-				.createCategoricalCharacterStateSet();
+				.createCharacterStateSet();
 
 		Assert.assertEquals("characterStateSet should be in categoricalMatrix", characterStateSet,
-				categoricalMatrix.getCategoricalCharacterStateSets().iterator().next());
+				categoricalMatrix.getCharacterStateSets().iterator().next());
 		
 		CharacterState red = characterStateSet.createCharacterState();
 		red.setLabel("red");

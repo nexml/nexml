@@ -1,5 +1,5 @@
 package org.nexml.model;
 
-public interface Tree extends Network {
+public interface Tree<E extends Edge> extends Network<E> {
 	
 }
