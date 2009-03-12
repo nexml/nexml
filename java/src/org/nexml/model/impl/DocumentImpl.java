@@ -20,6 +20,7 @@ import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
 import org.nexml.model.CategoricalMatrix;
+import org.nexml.model.ContinuousMatrix;
 import org.nexml.model.Document;
 import org.nexml.model.OTUs;
 import org.nexml.model.TreeBlock;
@@ -126,6 +127,28 @@ public class DocumentImpl extends AnnotatableImpl implements Document {
 				XSI_PREFIX + ":type", NEX_PREFIX + ":StandardCells");
 		return categoricalMatrix;
 	}
+	
+	/**
+	 * This method creates the characters element and appends
+	 * it to the document root. Because NeXML requires that 
+	 * characters elements have an id reference attribute to specify
+	 * the otus element it refers to, the equivalent OTUs
+	 * object needs to be passed in here. In addition,
+	 * characters elements need to specify the concrete subclass
+	 * they implement (the xsi:type business). XXX Here, this
+	 * subclass is set to ContinuousCells. Hopefully we come up
+	 * with a better way to do this.
+	 * @author rvosa
+	 */	
+	public ContinuousMatrix createContinuousMatrix(OTUs otus) {
+		ContinuousMatrixImpl continuousMatrix = new ContinuousMatrixImpl(
+				getDocument());
+		getElement().appendChild(continuousMatrix.getElement());
+		continuousMatrix.setOTUs(otus);
+		continuousMatrix.getElement().setAttributeNS(XSI_NS,
+				XSI_PREFIX + ":type", NEX_PREFIX + ":ContinuousCells");
+		return continuousMatrix;
+	}	
 
 	public String getXmlString() {
 		StringWriter stringWriter = new StringWriter();
