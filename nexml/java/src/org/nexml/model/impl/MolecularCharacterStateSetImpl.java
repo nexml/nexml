@@ -101,7 +101,7 @@ class MolecularCharacterStateSetImpl extends CharacterStateSetImpl{
         Set<CharacterState> ySet = new HashSet<CharacterState>(2);
         ySet.add(aState);
         ySet.add(tState);
-        mState.setStates(ySet);
+        yState.setStates(ySet);
         UncertainCharacterState bState = new UncertainCharacterStateImpl(document);
         DNAStateSet.getCharacterStates().add(bState);
         bState.setLabel("s11");
@@ -193,10 +193,12 @@ class MolecularCharacterStateSetImpl extends CharacterStateSetImpl{
         if (RNAStateSet != null){
             return (CharacterStateSet)RNAStateSet;
         }
+        if (DNAStateSet == null)
+            getDNAStateSet();
         Document document = getDocument();
         RNAStateSet = new MolecularCharacterStateSetImpl(document);
-        RNAStateSet.setCharacterStates(new HashSet<CharacterState>());
-
+        RNAStateSet.mCharacterStates = new HashSet<CharacterState>();
+        
         CharacterState tState = null;
         CharacterState uState = null;
         for (CharacterState c : DNAStateSet.getCharacterStates()){
@@ -205,19 +207,27 @@ class MolecularCharacterStateSetImpl extends CharacterStateSetImpl{
                 uState = new CharacterStateImpl(getDocument());
                 uState.setLabel(c.getLabel());
                 uState.setSymbol("U");
+                RNAStateSet.mCharacterStates.add(uState);
+
             }
             else
-                RNAStateSet.getCharacterStates().add(c);
+                RNAStateSet.mCharacterStates.add(c);
         }
-        for (CharacterState c : DNAStateSet.getCharacterStates()){
+        for (CharacterState c : DNAStateSet.mCharacterStates){
             if (c instanceof UncertainCharacterState){
                 UncertainCharacterState u = (UncertainCharacterState)c;
+                if (u.getStates() != null){
                 if (u.getStates().contains(tState)){
                     u.getStates().remove(tState);
                     u.getStates().add(uState);
                 }
+                }
+                else
+                    System.out.println("Empty symbol: " + u.getSymbol());
             }
         }
+        if (tState != null)
+            RNAStateSet.mCharacterStates.remove(tState);
         return (CharacterStateSet)RNAStateSet;
     }
     
