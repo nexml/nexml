@@ -6,6 +6,6 @@ public interface Annotatable extends NexmlWritable {
     
     Set<Object> getAnnotationValues(String property);
     
-    void setAnnotationValue(String property, Object value);
+    void addAnnotationValue(String property, Object value);
 
 }
