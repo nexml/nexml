@@ -15,28 +15,25 @@ public class TestTreeBlock {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		OTUs mammals = doc.createOTUs();
-
-		TreeBlock treeBlock = doc.createTreeBlock(mammals);
+		OTUs otus = doc.createOTUs();
+		TreeBlock treeBlock = doc.createTreeBlock(otus);
 		Network<IntEdge> network = treeBlock.createIntNetwork();
-		Node node1 = network.createNode();
-		Node node2 = network.createNode();
-		IntEdge edge = network.createEdge(node1, node2);
-		edge.setSource(node1);
-		edge.setTarget(node2);
-		Assert.assertEquals("node1 == getSource is what we want", node1, edge
+		Node source = network.createNode();
+		Node target = network.createNode();
+		IntEdge edge = network.createEdge(source,target);
+		Assert.assertEquals("node1 == getSource is what we want", source, edge
 				.getSource());
-		Assert.assertEquals("node2 == getTarget is what we want", node2, edge
+		Assert.assertEquals("node2 == getTarget is what we want", target, edge
 				.getTarget());
 
 		edge.setLength(34);
 		Assert.assertEquals("edge.setLength should be 34", 34, edge.getLength()
 				.intValue());
 
-		OTU chimp = mammals.createOTU();
+		OTU chimp = otus.createOTU();
 		chimp.setLabel("chimp");
-		node2.setOTU(chimp);
-		Assert.assertEquals("node2.getOTU should be chimp", chimp, node2
+		target.setOTU(chimp);
+		Assert.assertEquals("node2.getOTU should be chimp", chimp, target
 				.getOTU());
 		
 		System.out.println("xmlstring: " + doc.getXmlString());
@@ -52,17 +49,12 @@ public class TestTreeBlock {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		OTUs mammals = doc.createOTUs();
-		mammals.setLabel("mammals");
-
-		TreeBlock treeBlock = doc.createTreeBlock(null);
-
+		OTUs otus = doc.createOTUs();
+		TreeBlock treeBlock = doc.createTreeBlock(otus);
 		Network<FloatEdge> floatNetwork = treeBlock.createFloatNetwork();
 		Node floatNode1 = floatNetwork.createNode();
 		Node floatNode2 = floatNetwork.createNode();
 		FloatEdge floatEdge = floatNetwork.createEdge(floatNode1, floatNode2);
-		floatEdge.setSource(floatNode1);
-		floatEdge.setTarget(floatNode2);
 		Assert.assertEquals(
 				"floatNode1 == floatEdge.getSource is what we want",
 				floatNode1, floatEdge.getSource());

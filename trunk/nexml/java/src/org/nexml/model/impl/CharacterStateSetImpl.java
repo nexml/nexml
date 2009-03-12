@@ -4,6 +4,8 @@ import java.util.Set;
 
 import org.nexml.model.CharacterState;
 import org.nexml.model.CharacterStateSet;
+import org.nexml.model.PolymorphicCharacterState;
+import org.nexml.model.UncertainCharacterState;
 import org.w3c.dom.Document;
 
 class CharacterStateSetImpl extends
@@ -11,7 +13,6 @@ class CharacterStateSetImpl extends
 
 	public CharacterStateSetImpl(Document document) {
 		super(document);
-		// TODO Auto-generated constructor stub
 	}
 
 	private Set<CharacterState> mCharacterStates;
@@ -29,8 +30,51 @@ class CharacterStateSetImpl extends
 		mCharacterStates = characterStates;
 	}
 
-	public CharacterState createCharacterState() {
-		return new CharacterStateImpl(getDocument());
+	/**
+	 * This method creates the state element (i.e. a single state definition
+	 * within a state set, inside a format element). Because state elements
+	 * require a symbol attribute it needs to be passed in here.
+	 * @author rvosa
+	 */
+	public CharacterState createCharacterState(Object symbol) {
+		CharacterStateImpl characterStateImpl = new CharacterStateImpl(getDocument());
+		getElement().appendChild(characterStateImpl.getElement());
+		characterStateImpl.setSymbol(symbol);
+		return characterStateImpl;
+	}
+
+	/**
+	 * The method creates the polymorphic_state_set element. Because state 
+	 * elements require a symbol attribute it needs to be passed in here.
+	 * Polymorphic_state_set elements have two or more members, these need
+	 * to be passed in here. XXX In discussion with Jeet, we concluded that 
+	 * polymorphic state sets biologically are a combination of fundamental
+	 * states (whereas uncertain state sets can also contain polymorphic states).
+	 * THis, however, is very much open to debate. In any case, the method
+	 * at present doesn't distinguish between CharacterState subclasses, but
+	 * perhaps that needs to change.
+	 * @author rvosa
+	 */
+	public PolymorphicCharacterState createPolymorphicCharacterState(
+		Object symbol,
+		Set<CharacterState> members) {
+		PolymorphicCharacterStateImpl polymorphicCharacterStateImpl = new PolymorphicCharacterStateImpl(getDocument());
+		polymorphicCharacterStateImpl.setSymbol(symbol);
+		polymorphicCharacterStateImpl.setStates(members);
+		return polymorphicCharacterStateImpl;
+	}
+
+	/**
+	 * XXX see discussion for createPolymorphicCharacterState()
+	 */
+	public UncertainCharacterState createUncertainCharacterState(
+		Object symbol,
+		Set<CharacterState> members) {
+		UncertainCharacterStateImpl uncertainCharacterStateImpl = new UncertainCharacterStateImpl(getDocument());
+		getElement().appendChild(uncertainCharacterStateImpl.getElement());
+		uncertainCharacterStateImpl.setSymbol(symbol);
+		uncertainCharacterStateImpl.setStates(members);
+		return uncertainCharacterStateImpl;
 	}
 
     public CharacterState lookupCharacterStateByLabel(String label){

@@ -28,7 +28,6 @@ public abstract class TreeImpl<E extends Edge> extends
 
 	public TreeImpl(Document document) {
 		super(document);
-		// TODO Auto-generated constructor stub
 	}
 
 	public TreeImpl(Document document, Element element) {

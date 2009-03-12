@@ -10,7 +10,6 @@ abstract class OTUsLinkableImpl<T> extends SetManager<T> implements
 
 	public OTUsLinkableImpl(Document document) {
 		super(document);
-		// TODO Auto-generated constructor stub
 	}
 
 	public OTUsLinkableImpl(Document document, Element item) {

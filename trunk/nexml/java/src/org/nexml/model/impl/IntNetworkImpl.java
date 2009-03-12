@@ -8,9 +8,14 @@ class IntNetworkImpl extends NetworkImpl<IntEdge> {
 
 	public IntNetworkImpl(Document document) {
 		super(document);
-		// TODO Auto-generated constructor stub
 	}
 
+	/**
+	 * This creates an edge element. Because edge elements
+	 * require source and target attributes, these need to
+	 * be passed in here.
+	 * @author rvosa
+	 */
 	@Override
 	public IntEdge createEdge(Node source, Node target) { 
 		IntEdgeImpl intEdge = new IntEdgeImpl(getDocument());

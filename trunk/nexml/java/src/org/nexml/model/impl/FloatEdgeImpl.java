@@ -7,7 +7,6 @@ class FloatEdgeImpl extends EdgeImpl implements FloatEdge {
 
 	public FloatEdgeImpl(Document document) {
 		super(document);
-		// TODO Auto-generated constructor stub
 	}
 
 	public Double getLength() {

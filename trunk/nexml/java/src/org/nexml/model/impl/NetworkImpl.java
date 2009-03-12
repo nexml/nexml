@@ -14,7 +14,6 @@ abstract class NetworkImpl<E extends Edge> extends SetManager<NetworkObject> imp
 
 	public NetworkImpl(Document document) {
 		super(document);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
@@ -24,6 +23,13 @@ abstract class NetworkImpl<E extends Edge> extends SetManager<NetworkObject> imp
 
 	abstract public E createEdge(Node source, Node target);
 
+	/**
+	 * This method creates a node element. Because node elements
+	 * come before edge elements, the node is prepended to all
+	 * other elements in the tree. XXX This is problematic once
+	 * we start adding annotations.
+	 * @author rvosa
+	 */
 	public Node createNode() {
 		NodeImpl node = new NodeImpl(getDocument());
 		addThing(node);
@@ -58,7 +64,10 @@ abstract class NetworkImpl<E extends Edge> extends SetManager<NetworkObject> imp
 		return nodes;
 	}
 	
-	
+	/**
+	 * XXX need to cast Node to NodeImpl here because we
+	 * also remove the equivalent node element.
+	 */
 	public void removeNode(Node node) {
 		removeThing(node);
 		getElement().removeChild(((NodeImpl)node).getElement());

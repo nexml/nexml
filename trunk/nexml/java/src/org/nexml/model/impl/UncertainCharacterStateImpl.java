@@ -8,7 +8,6 @@ class UncertainCharacterStateImpl extends CompoundCharacterStateImpl
 
 	public UncertainCharacterStateImpl(Document document) {
 		super(document);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
