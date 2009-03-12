@@ -20,7 +20,7 @@ class MolecularCharacterStateSetImpl extends CharacterStateSetImpl{
     private static MolecularCharacterStateSetImpl ProteinStateSet = null;
 
     public Set<CharacterState> getCharacterStates() {
-        return getCharacterStates();
+        return mCharacterStates;
     }
 
     public void setCharacterStates(Set<CharacterState> characterStates) {
@@ -37,9 +37,9 @@ class MolecularCharacterStateSetImpl extends CharacterStateSetImpl{
         }
         Document document = getDocument();
         DNAStateSet = new MolecularCharacterStateSetImpl(document);
-        DNAStateSet.setCharacterStates(new HashSet<CharacterState>());
+        DNAStateSet.mCharacterStates = new HashSet<CharacterState>();
         CharacterState aState = new CharacterStateImpl(document);
-        DNAStateSet.getCharacterStates().add(aState);
+        DNAStateSet.mCharacterStates.add(aState);
         aState.setLabel("s1");
         aState.setSymbol("A");
         CharacterState cState = new CharacterStateImpl(document);
@@ -155,14 +155,14 @@ class MolecularCharacterStateSetImpl extends CharacterStateSetImpl{
         xState.setStates(nSet);   //safe to share these sets?
         UncertainCharacterState gapState = new UncertainCharacterStateImpl(document);
         DNAStateSet.getCharacterStates().add(gapState);
-        tState.setLabel("s17");
-        tState.setSymbol("-");
+        gapState.setLabel("s17");
+        gapState.setSymbol("-");
         Set <CharacterState> gapSet = new HashSet<CharacterState>();
         gapState.setStates(gapSet);   //want an empty set here, not null
         UncertainCharacterState unKnownState = new UncertainCharacterStateImpl(document);
         DNAStateSet.getCharacterStates().add(unKnownState);
-        tState.setLabel("s18");
-        tState.setSymbol("?");
+        unKnownState.setLabel("s18");
+        unKnownState.setSymbol("?");
         Set <CharacterState> unKnownSet = new HashSet<CharacterState>();
         unKnownSet.add(aState);
         unKnownSet.add(cState);
@@ -216,6 +216,7 @@ class MolecularCharacterStateSetImpl extends CharacterStateSetImpl{
         }
         return (CharacterStateSet)RNAStateSet;
     }
+    
 
     public CharacterStateSet getProteinStateSet(){
         if (ProteinStateSet != null){
@@ -223,6 +224,87 @@ class MolecularCharacterStateSetImpl extends CharacterStateSetImpl{
         }
         Document document = getDocument();
         ProteinStateSet = new MolecularCharacterStateSetImpl(document);
+        CharacterState aState = new CharacterStateImpl(document);
+        ProteinStateSet.mCharacterStates.add(aState);
+        aState.setLabel("s1");
+        aState.setSymbol("A");
+        CharacterState cState = new CharacterStateImpl(document);
+        ProteinStateSet.getCharacterStates().add(cState);
+        cState.setLabel("s2");
+        cState.setSymbol("C");
+        CharacterState dState = new CharacterStateImpl(document);
+        ProteinStateSet.getCharacterStates().add(dState);
+        dState.setLabel("s3");
+        dState.setSymbol("D");
+        CharacterState eState = new CharacterStateImpl(document);
+        ProteinStateSet.getCharacterStates().add(eState);
+        eState.setLabel("s4");
+        eState.setSymbol("E");
+        CharacterState fState = new CharacterStateImpl(document);
+        ProteinStateSet.getCharacterStates().add(fState);
+        fState.setLabel("s5");
+        fState.setSymbol("F");
+        CharacterState gState = new CharacterStateImpl(document);
+        ProteinStateSet.getCharacterStates().add(gState);
+        gState.setLabel("s6");
+        gState.setSymbol("G");
+        CharacterState hState = new CharacterStateImpl(document);
+        ProteinStateSet.getCharacterStates().add(hState);
+        hState.setLabel("s7");
+        hState.setSymbol("H");
+        CharacterState iState = new CharacterStateImpl(document);
+        ProteinStateSet.getCharacterStates().add(iState);
+        iState.setLabel("s8");
+        iState.setSymbol("I");
+        CharacterState kState = new CharacterStateImpl(document);
+        ProteinStateSet.getCharacterStates().add(kState);
+        kState.setLabel("s9");
+        kState.setSymbol("K");
+        CharacterState lState = new CharacterStateImpl(document);
+        ProteinStateSet.getCharacterStates().add(lState);
+        lState.setLabel("s10");
+        lState.setSymbol("L");
+        CharacterState mState = new CharacterStateImpl(document);
+        ProteinStateSet.getCharacterStates().add(mState);
+        mState.setLabel("s11");
+        mState.setSymbol("M");
+        CharacterState nState = new CharacterStateImpl(document);
+        ProteinStateSet.getCharacterStates().add(nState);
+        nState.setLabel("s12");
+        nState.setSymbol("N");
+        CharacterState pState = new CharacterStateImpl(document);
+        ProteinStateSet.getCharacterStates().add(pState);
+        pState.setLabel("s13");
+        pState.setSymbol("P");
+        CharacterState qState = new CharacterStateImpl(document);
+        ProteinStateSet.getCharacterStates().add(qState);
+        qState.setLabel("s14");
+        qState.setSymbol("Q");
+        CharacterState rState = new CharacterStateImpl(document);
+        ProteinStateSet.getCharacterStates().add(rState);
+        rState.setLabel("s15");
+        rState.setSymbol("R");
+        CharacterState sState = new CharacterStateImpl(document);
+        ProteinStateSet.getCharacterStates().add(sState);
+        sState.setLabel("s16");
+        sState.setSymbol("S");
+        CharacterState tState = new CharacterStateImpl(document);
+        ProteinStateSet.getCharacterStates().add(tState);
+        tState.setLabel("s17");
+        tState.setSymbol("T");
+        CharacterState vState = new CharacterStateImpl(document);
+        ProteinStateSet.getCharacterStates().add(vState);
+        vState.setLabel("s18");
+        vState.setSymbol("T");
+        CharacterState wState = new CharacterStateImpl(document);
+        ProteinStateSet.getCharacterStates().add(wState);
+        wState.setLabel("s19");
+        wState.setSymbol("W");
+        CharacterState yState = new CharacterStateImpl(document);
+        ProteinStateSet.getCharacterStates().add(yState);
+        yState.setLabel("s20");
+        yState.setSymbol("Y");
+
         return (CharacterStateSet)ProteinStateSet;
     }
 
