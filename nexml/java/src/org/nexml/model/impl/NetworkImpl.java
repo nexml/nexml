@@ -24,12 +24,13 @@ abstract class NetworkImpl<E extends Edge> extends SetManager<NetworkObject> imp
 		return node;
 	}
 
-	@SuppressWarnings("unchecked")
 	public Set<E> getEdges() { 
 		Set<E> edges = new HashSet<E>();
 		for (NetworkObject networkObject : getThings()) { 
 			if (networkObject instanceof Edge) { 
-				edges.add((E)networkObject);
+				@SuppressWarnings("unchecked")
+				E edge = (E)networkObject;
+				edges.add(edge);
 			}
 		}
 		return edges;
