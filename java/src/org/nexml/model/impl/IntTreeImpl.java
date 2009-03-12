@@ -5,7 +5,7 @@ import org.nexml.model.Node;
 import org.nexml.model.Tree;
 import org.w3c.dom.Document;
 
-public class IntTreeImpl extends TreeImpl<IntEdge> implements Tree<IntEdge>{
+class IntTreeImpl extends TreeImpl<IntEdge> implements Tree<IntEdge>{
 
 	public IntTreeImpl(Document document) {
 		super(document);
@@ -14,7 +14,7 @@ public class IntTreeImpl extends TreeImpl<IntEdge> implements Tree<IntEdge>{
 
 	@Override
 	public IntEdge createEdge(Node source, Node target) {
-		IntEdge intEdge = new IntEdgeImpl(getDocument()); 
+		IntEdgeImpl intEdge = new IntEdgeImpl(getDocument()); 
 		addThing(intEdge);
 		getElement().appendChild(intEdge.getElement());	
 		intEdge.setSource(source);
