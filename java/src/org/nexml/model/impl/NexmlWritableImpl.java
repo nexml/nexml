@@ -1,8 +1,6 @@
 package org.nexml.model.impl;
-import java.util.Set;
 import java.util.UUID;
 
-import org.nexml.model.Annotation;
 import org.nexml.model.NexmlWritable;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -11,7 +9,6 @@ import org.w3c.dom.Element;
 public abstract class NexmlWritableImpl implements NexmlWritable {
     private Document mDocument = null;
     private String mId;
-    private Set<Annotation> mAnnotations;
     private Element mElement;
     protected static String XSI_NS = "http://www.w3.org/2001/XMLSchema-instance";
     protected static String XSI_PREFIX = "xsi";
