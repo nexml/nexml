@@ -6,13 +6,19 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 abstract class SetManager<T> extends AnnotatableImpl {
 
 	public SetManager(Document document) {
 		super(document);
 		// TODO Auto-generated constructor stub
+	}
+	
+	public SetManager(Document document, Element element) { 
+		super(document, element);
 	}
 
 	private final Map<String, Set<T>> mSets = new HashMap<String, Set<T>>();
