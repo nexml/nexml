@@ -18,15 +18,15 @@ import org.w3c.dom.Element;
  */
 abstract class SetManager<T> extends AnnotatableImpl {
 
-	/** Named subsets of {@code mThings}. */
-	private final Map<String, Set<T>> mSubsets = new HashMap<String, Set<T>>();
-
 	/** {@code mThings} is an ordered set - i.e. no duplicates. */
 	private final List<T> mOrderedSet = new ArrayList<T>();
 
+	/** Named subsets of {@code mThings}. */
+	private final Map<String, Set<T>> mSubsets = new HashMap<String, Set<T>>();
+
 	/**
-	 * Hack around no multiple inheritance: we need to pass this stuff up the
-	 * type hierarchy to {@code NexmlWritableImpl}.
+	 * A work-around for no multiple inheritance: we need to pass this stuff up
+	 * the type hierarchy to {@code NexmlWritableImpl}.
 	 * 
 	 * @param document this {@code NexmlWritable}'s root DOM {@code Document}.
 	 */
@@ -35,8 +35,8 @@ abstract class SetManager<T> extends AnnotatableImpl {
 	}
 
 	/**
-	 * Hack around no multiple inheritance: we need to pass this stuff up the
-	 * type hierarchy to {@code NexmlWritableImpl}.
+	 * To work-around for no multiple inheritance: we need to pass this stuff up
+	 * the type hierarchy to {@code NexmlWritableImpl}.
 	 * 
 	 * @param document this {@code NexmlWritable}'s root DOM {@code Document}.
 	 * @param element the wrapped {@code Element} of this {@code NexmlWritable}.
@@ -92,9 +92,14 @@ abstract class SetManager<T> extends AnnotatableImpl {
 		mSubsets.get(subsetName).add(thing);
 	}
 
-	protected void createSubset(String setName) {
-		if (!mSubsets.containsKey(setName)) {
-			mSubsets.put(setName, new HashSet<T>());
+	/**
+	 * Create subset named {@subsetName}.
+	 * 
+	 * @param subsetName the name of the subset we're creating.
+	 */
+	protected void createSubset(String subsetName) {
+		if (!mSubsets.containsKey(subsetName)) {
+			mSubsets.put(subsetName, new HashSet<T>());
 		}
 	}
 
