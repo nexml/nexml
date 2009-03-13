@@ -40,9 +40,9 @@ public class TestParse {
 		for (Node node : tree.getNodes()) {
 			findEdges(node, tree, nodeToEdge);
 			System.out.println("node: " + node);
-			for (IntEdge edge : nodeToEdge.get(node)) {
-				System.out.println("    edge: " + edge);
-			}
+			// for (IntEdge edge : nodeToEdge.get(node)) {
+			// System.out.println("    edge: " + edge);
+			// }
 		}
 		Node brevParent = null;
 
@@ -65,8 +65,11 @@ public class TestParse {
 
 		Node newNode = tree.createNode();
 		newNode.setLabel("TEST_NEW_NODE");
-		Edge newEdge = tree.createEdge(brevParent, newNode);
+		IntEdge newEdge = tree.createEdge(brevParent, newNode);
 		newEdge.setLabel("TEST_NEW_EDGE");
+		newEdge.setLength(33);
+		Assert.assertEquals("length should be 33", Integer.valueOf(33), newEdge
+				.getLength());
 		System.out.println("xmlString: " + document.getXmlString());
 	}
 
