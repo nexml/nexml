@@ -7,6 +7,7 @@ import org.nexml.model.CharacterStateSet;
 import org.nexml.model.PolymorphicCharacterState;
 import org.nexml.model.UncertainCharacterState;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 class CharacterStateSetImpl extends
 		SetManager<CharacterState> implements CharacterStateSet {
@@ -15,6 +16,10 @@ class CharacterStateSetImpl extends
 		super(document);
 	}
 
+	public CharacterStateSetImpl(Document document,Element element) {
+		super(document,element);
+	}	
+	
 	Set<CharacterState> mCharacterStates;
 
 	@Override
