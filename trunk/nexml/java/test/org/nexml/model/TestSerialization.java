@@ -83,11 +83,11 @@ public class TestSerialization {
 		categoricalMatrix.getCell(otu, character2).setValue(uncertain);
 		
 		/**
-		 * Create a molecular matrix
+		 * Create a DNA matrix
 		 */
-        CategoricalMatrix DNAMatrix = nexmlDocument.createCategoricalMatrix(otus);
+        MolecularMatrix DNAMatrix = nexmlDocument.createMolecularMatrix(otus,"DnaSeqs");
         DNAMatrix.setLabel("Molecular Matrix");
-        CharacterStateSet DNAStateSet = categoricalMatrix.getDNACharacterStateSet();
+        CharacterStateSet DNAStateSet = DNAMatrix.getDNACharacterStateSet();
         CharacterState aState = DNAStateSet.lookupCharacterStateBySymbol("A");
         CharacterState bState = DNAStateSet.lookupCharacterStateBySymbol("B");
         Character pos1 = DNAMatrix.createCharacter(DNAStateSet);
@@ -120,6 +120,7 @@ public class TestSerialization {
 		 */
 		InputStream is = null;
 		try {
+		    System.out.println(nexmlDocument.getXmlString());
 			is = new ByteArrayInputStream(nexmlDocument.getXmlString().getBytes("UTF-8"));
 		} catch (UnsupportedEncodingException e1) {
 			Assert.assertFalse(e1.getMessage(), false);
