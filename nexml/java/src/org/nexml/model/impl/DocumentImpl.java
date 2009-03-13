@@ -15,11 +15,6 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathExpression;
-import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory;
 
 import org.nexml.model.CategoricalMatrix;
 import org.nexml.model.ContinuousMatrix;
@@ -29,7 +24,6 @@ import org.nexml.model.MolecularMatrix;
 import org.nexml.model.OTUs;
 import org.nexml.model.TreeBlock;
 import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
 
 public class DocumentImpl extends AnnotatableImpl implements Document {
 	private List<OTUs> mOtusList = new ArrayList<OTUs>();
@@ -46,65 +40,47 @@ public class DocumentImpl extends AnnotatableImpl implements Document {
 
 	public DocumentImpl(org.w3c.dom.Document document, Element element) {
 		super(document, element);
-		try {
-			XPathFactory factory = XPathFactory.newInstance();
-			XPath xpath = factory.newXPath();
 
-			XPathExpression otusExpr = xpath.compile(this.getTagName() + "/"
-					+ OTUsImpl.getTagNameClass());
+		List<Element> elements = getChildrenByTagName(document
+				.getDocumentElement(), OTUsImpl.getTagNameClass());
 
-			Object result = otusExpr.evaluate(document, XPathConstants.NODESET);
-			NodeList nodes = (NodeList) result;
+		Map<String, OTUsImpl> originalOTUsIds = new HashMap<String, OTUsImpl>();
 
-			Map<String, OTUsImpl> originalOTUsIds = new HashMap<String, OTUsImpl>();
+		for (Element thisElement : elements) {
+			String originalOTUsId = thisElement.getAttribute("id");
+			OTUsImpl otus = new OTUsImpl(document, thisElement);
+			originalOTUsIds.put(originalOTUsId, otus);
+			mOtusList.add(otus);
+		}
 
-			for (int i = 0; i < nodes.getLength(); i++) {
-				String originalOTUsId = ((Element) nodes.item(i))
-						.getAttribute("id");
-				OTUsImpl otus = new OTUsImpl(document, (Element) nodes.item(i));
-				originalOTUsIds.put(originalOTUsId, otus);
-				mOtusList.add(otus);
+		List<Element> treeBlockElements = getChildrenByTagName(document
+				.getDocumentElement(), TreeBlockImpl.getTagNameClass());
+		for (Element treeBlockElement : treeBlockElements) {
+			TreeBlockImpl treeBlock = new TreeBlockImpl(document,
+					treeBlockElement, originalOTUsIds.get(
+							treeBlockElement.getAttribute("otus"))
+							.getOriginalOTUIds());
+			treeBlock.setOTUs(originalOTUsIds.get(treeBlock.getElement()
+					.getAttribute("otus")));
+			mTreeBlockList.add(treeBlock);
+		}
+
+		List<Element> charsBlockElements = getChildrenByTagName(document
+				.getDocumentElement(), MatrixImpl.getTagNameClass());
+
+		for (Element charsBlock : charsBlockElements) {
+			Matrix matrix = null;
+			String xsiType = charsBlock.getAttribute("xsi:type");
+			xsiType = xsiType.replaceAll("Seqs", "Cells");
+			charsBlock.setAttribute("xsi:type", xsiType);
+			if (xsiType.indexOf("Continuous") > 0) {
+				matrix = new ContinuousMatrixImpl(getDocument());
+			} else {
+				matrix = new CategoricalMatrixImpl(getDocument(), charsBlock,
+						originalOTUsIds.get(charsBlock.getAttribute("otus")));
 			}
+			mMatrixList.add(matrix);
 
-			XPathExpression treesExpr = xpath.compile(this.getTagName() + "/"
-					+ TreeBlockImpl.getTagNameClass());
-
-			NodeList treeBlockNodes = (NodeList) treesExpr.evaluate(document,
-					XPathConstants.NODESET);
-			for (int i = 0; i < treeBlockNodes.getLength(); i++) {
-				Element treeBlockElement = (Element) treeBlockNodes.item(i);
-				TreeBlockImpl treeBlock = new TreeBlockImpl(document,
-						treeBlockElement, originalOTUsIds.get(
-								treeBlockElement.getAttribute("otus"))
-								.getOriginalOTUIds());
-				treeBlock.setOTUs(originalOTUsIds.get(treeBlock.getElement()
-						.getAttribute("otus")));
-				mTreeBlockList.add(treeBlock);
-			}
-
-			XPathExpression charsExpr = xpath.compile(this.getTagName() + "/"
-					+ MatrixImpl.getTagNameClass());
-			NodeList charsBlocks = (NodeList) charsExpr.evaluate(document,
-					XPathConstants.NODESET);
-			for (int i = 0; i < charsBlocks.getLength(); i++) {
-				Element charsBlock = (Element) charsBlocks.item(i);
-				Matrix matrix = null;
-				String xsiType = charsBlock.getAttribute("xsi:type");
-				xsiType = xsiType.replaceAll("Seqs", "Cells");
-				charsBlock.setAttribute("xsi:type", xsiType);
-				if (xsiType.indexOf("Continuous") > 0) {
-					matrix = new ContinuousMatrixImpl(getDocument());
-				} else {
-					matrix = new CategoricalMatrixImpl(getDocument(),
-							charsBlock, originalOTUsIds.get(charsBlock
-									.getAttribute("otus")));
-				}
-				mMatrixList.add(matrix);
-
-			}
-
-		} catch (XPathExpressionException e) {
-			throw new RuntimeException(e);
 		}
 	}
 
@@ -250,6 +226,5 @@ public class DocumentImpl extends AnnotatableImpl implements Document {
 	public List<TreeBlock> getTreeBlockList() {
 		return mTreeBlockList;
 	}
-
 
 }
