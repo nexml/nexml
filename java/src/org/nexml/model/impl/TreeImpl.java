@@ -2,14 +2,9 @@ package org.nexml.model.impl;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathExpression;
-import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory;
 
 import org.nexml.model.Edge;
 import org.nexml.model.NetworkObject;
@@ -18,10 +13,14 @@ import org.nexml.model.OTU;
 import org.nexml.model.Tree;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
 
 public abstract class TreeImpl<E extends Edge> extends
 		SetManager<NetworkObject> implements Tree<E> {
+
+	protected interface EdgeImplFactory {
+		public EdgeImpl newEdgeImpl(Document rootDocument, Element element,
+				String length);
+	}
 
 	static String getTagNameClass() {
 		return "tree";
@@ -32,68 +31,44 @@ public abstract class TreeImpl<E extends Edge> extends
 	}
 
 	public TreeImpl(Document document, Element element,
-			Map<String, OTU> originalOTUIds) {
+			Map<String, OTU> originalOTUIds, EdgeImplFactory edgeFactory) {
 		super(document, element);
-
-		try {
-			XPathFactory factory = XPathFactory.newInstance();
-			XPath xpath = factory.newXPath();
-
-			XPathExpression otusExpr = xpath
-					.compile(NodeImpl.getTagNameClass());
-			Object result = otusExpr.evaluate(this.getElement(),
-					XPathConstants.NODESET);
-			NodeList nodes = (NodeList) result;
-			Map<Node, String> originalNodeIds = new HashMap<Node, String>();
-			for (int i = 0; i < nodes.getLength(); i++) {
-				Element thisNodeElement = (Element) nodes.item(i);
-				String originalNodeId = thisNodeElement.getAttribute("id");
-				NodeImpl node = new NodeImpl(document, thisNodeElement);
-				originalNodeIds.put(node, originalNodeId);
-				if (thisNodeElement.getAttribute("root").equals("true")) {
-					node.setRoot(true);
-				}
-				if (originalOTUIds.containsKey(thisNodeElement
-						.getAttribute("otu"))) {
-					node.setOTU(originalOTUIds.get(thisNodeElement
-							.getAttribute("otu")));
-				}
-				this.addThing(node);
+		Map<Node, String> originalNodeIds = new HashMap<Node, String>();
+		List<Element> nodeElements = getChildrenByTagName(this.getElement(),
+				NodeImpl.getTagNameClass());
+		for (Element thisNodeElement : nodeElements) {
+			String originalNodeId = thisNodeElement.getAttribute("id");
+			NodeImpl node = new NodeImpl(document, thisNodeElement);
+			originalNodeIds.put(node, originalNodeId);
+			if (thisNodeElement.getAttribute("root").equals("true")) {
+				node.setRoot(true);
 			}
+			if (originalOTUIds.containsKey(thisNodeElement.getAttribute("otu"))) {
+				node.setOTU(originalOTUIds.get(thisNodeElement
+						.getAttribute("otu")));
+			}
+			this.addThing(node);
+		}
 
-			XPathExpression edgesExpr = xpath.compile(EdgeImpl
-					.getTagNameClass());
-			Object edgesResult = edgesExpr.evaluate(this.getElement(),
-					XPathConstants.NODESET);
-			NodeList edges = (NodeList) edgesResult;
-			for (int i = 0; i < edges.getLength(); i++) {
-				Element thisEdgeElement = (Element) edges.item(i);
-				try {
-					Integer edgeLength = Integer.parseInt(thisEdgeElement
-							.getAttribute("length"));
-					IntEdgeImpl edge = new IntEdgeImpl(document,
-							thisEdgeElement);
-					edge.setLength(edgeLength);
-					this.addThing(edge);
-					for (NetworkObject networkObject : getThings()) {
-						if (networkObject instanceof Node) {
-							NodeImpl node = (NodeImpl) networkObject;
-							if (originalNodeIds.get(node).equals(
-									edge.getElement().getAttribute("source"))) {
-								edge.setSource(node);
-							} else if (originalNodeIds.get(node).equals(
-									edge.getElement().getAttribute("target"))) {
-								edge.setTarget(node);
-							}
-						}
+		List<Element> edgeElements = getChildrenByTagName(this.getElement(),
+				EdgeImpl.getTagNameClass());
+		for (Element thisEdgeElement : edgeElements) {
+			EdgeImpl edge = edgeFactory.newEdgeImpl(document, thisEdgeElement,
+					thisEdgeElement.getAttribute("length"));
+			this.addThing(edge);
+			for (NetworkObject networkObject : getThings()) {
+				if (networkObject instanceof Node) {
+					Node node = (Node) networkObject;
+					if (originalNodeIds.get(node).equals(
+							edge.getElement().getAttribute("source"))) {
+						edge.setSource(node);
+					} else if (originalNodeIds.get(node).equals(
+							edge.getElement().getAttribute("target"))) {
+						edge.setTarget(node);
 					}
-					edge.getElement().setAttribute("id", edge.getId());
-				} catch (NumberFormatException e) {
-					throw new RuntimeException("FloatEdge's not yet supported.");
 				}
 			}
-		} catch (XPathExpressionException e) {
-			throw new RuntimeException(e);
+			edge.getElement().setAttribute("id", edge.getId());
 		}
 	}
 
