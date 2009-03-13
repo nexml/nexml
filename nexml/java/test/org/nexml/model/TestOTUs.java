@@ -37,7 +37,7 @@ public class TestOTUs {
 
 		mammals.addOTUToSubset("primates", gorilla);
 		mammals.addOTUToSubset("primates", chimp);
-		Assert.assertEquals("should be 2 primates", 2, mammals.getOTUsFromSet(
+		Assert.assertEquals("should be 2 primates", 2, mammals.getOTUsFromSubset(
 				"primates").size());
 
 		Assert.assertEquals("should be 3 otus", 3, mammals.getAllOTUs().size());
@@ -48,7 +48,7 @@ public class TestOTUs {
 		mammals.removeOTU(chimp);
 		Assert.assertEquals("should be 2 otus", 2, mammals.getAllOTUs().size());
 
-		List<OTU> primates = mammals.getOTUsFromSet("primates");
+		List<OTU> primates = mammals.getOTUsFromSubset("primates");
 		Assert.assertEquals("primates.size() should be 1", 1, primates.size());
 
 		mammals.removeOTU(hippopotamus);

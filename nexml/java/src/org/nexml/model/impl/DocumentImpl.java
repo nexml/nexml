@@ -39,12 +39,12 @@ public class DocumentImpl extends AnnotatableImpl implements Document {
 	public DocumentImpl(org.w3c.dom.Document document, Element element) {
 		super(document, element);
 
-		List<Element> elements = getChildrenByTagName(document
+		List<Element> otusElements = getChildrenByTagName(document
 				.getDocumentElement(), OTUsImpl.getTagNameClass());
 
 		Map<String, OTUsImpl> originalOTUsIds = new HashMap<String, OTUsImpl>();
 
-		for (Element thisElement : elements) {
+		for (Element thisElement : otusElements) {
 			String originalOTUsId = thisElement.getAttribute("id");
 			OTUsImpl otus = new OTUsImpl(document, thisElement);
 			originalOTUsIds.put(originalOTUsId, otus);
@@ -63,15 +63,16 @@ public class DocumentImpl extends AnnotatableImpl implements Document {
 			mTreeBlockList.add(treeBlock);
 		}
 
+		
 		List<Element> charsBlockElements = getChildrenByTagName(document
 				.getDocumentElement(), MatrixImpl.getTagNameClass());
 		for (Element charsBlock : charsBlockElements) {
-			Matrix matrix = null;
+			Matrix<?> matrix = null;
 			String xsiType = charsBlock.getAttribute("xsi:type");
 			xsiType = xsiType.replaceAll("Seqs", "Cells");
 			charsBlock.setAttribute("xsi:type", xsiType);
 			if (xsiType.indexOf("Continuous") > 0) {
-				matrix = new ContinuousMatrixImpl(getDocument(), charsBlock, 
+				matrix = new ContinuousMatrixImpl(getDocument(), charsBlock,
 						originalOTUsIds.get(charsBlock.getAttribute("otus")));
 			} else {
 				matrix = new CategoricalMatrixImpl(getDocument(), charsBlock,
@@ -237,9 +238,9 @@ public class DocumentImpl extends AnnotatableImpl implements Document {
 	public String getLabel() {
 		return null;
 	}
-	
+
 	private Map<String, OTUs> mOriginalOTUsIds = new HashMap<String, OTUs>();
-	
+
 	Map<String, OTUs> getOriginalOTUsIds() {
 		return mOriginalOTUsIds;
 	}
