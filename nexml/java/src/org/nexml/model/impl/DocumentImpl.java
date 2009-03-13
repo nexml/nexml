@@ -187,6 +187,7 @@ public class DocumentImpl extends AnnotatableImpl implements Document {
 	public MolecularMatrix createMolecularMatrix(OTUs otus, String type) {
 		MolecularMatrixImpl molecularMatrix = new MolecularMatrixImpl(
 				getDocument());
+		mMatrices.add(molecularMatrix);
 		getElement().appendChild(molecularMatrix.getElement());
 		molecularMatrix.setOTUs(otus);
 		molecularMatrix.getElement().setAttributeNS(XSI_NS,
