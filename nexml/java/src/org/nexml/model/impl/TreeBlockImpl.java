@@ -51,22 +51,22 @@ public class TreeBlockImpl extends OTUsLinkableImpl<Network<?>> implements
 			NodeList nodes = (NodeList) result;
 			for (int i = 0; i < nodes.getLength(); i++) {
 				Element thisTreeElement = (Element) nodes.item(i);
+				Tree<?> tree = null;
 				if (thisTreeElement.getAttribute(XSI_PREFIX + ":type").equals(
 						NEX_PREFIX + ":IntTree")) {
-					TreeImpl<IntEdge> tree = new IntTreeImpl(document,
-							thisTreeElement, originalOTUIds);
-					this.addThing(tree);
+					tree = new IntTreeImpl(document, thisTreeElement,
+							originalOTUIds);
 				} else if (thisTreeElement.getAttribute(XSI_PREFIX + ":type")
 						.equals(NEX_PREFIX + ":FloatTree")) {
-					TreeImpl<FloatEdge> tree = new FloatTreeImpl(document,
-							thisTreeElement, originalOTUIds);
-					this.addThing(tree);
+					tree = new FloatTreeImpl(document, thisTreeElement,
+							originalOTUIds);
 				} else {
 					throw new RuntimeException("tree type ["
 							+ thisTreeElement
 									.getAttribute(XSI_PREFIX + ":type")
 							+ "] not supported.");
 				}
+				this.addThing(tree);
 			}
 		} catch (XPathExpressionException e) {
 			throw new RuntimeException(e);
