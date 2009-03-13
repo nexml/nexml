@@ -9,13 +9,13 @@ public interface OTUs extends Iterable<OTU>, NexmlWritable {
 	// unmodifiable
 	List<OTU> getOTUsFromSet(String setName);
 
-	Set<String> getSetNames();
+	Set<String> getSubsetNames();
 	
-	void createOTUSet(String setName);
+	void createOTUSubset(String setName);
 
-	void addOTUToSet(String setName, OTU otu);
+	void addOTUToSubset(String setName, OTU otu);
 
-	void removeOTUFromSet(String setName, OTU otu);
+	void removeOTUFromSubset(String setName, OTU otu);
 
 	void addAnnotationToSet(String setName, Annotation annotation);
 	
