@@ -151,4 +151,8 @@ class MatrixImpl<T> extends OTUsLinkableImpl<Character> implements
 			characterToMatrixCell.remove(character);
 		}
 	}
+
+    public List<Character> getCharacters() {
+        return getThings();
+    }
 }
