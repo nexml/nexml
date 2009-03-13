@@ -3,7 +3,16 @@ package org.nexml.model;
 import java.util.List;
 import java.util.Set;
 
-public interface OTUs extends Iterable<OTU>, NexmlWritable {
+/**
+ * An OTU set.
+ */
+public interface OTUs extends Annotatable, Iterable<OTU>, NexmlWritable {
+
+	/**
+	 * Create a new {@code OTUs}.
+	 * 
+	 * @return a new {@code OTUs}.
+	 */
 	OTU createOTU();
 
 	/**
@@ -14,14 +23,42 @@ public interface OTUs extends Iterable<OTU>, NexmlWritable {
 	 */
 	List<OTU> getOTUsFromSubset(String subsetName);
 
+	/**
+	 * Get all subset names.
+	 * 
+	 * @return all subset names.
+	 */
 	Set<String> getSubsetNames();
 
+	/**
+	 * Create a subset named {@code subsetName}.
+	 * 
+	 * @param subsetName see description.
+	 */
 	void createOTUSubset(String subsetName);
 
+	/**
+	 * Add {@code otu} to the subset named {@code subsetName}.
+	 * 
+	 * @param subsetName see description.
+	 * @param otu see description.
+	 */
 	void addOTUToSubset(String subsetName, OTU otu);
 
+	/**
+	 * Add {@code annotation} to the subset named {@code subsetName}.
+	 * 
+	 * @param subsetName see description.
+	 * @param annotation see description.
+	 */
 	void addAnnotationToSubset(String subsetName, Annotation annotation);
 
+	/**
+	 * Remove {@code otu} from the subset named {@code subsetName}.
+	 * 
+	 * @param subsetName see description.
+	 * @param otu see description.
+	 */
 	void removeOTUFromSubset(String subsetName, OTU otu);
 
 	/**
