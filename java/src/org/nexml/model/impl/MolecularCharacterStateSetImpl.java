@@ -8,11 +8,16 @@ import org.nexml.model.CharacterStateSet;
 import org.nexml.model.UncertainCharacterState;
 import org.w3c.dom.Document;
 
+/**
+ * 
+ * @author pmidford
+ * created Mar 12, 2009
+ *
+ */
 class MolecularCharacterStateSetImpl extends CharacterStateSetImpl{
 
     public MolecularCharacterStateSetImpl(Document document) {
         super(document);
-        // TODO Auto-generated constructor stub
     }
 
     private static MolecularCharacterStateSetImpl DNAStateSet = null;
@@ -23,15 +28,27 @@ class MolecularCharacterStateSetImpl extends CharacterStateSetImpl{
         return mCharacterStates;
     }
 
+    /**
+     * @param characterStates
+     *
+     * This should probably throw something since changing the state sets should be forbidden
+     *
+     */
     public void setCharacterStates(Set<CharacterState> characterStates) {
     }
 
-    public CharacterState createCharacterState() {
-        return null;
-    }
 
 
-    
+    /**
+     * 
+     * @return returns the singleton DNAStateSet
+     * 
+     * It is uninitialized, since it seems to interact better with generation of format 
+     * elements to separate generation from initialization.  
+     * This separation might not work as expected if we have multiple matrices of the 
+     * same molecular type.
+     * TODO: Test this
+     */
     CharacterStateSet getDNAStateSet(){
         if (DNAStateSet == null){
             DNAStateSet = new MolecularCharacterStateSetImpl(getDocument());
@@ -39,6 +56,9 @@ class MolecularCharacterStateSetImpl extends CharacterStateSetImpl{
         return (CharacterStateSet)DNAStateSet;
     }
 
+    /**
+     * fills the preexisting DNAStateSet.  See comments above.
+     */
     void fillDNAStateSet(){
         DNAStateSet.mCharacterStates = new HashSet<CharacterState>();
         CharacterState aState = DNAStateSet.createCharacterState("A");
@@ -154,6 +174,12 @@ class MolecularCharacterStateSetImpl extends CharacterStateSetImpl{
         unKnownState.setLabel("s18");
     }
 
+    /**
+     * 
+     * @return returns the singleton RNAStateSet
+     *
+     * See above comments for DNAStateSet
+    */
     CharacterStateSet getRNAStateSet(){
         if (RNAStateSet == null){
             RNAStateSet = new MolecularCharacterStateSetImpl(getDocument());
@@ -161,6 +187,13 @@ class MolecularCharacterStateSetImpl extends CharacterStateSetImpl{
         return (CharacterStateSet)RNAStateSet;
     }
 
+    /**
+     * Fills the preexisting RNAStateSet
+     * 
+     * See the comments for DNAStateSet.  
+     * @note copying from the DNAStateSet and changing T -> U, and in all the uncertain sets
+     * seems more trouble than the cut and paste.
+     */
     void fillRNAStateSet(){
         RNAStateSet.mCharacterStates = new HashSet<CharacterState>();
         CharacterState aState = RNAStateSet.createCharacterState("A");
@@ -278,6 +311,12 @@ class MolecularCharacterStateSetImpl extends CharacterStateSetImpl{
     }
     
     
+    /**
+     * 
+     * @return returns the singleton ProteinStateSet
+     *
+     * See above comments for DNAStateSet
+    */
 
     public CharacterStateSet getProteinStateSet(){
         if (ProteinStateSet == null){
@@ -286,9 +325,12 @@ class MolecularCharacterStateSetImpl extends CharacterStateSetImpl{
         return (CharacterStateSet)ProteinStateSet;
     }
         
-        
+    /**
+     * Fills the pre-existing ProteinStateSet
+     * 
+     * See the comments for DNAStateSet.  
+     */
     void fillProteinStateSet(){    
-        Document document = getDocument();
         ProteinStateSet.mCharacterStates = new HashSet<CharacterState>();
         CharacterState aState = ProteinStateSet.createCharacterState("A");
         ProteinStateSet.getCharacterStates().add(aState);
@@ -352,7 +394,6 @@ class MolecularCharacterStateSetImpl extends CharacterStateSetImpl{
         yState.setLabel("s20");
 
     }
-
-    
+  
     
 }
