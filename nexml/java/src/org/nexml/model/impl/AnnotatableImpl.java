@@ -27,8 +27,9 @@ abstract class AnnotatableImpl extends NexmlWritableImpl implements Annotatable 
        }
            
        public void addAnnotationValue(String property, Object value) {
-           Annotation annotation = new AnnotationImpl(property, value);
+           AnnotationImpl annotation = new AnnotationImpl(property, value);
            mAnnotations.add(annotation);
+           getElement().appendChild(annotation.getElement());
        }
        
 }

@@ -24,6 +24,7 @@ import javax.xml.xpath.XPathFactory;
 import org.nexml.model.CategoricalMatrix;
 import org.nexml.model.ContinuousMatrix;
 import org.nexml.model.Document;
+import org.nexml.model.Matrix;
 import org.nexml.model.OTUs;
 import org.nexml.model.TreeBlock;
 import org.w3c.dom.Element;
@@ -31,6 +32,7 @@ import org.w3c.dom.NodeList;
 
 public class DocumentImpl extends AnnotatableImpl implements Document {
 	private List<OTUs> mOtusList = new ArrayList<OTUs>();
+	private List<Matrix<?>> mMatrices = new ArrayList<Matrix<?>>();
 
 	private List<TreeBlock> mTreeBlockList = new ArrayList<TreeBlock>();
 
@@ -136,6 +138,7 @@ public class DocumentImpl extends AnnotatableImpl implements Document {
 	public CategoricalMatrix createCategoricalMatrix(OTUs otus) {
 		CategoricalMatrixImpl categoricalMatrix = new CategoricalMatrixImpl(
 				getDocument());
+		mMatrices.add(categoricalMatrix);
 		getElement().appendChild(categoricalMatrix.getElement());
 		categoricalMatrix.setOTUs(otus);
 		categoricalMatrix.getElement().setAttributeNS(XSI_NS,
@@ -157,6 +160,7 @@ public class DocumentImpl extends AnnotatableImpl implements Document {
 	public ContinuousMatrix createContinuousMatrix(OTUs otus) {
 		ContinuousMatrixImpl continuousMatrix = new ContinuousMatrixImpl(
 				getDocument());
+		mMatrices.add(continuousMatrix);
 		getElement().appendChild(continuousMatrix.getElement());
 		continuousMatrix.setOTUs(otus);
 		continuousMatrix.getElement().setAttributeNS(XSI_NS,
@@ -185,6 +189,10 @@ public class DocumentImpl extends AnnotatableImpl implements Document {
 
 	public List<OTUs> getOTUsList() {
 		return mOtusList;
+	}
+	
+	public List<Matrix<?>> getMatrices() {
+	    return mMatrices;
 	}
 
 	public List<TreeBlock> getTreeBlockList() {
