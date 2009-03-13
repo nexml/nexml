@@ -66,7 +66,6 @@ class MolecularMatrixImpl extends
 	    }
 	    CharacterStateSet result = mMolecularCharacterStates.getDNAStateSet();
 	    CharacterStateSetImpl characterStateSet = (CharacterStateSetImpl)result;
-	    System.out.println("Get element is: " + characterStateSet.getElement());
 	    if (mCharacterStateSets.add(characterStateSet)){
 	        if ( null == getFormatElement() ) {
 	            setFormatElement( getDocument().createElement("format") );
