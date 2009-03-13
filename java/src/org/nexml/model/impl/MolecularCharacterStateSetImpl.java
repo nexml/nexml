@@ -152,7 +152,6 @@ class MolecularCharacterStateSetImpl extends CharacterStateSetImpl{
         UncertainCharacterState unKnownState = DNAStateSet.createUncertainCharacterState("?",unKnownSet);
         DNAStateSet.getCharacterStates().add(unKnownState);
         unKnownState.setLabel("s18");
-        unKnownState.setSymbol("?");
     }
 
     CharacterStateSet getRNAStateSet(){
