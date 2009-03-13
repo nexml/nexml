@@ -112,12 +112,13 @@ public abstract class TreeImpl<E extends Edge> extends
 		return node;
 	}
 
-	@SuppressWarnings("unchecked")
 	public Set<E> getEdges() {
 		Set<E> edges = new HashSet<E>();
 		for (NetworkObject networkObject : getThings()) {
 			if (networkObject instanceof Edge) {
-				edges.add((E) networkObject);
+				@SuppressWarnings("unchecked")
+				E edge = (E) networkObject;
+				edges.add(edge);
 			}
 		}
 		return edges;
@@ -133,7 +134,7 @@ public abstract class TreeImpl<E extends Edge> extends
 		return nodes;
 	}
 
-	public void removeEdge(Edge edge) {
+	public void removeEdge(E edge) {
 		removeThing(edge);
 		getElement().removeChild(((EdgeImpl) edge).getElement());
 	}
@@ -141,8 +142,8 @@ public abstract class TreeImpl<E extends Edge> extends
 	public void removeNode(Node node) {
 		removeThing(node);
 		getElement().removeChild(((NodeImpl) node).getElement());
-		//TODO: need to keep our tree connected.
-		for (Edge edge : getEdges()) {
+		// TODO: need to keep our tree connected.
+		for (E edge : getEdges()) {
 			if (node.equals(edge.getSource()) || node.equals(edge.getTarget())) {
 				removeEdge(edge);
 			}

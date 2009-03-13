@@ -25,20 +25,19 @@ import org.nexml.model.CategoricalMatrix;
 import org.nexml.model.ContinuousMatrix;
 import org.nexml.model.Document;
 import org.nexml.model.Matrix;
-import org.nexml.model.OTU;
+import org.nexml.model.MolecularMatrix;
 import org.nexml.model.MolecularMatrix;
 import org.nexml.model.OTUs;
 import org.nexml.model.TreeBlock;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-
 public class DocumentImpl extends AnnotatableImpl implements Document {
 	private List<OTUs> mOtusList = new ArrayList<OTUs>();
 	private List<Matrix<?>> mMatrices = new ArrayList<Matrix<?>>();
 
 	private List<TreeBlock> mTreeBlockList = new ArrayList<TreeBlock>();
-	
+
 	private List<Matrix> mMatrixList = new ArrayList<Matrix>();
 
 	public DocumentImpl(org.w3c.dom.Document document) {
@@ -67,30 +66,9 @@ public class DocumentImpl extends AnnotatableImpl implements Document {
 				originalOTUsIds.put(originalOTUsId, otus);
 				mOtusList.add(otus);
 			}
+
 			XPathExpression treesExpr = xpath.compile(this.getTagName() + "/"
 					+ TreeBlockImpl.getTagNameClass());
-
-			
-			XPathExpression charsExpr = xpath.compile(this.getTagName() + "/"
-					+ MatrixImpl.getTagNameClass());
-			NodeList charsBlocks = (NodeList)charsExpr.evaluate(document,XPathConstants.NODESET);
-			for ( int i = 0; i < charsBlocks.getLength(); i++ ) {
-				Element charsBlock = (Element)charsBlocks.item(i);
-				Matrix matrix = null;
-				String xsiType = charsBlock.getAttribute("xsi:type");
-				xsiType = xsiType.replaceAll("Seqs", "Cells");
-				charsBlock.setAttribute("xsi:type", xsiType);
-				if ( xsiType.indexOf("Continuous") > 0 ) {
-					matrix = new ContinuousMatrixImpl(getDocument());
-				}
-				else {
-					matrix = new CategoricalMatrixImpl(getDocument(),charsBlock,originalOTUsIds.get(
-						charsBlock.getAttribute("otus")));
-				}
-				mMatrixList.add(matrix);
-				
-			}
-
 
 			NodeList treeBlockNodes = (NodeList) treesExpr.evaluate(document,
 					XPathConstants.NODESET);
@@ -103,6 +81,27 @@ public class DocumentImpl extends AnnotatableImpl implements Document {
 				treeBlock.setOTUs(originalOTUsIds.get(treeBlock.getElement()
 						.getAttribute("otus")));
 				mTreeBlockList.add(treeBlock);
+			}
+
+			XPathExpression charsExpr = xpath.compile(this.getTagName() + "/"
+					+ MatrixImpl.getTagNameClass());
+			NodeList charsBlocks = (NodeList) charsExpr.evaluate(document,
+					XPathConstants.NODESET);
+			for (int i = 0; i < charsBlocks.getLength(); i++) {
+				Element charsBlock = (Element) charsBlocks.item(i);
+				Matrix matrix = null;
+				String xsiType = charsBlock.getAttribute("xsi:type");
+				xsiType = xsiType.replaceAll("Seqs", "Cells");
+				charsBlock.setAttribute("xsi:type", xsiType);
+				if (xsiType.indexOf("Continuous") > 0) {
+					matrix = new ContinuousMatrixImpl(getDocument());
+				} else {
+					matrix = new CategoricalMatrixImpl(getDocument(),
+							charsBlock, originalOTUsIds.get(charsBlock
+									.getAttribute("otus")));
+				}
+				mMatrixList.add(matrix);
+
 			}
 
 		} catch (XPathExpressionException e) {
@@ -196,31 +195,31 @@ public class DocumentImpl extends AnnotatableImpl implements Document {
 				XSI_PREFIX + ":type", NEX_PREFIX + ":ContinuousCells");
 		return continuousMatrix;
 	}
-	
-    /**
-     * @param otus
-     * @param type specifies the molecular sequence type (Dna,Rna,Protein)
-     * This method creates the characters element and appends it to the document
-     * root. Because NeXML requires that characters elements have an id
-     * reference attribute to specify the otus element it refers to, the
-     * equivalent OTUs object needs to be passed in here. In addition,
-     * characters elements need to specify the concrete subclass they implement
-     * (the xsi:type business). XXX Here, this subclass is set to
-     * a molecular sequence type as specified in param type. 
-     * Hopefully we come up with a better way to do this.
-     * 
-     * @author pmidford
-     */
-    public MolecularMatrix createMolecularMatrix(OTUs otus, String type) {
-        MolecularMatrixImpl molecularMatrix = new MolecularMatrixImpl(
-                getDocument());
-        getElement().appendChild(molecularMatrix.getElement());
-        molecularMatrix.setOTUs(otus);
-        molecularMatrix.getElement().setAttributeNS(XSI_NS,
-                XSI_PREFIX + ":type", NEX_PREFIX + ":" + type);
-        return molecularMatrix;
-    }
 
+	/**
+	 * @param otus
+	 * @param type specifies the molecular sequence type (Dna,Rna,Protein) This
+	 *            method creates the characters element and appends it to the
+	 *            document root. Because NeXML requires that characters elements
+	 *            have an id reference attribute to specify the otus element it
+	 *            refers to, the equivalent OTUs object needs to be passed in
+	 *            here. In addition, characters elements need to specify the
+	 *            concrete subclass they implement (the xsi:type business). XXX
+	 *            Here, this subclass is set to a molecular sequence type as
+	 *            specified in param type. Hopefully we come up with a better
+	 *            way to do this.
+	 * 
+	 * @author pmidford
+	 */
+	public MolecularMatrix createMolecularMatrix(OTUs otus, String type) {
+		MolecularMatrixImpl molecularMatrix = new MolecularMatrixImpl(
+				getDocument());
+		getElement().appendChild(molecularMatrix.getElement());
+		molecularMatrix.setOTUs(otus);
+		molecularMatrix.getElement().setAttributeNS(XSI_NS,
+				XSI_PREFIX + ":type", NEX_PREFIX + ":" + type);
+		return molecularMatrix;
+	}
 
 	public String getXmlString() {
 		StringWriter stringWriter = new StringWriter();
@@ -244,31 +243,14 @@ public class DocumentImpl extends AnnotatableImpl implements Document {
 	public List<OTUs> getOTUsList() {
 		return mOtusList;
 	}
-	
+
 	public List<Matrix<?>> getMatrices() {
-	    return mMatrices;
+		return mMatrices;
 	}
 
 	public List<TreeBlock> getTreeBlockList() {
 		return mTreeBlockList;
 	}
 
-	public String getId() {
-		return null;
-	}
-
-	public void setLabel(String label) {
-
-	}
-
-	public String getLabel() {
-		return null;
-	}
-	
-	private Map<String, OTUs> mOriginalOTUsIds = new HashMap<String, OTUs>();
-	
-	Map<String, OTUs> getOriginalOTUsIds() {
-		return mOriginalOTUsIds;
-	}	
 
 }
