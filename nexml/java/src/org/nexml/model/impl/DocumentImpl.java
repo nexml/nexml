@@ -31,8 +31,6 @@ public class DocumentImpl extends AnnotatableImpl implements Document {
 
 	private List<TreeBlock> mTreeBlockList = new ArrayList<TreeBlock>();
 
-	private List<Matrix> mMatrixList = new ArrayList<Matrix>();
-
 	public DocumentImpl(org.w3c.dom.Document document) {
 		super(document);
 		setRootAttributes();
@@ -67,7 +65,6 @@ public class DocumentImpl extends AnnotatableImpl implements Document {
 
 		List<Element> charsBlockElements = getChildrenByTagName(document
 				.getDocumentElement(), MatrixImpl.getTagNameClass());
-
 		for (Element charsBlock : charsBlockElements) {
 			Matrix matrix = null;
 			String xsiType = charsBlock.getAttribute("xsi:type");
@@ -79,7 +76,7 @@ public class DocumentImpl extends AnnotatableImpl implements Document {
 				matrix = new CategoricalMatrixImpl(getDocument(), charsBlock,
 						originalOTUsIds.get(charsBlock.getAttribute("otus")));
 			}
-			mMatrixList.add(matrix);
+			mMatrices.add(matrix);
 
 		}
 	}
@@ -225,6 +222,24 @@ public class DocumentImpl extends AnnotatableImpl implements Document {
 
 	public List<TreeBlock> getTreeBlockList() {
 		return mTreeBlockList;
+	}
+
+	public String getId() {
+		return null;
+	}
+
+	public void setLabel(String label) {
+
+	}
+
+	public String getLabel() {
+		return null;
+	}
+	
+	private Map<String, OTUs> mOriginalOTUsIds = new HashMap<String, OTUs>();
+	
+	Map<String, OTUs> getOriginalOTUsIds() {
+		return mOriginalOTUsIds;
 	}
 
 }
