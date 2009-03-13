@@ -16,14 +16,16 @@ class IntTreeImpl extends TreeImpl<IntEdge> implements Tree<IntEdge> {
 		super(document);
 	}
 
-	public IntTreeImpl(Document document, Element element, Map<String, OTU> originalOTUIds) { 
+	public IntTreeImpl(Document document, Element element,
+			Map<String, OTU> originalOTUIds) {
 		super(document, element, originalOTUIds);
+
 	}
 
 	/**
-	 * This creates an edge element. Because edge elements
-	 * require source and target attributes, these need to
-	 * be passed in here.
+	 * This creates an edge element. Because edge elements require source and
+	 * target attributes, these need to be passed in here.
+	 * 
 	 * @author rvosa
 	 */
 	@Override
@@ -34,15 +36,6 @@ class IntTreeImpl extends TreeImpl<IntEdge> implements Tree<IntEdge> {
 		intEdge.setSource(source);
 		intEdge.setTarget(target);
 		return intEdge;
-	}
-
-	/**
-	 * XXX Why can't I just axe this method and let the removal
-	 * be done by TreeImpl? I don't get generics. Sorry.
-	 * @author rvosa
-	 */	
-	public void removeEdge(IntEdge edge) {
-		removeEdge((Edge)edge);
 	}
 
 }

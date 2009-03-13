@@ -27,6 +27,7 @@ abstract class EdgeImpl extends AnnotatableImpl implements Edge {
 
 	protected void setLengthAsNumber(Number length) {
 		mLength = length;
+		getElement().setAttribute("length", length.toString());
 	}
 
 	public Node getSource() {
