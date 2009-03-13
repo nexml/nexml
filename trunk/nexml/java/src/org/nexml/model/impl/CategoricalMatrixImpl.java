@@ -99,14 +99,9 @@ class CategoricalMatrixImpl extends
 								continue STATE;
 							}
 							Character character = null;
-							try {
-								character = this.getCharacterByIndex(k);
-							} catch (RuntimeException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
+							character = getCharacterByIndex(k);
 							CharacterState value = symbolByStateSet.get(stateSetByCharacter.get(character)).get(states[j]);
-							this.getCell(otu, character).setValue(value);							
+							getCell(otu, character).setValue(value);							
 							k++;
 						}
 						row.removeChild(seq);
