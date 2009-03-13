@@ -12,6 +12,8 @@ public interface Document extends NexmlWritable {
 	
 	ContinuousMatrix createContinuousMatrix(OTUs otus);
 
+	MolecularMatrix createMolecularMatrix(OTUs otus, String type);
+
 	List<OTUs> getOTUsList();
 	
 	List<Matrix<?>> getMatrices();
