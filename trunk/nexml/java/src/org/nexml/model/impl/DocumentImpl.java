@@ -26,6 +26,7 @@ import org.nexml.model.ContinuousMatrix;
 import org.nexml.model.Document;
 import org.nexml.model.Matrix;
 import org.nexml.model.OTU;
+import org.nexml.model.MolecularMatrix;
 import org.nexml.model.OTUs;
 import org.nexml.model.TreeBlock;
 import org.w3c.dom.Element;
@@ -80,8 +81,7 @@ public class DocumentImpl extends AnnotatableImpl implements Document {
 				xsiType = xsiType.replaceAll("Seqs", "Cells");
 				charsBlock.setAttribute("xsi:type", xsiType);
 				if ( xsiType.indexOf("Continuous") > 0 ) {
-					matrix = new ContinuousMatrixImpl(getDocument(),charsBlock,originalOTUsIds.get(
-						charsBlock.getAttribute("otus")));
+					matrix = new ContinuousMatrixImpl(getDocument());
 				}
 				else {
 					matrix = new CategoricalMatrixImpl(getDocument(),charsBlock,originalOTUsIds.get(
@@ -196,6 +196,31 @@ public class DocumentImpl extends AnnotatableImpl implements Document {
 				XSI_PREFIX + ":type", NEX_PREFIX + ":ContinuousCells");
 		return continuousMatrix;
 	}
+	
+    /**
+     * @param otus
+     * @param type specifies the molecular sequence type (Dna,Rna,Protein)
+     * This method creates the characters element and appends it to the document
+     * root. Because NeXML requires that characters elements have an id
+     * reference attribute to specify the otus element it refers to, the
+     * equivalent OTUs object needs to be passed in here. In addition,
+     * characters elements need to specify the concrete subclass they implement
+     * (the xsi:type business). XXX Here, this subclass is set to
+     * a molecular sequence type as specified in param type. 
+     * Hopefully we come up with a better way to do this.
+     * 
+     * @author pmidford
+     */
+    public MolecularMatrix createMolecularMatrix(OTUs otus, String type) {
+        MolecularMatrixImpl molecularMatrix = new MolecularMatrixImpl(
+                getDocument());
+        getElement().appendChild(molecularMatrix.getElement());
+        molecularMatrix.setOTUs(otus);
+        molecularMatrix.getElement().setAttributeNS(XSI_NS,
+                XSI_PREFIX + ":type", NEX_PREFIX + ":" + type);
+        return molecularMatrix;
+    }
+
 
 	public String getXmlString() {
 		StringWriter stringWriter = new StringWriter();
