@@ -3,6 +3,7 @@ package org.nexml.model.impl;
 import org.nexml.model.CharacterState;
 import org.nexml.model.MatrixCell;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 class MatrixCellImpl<T> extends AnnotatableImpl implements
 		MatrixCell<T> {
@@ -11,6 +12,11 @@ class MatrixCellImpl<T> extends AnnotatableImpl implements
 		super(document);
 	}
 
+	public MatrixCellImpl(Document document,Element element) {
+		super(document,element);
+		element.removeAttribute("id");
+	}	
+	
 	private T mValue;
 
 	@Override

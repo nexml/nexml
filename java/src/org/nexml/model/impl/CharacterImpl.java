@@ -3,6 +3,7 @@ package org.nexml.model.impl;
 import org.nexml.model.Character;
 import org.nexml.model.CharacterStateSet;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 class CharacterImpl extends AnnotatableImpl implements Character {
 
@@ -10,6 +11,10 @@ class CharacterImpl extends AnnotatableImpl implements Character {
 		super(document);
 	}
 
+	public CharacterImpl(Document document,Element element) {
+		super(document,element);
+	}	
+	
 	private CharacterStateSet mCharacterStateSet;
 
 	@Override
@@ -23,6 +28,7 @@ class CharacterImpl extends AnnotatableImpl implements Character {
 
 	public void setCharacterStateSet(CharacterStateSet characterStateSet) {
 		mCharacterStateSet = characterStateSet;
+		getElement().setAttribute("states", characterStateSet.getId());
 	}
 
 }

@@ -22,13 +22,21 @@ class MatrixImpl<T> extends OTUsLinkableImpl<Character> implements
 	public MatrixImpl(Document document) {
 		super(document);
 	}
+	
+	public MatrixImpl(Document document,Element element) {
+		super(document,element);
+	}	
 
 	private final Map<OTU, Map<Character, MatrixCellImpl<T>>> mMatrixCells = new HashMap<OTU, Map<Character, MatrixCellImpl<T>>>();
 
 	@Override
 	String getTagName() {
-		return "characters";
+		return getTagNameClass();
 	}
+	
+	static String getTagNameClass() {
+		return "characters";
+	}	
 
 	public List<MatrixCell<T>> getColumn(Character character) {
 		List<MatrixCell<T>> column = new ArrayList<MatrixCell<T>>();
@@ -104,6 +112,13 @@ class MatrixImpl<T> extends OTUsLinkableImpl<Character> implements
 		return matrixCell;
 	}	
 	
+	protected void setCell(OTU otu, Character character, MatrixCellImpl<T> matrixCell) {
+		if (!mMatrixCells.containsKey(otu)) {
+			mMatrixCells.put(otu, new HashMap<Character, MatrixCellImpl<T>>());
+		}
+		mMatrixCells.get(otu).put(character, matrixCell);
+	}
+	
 	protected Element getFormatElement() {
 		if ( null == mFormatElement ) {
 			Element format = getDocument().createElement("format");
@@ -123,7 +138,11 @@ class MatrixImpl<T> extends OTUsLinkableImpl<Character> implements
 	
 	protected void setMatrixElement(Element matrixElement) {
 		mMatrixElement = matrixElement;
-	}	
+	}
+	
+	protected Character getCharacterByIndex(int i) {
+		return getThings().get(i);
+	}
 
 	public void removeCharacter(Character character) {
 		removeThing(character);

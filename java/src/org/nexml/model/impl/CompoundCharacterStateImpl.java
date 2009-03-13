@@ -14,6 +14,10 @@ abstract class CompoundCharacterStateImpl extends CharacterStateImpl
 		super(document);
 	}
 
+	public CompoundCharacterStateImpl(Document document,Element element) {
+		super(document,element);
+	}	
+	
 	private Set<CharacterState> mCharacterStates;
 
 	public Set<CharacterState> getStates() {

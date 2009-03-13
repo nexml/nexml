@@ -25,16 +25,20 @@ import org.nexml.model.CategoricalMatrix;
 import org.nexml.model.ContinuousMatrix;
 import org.nexml.model.Document;
 import org.nexml.model.Matrix;
+import org.nexml.model.OTU;
 import org.nexml.model.OTUs;
 import org.nexml.model.TreeBlock;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+
 
 public class DocumentImpl extends AnnotatableImpl implements Document {
 	private List<OTUs> mOtusList = new ArrayList<OTUs>();
 	private List<Matrix<?>> mMatrices = new ArrayList<Matrix<?>>();
 
 	private List<TreeBlock> mTreeBlockList = new ArrayList<TreeBlock>();
+	
+	private List<Matrix> mMatrixList = new ArrayList<Matrix>();
 
 	public DocumentImpl(org.w3c.dom.Document document) {
 		super(document);
@@ -64,6 +68,30 @@ public class DocumentImpl extends AnnotatableImpl implements Document {
 			}
 			XPathExpression treesExpr = xpath.compile(this.getTagName() + "/"
 					+ TreeBlockImpl.getTagNameClass());
+
+			
+			XPathExpression charsExpr = xpath.compile(this.getTagName() + "/"
+					+ MatrixImpl.getTagNameClass());
+			NodeList charsBlocks = (NodeList)charsExpr.evaluate(document,XPathConstants.NODESET);
+			for ( int i = 0; i < charsBlocks.getLength(); i++ ) {
+				Element charsBlock = (Element)charsBlocks.item(i);
+				Matrix matrix = null;
+				String xsiType = charsBlock.getAttribute("xsi:type");
+				xsiType = xsiType.replaceAll("Seqs", "Cells");
+				charsBlock.setAttribute("xsi:type", xsiType);
+				if ( xsiType.indexOf("Continuous") > 0 ) {
+					matrix = new ContinuousMatrixImpl(getDocument(),charsBlock,originalOTUsIds.get(
+						charsBlock.getAttribute("otus")));
+				}
+				else {
+					matrix = new CategoricalMatrixImpl(getDocument(),charsBlock,originalOTUsIds.get(
+						charsBlock.getAttribute("otus")));
+				}
+				mMatrixList.add(matrix);
+				
+			}
+
+
 			NodeList treeBlockNodes = (NodeList) treesExpr.evaluate(document,
 					XPathConstants.NODESET);
 			for (int i = 0; i < treeBlockNodes.getLength(); i++) {
@@ -76,6 +104,7 @@ public class DocumentImpl extends AnnotatableImpl implements Document {
 						.getAttribute("otus")));
 				mTreeBlockList.add(treeBlock);
 			}
+
 		} catch (XPathExpressionException e) {
 			throw new RuntimeException(e);
 		}
@@ -210,5 +239,11 @@ public class DocumentImpl extends AnnotatableImpl implements Document {
 	public String getLabel() {
 		return null;
 	}
+	
+	private Map<String, OTUs> mOriginalOTUsIds = new HashMap<String, OTUs>();
+	
+	Map<String, OTUs> getOriginalOTUsIds() {
+		return mOriginalOTUsIds;
+	}	
 
 }
