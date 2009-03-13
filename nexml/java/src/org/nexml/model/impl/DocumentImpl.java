@@ -26,7 +26,6 @@ import org.nexml.model.ContinuousMatrix;
 import org.nexml.model.Document;
 import org.nexml.model.Matrix;
 import org.nexml.model.MolecularMatrix;
-import org.nexml.model.MolecularMatrix;
 import org.nexml.model.OTUs;
 import org.nexml.model.TreeBlock;
 import org.w3c.dom.Element;
