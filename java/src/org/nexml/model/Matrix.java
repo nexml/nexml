@@ -12,6 +12,8 @@ public interface Matrix<T> extends OTUsLinkable {
 
 	MatrixCell<T> getCell(OTU otu, Character character);
 	
+	List<Character> getCharacters();
+	
 	void removeCharacter(Character character);
 	
 }
