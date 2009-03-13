@@ -2,7 +2,7 @@ package org.nexml.model;
 
 import java.util.List;
 
-public interface Document extends NexmlWritable {
+public interface Document extends Annotatable {
     
 	TreeBlock createTreeBlock(OTUs otus);
 
