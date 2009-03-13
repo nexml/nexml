@@ -332,13 +332,13 @@
     </format>
     <matrix>
             <row otu="t1" id="r1">
-                <seq>A C G C T C G C A T C G C A T C G C G A</seq>
+                <seq>A C G C T C G C A T C G C A T C</seq>
             </row>
             <row otu="t2" id="r2">
-                <seq>A C G C T C G C A T C G C A T C G C G A</seq>
+                <seq>A C G C T C G C A T C G C A T C</seq>
             </row>
             <row otu="t3" id="r3">
-                <seq>A C G C T C G C A T C G C A T C G C G A</seq>
+                <seq>A C G C T C G C A T C G C A T C</seq>
             </row>
         </matrix>
     </characters>
@@ -452,13 +452,13 @@
       </format>
         <matrix>
             <row otu="t1" id="r1">
-                <seq>ACGCUCGCAUCGCAUCGCGA</seq>
+                <seq>ACGCUCGCAUCGCAUC</seq>
             </row>
             <row otu="t2" id="r2">
-                <seq>ACGCUCGCAUCGCAUCGCGA</seq>
+                <seq>ACGCUCGCAUCGCAUC</seq>
             </row>
             <row otu="t3" id="r3">
-                <seq>ACGCUCGCAUCGCAUCGCGA</seq>
+                <seq>ACGCUCGCAUCGCAUC</seq>
             </row>
         </matrix>
     </characters>
