@@ -33,17 +33,17 @@ public class TestOTUs {
 		Assert.assertEquals("chimp.getLabel() should be \"chimp\"", "chimp",
 				chimp.getLabel());
 
-		mammals.createOTUSet("primates");
+		mammals.createOTUSubset("primates");
 
-		mammals.addOTUToSet("primates", gorilla);
-		mammals.addOTUToSet("primates", chimp);
+		mammals.addOTUToSubset("primates", gorilla);
+		mammals.addOTUToSubset("primates", chimp);
 		Assert.assertEquals("should be 2 primates", 2, mammals.getOTUsFromSet(
 				"primates").size());
 
 		Assert.assertEquals("should be 3 otus", 3, mammals.getAllOTUs().size());
 
 		Assert.assertEquals("expected {\"primates\"}", new HashSet<String>(
-				Arrays.asList("primates")), mammals.getSetNames());
+				Arrays.asList("primates")), mammals.getSubsetNames());
 
 		mammals.removeOTU(chimp);
 		Assert.assertEquals("should be 2 otus", 2, mammals.getAllOTUs().size());

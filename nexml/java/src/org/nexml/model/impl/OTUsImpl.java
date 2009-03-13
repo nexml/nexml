@@ -1,5 +1,6 @@
 package org.nexml.model.impl;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -54,8 +55,8 @@ class OTUsImpl extends SetManager<OTU> implements OTUs {
 		addThing(otu);
 	}
 
-	public void addOTUToSet(String setName, OTU otu) {
-		addToSet(setName, otu);
+	public void addOTUToSubset(String setName, OTU otu) {
+		addToSubset(setName, otu);
 	}
 
 	public OTU createOTU() {
@@ -65,23 +66,23 @@ class OTUsImpl extends SetManager<OTU> implements OTUs {
 		return otu;
 	}
 
-	public void createOTUSet(String setName) {
-		createSet(setName);
+	public void createOTUSubset(String setName) {
+		createSubset(setName);
 	}
 
 	public List<OTU> getAllOTUs() {
-		return getThings();
+		return Collections.unmodifiableList(getThings());
 	}
 
 	public List<OTU> getOTUsFromSet(String setName) {
-		return getFromSet(setName);
+		return getSubset(setName);
 	}
 
 	public void removeOTU(OTU otu) {
 		removeThing(otu);
 	}
 
-	public void removeOTUFromSet(String setName, OTU otu) {
+	public void removeOTUFromSubset(String setName, OTU otu) {
 		// TODO Auto-generated method stub
 
 	}
@@ -107,7 +108,7 @@ class OTUsImpl extends SetManager<OTU> implements OTUs {
 	}
 
 	private Map<String, OTU> mOriginalOTUIds = new HashMap<String, OTU>();
-	
+
 	Map<String, OTU> getOriginalOTUIds() {
 		return mOriginalOTUIds;
 	}

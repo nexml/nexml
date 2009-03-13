@@ -1,5 +1,6 @@
 package org.nexml.model;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -8,12 +9,19 @@ import java.util.Map;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class TestParse {
+public class TestParseTrees {
+
 	@Test
-	public void parse() throws Throwable {
-		Document document = DocumentFactory
-				.parse("http://dbhack1.googlecode.com/svn/trunk/data/nexml/02_dogfish_no_taxrefs.xml");
-		// .parse("org.nexml.model.trees.xml");
+	public void parseFloatTree() throws Throwable {
+		Document document = DocumentFactory.parse(getClass()
+				.getResourceAsStream("/org/nexml/model/trees.xml"));
+	}
+
+	@Test
+	public void parseIntTree() throws Throwable {
+		Document document = DocumentFactory.parse(getClass()
+				.getResourceAsStream(
+						"/org/nexml/model/02_dogfish_no_taxrefs.xml"));
 		Assert.assertEquals("should be one tree", 1, document
 				.getTreeBlockList().size());
 		Assert.assertEquals("should be an int tree", "'the tree'", document
@@ -21,6 +29,7 @@ public class TestParse {
 		TreeBlock treeBlock = document.getTreeBlockList().get(0);
 		Assert.assertEquals("should have same OTU in both", document
 				.getOTUsList().get(0), treeBlock.getOTUs());
+		@SuppressWarnings("unchecked")
 		Tree<IntEdge> tree = (Tree<IntEdge>) treeBlock.iterator().next();
 		boolean foundRoot = false;
 		for (Node node : tree.getNodes()) {
