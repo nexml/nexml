@@ -71,7 +71,8 @@ public class DocumentImpl extends AnnotatableImpl implements Document {
 			xsiType = xsiType.replaceAll("Seqs", "Cells");
 			charsBlock.setAttribute("xsi:type", xsiType);
 			if (xsiType.indexOf("Continuous") > 0) {
-				matrix = new ContinuousMatrixImpl(getDocument());
+				matrix = new ContinuousMatrixImpl(getDocument(), charsBlock, 
+						originalOTUsIds.get(charsBlock.getAttribute("otus")));
 			} else {
 				matrix = new CategoricalMatrixImpl(getDocument(), charsBlock,
 						originalOTUsIds.get(charsBlock.getAttribute("otus")));
