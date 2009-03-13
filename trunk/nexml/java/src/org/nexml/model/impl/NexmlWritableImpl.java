@@ -1,11 +1,14 @@
 package org.nexml.model.impl;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import org.nexml.model.NexmlWritable;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 abstract class NexmlWritableImpl implements NexmlWritable {
 	private Document mDocument = null;
@@ -53,6 +56,18 @@ abstract class NexmlWritableImpl implements NexmlWritable {
 	
 	protected final Document getDocument() {
 		return mDocument;
+	}
+	
+	protected List<Element> getChildrenByTagName(Element element, String tagName) {
+		List<Element> result = new ArrayList<Element>();
+		NodeList children = element.getChildNodes();
+		for ( int i = 0; i < children.getLength(); i++ ) {
+			String localName = children.item(i).getNodeName();
+			if ( null != localName && localName.equals(tagName) ) {
+				result.add((Element)children.item(i));
+			}
+		}
+		return result;
 	}
 	
 	public final Element getElement() {

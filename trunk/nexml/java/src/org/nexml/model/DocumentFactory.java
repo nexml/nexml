@@ -34,7 +34,8 @@ public class DocumentFactory {
 
 	static public Document parse(File file) throws SAXException, IOException,
 			ParserConfigurationException {
-		Document document = new DocumentImpl(getDocumentBuilder().parse(file));
+		org.w3c.dom.Document domDocument = getDocumentBuilder().parse(file);		
+		Document document = new DocumentImpl(domDocument,domDocument.getDocumentElement());
 		return document;
 	}
 

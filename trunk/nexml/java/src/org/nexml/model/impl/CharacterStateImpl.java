@@ -2,6 +2,7 @@ package org.nexml.model.impl;
 
 import org.nexml.model.CharacterState;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 class CharacterStateImpl extends AnnotatableImpl implements
 		CharacterState {
@@ -9,6 +10,10 @@ class CharacterStateImpl extends AnnotatableImpl implements
 	public CharacterStateImpl(Document document) {
 		super(document);
 	}
+	
+	public CharacterStateImpl(Document document,Element element) {
+		super(document,element);
+	}	
 
 	private Object mSymbol;
 	
