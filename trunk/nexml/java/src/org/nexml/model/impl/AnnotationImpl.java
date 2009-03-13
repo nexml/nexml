@@ -25,12 +25,11 @@ public class AnnotationImpl extends NexmlWritableImpl implements Annotation {
 
     public Object getValue() {
         // TODO Auto-generated method stub
-        return null;
+        return mValue;
     }
 
     public void setProperty(String property) {
-        // TODO Auto-generated method stub
-
+        getElement().setAttribute("property", property);
     }
 
     public void setValue(Object value) {
