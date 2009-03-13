@@ -3,6 +3,7 @@ package org.nexml.model;
 import java.util.List;
 
 public interface Document extends NexmlWritable {
+    
 	TreeBlock createTreeBlock(OTUs otus);
 
 	OTUs createOTUs();
@@ -12,6 +13,8 @@ public interface Document extends NexmlWritable {
 	ContinuousMatrix createContinuousMatrix(OTUs otus);
 
 	List<OTUs> getOTUsList();
+	
+	List<Matrix<?>> getMatrices();
 
 	List<TreeBlock> getTreeBlockList();
 
