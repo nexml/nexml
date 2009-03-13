@@ -13,6 +13,7 @@ public class TestParse {
 	public void parse() throws Throwable {
 		Document document = DocumentFactory
 				.parse("http://dbhack1.googlecode.com/svn/trunk/data/nexml/02_dogfish_no_taxrefs.xml");
+		// .parse("org.nexml.model.trees.xml");
 		Assert.assertEquals("should be one tree", 1, document
 				.getTreeBlockList().size());
 		Assert.assertEquals("should be an int tree", "'the tree'", document

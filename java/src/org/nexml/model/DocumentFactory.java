@@ -19,31 +19,26 @@ public class DocumentFactory {
 
 	static public Document parse(InputStream inputStream)
 			throws ParserConfigurationException, SAXException, IOException {
-		Document document = new DocumentImpl(getDocumentBuilder().parse(
-				inputStream));
-		return document;
+		return createDocument(getDocumentBuilder().parse(inputStream));
 	}
 
 	static public Document parse(String uri) throws SAXException, IOException,
 			ParserConfigurationException {
-		org.w3c.dom.Document domDocument = getDocumentBuilder().parse(uri);
-		Document document = new DocumentImpl(domDocument, domDocument
-				.getDocumentElement());
-		return document;
+		return createDocument(getDocumentBuilder().parse(uri));
 	}
 
 	static public Document parse(File file) throws SAXException, IOException,
 			ParserConfigurationException {
-		org.w3c.dom.Document domDocument = getDocumentBuilder().parse(file);		
-		Document document = new DocumentImpl(domDocument,domDocument.getDocumentElement());
-		return document;
+		return createDocument(getDocumentBuilder().parse(file));
 	}
 
 	static public Document parse(InputSource inputSource) throws SAXException,
 			IOException, ParserConfigurationException {
-		Document document = new DocumentImpl(getDocumentBuilder().parse(
-				inputSource));
-		return document;
+		return createDocument(getDocumentBuilder().parse(inputSource));
+	}
+
+	static private Document createDocument(org.w3c.dom.Document domDocument) {
+		return new DocumentImpl(domDocument, domDocument.getDocumentElement());
 	}
 
 	static private DocumentBuilder getDocumentBuilder()
