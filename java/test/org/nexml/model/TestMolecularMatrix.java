@@ -18,16 +18,16 @@ public class TestMolecularMatrix {
             e.printStackTrace();
         }
         OTUs mammals = doc.createOTUs();
-        CategoricalMatrix categoricalMatrix = doc
-                .createCategoricalMatrix(mammals);
+        MolecularMatrix molecularMatrix = doc
+                .createMolecularMatrix(mammals,"DNASeqs");
         mammals.setLabel("mammals");
         OTU chimp = mammals.createOTU();
         chimp.setLabel("chimp");
-        categoricalMatrix.setOTUs(mammals);
+        molecularMatrix.setOTUs(mammals);
         Assert.assertEquals("categoricalMatrix.getOTUS should be mammals",
-                mammals, categoricalMatrix.getOTUs());
+                mammals, molecularMatrix.getOTUs());
 
-        CharacterStateSet characterMolecularStateSet = categoricalMatrix.getDNACharacterStateSet();
+        CharacterStateSet characterMolecularStateSet = molecularMatrix.getDNACharacterStateSet();
 
 //      Assert.assertEquals("characterStateSet should be in categoricalMatrix",
 //              characterMolecularStateSet, categoricalMatrix.getCharacterStateSets()
@@ -43,15 +43,15 @@ public class TestMolecularMatrix {
         Assert.assertTrue("State containing G is not null", (gState != null));
         Assert.assertTrue("State containing T is not null", (tState != null));
 
-        Character pos1 = categoricalMatrix.createCharacter(characterMolecularStateSet);
-        Character pos2 = categoricalMatrix.createCharacter(characterMolecularStateSet);
-        Character pos3 = categoricalMatrix.createCharacter(characterMolecularStateSet);
-        Character pos4 = categoricalMatrix.createCharacter(characterMolecularStateSet);
+        Character pos1 = molecularMatrix.createCharacter(characterMolecularStateSet);
+        Character pos2 = molecularMatrix.createCharacter(characterMolecularStateSet);
+        Character pos3 = molecularMatrix.createCharacter(characterMolecularStateSet);
+        Character pos4 = molecularMatrix.createCharacter(characterMolecularStateSet);
 
-        MatrixCell<CharacterState> cell1 = categoricalMatrix.getCell(chimp,pos1);
-        MatrixCell<CharacterState> cell2 = categoricalMatrix.getCell(chimp,pos2);
-        MatrixCell<CharacterState> cell3 = categoricalMatrix.getCell(chimp,pos3);
-        MatrixCell<CharacterState> cell4 = categoricalMatrix.getCell(chimp,pos4);
+        MatrixCell<CharacterState> cell1 = molecularMatrix.getCell(chimp,pos1);
+        MatrixCell<CharacterState> cell2 = molecularMatrix.getCell(chimp,pos2);
+        MatrixCell<CharacterState> cell3 = molecularMatrix.getCell(chimp,pos3);
+        MatrixCell<CharacterState> cell4 = molecularMatrix.getCell(chimp,pos4);
 
         cell1.setValue(aState);
         cell2.setValue(cState);
@@ -85,19 +85,19 @@ public class TestMolecularMatrix {
             e.printStackTrace();
         }
         OTUs mammals = doc.createOTUs();
-        CategoricalMatrix categoricalMatrix = doc
-                .createCategoricalMatrix(mammals);
+        MolecularMatrix molecularMatrix = doc
+                .createMolecularMatrix(mammals,"RNASeqs");
         mammals.setLabel("mammals");
         OTU chimp = mammals.createOTU();
         chimp.setLabel("chimp");
-        categoricalMatrix.setOTUs(mammals);
-        Assert.assertEquals("categoricalMatrix.getOTUS should be mammals",
-                mammals, categoricalMatrix.getOTUs());
+        molecularMatrix.setOTUs(mammals);
+        Assert.assertEquals("MolecularMatrix.getOTUS should be mammals",
+                mammals, molecularMatrix.getOTUs());
 
-        CharacterStateSet characterMolecularStateSet = categoricalMatrix.getRNACharacterStateSet();
+        CharacterStateSet characterMolecularStateSet = molecularMatrix.getRNACharacterStateSet();
 
-//      Assert.assertEquals("characterStateSet should be in categoricalMatrix",
-//              characterMolecularStateSet, categoricalMatrix.getCharacterStateSets()
+//      Assert.assertEquals("characterStateSet should be in MolecularMatrix",
+//              characterMolecularStateSet, MolecularMatrix.getCharacterStateSets()
 //                      .iterator().next());
 
 
@@ -110,15 +110,15 @@ public class TestMolecularMatrix {
         Assert.assertTrue("State containing G is not null", (gState != null));
         Assert.assertTrue("State containing U is not null", (uState != null));
 
-        Character pos1 = categoricalMatrix.createCharacter(characterMolecularStateSet);
-        Character pos2 = categoricalMatrix.createCharacter(characterMolecularStateSet);
-        Character pos3 = categoricalMatrix.createCharacter(characterMolecularStateSet);
-        Character pos4 = categoricalMatrix.createCharacter(characterMolecularStateSet);
+        Character pos1 = molecularMatrix.createCharacter(characterMolecularStateSet);
+        Character pos2 = molecularMatrix.createCharacter(characterMolecularStateSet);
+        Character pos3 = molecularMatrix.createCharacter(characterMolecularStateSet);
+        Character pos4 = molecularMatrix.createCharacter(characterMolecularStateSet);
 
-        MatrixCell<CharacterState> cell1 = categoricalMatrix.getCell(chimp,pos1);
-        MatrixCell<CharacterState> cell2 = categoricalMatrix.getCell(chimp,pos2);
-        MatrixCell<CharacterState> cell3 = categoricalMatrix.getCell(chimp,pos3);
-        MatrixCell<CharacterState> cell4 = categoricalMatrix.getCell(chimp,pos4);
+        MatrixCell<CharacterState> cell1 = molecularMatrix.getCell(chimp,pos1);
+        MatrixCell<CharacterState> cell2 = molecularMatrix.getCell(chimp,pos2);
+        MatrixCell<CharacterState> cell3 = molecularMatrix.getCell(chimp,pos3);
+        MatrixCell<CharacterState> cell4 = molecularMatrix.getCell(chimp,pos4);
 
         cell1.setValue(aState);
         cell2.setValue(cState);
@@ -153,19 +153,19 @@ public class TestMolecularMatrix {
             e.printStackTrace();
         }
         OTUs mammals = doc.createOTUs();
-        CategoricalMatrix categoricalMatrix = doc
-                .createCategoricalMatrix(mammals);
+        MolecularMatrix MolecularMatrix = doc
+                .createMolecularMatrix(mammals,"ProteinSeqs");
         mammals.setLabel("mammals");
         OTU chimp = mammals.createOTU();
         chimp.setLabel("chimp");
-        categoricalMatrix.setOTUs(mammals);
-        Assert.assertEquals("categoricalMatrix.getOTUS should be mammals",
-                mammals, categoricalMatrix.getOTUs());
+        MolecularMatrix.setOTUs(mammals);
+        Assert.assertEquals("MolecularMatrix.getOTUS should be mammals",
+                mammals, MolecularMatrix.getOTUs());
 
-        CharacterStateSet characterMolecularStateSet = categoricalMatrix.getProteinCharacterStateSet();
+        CharacterStateSet characterMolecularStateSet = MolecularMatrix.getProteinCharacterStateSet();
 
-//      Assert.assertEquals("characterStateSet should be in categoricalMatrix",
-//              characterMolecularStateSet, categoricalMatrix.getCharacterStateSets()
+//      Assert.assertEquals("characterStateSet should be in MolecularMatrix",
+//              characterMolecularStateSet, MolecularMatrix.getCharacterStateSets()
 //                      .iterator().next());
 
 
@@ -211,47 +211,47 @@ public class TestMolecularMatrix {
         Assert.assertTrue("State containing Y is not null", (yState != null));
         
         
-        Character pos1 = categoricalMatrix.createCharacter(characterMolecularStateSet);
-        Character pos2 = categoricalMatrix.createCharacter(characterMolecularStateSet);
-        Character pos3 = categoricalMatrix.createCharacter(characterMolecularStateSet);
-        Character pos4 = categoricalMatrix.createCharacter(characterMolecularStateSet);
-        Character pos5 = categoricalMatrix.createCharacter(characterMolecularStateSet);
-        Character pos6 = categoricalMatrix.createCharacter(characterMolecularStateSet);
-        Character pos7 = categoricalMatrix.createCharacter(characterMolecularStateSet);
-        Character pos8 = categoricalMatrix.createCharacter(characterMolecularStateSet);
-        Character pos9 = categoricalMatrix.createCharacter(characterMolecularStateSet);
-        Character pos10 = categoricalMatrix.createCharacter(characterMolecularStateSet);
-        Character pos11 = categoricalMatrix.createCharacter(characterMolecularStateSet);
-        Character pos12 = categoricalMatrix.createCharacter(characterMolecularStateSet);
-        Character pos13 = categoricalMatrix.createCharacter(characterMolecularStateSet);
-        Character pos14 = categoricalMatrix.createCharacter(characterMolecularStateSet);
-        Character pos15 = categoricalMatrix.createCharacter(characterMolecularStateSet);
-        Character pos16 = categoricalMatrix.createCharacter(characterMolecularStateSet);
-        Character pos17= categoricalMatrix.createCharacter(characterMolecularStateSet);
-        Character pos18 = categoricalMatrix.createCharacter(characterMolecularStateSet);
-        Character pos19 = categoricalMatrix.createCharacter(characterMolecularStateSet);
-        Character pos20= categoricalMatrix.createCharacter(characterMolecularStateSet);
+        Character pos1 = MolecularMatrix.createCharacter(characterMolecularStateSet);
+        Character pos2 = MolecularMatrix.createCharacter(characterMolecularStateSet);
+        Character pos3 = MolecularMatrix.createCharacter(characterMolecularStateSet);
+        Character pos4 = MolecularMatrix.createCharacter(characterMolecularStateSet);
+        Character pos5 = MolecularMatrix.createCharacter(characterMolecularStateSet);
+        Character pos6 = MolecularMatrix.createCharacter(characterMolecularStateSet);
+        Character pos7 = MolecularMatrix.createCharacter(characterMolecularStateSet);
+        Character pos8 = MolecularMatrix.createCharacter(characterMolecularStateSet);
+        Character pos9 = MolecularMatrix.createCharacter(characterMolecularStateSet);
+        Character pos10 = MolecularMatrix.createCharacter(characterMolecularStateSet);
+        Character pos11 = MolecularMatrix.createCharacter(characterMolecularStateSet);
+        Character pos12 = MolecularMatrix.createCharacter(characterMolecularStateSet);
+        Character pos13 = MolecularMatrix.createCharacter(characterMolecularStateSet);
+        Character pos14 = MolecularMatrix.createCharacter(characterMolecularStateSet);
+        Character pos15 = MolecularMatrix.createCharacter(characterMolecularStateSet);
+        Character pos16 = MolecularMatrix.createCharacter(characterMolecularStateSet);
+        Character pos17= MolecularMatrix.createCharacter(characterMolecularStateSet);
+        Character pos18 = MolecularMatrix.createCharacter(characterMolecularStateSet);
+        Character pos19 = MolecularMatrix.createCharacter(characterMolecularStateSet);
+        Character pos20= MolecularMatrix.createCharacter(characterMolecularStateSet);
 
-        MatrixCell<CharacterState> cell1 = categoricalMatrix.getCell(chimp,pos1);
-        MatrixCell<CharacterState> cell2 = categoricalMatrix.getCell(chimp,pos2);
-        MatrixCell<CharacterState> cell3 = categoricalMatrix.getCell(chimp,pos3);
-        MatrixCell<CharacterState> cell4 = categoricalMatrix.getCell(chimp,pos4);
-        MatrixCell<CharacterState> cell5 = categoricalMatrix.getCell(chimp,pos5);
-        MatrixCell<CharacterState> cell6 = categoricalMatrix.getCell(chimp,pos6);
-        MatrixCell<CharacterState> cell7 = categoricalMatrix.getCell(chimp,pos7);
-        MatrixCell<CharacterState> cell8 = categoricalMatrix.getCell(chimp,pos8);
-        MatrixCell<CharacterState> cell9 = categoricalMatrix.getCell(chimp,pos9);
-        MatrixCell<CharacterState> cell10 = categoricalMatrix.getCell(chimp,pos10);
-        MatrixCell<CharacterState> cell11 = categoricalMatrix.getCell(chimp,pos11);
-        MatrixCell<CharacterState> cell12 = categoricalMatrix.getCell(chimp,pos12);
-        MatrixCell<CharacterState> cell13 = categoricalMatrix.getCell(chimp,pos13);
-        MatrixCell<CharacterState> cell14 = categoricalMatrix.getCell(chimp,pos14);
-        MatrixCell<CharacterState> cell15 = categoricalMatrix.getCell(chimp,pos15);
-        MatrixCell<CharacterState> cell16 = categoricalMatrix.getCell(chimp,pos16);
-        MatrixCell<CharacterState> cell17 = categoricalMatrix.getCell(chimp,pos17);
-        MatrixCell<CharacterState> cell18 = categoricalMatrix.getCell(chimp,pos18);
-        MatrixCell<CharacterState> cell19 = categoricalMatrix.getCell(chimp,pos19);
-        MatrixCell<CharacterState> cell20 = categoricalMatrix.getCell(chimp,pos20);
+        MatrixCell<CharacterState> cell1 = MolecularMatrix.getCell(chimp,pos1);
+        MatrixCell<CharacterState> cell2 = MolecularMatrix.getCell(chimp,pos2);
+        MatrixCell<CharacterState> cell3 = MolecularMatrix.getCell(chimp,pos3);
+        MatrixCell<CharacterState> cell4 = MolecularMatrix.getCell(chimp,pos4);
+        MatrixCell<CharacterState> cell5 = MolecularMatrix.getCell(chimp,pos5);
+        MatrixCell<CharacterState> cell6 = MolecularMatrix.getCell(chimp,pos6);
+        MatrixCell<CharacterState> cell7 = MolecularMatrix.getCell(chimp,pos7);
+        MatrixCell<CharacterState> cell8 = MolecularMatrix.getCell(chimp,pos8);
+        MatrixCell<CharacterState> cell9 = MolecularMatrix.getCell(chimp,pos9);
+        MatrixCell<CharacterState> cell10 = MolecularMatrix.getCell(chimp,pos10);
+        MatrixCell<CharacterState> cell11 = MolecularMatrix.getCell(chimp,pos11);
+        MatrixCell<CharacterState> cell12 = MolecularMatrix.getCell(chimp,pos12);
+        MatrixCell<CharacterState> cell13 = MolecularMatrix.getCell(chimp,pos13);
+        MatrixCell<CharacterState> cell14 = MolecularMatrix.getCell(chimp,pos14);
+        MatrixCell<CharacterState> cell15 = MolecularMatrix.getCell(chimp,pos15);
+        MatrixCell<CharacterState> cell16 = MolecularMatrix.getCell(chimp,pos16);
+        MatrixCell<CharacterState> cell17 = MolecularMatrix.getCell(chimp,pos17);
+        MatrixCell<CharacterState> cell18 = MolecularMatrix.getCell(chimp,pos18);
+        MatrixCell<CharacterState> cell19 = MolecularMatrix.getCell(chimp,pos19);
+        MatrixCell<CharacterState> cell20 = MolecularMatrix.getCell(chimp,pos20);
 
         cell1.setValue(aState);
         cell2.setValue(cState);
