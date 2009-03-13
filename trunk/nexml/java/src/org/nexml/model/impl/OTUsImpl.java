@@ -19,12 +19,28 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
+/**
+ * An {@code OTUs} implemented with DOM objects.
+ */
 class OTUsImpl extends SetManager<OTU> implements OTUs {
 
+	/**
+	 * Get the (XML) tag name of otus.
+	 * 
+	 * @return the (XML) tag name of otus.
+	 */
 	public static String getTagNameClass() {
 		return "otus";
 	}
 
+	/**
+	 * Build an {@code OTUs} from a {@code Document}.
+	 * <p>
+	 * {@document} will then be owned by this object and shouldn't be modified
+	 * outside of it.
+	 * 
+	 * @param document that from which we're building.
+	 */
 	public OTUsImpl(Document document) {
 		super(document);
 	}
@@ -55,10 +71,12 @@ class OTUsImpl extends SetManager<OTU> implements OTUs {
 		addThing(otu);
 	}
 
+	/** {@inheritDoc} */
 	public void addOTUToSubset(String setName, OTU otu) {
 		addToSubset(setName, otu);
 	}
 
+	/** {@inheritDoc} */
 	public OTU createOTU() {
 		OTUImpl otu = new OTUImpl(getDocument());
 		addOTU(otu);
@@ -74,7 +92,7 @@ class OTUsImpl extends SetManager<OTU> implements OTUs {
 		return Collections.unmodifiableList(getThings());
 	}
 
-	public List<OTU> getOTUsFromSet(String setName) {
+	public List<OTU> getOTUsFromSubset(String setName) {
 		return getSubset(setName);
 	}
 
@@ -97,12 +115,7 @@ class OTUsImpl extends SetManager<OTU> implements OTUs {
 		return getTagNameClass();
 	}
 
-	public void addAnnotationToSet(String setName, Annotation annotation) {
-		// TODO Auto-generated method stub
-
-	}
-
-	public void removeAnnotationFromSet(Annotation annotation) {
+	public void addAnnotationToSubset(String setName, Annotation annotation) {
 		// TODO Auto-generated method stub
 
 	}
@@ -112,4 +125,5 @@ class OTUsImpl extends SetManager<OTU> implements OTUs {
 	Map<String, OTU> getOriginalOTUIds() {
 		return mOriginalOTUIds;
 	}
+
 }

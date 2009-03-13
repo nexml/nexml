@@ -15,6 +15,7 @@ public class TestParseTrees {
 	public void parseFloatTree() throws Throwable {
 		Document document = DocumentFactory.parse(getClass()
 				.getResourceAsStream("/org/nexml/model/trees.xml"));
+		System.out.println(document.getXmlString());
 	}
 
 	@Test
@@ -37,7 +38,7 @@ public class TestParseTrees {
 				foundRoot = true;
 			}
 			Assert.assertNotNull(node.getLabel());
-			System.out.println("edge.getLabel(): " + node.getLabel());
+			//System.out.println("edge.getLabel(): " + node.getLabel());
 		}
 		Assert.assertTrue("should have found the root", foundRoot);
 
@@ -49,7 +50,7 @@ public class TestParseTrees {
 		Map<Node, List<IntEdge>> nodeToEdge = new HashMap<Node, List<IntEdge>>();
 		for (Node node : tree.getNodes()) {
 			findEdges(node, tree, nodeToEdge);
-			System.out.println("node: " + node);
+			//System.out.println("node: " + node);
 			// for (IntEdge edge : nodeToEdge.get(node)) {
 			// System.out.println("    edge: " + edge);
 			// }
