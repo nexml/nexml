@@ -17,6 +17,10 @@ import org.w3c.dom.Element;
 public abstract class TreeImpl<E extends Edge> extends NetworkImpl<E> implements
 		Tree<E> {
 
+	/**
+	 * For subclasses to pass into {@code TreeImpl(Document, Element,
+	 * EdgeImplFactory)} so it can construct the right kind of edge.
+	 */
 	protected interface EdgeImplFactory {
 		public EdgeImpl newEdgeImpl(Document rootDocument, Element element,
 				String length);
@@ -47,7 +51,7 @@ public abstract class TreeImpl<E extends Edge> extends NetworkImpl<E> implements
 				node.setOTU(originalOTUIds.get(thisNodeElement
 						.getAttribute("otu")));
 			}
-			this.addThing(node);
+			addThing(node);
 		}
 
 		List<Element> edgeElements = getChildrenByTagName(this.getElement(),
@@ -55,7 +59,7 @@ public abstract class TreeImpl<E extends Edge> extends NetworkImpl<E> implements
 		for (Element thisEdgeElement : edgeElements) {
 			EdgeImpl edge = edgeFactory.newEdgeImpl(document, thisEdgeElement,
 					thisEdgeElement.getAttribute("length"));
-			this.addThing(edge);
+			addThing(edge);
 			for (NetworkObject networkObject : getThings()) {
 				if (networkObject instanceof Node) {
 					Node node = (Node) networkObject;
