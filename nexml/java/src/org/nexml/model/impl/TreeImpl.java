@@ -14,8 +14,8 @@ import org.nexml.model.Tree;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-public abstract class TreeImpl<E extends Edge> extends
-		SetManager<NetworkObject> implements Tree<E> {
+public abstract class TreeImpl<E extends Edge> extends NetworkImpl<E> implements
+		Tree<E> {
 
 	protected interface EdgeImplFactory {
 		public EdgeImpl newEdgeImpl(Document rootDocument, Element element,
@@ -123,6 +123,15 @@ public abstract class TreeImpl<E extends Edge> extends
 				removeEdge(edge);
 			}
 		}
+	}
+
+	public Node getRoot() {
+		for (Node node : getNodes()) {
+			if (node.isRoot()) {
+				return node;
+			}
+		}
+		return null;
 	}
 
 }
