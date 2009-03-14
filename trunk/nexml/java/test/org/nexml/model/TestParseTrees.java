@@ -1,10 +1,12 @@
 package org.nexml.model;
 
-import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -16,6 +18,27 @@ public class TestParseTrees {
 		Document document = DocumentFactory.parse(getClass()
 				.getResourceAsStream("/org/nexml/model/trees.xml"));
 		System.out.println(document.getXmlString());
+		TreeBlock treeBlock = document.getTreeBlockList().get(0);
+		Assert.assertNotNull("we should have a tree block", treeBlock);
+		Tree<?> floatTree = null;
+		for (Network<?> networkObject : treeBlock) {
+			if ("tree1".equals(networkObject.getLabel())) {
+				// @SuppressWarnings("unchecked")
+				floatTree = (Tree<?>) networkObject;
+			}
+		}
+		Assert.assertNotNull("we should have a tree", floatTree);
+		Node rootNode = floatTree.getRoot();
+		Assert.assertEquals("rootNode should be the labeled n1", "n1", rootNode
+				.getLabel());
+		Set<Node> rootChildren = floatTree.getOutNodes(rootNode);
+		Set<String> rootChildrenLabels = new HashSet<String>();
+		for (Node rootChild : rootChildren) {
+			rootChildrenLabels.add(rootChild.getLabel());
+		}
+		Assert.assertEquals("rootChildren should be n2 & n3",
+				rootChildrenLabels, new HashSet<String>(Arrays.asList("n2",
+						"n3")));
 	}
 
 	@Test
@@ -38,7 +61,7 @@ public class TestParseTrees {
 				foundRoot = true;
 			}
 			Assert.assertNotNull(node.getLabel());
-			//System.out.println("edge.getLabel(): " + node.getLabel());
+			// System.out.println("edge.getLabel(): " + node.getLabel());
 		}
 		Assert.assertTrue("should have found the root", foundRoot);
 
@@ -50,7 +73,7 @@ public class TestParseTrees {
 		Map<Node, List<IntEdge>> nodeToEdge = new HashMap<Node, List<IntEdge>>();
 		for (Node node : tree.getNodes()) {
 			findEdges(node, tree, nodeToEdge);
-			//System.out.println("node: " + node);
+			// System.out.println("node: " + node);
 			// for (IntEdge edge : nodeToEdge.get(node)) {
 			// System.out.println("    edge: " + edge);
 			// }
