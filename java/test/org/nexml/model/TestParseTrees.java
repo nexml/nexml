@@ -23,8 +23,8 @@ public class TestParseTrees {
 		Tree<?> floatTree = null;
 		for (Network<?> networkObject : treeBlock) {
 			if ("tree1".equals(networkObject.getLabel())) {
-				// @SuppressWarnings("unchecked")
 				floatTree = (Tree<?>) networkObject;
+				break;
 			}
 		}
 		Assert.assertNotNull("we should have a tree", floatTree);
