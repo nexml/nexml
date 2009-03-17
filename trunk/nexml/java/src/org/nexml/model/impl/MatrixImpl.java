@@ -19,16 +19,48 @@ class MatrixImpl<T> extends OTUsLinkableImpl<Character> implements
 	private Element mFormatElement;
 	private Element mMatrixElement;	
 	
-	public MatrixImpl(Document document) {
+    /**
+     * Protected constructors that take a DOM document object but not
+     * an element object are used for generating new element nodes in
+     * a NeXML document. On calling such constructors, a new element
+     * is created, which can be retrieved using getElement(). After this
+     * step, the Impl class that called this constructor would still 
+     * need to attach the element in the proper location (typically
+     * as a child element of the class that called the constructor). 
+     * @param document a DOM document object
+     * @author rvosa
+     */
+	protected MatrixImpl(Document document) {
 		super(document);
 	}
 	
-	public MatrixImpl(Document document,Element element) {
+    /**
+     * Protected constructors are intended for recursive parsing, i.e.
+     * starting from the root element (which maps onto DocumentImpl) we
+     * traverse the element tree such that for every child element that maps
+     * onto an Impl class the containing class calls that child's protected
+     * constructor, passes in the element of the child. From there the 
+     * child takes over, populates itself and calls the protected 
+     * constructors of its children. These should probably be protected
+     * because there is all sorts of opportunity for outsiders to call
+     * these in the wrong context, passing in the wrong elements etc.
+     * @param document the containing DOM document object. Every Impl 
+     * class needs a reference to this so that it can create DOM element
+     * objects
+     * @param element the equivalent NeXML element (e.g. for OTUsImpl, it's
+     * the <otus/> element)
+     * @author rvosa
+     */
+	protected MatrixImpl(Document document,Element element) {
 		super(document,element);
 	}	
 
 	private final Map<OTU, Map<Character, MatrixCellImpl<T>>> mMatrixCells = new HashMap<OTU, Map<Character, MatrixCellImpl<T>>>();
 
+	/*
+	 * (non-Javadoc)
+	 * @see org.nexml.model.impl.NexmlWritableImpl#getTagName()
+	 */
 	@Override
 	String getTagName() {
 		return getTagNameClass();
@@ -38,6 +70,10 @@ class MatrixImpl<T> extends OTUsLinkableImpl<Character> implements
 		return "characters";
 	}	
 
+	/*
+	 * (non-Javadoc)
+	 * @see org.nexml.model.Matrix#getColumn(org.nexml.model.Character)
+	 */
 	public List<MatrixCell<T>> getColumn(Character character) {
 		List<MatrixCell<T>> column = new ArrayList<MatrixCell<T>>();
 		for (Map<Character, MatrixCellImpl<T>> characterToMatrixCell : mMatrixCells
@@ -47,6 +83,10 @@ class MatrixImpl<T> extends OTUsLinkableImpl<Character> implements
 		return column;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see org.nexml.model.Matrix#getRow(org.nexml.model.OTU)
+	 */
 	public List<MatrixCell<T>> getRow(OTU otu) {
 		Map<Character, MatrixCellImpl<T>> charsToCells = mMatrixCells.get(otu);
 		List<MatrixCell<T>> row = new ArrayList<MatrixCell<T>>();
@@ -119,20 +159,49 @@ class MatrixImpl<T> extends OTUsLinkableImpl<Character> implements
 		mMatrixCells.get(otu).put(character, matrixCell);
 	}
 	
+	protected MatrixCell<T> createMatrixCell(OTU otu,Character character,Element element) {
+		MatrixCellImpl<T> cell = new MatrixCellImpl<T>(getDocument(),element);
+		this.setCell(otu, character, cell);
+		return cell;
+	}	
+	
 	protected Element getFormatElement() {
 		if ( null == mFormatElement ) {
-			Element format = getDocument().createElement("format");
-			getElement().insertBefore(format, getElement().getFirstChild());
-			setFormatElement(format);
+			List<Element> formatElements = getChildrenByTagName(getElement(), "format");
+			if ( formatElements.isEmpty() ) {
+				Element format = getDocument().createElement("format");
+				getElement().insertBefore(format, getMatrixElement());
+				setFormatElement(format);
+			}
+			else if ( formatElements.size() == 1 ) {
+				setFormatElement(formatElements.get(0));
+			}
+			else {
+				throw new RuntimeException("Too many format elements");
+			}
 		}
 		return mFormatElement;
 	}
 	
-	protected void setFormatElement(Element formatElement) {
+	protected void setFormatElement(Element formatElement) {		
 		mFormatElement = formatElement;
 	}
 	
 	protected Element getMatrixElement() {
+		if ( null == mMatrixElement ) {
+			List<Element> matrixElements = getChildrenByTagName(getElement(), "matrix");
+			if ( matrixElements.isEmpty() ) {
+				Element matrix = getDocument().createElement("matrix");
+				getElement().appendChild(matrix);
+				setMatrixElement(matrix);
+			}
+			else if ( matrixElements.size() == 1 ) {
+				setMatrixElement(matrixElements.get(0));
+			}
+			else {
+				throw new RuntimeException("Too many matrix elements");
+			}			
+		}
 		return mMatrixElement;
 	}
 	
@@ -144,6 +213,10 @@ class MatrixImpl<T> extends OTUsLinkableImpl<Character> implements
 		return getThings().get(i);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see org.nexml.model.Matrix#removeCharacter(org.nexml.model.Character)
+	 */
 	public void removeCharacter(Character character) {
 		removeThing(character);
 		for (Map<Character, MatrixCellImpl<T>> characterToMatrixCell : mMatrixCells

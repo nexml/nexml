@@ -1,23 +1,14 @@
 package org.nexml.model.impl;
 
 import java.util.Iterator;
-import java.util.Map;
-
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathExpression;
-import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory;
-
 import org.nexml.model.FloatEdge;
 import org.nexml.model.IntEdge;
 import org.nexml.model.Network;
-import org.nexml.model.OTU;
+import org.nexml.model.OTUs;
 import org.nexml.model.Tree;
 import org.nexml.model.TreeBlock;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
 
 public class TreeBlockImpl extends OTUsLinkableImpl<Network<?>> implements
 		TreeBlock {
@@ -25,54 +16,67 @@ public class TreeBlockImpl extends OTUsLinkableImpl<Network<?>> implements
 		return "trees";
 	}
 
-	public TreeBlockImpl(Document document) {
+    /**
+     * Protected constructors that take a DOM document object but not
+     * an element object are used for generating new element nodes in
+     * a NeXML document. On calling such constructors, a new element
+     * is created, which can be retrieved using getElement(). After this
+     * step, the Impl class that called this constructor would still 
+     * need to attach the element in the proper location (typically
+     * as a child element of the class that called the constructor). 
+     * @param document a DOM document object
+     * @author rvosa
+     */
+	protected TreeBlockImpl(Document document) {
 		super(document);
 	}
 
-	/**
-	 * This method creates a network with edge lengths which are integers. Here
-	 * we also create a tree element, and set its xsi:type attribute to
-	 * nex:IntNetwork
-	 * 
-	 * @author rvosa
-	 */
-	public TreeBlockImpl(Document document, Element item,
-			Map<String, OTU> originalOTUIds) {
+	protected Network<IntEdge> createIntNetwork(Element element) {
+		return new IntNetworkImpl(getDocument(),element,(OTUsImpl)getOTUs());
+	}
+	
+    /**
+     * Protected constructors are intended for recursive parsing, i.e.
+     * starting from the root element (which maps onto DocumentImpl) we
+     * traverse the element tree such that for every child element that maps
+     * onto an Impl class the containing class calls that child's protected
+     * constructor, passes in the element of the child. From there the 
+     * child takes over, populates itself and calls the protected 
+     * constructors of its children. These should probably be protected
+     * because there is all sorts of opportunity for outsiders to call
+     * these in the wrong context, passing in the wrong elements etc.
+     * @param document the containing DOM document object. Every Impl 
+     * class needs a reference to this so that it can create DOM element
+     * objects
+     * @param element the equivalent NeXML element (e.g. for OTUsImpl, it's
+     * the <otus/> element)
+     * @author rvosa
+     */
+	protected TreeBlockImpl(Document document, Element item, OTUs otus) {
 		super(document, item);
-
-		try {
-			XPathFactory factory = XPathFactory.newInstance();
-			XPath xpath = factory.newXPath();
-
-			XPathExpression otusExpr = xpath
-					.compile(TreeImpl.getTagNameClass());
-			Object result = otusExpr.evaluate(this.getElement(),
-					XPathConstants.NODESET);
-			NodeList nodes = (NodeList) result;
-			for (int i = 0; i < nodes.getLength(); i++) {
-				Element thisTreeElement = (Element) nodes.item(i);
-				Tree<?> tree = null;
-				if (thisTreeElement.getAttribute(XSI_PREFIX + ":type").equals(
-						NEX_PREFIX + ":IntTree")) {
-					tree = new IntTreeImpl(document, thisTreeElement,
-							originalOTUIds);
-				} else if (thisTreeElement.getAttribute(XSI_PREFIX + ":type")
-						.equals(NEX_PREFIX + ":FloatTree")) {
-					tree = new FloatTreeImpl(document, thisTreeElement,
-							originalOTUIds);
-				} else {
-					throw new RuntimeException("tree type ["
-							+ thisTreeElement
-									.getAttribute(XSI_PREFIX + ":type")
-							+ "] not supported.");
-				}
-				this.addThing(tree);
+		setOTUs(otus);
+		for ( Element networkElement : getChildrenByTagName(item,NetworkImpl.getTagNameClass())) {
+			if ( networkElement.getAttribute(XSI_PREFIX + ":type").indexOf("Int") > 0 ) {
+				addThing(new IntNetworkImpl(document,networkElement,(OTUsImpl)otus));
 			}
-		} catch (XPathExpressionException e) {
-			throw new RuntimeException(e);
+			else {
+				addThing(new FloatNetworkImpl(document,networkElement,(OTUsImpl)otus));
+			}
+		}
+		for ( Element treeElement : getChildrenByTagName(item,TreeImpl.getTagNameClass())) {
+			if ( treeElement.getAttribute(XSI_PREFIX + ":type").indexOf("Int") > 0 ) {
+				addThing(new IntTreeImpl(document,treeElement,(OTUsImpl)otus));
+			}
+			else {
+				addThing(new FloatTreeImpl(document,treeElement,(OTUsImpl)otus));
+			}
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see org.nexml.model.TreeBlock#createIntNetwork()
+	 */
 	public Network<IntEdge> createIntNetwork() {
 		IntNetworkImpl network = new IntNetworkImpl(getDocument());
 		addThing(network);
@@ -98,6 +102,10 @@ public class TreeBlockImpl extends OTUsLinkableImpl<Network<?>> implements
 		return network;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see org.nexml.model.impl.NexmlWritableImpl#getTagName()
+	 */
 	@Override
 	public String getTagName() {
 		return getTagNameClass();
@@ -132,6 +140,10 @@ public class TreeBlockImpl extends OTUsLinkableImpl<Network<?>> implements
 		return tree;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see java.lang.Iterable#iterator()
+	 */
 	public Iterator<Network<?>> iterator() {
 		return getThings().iterator();
 	}

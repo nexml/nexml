@@ -12,9 +12,25 @@ import org.w3c.dom.NodeList;
 
 class ContinuousMatrixImpl extends MatrixImpl<Double> implements ContinuousMatrix {
 
-	public ContinuousMatrixImpl(Document document, Element item, OTUsImpl otus) {
+    /**
+     * Protected constructors are intended for recursive parsing, i.e.
+     * starting from the root element (which maps onto DocumentImpl) we
+     * traverse the element tree such that for every child element that maps
+     * onto an Impl class the containing class calls that child's protected
+     * constructor, passes in the element of the child. From there the 
+     * child takes over, populates itself and calls the protected 
+     * constructors of its children. These should probably be protected
+     * because there is all sorts of opportunity for outsiders to call
+     * these in the wrong context, passing in the wrong elements etc.
+     * @param document the containing DOM document object. Every Impl 
+     * class needs a reference to this so that it can create DOM element
+     * objects
+     * @param element the equivalent NeXML element (e.g. for OTUsImpl, it's
+     * the <otus/> element)
+     * @author rvosa
+     */
+	protected ContinuousMatrixImpl(Document document, Element item, OTUsImpl otus) {
 		super(document,item);
-		Map<String, OTU> originalOTUIds = otus.getOriginalOTUIds();
 		NodeList children = item.getChildNodes();
 		Map<String,Character> charactersById = null;
 		for ( int i = 0; i < children.getLength(); i++ ) {
@@ -23,7 +39,7 @@ class ContinuousMatrixImpl extends MatrixImpl<Double> implements ContinuousMatri
 				charactersById = processCharacters((Element)children.item(i));
 			}
 			if ( null != localName && localName.equals("matrix") ) {
-				processMatrix((Element)children.item(i),originalOTUIds, charactersById);
+				processMatrix((Element)children.item(i),otus, charactersById);
 			}			
 		}
 		setOTUs(otus);
@@ -41,10 +57,10 @@ class ContinuousMatrixImpl extends MatrixImpl<Double> implements ContinuousMatri
 		return result;
 	}
 	
-	private void processMatrix(Element matrix,Map<String, OTU> originalOTUIds,Map<String,Character> charactersById) {
+	private void processMatrix(Element matrix,OTUsImpl otus,Map<String,Character> charactersById) {
 		setMatrixElement(matrix);
 		for ( Element rowElement : getChildrenByTagName(matrix, "row") ) {
-			OTU otu = originalOTUIds.get(rowElement.getAttribute("otu"));
+			OTU otu = otus.getThingById(rowElement.getAttribute("otu"));
 			rowElement.setAttribute("otu", otu.getId());
 			for ( Element cellElement : getChildrenByTagName(rowElement, "cell") ) {
 				MatrixCellImpl<Double> matrixCell = new MatrixCellImpl<Double>(getDocument(),cellElement);
@@ -69,8 +85,18 @@ class ContinuousMatrixImpl extends MatrixImpl<Double> implements ContinuousMatri
 		}		
 	}
 
-	
-	public ContinuousMatrixImpl(Document document) {
+    /**
+     * Protected constructors that take a DOM document object but not
+     * an element object are used for generating new element nodes in
+     * a NeXML document. On calling such constructors, a new element
+     * is created, which can be retrieved using getElement(). After this
+     * step, the Impl class that called this constructor would still 
+     * need to attach the element in the proper location (typically
+     * as a child element of the class that called the constructor). 
+     * @param document a DOM document object
+     * @author rvosa
+     */
+	protected ContinuousMatrixImpl(Document document) {
 		super(document);
 	}
 

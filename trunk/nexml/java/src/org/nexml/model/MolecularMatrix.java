@@ -4,8 +4,17 @@ import java.util.Set;
 
 public interface MolecularMatrix extends Matrix<CharacterState> {
 
+	/**
+	 * Gets the charactere state sets associated with the
+	 * invocant matrix. Typically, this would be a single,
+	 * fixed state set.
+	 */
 	Set<CharacterStateSet> getCharacterStateSets();
 	
+	/**
+	 * Creates and returns a new character state set
+	 * @return
+	 */
 	CharacterStateSet createCharacterStateSet();
 	
 	/**
@@ -18,9 +27,21 @@ public interface MolecularMatrix extends Matrix<CharacterState> {
 	 */	
 	Character createCharacter(CharacterStateSet characterStateSet);
 	
+	/**
+	 * Retrieves a fixed character state set for IUPAC single
+	 * character DNA nucleotide symbols
+	 */
 	CharacterStateSet getDNACharacterStateSet();
-	
+
+	/**
+	 * Retrieves a fixed character state set for IUPAC single
+	 * character RNA nucleotide symbols
+	 */
 	CharacterStateSet getRNACharacterStateSet();
 	
+	/**
+	 * Retrieves a fixed character state set for IUPAC single
+	 * character amino acid symbols
+	 */
 	CharacterStateSet getProteinCharacterStateSet();
 }
