@@ -16,7 +16,7 @@ import org.w3c.dom.Document;
  */
 class MolecularCharacterStateSetImpl extends CharacterStateSetImpl{
 
-    public MolecularCharacterStateSetImpl(Document document) {
+	protected MolecularCharacterStateSetImpl(Document document) {
         super(document);
     }
 
@@ -24,10 +24,18 @@ class MolecularCharacterStateSetImpl extends CharacterStateSetImpl{
     private static MolecularCharacterStateSetImpl RNAStateSet = null;
     private static MolecularCharacterStateSetImpl ProteinStateSet = null;
 
+    /*
+     * (non-Javadoc)
+     * @see org.nexml.model.impl.CharacterStateSetImpl#getCharacterStates()
+     */
     public Set<CharacterState> getCharacterStates() {
         return mCharacterStates;
     }
 
+    /*
+     * (non-Javadoc)
+     * @see org.nexml.model.impl.CharacterStateSetImpl#setCharacterStates(java.util.Set)
+     */
     /**
      * @param characterStates
      *
@@ -36,8 +44,6 @@ class MolecularCharacterStateSetImpl extends CharacterStateSetImpl{
      */
     public void setCharacterStates(Set<CharacterState> characterStates) {
     }
-
-
 
     /**
      * 
@@ -156,7 +162,7 @@ class MolecularCharacterStateSetImpl extends CharacterStateSetImpl{
         unKnownSet.add(aState);
         unKnownSet.add(cState);
         unKnownSet.add(gState);
-        unKnownSet.add(tState); //others, through gap?
+        unKnownSet.add(tState); //others, through gap? XXX maybe just fundamental states?
         unKnownSet.add(kState);
         unKnownSet.add(mState);
         unKnownSet.add(rState);
@@ -291,7 +297,7 @@ class MolecularCharacterStateSetImpl extends CharacterStateSetImpl{
         unKnownSet.add(aState);
         unKnownSet.add(cState);
         unKnownSet.add(gState);
-        unKnownSet.add(uState); //others, through gap?
+        unKnownSet.add(uState); //others, through gap? XXX maybe just fundamental states?
         unKnownSet.add(kState);
         unKnownSet.add(mState);
         unKnownSet.add(rState);

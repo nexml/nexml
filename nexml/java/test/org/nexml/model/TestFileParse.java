@@ -20,7 +20,7 @@ import org.xml.sax.SAXException;
 public class TestFileParse {
 	@Test
 	public void parseCharacters() {
-		File file = new File("trunk/nexml/examples/characters.xml");
+		File file = new File("trunk/nexml/examples/trees.xml");
 		Document doc = null;
 		try {
 			doc = DocumentFactory.parse(file);

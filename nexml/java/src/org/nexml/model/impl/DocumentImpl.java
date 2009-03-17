@@ -2,10 +2,7 @@ package org.nexml.model.impl;
 
 import java.io.StringWriter;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
@@ -27,39 +24,54 @@ import org.w3c.dom.Element;
 
 public class DocumentImpl extends AnnotatableImpl implements Document {
 	private List<OTUs> mOtusList = new ArrayList<OTUs>();
-	private List<Matrix<?>> mMatrices = new ArrayList<Matrix<?>>();
+	private List<Matrix<?>> mMatrixList = new ArrayList<Matrix<?>>();
 
 	private List<TreeBlock> mTreeBlockList = new ArrayList<TreeBlock>();
 
+    /**
+     * Protected constructors that take a DOM document object but not
+     * an element object are used for generating new element nodes in
+     * a NeXML document. On calling such constructors, a new element
+     * is created, which can be retrieved using getElement(). After this
+     * step, the Impl class that called this constructor would still 
+     * need to attach the element in the proper location (typically
+     * as a child element of the class that called the constructor). 
+     * @param document a DOM document object
+     * @author rvosa
+     */
 	public DocumentImpl(org.w3c.dom.Document document) {
 		super(document);
 		setRootAttributes();
 	}
 
+    /**
+     * This is the only public constructor that takes an element as
+     * its argument. This is so that we can start the recursive
+     * element traversal from outside this packages, e.g. in the
+     * DocumentFactory.
+     * @param document the containing DOM document object. Every Impl 
+     * class needs a reference to this so that it can create DOM element
+     * objects
+     * @param element the <nex:nexml/> root element
+     * @author rvosa
+     */
 	public DocumentImpl(org.w3c.dom.Document document, Element element) {
 		super(document, element);
+		if ( ! element.getOwnerDocument().equals(document) ) {
+			throw new RuntimeException("This'll never work");
+		}		
 
-		List<Element> otusElements = getChildrenByTagName(document
-				.getDocumentElement(), OTUsImpl.getTagNameClass());
+		List<Element> oTUsElements = getChildrenByTagName(element, OTUsImpl.getTagNameClass());
 
-		Map<String, OTUsImpl> originalOTUsIds = new HashMap<String, OTUsImpl>();
-
-		for (Element thisElement : otusElements) {
-			String originalOTUsId = thisElement.getAttribute("id");
+		for (Element thisElement : oTUsElements) {
 			OTUsImpl otus = new OTUsImpl(document, thisElement);
-			originalOTUsIds.put(originalOTUsId, otus);
 			mOtusList.add(otus);
 		}
 
-		List<Element> treeBlockElements = getChildrenByTagName(document
-				.getDocumentElement(), TreeBlockImpl.getTagNameClass());
+		List<Element> treeBlockElements = getChildrenByTagName(element, TreeBlockImpl.getTagNameClass());
 		for (Element treeBlockElement : treeBlockElements) {
-			TreeBlockImpl treeBlock = new TreeBlockImpl(document,
-					treeBlockElement, originalOTUsIds.get(
-							treeBlockElement.getAttribute("otus"))
-							.getOriginalOTUIds());
-			treeBlock.setOTUs(originalOTUsIds.get(treeBlock.getElement()
-					.getAttribute("otus")));
+			String oTUsId = treeBlockElement.getAttribute("otus");			
+			TreeBlockImpl treeBlock = new TreeBlockImpl(document,treeBlockElement,getOTUsById(oTUsId));
 			mTreeBlockList.add(treeBlock);
 		}
 
@@ -67,19 +79,19 @@ public class DocumentImpl extends AnnotatableImpl implements Document {
 		List<Element> charsBlockElements = getChildrenByTagName(document
 				.getDocumentElement(), MatrixImpl.getTagNameClass());
 		for (Element charsBlock : charsBlockElements) {
+			String xsiType = charsBlock.getAttribute(XSI_PREFIX+":type");
 			Matrix<?> matrix = null;
-			String xsiType = charsBlock.getAttribute("xsi:type");
 			xsiType = xsiType.replaceAll("Seqs", "Cells");
-			charsBlock.setAttribute("xsi:type", xsiType);
+			charsBlock.setAttribute(XSI_PREFIX+":type", xsiType);
 			if (xsiType.indexOf("Continuous") > 0) {
-				matrix = new ContinuousMatrixImpl(getDocument(), charsBlock,
-						originalOTUsIds.get(charsBlock.getAttribute("otus")));
-			} else {
+				matrix = new ContinuousMatrixImpl(getDocument(), charsBlock, 
+					(OTUsImpl)getOTUsById(charsBlock.getAttribute("otus")));
+			} 
+			else {
 				matrix = new CategoricalMatrixImpl(getDocument(), charsBlock,
-						originalOTUsIds.get(charsBlock.getAttribute("otus")));
+					(OTUsImpl)getOTUsById(charsBlock.getAttribute("otus")));				
 			}
-			mMatrices.add(matrix);
-
+			mMatrixList.add(matrix);
 		}
 	}
 
@@ -94,7 +106,7 @@ public class DocumentImpl extends AnnotatableImpl implements Document {
 	}
 
 	/**
-	 * THis method creates an otus element and appends it to the document root.
+	 * This method creates an otus element and appends it to the document root.
 	 * 
 	 * @author rvosa
 	 */
@@ -121,6 +133,10 @@ public class DocumentImpl extends AnnotatableImpl implements Document {
 		return treeBlock;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see org.nexml.model.impl.NexmlWritableImpl#getTagName()
+	 */
 	@Override
 	String getTagName() {
 		return "nexml";
@@ -140,7 +156,7 @@ public class DocumentImpl extends AnnotatableImpl implements Document {
 	public CategoricalMatrix createCategoricalMatrix(OTUs otus) {
 		CategoricalMatrixImpl categoricalMatrix = new CategoricalMatrixImpl(
 				getDocument());
-		mMatrices.add(categoricalMatrix);
+		mMatrixList.add(categoricalMatrix);
 		getElement().appendChild(categoricalMatrix.getElement());
 		categoricalMatrix.setOTUs(otus);
 		categoricalMatrix.getElement().setAttributeNS(XSI_NS,
@@ -162,7 +178,7 @@ public class DocumentImpl extends AnnotatableImpl implements Document {
 	public ContinuousMatrix createContinuousMatrix(OTUs otus) {
 		ContinuousMatrixImpl continuousMatrix = new ContinuousMatrixImpl(
 				getDocument());
-		mMatrices.add(continuousMatrix);
+		mMatrixList.add(continuousMatrix);
 		getElement().appendChild(continuousMatrix.getElement());
 		continuousMatrix.setOTUs(otus);
 		continuousMatrix.getElement().setAttributeNS(XSI_NS,
@@ -178,8 +194,8 @@ public class DocumentImpl extends AnnotatableImpl implements Document {
 	 *            have an id reference attribute to specify the otus element it
 	 *            refers to, the equivalent OTUs object needs to be passed in
 	 *            here. In addition, characters elements need to specify the
-	 *            concrete subclass they implement (the xsi:type business). XXX
-	 *            Here, this subclass is set to a molecular sequence type as
+	 *            concrete subclass they implement (the xsi:type business). 
+	 *            XXX Here, this subclass is set to a molecular sequence type as
 	 *            specified in param type. Hopefully we come up with a better
 	 *            way to do this.
 	 * 
@@ -188,7 +204,7 @@ public class DocumentImpl extends AnnotatableImpl implements Document {
 	public MolecularMatrix createMolecularMatrix(OTUs otus, String type) {
 		MolecularMatrixImpl molecularMatrix = new MolecularMatrixImpl(
 				getDocument());
-		mMatrices.add(molecularMatrix);
+		mMatrixList.add(molecularMatrix);
 		getElement().appendChild(molecularMatrix.getElement());
 		molecularMatrix.setOTUs(otus);
 		molecularMatrix.getElement().setAttributeNS(XSI_NS,
@@ -196,6 +212,10 @@ public class DocumentImpl extends AnnotatableImpl implements Document {
 		return molecularMatrix;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see org.nexml.model.Document#getXmlString()
+	 */
 	public String getXmlString() {
 		StringWriter stringWriter = new StringWriter();
 		try {
@@ -215,34 +235,64 @@ public class DocumentImpl extends AnnotatableImpl implements Document {
 		return stringWriter.getBuffer().toString();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see org.nexml.model.Document#getOTUsList()
+	 */
 	public List<OTUs> getOTUsList() {
 		return mOtusList;
 	}
-
-	public List<Matrix<?>> getMatrices() {
-		return mMatrices;
+	
+	protected OTUs getOTUsById(String id) {
+		if ( null == id ) {
+			return null;
+		}
+		for ( OTUs otus : getOTUsList() ) {
+			if ( ((OTUsImpl)otus).getId().equals(id) ) {
+				return otus;
+			}
+		}
+		return null;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see org.nexml.model.Document#getMatrices()
+	 */
+	public List<Matrix<?>> getMatrices() {
+		return mMatrixList;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.nexml.model.Document#getTreeBlockList()
+	 */
 	public List<TreeBlock> getTreeBlockList() {
 		return mTreeBlockList;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see org.nexml.model.impl.NexmlWritableImpl#getId()
+	 */
 	public String getId() {
 		return null;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see org.nexml.model.impl.NexmlWritableImpl#setLabel(java.lang.String)
+	 */
 	public void setLabel(String label) {
 
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see org.nexml.model.impl.NexmlWritableImpl#getLabel()
+	 */
 	public String getLabel() {
 		return null;
-	}
-
-	private Map<String, OTUs> mOriginalOTUsIds = new HashMap<String, OTUs>();
-
-	Map<String, OTUs> getOriginalOTUsIds() {
-		return mOriginalOTUsIds;
 	}
 
 }

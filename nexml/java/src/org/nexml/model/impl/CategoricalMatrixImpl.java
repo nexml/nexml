@@ -1,161 +1,110 @@
 package org.nexml.model.impl;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 import org.nexml.model.CategoricalMatrix;
 import org.nexml.model.Character;
 import org.nexml.model.CharacterState;
 import org.nexml.model.CharacterStateSet;
-import org.nexml.model.CompoundCharacterState;
+import org.nexml.model.MatrixCell;
 import org.nexml.model.OTU;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
 
 class CategoricalMatrixImpl extends
 		MatrixImpl<CharacterState> implements CategoricalMatrix {
 	
-	public CategoricalMatrixImpl(Document document) {
+	private Set<CharacterStateSet> mCharacterStateSets = new HashSet<CharacterStateSet>();
+	private MolecularCharacterStateSetImpl mMolecularCharacterStates = null;	
+	
+    /**
+     * Protected constructors that take a DOM document object but not
+     * an element object are used for generating new element nodes in
+     * a NeXML document. On calling such constructors, a new element
+     * is created, which can be retrieved using getElement(). After this
+     * step, the Impl class that called this constructor would still 
+     * need to attach the element in the proper location (typically
+     * as a child element of the class that called the constructor). 
+     * @param document a DOM document object
+     * @author rvosa
+     */	
+	protected CategoricalMatrixImpl(Document document) {
 		super(document);
 	}
 	
-	private void createState (Class<?> subClass,Element stateElement,
-			Map<CharacterStateSet,Map<String,CharacterState>> stateByStateSet,
-			Map<CharacterStateSet,Map<String,CharacterState>> symbolByStateSet,
-			CharacterStateSet charStateSet) {
-		String stateId = stateElement.getAttribute("id");
-		String symbol = stateElement.getAttribute("symbol");
-		CharacterState stateObj = null;
-		try {
-			stateObj = (CharacterState)subClass
-				.getConstructor(org.w3c.dom.Document.class,Element.class)
-				.newInstance(getDocument(),stateElement);
-		} catch (Exception e) {
-			e.printStackTrace();
+    /**
+     * Protected constructors are intended for recursive parsing, i.e.
+     * starting from the root element (which maps onto DocumentImpl) we
+     * traverse the element tree such that for every child element that maps
+     * onto an Impl class the containing class calls that child's protected
+     * constructor, passes in the element of the child. From there the 
+     * child takes over, populates itself and calls the protected 
+     * constructors of its children. These should probably be protected
+     * because there is all sorts of opportunity for outsiders to call
+     * these in the wrong context, passing in the wrong elements etc.
+     * @param document the containing DOM document object. Every Impl 
+     * class needs a reference to this so that it can create DOM element
+     * objects
+     * @param element the equivalent NeXML element (e.g. for OTUsImpl, it's
+     * the <otus/> element)
+     * @author rvosa
+     */
+	protected CategoricalMatrixImpl(Document document, Element element, OTUsImpl otus) {
+		super(document, element);
+		for ( Element stateSetElement : getChildrenByTagName( getFormatElement(), CharacterStateSetImpl.getTagNameClass() ) ) {
+			createCharacterStateSet(stateSetElement); 
 		}
-		stateByStateSet.get(charStateSet).put(stateId, stateObj);
-		symbolByStateSet.get(charStateSet).put(symbol, stateObj);
-		if ( stateObj instanceof CompoundCharacterState ) {
-			Set<CharacterState> members = new HashSet<CharacterState>();
-			for ( Element member : getChildrenByTagName( stateElement, "member" ) ) {
-				String memberId = member.getAttribute("state");
-				members.add(stateByStateSet.get(charStateSet).get(memberId));
-				member.setAttribute("state", stateByStateSet.get(charStateSet).get(memberId).getId());
-			}
-			((CompoundCharacterState)stateObj).setStates(members);			
+		for ( Element characterElement : getChildrenByTagName( getFormatElement(), CharacterImpl.getTagNameClass() ) ) {
+			createCharacter(characterElement);
 		}
-	}
-	
-	public CategoricalMatrixImpl(Document document, Element item, OTUsImpl otus) {
-		super(document, item);
-		Map<String, OTU> originalOTUIds = otus.getOriginalOTUIds();
-		NodeList children = item.getChildNodes();
-		Map<CharacterStateSet, Map<String, CharacterState>> stateByStateSet = new HashMap<CharacterStateSet, Map<String, CharacterState>>();
-		Map<CharacterStateSet, Map<String, CharacterState>> symbolByStateSet = new HashMap<CharacterStateSet, Map<String, CharacterState>>();
-		Map<String, CharacterStateSet> stateSetById = new HashMap<String, CharacterStateSet>();
-		Map<String, Character> characterById = new HashMap<String, Character>();
-		Map<Character, CharacterStateSet> stateSetByCharacter = new HashMap<Character, CharacterStateSet>();
-		for (int i = 0; i < children.getLength(); i++) {
-			String localName = children.item(i).getNodeName();
-			if (null != localName && localName.equals("format")) {
-				this.setFormatElement((Element) children.item(i));
-				for (Element stateSet : getChildrenByTagName((Element) children.item(i), "states")) {
-					processStateSet(stateByStateSet, symbolByStateSet, stateSetById, stateSet);
-				}
-				for (Element character : getChildrenByTagName((Element) children.item(i), "char")) {
-					String stateSetId = character.getAttribute("states");
-					String characterId = character.getAttribute("id");
-					Character characterObj = new CharacterImpl(getDocument(), character);
-					characterObj.setCharacterStateSet(stateSetById.get(stateSetId));
-					characterById.put(characterId, characterObj);
-					stateSetByCharacter.put(characterObj, stateSetById.get(stateSetId));
-					this.addThing(characterObj);
-				}
+		for ( Element row : getChildrenByTagName( getMatrixElement(), "row") ) {
+			OTU otu = otus.getThingById(row.getAttribute("otu"));
+			for (Element cellElement : getChildrenByTagName(row, MatrixCellImpl.getTagNameClass() ) ) {
+				Character character = getThingById(cellElement.getAttribute("char"));
+				String stateId = cellElement.getAttribute("state");
+				CharacterState state = character.getCharacterStateSet().lookupCharacterStateById(stateId);
+				MatrixCell<CharacterState> matrixCell = createMatrixCell(otu, character, cellElement);				
+				matrixCell.setValue(state);
 			}
-			if (null != localName && localName.equals("matrix")) {
-				this.setMatrixElement((Element) children.item(i));
-				for (Element row : getChildrenByTagName((Element) children.item(i), "row")) {
-					OTU otu = originalOTUIds.get(row.getAttribute("otu"));
-					row.setAttribute("otu", otu.getId());
-					for (Element cell : getChildrenByTagName(row, "cell")) {
-						processCell(stateByStateSet, characterById, stateSetByCharacter, otu, cell);
+			for ( Element seqElement : getChildrenByTagName(row, "seq")) {
+				String seq = seqElement.getTextContent();
+				String[] states = element.getAttribute(XSI_PREFIX+":type").indexOf("Standard") > 0 
+					? seq.split("\\s+") : seq.split("\\s*");
+				int k = 0;
+				STATE: for ( int j = 0; j < states.length; j++ ) {
+					if ( states[j].length() == 0 ) {
+						continue STATE;
 					}
-					for ( Element seq : getChildrenByTagName(row, "seq")) {
-						String sequence = seq.getTextContent();
-						String[] states = null;
-						if ( item.getAttribute("xsi:type").indexOf("Standard") > 0 ) {
-							states = sequence.split("\\s+");
-						}
-						else {
-							states = sequence.split("\\s*");
-						}
-						int k = 0;
-						STATE: for ( int j = 0; j < states.length; j++ ) {
-							if ( states[j].length() == 0 ) {
-								continue STATE;
-							}
-							Character character = null;
-							character = getCharacterByIndex(k);
-							CharacterState value = symbolByStateSet.get(stateSetByCharacter.get(character)).get(states[j]);
-							getCell(otu, character).setValue(value);							
-							k++;
-						}
-						row.removeChild(seq);
-					}
+					Character character = getCharacterByIndex(k);
+					CharacterState state = character.getCharacterStateSet().lookupCharacterStateBySymbol(states[j]);
+					getCell(otu, character).setValue(state);							
+					k++;
 				}
+				row.removeChild(seqElement);
 			}
 		}
 		setOTUs(otus);
 	}
 
-	private void processStateSet(
-		Map<CharacterStateSet, Map<String, CharacterState>> stateByStateSet,
-		Map<CharacterStateSet, Map<String, CharacterState>> symbolByStateSet,
-		Map<String, CharacterStateSet> stateSetById,
-		Element stateSet) {
-		String stateSetId = stateSet.getAttribute("id");
-		CharacterStateSetImpl charStateSet = new CharacterStateSetImpl(getDocument(),stateSet);
-		stateSetById.put(stateSetId, charStateSet);
-		stateByStateSet.put(charStateSet, new HashMap<String,CharacterState>());
-		symbolByStateSet.put(charStateSet, new HashMap<String,CharacterState>());
-		for ( Element state : getChildrenByTagName(stateSet,"state") ) {
-			createState(CharacterStateImpl.class, state, stateByStateSet, symbolByStateSet, charStateSet);
+	protected CharacterStateSet createCharacterStateSet(Element statesElement) {
+		CharacterStateSetImpl charStateSet = new CharacterStateSetImpl(getDocument(),statesElement);
+		for ( Element stateElement : getChildrenByTagName(statesElement,"state") ) {
+			CharacterState characterState = charStateSet.createCharacterState(stateElement);
+			charStateSet.addThing(characterState);
 		}
-		for ( Element state : getChildrenByTagName(stateSet,"uncertain_state_set") ) {
-			createState(UncertainCharacterStateImpl.class, state, stateByStateSet, symbolByStateSet, charStateSet);
+		for ( Element stateElement : getChildrenByTagName(statesElement,"uncertain_state_set") ) {
+			CharacterState characterState = charStateSet.createUncertainCharacterState(stateElement);
+			charStateSet.addThing(characterState);
 		}	
-		for ( Element state : getChildrenByTagName(stateSet,"polymorphic_state_set") ) {
-			createState(PolymorphicCharacterStateImpl.class, state, stateByStateSet, symbolByStateSet, charStateSet);						
+		for ( Element stateElement : getChildrenByTagName(statesElement,"polymorphic_state_set") ) {
+			CharacterState characterState = charStateSet.createPolymorphicCharacterState(stateElement);
+			charStateSet.addThing(characterState);
 		}
+		mCharacterStateSets.add(charStateSet); // XXX Make this into a setter?
+		return charStateSet;
 	}
-
-	private void processCell(
-		Map<CharacterStateSet, Map<String, CharacterState>> stateByStateSet,
-		Map<String, Character> characterById,
-		Map<Character, CharacterStateSet> stateSetByCharacter,
-		OTU otu,
-		Element cell) {
-		String charId = cell.getAttribute("char");
-		String stateId = cell.getAttribute("state");
-		Character character = characterById.get(charId);
-		CharacterState state = null;
-		try {
-			state = stateByStateSet.get(stateSetByCharacter.get(character)).get(stateId);
-		} catch ( Exception e ) {
-			e.printStackTrace();
-		}
-		MatrixCellImpl<CharacterState> cellObj = new MatrixCellImpl<CharacterState>(getDocument(),cell);
-		cellObj.setValue(state);
-		setCell(otu, character, cellObj);
-		cellObj.getElement().setAttribute("char", character.getId());
-	}	
-
-	private Set<CharacterStateSet> mCharacterStateSets = new HashSet<CharacterStateSet>();
-	private MolecularCharacterStateSetImpl mMolecularCharacterStates = null;
 	
 	/**
 	 * This is equivalent to creating a <states> element, i.e.
@@ -168,14 +117,14 @@ class CategoricalMatrixImpl extends
 	public CharacterStateSet createCharacterStateSet() {
 		CharacterStateSetImpl characterStateSet = new CharacterStateSetImpl(getDocument());
 		mCharacterStateSets.add(characterStateSet);
-		if ( null == getFormatElement() ) {
-			setFormatElement( getDocument().createElement("format") );
-			getElement().insertBefore( getFormatElement(), getElement().getFirstChild() );
-		}
 		getFormatElement().insertBefore( characterStateSet.getElement(), getFormatElement().getFirstChild() );
 		return characterStateSet;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see org.nexml.model.CategoricalMatrix#getCharacterStateSets()
+	 */
 	public Set<CharacterStateSet> getCharacterStateSets() {
 		return Collections.unmodifiableSet(mCharacterStateSets);
 	}
@@ -191,10 +140,31 @@ class CategoricalMatrixImpl extends
 	public Character createCharacter(CharacterStateSet characterStateSet) {
 		CharacterImpl character = new CharacterImpl(getDocument());
 		addThing(character);
-		character.getElement().setAttribute("states", characterStateSet.getId());
+		character.setCharacterStateSet(characterStateSet);
 		getFormatElement().appendChild(character.getElement());
 		return character;
 	}	
+	
+	protected Character createCharacter(Element element) {
+		CharacterImpl character = new CharacterImpl(getDocument(),element);
+		addThing(character);
+		String stateSetId = element.getAttribute("states");
+		CharacterStateSet stateSet = lookupCharacterStateSetById(stateSetId);
+		character.setCharacterStateSet(stateSet);
+		return character;
+	}
+	
+	protected CharacterStateSet lookupCharacterStateSetById(String stateSetId) {
+		if ( null == stateSetId ) {
+			return null;
+		}
+		for ( CharacterStateSet stateSet : mCharacterStateSets ) {
+			if ( stateSetId.equals(stateSet.getId()) ) {
+				return stateSet;
+			}
+		}
+		return null;
+	}
 
 	public CharacterStateSet getDNACharacterStateSet() {
 	    if (mMolecularCharacterStates == null){

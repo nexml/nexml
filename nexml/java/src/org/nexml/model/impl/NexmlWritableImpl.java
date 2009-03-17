@@ -15,7 +15,6 @@ import org.w3c.dom.NodeList;
  */
 abstract class NexmlWritableImpl implements NexmlWritable {
 	private Document mDocument = null;
-	private String mId;
 	private Element mElement;
 	protected static String XSI_NS = "http://www.w3.org/2001/XMLSchema-instance";
 	protected static String XSI_PREFIX = "xsi";
@@ -34,35 +33,43 @@ abstract class NexmlWritableImpl implements NexmlWritable {
 	 * 
 	 * @param document
 	 */
-	public NexmlWritableImpl(Document document) {
-		mId = "a" + UUID.randomUUID();
+	protected NexmlWritableImpl(Document document) {
 		mDocument = document;
 		mElement = document.createElementNS(DEFAULT_NAMESPACE, getTagName());
-		getElement().setAttribute("id", getId());
+		getElement().setAttribute("id", "a" + UUID.randomUUID());
 	}
 
-	/**
-	 * This constructor is intended for calls while we are traversing an
-	 * existing DOM tree: in this constructor we set up the references between
-	 * our Impl objects and their equivalent DOM Element objects (so that we can
-	 * modify them in place). We make one immediate modification to the Element
-	 * object: we change the id attribute, so that we don't have to worry about
-	 * id clashes.
-	 * 
-	 * @param document
-	 * @param element
-	 */
-	public NexmlWritableImpl(Document document, Element element) {
-		mId = "a" + UUID.randomUUID();
+    /**
+     * Protected constructors are intended for recursive parsing, i.e.
+     * starting from the root element (which maps onto DocumentImpl) we
+     * traverse the element tree such that for every child element that maps
+     * onto an Impl class the containing class calls that child's protected
+     * constructor, passes in the element of the child. From there the 
+     * child takes over, populates itself and calls the protected 
+     * constructors of its children. These should probably be protected
+     * because there is all sorts of opportunity for outsiders to call
+     * these in the wrong context, passing in the wrong elements etc.
+     * @param document the containing DOM document object. Every Impl 
+     * class needs a reference to this so that it can create DOM element
+     * objects
+     * @param element the equivalent NeXML element (e.g. for OTUsImpl, it's
+     * the <otus/> element)
+     * @author rvosa
+     */
+	protected NexmlWritableImpl(Document document,Element element) {
 		mDocument = document;
 		mElement = element;
-		getElement().setAttribute("id", getId());
 	}
 
 	/**
 	 * Get the root DOM document of this {@code NexmlWritable}.
 	 * 
 	 * @return the root DOM document of this {@code NexmlWritable}.
+	 */
+	/**
+	 * The DOM document object here is typically used for creating
+	 * new Element objects.
+	 * @return A DOM document object
 	 */
 	protected final Document getDocument() {
 		return mDocument;
@@ -92,7 +99,12 @@ abstract class NexmlWritableImpl implements NexmlWritable {
 	 * 
 	 * @return the wrapped DOM element of this {@code NexmlWritable}.
 	 */
-	public final Element getElement() {
+	/**
+	 * This returns the equivalent NeXML element for the
+	 * invocant object.
+	 * @return a DOM Element object
+	 */
+	protected final Element getElement() {
 		return mElement;
 	}
 
@@ -101,33 +113,37 @@ abstract class NexmlWritableImpl implements NexmlWritable {
 	 * 
 	 * @return the label.
 	 */
+	/*
+	 * (non-Javadoc)
+	 * @see org.nexml.model.NexmlWritable#getLabel()
+	 */
 	public String getLabel() {
 		return getElement().getAttribute("label");
 	}
 
-	/**
-	 * Setter.
-	 * 
-	 * @param value.
+	/*
+	 * (non-Javadoc)
+	 * @see org.nexml.model.NexmlWritable#setLabel(java.lang.String)
 	 */
 	public void setLabel(String label) {
 		getElement().setAttribute("label", label);
 	}
 
-	/**
-	 * Getter.
-	 * 
-	 * @return the id.
+	
+	/*
+	 * (non-Javadoc)
+	 * @see org.nexml.model.NexmlWritable#getId()
 	 */
-	public String getId() {
-		return mId;
+	public String getId() { 
+		return getElement().getAttribute("id");
 	}
-
+	
 	/**
-	 * Get the (XML) tag name of this {@code NexmlWritable}.
-	 * 
+	 * This method returns the NeXML element name that the
+	 * {@code NexmlWritable} object is equivalent to.
 	 * @return the (XML) tag name of this {@code NexmlWritable}.
 	 */
+
 	abstract String getTagName();
 
 }
