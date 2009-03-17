@@ -2,6 +2,7 @@
 package Bio::Phylo::Treedrawer;
 use strict;
 use Bio::Phylo::Util::Logger;
+use Bio::Phylo::Forest::DrawTree;
 use Bio::Phylo::Util::Exceptions 'throw';
 use Bio::Phylo::Util::CONSTANT qw(_TREE_ looks_like_number looks_like_object looks_like_hash looks_like_class);
 my @fields = qw(WIDTH HEIGHT MODE SHAPE PADDING NODE_RADIUS TIP_RADIUS TEXT_HORIZ_OFFSET TEXT_VERT_OFFSET TEXT_WIDTH TREE _SCALEX _SCALEY SCALE FORMAT);
@@ -393,6 +394,9 @@ Sets tree to draw.
 sub set_tree {
     my ( $self, $tree ) = @_;
     if ( looks_like_object $tree, _TREE_ ) {
+    	if ( not $tree->isa('Bio::Phylo::Forest::DrawTree') ) {
+    		$tree = Bio::Phylo::Forest::DrawTree->new( '-tree' => $tree );
+    	}
         $self->{'TREE'} = $tree->negative_to_zero;
     }
     return $self;
@@ -739,6 +743,8 @@ Creates tree drawing.
            object into a drawing.
  Returns : SCALAR
  Args    :
+ Notes   : This will only work if you have the SVG module
+           from CPAN installed on your system.
 
 =cut
 
