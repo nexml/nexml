@@ -1,5 +1,6 @@
 package org.nexml.model;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -15,8 +16,7 @@ public class TestParseTrees {
 
 	@Test
 	public void parseFloatTree() throws Throwable {
-		Document document = DocumentFactory.parse(getClass()
-				.getResourceAsStream("/org/nexml/model/trees.xml"));
+		Document document = DocumentFactory.parse(new File("trunk/nexml/examples/trees.xml"));
 		System.out.println(document.getXmlString());
 		TreeBlock treeBlock = document.getTreeBlockList().get(0);
 		Assert.assertNotNull("we should have a tree block", treeBlock);
@@ -43,9 +43,8 @@ public class TestParseTrees {
 
 	@Test
 	public void parseIntTree() throws Throwable {
-		Document document = DocumentFactory.parse(getClass()
-				.getResourceAsStream(
-						"/org/nexml/model/02_dogfish_no_taxrefs.xml"));
+		Document document = DocumentFactory.parse(new File(
+						"trunk/nexml/examples/02_dogfish_no_taxrefs.xml"));
 		Assert.assertEquals("should be one tree", 1, document
 				.getTreeBlockList().size());
 		Assert.assertEquals("should be an int tree", "'the tree'", document

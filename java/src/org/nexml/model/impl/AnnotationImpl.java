@@ -4,7 +4,7 @@ import org.nexml.model.Annotation;
 
 public class AnnotationImpl extends NexmlWritableImpl implements Annotation {
     
-    private String mProperty;
+    //private String mProperty;
     private Object mValue;
     
     public AnnotationImpl(String property, Object value) {
@@ -13,28 +13,45 @@ public class AnnotationImpl extends NexmlWritableImpl implements Annotation {
     
     public AnnotationImpl() {}
 
+    /*
+     * (non-Javadoc)
+     * @see org.nexml.model.impl.NexmlWritableImpl#getTagName()
+     */
     @Override
     String getTagName() {
         return "meta";
     }
 
+    /*
+     * (non-Javadoc)
+     * @see org.nexml.model.Annotation#getProperty()
+     */
     public String getProperty() {
-        // TODO Auto-generated method stub
-        return null;
+        return getElement().getAttribute("property");
     }
 
+    /*
+     * (non-Javadoc)
+     * @see org.nexml.model.Annotation#getValue()
+     */
     public Object getValue() {
-        // TODO Auto-generated method stub
         return mValue;
     }
 
+    /*
+     * (non-Javadoc)
+     * @see org.nexml.model.Annotation#setProperty(java.lang.String)
+     */
     public void setProperty(String property) {
         getElement().setAttribute("property", property);
     }
 
+    /*
+     * (non-Javadoc)
+     * @see org.nexml.model.Annotation#setValue(java.lang.Object)
+     */
     public void setValue(Object value) {
-        // TODO Auto-generated method stub
-
+        mValue = value;
     }
 
 }

@@ -15,6 +15,7 @@ public interface OTUs extends Annotatable, Iterable<OTU> {
 	 */
 	OTU createOTU();
 
+
 	/**
 	 * An unmodifiable view of the subset named {@code subsetName}.
 	 * 
@@ -52,7 +53,13 @@ public interface OTUs extends Annotatable, Iterable<OTU> {
 	 * @param annotation see description.
 	 */
 	void addAnnotationToSubset(String subsetName, Annotation annotation);
-
+	
+	/**
+	 * Removes specified annotation from the taxon subset
+	 * @param annotation
+	 */
+	void removeAnnotationFromSubset(Annotation annotation);
+	
 	/**
 	 * Remove {@code otu} from the subset named {@code subsetName}.
 	 * 
@@ -73,5 +80,6 @@ public interface OTUs extends Annotatable, Iterable<OTU> {
 	 * 
 	 * @return an unmodifiable view of the contained {@code OTU}s.
 	 */
+
 	List<OTU> getAllOTUs();
 }

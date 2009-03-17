@@ -4,7 +4,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.nexml.model.CategoricalMatrix;
 import org.nexml.model.Character;
 import org.nexml.model.CharacterState;
 import org.nexml.model.CharacterStateSet;
@@ -14,12 +13,23 @@ import org.w3c.dom.Document;
 class MolecularMatrixImpl extends
 		MatrixImpl<CharacterState> implements MolecularMatrix {
 	
-	public MolecularMatrixImpl(Document document) {
-		super(document);
-	}
-
 	private Set<CharacterStateSet> mCharacterStateSets = new HashSet<CharacterStateSet>();
 	private MolecularCharacterStateSetImpl mMolecularCharacterStates = null;
+	
+    /**
+     * Protected constructors that take a DOM document object but not
+     * an element object are used for generating new element nodes in
+     * a NeXML document. On calling such constructors, a new element
+     * is created, which can be retrieved using getElement(). After this
+     * step, the Impl class that called this constructor would still 
+     * need to attach the element in the proper location (typically
+     * as a child element of the class that called the constructor). 
+     * @param document a DOM document object
+     * @author rvosa
+     */
+	protected MolecularMatrixImpl(Document document) {
+		super(document);
+	}
 	
 	/**
 	 * This is equivalent to creating a <states> element, i.e.
@@ -32,14 +42,20 @@ class MolecularMatrixImpl extends
 	public CharacterStateSet createCharacterStateSet() {
 		CharacterStateSetImpl characterStateSet = new CharacterStateSetImpl(getDocument());
 		mCharacterStateSets.add(characterStateSet);
+		/* XXX getFormateElement() always returns an element, it'll create one on the fly if need be
 		if ( null == getFormatElement() ) {
 			setFormatElement( getDocument().createElement("format") );
 			getElement().insertBefore( getFormatElement(), getElement().getFirstChild() );
 		}
+		*/
 		getFormatElement().insertBefore( characterStateSet.getElement(), getFormatElement().getFirstChild() );
 		return characterStateSet;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see org.nexml.model.MolecularMatrix#getCharacterStateSets()
+	 */
 	public Set<CharacterStateSet> getCharacterStateSets() {
 		return Collections.unmodifiableSet(mCharacterStateSets);
 	}
@@ -60,6 +76,10 @@ class MolecularMatrixImpl extends
 		return character;
 	}	
 
+	/*
+	 * (non-Javadoc)
+	 * @see org.nexml.model.MolecularMatrix#getDNACharacterStateSet()
+	 */
 	public CharacterStateSet getDNACharacterStateSet() {
 	    if (mMolecularCharacterStates == null){
 	        mMolecularCharacterStates = new MolecularCharacterStateSetImpl(getDocument());
@@ -67,16 +87,22 @@ class MolecularMatrixImpl extends
 	    CharacterStateSet result = mMolecularCharacterStates.getDNAStateSet();
 	    CharacterStateSetImpl characterStateSet = (CharacterStateSetImpl)result;
 	    if (mCharacterStateSets.add(characterStateSet)){
+	    	/* XXX getFormateElement() always returns an element, it'll create one on the fly if need be
 	        if ( null == getFormatElement() ) {
 	            setFormatElement( getDocument().createElement("format") );
 	            getElement().insertBefore( getFormatElement(), getElement().getFirstChild() );
 	        }
+	        */
 	        getFormatElement().insertBefore( characterStateSet.getElement(), getFormatElement().getFirstChild() );
 	        mMolecularCharacterStates.fillDNAStateSet();
 	    }
 	    return result;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see org.nexml.model.MolecularMatrix#getRNACharacterStateSet()
+	 */
 	public CharacterStateSet getRNACharacterStateSet() {
         if (mMolecularCharacterStates == null){
             mMolecularCharacterStates = new MolecularCharacterStateSetImpl(getDocument());
@@ -84,16 +110,22 @@ class MolecularMatrixImpl extends
         CharacterStateSet result = mMolecularCharacterStates.getRNAStateSet();
         CharacterStateSetImpl characterStateSet = (CharacterStateSetImpl)result;
         if (mCharacterStateSets.add(characterStateSet)){
+        	/* XXX getFormateElement() always returns an element, it'll create one on the fly if need be
             if ( null == getFormatElement() ) {
                 setFormatElement( getDocument().createElement("format") );
                 getElement().insertBefore( getFormatElement(), getElement().getFirstChild() );
             }
+            */
             getFormatElement().insertBefore( characterStateSet.getElement(), getFormatElement().getFirstChild() );
             mMolecularCharacterStates.fillRNAStateSet();
         }
         return result;
      }
     
+	/*
+	 * (non-Javadoc)
+	 * @see org.nexml.model.MolecularMatrix#getProteinCharacterStateSet()
+	 */
     public CharacterStateSet getProteinCharacterStateSet(){
         if (mMolecularCharacterStates == null){
             mMolecularCharacterStates = new MolecularCharacterStateSetImpl(getDocument());
@@ -101,10 +133,12 @@ class MolecularMatrixImpl extends
         CharacterStateSet result = mMolecularCharacterStates.getProteinStateSet();
         CharacterStateSetImpl characterStateSet = (CharacterStateSetImpl)result;
         if (mCharacterStateSets.add(characterStateSet)){
-            if ( null == getFormatElement() ) {
+            /* XXX getFormateElement() always returns an element, it'll create one on the fly if need be
+        	if ( null == getFormatElement() ) {
                 setFormatElement( getDocument().createElement("format") );
                 getElement().insertBefore( getFormatElement(), getElement().getFirstChild() );
             }
+            */
             getFormatElement().insertBefore( characterStateSet.getElement(), getFormatElement().getFirstChild() );
             mMolecularCharacterStates.fillProteinStateSet();
         }

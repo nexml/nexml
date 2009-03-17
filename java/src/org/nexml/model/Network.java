@@ -3,10 +3,26 @@ package org.nexml.model;
 import java.util.Set;
 
 public interface Network<E extends Edge> extends NexmlWritable {
+	/**
+	 * Creates a new edge object, paramerized by branch length
+	 * type. As edges require a source and a target, this must
+	 * be provided here (though they can be changed later).
+	 * @param source
+	 * @param target
+	 * @return
+	 */
 	E createEdge(Node source, Node target);
 
+	/**
+	 * Removes an edge object.
+	 * XXX Does this mean collapse?
+	 * @param edge
+	 */
 	void removeEdge(E edge);
 
+	/**
+	 * Gets all the edges in the network
+	 */
 	Set<E> getEdges();
 
 	/**
@@ -14,14 +30,23 @@ public interface Network<E extends Edge> extends NexmlWritable {
 	 * 
 	 * @return a new {@code Node}.
 	 */
+
 	Node createNode();
+
+	/**
+	 * Removes a node from the network
+	 * XXX does this mean collapse?
+	 * @param node
+	 */
 
 	/**
 	 * Remove {@code node} from this {@code Network}.
 	 * 
 	 * @param node to be removed.
 	 */
+
 	void removeNode(Node node);
+
 
 	/**
 	 * Get an unmodifiable view of this {@code Network}'s {@code Node}s.

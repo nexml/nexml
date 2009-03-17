@@ -35,8 +35,28 @@ public interface CharacterStateSet extends
 	 */	
 	UncertainCharacterState createUncertainCharacterState(Object symbol,Set<CharacterState> members);	
 
+	/**
+	 * Queries the state set for the CharacterState that has 
+	 * the provided label.
+	 * @param label
+	 * @return a CharacterState object, or null
+	 */
     public CharacterState lookupCharacterStateByLabel(String label);
     
+	/**
+	 * Queries the state set for the CharacterState that has 
+	 * the provided symbol.
+	 * @param symbol
+	 * @return a CharacterState object, or null
+	 */    
     public CharacterState lookupCharacterStateBySymbol(String symbol);
+
+	/**
+	 * Queries the state set for the CharacterState that has 
+	 * the provided id.
+	 * @param id
+	 * @return a CharacterState object, or null
+	 */    
+    public CharacterState lookupCharacterStateById(String id);
     
 }
