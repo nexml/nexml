@@ -145,5 +145,5 @@ abstract class NexmlWritableImpl implements NexmlWritable {
 	 */
 
 	abstract String getTagName();
-
+	
 }

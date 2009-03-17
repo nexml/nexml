@@ -66,7 +66,7 @@ public interface Network<E extends Edge> extends NexmlWritable {
 	/**
 	 * Get those nodes that {@code source} goes into, via some edge.
 	 * 
-	 * @param target see description.
+	 * @param source see description.
 	 * @return see description.
 	 */
 	Set<Node> getOutNodes(Node source);
