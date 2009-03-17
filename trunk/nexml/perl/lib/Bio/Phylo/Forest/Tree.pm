@@ -2162,6 +2162,8 @@ Serializes invocant to SVG.
  Function: Turns the invocant object into an SVG string.
  Returns : SCALAR
  Args    : Same args as the Bio::Phylo::Treedrawer constructor
+ Notes   : This will only work if you have the SVG module
+           from CPAN installed on your system.
 
 =cut
 
