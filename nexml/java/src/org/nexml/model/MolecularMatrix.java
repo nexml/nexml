@@ -13,7 +13,6 @@ public interface MolecularMatrix extends Matrix<CharacterState> {
 	
 	/**
 	 * Creates and returns a new character state set
-	 * @return
 	 */
 	CharacterStateSet createCharacterStateSet();
 	

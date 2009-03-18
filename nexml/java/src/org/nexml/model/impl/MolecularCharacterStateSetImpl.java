@@ -38,11 +38,11 @@ class MolecularCharacterStateSetImpl extends CharacterStateSetImpl{
      */
     /**
      * @param characterStates
-     *
-     * This should probably throw something since changing the state sets should be forbidden
+     * @throws Error Always throws an error as molecular states can not be changed.
      *
      */
     public void setCharacterStates(Set<CharacterState> characterStates) {
+        throw new Error("MolecularStates can not be set");
     }
 
     /**
