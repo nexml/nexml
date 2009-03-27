@@ -58,7 +58,6 @@ Bio::Phylo::Matrices::Datum - Character state sequence
  # ...and insert datum in matrix
  $matrix->insert($datum);
 
-
 =head1 DESCRIPTION
 
 The datum object models a single observation or a sequence of observations,
@@ -86,11 +85,10 @@ Datum object constructor.
            -type   => DNA,           
            -pos    => 2,
 
-
 =cut
 
     sub new {
-
+	
         # could be child class
         my $class = shift;
 
@@ -125,6 +123,8 @@ Datum constructor from Bio::Seq argument.
     
     sub new_from_bioperl {
     	my ( $class, $seq, @args ) = @_;
+	# want $seq type-check here? Allowable: is-a Bio::PrimarySeq, 
+        #  Bio::LocatableSeq /maj
     	my $type = $seq->alphabet || $seq->_guess_alphabet || 'dna';
     	my $self = $class->new( '-type' => $type, @args );
         
@@ -152,8 +152,10 @@ Datum constructor from Bio::Seq argument.
         # copy desc
         my $desc = $seq->desc;   
         $self->set_desc( $desc ) if defined $desc;   
+
+	# only Bio::LocatableSeq objs have these fields...
         for my $field ( qw(start end strand) ) {
-        	$self->$field( $seq->$field );
+	    $self->$field( $seq->$field ) if $seq->can($field);
         } 	
         return $self;
     }
