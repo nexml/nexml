@@ -201,10 +201,10 @@ Assigns attributes for the element.
 		}		
 		my $hash = $attributes{ $self->get_id } || {};
 		for my $key ( keys %attrs ) {
-			if ( $key =~ m/^(.+?):.*$/ ) {
-				my $prefix = $1;
-				if ( not exists $namespaces{$prefix} ) {
-					$logger->warn("Prefix '$prefix' is not bound to a namespace");
+			if ( $key =~ m/^(.+?):(.+)$/ ) {
+				my ( $prefix, $attribute ) = ( $1, $2 );
+				if ( $prefix ne 'xmlns' and not exists $namespaces{$prefix} ) {
+					$logger->warn("Attribute '${prefix}:${attribute}' is not bound to a namespace");
 				}
 			}
 			$hash->{$key} = $attrs{$key};
