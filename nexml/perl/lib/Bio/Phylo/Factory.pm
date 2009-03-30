@@ -13,6 +13,7 @@ my %class = (
     'tree'       => 'Bio::Phylo::Forest::Tree',
     'logger'     => 'Bio::Phylo::Util::Logger',
     'drawer'     => 'Bio::Phylo::Treedrawer',
+    'treedrawer' => 'Bio::Phylo::Treedrawer',    
     'project'    => 'Bio::Phylo::Project',
     'dictionary' => 'Bio::Phylo::Dictionary',
     'annotation' => 'Bio::Phylo::Annotation',
@@ -115,12 +116,21 @@ method.
  Usage   : $fac->register_class('Foo::Bar');
  Function: Registers a class name for instantiation
  Returns : Invocant
- Args    : $class, a class name (required)
+ Args    : $class, a class name (required), or
+           'short_name' => $class, such that you
+           can subsequently call $fac->create_short_name()
 
 =cut
 
 sub register_class {
-	my ( $self, $class ) = @_;
+	my ( $self, @args ) = @_;
+	my ( $short, $class );
+	if ( @args == 1 ) {
+	    $class = $args[0];
+	}
+	else {
+	    ( $short, $class ) = @args;
+	}
     my $path = $class;
     $path =~ s|::|/|g;
     $path .= '.pm';
@@ -130,9 +140,12 @@ sub register_class {
 			throw 'ExtensionError' => "Can't register $class - $@";
 		}        
     }
-	my $short = $class;
-	$short =~ s/.*://;
-	$class{lc $short} = $class;
+	if ( not defined $short ) {
+        $short = $class;
+        $short =~ s/.*://;
+        $short = lc $short;
+	}
+	$class{$short} = $class;
 	return $self;
 }
 
