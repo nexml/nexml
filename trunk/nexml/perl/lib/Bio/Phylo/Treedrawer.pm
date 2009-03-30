@@ -785,7 +785,7 @@ sub draw {
     
     $self->_y_terminals(0);
     $self->_y_terminals($root);
-    $self->get_tree->get_root->set_generic('y'=>0);
+    $self->get_tree->get_root->set_y(0);
     $self->_y_internals;
     my $library = looks_like_class __PACKAGE__ . '::' . ucfirst( lc( $self->get_format ) );
 
@@ -813,8 +813,8 @@ sub draw {
 sub _reset_internal {
     my ($self, $node) = @_;
     my $tree = $self->get_tree;
-    $node->set_generic('x'=>undef);
-    $node->set_generic('y'=>undef);
+    $node->set_x(undef);
+    $node->set_y(undef);
     my $children = $node->get_children;
     foreach $node (@$children) {
         _reset_internal($self,$node);
@@ -843,7 +843,7 @@ sub _x_positions {
     my $padding = $self->get_padding;
     foreach my $node ( @{ $tree->get_entities } ) {
         my $x = ( $node->calc_path_to_root * $scalex ) + $padding;
-        $node->set_generic( x => $x );
+        $node->set_x( $x );
     }
 }
 
@@ -868,7 +868,7 @@ sub _x_positions_clado {
     my $scalex  = $self->_get_scalex;
     my $padding = $self->get_padding;
     for my $tip ( @{ $tree->get_terminals } ) {
-        $tip->set_generic( 'x' => ( ( $longest ) * $scalex ) );
+        $tip->set_x( $longest * $scalex );
     }
     for my $internal ( @{ $tree->get_internals } ) {
         my $id = $internal->get_id;
@@ -886,7 +886,7 @@ sub _x_positions_clado {
             }
         }
         my $xc = $longest - $longest1;
-        $internal->set_generic( 'x' => ( ( $xc * $scalex ) + $padding ) );
+        $internal->set_x( ( $xc * $scalex ) + $padding );
     }
 }
 
@@ -910,8 +910,7 @@ sub _x_positions_clado {
         if ($node == 0) { $tips = 0.000_000_000_000_01; return; }
         if ( !$node->get_first_daughter ) {
             $tips++;
-            $node->set_generic(
-                'y' => ( ( $tips * $self->_get_scaley ) + $self->get_padding ) );
+            $node->set_y( ( $tips * $self->_get_scaley ) + $self->get_padding );
         }
         else {
             $node = $node->get_first_daughter;
@@ -940,13 +939,13 @@ sub _x_positions_clado {
 sub _y_internals {
     my $self = shift;
     my $tree = $self->get_tree;
-    while ( !$tree->get_root->get_generic('y') ) {
+    while ( !$tree->get_root->get_y ) {
         foreach my $e ( @{ $tree->get_internals } ) {
-            my $y1 = $e->get_first_daughter->get_generic('y');
-            my $y2 = $e->get_last_daughter->get_generic('y');
+            my $y1 = $e->get_first_daughter->get_y;
+            my $y2 = $e->get_last_daughter->get_y;
             if ( $y1 && $y2 ) {
                 my $y = ( $y1 + $y2 ) / 2;
-                $e->set_generic( 'y' => $y );
+                $e->set_y( $y );
             }
         }
     }
