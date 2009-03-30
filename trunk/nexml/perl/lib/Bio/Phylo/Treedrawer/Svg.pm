@@ -104,14 +104,13 @@ sub _draw {
         	$class{'text'}   = 'node_text';
         	$r = int $self->{'DRAWER'}->get_node_radius;
         }
-        my $cx = int $node->get_generic('x');
-        my $cy = int $node->get_generic('y');
+        my $cx = int $node->get_x;
+        my $cy = int $node->get_y;
         my $x  =
-          int( $node->get_generic('x') +
-              $self->{'DRAWER'}->get_text_horiz_offset );
+          int( $node->get_x + $self->{'DRAWER'}->get_text_horiz_offset );
         my $y =
           int(
-            $node->get_generic('y') + $self->{'DRAWER'}->get_text_vert_offset );
+            $node->get_y + $self->{'DRAWER'}->get_text_vert_offset );
         if ( my $style = $node->get_generic('svg') ) {
             $self->{'SVG'}->tag(
                 'circle',
@@ -172,15 +171,15 @@ sub _draw {
 sub _draw_pies {
     my $self = shift;
     foreach my $node ( @{ $self->{'TREE'}->get_entities } ) {
-        my $cx = int $node->get_generic('x');
-        my $cy = int $node->get_generic('y');
+        my $cx = int $node->get_x;
+        my $cy = int $node->get_y;
         my $r  = int $self->{'DRAWER'}->get_node_radius;
         my $x  =
-          int( $node->get_generic('x') +
+          int( $node->get_x +
               $self->{'DRAWER'}->get_text_horiz_offset );
         my $y =
           int(
-            $node->get_generic('y') + $self->{'DRAWER'}->get_text_vert_offset );
+            $node->get_y + $self->{'DRAWER'}->get_text_vert_offset );
         if ( my $pievalues = $node->get_generic('pie') ) {
             my @keys  = keys %{$pievalues};
             my $start = -90;
@@ -239,7 +238,7 @@ sub _draw_scale {
     my $svg     = $self->{'SVG'};
     my $tree    = $self->{'TREE'};
     my $root    = $tree->get_root;
-    my $rootx   = $root->get_generic('x');
+    my $rootx   = $root->get_x;
     my $height  = $drawer->get_height;
     my $options = $drawer->get_scale_options;
     if ( $options ) {
@@ -247,7 +246,7 @@ sub _draw_scale {
         my $width = $options->{'-width'};
         if ( $width =~ m/^(\d+)%$/ ) {
             $width =
-              ( $1 / 100 ) * ( $tree->get_tallest_tip->get_generic('x') -
+              ( $1 / 100 ) * ( $tree->get_tallest_tip->get_x -
                   $rootx );
         }
         if ( $major =~ m/^(\d+)%$/ ) {
@@ -321,9 +320,9 @@ sub _draw_legend {
         my $draw      = $self->{'DRAWER'};
         my @keys      = keys %colors;
         my $increment =
-          ( $tree->get_tallest_tip->get_generic('x') -
-              $tree->get_root->get_generic('x') ) / scalar @keys;
-        my $x = $tree->get_root->get_generic('x') + 5;
+          ( $tree->get_tallest_tip->get_x -
+              $tree->get_root->get_x ) / scalar @keys;
+        my $x = $tree->get_root->get_x + 5;
         foreach my $key (@keys) {
             $svg->rectangle(
                 'x'      => $x,
@@ -348,7 +347,7 @@ sub _draw_legend {
         $svg->tag(
             'text',
             'x' => (
-                $tree->get_tallest_tip->get_generic('x') +
+                $tree->get_tallest_tip->get_x +
                   $draw->get_text_horiz_offset
             ),
             'y'     => ( $draw->get_height - 80 ),
@@ -372,11 +371,12 @@ sub _draw_legend {
 
 sub _draw_line {
     my ( $self, $node ) = @_;
+    my $pnode      = $node->get_parent;
     my $node_hash  = $node->get_generic;
-    my $pnode_hash = $node->get_parent->get_generic;
+    my $pnode_hash = $pnode->get_generic;
     my ( $x1, $x2, $style ) =
-      ( int $pnode_hash->{'x'}, int $node_hash->{'x'}, $node_hash->{'svg'} );
-    my ( $y1, $y2 ) = ( int $pnode_hash->{'y'}, int $node_hash->{'y'} );
+      ( int $pnode->get_x, int $node->get_x, $node_hash->{'svg'} );
+    my ( $y1, $y2 ) = ( int $pnode->get_y, int $node->get_y );
     if ( $self->{'DRAWER'}->get_shape eq 'CURVY' ) {
         my $points = qq{M$x1,$y1 C$x1,$y2 $x2,$y2 $x2,$y2};
         if ($style) {
