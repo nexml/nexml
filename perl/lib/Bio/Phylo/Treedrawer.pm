@@ -756,44 +756,83 @@ sub draw {
     my $root = $self->get_tree->get_root;
 
     #Reset the stored data in the tree
-    $self->_reset_internal($root);
+    $self->_reset_internal($root);    
+        
+    if ( $self->get_mode eq 'CLADO' ) {
+        $self->_compute_clado_coordinates;
+    }
+    elsif ( $self->get_mode eq 'PHYLO' ) {
+        $self->_compute_phylo_coordinates;
+    }    
+    
+    return $self->render;
+}
 
+sub _compute_clado_coordinates {
+	my $self = shift;
+	my $root = $self->get_tree->get_root;
     my $tips = $self->get_tree->calc_number_of_terminals;
     my ( $width,   $height )    = ( $self->get_width,   $self->get_height );
     my ( $padding, $textwidth ) = ( $self->get_padding, $self->get_text_width );
-    my $maxpath;
-    if ( $self->get_mode eq 'CLADO' ) {
-        $maxpath = $root->calc_max_nodes_to_tips;
-    }
-    elsif ( $self->get_mode eq 'PHYLO' ) {
-        $maxpath = $root->calc_max_path_to_tips;
-        if ( not $maxpath ) {
-            $logger->warn("no branch lengths on tree, switching to clado mode");
-            $self->set_mode('CLADO');
-            $maxpath = $root->calc_max_nodes_to_tips;
-        }
+    my $maxpath = $root->calc_max_nodes_to_tips;
+    $self->_set_scalex(
+        ( ( $width - ( ( 2 * $padding ) + $textwidth ) ) / $maxpath ) );
+    $self->_set_scaley( ( ( $height - ( 2 * $padding ) ) / ( $tips + 1 ) ) );
+    $self->_x_positions_clado;    
+    $self->_y_terminals(0);
+    $self->_y_terminals($root);
+    $self->get_tree->get_root->set_y(0);
+    $self->_y_internals;	
+}
+
+sub _compute_phylo_coordinates {
+	my $self = shift;
+	my $root = $self->get_tree->get_root;
+    my $tips = $self->get_tree->calc_number_of_terminals;
+    my ( $width,   $height )    = ( $self->get_width,   $self->get_height );
+    my ( $padding, $textwidth ) = ( $self->get_padding, $self->get_text_width );
+    my $maxpath = $root->calc_max_path_to_tips;
+    if ( not $maxpath ) {
+        $logger->warn("no branch lengths on tree, switching to clado mode");
+        $self->_compute_clado_coordinates;
+        return;
     }
     $self->_set_scalex(
         ( ( $width - ( ( 2 * $padding ) + $textwidth ) ) / $maxpath ) );
     $self->_set_scaley( ( ( $height - ( 2 * $padding ) ) / ( $tips + 1 ) ) );
-    if ( $self->get_mode eq 'CLADO' ) {
-        $self->_x_positions_clado;
-    }
-    else {
-        $self->_x_positions;
-    }
-    
+    $self->_x_positions_phylo;    
     $self->_y_terminals(0);
     $self->_y_terminals($root);
     $self->get_tree->get_root->set_y(0);
-    $self->_y_internals;
-    my $library = looks_like_class __PACKAGE__ . '::' . ucfirst( lc( $self->get_format ) );
+    $self->_y_internals;	
+}
 
+=item render()
+
+Renders tree based on pre-computed node coordinates. You would typically use
+this method if you have passed a Bio::Phylo::Forest::DrawTree on which you
+have already calculated the node coordinates separately.
+
+ Type    : Unparsers
+ Title   : render
+ Usage   : my $drawing = $treedrawer->render;
+ Function: Unparses a Bio::Phylo::Forest::DrawTree 
+           object into a drawing.
+ Returns : SCALAR
+ Args    :
+ Notes   : This will only work if you have the SVG module
+           from CPAN installed on your system.
+
+=cut
+
+sub render {
+	my $self = shift;
+    my $library = looks_like_class __PACKAGE__ . '::' . ucfirst( lc( $self->get_format ) );
     my $drawer = $library->_new(
-        -tree   => $self->get_tree,
-        -drawer => $self
+        '-tree'   => $self->get_tree,
+        '-drawer' => $self
     );
-    $drawer->_draw;
+    return $drawer->_draw;	
 }
 
 =begin comment
@@ -835,7 +874,7 @@ sub _reset_internal {
 
 =cut
 
-sub _x_positions {
+sub _x_positions_phylo {
     my $self    = shift;
     my $tree    = $self->get_tree;
     my $root    = $tree->get_root;
