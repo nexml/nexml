@@ -759,16 +759,16 @@ sub draw {
     $self->_reset_internal($root);    
         
     if ( $self->get_mode eq 'CLADO' ) {
-        $self->_compute_clado_coordinates;
+        $self->_compute_rooted_clado_coordinates;
     }
     elsif ( $self->get_mode eq 'PHYLO' ) {
-        $self->_compute_phylo_coordinates;
+        $self->_compute_rooted_phylo_coordinates;
     }    
     
     return $self->render;
 }
 
-sub _compute_clado_coordinates {
+sub _compute_rooted_clado_coordinates {
 	my $self = shift;
 	my $root = $self->get_tree->get_root;
     my $tips = $self->get_tree->calc_number_of_terminals;
@@ -785,7 +785,7 @@ sub _compute_clado_coordinates {
     $self->_y_internals;	
 }
 
-sub _compute_phylo_coordinates {
+sub _compute_rooted_phylo_coordinates {
 	my $self = shift;
 	my $root = $self->get_tree->get_root;
     my $tips = $self->get_tree->calc_number_of_terminals;
