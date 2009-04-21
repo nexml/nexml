@@ -8,7 +8,7 @@ use vars '@ISA';
 @ISA = qw(Bio::Phylo::Util::XMLWritable);
 
 {
- 
+    
  	my $logger = __PACKAGE__->get_logger;
     
     my @fields = \( my ( %lookup, %missing, %gap ) );
@@ -125,9 +125,9 @@ Datatype constructor.
     }
 
 =back
-
+    
 =head2 MUTATORS
-
+    
 =over
 
 =item set_lookup()
@@ -258,7 +258,6 @@ Gets state-to-id mapping for missing and gap symbols
            true  => prefix state ids with 's'
            false => keep ids numerical
 
-
 =cut
 
     sub get_ids_for_special_symbols {
@@ -291,42 +290,28 @@ Gets state-to-id mapping
  Args    : Optional, a boolean:
            true  => prefix state ids with 's'
            false => keep ids numerical
+ Note    : This returns a mapping to alphanumeric states; special
+           symbols (for missing data and gaps) are handled separately
 
 =cut
     
-    sub get_ids_for_states {
-    	my $self = shift;
-    	if ( my $lookup = $self->get_lookup ) {
-    		my $i = 1;
-    		my $ids_for_states = {};
-    		my ( @states, @tmp_cats ); 
-    		my @tmp = sort { $a->[1] <=> $b->[1] } 
-    		           map { [ $_, scalar @{ $lookup->{$_} } ] } 
-    		         keys %{ $lookup };
-    		for my $state ( @tmp ) {
-    			my $count = $state->[1];
-    			my $sym   = $state->[0];
-    			if ( not $tmp_cats[$count] ) {
-    				$tmp_cats[$count] = [];
-    			}
-    			push @{ $tmp_cats[$count] }, $sym;
-    		}
-    		for my $cat ( @tmp_cats ) {
-    			if ( $cat ) {
-    				my @sorted = sort { $a cmp $b } @{ $cat };
-    				push @states, @sorted;
-    			}
-    		}
-    		for my $state ( @states ) {
-    			my $id = $i++;
-    			$ids_for_states->{$state} = $_[0] ? "s${id}" : $id;
-    		}
-    		return $ids_for_states;
-    	}
-    	else {
-    		return {};
-    	}
-    }
+        sub get_ids_for_states {
+	    my $self = shift;
+	    if ( my $lookup = $self->get_lookup ) {
+		my $ids_for_states = {};
+		my ( @symbols, %tmp_cats,$i ); 
+		# build a list of state symbols: what properties will this 
+		# list have? Symbols will be present in order of the 
+		# size of the state set to which they belong; within 
+		# each of these ranks, the symbols will be in lexical
+		# order.
+		push (@{ $tmp_cats{ @{ $lookup->{$_} } } ||= [] }, $_) for grep /^\d+|[a-zA-Z]/, keys %{ $lookup };
+		push (@symbols, sort { $a cmp $b } @{ $tmp_cats{$_} }) for sort { $a <=> $b } keys %tmp_cats;
+		$ids_for_states->{$_} = ($_[0] ? 's' : '').(++$i) for (@symbols);
+		return $ids_for_states;
+	    }
+	    return {};
+        }
 
 =item get_symbol_for_states()
 
@@ -675,15 +660,10 @@ Writes data type definitions to xml
 		my $polymorphism = $_[1];
 		if ( my $lookup  = $self->get_lookup ) {
 			$xml .= "\n" . $self->get_xml_tag;
-			my $id_for_state = $self->get_ids_for_states;
-			my @states = sort  { $id_for_state->{$a} <=> $id_for_state->{$b} } 
-			             keys %{ $id_for_state };
-			my $max_id = 0;
-			for my $state ( @states ) {
-				my $state_id = $id_for_state->{ $state };
-				$id_for_state->{ $state } = 's' . $state_id;
-				$max_id = $state_id;
-			}
+			my $id_for_state = $self->get_ids_for_states(1);
+			my @states = sort { 
+			    $id_for_state->{$a} <=> $id_for_state->{$b} 
+			} keys %{ $id_for_state };
 			for my $state ( @states ) {
 			    $xml .= $self->_state_to_xml( 
 			        $state, 
