@@ -1,4 +1,4 @@
-use Test::More qw( no_plan );
+use Test::More tests => 51;
 use File::Temp;
 use lib '../lib';
 use strict;
