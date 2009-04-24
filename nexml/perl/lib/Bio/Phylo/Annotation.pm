@@ -47,7 +47,7 @@ set the tag name to 'string' (i.e. $ann->set_tag('string')) then the value is
 interpreted to be a string (i.e. $ann->set_value('some kind of string')). Also,
 a common tag name is 'any', which means that the value is any kind of xml structure,
 which can be provided as a raw string, or as an xml element tree object of one of 
-the following distributions: L<XML::DOM>, L<XML::GDOME>, L<XML::Twig>, L<XML::DOM2>,
+the following distributions: L<XML::DOM>, L<XML::GDOME>, L<XML::LibXML>, L<XML::Twig>, L<XML::DOM2>,
 L<XML::DOMBacked>, L<XML::Handler>, L<XML::Element>, L<XML::API>, L<XML::Code> or
 L<XML::XMLWriter>. Alternatively, you can provide a L<RDF::Core::Model> for
 semantic annotations or a L<Bio::Phylo::Dictionary> to create recursively nested
@@ -192,7 +192,7 @@ Serializes object to an xml string
         		}
         		for my $v ( @values ) {
 	        		# duck-typing
-		        	# Bio::Phylo => to_xml, XML::DOM,XML::GDOME => toString, XML::Twig => sprint
+		        	# Bio::Phylo => to_xml, XML::DOM,XML::GDOME,XML::LibXML => toString, XML::Twig => sprint
 		        	# XML::DOM2 => xmlify, XML::DOMBacked => as_xml,
 		        	# XML::Handler => dump_tree, XML::Element => as_XML
 		        	# XML::API => _as_string, XML::Code => code
