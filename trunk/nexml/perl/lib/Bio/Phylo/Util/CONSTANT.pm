@@ -57,7 +57,7 @@ BEGIN {
                 _DICTIONARY_
             )
         ],
-        'funtions' => [
+        'functions' => [
         	qw(
         		looks_like_number
         		looks_like_object
