@@ -246,4 +246,28 @@ BEAST is a powerful and flexible evolutionary analysis package for molecular seq
 	year = {2007}
 }
 
-	
+@inproceedings{citeulike:4594831,
+	abstract = {Phylogenetic data involves operational taxonomic units, graph representations of their evolutionary relationships and comparative data from which the relationships are inferred. To represent phylogenetic data, different types of entities - lists, trees, matrices and their intersections, need to be modeled. These representations are not just sequential or recursive record sets, but rather more complex data models. 
+
+The "nexus" flat file format implements such a model using blocks of "taxa", characters and trees. The relationships between entities - operational taxonomic units, character state sequences and nodes in trees within different blocks are defined by labels and implicit orderings of the entities. By virtue of its conciseness and readability, the nexus format has been widely adopted as the standard for many applications, both offline and online.
+
+Unfortunately, the format lacks some formal mechanisms to ensure its continuing robustness in the face of advances in the field of phylogenetics. Principally, it lacks a formal versioning scheme by which new features can be adopted or bugs can be deprecated. It lacks a formal grammar or schema by which its syntax can be validated and it lacks a formal definition of its semantics by which subtle differences in interpretation can be exposed (such as implicit or explicit rootedness of trees, uncertainty versus polymorphism). This has led to mutually incompatible dialects of the standard that hamper the interoperability necessary for more complex analyses and work flows. 
+
+Two examples of this problem are the TreeBase project where data submissions need to be curated by hand and are not accessible at a level of granularity that promotes data re-use, and the CIPRES portal where around 20\% of submitted data sets contain unrecoverable errors. The success of the standard also has led the phylogenetics community to lag behind in the adoption and standardization around new technologies (e.g. standard markup languages, ontologies, web services) compared to related fields (for example genetics, where data standards are more strict, and where ontologies are becoming highly useful resources). 
+
+To address these issues, the Evolutionary Informatics Working Group at the National Evolutionary Synthesis Center has undertaken several projects aimed at improving interoperability at the level of data syntax (NeXML), data semantics (CDAO) and data exchange (PhyloWS).. The aim of NeXML is to develop a next generation data standard for phylogenetics; a standard that is based conceptually on the nexus format but with strictly defined syntax and semantics and implemented in XML. 
+
+Using the W3C stacks for XML (schema, namespaces, etc.) and ontologies (OWL, SAWSDL), members of the working group have developed a semantically annotated schema that models OTUs, character state matrices of various types, trees and networks. The schema is versioned and designed for extensibility. Application and web service support is growing, and a developer meeting to implement NeXML support on a variety of online data resources is planned for December 2008.},
+	author = {Vos, Rutger  },
+	booktitle = {Proceedings of TDWG (2008), Fremantle, Australia.},
+	citeulike-article-id = {4594831},
+	editor = {Weitzman, A. L.  and Belbin, L. },
+	keywords = {nexml},
+	location = {Fremantle, Australia.},
+	organization = {TDWG},
+	posted-at = {2009-05-22 08:57:46},
+	priority = {2},
+	title = {Data standards in phylogenetics: the NeXML project},
+	url = {http://www.tdwg.org/proceedings/article/view/439},
+	year = {2008}
+}
