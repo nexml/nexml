@@ -1,5 +1,6 @@
 package org.nexml.model.impl;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import org.nexml.model.Annotatable;
@@ -45,6 +46,7 @@ abstract class AnnotatableImpl extends NexmlWritableImpl implements Annotatable 
      */
     protected AnnotatableImpl(Document document) {
         super(document);
+        mAnnotations = new HashSet<Annotation>();
     }
     
     protected AnnotatableImpl() {}
@@ -54,8 +56,16 @@ abstract class AnnotatableImpl extends NexmlWritableImpl implements Annotatable 
      * @see org.nexml.model.Annotatable#getAnnotationValues(java.lang.String)
      */
     public Set<Object> getAnnotationValues(String property) {
-        //TODO
-           return null;
+    	Set<Object> annotationValues = new HashSet<Object>();
+    	if ( property == null ) {
+    		return annotationValues;
+    	}    	
+    	for ( Annotation annotation : mAnnotations ) {
+    		if ( property.equals(annotation.getProperty()) ) {
+    			annotationValues.add(annotation);
+    		}
+    	}
+    	return annotationValues;
     }
     
     /*
@@ -63,9 +73,12 @@ abstract class AnnotatableImpl extends NexmlWritableImpl implements Annotatable 
      * @see org.nexml.model.Annotatable#addAnnotationValue(java.lang.String, java.lang.Object)
      */
     public void addAnnotationValue(String property, Object value) {
-           AnnotationImpl annotation = new AnnotationImpl(property, value);
+           AnnotationImpl annotation = new AnnotationImpl(getDocument());
+           annotation.setProperty(property);
+           annotation.setValue(value);
            mAnnotations.add(annotation);
            getElement().appendChild(annotation.getElement());
+           getElement().setAttribute("about",getId());
     }
        
 }
