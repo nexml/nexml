@@ -662,7 +662,7 @@ Writes data type definitions to xml
 			$xml .= "\n" . $self->get_xml_tag;
 			my $id_for_state = $self->get_ids_for_states(1);
 			my @states = sort { 
-			    $id_for_state->{$a} <=> $id_for_state->{$b} 
+			    $id_for_state->{$a} cmp $id_for_state->{$b} 
 			} keys %{ $id_for_state };
 			for my $state ( @states ) {
 			    $xml .= $self->_state_to_xml( 
@@ -676,40 +676,63 @@ Writes data type definitions to xml
 			my ( $missing, $gap ) = ( $self->get_missing, $self->get_gap );
 			my $special = $self->get_ids_for_special_symbols;
 			if ( %{ $special } ) {
-				$xml .= sprintf('<uncertain_state_set id="s%s" symbol="%s">', $special->{$gap}, '-');
-				$xml .= '</uncertain_state_set>';
-				$xml .= sprintf('<uncertain_state_set id="s%s" symbol="%s">', $special->{$missing}, '?');
-				$xml .= sprintf('<member state="%s"/>', $id_for_state->{$_}) for @states;
-				$xml .= sprintf('<member state="s%s"/>', $special->{$gap});			
-				$xml .= '</uncertain_state_set>';	
+			    my $uss = Bio::Phylo::Util::XMLWritable->_new('uncertain_state_set');
+			    my $mbr = Bio::Phylo::Util::XMLWritable->_new('member');
+			    $uss->set_attributes(
+				'id'     => "s".$special->{$gap},
+				'symbol' => '-'
+				);
+			    $xml .= "\n".$uss->get_xml_tag(1);
+			    $uss->set_attributes(
+				'id'     => "s".$special->{$missing},
+				'symbol' => '?'
+				);
+			    $xml .= "\n".$uss->get_xml_tag();
+			    for (@states) {
+				$mbr->set_attributes('state' => $id_for_state->{$_});
+				$xml .= "\n".$mbr->get_xml_tag(1);
+			    }
+			    $mbr->set_attributes( 'state' => "s".$special->{$gap});
+			    $xml .= "\n".$mbr->get_xml_tag(1);
+			    $xml .= "\n</".$uss->get_tag.">";	
 			}		
 			
-			$xml .= "\n</states>";
+			$xml .= "\n</".$self->get_tag.">";
 		}	
 		return $xml;	
 	}
 	
 	sub _state_to_xml {
 	    my ( $self, $state, $id_for_state, $lookup, $normalized, $polymorphism ) = @_;
-        my $state_id = $id_for_state->{ $state };
-        my @mapping = @{ $lookup->{$state} };
-        my $symbol = exists $normalized->{$state} ? $normalized->{$state} : $state;
-        my $xml = '';
-    
-        # has ambiguity mappings
-        if ( scalar @mapping > 1 ) {
-            my $tag = $polymorphism ? 'polymorphic_state_set' : 'uncertain_state_set';
-            $xml .= "\n" . sprintf('<%s id="%s" symbol="%s">', $tag, $state_id, $symbol);
-            for my $map ( @mapping ) {
-                $xml .= "\n" . sprintf( '<member state="%s"/>', $id_for_state->{ $map } );
-            }
-            $xml .= "\n</${tag}>";
-        }
-        
-        # no ambiguity
-        else {
-            $xml .= "\n" . sprintf('<state id="%s" symbol="%s"/>', $state_id, $symbol);
-        }
+	    my $state_id = $id_for_state->{ $state };
+	    my @mapping = @{ $lookup->{$state} };
+	    my $symbol = exists $normalized->{$state} ? $normalized->{$state} : $state;
+	    my $xml = '';
+	    
+	    # has ambiguity mappings
+	    if ( scalar @mapping > 1 ) {
+		my $elt = Bio::Phylo::Util::XMLWritable->_new(
+		    $polymorphism ? 'polymorphic_state_set' : 'uncertain_state_set'
+		    );
+		my $mbr = Bio::Phylo::Util::XMLWritable->_new('member');
+		$elt->set_attributes( 'id' => $state_id, 'symbol' => $symbol );
+		$xml .= "\n".$elt->get_xml_tag();
+		for ( @mapping ) {
+		    $mbr->set_attributes('state'=>$id_for_state->{$_});
+		    $xml .= "\n".$mbr->get_xml_tag(1);
+		}
+		$xml .= "\n</".$elt->get_tag.">";
+	    }
+	    
+	    # no ambiguity
+	    else {
+		my $elt = Bio::Phylo::Util::XMLWritable->_new(
+		    'state',
+		    'id'     => $state_id,
+		    'symbol' => $symbol
+		    );
+		$xml .= "\n" . $elt->get_xml_tag(1);
+	    }
         return $xml;
 	}
 
