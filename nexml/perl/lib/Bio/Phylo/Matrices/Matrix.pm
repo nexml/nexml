@@ -7,6 +7,7 @@ use Bio::Phylo::Taxa::TaxaLinker;
 use Bio::Phylo::IO qw(unparse);
 use Bio::Phylo::Util::CONSTANT qw(:objecttypes looks_like_hash);
 use Bio::Phylo::Util::Exceptions qw(throw);
+use Bio::Phylo::Util::XMLWritable;
 use Bio::Phylo::Matrices::TypeSafeData;
 use Bio::Phylo::Matrices::Datum;
 use UNIVERSAL qw(isa);
@@ -827,11 +828,14 @@ Serializes matrix to nexml format.
 		my $normalized = $self->_normalize_symbols;
 		
 		# the format block
-		$xml .= "\n<format>";
+		my $fmt = Bio::Phylo::Util::XMLWritable->_new('format');
+		$xml .= $fmt->get_xml_tag;
 		my $to = $self->get_type_object;
 		$ids_for_states = $to->get_ids_for_states(1);
 		
-		# write state definitions
+		# write state definitions 
+		# this calls Datatype::to_xml method
+		#  
 		$xml .= $to->to_xml($normalized,$self->get_polymorphism);
 		
 		# write column definitions
@@ -841,10 +845,11 @@ Serializes matrix to nexml format.
 		else {
 			$xml .= $self->_write_char_labels();
 		}
-		$xml .= "\n</format>";
+		$xml .= "\n</".$fmt->get_tag.">";
 		
 		# the matrix block
-		$xml .= "\n<matrix>";
+		my $mx = Bio::Phylo::Util::XMLWritable->_new('matrix');
+		$xml .= "\n".$mx->get_xml_tag;
 		my @char_ids;
 		for ( 0 .. $self->get_nchar ) {
 			push @char_ids, 'c' . ($_+1);
@@ -861,59 +866,50 @@ Serializes matrix to nexml format.
 				%args,
 			);
 		}
-		$xml .= "\n</matrix>";
+		$xml .= "\n</".$mx->get_tag.">";
 		$xml .= "\n" . sprintf( '</%s>', $self->get_tag );
 		return $xml;
 	}
-	
-	sub _normalize_symbols {
-		my $self = shift;
-		if ( $self->get_type =~ /^standard$/i ) {
-			my $to = $self->get_type_object;
-			my $lookup = $self->get_lookup;
-			my @states = keys %{ $lookup };
-			if ( my @letters = sort { $a cmp $b } grep { /[a-z]/i } @states ) {
-				my @numbers  = sort { $a <=> $b } grep { /^\d+$/ } @states;
-				my $i = $numbers[-1];
-				my %map = map { $_ => ++$i } @letters;	
-				return \%map;			
-			}
-			else {
-				return {};
-			}			
+        
+        # what this does:
+        # numerical states are their own keys; also want numerical 
+        # representations for non-numerical states..."normalization"
+        # provides this mapping....
+
+        sub _normalize_symbols {
+	    my $self = shift;
+	    if ( $self->get_type =~ /^standard$/i ) {
+		my $to = $self->get_type_object;
+		my $lookup = $self->get_lookup;
+		my @states = keys %{ $lookup };
+		if ( my @letters = sort { $a cmp $b } grep { /[a-z]/i } @states ) {
+		    my @numbers  = sort { $a <=> $b } grep { /^\d+$/ } @states;
+		    my $i = $numbers[-1];
+		    my %map = map { $_ => ++$i } @letters;
+		    return \%map;
 		}
 		else {
-			return {};
+		    return {};
 		}
-	}
+	    }
+	    else {
+		return {};
+	    }
+}
 	
 	sub _write_char_labels {
 		my ( $self, $states_id ) = @_;
 		my $xml = '';
 		my $labels = $self->get_charlabels;
 		for my $i ( 1 .. $self->get_nchar ) {
+		        # new $char each time: start with no attributes...
+		        my $char = Bio::Phylo::Util::XMLWritable->_new('char');
 			my $char_id = 'c' . $i;
 			my $label   = $labels->[ $i - 1 ];
-			
-			# have state definitions (categorical data)
-			if ( $states_id ) {
-				if ( $label ) {
-					$xml .= "\n" . sprintf('<char id="%s" label="%s" states="%s"/>', $char_id, $label, $states_id);
-				}
-				else {
-					$xml .= "\n" . sprintf('<char id="%s" states="%s"/>', $char_id, $states_id);
-				}
-			}
-			
-			# must be continuous characters (because no state definitions)
-			else {
-				if ( $label ) {
-					$xml .= "\n" . sprintf('<char id="%s" label="%s"/>', $char_id, $label);
-				}
-				else {
-					$xml .= "\n" . sprintf('<char id="%s"/>', $char_id);
-				}
-			}
+			$char->set_attributes('id' => $char_id);
+			$char->set_attributes('label' => $label) if $label;
+			$char->set_attributes('states' => $states_id) if $states_id;
+			$xml .= "\n".$char->get_xml_tag(1);
 		}	
 		return $xml;	
 	}

@@ -5,6 +5,7 @@ use Bio::Phylo::Taxa::TaxonLinker;
 use Bio::Phylo::Util::CONSTANT qw(_NODE_ _TREE_ _TAXON_ looks_like_number looks_like_object looks_like_hash);
 use Bio::Phylo::Listable;
 use Bio::Phylo::Util::Exceptions 'throw';
+use Bio::Phylo::Util::XMLWritable;
 use Scalar::Util 'weaken';
 
 no warnings 'recursion';
@@ -2157,23 +2158,26 @@ Serializes invocant to xml.
 		
 		# then the rootedge?
 		if ( my $length = shift(@nodes)->get_branch_length ) {
-			my $target = $self->get_xml_id;
-			my $id = "edge" . $self->get_id;
-			$xml .= "\n" . sprintf('<rootedge target="%s" id="%s" length="%s"/>', $target, $id, $length);
+		    my $edge = Bio::Phylo::Util::XMLWritable->_new(
+			'rootedge',
+                        'target' => $self->get_xml_id,
+                        'id'     => "edge".$self->get_id,
+                        'length' => $length
+			);
+		    $xml .= "\n".$edge->get_xml_tag(1);
 		}
 		
 		# then the subtended edges
 		for my $node ( @nodes ) {
-			my $source = $node->get_parent->get_xml_id;
-			my $target = $node->get_xml_id;
-			my $id     = "edge" . $node->get_id;
-			my $length = $node->get_branch_length;
-			if ( defined $length ) {
-				$xml .= "\n" . sprintf('<edge source="%s" target="%s" id="%s" length="%s"/>', $source, $target, $id, $length);
-			}
-			else {
-				$xml .= "\n" . sprintf('<edge source="%s" target="%s" id="%s"/>', $source, $target, $id);
-			}
+		    my $length = $node->get_branch_length;
+		    my $edge = Bio::Phylo::Util::XMLWritable->_new(
+			'edge',
+			'source' => $node->get_parent->get_xml_id,
+			'target' => $node->get_xml_id,
+			'id'     => "edge" . $node->get_id
+			);
+		    $edge->set_attributes( 'length' => $length ) if defined $length;
+		    $xml .= "\n".$edge->get_xml_tag(1);
 		}
 		
 		return $xml;		

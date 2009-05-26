@@ -6,6 +6,7 @@ use Bio::Phylo::Taxa::TaxonLinker;
 use Bio::Phylo::Util::Exceptions 'throw';
 use Bio::Phylo::Matrices::TypeSafeData;
 use Bio::Phylo::Util::CONSTANT qw(:objecttypes looks_like_number looks_like_hash);
+use Bio::Phylo::Util::XMLWritable;
 use UNIVERSAL qw(isa can);
 @ISA = qw(
   Bio::Phylo::Matrices::TypeSafeData
@@ -863,9 +864,10 @@ Serializes datum to nexml format.
 		my $xml = $self->get_xml_tag;
 		
 		if ( not $args{'-compact'} ) {
+		        my $cell = Bio::Phylo::Util::XMLWritable->_new('cell');
 			for my $i ( 0 .. $#char ) {
+			        my ( $c, $s );
 				if ( $missing ne $char[$i] and $gap ne $char[$i] ) {
-					my ( $c, $s );
 					if ( $char_ids and $char_ids->[$i] ) {
 						$c = $char_ids->[$i];
 					}
@@ -878,10 +880,8 @@ Serializes datum to nexml format.
 					else {
 						$s = uc $char[$i];
 					}
-					$xml .= sprintf('<cell char="%s" state="%s" />', $c, $s);
 				}
 				elsif ( $missing eq $char[$i] or $gap eq $char[$i] ) {
-					my ( $c, $s );
 					if ( $char_ids and $char_ids->[$i] ) {
 						$c = $char_ids->[$i];
 					}
@@ -894,14 +894,16 @@ Serializes datum to nexml format.
 					else {
 						$s = $char[$i];
 					}
-					$xml .= sprintf('<cell char="%s" state="%s" />', $c, $s);				
 				}
+			        $cell->set_attributes( 'char' => $c, 'state' => $s );
+			        $xml .= $cell->get_xml_tag(1);
 			}
 		}
 		else {
 			my @tmp = map { uc $_ } @char;
-			my $seq = $self->get_type_object->join(\@tmp);
-			$xml .= '<seq>' . $seq . '</seq>';	
+			my $seq = Bio::Phylo::Util::XMLWritable->_new('seq');
+			my $seq_text = $self->get_type_object->join(\@tmp);
+			$xml .= $seq->get_xml_tag . "\n$seq_text\n" . "</".$seq->get_tag.">";
 		}
 		
 		$xml .= sprintf('</%s>', $self->get_tag);

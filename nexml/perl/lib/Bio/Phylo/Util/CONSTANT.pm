@@ -28,6 +28,7 @@ BEGIN {
       	_PROJECT_
       	_ANNOTATION_
       	_DICTIONARY_
+        _DOMCREATOR_
       	looks_like_number
       	looks_like_object
 		looks_like_hash
@@ -55,6 +56,7 @@ BEGIN {
                 _PROJECT_
                 _ANNOTATION_
                 _DICTIONARY_
+                _DOMCREATOR_
             )
         ],
         'functions' => [
@@ -92,6 +94,8 @@ sub _CHARSTATESEQ_ () { 14 }
 sub _MATRIXROW_    () { 15 }
 sub _ANNOTATION_   () { 16 }
 sub _DICTIONARY_   () { 17 }
+
+sub _DOMCREATOR_   () { 18 }
 
 # this is a drop in replacement for Scalar::Util's function
 my $looks_like_number;
