@@ -18,7 +18,7 @@ use UNIVERSAL 'isa';
     	'xsi' => 'http://www.w3.org/2001/XMLSchema-instance',
     	'rdf' => 'http://www.w3.org/1999/02/22-rdf-syntax-ns'
     );
-    my @fields = \( my ( %tag, %id, %attributes, %identifiable, %dictionaries ) );
+    my @fields = \( my ( %tag, %id, %attributes, %identifiable, %dictionaries, %suppress_ns ) );
 
 =head1 NAME
 
@@ -34,6 +34,34 @@ This is the superclass for all objects that can be serialized to NeXML
 (L<http://www.nexml.org>).
 
 =head1 METHODS
+
+=head2 CONSTRUCTOR
+
+=item _new()
+
+ Type    : Constructor
+ Title   : _new
+ Usage   : $obj = XMLWritable->new($tagname, @attributes)
+ Function: Allows the creation of XMLable objects on the fly, 
+           for elements that do not possess their own Bio::Phylo
+           class
+ Returns : $self
+ Args    : ($tagname, @attributes)
+ Note    : Namespace generation is supressed by default; do
+           $obj->enable_ns() to clear
+
+=cut
+
+    sub _new {
+	my $class = shift;
+	my ($tag, @attr) = @_;
+	$class = ref($class) || $class;
+	my $self = $class->SUPER::new(); 
+	$self->set_tag($tag) if $tag;
+	$self->set_attributes(@attr) if @attr;
+	$self->set_suppress_ns;
+	return $self;
+    }
 
 =head2 MUTATORS
 
@@ -73,6 +101,62 @@ This is the superclass for all objects that can be serialized to NeXML
 			}			
 		}
 	}
+
+=item set_suppress_ns()
+
+ Type    : Mutator
+ Title   : set_suppress_ns
+ Usage   : $obj->set_suppress_ns();
+ Function: Tell this object not to write namespace attributes
+ Returns : 
+ Args    : none
+
+=cut
+
+sub set_suppress_ns {
+    my $self = shift;
+    my $id = $self->get_id;
+    $suppress_ns{$id} = 1;
+}
+
+=item suppress_ns()
+
+ Type    : Alias
+ Title   : suppress_ns
+ Usage   : $obj->suppress_ns
+ Function: alias for set_suppress_ns()
+
+=cut
+
+sub suppress_ns { shift->set_suppress_ns() }
+
+=item clear_suppress_ns()
+
+ Type    : Mutator
+ Title   : clear_suppress_ns
+ Usage   : $obj->clear_suppress_ns();
+ Function: Tell this object to write namespace attributes
+ Returns : 
+ Args    : none
+
+=cut
+
+sub clear_suppress_ns {
+    my $self = shift;
+    my $id = $self->get_id;
+    $suppress_ns{$id} = 0;
+}
+
+=item enable_ns()
+
+ Type    : Alias
+ Title   : enable_ns
+ Usage   : $obj->enable_ns
+ Function: alias for clear_suppress_ns()
+
+=cut
+
+sub enable_ns { shift->clear_suppress_ns() }
 
 =item add_dictionary()
 
@@ -165,7 +249,8 @@ xml element structure called <node/>
 
 	sub set_tag {
 		my ( $self, $tag ) = @_;
-		if ( $tag =~ qr/^[a-zA-Z]+\:?[a-zA-Z]*$/ ) {
+		# _ is ok; see http://www.w3.org/TR/2004/REC-xml-20040204/#NT-NameChar
+		if ( $tag =~ qr/^[a-zA-Z]+\:?[a-zA-Z_]*$/ ) {
 			$tag{ $self->get_id } = $tag;
 			return $self;
 		}
@@ -458,7 +543,7 @@ Retrieves attributes for the element.
 				$logger->info("No linked taxon found");
 			}
 		}
-		$attrs = $add_namespaces_to_attributes->($self,$attrs);
+		$attrs = $add_namespaces_to_attributes->($self,$attrs) unless $self->ns_is_suppressed;
 		my $arg = shift;
 		if ( $arg ) {
 		    return $attrs->{$arg};
@@ -517,6 +602,33 @@ method indicates whether that is the case.
         my $self = shift;
         return $identifiable{ $self->get_id };
     }
+
+=item ns_is_suppressed()
+
+ Type    : Test
+ Title   : ns_is_suppressed
+ Usage   : if ( $obj->ns_is_suppressed ) { ... }
+ Function: Indicates whether namespace attributes should not
+           be written on XML serialization
+ Returns : BOOLEAN
+ Args    : NONE
+
+=cut
+
+sub ns_is_suppressed {
+    return $suppress_ns{ shift->get_id }
+}
+
+=item ns_are_suppressed()
+
+ Type    : Alias
+ Title   : ns_are_suppressed
+ Usage   : $obj->ns_are_suppressed
+ Function: alias for ns_is_suppressed()
+
+=cut
+
+sub ns_are_suppressed { shift->ns_is_suppressed }
 
 =back
 
