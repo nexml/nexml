@@ -23,7 +23,7 @@ import org.w3c.dom.NodeList;
  * <meta rel="dc:creator" href="http://www.example.com/Homer"/>
  * </otu>
  */
-public interface Annotation extends NexmlWritable {
+public interface Annotation extends Annotatable {
     
 	/**
 	 * Returns a namespaced predicate, e.g. dc:name
@@ -69,6 +69,7 @@ public interface Annotation extends NexmlWritable {
 	 * @param value
 	 */
 	public void setValue(Set<Annotation> value);
+	public void setValue(Annotation value);
 	public void setValue(Object value);	    
 	public void setValue(NodeList value);	    
 	public void setValue(Element value);	    

@@ -110,6 +110,11 @@ public class DocumentImpl extends AnnotatableImpl implements Document {
 			"xmlns:xsd",			
 			"http://www.w3.org/2001/XMLSchema#"
 		);
+		getElement().setAttributeNS(
+			"http://www.w3.org/2000/xmlns/",
+			"xmlns:rdf",			
+			"http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+		);
 	}
 
 	protected DocumentImpl() {
