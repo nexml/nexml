@@ -25,6 +25,7 @@ import javax.xml.transform.Source;
 import org.nexml.model.Annotation;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 public class AnnotationImpl extends NexmlWritableImpl implements Annotation {
@@ -245,7 +246,11 @@ public class AnnotationImpl extends NexmlWritableImpl implements Annotation {
 		getElement().setAttribute("datatype", "rdf:Literal");
 		getElement().setAttribute("xsi:type","nex:LiteralMeta");
 		for ( int i = 0; i < ((NodeList)value).getLength(); i++ ) {
-			getElement().appendChild(((NodeList)value).item(i));
+			Node node = ((NodeList)value).item(i);
+			if ( node.getOwnerDocument() != getDocument() ) {
+				node = getDocument().importNode(node,true);
+			}				
+			getElement().appendChild(node);
 		}		    	    	
     }
     
@@ -257,6 +262,9 @@ public class AnnotationImpl extends NexmlWritableImpl implements Annotation {
     	mValue = value;
 		getElement().setAttribute("datatype", "rdf:Literal");
 		getElement().setAttribute("xsi:type","nex:LiteralMeta");
+		if ( value.getOwnerDocument() != getDocument() ) {
+			value = (Element) getDocument().importNode(value,true);
+		}
 		getElement().appendChild(value);    	
     }    
     

@@ -319,8 +319,14 @@ abstract class AnnotatableImpl extends NexmlWritableImpl implements Annotatable 
 	 */
     public void addAnnotationValue(String property, URI nameSpaceURI, Set<Annotation> value) {
         AnnotationImpl annotation = new AnnotationImpl(getDocument());
+        String[] curie = property.split(":");
         annotation.setRel(property);
         mAnnotations.add(annotation);
+        getElement().setAttributeNS(
+        	"http://www.w3.org/2000/xmlns/",
+        	"xmlns:" + curie[0],
+        	nameSpaceURI.toString()
+        );        
         getElement().appendChild(annotation.getElement());
         getElement().setAttribute("about","#" + getId()); 
         annotation.setValue(value);      	
