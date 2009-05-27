@@ -64,7 +64,7 @@ public class TestAnnotation {
 		}
 		URI ns = null;
 		try {
-			ns = new URI("http://evolutionaryontology.org");
+			ns = new URI("http://evolutionaryontology.org/#");
 		} catch (URISyntaxException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
