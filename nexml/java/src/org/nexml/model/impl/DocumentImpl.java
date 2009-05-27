@@ -100,6 +100,16 @@ public class DocumentImpl extends AnnotatableImpl implements Document {
 		getElement().setAttribute("generator", getClass().getName());
 		getElement().setPrefix("nex");
 		getElement().removeAttribute("id");
+		getElement().setAttributeNS(
+			"http://www.w3.org/2000/xmlns/",
+			"xmlns:xsi",
+			"http://www.w3.org/1999/XMLSchema-instance"
+		);
+		getElement().setAttributeNS(
+			"http://www.w3.org/2000/xmlns/",
+			"xmlns:xsd",			
+			"http://www.w3.org/2001/XMLSchema#"
+		);
 	}
 
 	protected DocumentImpl() {
@@ -219,6 +229,7 @@ public class DocumentImpl extends AnnotatableImpl implements Document {
 	public String getXmlString() {
 		StringWriter stringWriter = new StringWriter();
 		try {
+			getDocument().normalizeDocument();
 			Source source = new DOMSource(getElement());
 			Result result = new StreamResult(stringWriter);
 			TransformerFactory factory = TransformerFactory.newInstance();
