@@ -156,6 +156,16 @@ public class TestAnnotation {
 	    Assert.assertTrue(relValue instanceof NodeList);
 	    
 	    /**
+	     * Adding a recursively nested annotation
+	     */
+	    // XXX The Object in this annotation is a placeholder, which will be 
+	    // replaced by the inner annotation we attach 4 lines down.
+	    otu.addAnnotationValue("cdao:hasAnnotation",ns,new Object());
+	    Set<Annotation> annos = otu.getAnnotations("cdao:hasAnnotation");
+	    Annotation outer = annos.iterator().next();
+	    outer.addAnnotationValue("cdao:hasObject",ns,new Object());
+	    
+	    /**
 	     * Haven't done these yet
 	     */
 //	    otu.addAnnotationValue("hasByteArray", Byte[] value);	    

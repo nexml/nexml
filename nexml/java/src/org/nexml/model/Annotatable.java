@@ -31,7 +31,9 @@ public interface Annotatable extends NexmlWritable {
 	 */
     Set<Object> getAnnotationValues(String property);
     
-    Set<Object> getRelValues(String property);
+    Set<Object> getRelValues(String rel);
+    
+    Set<Annotation> getAnnotations(String rel);
     
     /**
      * Sets a single key/value pair. 

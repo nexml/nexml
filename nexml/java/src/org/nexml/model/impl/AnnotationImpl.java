@@ -8,10 +8,8 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
@@ -28,7 +26,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-public class AnnotationImpl extends NexmlWritableImpl implements Annotation {
+public class AnnotationImpl extends AnnotatableImpl implements Annotation {
 	private Object mValue;
 	
 	/**
@@ -224,6 +222,12 @@ public class AnnotationImpl extends NexmlWritableImpl implements Annotation {
 		for ( Annotation annotation : value ) {
 			getElement().appendChild(((AnnotationImpl)annotation).getElement());
 		}
+    }
+    
+    public void setValue(Annotation value) {
+    	mValue = value;
+    	getElement().setAttribute("xsi:type","nex:ResourceMeta");
+    	getElement().appendChild(((AnnotationImpl)value).getElement());
     }
     
     /*

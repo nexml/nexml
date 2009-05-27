@@ -100,14 +100,31 @@ abstract class AnnotatableImpl extends NexmlWritableImpl implements Annotatable 
     		}
     	}
     	return annotationValues;
-    }    
+    } 
+    
+    /*
+     * (non-Javadoc)
+     * @see org.nexml.model.Annotatable#getAnnotations(java.lang.String)
+     */
+    public Set<Annotation> getAnnotations(String rel) {
+    	Set<Annotation> annotations = new HashSet<Annotation>();
+    	if ( rel == null ) {
+    		return annotations;
+    	}
+    	for ( Annotation annotation : mAnnotations ) {
+    		if ( rel.equals(annotation.getProperty()) || rel.equals(annotation.getRel()) ) {
+    			annotations.add(annotation);
+    		}
+    	}
+    	return annotations;
+    }
     
     /*
      * (non-Javadoc)
      * @see org.nexml.model.Annotatable#addAnnotationValue(java.lang.String, java.lang.Object)
      */    
     public void addAnnotationValue(String property, URI nameSpaceURI, Object value){
-        Annotation annotation = addAnnotationValueHelper(property,nameSpaceURI,value);
+        Annotation annotation = addAnnotationValueHelper(property,nameSpaceURI,false);
         annotation.setValue(value);           
     }
     
@@ -116,7 +133,7 @@ abstract class AnnotatableImpl extends NexmlWritableImpl implements Annotatable 
      * @see org.nexml.model.Annotatable#addAnnotationValue(java.lang.String, org.w3c.dom.NodeList)
      */
     public void addAnnotationValue(String property, URI nameSpaceURI, NodeList value){
-        Annotation annotation = addAnnotationValueHelper(property,nameSpaceURI,value);
+        Annotation annotation = addAnnotationValueHelper(property,nameSpaceURI,false);
         annotation.setValue(value);           
     } 
     
@@ -125,7 +142,7 @@ abstract class AnnotatableImpl extends NexmlWritableImpl implements Annotatable 
      * @see org.nexml.model.Annotatable#addAnnotationValue(java.lang.String, org.w3c.dom.Element)
      */
     public void addAnnotationValue(String property, URI nameSpaceURI, Element value){
-        Annotation annotation = addAnnotationValueHelper(property,nameSpaceURI,value);
+        Annotation annotation = addAnnotationValueHelper(property,nameSpaceURI,false);
         annotation.setValue(value);           
     }
     
@@ -134,11 +151,7 @@ abstract class AnnotatableImpl extends NexmlWritableImpl implements Annotatable 
      * @see org.nexml.model.Annotatable#addAnnotationValue(java.lang.String, java.net.URI)
      */
     public void addAnnotationValue(String property, URI nameSpaceURI, URI value){
-        AnnotationImpl annotation = new AnnotationImpl(getDocument());
-        annotation.setRel(property);
-        mAnnotations.add(annotation);
-        getElement().appendChild(annotation.getElement());
-        getElement().setAttribute("about","#" + getId()); 
+        Annotation annotation = addAnnotationValueHelper(property,nameSpaceURI,true);
         annotation.setValue(value);           
     }
     
@@ -147,7 +160,7 @@ abstract class AnnotatableImpl extends NexmlWritableImpl implements Annotatable 
      * @see org.nexml.model.Annotatable#addAnnotationValue(java.lang.String, java.lang.Byte[])
      */
     public void addAnnotationValue(String property, URI nameSpaceURI, Byte[] value){
-        Annotation annotation = addAnnotationValueHelper(property,nameSpaceURI,value);
+        Annotation annotation = addAnnotationValueHelper(property,nameSpaceURI,false);
         annotation.setValue(value);           
     }
     
@@ -156,7 +169,7 @@ abstract class AnnotatableImpl extends NexmlWritableImpl implements Annotatable 
      * @see org.nexml.model.Annotatable#addAnnotationValue(java.lang.String, java.math.BigDecimal)
      */
     public void addAnnotationValue(String property, URI nameSpaceURI, BigDecimal value){
-        Annotation annotation = addAnnotationValueHelper(property,nameSpaceURI,value);
+        Annotation annotation = addAnnotationValueHelper(property,nameSpaceURI,false);
         annotation.setValue(value);           
     }
     
@@ -165,7 +178,7 @@ abstract class AnnotatableImpl extends NexmlWritableImpl implements Annotatable 
      * @see org.nexml.model.Annotatable#addAnnotationValue(java.lang.String, java.math.BigInteger)
      */
     public void addAnnotationValue(String property, URI nameSpaceURI, BigInteger value){
-        Annotation annotation = addAnnotationValueHelper(property,nameSpaceURI,value);
+        Annotation annotation = addAnnotationValueHelper(property,nameSpaceURI,false);
         annotation.setValue(value);           
     } 
     
@@ -174,7 +187,7 @@ abstract class AnnotatableImpl extends NexmlWritableImpl implements Annotatable 
      * @see org.nexml.model.Annotatable#addAnnotationValue(java.lang.String, java.lang.Boolean)
      */
     public void addAnnotationValue(String property, URI nameSpaceURI, Boolean value){
-        Annotation annotation = addAnnotationValueHelper(property,nameSpaceURI,value);
+        Annotation annotation = addAnnotationValueHelper(property,nameSpaceURI,false);
         annotation.setValue(value);           
     }
     
@@ -183,7 +196,7 @@ abstract class AnnotatableImpl extends NexmlWritableImpl implements Annotatable 
      * @see org.nexml.model.Annotatable#addAnnotationValue(java.lang.String, java.lang.Byte)
      */
     public void addAnnotationValue(String property, URI nameSpaceURI, Byte value){
-        Annotation annotation = addAnnotationValueHelper(property,nameSpaceURI,value);
+        Annotation annotation = addAnnotationValueHelper(property,nameSpaceURI,false);
         annotation.setValue(value);           
     }
     
@@ -192,7 +205,7 @@ abstract class AnnotatableImpl extends NexmlWritableImpl implements Annotatable 
      * @see org.nexml.model.Annotatable#addAnnotationValue(java.lang.String, java.util.Calendar)
      */
     public void addAnnotationValue(String property, URI nameSpaceURI, Calendar value){
-        Annotation annotation = addAnnotationValueHelper(property,nameSpaceURI,value);
+        Annotation annotation = addAnnotationValueHelper(property,nameSpaceURI,false);
         annotation.setValue(value);           
     } 
     
@@ -201,7 +214,7 @@ abstract class AnnotatableImpl extends NexmlWritableImpl implements Annotatable 
      * @see org.nexml.model.Annotatable#addAnnotationValue(java.lang.String, java.util.Date)
      */
 	public void addAnnotationValue(String property, URI nameSpaceURI, Date value){
-        Annotation annotation = addAnnotationValueHelper(property,nameSpaceURI,value);
+        Annotation annotation = addAnnotationValueHelper(property,nameSpaceURI,false);
         annotation.setValue(value);           
 	}
 	
@@ -210,7 +223,7 @@ abstract class AnnotatableImpl extends NexmlWritableImpl implements Annotatable 
 	 * @see org.nexml.model.Annotatable#addAnnotationValue(java.lang.String, java.lang.Double)
 	 */
 	public void addAnnotationValue(String property, URI nameSpaceURI, Double value){
-        Annotation annotation = addAnnotationValueHelper(property,nameSpaceURI,value);
+        Annotation annotation = addAnnotationValueHelper(property,nameSpaceURI,false);
         annotation.setValue(value);           
 	} 
 	
@@ -219,7 +232,7 @@ abstract class AnnotatableImpl extends NexmlWritableImpl implements Annotatable 
 	 * @see org.nexml.model.Annotatable#addAnnotationValue(java.lang.String, java.lang.Float)
 	 */
 	public void addAnnotationValue(String property, URI nameSpaceURI, Float value){
-        Annotation annotation = addAnnotationValueHelper(property,nameSpaceURI,value);
+        Annotation annotation = addAnnotationValueHelper(property,nameSpaceURI,false);
         annotation.setValue(value);           
 	}
 	
@@ -228,7 +241,7 @@ abstract class AnnotatableImpl extends NexmlWritableImpl implements Annotatable 
 	 * @see org.nexml.model.Annotatable#addAnnotationValue(java.lang.String, java.lang.Integer)
 	 */
 	public void addAnnotationValue(String property, URI nameSpaceURI, Integer value){
-        Annotation annotation = addAnnotationValueHelper(property,nameSpaceURI,value);
+        Annotation annotation = addAnnotationValueHelper(property,nameSpaceURI,false);
         annotation.setValue(value);           
 	}
 	
@@ -237,7 +250,7 @@ abstract class AnnotatableImpl extends NexmlWritableImpl implements Annotatable 
 	 * @see org.nexml.model.Annotatable#addAnnotationValue(java.lang.String, java.lang.Long)
 	 */
 	public void addAnnotationValue(String property, URI nameSpaceURI, Long value){
-        Annotation annotation = addAnnotationValueHelper(property,nameSpaceURI,value);
+        Annotation annotation = addAnnotationValueHelper(property,nameSpaceURI,false);
         annotation.setValue(value);           
 	}
 	
@@ -246,7 +259,7 @@ abstract class AnnotatableImpl extends NexmlWritableImpl implements Annotatable 
 	 * @see org.nexml.model.Annotatable#addAnnotationValue(java.lang.String, java.lang.Short)
 	 */
 	public void addAnnotationValue(String property, URI nameSpaceURI, Short value){
-        Annotation annotation = addAnnotationValueHelper(property,nameSpaceURI,value);
+        Annotation annotation = addAnnotationValueHelper(property,nameSpaceURI,false);
         annotation.setValue(value);           
 	}
 	
@@ -255,7 +268,7 @@ abstract class AnnotatableImpl extends NexmlWritableImpl implements Annotatable 
 	 * @see org.nexml.model.Annotatable#addAnnotationValue(java.lang.String, java.util.UUID)
 	 */
 	public void addAnnotationValue(String property, URI nameSpaceURI, UUID value){
-        Annotation annotation = addAnnotationValueHelper(property,nameSpaceURI,value);
+        Annotation annotation = addAnnotationValueHelper(property,nameSpaceURI,false);
         annotation.setValue(value);           
 	}
 	
@@ -264,7 +277,7 @@ abstract class AnnotatableImpl extends NexmlWritableImpl implements Annotatable 
 	 * @see org.nexml.model.Annotatable#addAnnotationValue(java.lang.String, java.lang.String)
 	 */
 	public void addAnnotationValue(String property, URI nameSpaceURI, String value){
-        Annotation annotation = addAnnotationValueHelper(property,nameSpaceURI,value);
+        Annotation annotation = addAnnotationValueHelper(property,nameSpaceURI,false);
         annotation.setValue(value);           
 	}
 	
@@ -273,7 +286,7 @@ abstract class AnnotatableImpl extends NexmlWritableImpl implements Annotatable 
 	 * @see org.nexml.model.Annotatable#addAnnotationValue(java.lang.String, java.awt.Image)
 	 */
 	public void addAnnotationValue(String property, URI nameSpaceURI, java.awt.Image value){
-        Annotation annotation = addAnnotationValueHelper(property,nameSpaceURI,value);
+        Annotation annotation = addAnnotationValueHelper(property,nameSpaceURI,false);
         annotation.setValue(value);           
 	}
 	
@@ -282,7 +295,7 @@ abstract class AnnotatableImpl extends NexmlWritableImpl implements Annotatable 
 	 * @see org.nexml.model.Annotatable#addAnnotationValue(java.lang.String, javax.xml.datatype.Duration)
 	 */
 	public void addAnnotationValue(String property, URI nameSpaceURI, Duration value){
-        Annotation annotation = addAnnotationValueHelper(property,nameSpaceURI,value);
+        Annotation annotation = addAnnotationValueHelper(property,nameSpaceURI,false);
         annotation.setValue(value);           
 	} 
 	
@@ -291,7 +304,7 @@ abstract class AnnotatableImpl extends NexmlWritableImpl implements Annotatable 
 	 * @see org.nexml.model.Annotatable#addAnnotationValue(java.lang.String, javax.xml.namespace.QName)
 	 */
 	public void addAnnotationValue(String property, URI nameSpaceURI, QName value){
-        Annotation annotation = addAnnotationValueHelper(property,nameSpaceURI,value);
+        Annotation annotation = addAnnotationValueHelper(property,nameSpaceURI,false);
         annotation.setValue(value);           
 	}
 	
@@ -300,7 +313,7 @@ abstract class AnnotatableImpl extends NexmlWritableImpl implements Annotatable 
 	 * @see org.nexml.model.Annotatable#addAnnotationValue(java.lang.String, javax.xml.transform.Source)
 	 */
 	public void addAnnotationValue(String property, URI nameSpaceURI, Source value){
-        Annotation annotation = addAnnotationValueHelper(property,nameSpaceURI,value);
+        Annotation annotation = addAnnotationValueHelper(property,nameSpaceURI,false);
         annotation.setValue(value);           
 	} 
 	
@@ -309,7 +322,7 @@ abstract class AnnotatableImpl extends NexmlWritableImpl implements Annotatable 
 	 * @see org.nexml.model.Annotatable#addAnnotationValue(java.lang.String, javax.xml.datatype.XMLGregorianCalendar)
 	 */
 	public void addAnnotationValue(String property, URI nameSpaceURI, XMLGregorianCalendar value){
-        Annotation annotation = addAnnotationValueHelper(property,nameSpaceURI,value);
+        Annotation annotation = addAnnotationValueHelper(property,nameSpaceURI,false);
         annotation.setValue(value);           
 	}    
 	
@@ -318,17 +331,7 @@ abstract class AnnotatableImpl extends NexmlWritableImpl implements Annotatable 
 	 * @see org.nexml.model.Annotatable#addAnnotationValue(java.lang.String, java.util.Set)
 	 */
     public void addAnnotationValue(String property, URI nameSpaceURI, Set<Annotation> value) {
-        AnnotationImpl annotation = new AnnotationImpl(getDocument());
-        String[] curie = property.split(":");
-        annotation.setRel(property);
-        mAnnotations.add(annotation);
-        getElement().setAttributeNS(
-        	"http://www.w3.org/2000/xmlns/",
-        	"xmlns:" + curie[0],
-        	nameSpaceURI.toString()
-        );        
-        getElement().appendChild(annotation.getElement());
-        getElement().setAttribute("about","#" + getId()); 
+    	Annotation annotation = addAnnotationValueHelper(property,nameSpaceURI,true);
         annotation.setValue(value);      	
     }
     
@@ -338,10 +341,15 @@ abstract class AnnotatableImpl extends NexmlWritableImpl implements Annotatable 
      * @param value the object
      * @return
      */
-    private Annotation addAnnotationValueHelper(String property, URI nameSpaceURI, Object value) {
+    private Annotation addAnnotationValueHelper(String property, URI nameSpaceURI, boolean propertyIsRel) {
         AnnotationImpl annotation = new AnnotationImpl(getDocument());
         String[] curie = property.split(":");
-        annotation.setProperty(property);
+        if ( propertyIsRel ) {
+        	annotation.setRel(property);
+        }
+        else {
+        	annotation.setProperty(property);
+        }
         mAnnotations.add(annotation);
         getElement().setAttributeNS(
         	"http://www.w3.org/2000/xmlns/",
@@ -349,7 +357,19 @@ abstract class AnnotatableImpl extends NexmlWritableImpl implements Annotatable 
         	nameSpaceURI.toString()
         );
         getElement().appendChild(annotation.getElement());
-        getElement().setAttribute("about","#" + getId()); 
+        if ( this instanceof Annotation ) {
+        	getElement().removeAttribute("content");
+        	getElement().removeAttribute("datatype");        	
+        	getElement().setAttribute("xsi:type","nex:ResourceMeta");
+        	if ( getElement().hasAttribute("property") ) {
+        		String rel = getElement().getAttribute("property");
+        		getElement().setAttribute("rel",rel);
+        		getElement().removeAttribute("property");
+        	}
+        }
+        else {
+        	getElement().setAttribute("about","#" + getId());
+        }
         return annotation;
     }
        
