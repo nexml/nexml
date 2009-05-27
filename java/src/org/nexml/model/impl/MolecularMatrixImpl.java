@@ -9,6 +9,7 @@ import org.nexml.model.CharacterState;
 import org.nexml.model.CharacterStateSet;
 import org.nexml.model.MolecularMatrix;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 class MolecularMatrixImpl extends
 		MatrixImpl<CharacterState> implements MolecularMatrix {
@@ -42,12 +43,6 @@ class MolecularMatrixImpl extends
 	public CharacterStateSet createCharacterStateSet() {
 		CharacterStateSetImpl characterStateSet = new CharacterStateSetImpl(getDocument());
 		mCharacterStateSets.add(characterStateSet);
-		/* XXX getFormateElement() always returns an element, it'll create one on the fly if need be
-		if ( null == getFormatElement() ) {
-			setFormatElement( getDocument().createElement("format") );
-			getElement().insertBefore( getFormatElement(), getElement().getFirstChild() );
-		}
-		*/
 		getFormatElement().insertBefore( characterStateSet.getElement(), getFormatElement().getFirstChild() );
 		return characterStateSet;
 	}
@@ -87,13 +82,20 @@ class MolecularMatrixImpl extends
 	    CharacterStateSet result = mMolecularCharacterStates.getDNAStateSet();
 	    CharacterStateSetImpl characterStateSet = (CharacterStateSetImpl)result;
 	    if (mCharacterStateSets.add(characterStateSet)){
-	    	/* XXX getFormateElement() always returns an element, it'll create one on the fly if need be
-	        if ( null == getFormatElement() ) {
-	            setFormatElement( getDocument().createElement("format") );
-	            getElement().insertBefore( getFormatElement(), getElement().getFirstChild() );
-	        }
-	        */
-	        getFormatElement().insertBefore( characterStateSet.getElement(), getFormatElement().getFirstChild() );
+	    	Element characterStateSetElement = characterStateSet.getElement();
+	    	Element formatElementChild = (Element) getFormatElement().getFirstChild();
+	    	if ( characterStateSetElement.getOwnerDocument() != getDocument() ) {
+	    		/**
+	    		 * XXX
+	    		 * Under some obscure conditions (i.e. running the whole test suite at once)
+	    		 * an exception is thrown saying that characterStateSetElement originates from
+	    		 * a different DOM document then the current one UNLESS we do the import here.
+	    		 * Obviously there's something wrong elsewhere in the code - but I can't figure
+	    		 * it out.
+	    		 */
+	    		characterStateSetElement = (Element) getDocument().importNode(characterStateSetElement,true);
+	    	}
+	    	getFormatElement().insertBefore( characterStateSetElement, formatElementChild );
 	        mMolecularCharacterStates.fillDNAStateSet();
 	    }
 	    return result;
@@ -110,13 +112,20 @@ class MolecularMatrixImpl extends
         CharacterStateSet result = mMolecularCharacterStates.getRNAStateSet();
         CharacterStateSetImpl characterStateSet = (CharacterStateSetImpl)result;
         if (mCharacterStateSets.add(characterStateSet)){
-        	/* XXX getFormateElement() always returns an element, it'll create one on the fly if need be
-            if ( null == getFormatElement() ) {
-                setFormatElement( getDocument().createElement("format") );
-                getElement().insertBefore( getFormatElement(), getElement().getFirstChild() );
-            }
-            */
-            getFormatElement().insertBefore( characterStateSet.getElement(), getFormatElement().getFirstChild() );
+	    	Element characterStateSetElement = characterStateSet.getElement();
+	    	Element formatElementChild = (Element) getFormatElement().getFirstChild();
+	    	if ( characterStateSetElement.getOwnerDocument() != getDocument() ) {
+	    		/**
+	    		 * XXX
+	    		 * Under some obscure conditions (i.e. running the whole test suite at once)
+	    		 * an exception is thrown saying that characterStateSetElement originates from
+	    		 * a different DOM document then the current one UNLESS we do the import here.
+	    		 * Obviously there's something wrong elsewhere in the code - but I can't figure
+	    		 * it out.
+	    		 */
+	    		characterStateSetElement = (Element) getDocument().importNode(characterStateSetElement,true);
+	    	}
+	    	getFormatElement().insertBefore( characterStateSetElement, formatElementChild );        	
             mMolecularCharacterStates.fillRNAStateSet();
         }
         return result;
@@ -133,13 +142,20 @@ class MolecularMatrixImpl extends
         CharacterStateSet result = mMolecularCharacterStates.getProteinStateSet();
         CharacterStateSetImpl characterStateSet = (CharacterStateSetImpl)result;
         if (mCharacterStateSets.add(characterStateSet)){
-            /* XXX getFormateElement() always returns an element, it'll create one on the fly if need be
-        	if ( null == getFormatElement() ) {
-                setFormatElement( getDocument().createElement("format") );
-                getElement().insertBefore( getFormatElement(), getElement().getFirstChild() );
-            }
-            */
-            getFormatElement().insertBefore( characterStateSet.getElement(), getFormatElement().getFirstChild() );
+	    	Element characterStateSetElement = characterStateSet.getElement();
+	    	Element formatElementChild = (Element) getFormatElement().getFirstChild();
+	    	if ( characterStateSetElement.getOwnerDocument() != getDocument() ) {
+	    		/**
+	    		 * XXX
+	    		 * Under some obscure conditions (i.e. running the whole test suite at once)
+	    		 * an exception is thrown saying that characterStateSetElement originates from
+	    		 * a different DOM document then the current one UNLESS we do the import here.
+	    		 * Obviously there's something wrong elsewhere in the code - but I can't figure
+	    		 * it out.
+	    		 */
+	    		characterStateSetElement = (Element) getDocument().importNode(characterStateSetElement,true);
+	    	}
+	    	getFormatElement().insertBefore( characterStateSetElement, formatElementChild );        	
             mMolecularCharacterStates.fillProteinStateSet();
         }
         return result;
