@@ -1,27 +1,21 @@
 package org.nexml.model;
 
 import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
-import javax.xml.datatype.Duration;
-import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.namespace.QName;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.Source;
 
 import junit.framework.Assert;
 
@@ -46,29 +40,30 @@ public class TestAnnotation {
 		}
 		
 		/**
-		 * Create an OTUs block
+		 * Create an OTUs block and an OTU, which we will annotate
 		 */
 		OTUs otus = nexmlDocument.createOTUs();
 		otus.setLabel("bar");
 		OTU otu = otus.createOTU();
 		otu.setLabel("foo");
 		
-		/**
-		 * Add annotations
-		 */
+		// we need this to create some obscure-ish objects, such as "Duration"
 		DatatypeFactory dtf = null;
 		try {
 			dtf = DatatypeFactory.newInstance();
 		} catch (DatatypeConfigurationException e) {
 			e.printStackTrace();
 		}
+		
+		// we're going to namespace all predicates in CDAO
 		URI ns = null;
 		try {
 			ns = new URI("http://evolutionaryontology.org/#");
 		} catch (URISyntaxException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
+		
+		// attaching a simple object, just to see that we can
 	    otu.addAnnotationValue("cdao:hasObject", ns, new Object());	
 	    
 	    /**
@@ -84,7 +79,8 @@ public class TestAnnotation {
 		}
 	    
 	    /**
-	     * Set/Get a Calendar
+	     * Set/Get a Calendar - doesn't work yet (because of
+	     * unpredictable date string formatting)
 	     */
 //	    otu.addAnnotationValue("hasCalendar", Calendar.getInstance());
 //	    annos = otu.getAnnotationValues("hasCalendar");
@@ -92,7 +88,8 @@ public class TestAnnotation {
 //	    Assert.assertTrue(relValue instanceof Calendar);
 	    
 	    /**
-	     * Set/Get a Date
+	     * Set/Get a Date - doesn't work yet (because of
+	     * unpredictable date string formatting)
 	     */
 //	    otu.addAnnotationValue("hasDate", new Date(0));
 //	    annos = otu.getAnnotationValues("hasDate");
@@ -121,14 +118,56 @@ public class TestAnnotation {
 	    Object relValue = getAnnotationValue(otu,"cdao:hasUUID");
 	    Assert.assertTrue(relValue instanceof UUID);
 	    
-
-//	    otu.addAnnotationValue("hasNodeList", new NodeList());	    
-//	    otu.addAnnotationValue("hasElement", Element value);	    
+	    /**
+	     *  Set/Get an Element
+	     */
+	    org.w3c.dom.Document domdoc = createDocument();
+	    Element foo = domdoc.createElement("foo");
+	    otu.addAnnotationValue("cdao:hasElement", ns, foo);	   
+	    relValue = getAnnotationValue(otu,"cdao:hasElement");
+	    Assert.assertTrue(relValue instanceof Element);
+	    
+	    /**
+	     * Set/Get a NodeList
+	     */
+	    
+	    // first we need to jump through a bunch of hoops to create a NodeList
+	    String opaqueXml = "<phoo><foo/><bar/></phoo>";
+	    org.w3c.dom.Document opaqueDoc = null;
+		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder documentBuilder = null;
+		try {
+			documentBuilder = documentBuilderFactory.newDocumentBuilder();
+		} catch (ParserConfigurationException e1) {
+			e1.printStackTrace();
+		}
+		try {
+			opaqueDoc = documentBuilder.parse(new ByteArrayInputStream(opaqueXml.getBytes()));
+		} catch (SAXException e1) {
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+	    NodeList phenoScapeNodes = opaqueDoc.getElementsByTagName("phoo");
+	    
+	    // here's the actual getting and setting
+	    otu.addAnnotationValue("cdao:hasNodeList", ns, phenoScapeNodes);
+	    relValue = getAnnotationValue(otu,"cdao:hasNodeList");
+	    Assert.assertTrue(relValue instanceof NodeList);
+	    
+	    /**
+	     * Haven't done these yet
+	     */
 //	    otu.addAnnotationValue("hasByteArray", Byte[] value);	    
 //	    otu.addAnnotationValue("hasImage", new java.awt.Image());	    
 //	    otu.addAnnotationValue("hasSource", Source value);  
 //	    otu.addAnnotationValue("hasXMLGregorianCalendar", dtf.newXMLGregorianCalendar());  
 		
+	    /**
+	     * Here we serialize *to* a nexml string, then parse that,
+	     * then run the equals tests again to test we can properly
+	     * round-trip
+	     */
 	    String nexml = nexmlDocument.getXmlString();
 	    Document document = null;
 		try {
@@ -169,6 +208,17 @@ public class TestAnnotation {
 	    testEquals("cdao:hasString","foo",otu);
 	    testEquals("cdao:hasDuration",dtf.newDuration(1),otu);
 	    testEquals("cdao:hasQName",new QName("foo"),otu); 		
+	}
+	
+	private org.w3c.dom.Document createDocument () {
+		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder documentBuilder = null;
+		try {
+			documentBuilder = documentBuilderFactory.newDocumentBuilder();
+		} catch (ParserConfigurationException e) {
+			e.printStackTrace();
+		}
+		return documentBuilder.newDocument();
 	}
 
 }
