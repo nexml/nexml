@@ -335,8 +335,9 @@ looks_like_number test is given as an argument to a method that expects a number
 
 =item Bio::Phylo::Util::Exceptions::BadString
 
-Thrown when a string that contains any of the characters C<< ():;, >>  is given
-as an argument to a method that expects a name.
+Thrown when an incorrectly formatted string argument is provided, for example
+a string that would be split into substrings under NEXUS tokenization rules,
+a string that isn't an xs:NCName or a string that isn't a binomial CURIE
 
 =item Bio::Phylo::Util::Exceptions::BadFormat
 
