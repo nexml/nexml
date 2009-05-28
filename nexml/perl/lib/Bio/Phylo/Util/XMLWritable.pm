@@ -3,7 +3,7 @@ package Bio::Phylo::Util::XMLWritable;
 use strict;
 use Bio::Phylo;
 use Bio::Phylo::Util::Exceptions 'throw';
-use Bio::Phylo::Util::CONSTANT qw(_DICTIONARY_ looks_like_object looks_like_hash);
+use Bio::Phylo::Util::CONSTANT qw(_DICTIONARY_ _META_ looks_like_object looks_like_hash);
 use vars '@ISA';
 use UNIVERSAL 'isa';
 @ISA=qw(Bio::Phylo);
@@ -12,6 +12,7 @@ use UNIVERSAL 'isa';
 
     my $logger = __PACKAGE__->get_logger;
     my $DICTIONARY_CONSTANT = _DICTIONARY_;
+    my $META_CONSTANT = _META_;
     my %namespaces = (
     	'nex' => 'http://www.nexml.org/1.0',
     	'xml' => 'http://www.w3.org/XML/1998/namespace',
@@ -19,7 +20,7 @@ use UNIVERSAL 'isa';
     	'rdf' => 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
     	'xsd' => 'http://www.w3.org/2001/XMLSchema#',
     );
-    my @fields = \( my ( %tag, %id, %attributes, %identifiable, %dictionaries, %suppress_ns ) );
+    my @fields = \( my ( %tag, %id, %attributes, %identifiable, %dictionaries, %suppress_ns, %meta ) );
 
 =head1 NAME
 
@@ -51,11 +52,18 @@ This is the superclass for all objects that can be serialized to NeXML
  Returns : $self
  Args    : ($tagname, @attributes)
  Note    : Namespace generation is supressed by default; do
-           $obj->enable_ns() to clear
+           $obj->clear_suppress_ns() to clear
 
 =cut
 
+	# XXX we don't need this!!! 
+	# Instead, use:
+	# Bio::Phylo::Util::XMLWritable->new( 
+	#    '-tag' => 'foo',
+	#    '-attributes' => { 'bar' => 'baz' }
+	#)
     sub _new {
+    	$logger->warn("Deprecated! Use XMLWritable->new( -tag => 'foo', -attributes => { 'bar' => 'baz' } )");
 		my $class = shift;
 		my ( $tag, @attr ) = @_;
 		$class = ref($class) || $class;
@@ -124,17 +132,6 @@ This is the superclass for all objects that can be serialized to NeXML
 	    $suppress_ns{$id} = 1;
 	}
 
-=item suppress_ns()
-
- Type    : Alias
- Title   : suppress_ns
- Usage   : $obj->suppress_ns
- Function: alias for set_suppress_ns()
-
-=cut
-
-	sub suppress_ns { shift->set_suppress_ns() }
-
 =item clear_suppress_ns()
 
  Type    : Mutator
@@ -151,17 +148,6 @@ This is the superclass for all objects that can be serialized to NeXML
 	    my $id = $self->get_id;
 	    $suppress_ns{$id} = 0;
 	}
-
-=item enable_ns()
-
- Type    : Alias
- Title   : enable_ns
- Usage   : $obj->enable_ns
- Function: alias for clear_suppress_ns()
-
-=cut
-
-	sub enable_ns { shift->clear_suppress_ns() }
 
 =item add_dictionary()
 
@@ -186,6 +172,30 @@ This is the superclass for all objects that can be serialized to NeXML
         return $self;
     }
 
+=item add_meta()
+
+ Type    : Mutator
+ Title   : add_meta
+ Usage   : $obj->add_meta($meta);
+ Function: Adds a metadata attachment to the object
+ Returns : $self
+ Args    : A Bio::Phylo::Meta object
+
+=cut
+    
+    sub add_meta {
+        my ( $self, $meta ) = @_;
+        if ( looks_like_object $meta, $META_CONSTANT ) {
+            my $id = $self->get_id;
+            if ( not $meta{$id} ) {
+                $meta{$id} = [];
+            }
+            push @{ $meta{$id} }, $meta;
+            $self->set_attributes( 'about' => '#' . $self->get_xml_id );
+        }
+        return $self;
+    }    
+
 =item remove_dictionary()
 
  Type    : Mutator
@@ -208,6 +218,35 @@ This is the superclass for all objects that can be serialized to NeXML
                     last DICT;
                 }
             }
+        }
+        return $self;
+    }
+
+=item remove_meta()
+
+ Type    : Mutator
+ Title   : remove_meta
+ Usage   : $obj->remove_meta($meta);
+ Function: Removes a metadata attachment from the object
+ Returns : $self
+ Args    : Bio::Phylo::Meta
+
+=cut
+
+    sub remove_meta {
+        my ( $self, $meta ) = @_;
+        my $id = $self->get_id;
+        my $meta_id = $meta->get_id;
+        if ( $meta{$id} ) {
+            DICT: for my $i ( 0 .. $#{ $meta{$id} } ) {
+                if ( $meta{$id}->[$i]->get_id == $meta_id ) {
+                    splice @{ $meta{$id} }, $i, 1;
+                    last DICT;
+                }
+            }
+        }
+        if ( not $meta{$id} or not @{ $meta{$id} } ) {
+        	$self->unset_attribute( 'about' );
         }
         return $self;
     }
@@ -303,7 +342,6 @@ Assigns attributes for the element.
 		return $self;
 	}
 
-
 =item set_xml_id()
 
 This method is usually only used internally, to store the xml id
@@ -328,6 +366,28 @@ the purpose of round-tripping nexml info sets.
 		else {
 			throw 'BadString' => "'$id' is not a valid xml NCName for $self";
 		}
+	}
+
+=item unset_attribute()
+
+Removes specified attribute
+
+ Type    : Mutator
+ Title   : unset_attribute
+ Usage   : $obj->unset_attribute( 'foo' )
+ Function: Removes the specified xml attribute for the object
+ Returns : $self
+ Args    : an attribute name
+
+=cut
+
+	sub unset_attribute {
+		my ( $self, $attr ) = @_;
+		my $attrs = $attributes{ $self->get_id };
+		if ( $attrs and isa($attrs,'HASH') ) {
+			delete $attrs->{$attr};
+		}
+		return $self;
 	}
 
 =back
@@ -379,6 +439,25 @@ Retrieves the dictionaries for the element.
         return $dictionaries{$id} || [];
     }
 
+=item get_meta()
+
+Retrieves the metadata for the element.
+
+ Type    : Accessor
+ Title   : get_meta
+ Usage   : my @meta = @{ $obj->get_meta };
+ Function: Retrieves the metadata for the element.
+ Returns : An array ref of Bio::Phylo::Meta objects
+ Args    : None.
+
+=cut
+
+    sub get_meta {
+        my $self = shift;
+        my $id = $self->get_id;
+        return $meta{$id} || [];
+    }
+
 =item get_tag()
 
 Retrieves tag name for the element.
@@ -426,10 +505,16 @@ Retrieves tag string
 		    $has_contents++;
 		    
 		}
+		my $meta = $self->get_meta;
+		if ( @{ $meta } ) {
+			$xml .= '>' if not @{ $dictionaries };
+			$xml .= $_->to_xml for @{ $meta };
+			$has_contents++			
+		}
 		if ( UNIVERSAL::can($self,'get_sets') ) {
 			my $sets = $self->get_sets;
 			if ( @{ $sets } ) {
-				$xml .= '>' if not @{ $dictionaries };
+				$xml .= '>' if not @{ $dictionaries } and not @{ $meta };
 				$xml .= $_->to_xml for @{ $sets };
 				$has_contents++;
 			}
@@ -548,7 +633,7 @@ Retrieves attributes for the element.
 				$logger->info("No linked taxon found");
 			}
 		}
-		$attrs = $add_namespaces_to_attributes->($self,$attrs) unless $self->ns_is_suppressed;
+		$attrs = $add_namespaces_to_attributes->($self,$attrs) unless $self->is_ns_suppressed;
 		my $arg = shift;
 		if ( $arg ) {
 		    return $attrs->{$arg};
@@ -577,7 +662,9 @@ Retrieves xml id for the element.
 			return $id;
 		}		
 		else {
-			return $self->get_tag . $self->get_id;
+			my $tag = $self->get_tag;
+			$tag =~ s/:/_/;
+			return $tag . $self->get_id;
 		}
 	}
 
@@ -608,11 +695,11 @@ method indicates whether that is the case.
         return $identifiable{ $self->get_id };
     }
 
-=item ns_is_suppressed()
+=item is_ns_suppressed()
 
  Type    : Test
- Title   : ns_is_suppressed
- Usage   : if ( $obj->ns_is_suppressed ) { ... }
+ Title   : is_ns_suppressed
+ Usage   : if ( $obj->is_ns_suppressed ) { ... }
  Function: Indicates whether namespace attributes should not
            be written on XML serialization
  Returns : BOOLEAN
@@ -620,20 +707,9 @@ method indicates whether that is the case.
 
 =cut
 
-	sub ns_is_suppressed {
+	sub is_ns_suppressed {
 	    return $suppress_ns{ shift->get_id }
 	}
-
-=item ns_are_suppressed()
-
- Type    : Alias
- Title   : ns_are_suppressed
- Usage   : $obj->ns_are_suppressed
- Function: alias for ns_is_suppressed()
-
-=cut
-
-	sub ns_are_suppressed { shift->ns_is_suppressed }
 
 =back
 
