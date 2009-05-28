@@ -869,7 +869,7 @@ Returns suggested citation.
         my $self    = shift;
         my $name    = __PACKAGE__;
         my $version = __PACKAGE__->VERSION;
-        my $string  = qq{Rutger A. Vos, 2005-2007. $name: };
+        my $string  = qq{Rutger A. Vos, 2005-2009. $name: };
         $string .= qq{Phylogenetic analysis using Perl, version $version};
         return $string;
     }
