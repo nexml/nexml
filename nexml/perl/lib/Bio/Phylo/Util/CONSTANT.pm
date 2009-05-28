@@ -29,6 +29,7 @@ BEGIN {
       	_ANNOTATION_
       	_DICTIONARY_
         _DOMCREATOR_
+        _META_
       	looks_like_number
       	looks_like_object
 		looks_like_hash
@@ -57,6 +58,7 @@ BEGIN {
                 _ANNOTATION_
                 _DICTIONARY_
                 _DOMCREATOR_
+                _META_
             )
         ],
         'functions' => [
@@ -96,6 +98,7 @@ sub _ANNOTATION_   () { 16 }
 sub _DICTIONARY_   () { 17 }
 
 sub _DOMCREATOR_   () { 18 }
+sub _META_         () { 19 }
 
 # this is a drop in replacement for Scalar::Util's function
 my $looks_like_number;

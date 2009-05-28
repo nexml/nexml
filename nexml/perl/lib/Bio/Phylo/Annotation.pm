@@ -214,7 +214,7 @@ Serializes object to an xml string
         	}
         }
         my $type = $self->get_tag;
-        $xml .= "<${type} id=\"${key}\">" . $value . "</${type}>";
+        $xml .= "<meta datatype=\"xsd:${type}\" id=\"${key}\" content=\"${value}\"/>";
         return $xml;
     }
 
