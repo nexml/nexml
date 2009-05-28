@@ -16,7 +16,8 @@ use UNIVERSAL 'isa';
     	'nex' => 'http://www.nexml.org/1.0',
     	'xml' => 'http://www.w3.org/XML/1998/namespace',
     	'xsi' => 'http://www.w3.org/2001/XMLSchema-instance',
-    	'rdf' => 'http://www.w3.org/1999/02/22-rdf-syntax-ns'
+    	'rdf' => 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
+    	'xsd' => 'http://www.w3.org/2001/XMLSchema#',
     );
     my @fields = \( my ( %tag, %id, %attributes, %identifiable, %dictionaries, %suppress_ns ) );
 
@@ -37,6 +38,8 @@ This is the superclass for all objects that can be serialized to NeXML
 
 =head2 CONSTRUCTOR
 
+=over
+
 =item _new()
 
  Type    : Constructor
@@ -53,15 +56,17 @@ This is the superclass for all objects that can be serialized to NeXML
 =cut
 
     sub _new {
-	my $class = shift;
-	my ($tag, @attr) = @_;
-	$class = ref($class) || $class;
-	my $self = $class->SUPER::new(); 
-	$self->set_tag($tag) if $tag;
-	$self->set_attributes(@attr) if @attr;
-	$self->set_suppress_ns;
-	return $self;
+		my $class = shift;
+		my ( $tag, @attr ) = @_;
+		$class = ref($class) || $class;
+		my $self = $class->SUPER::new(); 
+		$self->set_tag($tag) if $tag;
+		$self->set_attributes(@attr) if @attr;
+		$self->set_suppress_ns;
+		return $self;
     }
+
+=back
 
 =head2 MUTATORS
 
@@ -113,11 +118,11 @@ This is the superclass for all objects that can be serialized to NeXML
 
 =cut
 
-sub set_suppress_ns {
-    my $self = shift;
-    my $id = $self->get_id;
-    $suppress_ns{$id} = 1;
-}
+	sub set_suppress_ns {
+	    my $self = shift;
+	    my $id = $self->get_id;
+	    $suppress_ns{$id} = 1;
+	}
 
 =item suppress_ns()
 
@@ -128,7 +133,7 @@ sub set_suppress_ns {
 
 =cut
 
-sub suppress_ns { shift->set_suppress_ns() }
+	sub suppress_ns { shift->set_suppress_ns() }
 
 =item clear_suppress_ns()
 
@@ -141,11 +146,11 @@ sub suppress_ns { shift->set_suppress_ns() }
 
 =cut
 
-sub clear_suppress_ns {
-    my $self = shift;
-    my $id = $self->get_id;
-    $suppress_ns{$id} = 0;
-}
+	sub clear_suppress_ns {
+	    my $self = shift;
+	    my $id = $self->get_id;
+	    $suppress_ns{$id} = 0;
+	}
 
 =item enable_ns()
 
@@ -156,7 +161,7 @@ sub clear_suppress_ns {
 
 =cut
 
-sub enable_ns { shift->clear_suppress_ns() }
+	sub enable_ns { shift->clear_suppress_ns() }
 
 =item add_dictionary()
 
@@ -615,9 +620,9 @@ method indicates whether that is the case.
 
 =cut
 
-sub ns_is_suppressed {
-    return $suppress_ns{ shift->get_id }
-}
+	sub ns_is_suppressed {
+	    return $suppress_ns{ shift->get_id }
+	}
 
 =item ns_are_suppressed()
 
@@ -628,7 +633,7 @@ sub ns_is_suppressed {
 
 =cut
 
-sub ns_are_suppressed { shift->ns_is_suppressed }
+	sub ns_are_suppressed { shift->ns_is_suppressed }
 
 =back
 
