@@ -232,16 +232,18 @@ sub set_text {
  Args    : none
 
 =cut
+
 no strict;
 sub get_text {
     my ($self, @args) = @_;
     my $text;
     for ($self->childNodes) {
-	$text .= $_->nodeValue if $_->nodeType == XML_TEXT_NODE;
+		$text .= $_->nodeValue if $_->nodeType == XML_TEXT_NODE;
     }
     return $text || undef;
 }
 use strict;
+
 =item clear_text()
 
  Type    : Mutator
@@ -252,6 +254,7 @@ use strict;
  Args    : none
 
 =cut
+
 no strict;
 sub clear_text {
     my ($self, @args) = @_;
@@ -262,6 +265,7 @@ sub clear_text {
     return 0;
 }
 use strict;
+
 =back
 
 =head2 Traversal methods
