@@ -247,7 +247,7 @@ public class AnnotationImpl extends AnnotatableImpl implements Annotation {
      */
     public void setValue(NodeList value) {
     	mValue = value;
-		getElement().setAttribute("datatype", "rdf:Literal");
+		getElement().setAttribute("datatype", "rdf:XMLLiteral");
 		getElement().setAttribute("xsi:type","nex:LiteralMeta");
 		for ( int i = 0; i < ((NodeList)value).getLength(); i++ ) {
 			Node node = ((NodeList)value).item(i);
@@ -264,7 +264,7 @@ public class AnnotationImpl extends AnnotatableImpl implements Annotation {
      */
     public void setValue(Element value) {
     	mValue = value;
-		getElement().setAttribute("datatype", "rdf:Literal");
+		getElement().setAttribute("datatype", "rdf:XMLLiteral");
 		getElement().setAttribute("xsi:type","nex:LiteralMeta");
 		if ( value.getOwnerDocument() != getDocument() ) {
 			value = (Element) getDocument().importNode(value,true);
