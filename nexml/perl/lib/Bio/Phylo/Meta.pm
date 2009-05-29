@@ -37,23 +37,17 @@ use vars qw'@ISA';
         $content{ $self->get_id } = $content;
         if ( not ref $content ) {
             if ( $content =~ m|^http://| ) {
-                $self->set_attributes( 'href' => $content );
-                $self->set_attributes( 'xsi:type' => 'nex:ResourceMeta' );
+                $self->set_attributes('href'=>$content,'xsi:type'=>'nex:ResourceMeta');
                 if ( my $prop = $self->get_attributes( 'property' ) ) {
                     $self->set_attributes( 'rel' => $prop );
                     $self->unset_attribute( 'property' );
                 }
             }
             else {
-                $self->set_attributes( 'content' => $content );
-                $self->set_attributes( 'xsi:type' => 'nex:LiteralMeta' );            
+                $self->set_attributes('content'=>$content,'xsi:type'=>'nex:LiteralMeta');            
                 if ( looks_like_number $content ) {
-                    if ( $content == int($content) && $content !~ /\./ ) {
-                        $self->set_attributes( 'datatype' => 'xsd:integer' );
-                    }
-                    else {
-                        $self->set_attributes( 'datatype' => 'xsd:float' );
-                    }
+                	my $dt = $content==int($content) && $content !~ /\./ ?'integer':'float';
+                	$self->set_attributes( 'datatype'  => 'xsd:' . $dt );
                 }
                 else {
                     $self->set_attributes( 'datatype' => 'xsd:string' );
@@ -70,8 +64,7 @@ use vars qw'@ISA';
                 }                
             }
             else {
-                $self->set_attributes( 'xsi:type' => 'nex:LiteralMeta' );
-                $self->set_attributes( 'datatype' => 'rdf:Literal' );
+                $self->set_attributes('xsi:type'=>'nex:LiteralMeta','datatype'=>'rdf:XMLLiteral');
                 $self->insert(Bio::Phylo::Meta::XMLLiteral->new($content));
             }        
         }
@@ -120,45 +113,44 @@ use UNIVERSAL qw'isa can';
     }
     sub to_xml {
         my $self = shift;
-        my $obj = $$self;
+        my $objs = $$self;
+        my @objs = ref($objs) eq 'ARRAY' ? @{ $objs } : ( $objs );
         my $xml = '';
-
-        # for RDF::Core::Model objects
-        if ( isa($obj, 'RDF::Core::Model') ) {
-            eval {
-                require RDF::Core::Model::Serializer;
-                my $serialized_model = '';
-                my $serializer = RDF::Core::Model::Serializer->new(
-                    'Model'  => $value,
-                    'Output' => \$serialized_model,
-                );   
-                $xml = $serialized_model;     			
-            };
-            if ( $@ ) {
-                throw 'API' => $@;
-            }
-        }         
-        
-        # for XML::XMLWriter object
-        elsif ( isa($obj, 'XML::XMLWriter') ) {
-            $xml = $obj->get;
-        }
-        
-        else {
-            # duck-typing
-            # Bio::Phylo => to_xml, XML::DOM,XML::GDOME,XML::LibXML => toString, XML::Twig => sprint
-            # XML::DOM2 => xmlify, XML::DOMBacked => as_xml,
-            # XML::Handler => dump_tree, XML::Element => as_XML
-            # XML::API => _as_string, XML::Code => code
-            
-            my @methods = qw(to_xml toString sprint _as_string code xmlify as_xml dump_tree as_XML);
-            SERIALIZER: for my $method ( @methods ) {
-                if ( can($obj,$method) ) {
-                    $xml .= $obj->$method;
-                    last SERIALIZER;
-                }
-            }
-        }
+		for my $obj ( @objs ) {
+	        # for RDF::Core::Model objects
+	        if ( isa($obj, 'RDF::Core::Model') ) {
+	            eval {
+	                require RDF::Core::Model::Serializer;
+	                my $serialized_model = '';
+	                my $serializer = RDF::Core::Model::Serializer->new(
+	                    'Model'  => $value,
+	                    'Output' => \$serialized_model,
+	                );   
+	                $xml .= $serialized_model;     			
+	            };
+	            if ( $@ ) {
+	                throw 'API' => $@;
+	            }
+	        }	        
+	        # for XML::XMLWriter object
+	        elsif ( isa($obj, 'XML::XMLWriter') ) {
+	            $xml .= $obj->get;
+	        }	        
+	        else {
+	            # duck-typing
+	            # Bio::Phylo => to_xml, XML::DOM,XML::GDOME,XML::LibXML => toString, XML::Twig => sprint
+	            # XML::DOM2 => xmlify, XML::DOMBacked => as_xml,
+	            # XML::Handler => dump_tree, XML::Element => as_XML
+	            # XML::API => _as_string, XML::Code => code	            
+	            my @methods = qw(to_xml toString sprint _as_string code xmlify as_xml dump_tree as_XML);
+	            SERIALIZER: for my $method ( @methods ) {
+	                if ( can($obj,$method) ) {
+	                    $xml .= $obj->$method;
+	                    last SERIALIZER;
+	                }
+	            }
+	        }
+		}
         return $xml;        
     }
     sub _type { $TYPE_CONSTANT }
