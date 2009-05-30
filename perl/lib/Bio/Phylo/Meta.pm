@@ -4,50 +4,51 @@ use Bio::Phylo::Util::CONSTANT qw'_META_ looks_like_number';
 use Bio::Phylo::Util::Exceptions 'throw';
 use UNIVERSAL 'isa';
 use vars qw'@ISA';
+use strict;
 @ISA=qw'Bio::Phylo::Listable';
 
 #Synopsis 
 #
-#use Bio::Phylo::Factory;
-#my $fac = Bio::Phylo::Factory->new;
+# use Bio::Phylo::Factory;
+# my $fac = Bio::Phylo::Factory->new;
 #
-#my $proj = $fac->create_project->add_meta(
-#    $fac->create_meta(
-#        '-namespaces' => { 'cdao' => 'http://evolutionaryontology.org#' },
-#        '-property'   => 'cdao:hasMeta',
-#        '-content'    => $fac->create_meta(
-#            '-namespaces' => { 'cdao' => 'http://evolutionaryontology.org#' },
-#            '-property'   => 'cdao:hasUrl',
-#            '-content'    => 'http://8ball.sdsc.edu:6666/treebase-web/PhyloWS/tree/TreeBASE:2602',
-#        )
-#    )
-#);
+# my $proj = $fac->create_project->add_meta(
+#     $fac->create_meta(
+#         '-namespaces' => { 'cdao' => 'http://evolutionaryontology.org#' },
+#         '-triple'     => { 
+#             'cdao:hasMeta' => $fac->create_meta(
+#                 '-namespaces' => { 'cdao' => 'http://evolutionaryontology.org#' },
+#                 '-triple'     => { 'cdao:hasUrl' => 'http://8ball.sdsc.edu:6666/treebase-web/PhyloWS/tree/TreeBASE:2602' }
+#             )
+#         }
+#     )
+# );
 
 {
     my @fields = \( my( %property, %content ) );
     my $TYPE_CONSTANT      = _META_;
     my $CONTAINER_CONSTANT = $TYPE_CONSTANT;
 
-    sub new {
-        return shift->SUPER::new( '-tag' => 'meta', @_ );
-    }
+    sub new { return shift->SUPER::new( '-tag' => 'meta', @_ ) }   
     
-    sub set_content {
+    my $set_content = sub {
         my ( $self, $content ) = @_;
         $content{ $self->get_id } = $content;
+        my %resource = ( 'xsi:type' => 'nex:ResourceMeta' );
+        my %literal  = ( 'xsi:type' => 'nex:LiteralMeta'  );
         if ( not ref $content ) {
             if ( $content =~ m|^http://| ) {
-                $self->set_attributes('href'=>$content,'xsi:type'=>'nex:ResourceMeta');
+                $self->set_attributes( 'href' => $content, %resource );
                 if ( my $prop = $self->get_attributes( 'property' ) ) {
                     $self->set_attributes( 'rel' => $prop );
                     $self->unset_attribute( 'property' );
                 }
             }
             else {
-                $self->set_attributes('content'=>$content,'xsi:type'=>'nex:LiteralMeta');            
+                $self->set_attributes( 'content' => $content, %literal );            
                 if ( looks_like_number $content ) {
-                	my $dt = $content==int($content) && $content !~ /\./ ?'integer':'float';
-                	$self->set_attributes( 'datatype'  => 'xsd:' . $dt );
+                	my $dt = $content == int($content) && $content !~ /\./ ? 'integer' : 'float';
+                	$self->set_attributes( 'datatype' => 'xsd:' . $dt );
                 }
                 else {
                     $self->set_attributes( 'datatype' => 'xsd:string' );
@@ -56,22 +57,21 @@ use vars qw'@ISA';
         }
         else {
             if ( isa($content, 'Bio::Phylo') and $content->_type == $TYPE_CONSTANT ) {
-                $self->insert($content);
-                $self->set_attributes( 'xsi:type' => 'nex:ResourceMeta' );
+                $self->insert($content)->set_attributes( %resource );
                 if ( my $prop = $self->get_attributes( 'property' ) ) {
                     $self->set_attributes( 'rel' => $prop );
                     $self->unset_attribute( 'property' );
                 }                
             }
             else {
-                $self->set_attributes('xsi:type'=>'nex:LiteralMeta','datatype'=>'rdf:XMLLiteral');
+                $self->set_attributes( 'datatype' => 'rdf:XMLLiteral', %literal );
                 $self->insert(Bio::Phylo::Meta::XMLLiteral->new($content));
             }        
         }
         return $self;
-    }
+    };
     
-    sub set_property {
+    my $set_property = sub {
         my ( $self, $property ) = @_;
         if ( $property =~ m/^([a-zA-Z0-9_]+):([a-zA-Z0-9_]+)$/ ) {
             my ( $prefix, $prop ) = ( $1, $2 );
@@ -83,8 +83,18 @@ use vars qw'@ISA';
             }
         }
         else {
-            throw 'BadString' => 'Not a valid CURIE';
+            throw 'BadString' => "$property is not a valid CURIE";
         }
+    };   
+    
+    sub set_triple {
+        my ( $self, $property, $content ) = @_;
+        if ( ref($property) && ref($property) eq 'HASH' ) {
+            ( $property, $content ) = each %{ $property };
+        }
+        $set_property->( $self, $property );
+        $set_content->( $self, $content );
+        return $self;
     }    
     
     sub get_content { $content{ shift->get_id } }    
@@ -123,7 +133,7 @@ use UNIVERSAL qw'isa can';
 	                require RDF::Core::Model::Serializer;
 	                my $serialized_model = '';
 	                my $serializer = RDF::Core::Model::Serializer->new(
-	                    'Model'  => $value,
+	                    'Model'  => $obj,
 	                    'Output' => \$serialized_model,
 	                );   
 	                $xml .= $serialized_model;     			
