@@ -87,6 +87,24 @@ public class DocumentImpl extends AnnotatableImpl implements Document {
 				matrix = new ContinuousMatrixImpl(getDocument(), charsBlock, 
 					(OTUsImpl)getOTUsById(charsBlock.getAttribute("otus")));
 			} 
+			else if ( xsiType.indexOf(MolecularMatrixImpl.DNA) > 0 ) {
+				matrix = new MolecularMatrixImpl(getDocument(), charsBlock,
+					(OTUsImpl)getOTUsById(charsBlock.getAttribute("otus")),
+					MolecularMatrixImpl.DNA
+					);
+			}
+			else if ( xsiType.indexOf(MolecularMatrixImpl.RNA) > 0 ) {
+				matrix = new MolecularMatrixImpl(getDocument(), charsBlock,
+					(OTUsImpl)getOTUsById(charsBlock.getAttribute("otus")),
+					MolecularMatrixImpl.RNA
+					);
+			}		
+			else if ( xsiType.indexOf(MolecularMatrixImpl.Protein) > 0 ) {
+				matrix = new MolecularMatrixImpl(getDocument(), charsBlock,
+					(OTUsImpl)getOTUsById(charsBlock.getAttribute("otus")),
+					MolecularMatrixImpl.Protein
+					);
+			}			
 			else {
 				matrix = new CategoricalMatrixImpl(getDocument(), charsBlock,
 					(OTUsImpl)getOTUsById(charsBlock.getAttribute("otus")));				
@@ -223,7 +241,7 @@ public class DocumentImpl extends AnnotatableImpl implements Document {
 		getElement().appendChild(molecularMatrix.getElement());
 		molecularMatrix.setOTUs(otus);
 		molecularMatrix.getElement().setAttributeNS(XSI_NS,
-				XSI_PREFIX + ":type", NEX_PREFIX + ":" + type);
+				XSI_PREFIX + ":type", NEX_PREFIX + ":" + type + "Cells");
 		return molecularMatrix;
 	}
 
