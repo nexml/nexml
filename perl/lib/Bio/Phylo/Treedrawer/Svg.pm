@@ -72,11 +72,10 @@ sub _new {
 
 sub _draw {
     my $self = shift;
-    $self->{'SVG'} = SVG->new(
-        'width'  => $self->{'DRAWER'}->get_width,
-        'height' => $self->{'DRAWER'}->get_height
-    );
-    $self->{'SVG'}->tag( 'style', type => 'text/css' )
+    my $drawer = $self->{'DRAWER'};    
+    $self->{'SVG'} = SVG->new( 'width' => $drawer->get_width, 'height' => $drawer->get_height );
+    my $svg = $self->{'SVG'};
+    $svg->tag( 'style', type => 'text/css' )
       ->CDATA( "\n\tpolyline { fill: none; stroke: black; stroke-width: 2 }\n"
           . "\tpath { fill: none; stroke: black; stroke-width: 2 }\n"
           . "\tline { fill: none; stroke: black; stroke-width: 2 }\n"
@@ -88,60 +87,28 @@ sub _draw {
           . "\ttext.scale_label    {}\n"
           . "\tline.scale_major    {}\n"
           . "\tline.scale_minor    {}\n" );
-    foreach my $node ( @{ $self->{'TREE'}->get_entities } ) {
+    for my $node ( @{ $self->{'TREE'}->get_entities } ) {
         my $name = $node->get_name || ' ';
+        my $url  = $node->get_url;         
         $name =~ s/_/ /g;
         $name =~ s/^'(.*)'$/$1/;
         $name =~ s/^"(.*)"$/$1/;        
         my ( %class, $r );
-        if ( $node->is_terminal ) {
-        	$class{'circle'} = 'taxon_circle';
-        	$class{'text'}   = 'taxon_text';
-        	$r = int $self->{'DRAWER'}->get_tip_radius;
-        }
-        else {
-        	$class{'circle'} = 'node_circle';
-        	$class{'text'}   = 'node_text';
-        	$r = int $self->{'DRAWER'}->get_node_radius;
-        }
-        my $cx = int $node->get_x;
-        my $cy = int $node->get_y;
-        my $x  =
-          int( $node->get_x + $self->{'DRAWER'}->get_text_horiz_offset );
-        my $y =
-          int(
-            $node->get_y + $self->{'DRAWER'}->get_text_vert_offset );
+        my $is_terminal  = $node->is_terminal;
+        $class{'circle'} = $is_terminal ? 'taxon_circle' : 'node_circle';
+        $class{'text'}   = $is_terminal ? 'taxon_text'   : 'node_text';
+        $r = $is_terminal ? int($drawer->get_tip_radius) : int($drawer->get_node_radius);
+        my %circle = ( 'cx' => int($node->get_x), 'cy' => int($node->get_y), 'r' => $r, 'class' => $class{'circle'} );
+        my $x = int( $node->get_x + $drawer->get_text_horiz_offset );
+        my $y = int( $node->get_y + $drawer->get_text_vert_offset );
+        my %text = ( 'x' => $x, 'y' => $y, 'class' => $class{'text'} );
         if ( my $style = $node->get_generic('svg') ) {
-            $self->{'SVG'}->tag(
-                'circle',
-                'cx'    => $cx,
-                'cy'    => $cy,
-                'r'     => $r,
-                'style' => $style,
-                'class' => $class{'circle'},
-            );
-            $self->{'SVG'}->tag(
-                'text',
-                'x'     => $x,
-                'y'     => $y,
-                'style' => $style,
-                'class' => $class{'text'},
-            )->cdata( $name );
+            $svg->tag( 'a', 'xlink:href' => $url )->tag( 'circle', %circle, 'style' => $style );
+            $svg->tag( 'text', %text, 'style' => $style )->cdata( $name );
         }
         else {
-            $self->{'SVG'}->tag(
-                'circle',
-                'cx'    => $cx,
-                'cy'    => $cy,
-                'r'     => $r,
-                'class' => $class{'circle'},
-            );
-            $self->{'SVG'}->tag(
-                'text',
-                'x'     => $x,
-                'y'     => $y,
-                'class' => $class{'text'},
-            )->cdata( $name );
+            $svg->tag( 'a', 'xlink:href' => $url )->tag( 'circle', %circle );
+            $svg->tag( 'text',   %text   )->cdata( $name );
         }
         if ( $node->get_parent ) {
             $self->_draw_line($node);
