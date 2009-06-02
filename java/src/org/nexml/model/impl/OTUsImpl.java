@@ -1,7 +1,6 @@
 package org.nexml.model.impl;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import org.nexml.model.Annotation;
