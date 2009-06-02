@@ -54,7 +54,7 @@ class CategoricalMatrixImpl extends
 	protected CategoricalMatrixImpl(Document document, Element element, OTUsImpl otus) {
 		super(document, element);
 		for ( Element stateSetElement : getChildrenByTagName( getFormatElement(), CharacterStateSetImpl.getTagNameClass() ) ) {
-			createCharacterStateSet(stateSetElement); 
+			createCharacterStateSet(stateSetElement);
 		}
 		for ( Element characterElement : getChildrenByTagName( getFormatElement(), CharacterImpl.getTagNameClass() ) ) {
 			createCharacter(characterElement);
@@ -213,5 +213,17 @@ class CategoricalMatrixImpl extends
         }
         return result;
     }
+
+	public CharacterState parseSymbol(String symbol) {
+		CharacterStateSet lastSet = null;
+		for ( CharacterStateSet stateSet : getCharacterStateSets() ) {
+			CharacterState state = stateSet.lookupCharacterStateBySymbol(symbol);
+			if ( null != state ) {
+				return state;
+			}
+			lastSet = stateSet;
+		}
+		return lastSet.createCharacterState(symbol);
+	}
 
  }
