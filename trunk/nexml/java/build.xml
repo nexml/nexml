@@ -6,6 +6,7 @@
 	<property name="test" value="test"/>
 	<property name="classfiles" value="bin"/>
 	<property name="lib" value="jars"/>
+	<property name="rev" value="$Rev$"/>
 	<property name="jarfile" value="nexml.jar"/>
 	
     <path id="classpath">
