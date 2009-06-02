@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.nexml.model.Character;
-import org.nexml.model.CharacterState;
 import org.nexml.model.CharacterStateSet;
 import org.nexml.model.ContinuousMatrix;
 import org.nexml.model.OTU;
