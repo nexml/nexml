@@ -480,5 +480,10 @@ public class AnnotationImpl extends AnnotatableImpl implements Annotation {
     		return mValue;
     	}
     }
+
+	public Set<Annotation> getAllAnnotations() {
+		// TODO Auto-generated method stub
+		return null;
+	}
     
 }
