@@ -90,6 +90,7 @@ class CharacterStateSetImpl extends
 		CharacterStateImpl characterStateImpl = new CharacterStateImpl(getDocument());
 		getElement().appendChild(characterStateImpl.getElement());
 		characterStateImpl.setSymbol(symbol);
+		getCharacterStates().add(characterStateImpl);
 		return characterStateImpl;
 	}
 	
@@ -209,7 +210,7 @@ class CharacterStateSetImpl extends
                 return cs;
             }
         }
-        return null;
+        return createCharacterState(symbol);
     }
 
 	
