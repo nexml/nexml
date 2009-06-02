@@ -14,7 +14,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-class MatrixImpl<T> extends OTUsLinkableImpl<Character> implements
+abstract class MatrixImpl<T> extends OTUsLinkableImpl<Character> implements
 		Matrix<T> {
 	private Element mFormatElement;
 	private Element mMatrixElement;	
