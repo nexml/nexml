@@ -3,7 +3,9 @@ package org.nexml.model;
 import java.util.Set;
 
 public interface MolecularMatrix extends Matrix<CharacterState> {
-
+	public static final String DNA = "Dna";
+	public static final String RNA = "Rna";
+	public static final String Protein = "Protein";
 	/**
 	 * Gets the charactere state sets associated with the
 	 * invocant matrix. Typically, this would be a single,
