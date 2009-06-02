@@ -7,6 +7,7 @@ import org.nexml.model.CharacterState;
 import org.nexml.model.CharacterStateSet;
 import org.nexml.model.UncertainCharacterState;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 /**
  * 
@@ -19,6 +20,10 @@ class MolecularCharacterStateSetImpl extends CharacterStateSetImpl{
 	protected MolecularCharacterStateSetImpl(Document document) {
         super(document);
     }
+	
+	protected MolecularCharacterStateSetImpl(Document document,Element element) {
+        super(document,element);
+    }	
 
     private static MolecularCharacterStateSetImpl DNAStateSet = null;
     private static MolecularCharacterStateSetImpl RNAStateSet = null;
