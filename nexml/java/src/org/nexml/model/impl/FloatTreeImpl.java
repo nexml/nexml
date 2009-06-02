@@ -1,10 +1,7 @@
 package org.nexml.model.impl;
 
-import java.util.Map;
-
 import org.nexml.model.FloatEdge;
 import org.nexml.model.Node;
-import org.nexml.model.OTU;
 import org.nexml.model.Tree;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
