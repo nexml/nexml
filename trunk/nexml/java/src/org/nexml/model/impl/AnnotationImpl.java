@@ -475,7 +475,6 @@ public class AnnotationImpl extends AnnotatableImpl implements Annotation {
     	public SimpleObject(String value) {
     		mValue = value;
     	}
-    	private SimpleObject(){}
     	public String toString() {
     		return mValue;
     	}
