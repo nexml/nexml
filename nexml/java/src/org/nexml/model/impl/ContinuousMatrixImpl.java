@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.nexml.model.Character;
+import org.nexml.model.CharacterState;
+import org.nexml.model.CharacterStateSet;
 import org.nexml.model.ContinuousMatrix;
 import org.nexml.model.OTU;
 import org.w3c.dom.Document;
@@ -66,6 +68,7 @@ class ContinuousMatrixImpl extends MatrixImpl<Double> implements ContinuousMatri
 				MatrixCellImpl<Double> matrixCell = new MatrixCellImpl<Double>(getDocument(),cellElement);
 				setCell(otu, charactersById.get(cellElement.getAttribute("char")), matrixCell);
 				cellElement.setAttribute("char", charactersById.get(cellElement.getAttribute("char")).getId());
+				matrixCell.setValue(Double.parseDouble(cellElement.getAttribute("state")));
 			}
 			for ( Element seq : getChildrenByTagName(rowElement, "seq")) {
 				String sequence = seq.getTextContent();
@@ -109,6 +112,14 @@ class ContinuousMatrixImpl extends MatrixImpl<Double> implements ContinuousMatri
 		addThing(character);
 		getFormatElement().appendChild(character.getElement());
 		return character;
+	}
+
+	public Character createCharacter(CharacterStateSet stateSet) {
+		return createCharacter();
+	}
+
+	public Double parseSymbol(String symbol) {
+		return Double.parseDouble(symbol);
 	}
 
 }
