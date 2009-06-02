@@ -104,6 +104,15 @@ abstract class AnnotatableImpl extends NexmlWritableImpl implements Annotatable 
     
     /*
      * (non-Javadoc)
+     * @see org.nexml.model.Annotatable#getAllAnnotations()
+     */
+    public Set<Annotation> getAllAnnotations() {
+		return mAnnotations;
+    	
+    }
+    
+    /*
+     * (non-Javadoc)
      * @see org.nexml.model.Annotatable#getAnnotations(java.lang.String)
      */
     public Set<Annotation> getAnnotations(String rel) {
