@@ -176,4 +176,13 @@ abstract class NetworkImpl<E extends Edge> extends SetManager<NetworkObject> imp
 		}
 		return targetNodes;
 	}
+	
+	public Edge getEdge(Node source, Node target) {
+		for (Edge edge : getEdges()) {
+			if ( edge.getSource().equals(source) && edge.getTarget().equals(target) ) {
+				return edge;
+			}
+		}
+		return null;
+	}
 }
