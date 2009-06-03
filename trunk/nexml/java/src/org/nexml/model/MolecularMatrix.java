@@ -45,4 +45,6 @@ public interface MolecularMatrix extends Matrix<CharacterState> {
 	 * character amino acid symbols
 	 */
 	CharacterStateSet getProteinCharacterStateSet();
+	
+	CharacterState parseSymbol(String symbol,String subDataType);
 }
