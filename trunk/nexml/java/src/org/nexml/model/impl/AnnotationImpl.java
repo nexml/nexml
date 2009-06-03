@@ -238,7 +238,9 @@ public class AnnotationImpl extends AnnotatableImpl implements Annotation {
         mValue = value;
     	getElement().setAttribute("datatype", "xsd:anySimpleType");
     	getElement().setAttribute("xsi:type","nex:LiteralMeta");
-    	getElement().setAttribute("content",value.toString());      
+    	if ( null != value ) {
+    		getElement().setAttribute("content",value.toString());
+    	}
     } 
     
     /*
