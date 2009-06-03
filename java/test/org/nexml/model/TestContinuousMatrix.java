@@ -14,8 +14,6 @@ import org.junit.Assert;
 import org.xml.sax.SAXException;
 
 public class TestContinuousMatrix {
-	private ContinuousMatrix mContinuousMatrix;
-	private Document mDocument;
 	@Test
 	public void testContinuousMatrix() {
 		Document doc = null;
@@ -90,19 +88,4 @@ public class TestContinuousMatrix {
 		
 	}
 	
-	private void setDocument(Document doc) {
-		mDocument = doc;
-	}
-	
-	private Document getDocument() {
-		return mDocument;
-	}
-
-	private void setContinuousMatrix(ContinuousMatrix matrix) {
-		mContinuousMatrix = matrix;
-	}
-	
-	private ContinuousMatrix getContinuousMatrix () {
-		return mContinuousMatrix;
-	}
 }
