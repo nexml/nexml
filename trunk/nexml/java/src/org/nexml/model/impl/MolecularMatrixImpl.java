@@ -272,4 +272,27 @@ class MolecularMatrixImpl extends
 		return state;
 	}
 
+	public CharacterState parseSymbol(String symbol, String subDataType) {
+		if ( subDataType.equals(MolecularMatrix.DNA) ) {
+			if ( null == mMolecularCharacterStates  ) {
+				mMolecularCharacterStates = (MolecularCharacterStateSetImpl) getDNACharacterStateSet();
+			}
+			return mMolecularCharacterStates.lookupCharacterStateBySymbol(symbol);
+		}
+		else if ( subDataType.equals(MolecularMatrix.RNA) ) {
+			if ( null == mMolecularCharacterStates  ) {
+				mMolecularCharacterStates = (MolecularCharacterStateSetImpl) getRNACharacterStateSet();
+			}
+			return mMolecularCharacterStates.lookupCharacterStateBySymbol(symbol);			
+		}	
+		else if ( subDataType.equals(MolecularMatrix.Protein) ) {
+			if ( null == mMolecularCharacterStates  ) {
+				mMolecularCharacterStates = (MolecularCharacterStateSetImpl) getProteinCharacterStateSet();
+			}
+			return mMolecularCharacterStates.lookupCharacterStateBySymbol(symbol);			
+		}		
+		// TODO Auto-generated method stub
+		return null;
+	}
+
  }
