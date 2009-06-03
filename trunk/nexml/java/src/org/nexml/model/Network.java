@@ -2,7 +2,7 @@ package org.nexml.model;
 
 import java.util.Set;
 
-public interface Network<E extends Edge> extends NexmlWritable {
+public interface Network<E extends Edge> extends Annotatable {
 	/**
 	 * Creates a new edge object, paramerized by branch length
 	 * type. As edges require a source and a target, this must
@@ -70,4 +70,6 @@ public interface Network<E extends Edge> extends NexmlWritable {
 	 * @return see description.
 	 */
 	Set<Node> getOutNodes(Node source);
+	
+	Edge getEdge(Node source, Node target);
 }
