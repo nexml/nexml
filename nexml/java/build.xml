@@ -6,7 +6,7 @@
 	<property name="test" value="test"/>
 	<property name="classfiles" value="bin"/>
 	<property name="lib" value="jars"/>
-	<property name="rev" value="$Rev$"/>
+	<property name="revstring" value="$Rev$"/>
 	<property name="jarfile" value="nexml.jar"/>
 	
     <path id="classpath">
@@ -18,10 +18,17 @@
 	<target name="compile">
 		<mkdir dir="${classfiles}"/>
 	    <javac srcdir="${src}" destdir="${classfiles}">
-	          <exclude name="**/mesquite/nexml/InterpretNEXML/*"/>
+	        <exclude name="**/mesquite/nexml/InterpretNEXML/*"/>
 	        <classpath refid="classpath"/>
 	    </javac>
 	</target>
+	
+	<target name="mesquite">
+		<mkdir dir="${classfiles}"/>
+	    <javac srcdir="${src}" destdir="${classfiles}">
+	        <classpath refid="classpath"/>
+	    </javac>
+	</target>	
 	
 	<target name="build-test" depends="compile">
 	    <javac srcdir="${test}" destdir="${classfiles}" debug="yes">
