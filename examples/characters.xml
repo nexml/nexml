@@ -48,7 +48,7 @@
         it may have the same additional attributes (label, xml:base, 
         xml:lang, xml:id, xlink:href and class) as the taxa element. 
     -->
-    <characters otus="taxa1" id="m1" xsi:type="nex:RestrictionSeqs">
+    <characters otus="taxa1" id="m1" xsi:type="nex:RestrictionSeqs" label="Restriction site sequences">
     	<format>
 	      <states id="states3">
 	        <state id="s1" symbol="0"/>
