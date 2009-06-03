@@ -1,6 +1,7 @@
 package org.nexml.model.impl;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.nexml.model.Edge;
@@ -79,8 +80,17 @@ public abstract class TreeImpl<E extends Edge> extends NetworkImpl<E> implements
 	public Node createNode() {
 		NodeImpl node = new NodeImpl(getDocument());
 		addThing(node);
-		getElement().insertBefore(node.getElement(),
-				getElement().getFirstChild());
+		List<Element> edgeList = getChildrenByTagName(getElement(),"edge");
+		List<Element> rootEdgeList = getChildrenByTagName(getElement(),"rootedge");
+		if ( rootEdgeList.size() > 0 ) { 
+			getElement().insertBefore(node.getElement(),rootEdgeList.get(0));			
+		}
+		else if ( edgeList.size() > 0 ) {
+			getElement().insertBefore(node.getElement(),edgeList.get(0));
+		}
+		else {		
+			getElement().appendChild(node.getElement());
+		}
 		return node;
 	}
 
