@@ -1,3 +1,4 @@
+
 use Test::More tests => 83;
 use File::Temp;
 use lib '../lib';
@@ -15,7 +16,7 @@ my @xml_objects = qw(
 
 use_ok('Bio::Phylo::Factory');
 use_ok('Bio::Phylo::IO');
-use_ok('Bio::Phylo::Util::Dom');
+use_ok('Bio::Phylo::Util::DOM');
 use_ok('Bio::Phylo::Util::XMLWritable');
 use_ok('Bio::Phylo::Util::Exceptions');
 use_ok('Bio::Phylo::Util::CONSTANT');
