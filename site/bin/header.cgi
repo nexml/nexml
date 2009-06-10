@@ -18,17 +18,28 @@ my $template = $fac->create_plain_template(
 	]
 );
 
-my $cgi = CGI->new;
+# if cwd is under svn,
+my $svnPath;
+my $SVN = $ENV{'SVN'} || 'svn';
+my $svnStat = `$SVN stat`;
+if ( $svnStat !~ /is not a working copy/ ) {
+    $svnPath = 'https://nexml.svn.sourceforge.net/svnroot/nexml/trunk' . $fac->subtree;
+}
 
-# variables to be interpolated in template
+# variables to be interpolated in templates
 my $vars = $fac->create_template_vars(
     'title'       => 'nexml - index of ' . $fac->subtree,
     'mainHeading' => 'Directory listing',
+    'svnPath'     => $svnPath,
+    'svnStat'     => $svnStat,
 );
 
+# if there is a README.html
+if ( -e $fac->prefix . $fac->subtree . 'README.html' ) {
+     $template->process( 'README.html', $vars, \$vars->{'README'} );
+}
+
+my $cgi = CGI->new;
 print $cgi->header;
 $template->process( 'header.tmpl', $vars ) || die $template->error();
-if ( -e $fac->prefix . $fac->subtree . 'README.html' ) {
-     $template->process( 'README.html', $vars );
-}
 print '<div class="directoryIndex">';

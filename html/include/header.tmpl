@@ -120,5 +120,21 @@
         <!-- main heading of this page -->
         <h3 class="headerstyle"><% mainHeading %></h3>
         
-        <% INCLUDE 'breadCrumbs.tmpl' %>      
+        <% INCLUDE 'breadCrumbs.tmpl' %>  
+        
+        <% README %>
+        
+<% IF svnPath %>
+<div class="svnPath">
+<div style="color:maroon;background-color:#FF9E78;padding:10px;vertical-align:middle">
+    <img style="vertical-align:middle" src='<% paths.strip(paths.include("information.png")) %>'/>
+    To download the contents of this folder using <a href="http://subversion.tigris.org">svn</a>:
+</div>
+<div style="padding: 10px;overflow:auto">
+svn co \<br/>
+&nbsp;&nbsp;&nbsp;<% svnPath %> \<br/>
+&nbsp;&nbsp;&nbsp;<% paths.breadCrumbs(currentURL).-1.name %>
+</div>
+</div>
+<% END %>        
         
