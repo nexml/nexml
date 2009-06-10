@@ -4,4 +4,4 @@
 python setup.py sdist
 python setup.py clean
 mv dist/* ../downloads
-rm -rf pynexml.egg-info ez_setup.pyc dist
+rm -rf pynexml.egg-info ez_setup.pyc dist pynexml-0.01 setuptools-0.6c3-py2.3.egg
