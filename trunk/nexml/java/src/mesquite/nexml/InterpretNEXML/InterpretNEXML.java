@@ -58,7 +58,7 @@ public class InterpretNEXML extends FileInterpreterI {
 		// XXX pass properties here
 		Properties properties = new Properties();
 	    try {
-	        properties.load(new FileInputStream("/Users/rvosa/Documents/workspace/nexml/trunk/nexml/java/src/predicateHandlerMapping.properties"));
+	        properties.load(this.getClass().getResourceAsStream ("predicateHandlerMapping.properties"));
 	    } catch (IOException e) {
 	    	e.printStackTrace();
 	    }		
@@ -82,7 +82,7 @@ public class InterpretNEXML extends FileInterpreterI {
 		// XXX pass properties here
 		Properties properties = new Properties();
 	    try {
-	        properties.load(new FileInputStream("/Users/rvosa/Documents/workspace/nexml/trunk/nexml/java/src/predicateHandlerMapping.properties"));
+	    	properties.load(this.getClass().getResourceAsStream ("predicateHandlerMapping.properties"));
 	    } catch (IOException e) {
 	    	e.printStackTrace();
 	    }
