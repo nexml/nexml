@@ -192,10 +192,17 @@ h5 {
     font-size: 1em
 }
 
-li.rss {    
-    list-style-image: url('<% paths.strip(paths.include("resultset_next.gif")) %>');  
+li.rss, li.folder {    
     margin-bottom: 2em;  
     line-height: 1.5em
+}
+
+li.folder {
+    list-style-image: url('<% paths.strip(paths.include("folder.png")) %>');  
+}
+
+li.rss {
+    list-style-image: url('<% paths.strip(paths.include("resultset_next.gif")) %>');  
 }
 
 li.external {    
