@@ -264,19 +264,29 @@ img.app {
     padding-top: 20px
 }
 
-#validateFieldset, .svnPath {
+#validateFieldset, .infoBox {
     border: 3px solid #FF9E78;
     background-color: #FDDCCF;
     margin: 0px;
     padding: 10px
 }
 
-.svnPath {
+.infoBox {
     margin: 10px;
+    padding: 0px !important
+}
+
+.infoHeader {
+    color:maroon;
+    background-color:#FF9E78;
+    padding:10px;
     font-weight: bold;
-/*    overflow: auto; */
-    padding: 0px !important;
-    white-space:nowrap
+    vertical-align:middle
+}
+
+.infoContent {
+    padding: 10px;
+    overflow: auto
 }
 
 label {
