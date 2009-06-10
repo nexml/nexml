@@ -532,7 +532,7 @@ public class ObjectConverter extends MesquiteModule {
 			try {
 				Class<?> handlerClass = Class.forName(handlerClassName);
 				Constructor<?> declaredConstructor = handlerClass.getDeclaredConstructor(Object.class,String.class,Object.class);
-				ph = (PredicateHandler) declaredConstructor.newInstance(subject,predicate,value);				
+				ph = (PredicateHandler) declaredConstructor.newInstance(subject,predicate,value);	
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -540,6 +540,7 @@ public class ObjectConverter extends MesquiteModule {
 		if ( null == ph ) {
 			ph = new PredicateHandlerImpl(subject,predicate,value);
 		}
+		logln("Using predicateHandler " + ph.toString());		
 		return ph;
 	}
 
