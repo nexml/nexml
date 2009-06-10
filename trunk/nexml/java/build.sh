@@ -1,1 +1,3 @@
 ant jar
+ant clean
+
