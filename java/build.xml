@@ -8,7 +8,7 @@
 	<property name="lib" value="jars"/>
 	<property name="revstring" value="$Rev$"/>
 	<property name="jarfile" value="nexml.jar"/>
-	
+	<!-- this is a build file for ant: http://ant.apache.org/ -->	
     <path id="classpath">
         <fileset dir="${lib}">
             <include name="*.jar"/>
