@@ -1,0 +1,29 @@
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:h="http://www.w3.org/1999/xhtml">
+  <rdf:Description rdf:about="#aabef8df4-6968-4d97-961d-b28210c0b318">
+    <msq:taxaUID xmlns:msq="http://mesquiteproject.org#" rdf:datatype="http://www.w3.org/2001/XMLSchema#string">rvos@interchange.ubc.ca121a514ec3f4</msq:taxaUID>
+  </rdf:Description>
+  <rdf:Description rdf:about="#a3837480d-a8b1-4816-819d-5bd4b79dc9c7">
+    <cdao:has_External_Reference xmlns:cdao="http://evolutionaryontology.org#" rdf:resource="http"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#a3837480d-a8b1-4816-819d-5bd4b79dc9c7">
+    <msq:taxonUID xmlns:msq="http://mesquiteproject.org#" rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">0</msq:taxonUID>
+  </rdf:Description>
+  <rdf:Description rdf:about="#aac8f2251-3001-47b1-bc1d-b4638f1188fd">
+    <cdao:has_External_Reference xmlns:cdao="http://evolutionaryontology.org#" rdf:resource="http://8ball.sdsc.edu:6666/treebase-web"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#aac8f2251-3001-47b1-bc1d-b4638f1188fd">
+    <msq:taxonUID xmlns:msq="http://mesquiteproject.org#" rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">1</msq:taxonUID>
+  </rdf:Description>
+  <rdf:Description rdf:about="#acd5bc835-b31d-4a15-b3cc-4e9e6226a0ed">
+    <cdao:has_External_Reference xmlns:cdao="http://evolutionaryontology.org#" rdf:resource="http://8ball.sdsc.edu:6666/treebase-web"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#acd5bc835-b31d-4a15-b3cc-4e9e6226a0ed">
+    <msq:taxonUID xmlns:msq="http://mesquiteproject.org#" rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">2</msq:taxonUID>
+  </rdf:Description>
+  <rdf:Description rdf:about="#a4b25826c-6ae2-40a7-a506-0f61cfc070a8">
+    <msq:treeUID xmlns:msq="http://mesquiteproject.org#" rdf:datatype="http://www.w3.org/2001/XMLSchema#long">18</msq:treeUID>
+  </rdf:Description>
+  <rdf:Description rdf:about="#a4b25826c-6ae2-40a7-a506-0f61cfc070a8">
+    <msq:treePolytomyAssumption xmlns:msq="http://mesquiteproject.org#" rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">2</msq:treePolytomyAssumption>
+  </rdf:Description>
+</rdf:RDF>
