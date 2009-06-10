@@ -264,11 +264,19 @@ img.app {
     padding-top: 20px
 }
 
-#validateFieldset {
+#validateFieldset, .svnPath {
     border: 3px solid #FF9E78;
     background-color: #FDDCCF;
     margin: 0px;
     padding: 10px
+}
+
+.svnPath {
+    margin: 10px;
+    font-weight: bold;
+/*    overflow: auto; */
+    padding: 0px !important;
+    white-space:nowrap
 }
 
 label {
