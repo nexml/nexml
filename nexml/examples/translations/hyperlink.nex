@@ -25,13 +25,9 @@ END;
 
 BEGIN NOTES;
 
-	SUPPLEMENTAL   TAXA = Taxa TAXON = 1 NAME = hyperlink STRING = http;
-	SUPPLEMENTAL   TAXA = Taxa TAXON = 2 NAME = hyperlink STRING = 'http://8ball.sdsc.edu:6666/treebase-web';
-	SUPPLEMENTAL   TAXA = Taxa TAXON = 3 NAME = hyperlink STRING = 'http://8ball.sdsc.edu:6666/treebase-web';
-
-	HYPERLINK TAXA = Taxa TAXON = 0 URL = http;
-	HYPERLINK TAXA = Taxa TAXON = 1 URL = 'http://8ball.sdsc.edu:6666/treebase-web';
-	HYPERLINK TAXA = Taxa TAXON = 2 URL = 'http://8ball.sdsc.edu:6666/treebase-web';
+	SUPPLEMENTAL   TAXA = Taxa TAXON = 1 NAME = hyperlink STRING = 'http://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=9597';
+	SUPPLEMENTAL   TAXA = Taxa TAXON = 2 NAME = hyperlink STRING = 'http://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=9598';
+	SUPPLEMENTAL   TAXA = Taxa TAXON = 3 NAME = hyperlink STRING = 'http://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=9606';
 
 END;
 
