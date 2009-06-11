@@ -1,5 +1,5 @@
-
-use Test::More tests => 83;
+#-*-perl-*-
+use Test::More tests => 81;
 use File::Temp;
 use lib '../lib';
 use strict;
@@ -12,6 +12,9 @@ my @xml_objects = qw(
 		   Bio::Phylo::Matrices::Datum
 		   Bio::Phylo::Project      
                  );
+# check if XML::LibXML is available
+my $TEST_XML_LIBXML = eval { require XML::LibXML; 1 };
+
 # uses and cans
 
 use_ok('Bio::Phylo::Factory');
@@ -35,7 +38,8 @@ foreach (@xml_objects) {
 
 # test data
 use Bio::Phylo::IO qw( parse );
-ok( my $test = parse( -string=> do { local $/; <DATA> }, -format=>'nexml' ), 'parse 01_basic.xml');
+my $data = do {local $/; <DATA>};
+ok( my $test = parse( -string=> $data, -format=>'nexml' ), 'parse 01_basic.xml');
 
 # factory object
 ok( my $fac = Bio::Phylo::Factory->new(), 'make factory' );
@@ -79,26 +83,18 @@ foreach my $format (qw(twig libxml)) {
 # from here, want to check that all elements in the original file are 
 # manifested in the $doc DOM
 
-    ok(my $rdr = XML::LibXML::Reader->new( location => 'data/01_basic.xml' ), 
-       'read original data file');
-    $rdr->read;
-    $rdr->copyCurrentNode(1);
-    my $org_doc = $rdr->document;
+    my $twig = XML::Twig->new();
+    my $org_doc = $twig->parse( $data );
+
     my %org_elts;
 
     my @elt_tags = qw( nex:nexml otus otu trees tree node edge characters format states state uncertain_state_set member char matrix row cell );
 
     foreach (@elt_tags) {
-		$org_elts{$_} = $org_doc->getElementsByTagName($_);
+	my @a = $org_doc->descendants($_);
+	my @b = $doc->get_elements_by_tagname($_);
+	is(@b, @a, "number of $_ elements correct (".scalar @b.")");
     }
-
-    foreach (@elt_tags) {
-		my $a = $org_elts{$_};
-		my $n = $a ? ($a->isa('XML::LibXML::NodeList') ? $a->size : 1) : 0;
-		my @b = $doc->get_elements_by_tagname($_);
-		is(@b, $n, "number of $_ elements correct ($n)");
-    }
-
 }
 
 __DATA__
