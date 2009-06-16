@@ -5,7 +5,7 @@ use Bio::Phylo::Listable;
 use Bio::Phylo::Forest::Node;
 use Bio::Phylo::IO qw(unparse);
 use Bio::Phylo::Util::Exceptions 'throw';
-use Bio::Phylo::Util::CONSTANT qw(_TREE_ _FOREST_ looks_like_number looks_like_hash);
+use Bio::Phylo::Util::CONSTANT qw(_TREE_ _FOREST_ _DOMCREATOR_ looks_like_number looks_like_hash);
 use Bio::Phylo::Factory;
 use Scalar::Util qw(blessed);
 use vars qw(@ISA);
@@ -2196,6 +2196,39 @@ Serializes object to JSON string
         else {
             return $self->SUPER::to_json;
         }
+    }
+
+=item to_dom()
+
+ Type    : Serializer
+ Title   : to_dom
+ Usage   : $tree->to_dom($dom)
+ Function: Generates a DOM subtree from the invocant
+           and its contained objects
+ Returns : an Element object
+ Args    : DOM factory object
+
+=cut
+
+    sub to_dom {
+		my ($self, $dom) = @_;
+		$dom ||= $Bio::Phylo::Util::DOM::DOM;
+		unless (looks_like_object $dom, _DOMCREATOR_) {
+		    throw 'BadArgs' => 'DOM factory object not provided';
+		}
+		my $xsi_type = 'nex:IntTree';
+		for my $node ( @{ $self->get_entities } ) {
+		    my $length = $node->get_branch_length;
+		    if ( defined $length and $length !~ /^[+-]?\d+$/ ) {
+				$xsi_type = 'nex:FloatTree';
+		    }
+		}
+		$self->set_attributes( 'xsi:type' => $xsi_type );
+		my $elt = $self->get_dom_elt($dom);
+		if ( my $root = $self->get_root ) {
+		    $elt->set_child( $_ ) for $root->to_dom($dom);
+		}
+		return $elt;
     }
 
 =begin comment

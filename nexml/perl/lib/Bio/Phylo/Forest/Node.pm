@@ -2,7 +2,7 @@
 package Bio::Phylo::Forest::Node;
 use strict;
 use Bio::Phylo::Taxa::TaxonLinker;
-use Bio::Phylo::Util::CONSTANT qw(_NODE_ _TREE_ _TAXON_ looks_like_number looks_like_object looks_like_hash);
+use Bio::Phylo::Util::CONSTANT qw(_NODE_ _TREE_ _TAXON_ _DOMCREATOR_ looks_like_number looks_like_object looks_like_hash);
 use Bio::Phylo::Listable;
 use Bio::Phylo::Util::Exceptions 'throw';
 use Bio::Phylo::Util::XMLWritable;
@@ -2295,6 +2295,64 @@ Serializes subtree subtended by invocant to newick string.
 			}
 		}
 	}
+
+=item to_dom()
+
+ Type    : Serializer
+ Title   : to_dom
+ Usage   : $node->to_dom($dom)
+ Function: Generates an array of DOM elements from the invocant's
+           descendants
+ Returns : an array of Element objects
+ Args    : DOM factory object
+
+=cut
+
+    sub to_dom {
+		my ($self, $dom) = shift;
+		$dom ||= $Bio::Phylo::Util::DOM::DOM;
+		unless (looks_like_object $dom, _DOMCREATOR_) {
+		    throw 'BadArgs' => 'DOM factory object not provided';
+		}
+		my @nodes = ( $self, @{ $self->get_descendants } );
+		my @elts;
+		# first write out the node elements
+		for my $node ( @nodes ) {
+		    if ( my $taxon = $node->get_taxon ) {
+				$node->set_attributes( 'otu' => $taxon->get_xml_id );
+		    }
+		    if ( $node->is_root ) {
+				$node->set_attributes( 'root' => 'true' );
+		    }
+		    push @elts, $node->get_dom_elt($dom);		    
+		}
+		
+		# then the rootedge?
+		if ( my $length = shift(@nodes)->get_branch_length ) {
+		    my $target = $self->get_xml_id;
+		    my $id = "edge" . $self->get_id;
+		    my $elt = $dom->create_element('rootedge');
+		    $elt->set_attributes('target' => $target);
+		    $elt->set_attributes('id' => $id);
+		    $elt->set_attributes('length' => $length);
+		    push @elts, $elt;
+		}
+		
+		# then the subtended edges
+		for my $node ( @nodes ) {
+		    my $source = $node->get_parent->get_xml_id;
+		    my $target = $node->get_xml_id;
+		    my $id     = "edge" . $node->get_id;
+		    my $length = $node->get_branch_length;
+		    my $elt = $dom->create_element('edge');
+		    $elt->set_attributes('source' => $source);
+		    $elt->set_attributes('target' => $target);
+		    $elt->set_attributes('id' => $id);
+		    $elt->set_attributes('length' => $length) if ( defined $length );
+		    push @elts, $elt;
+		}
+		return @elts; 
+    }
 
 =begin comment
 

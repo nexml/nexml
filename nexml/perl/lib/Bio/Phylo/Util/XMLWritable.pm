@@ -3,7 +3,7 @@ package Bio::Phylo::Util::XMLWritable;
 use strict;
 use Bio::Phylo;
 use Bio::Phylo::Util::Exceptions 'throw';
-use Bio::Phylo::Util::CONSTANT qw(_DICTIONARY_ _META_ looks_like_object looks_like_hash);
+use Bio::Phylo::Util::CONSTANT qw(_DICTIONARY_ _META_ _DOMCREATOR_ looks_like_object looks_like_hash);
 use vars '@ISA';
 use UNIVERSAL 'isa';
 @ISA=qw(Bio::Phylo);
@@ -668,6 +668,40 @@ Retrieves xml id for the element.
 		}
 	}
 
+=item get_dom_elt()
+
+ Type    : Serializer
+ Title   : get_dom_elt
+ Usage   : $obj->get_dom_elt
+ Function: Generates a DOM element from the invocant
+ Returns : an XML::LibXML::Element object
+ Args    : DOM factory object
+
+=cut
+
+    sub get_dom_elt {
+		my ($self,$dom) = @_;
+		$dom ||= $Bio::Phylo::Util::DOM::DOM;
+		unless (looks_like_object $dom, _DOMCREATOR_) {
+		    throw 'BadArgs' => 'DOM factory object not provided';
+		}
+		my $elt = $dom->create_element($self->get_tag);
+		my %attrs = %{ $self->get_attributes };
+		for my $key ( keys %attrs ) {
+		    $elt->set_attributes( $key => $attrs{$key} );
+		}
+	
+		my $dictionaries = $self->get_dictionaries;
+		if ( @{ $dictionaries } ) {
+		    $elt->set_child( $_->to_dom($dom) ) for @{ $dictionaries };
+		}
+		if ( UNIVERSAL::can($self,'get_sets') ) {
+		    my $sets = $self->get_sets;
+		    $elt->set_child( $_->to_dom($dom) ) for @{ $sets };
+		}
+		return $elt;
+    }
+
 =back
 
 =head2 TESTS
@@ -748,6 +782,36 @@ Serializes invocant to XML.
 		}
 		return $xml;
 	}		
+
+=item to_dom()
+
+ Type    : Serializer
+ Title   : to_dom
+ Usage   : $obj->to_dom
+ Function: Generates a DOM subtree from the invocant and
+           its contained objects
+ Returns : an XML::LibXML::Element object
+ Args    : DOM factory object
+ Note    : This is the generic function. It is redefined in the 
+           classes below.
+=cut
+
+    sub to_dom {
+		my ($self, $dom) = @_;
+		$dom ||= $Bio::Phylo::Util::DOM::DOM;
+		unless (looks_like_object $dom, _DOMCREATOR_) {
+		    throw 'BadArgs' => 'DOM factory object not provided';
+		}
+		my $elt = $self->get_dom_elt($dom);
+		if ( $self->can('get_entities') ) {
+		    for my $ent ( @{ $self->get_entities } ) {
+				if ( UNIVERSAL::can($ent,'to_dom') ) { 
+				    $elt->set_child( $ent->to_dom($dom) );
+				}
+		    }
+		}
+		return $elt;
+    }
 
 	sub _cleanup { 
     	my $self = shift;

@@ -1111,6 +1111,104 @@ Serializes matrix to nexus format.
 		return $string;
 	}
 
+=item  Bio::Phylo::Matrices::Matrix::to_dom
+
+Analog to to_xml.
+
+ Type    : Serializer
+ Title   : to_dom
+ Usage   : $matrix->to_dom
+ Function: Generates a DOM subtree from the invocant
+           and its contained objects
+ Returns : an Element object
+ Args    : Optional:
+           -compact => 1 : renders characters as sequences,
+                           not individual cells
+
+=cut
+
+    sub to_dom {	
+		my $self = shift;
+		my $dom = $_[0];
+		my @args = @_;
+		# handle dom factory object...
+		if ( isa($dom, 'SCALAR') && $dom->_type == _DOMCREATOR_ ) {
+		    splice(@args, 0, 1);
+		}
+		else {
+		    $dom = $Bio::Phylo::Util::DOM::DOM;
+		    unless ($dom) {
+				throw 'BadArgs' => 'DOM factory object not provided';
+		    }
+		}
+		#### make sure argument handling works here...
+		my ( %args, $ids_for_states );
+		%args = @args if @args;
+	
+		my $type = $self->get_type;
+		my $verbosity = $args{'-compact'} ? 'Seqs' : 'Cells';
+		my $xsi_type = 'nex:' . ucfirst($type) . $verbosity;
+		$self->set_attributes( 'xsi:type' => $xsi_type );
+		my $elt = $self->get_dom_elt($dom);
+		my $normalized = $self->_normalize_symbols;
+		
+		# the format block
+	 	my $format_elt = $dom->create_element('format');
+		my $to = $self->get_type_object;
+		$ids_for_states = $to->get_ids_for_states(1);
+		
+		# write state definitions
+	
+		$format_elt->set_child( $to->to_dom( $dom, $normalized, $self->get_polymorphism ) );
+		
+		# write column definitions
+		$format_elt->set_child($_) for $self->_package_char_labels( $dom, %{ $ids_for_states } ? $to->get_xml_id : undef );
+	
+		$elt->set_child($format_elt);
+	
+		# the matrix block
+	
+		my $mx_elt = $dom->create_element('matrix');
+		my @char_ids;
+		for ( 0 .. $self->get_nchar ) {
+		    push @char_ids, 'c' . ($_+1);
+		}
+		
+		# write rows
+		my $special = $self->get_type_object->get_ids_for_special_symbols(1);
+		for my $row ( @{ $self->get_entities } ) {
+		    # $row->to_dom is calling ...::Datum::to_dom...
+		    $mx_elt->set_child( 
+				$row->to_dom( $dom,
+				    '-states'  => $ids_for_states,
+				    '-chars'   => \@char_ids,
+				    '-symbols' => $normalized,
+				    '-special' => $special,
+				    %args,
+				)
+			);
+		}
+		$elt->set_child($mx_elt);
+		return $elt;
+    }
+
+    # returns an array of elements
+    sub _package_char_labels {
+		my ( $self, $dom, $states_id ) = @_;
+		my @elts;
+		my $labels = $self->get_charlabels;
+		for my $i ( 1 .. $self->get_nchar ) {
+		    my $char_id = 'c' . $i;
+		    my $label   = $labels->[ $i - 1 ];
+		    my $elt = $dom->create_element('char');
+		    $elt->set_attributes( 'id' => $char_id );
+		    $elt->set_attributes( 'label' => $label ) if $label;
+		    $elt->set_attributes( 'states' => $states_id ) if $states_id;
+		    push @elts, $elt;
+		}	
+		return @elts;
+    }
+
 =item insert()
 
 Insert argument in invocant.

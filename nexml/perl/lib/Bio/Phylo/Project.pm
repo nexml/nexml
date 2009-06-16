@@ -141,6 +141,46 @@ Getter for matrix objects
 		return $get_object->($self,$MATRIX);		
 	}
 
+=item get_document()
+
+ Type    : Serializer
+ Title   : doc
+ Usage   : $proj->get_document()
+ Function: Creates a DOM Document object, containing the 
+           present state of the project by default
+ Returns : a Document object
+ Args    : a DOM factory object
+           Optional: pass 1 to obtain a document node without 
+           content
+
+=cut
+
+    sub get_document {
+		my $self = shift;
+		my $dom = $_[0];
+		my @args = @_;
+		# handle dom factory object...
+		if ( isa($dom, 'SCALAR') && $dom->_type == _DOMCREATOR_ ) {
+		    splice(@args, 0, 1);
+		}
+		else {
+		    $dom = $Bio::Phylo::Util::DOM::DOM;
+		    unless ($dom) {
+				throw 'BadArgs' => 'DOM factory object not provided';
+		    }
+		}
+	###	# make sure argument handling works here...
+		my $empty = shift @args;
+		my $doc = $dom->create_document();
+		my $root;
+	
+		unless ($empty) {
+		    $root = $self->to_dom($dom);
+		    $doc->set_root($root);
+		}
+		return $doc;
+    }
+
 =back
 
 =head2 SERIALIZERS
@@ -209,6 +249,34 @@ Serializes invocant to NEXUS.
 		}	
 		return $nexus;	
 	}
+
+=item to_dom()
+
+ Type    : Serializer
+ Title   : to_dom
+ Usage   : $node->to_dom
+ Function: Generates a DOM subtree from the invocant
+           and its contained objects
+ Returns : an XML::LibXML::Element object
+ Args    : a DOM factory object
+
+=cut
+
+    sub to_dom {
+		my ($self, $dom) = @_;
+		$dom ||= $Bio::Phylo::Util::DOM::DOM;
+		unless (looks_like_object $dom, _DOMCREATOR_) {
+		    throw 'BadArgs' => 'DOM factory object not provided';
+		}
+		my $elt = $self->get_dom_elt($dom);
+	
+		my @linked = ( @{ $self->get_forests }, @{ $self->get_matrices } );
+		my %taxa = map { $_->get_id => $_ } @{ $self->get_taxa }, map { $_->make_taxa } @linked;
+		for ( values %taxa, @linked ) {
+		    $elt->set_child( $_->to_dom($dom, @_) );
+		}
+		return $elt;
+    }
 	
 	sub _type { $TYPE }
 
