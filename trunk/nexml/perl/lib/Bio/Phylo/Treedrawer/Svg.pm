@@ -102,14 +102,13 @@ sub _draw {
         my $x = int( $node->get_x + $drawer->get_text_horiz_offset );
         my $y = int( $node->get_y + $drawer->get_text_vert_offset );
         my %text = ( 'x' => $x, 'y' => $y, 'class' => $class{'text'} );
+        my %args;
         if ( my $style = $node->get_generic('svg') ) {
-            $svg->tag( 'a', 'xlink:href' => $url )->tag( 'circle', %circle, 'style' => $style );
-            $svg->tag( 'text', %text, 'style' => $style )->cdata( $name );
+        	%args = ( 'style' => $style );
         }
-        else {
-            $svg->tag( 'a', 'xlink:href' => $url )->tag( 'circle', %circle );
-            $svg->tag( 'text',   %text   )->cdata( $name );
-        }
+		my $invocant = $url ? $svg->tag( 'a', 'xlink:href' => $url ) : $svg;
+        $invocant->tag( 'circle', %circle, %args );
+        $svg->tag( 'text', %text, %args )->cdata( $name );        
         if ( $node->get_parent ) {
             $self->_draw_line($node);
         }
