@@ -2,7 +2,7 @@
 package Bio::Phylo::Matrices::Datatype;
 use Bio::Phylo::Util::XMLWritable;
 use Bio::Phylo::Util::Exceptions 'throw';
-use Bio::Phylo::Util::CONSTANT 'looks_like_hash';
+use Bio::Phylo::Util::CONSTANT qw'_DOMCREATOR_ looks_like_hash';
 use strict;
 use vars '@ISA';
 @ISA = qw(Bio::Phylo::Util::XMLWritable);
@@ -735,6 +735,118 @@ Writes data type definitions to xml
 	    }
         return $xml;
 	}
+
+=item to_dom()
+
+Analog to to_xml.
+
+ Type    : Serializer
+ Title   : to_dom
+ Usage   : $type->to_dom
+ Function: Generates a DOM subtree from the invocant
+           and its contained objects
+ Returns : an XML::LibXML::Element object
+ Args    : none
+
+=cut
+
+    sub to_dom {
+		my $self = shift;
+		my $dom = $_[0];
+		my @args = @_;
+		# handle dom factory object...
+		if ( isa($dom, 'SCALAR') && $dom->_type == _DOMCREATOR_ ) {
+		    splice(@args, 0, 1);
+		}
+		else {
+		    $dom = $Bio::Phylo::Util::DOM::DOM;
+		    unless ($dom) {
+			throw 'BadArgs' => 'DOM factory object not provided';
+		    }
+		}
+		my $elt;
+		my $normalized   = $args[0] || {};
+		my $polymorphism = $args[1];
+		if ( my $lookup  = $self->get_lookup ) {
+		    $elt = $self->get_dom_elt($dom);
+		    my $id_for_state = $self->get_ids_for_states;
+		    my @states = sort  { $id_for_state->{$a} <=> $id_for_state->{$b} } 
+		    keys %{ $id_for_state };
+		    my $max_id = 0;
+		    for my $state ( @states ) {
+				my $state_id = $id_for_state->{ $state };
+				$id_for_state->{ $state } = 's' . $state_id;
+				$max_id = $state_id;
+		    }
+		    for my $state ( @states ) {
+				$elt->set_child( 
+				    $self->_state_to_dom(
+						$dom,
+						$state, 
+						$id_for_state, 
+						$lookup, 
+						$normalized, 
+						$polymorphism 
+		 		    )
+			    );
+		    }
+		    my ( $missing, $gap ) = ( $self->get_missing, $self->get_gap );
+		    my $special = $self->get_ids_for_special_symbols;
+		    if ( %{ $special } ) {
+				my $uss;
+				$uss = $dom->create_element('uncertain_state_set');
+				$uss->set_attributes( 'id' => 's'.$special->{$gap} );
+				$uss->set_attributes( 'symbol' => '-' );
+				$elt->set_child($uss);
+				$uss = $dom->create_element('uncertain_state_set');
+				$uss->set_attributes( 'id' => 's'.$special->{$missing} );
+				$uss->set_attributes( 'symbol' => '?' );
+				my $mbr;
+				for (@states) {
+				    $mbr = $dom->create_element('member');
+				    $mbr->set_attributes( 'state' => $id_for_state->{$_} );
+				    $uss->set_child($mbr);
+				}
+				$mbr = $dom->create_element('member');
+				$mbr->set_attributes( 'state' => 's'.$special->{$gap} );
+				$uss->set_child($mbr);
+				$elt->set_child($uss);
+		    }		
+		    
+		}	
+		return $elt;
+    }
+
+    sub _state_to_dom {
+		my ( $self, $dom, $state, $id_for_state, $lookup, $normalized, $polymorphism ) = @_;
+	    my $state_id = $id_for_state->{ $state };
+	    my @mapping = @{ $lookup->{$state} };
+	    my $symbol = exists $normalized->{$state} ? $normalized->{$state} : $state;
+		my $elt;
+		
+	        # has ambiguity mappings
+	        if ( scalar @mapping > 1 ) {
+	            my $tag = $polymorphism ? 'polymorphic_state_set' : 'uncertain_state_set';
+	
+			    $elt = $dom->create_element($tag);
+			    $elt->set_attributes( 'id' => $state_id );
+			    $elt->set_attributes( 'symbol' => $symbol );
+	            for my $map ( @mapping ) {
+					my $mbr = $dom->create_element('member');
+					$mbr->set_attributes('state' => $id_for_state->{ $map } );
+					$elt->set_child($mbr);
+	            }
+		    
+	        }
+	        
+	        # no ambiguity
+	        else {
+		    $elt = $dom->create_element('state');
+		    $elt->set_attributes( 'id' => $state_id );
+		    $elt->set_attributes( 'symbol' => $symbol ); 
+	        }
+		return $elt;
+    }
 
 =back
 
