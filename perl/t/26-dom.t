@@ -1,17 +1,25 @@
-#-*-perl-*-
-use Test::More tests => 81;
+use Test::More;
+BEGIN {
+    eval { require XML::LibXML::Reader };
+    if ( $@ ) {
+         plan 'skip_all' => 'XML::LibXML::Reader not installed';
+    }
+    else {
+        plan 'tests' => 81;
+    }
+}
+
 use File::Temp;
-use lib '../lib';
 use strict;
 
 my @xml_objects = qw( 
-		   Bio::Phylo::Forest::Tree
-                   Bio::Phylo::Forest::Node
-		   Bio::Phylo::Matrices::Matrix
-		   Bio::Phylo::Matrices::Datatype
-		   Bio::Phylo::Matrices::Datum
-		   Bio::Phylo::Project      
-                 );
+	Bio::Phylo::Forest::Tree
+	Bio::Phylo::Forest::Node
+	Bio::Phylo::Matrices::Matrix
+	Bio::Phylo::Matrices::Datatype
+	Bio::Phylo::Matrices::Datum
+	Bio::Phylo::Project      
+);
 # check if XML::LibXML is available
 my $TEST_XML_LIBXML = eval { require XML::LibXML; 1 };
 
