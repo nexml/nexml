@@ -2,6 +2,7 @@
 package Bio::Phylo::Matrices::Datum;
 use vars '@ISA';
 use strict;
+use Bio::Phylo::Factory;
 use Bio::Phylo::Taxa::TaxonLinker;
 use Bio::Phylo::Util::Exceptions 'throw';
 use Bio::Phylo::Matrices::TypeSafeData;
@@ -23,6 +24,7 @@ else {
 my $LOADED_WRAPPERS = 0;
 
 {
+	my $fac                = Bio::Phylo::Factory->new;
     my $logger             = __PACKAGE__->get_logger;
     my $TYPE_CONSTANT      = _DATUM_;
     my $CONTAINER_CONSTANT = _MATRIX_;
@@ -864,7 +866,7 @@ Serializes datum to nexml format.
 		my $xml = $self->get_xml_tag;
 		
 		if ( not $args{'-compact'} ) {
-		        my $cell = Bio::Phylo::Util::XMLWritable->_new('cell');
+		    my $cell = $fac->create_xmlwritable( '-tag' => 'cell' );
 			for my $i ( 0 .. $#char ) {
 			        my ( $c, $s );
 				if ( $missing ne $char[$i] and $gap ne $char[$i] ) {
