@@ -910,6 +910,105 @@ Serializes datum to nexml format.
 		return $xml;
 	}
 
+=item to_dom()
+
+Analog to to_xml.
+
+ Type    : Serializer
+ Title   : to_dom
+ Usage   : $datum->to_dom
+ Function: Generates a DOM subtree from the invocant
+           and its contained objects
+ Returns : an XML::LibXML::Element object
+ Args    : none
+
+=cut
+
+    sub to_dom {
+		my $self = shift;
+		my $dom = $_[0];
+		my @args = @_;
+		# handle dom factory object...
+		if ( isa($dom, 'SCALAR') && $dom->_type == _DOMCREATOR_ ) {
+		    splice(@args, 0, 1);
+		}
+		else {
+		    $dom = $Bio::Phylo::Util::DOM::DOM;
+		    unless ($dom) {
+				throw 'BadArgs' => 'DOM factory object not provided';
+		    }
+		}
+	
+		##### make sure argument handling works here....
+	
+		my %args = looks_like_hash @args;
+	
+		my $char_ids  = $args{'-chars'};
+		my $state_ids = $args{'-states'};
+		my $special   = $args{'-special'};
+		if ( my $taxon = $self->get_taxon ) {
+		    $self->set_attributes( 'otu' => $taxon->get_xml_id );
+		}
+		my @char = $self->get_char;
+		my ( $missing, $gap ) = ( $self->get_missing, $self->get_gap );
+	
+		my $elt = $self->get_dom_elt($dom);
+	
+		if ( not $args{'-compact'} ) {
+		    for my $i ( 0 .. $#char ) {
+				if ( $missing ne $char[$i] and $gap ne $char[$i] ) {
+				    my ( $c, $s );
+				    if ( $char_ids and $char_ids->[$i] ) {
+						$c = $char_ids->[$i];
+				    }
+				    else {
+						$c = $i;
+				    }
+				    if ( $state_ids and $state_ids->{uc $char[$i]} ) {
+						$s = $state_ids->{uc $char[$i]};
+				    }
+				    else {
+						$s = uc $char[$i];
+				    }
+				    my $cell_elt = $dom->create_element('cell'); 
+				    $cell_elt->set_attributes( 'char' => $c );
+				    $cell_elt->set_attributes('state' => $s ); 
+				    $elt->set_child($cell_elt);
+				}
+				elsif ( $missing eq $char[$i] or $gap eq $char[$i] ) {
+				    my ( $c, $s );
+				    if ( $char_ids and $char_ids->[$i] ) {
+						$c = $char_ids->[$i];
+				    }
+				    else {
+						$c = $i;
+				    }
+				    if ( $special and $special->{$char[$i]} ) {
+						$s = $special->{$char[$i]};
+				    }
+				    else {
+						$s = $char[$i];
+				    }
+				    my $cell_elt = $dom->create_element('cell');
+				    $cell_elt->set_attributes('char' => $c);
+				    $cell_elt->set_attributes( 'state' => $s );
+				    $elt->set_child($cell_elt);
+				    
+				}
+		    }
+		}
+		else {
+		    my @tmp = map { uc $_ } @char;
+		    my $seq = $self->get_type_object->join(\@tmp);
+		    my $seq_elt = $dom->create_element('seq');
+	#### create a text node here....
+		    $seq_elt->set_child( XML::LibXML::Text->new($seq) );
+	####
+		    $elt->set_child($seq_elt);
+		}
+		return $elt;
+    }
+
 =item copy_atts()
 
  Not implemented!
