@@ -1,4 +1,3 @@
-#-*-perl-*-
 use Test::More tests => 82;
 use Test::Exception;
 use strict;
@@ -15,7 +14,7 @@ my $TEST_XML_LIBXML = eval { require XML::LibXML; 1 };
 # element order required by NeXML standard
 # see _order() routine below
 my $nexml_order = {
-    'nex:nexml'      => [qw( otus trees characters )],
+    'nex:nexml'  => [qw( otus trees characters )],
     'otus'       => [qw( otu )],
     'otu'        => [qw( id label )],
     'trees'      => [qw( tree )],
@@ -147,7 +146,12 @@ sub _order {
     my (%h, @o,$max);
     @h{ @{$$nexml_order{$key}} } = (0..@{$$nexml_order{$key}});
     @o = @h{@a};
-    $max = ($_ > $max ? $_ : $max) for @o;
+    $max = 0;
+    for my $o ( @o ) {
+    	next unless $o;
+    	$max = $o if $o > $max;
+    }
+    #$max = ($_ > $max ? $_ : $max) for @o;
     map { $_ = ++$max unless defined } @o;
     @a[@o] = @a;
     return @a;
