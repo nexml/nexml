@@ -734,7 +734,7 @@ sub _get_scaley { shift->{'_SCALEY'} }
 
 =item draw()
 
-Creates tree drawing.
+Creates tree drawing. Requires L<SVG>;
 
  Type    : Unparsers
  Title   : draw
