@@ -64,12 +64,13 @@ for my $format (@formats) {
 	ok( $elt = _parse( undef, 'nex:nexml', $test, $dom), "parse XML structure as $format DOM");
 	ok( $doc->set_root($elt), "set $format document root element" );
 	SKIP : {
-	    skip 'BIO_PHYLO_TEST_NEXML not set', 3 unless $ENV{'BIO_PHYLO_TEST_NEXML'};
+	    skip 'NEXML_ROOT not set', 3 unless $ENV{'NEXML_ROOT'};
 	    ok( my $fh = File::Temp->new, 'make temp file' );
 	    my $fn = $fh->filename;
 	    ok( $doc->to_xml_file($fn), "write XML from $format DOM" );
 	    $fn =~ s/\\/\//g;
-	    is( (qx{ bash -c " if (../script/nexvl.pl -Q $fn) ; then echo -n 1 ; else echo -n 0 ; fi" })[0], 1, 'dom-generated XML is valid NeXML' );
+	    is(system( $ENV{'NEXML_ROOT'} . '/perl/script/nexvl.pl', '-Q', $fn) + 1, 1, 'dom-generated XML is valid NeXML');	    
+	    #is( (qx{ bash -c " if (../script/nexvl.pl -Q $fn) ; then echo -n 1 ; else echo -n 0 ; fi" })[0], 1, 'dom-generated XML is valid NeXML' );
 	}
 	is( scalar $doc->get_elements_by_tagname('row'), 6, "get_elements_by_tagname");
 	ok( my $s11 = $doc->get_element_by_id('s11'), "found uncertain_state_set s11" );

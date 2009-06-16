@@ -1,6 +1,7 @@
 # $Id$
 package Bio::Phylo::Forest::Node;
 use strict;
+use Bio::Phylo::Factory;
 use Bio::Phylo::Taxa::TaxonLinker;
 use Bio::Phylo::Util::CONSTANT qw(_NODE_ _TREE_ _TAXON_ _DOMCREATOR_ looks_like_number looks_like_object looks_like_hash);
 use Bio::Phylo::Listable;
@@ -20,7 +21,8 @@ use vars qw(@ISA);
 my $LOADED_WRAPPERS = 0;
 
 {
-
+	my $fac = Bio::Phylo::Factory->new;
+	
 	# logger singleton
 	my $logger = __PACKAGE__->get_logger;
 
@@ -2158,11 +2160,13 @@ Serializes invocant to xml.
 		
 		# then the rootedge?
 		if ( my $length = shift(@nodes)->get_branch_length ) {
-		    my $edge = Bio::Phylo::Util::XMLWritable->_new(
-			'rootedge',
-                        'target' => $self->get_xml_id,
-                        'id'     => "edge".$self->get_id,
-                        'length' => $length
+		    my $edge = $fac->create_xmlwritable(
+		    	'-tag' => 'rootedge',
+		    	'-attributes' => {
+                	'target' => $self->get_xml_id,
+                    'id'     => "edge".$self->get_id,
+                    'length' => $length
+		    	}
 			);
 		    $xml .= "\n".$edge->get_xml_tag(1);
 		}
@@ -2170,11 +2174,14 @@ Serializes invocant to xml.
 		# then the subtended edges
 		for my $node ( @nodes ) {
 		    my $length = $node->get_branch_length;
-		    my $edge = Bio::Phylo::Util::XMLWritable->_new(
-			'edge',
-			'source' => $node->get_parent->get_xml_id,
-			'target' => $node->get_xml_id,
-			'id'     => "edge" . $node->get_id
+		    
+		    my $edge = $fac->create_xmlwritable(
+				'-tag' => 'edge',
+				'-attributes' => {
+					'source' => $node->get_parent->get_xml_id,
+					'target' => $node->get_xml_id,
+					'id'     => "edge" . $node->get_id
+				}
 			);
 		    $edge->set_attributes( 'length' => $length ) if defined $length;
 		    $xml .= "\n".$edge->get_xml_tag(1);

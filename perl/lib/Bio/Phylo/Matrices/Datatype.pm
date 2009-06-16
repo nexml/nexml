@@ -1,8 +1,10 @@
 # $Id$
 package Bio::Phylo::Matrices::Datatype;
 use Bio::Phylo::Util::XMLWritable;
+use Bio::Phylo::Factory;
 use Bio::Phylo::Util::Exceptions 'throw';
 use Bio::Phylo::Util::CONSTANT qw'_DOMCREATOR_ looks_like_hash';
+use UNIVERSAL 'isa';
 use strict;
 use vars '@ISA';
 @ISA = qw(Bio::Phylo::Util::XMLWritable);
@@ -10,7 +12,7 @@ use vars '@ISA';
 {
     
  	my $logger = __PACKAGE__->get_logger;
-    
+    my $fac    = Bio::Phylo::Factory->new();
     my @fields = \( my ( %lookup, %missing, %gap ) );
 
 =head1 NAME
@@ -676,16 +678,16 @@ Writes data type definitions to xml
 			my ( $missing, $gap ) = ( $self->get_missing, $self->get_gap );
 			my $special = $self->get_ids_for_special_symbols;
 			if ( %{ $special } ) {
-			    my $uss = Bio::Phylo::Util::XMLWritable->_new('uncertain_state_set');
-			    my $mbr = Bio::Phylo::Util::XMLWritable->_new('member');
+			    my $uss = $fac->create_xmlwritable( '-tag' => 'uncertain_state_set');
+			    my $mbr = $fac->create_xmlwritable( '-tag' => 'member');
 			    $uss->set_attributes(
-				'id'     => "s".$special->{$gap},
-				'symbol' => '-'
+					'id'     => "s".$special->{$gap},
+					'symbol' => '-'
 				);
 			    $xml .= "\n".$uss->get_xml_tag(1);
 			    $uss->set_attributes(
-				'id'     => "s".$special->{$missing},
-				'symbol' => '?'
+					'id'     => "s".$special->{$missing},
+					'symbol' => '?'
 				);
 			    $xml .= "\n".$uss->get_xml_tag();
 			    for (@states) {
@@ -711,10 +713,10 @@ Writes data type definitions to xml
 	    
 	    # has ambiguity mappings
 	    if ( scalar @mapping > 1 ) {
-		my $elt = Bio::Phylo::Util::XMLWritable->_new(
+		my $elt = $fac->create_xmlwritable( '-tag' =>
 		    $polymorphism ? 'polymorphic_state_set' : 'uncertain_state_set'
-		    );
-		my $mbr = Bio::Phylo::Util::XMLWritable->_new('member');
+		);
+		my $mbr = $fac->create_xmlwritable( '-tag' => 'member');
 		$elt->set_attributes( 'id' => $state_id, 'symbol' => $symbol );
 		$xml .= "\n".$elt->get_xml_tag();
 		for ( @mapping ) {
@@ -726,10 +728,12 @@ Writes data type definitions to xml
 	    
 	    # no ambiguity
 	    else {
-		my $elt = Bio::Phylo::Util::XMLWritable->_new(
-		    'state',
-		    'id'     => $state_id,
-		    'symbol' => $symbol
+		my $elt = $fac->create_xmlwritable(
+			    '-tag' => 'state',
+			    '-attributes' => {
+				    'id'     => $state_id,
+				    'symbol' => $symbol
+			    }
 		    );
 		$xml .= "\n" . $elt->get_xml_tag(1);
 	    }

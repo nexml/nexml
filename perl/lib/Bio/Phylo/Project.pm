@@ -1,7 +1,8 @@
 package Bio::Phylo::Project;
 use Bio::Phylo::Listable;
-use Bio::Phylo::Util::CONSTANT qw(:objecttypes);
+use Bio::Phylo::Util::CONSTANT qw(:objecttypes looks_like_object);
 use Bio::Phylo::Util::Exceptions 'throw';
+use UNIVERSAL 'isa';
 use vars '@ISA';
 use strict;
 @ISA=qw(Bio::Phylo::Listable);

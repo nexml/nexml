@@ -1,7 +1,7 @@
 use Test::More;
 BEGIN {
-    if ( not $ENV{'BIO_PHYLO_TEST_NEXML'} ) {
-        plan 'skip_all' => 'env var BIO_PHYLO_TEST_NEXML not set';
+    if ( not $ENV{'NEXML_ROOT'} ) {
+        plan 'skip_all' => 'env var NEXML_ROOT not set';
     }
     else {
     		Test::More->import('no_plan');
@@ -14,7 +14,7 @@ use Bio::Phylo::Util::Logger;
 use XML::Twig;
 use Data::Dumper;
 
-my $XML_PATH = $ENV{'BIO_PHYLO_NEXML_EXAMPLES'} || '../examples'; # TODO fixme
+my $XML_PATH = $ENV{'NEXML_ROOT'} . '/examples' || '../examples'; # TODO fixme
 
 # here we just parse a file with only taxon elements
 my $taxa = parse( '-format' => 'nexml', '-file' => "$XML_PATH/taxa.xml" )->[0];
@@ -54,12 +54,13 @@ for my $tree ( @{ $forest->get_entities } ) {
 
 	for my $node ( @{ $tree->get_entities } ) {
 		my $id = $node->get_name;
-		if ( $id eq 'n4' ) {
-			my $dict  = $node->get_dictionaries->[0];
-			my $value = $dict->first;
-			ok( $value->get_tag eq 'boolean', "dict value type is boolean" );
-			ok( $value->get_value, "dict boolean value is true" );
-		}
+# XXX no more dictionaries, moving to meta attachments		
+#		if ( $id eq 'n4' ) {
+#			my $dict  = $node->get_dictionaries->[0];
+#			my $value = $dict->first;
+#			ok( $value->get_tag eq 'boolean', "dict value type is boolean" );
+#			ok( $value->get_value, "dict boolean value is true" );
+#		}
 		if ( $node->is_internal ) {
 			ok( exists $internals{$id}, "$id is an internal node" );
 		}

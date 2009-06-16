@@ -63,6 +63,7 @@ This is the superclass for all objects that can be serialized to NeXML
 	#    '-attributes' => { 'bar' => 'baz' }
 	#)
     sub _new {
+    	throw 'API' => "Deprecated! Use XMLWritable->new( -tag => 'foo', -attributes => { 'bar' => 'baz' } )";
     	$logger->warn("Deprecated! Use XMLWritable->new( -tag => 'foo', -attributes => { 'bar' => 'baz' } )");
 		my $class = shift;
 		my ( $tag, @attr ) = @_;

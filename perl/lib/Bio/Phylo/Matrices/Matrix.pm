@@ -828,7 +828,7 @@ Serializes matrix to nexml format.
 		my $normalized = $self->_normalize_symbols;
 		
 		# the format block
-		my $fmt = Bio::Phylo::Util::XMLWritable->_new('format');
+		my $fmt = $factory->create_xmlwritable( '-tag' => 'format' );
 		$xml .= $fmt->get_xml_tag;
 		my $to = $self->get_type_object;
 		$ids_for_states = $to->get_ids_for_states(1);
@@ -848,7 +848,7 @@ Serializes matrix to nexml format.
 		$xml .= "\n</".$fmt->get_tag.">";
 		
 		# the matrix block
-		my $mx = Bio::Phylo::Util::XMLWritable->_new('matrix');
+		my $mx = $factory->create_xmlwritable( '-tag' => 'matrix' );
 		$xml .= "\n".$mx->get_xml_tag;
 		my @char_ids;
 		for ( 0 .. $self->get_nchar ) {
@@ -903,7 +903,7 @@ Serializes matrix to nexml format.
 		my $labels = $self->get_charlabels;
 		for my $i ( 1 .. $self->get_nchar ) {
 		        # new $char each time: start with no attributes...
-		        my $char = Bio::Phylo::Util::XMLWritable->_new('char');
+		        my $char = $factory->create_xmlwritable( '-tag' => 'char' );
 			my $char_id = 'c' . $i;
 			my $label   = $labels->[ $i - 1 ];
 			$char->set_attributes('id' => $char_id);
