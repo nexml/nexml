@@ -1,4 +1,13 @@
-use Test::More tests => 82;
+use Test::More;
+BEGIN {
+    eval { require XML::LibXML::Reader };
+    if ( $@ ) {
+         plan 'skip_all' => $@;
+    }
+    else {
+        plan 'tests' => 82;
+    }
+}
 use Test::Exception;
 use strict;
 use lib '../lib';
