@@ -133,6 +133,15 @@ public class DocumentImpl extends AnnotatableImpl implements Document {
 			"xmlns:rdf",			
 			"http://www.w3.org/1999/02/22-rdf-syntax-ns#"
 		);
+		getElement().setAttributeNS(
+			"http://www.w3.org/2000/xmlns/",
+			"xmlns:nex",
+			"http://www.nexml.org/1.0"
+		);
+		getElement().setAttribute(
+			"xmlns",
+			"http://www.nexml.org/1.0"
+		);		
 	}
 
 	protected DocumentImpl() {
