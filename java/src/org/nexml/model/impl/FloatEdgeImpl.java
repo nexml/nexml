@@ -51,7 +51,11 @@ class FloatEdgeImpl extends EdgeImpl implements FloatEdge {
 	 * @see org.nexml.model.FloatEdge#getLength()
 	 */
 	public Double getLength() {
-		return (Double)getLengthAsNumber();
+		Number length = getLengthAsNumber();
+		if ( null != length ) {
+			return (Double)length;
+		}
+		return null;
 	}
 
 	/*
