@@ -193,80 +193,84 @@ abstract class AnnotatableImpl extends NexmlWritableImpl implements Annotatable 
      * @see org.nexml.model.Annotatable#addAnnotationValue(java.lang.String, java.lang.Object)
      */    
     @SuppressWarnings("unchecked")
-	public void addAnnotationValue(String property, URI nameSpaceURI, Object value){
+	public Annotation addAnnotationValue(String property, URI nameSpaceURI, Object value){
     	if ( value instanceof BigDecimal ) {
-	    	addAnnotationValue(property,nameSpaceURI,(BigDecimal)value);
+	    	return addAnnotationValue(property,nameSpaceURI,(BigDecimal)value);
 	    }
 	    else if ( value instanceof BigInteger ) {
-	    	addAnnotationValue(property,nameSpaceURI,(BigInteger)value);
+	    	return addAnnotationValue(property,nameSpaceURI,(BigInteger)value);
 	    }	   
 	    else if ( value instanceof Boolean ) {
-	    	addAnnotationValue(property,nameSpaceURI,(Boolean)value);
+	        return addAnnotationValue(property,nameSpaceURI,(Boolean)value);
 	    }	
 	    else if ( value instanceof Byte ) {
-	    	addAnnotationValue(property,nameSpaceURI,(Byte)value);
+	        return addAnnotationValue(property,nameSpaceURI,(Byte)value);
 	    }	
 	    else if ( value instanceof Byte[] ) {
-	    	addAnnotationValue(property,nameSpaceURI,(Byte[])value);
+	        return addAnnotationValue(property,nameSpaceURI,(Byte[])value);
 	    }	
 	    else if ( value instanceof Calendar ) {
-	    	addAnnotationValue(property,nameSpaceURI,(Calendar)value);
+	        return addAnnotationValue(property,nameSpaceURI,(Calendar)value);
 	    }	
 	    else if ( value instanceof Date ) {
-	    	addAnnotationValue(property,nameSpaceURI,(Date)value);
+	        return addAnnotationValue(property,nameSpaceURI,(Date)value);
 	    }	
 	    else if ( value instanceof Double ) {
-	    	addAnnotationValue(property,nameSpaceURI,(Double)value);
+	        return addAnnotationValue(property,nameSpaceURI,(Double)value);
 	    }	
 	    else if ( value instanceof Duration ) {
-	    	addAnnotationValue(property,nameSpaceURI,(Duration)value);
+	        return addAnnotationValue(property,nameSpaceURI,(Duration)value);
 	    }
 	    else if ( value instanceof Element ) {
-	    	addAnnotationValue(property,nameSpaceURI,(Element)value);
+	        return addAnnotationValue(property,nameSpaceURI,(Element)value);
 	    }	 
 	    else if ( value instanceof Float ) {
-	    	addAnnotationValue(property,nameSpaceURI,(Float)value);
+	        return addAnnotationValue(property,nameSpaceURI,(Float)value);
 	    }	   
 	    else if ( value instanceof Integer ) {
-	    	addAnnotationValue(property,nameSpaceURI,(Integer)value);
+	        return addAnnotationValue(property,nameSpaceURI,(Integer)value);
 	    }
 	    else if ( value instanceof java.awt.Image ) {
-	    	addAnnotationValue(property,nameSpaceURI,(java.awt.Image)value);
+	        return addAnnotationValue(property,nameSpaceURI,(java.awt.Image)value);
 	    }	
 	    else if ( value instanceof Long ) {
-	    	addAnnotationValue(property,nameSpaceURI,(Long)value);
+	        return addAnnotationValue(property,nameSpaceURI,(Long)value);
 	    }	
 	    else if ( value instanceof NodeList ) {
-	    	addAnnotationValue(property,nameSpaceURI,(NodeList)value);
-	    }	
+	        return addAnnotationValue(property,nameSpaceURI,(NodeList)value);
+	    }
+	    else if ( value instanceof Node ) {
+	        return addAnnotationValue(property,nameSpaceURI,(Node)value);
+        }
 	    else if ( value instanceof QName ) {
-	    	addAnnotationValue(property,nameSpaceURI,(QName)value);
+	        return addAnnotationValue(property,nameSpaceURI,(QName)value);
 	    }	
 	    else if ( value instanceof Set ) {
-	    	addAnnotationValue(property,nameSpaceURI,(Set<Annotation>)value);
+	        return addAnnotationValue(property,nameSpaceURI,(Set<Annotation>)value);
 	    }	    
 	    else if ( value instanceof Short ) {
-	    	addAnnotationValue(property,nameSpaceURI,(Short)value);
+	        return addAnnotationValue(property,nameSpaceURI,(Short)value);
 	    }	  
 	    else if ( value instanceof Source ) {
-	    	addAnnotationValue(property,nameSpaceURI,(Source)value);
+	        return addAnnotationValue(property,nameSpaceURI,(Source)value);
 	    }	 
 	    else if ( value instanceof String ) {
-	    	addAnnotationValue(property,nameSpaceURI,(String)value);
+	        return addAnnotationValue(property,nameSpaceURI,(String)value);
 	    }	    
 	    else if ( value instanceof URI ) {
-	    	addAnnotationValue(property,nameSpaceURI,(URI)value);
+	        return addAnnotationValue(property,nameSpaceURI,(URI)value);
 	    }
 	    else if ( value instanceof UUID ) {
-	    	addAnnotationValue(property,nameSpaceURI,(UUID)value);
+	        return addAnnotationValue(property,nameSpaceURI,(UUID)value);
 	    }	
 	    else if ( value instanceof XMLGregorianCalendar ) {
-	    	addAnnotationValue(property,nameSpaceURI,(XMLGregorianCalendar)value);
+	        return addAnnotationValue(property,nameSpaceURI,(XMLGregorianCalendar)value);
 	    }	    
 	    // XXX etc.
     	else {
 	        Annotation annotation = addAnnotationValueHelper(property,nameSpaceURI,false);
 	        annotation.setValue(value);
+	        return annotation;
     	}
     }
     
@@ -274,207 +278,240 @@ abstract class AnnotatableImpl extends NexmlWritableImpl implements Annotatable 
      * (non-Javadoc)
      * @see org.nexml.model.Annotatable#addAnnotationValue(java.lang.String, org.w3c.dom.NodeList)
      */
-    public void addAnnotationValue(String property, URI nameSpaceURI, NodeList value){
+    public Annotation addAnnotationValue(String property, URI nameSpaceURI, NodeList value){
         Annotation annotation = addAnnotationValueHelper(property,nameSpaceURI,false);
-        annotation.setValue(value);           
+        annotation.setValue(value);
+        return annotation;
+    } 
+    
+    /*
+     * (non-Javadoc)
+     * @see org.nexml.model.Annotatable#addAnnotationValue(java.lang.String, org.w3c.dom.Node)
+     */
+    public Annotation addAnnotationValue(String property, URI nameSpaceURI, Node value){
+        Annotation annotation = addAnnotationValueHelper(property,nameSpaceURI,false);
+        annotation.setValue(value);
+        return annotation;
     } 
     
     /*
      * (non-Javadoc)
      * @see org.nexml.model.Annotatable#addAnnotationValue(java.lang.String, org.w3c.dom.Element)
      */
-    public void addAnnotationValue(String property, URI nameSpaceURI, Element value){
+    public Annotation addAnnotationValue(String property, URI nameSpaceURI, Element value){
         Annotation annotation = addAnnotationValueHelper(property,nameSpaceURI,false);
-        annotation.setValue(value);           
+        annotation.setValue(value); 
+        return annotation;          
     }
     
     /*
      * (non-Javadoc)
      * @see org.nexml.model.Annotatable#addAnnotationValue(java.lang.String, java.net.URI)
      */
-    public void addAnnotationValue(String property, URI nameSpaceURI, URI value){
+    public Annotation addAnnotationValue(String property, URI nameSpaceURI, URI value){
         Annotation annotation = addAnnotationValueHelper(property,nameSpaceURI,true);
-        annotation.setValue(value);           
+        annotation.setValue(value);    
+        return annotation;       
     }
     
     /*
      * (non-Javadoc)
      * @see org.nexml.model.Annotatable#addAnnotationValue(java.lang.String, java.lang.Byte[])
      */
-    public void addAnnotationValue(String property, URI nameSpaceURI, Byte[] value){
+    public Annotation addAnnotationValue(String property, URI nameSpaceURI, Byte[] value){
         Annotation annotation = addAnnotationValueHelper(property,nameSpaceURI,false);
-        annotation.setValue(value);           
+        annotation.setValue(value);  
+        return annotation;         
     }
     
     /*
      * (non-Javadoc)
      * @see org.nexml.model.Annotatable#addAnnotationValue(java.lang.String, java.math.BigDecimal)
      */
-    public void addAnnotationValue(String property, URI nameSpaceURI, BigDecimal value){
+    public Annotation addAnnotationValue(String property, URI nameSpaceURI, BigDecimal value){
         Annotation annotation = addAnnotationValueHelper(property,nameSpaceURI,false);
-        annotation.setValue(value);           
+        annotation.setValue(value);  
+        return annotation;         
     }
     
     /*
      * (non-Javadoc)
      * @see org.nexml.model.Annotatable#addAnnotationValue(java.lang.String, java.math.BigInteger)
      */
-    public void addAnnotationValue(String property, URI nameSpaceURI, BigInteger value){
+    public Annotation addAnnotationValue(String property, URI nameSpaceURI, BigInteger value){
         Annotation annotation = addAnnotationValueHelper(property,nameSpaceURI,false);
-        annotation.setValue(value);           
+        annotation.setValue(value); 
+        return annotation;          
     } 
     
     /*
      * (non-Javadoc)
      * @see org.nexml.model.Annotatable#addAnnotationValue(java.lang.String, java.lang.Boolean)
      */
-    public void addAnnotationValue(String property, URI nameSpaceURI, Boolean value){
+    public Annotation addAnnotationValue(String property, URI nameSpaceURI, Boolean value){
         Annotation annotation = addAnnotationValueHelper(property,nameSpaceURI,false);
-        annotation.setValue(value);           
+        annotation.setValue(value);    
+        return annotation;       
     }
     
     /*
      * (non-Javadoc)
      * @see org.nexml.model.Annotatable#addAnnotationValue(java.lang.String, java.lang.Byte)
      */
-    public void addAnnotationValue(String property, URI nameSpaceURI, Byte value){
+    public Annotation addAnnotationValue(String property, URI nameSpaceURI, Byte value){
         Annotation annotation = addAnnotationValueHelper(property,nameSpaceURI,false);
-        annotation.setValue(value);           
+        annotation.setValue(value);      
+        return annotation;     
     }
     
     /*
      * (non-Javadoc)
      * @see org.nexml.model.Annotatable#addAnnotationValue(java.lang.String, java.util.Calendar)
      */
-    public void addAnnotationValue(String property, URI nameSpaceURI, Calendar value){
+    public Annotation addAnnotationValue(String property, URI nameSpaceURI, Calendar value){
         Annotation annotation = addAnnotationValueHelper(property,nameSpaceURI,false);
-        annotation.setValue(value);           
+        annotation.setValue(value);  
+        return annotation;         
     } 
     
     /*
      * (non-Javadoc)
      * @see org.nexml.model.Annotatable#addAnnotationValue(java.lang.String, java.util.Date)
      */
-	public void addAnnotationValue(String property, URI nameSpaceURI, Date value){
+	public Annotation addAnnotationValue(String property, URI nameSpaceURI, Date value){
         Annotation annotation = addAnnotationValueHelper(property,nameSpaceURI,false);
-        annotation.setValue(value);           
+        annotation.setValue(value);   
+        return annotation;        
 	}
 	
 	/*
 	 * (non-Javadoc)
 	 * @see org.nexml.model.Annotatable#addAnnotationValue(java.lang.String, java.lang.Double)
 	 */
-	public void addAnnotationValue(String property, URI nameSpaceURI, Double value){
+	public Annotation addAnnotationValue(String property, URI nameSpaceURI, Double value){
         Annotation annotation = addAnnotationValueHelper(property,nameSpaceURI,false);
-        annotation.setValue(value);           
+        annotation.setValue(value);  
+        return annotation;         
 	} 
 	
 	/*
 	 * (non-Javadoc)
 	 * @see org.nexml.model.Annotatable#addAnnotationValue(java.lang.String, java.lang.Float)
 	 */
-	public void addAnnotationValue(String property, URI nameSpaceURI, Float value){
+	public Annotation addAnnotationValue(String property, URI nameSpaceURI, Float value){
         Annotation annotation = addAnnotationValueHelper(property,nameSpaceURI,false);
-        annotation.setValue(value);           
+        annotation.setValue(value);  
+        return annotation;         
 	}
 	
 	/*
 	 * (non-Javadoc)
 	 * @see org.nexml.model.Annotatable#addAnnotationValue(java.lang.String, java.lang.Integer)
 	 */
-	public void addAnnotationValue(String property, URI nameSpaceURI, Integer value){
+	public Annotation addAnnotationValue(String property, URI nameSpaceURI, Integer value){
         Annotation annotation = addAnnotationValueHelper(property,nameSpaceURI,false);
-        annotation.setValue(value);           
+        annotation.setValue(value);  
+        return annotation;         
 	}
 	
 	/*
 	 * (non-Javadoc)
 	 * @see org.nexml.model.Annotatable#addAnnotationValue(java.lang.String, java.lang.Long)
 	 */
-	public void addAnnotationValue(String property, URI nameSpaceURI, Long value){
+	public Annotation addAnnotationValue(String property, URI nameSpaceURI, Long value){
         Annotation annotation = addAnnotationValueHelper(property,nameSpaceURI,false);
-        annotation.setValue(value);           
+        annotation.setValue(value);  
+        return annotation;         
 	}
 	
 	/*
 	 * (non-Javadoc)
 	 * @see org.nexml.model.Annotatable#addAnnotationValue(java.lang.String, java.lang.Short)
 	 */
-	public void addAnnotationValue(String property, URI nameSpaceURI, Short value){
+	public Annotation addAnnotationValue(String property, URI nameSpaceURI, Short value){
         Annotation annotation = addAnnotationValueHelper(property,nameSpaceURI,false);
-        annotation.setValue(value);           
+        annotation.setValue(value);    
+        return annotation;       
 	}
 	
 	/*
 	 * (non-Javadoc)
 	 * @see org.nexml.model.Annotatable#addAnnotationValue(java.lang.String, java.util.UUID)
 	 */
-	public void addAnnotationValue(String property, URI nameSpaceURI, UUID value){
+	public Annotation addAnnotationValue(String property, URI nameSpaceURI, UUID value){
         Annotation annotation = addAnnotationValueHelper(property,nameSpaceURI,false);
-        annotation.setValue(value);           
+        annotation.setValue(value);      
+        return annotation;     
 	}
 	
 	/*
 	 * (non-Javadoc)
 	 * @see org.nexml.model.Annotatable#addAnnotationValue(java.lang.String, java.lang.String)
 	 */
-	public void addAnnotationValue(String property, URI nameSpaceURI, String value){
+	public Annotation addAnnotationValue(String property, URI nameSpaceURI, String value){
         Annotation annotation = addAnnotationValueHelper(property,nameSpaceURI,false);
-        annotation.setValue(value);           
+        annotation.setValue(value);  
+        return annotation;         
 	}
 	
 	/*
 	 * (non-Javadoc)
 	 * @see org.nexml.model.Annotatable#addAnnotationValue(java.lang.String, java.awt.Image)
 	 */
-	public void addAnnotationValue(String property, URI nameSpaceURI, java.awt.Image value){
+	public Annotation addAnnotationValue(String property, URI nameSpaceURI, java.awt.Image value){
         Annotation annotation = addAnnotationValueHelper(property,nameSpaceURI,false);
-        annotation.setValue(value);           
+        annotation.setValue(value);   
+        return annotation;        
 	}
 	
 	/*
 	 * (non-Javadoc)
 	 * @see org.nexml.model.Annotatable#addAnnotationValue(java.lang.String, javax.xml.datatype.Duration)
 	 */
-	public void addAnnotationValue(String property, URI nameSpaceURI, Duration value){
+	public Annotation addAnnotationValue(String property, URI nameSpaceURI, Duration value){
         Annotation annotation = addAnnotationValueHelper(property,nameSpaceURI,false);
-        annotation.setValue(value);           
+        annotation.setValue(value);  
+        return annotation;         
 	} 
 	
 	/*
 	 * (non-Javadoc)
 	 * @see org.nexml.model.Annotatable#addAnnotationValue(java.lang.String, javax.xml.namespace.QName)
 	 */
-	public void addAnnotationValue(String property, URI nameSpaceURI, QName value){
+	public Annotation addAnnotationValue(String property, URI nameSpaceURI, QName value){
         Annotation annotation = addAnnotationValueHelper(property,nameSpaceURI,false);
-        annotation.setValue(value);           
+        annotation.setValue(value);    
+        return annotation;       
 	}
 	
 	/*
 	 * (non-Javadoc)
 	 * @see org.nexml.model.Annotatable#addAnnotationValue(java.lang.String, javax.xml.transform.Source)
 	 */
-	public void addAnnotationValue(String property, URI nameSpaceURI, Source value){
+	public Annotation addAnnotationValue(String property, URI nameSpaceURI, Source value){
         Annotation annotation = addAnnotationValueHelper(property,nameSpaceURI,false);
-        annotation.setValue(value);           
+        annotation.setValue(value);  
+        return annotation;         
 	} 
 	
 	/*
 	 * (non-Javadoc)
 	 * @see org.nexml.model.Annotatable#addAnnotationValue(java.lang.String, javax.xml.datatype.XMLGregorianCalendar)
 	 */
-	public void addAnnotationValue(String property, URI nameSpaceURI, XMLGregorianCalendar value){
+	public Annotation addAnnotationValue(String property, URI nameSpaceURI, XMLGregorianCalendar value){
         Annotation annotation = addAnnotationValueHelper(property,nameSpaceURI,false);
-        annotation.setValue(value);           
+        annotation.setValue(value);   
+        return annotation;        
 	}    
 	
 	/*
 	 * (non-Javadoc)
 	 * @see org.nexml.model.Annotatable#addAnnotationValue(java.lang.String, java.util.Set)
 	 */
-    public void addAnnotationValue(String property, URI nameSpaceURI, Set<Annotation> value) {
+    public Annotation addAnnotationValue(String property, URI nameSpaceURI, Set<Annotation> value) {
     	Annotation annotation = addAnnotationValueHelper(property,nameSpaceURI,true);
-        annotation.setValue(value);      	
+        annotation.setValue(value); 
+        return annotation;     	
     }
     
     /**
