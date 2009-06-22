@@ -15,6 +15,7 @@ import javax.xml.transform.Source;
 
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+import org.w3c.dom.Node;
 
 public interface Annotatable extends NexmlWritable {
     
@@ -44,29 +45,30 @@ public interface Annotatable extends NexmlWritable {
      * @param property a predicate as a namespaced string
      * @param value semantically, an object
      */
-    void addAnnotationValue(String property, URI nameSpaceURI, Set<Annotation> value);
-    void addAnnotationValue(String property, URI nameSpaceURI, Object value);
-	void addAnnotationValue(String property, URI nameSpaceURI, NodeList value);	    
-	void addAnnotationValue(String property, URI nameSpaceURI, Element value);	    
-	void addAnnotationValue(String property, URI nameSpaceURI, URI value);
-	void addAnnotationValue(String property, URI nameSpaceURI, Byte[] value);
-	void addAnnotationValue(String property, URI nameSpaceURI, BigDecimal value);
-	void addAnnotationValue(String property, URI nameSpaceURI, BigInteger value);   
-	void addAnnotationValue(String property, URI nameSpaceURI, Boolean value);
-	void addAnnotationValue(String property, URI nameSpaceURI, Byte value);
-	void addAnnotationValue(String property, URI nameSpaceURI, Calendar value);   
-	void addAnnotationValue(String property, URI nameSpaceURI, Date value);
-	void addAnnotationValue(String property, URI nameSpaceURI, Double value);   
-	void addAnnotationValue(String property, URI nameSpaceURI, Float value);
-	void addAnnotationValue(String property, URI nameSpaceURI, Integer value);
-	void addAnnotationValue(String property, URI nameSpaceURI, Long value);
-	void addAnnotationValue(String property, URI nameSpaceURI, Short value);
-	void addAnnotationValue(String property, URI nameSpaceURI, UUID value);
-	void addAnnotationValue(String property, URI nameSpaceURI, String value);
-	void addAnnotationValue(String property, URI nameSpaceURI, java.awt.Image value);
-	void addAnnotationValue(String property, URI nameSpaceURI, Duration value);  
-	void addAnnotationValue(String property, URI nameSpaceURI, QName value);
-	void addAnnotationValue(String property, URI nameSpaceURI, Source value);  
-	void addAnnotationValue(String property, URI nameSpaceURI, XMLGregorianCalendar value);    
+    Annotation addAnnotationValue(String property, URI nameSpaceURI, Set<Annotation> value);
+    Annotation addAnnotationValue(String property, URI nameSpaceURI, Object value);
+    Annotation addAnnotationValue(String property, URI nameSpaceURI, NodeList value);
+    Annotation addAnnotationValue(String property, URI nameSpaceURI, Node value);
+    Annotation addAnnotationValue(String property, URI nameSpaceURI, Element value);	    
+    Annotation addAnnotationValue(String property, URI nameSpaceURI, URI value);
+    Annotation addAnnotationValue(String property, URI nameSpaceURI, Byte[] value);
+    Annotation addAnnotationValue(String property, URI nameSpaceURI, BigDecimal value);
+    Annotation addAnnotationValue(String property, URI nameSpaceURI, BigInteger value);   
+    Annotation addAnnotationValue(String property, URI nameSpaceURI, Boolean value);
+    Annotation addAnnotationValue(String property, URI nameSpaceURI, Byte value);
+    Annotation addAnnotationValue(String property, URI nameSpaceURI, Calendar value);   
+    Annotation addAnnotationValue(String property, URI nameSpaceURI, Date value);
+    Annotation addAnnotationValue(String property, URI nameSpaceURI, Double value);   
+    Annotation addAnnotationValue(String property, URI nameSpaceURI, Float value);
+    Annotation addAnnotationValue(String property, URI nameSpaceURI, Integer value);
+    Annotation addAnnotationValue(String property, URI nameSpaceURI, Long value);
+    Annotation addAnnotationValue(String property, URI nameSpaceURI, Short value);
+    Annotation addAnnotationValue(String property, URI nameSpaceURI, UUID value);
+    Annotation addAnnotationValue(String property, URI nameSpaceURI, String value);
+    Annotation addAnnotationValue(String property, URI nameSpaceURI, java.awt.Image value);
+    Annotation addAnnotationValue(String property, URI nameSpaceURI, Duration value);  
+    Annotation addAnnotationValue(String property, URI nameSpaceURI, QName value);
+    Annotation addAnnotationValue(String property, URI nameSpaceURI, Source value);  
+    Annotation addAnnotationValue(String property, URI nameSpaceURI, XMLGregorianCalendar value);    
 
 }

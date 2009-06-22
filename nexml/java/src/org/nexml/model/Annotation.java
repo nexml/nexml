@@ -15,6 +15,7 @@ import javax.xml.transform.Source;
 
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+import org.w3c.dom.Node;
 
 
 /**
@@ -71,7 +72,8 @@ public interface Annotation extends Annotatable {
 	public void setValue(Set<Annotation> value);
 	public void setValue(Annotation value);
 	public void setValue(Object value);	    
-	public void setValue(NodeList value);	    
+	public void setValue(NodeList value);
+	public void setValue(Node value);
 	public void setValue(Element value);	    
 	public void setValue(URI value);
 	public void setValue(Byte[] value);

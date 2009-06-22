@@ -1,6 +1,6 @@
 package org.nexml.model;
 
-public interface CharacterState extends NexmlWritable {
+public interface CharacterState extends Annotatable {
 	
 	/**
 	 * Returns the state symbol for the focal state. Depending

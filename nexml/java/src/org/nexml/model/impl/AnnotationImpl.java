@@ -260,6 +260,16 @@ public class AnnotationImpl extends AnnotatableImpl implements Annotation {
 		}		    	    	
     }
     
+    public void setValue(Node value) {
+        mValue = value;
+        getElement().setAttribute("datatype", "rdf:XMLLiteral");
+        getElement().setAttribute("xsi:type","nex:LiteralMeta");
+        if ( value.getOwnerDocument() != getDocument() ) {
+            value = getDocument().importNode(value,true);
+        }               
+        getElement().appendChild(value);
+    }
+    
     /*
      * (non-Javadoc)
      * @see org.nexml.model.Annotation#setValue(org.w3c.dom.Element)
