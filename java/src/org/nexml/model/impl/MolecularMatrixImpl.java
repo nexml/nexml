@@ -91,6 +91,11 @@ class MolecularMatrixImpl extends
 		setOTUs(otus);
 	}	
 	
+	protected MolecularMatrixImpl(Document document, String type) {
+		this(document);
+		setType(type);
+	}
+
 	protected MolecularCharacterStateSetImpl createCharacterStateSet(Element statesElement,String typeName) {
 		MolecularCharacterStateSetImpl charStateSet = new MolecularCharacterStateSetImpl(getDocument(),statesElement);
 		for ( Element stateElement : getChildrenByTagName(statesElement,"state") ) {
@@ -143,7 +148,7 @@ class MolecularMatrixImpl extends
 	public Character createCharacter(CharacterStateSet characterStateSet) {
 		CharacterImpl character = new CharacterImpl(getDocument());
 		addThing(character);
-		character.getElement().setAttribute("states", characterStateSet.getId());
+		character.setCharacterStateSet(characterStateSet);
 		getFormatElement().appendChild(character.getElement());
 		return character;
 	}	
