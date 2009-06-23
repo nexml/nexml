@@ -49,4 +49,12 @@ public interface Matrix<T> extends OTUsLinkable {
 	
 	T parseSymbol(String symbol);
 	
+	/**
+	 * Creates a row element for OTU otu, and populates
+	 * it with a seq element
+	 * @param seq
+	 * @param otu
+	 */
+	void setSeq(String seq, OTU otu);
+	
 }
