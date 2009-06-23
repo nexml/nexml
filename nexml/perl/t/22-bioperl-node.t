@@ -12,7 +12,7 @@ BEGIN {
 }
 BEGIN { 
     use lib $ENV{'BIOPERL_LIVE_ROOT'} . '/t/lib';
-    use BioperlTest;    
+    use Bio::Root::Test;    
     test_begin( '-tests' => 15 );	
     use_ok('Bio::Tree::Node');
 }
