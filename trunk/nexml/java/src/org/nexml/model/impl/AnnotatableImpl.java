@@ -517,7 +517,8 @@ abstract class AnnotatableImpl extends NexmlWritableImpl implements Annotatable 
     /**
      * Helper method to fill out the boiler plate attributes for an annotation
      * @param property the predicate as a CURIE, e.g. cdao:hasSupportValue
-     * @param value the object
+     * @param nameSpaceURI the namespace to which the CURIE's prefix is bound
+     * @param propertyIsRel the property string is serialized as a rel attribute 
      * @return
      */
     private Annotation addAnnotationValueHelper(String property, URI nameSpaceURI, boolean propertyIsRel) {
@@ -533,12 +534,18 @@ abstract class AnnotatableImpl extends NexmlWritableImpl implements Annotatable 
         	annotation.setProperty(property);
         }
         mAnnotations.add(annotation);
-        getElement().setAttributeNS(
-        	"http://www.w3.org/2000/xmlns/",
-        	"xmlns:" + curie[0],
-        	nameSpaceURI.toString()
-        );
-        getElement().appendChild(annotation.getElement());
+        setNameSpace(getElement(), curie[0], nameSpaceURI.toString());
+//        getElement().setAttributeNS(
+//        	"http://www.w3.org/2000/xmlns/",
+//        	"xmlns:" + curie[0],
+//        	nameSpaceURI.toString()
+//        );
+        if ( getElement().getFirstChild() != null ) {
+        	getElement().insertBefore(annotation.getElement(),getElement().getFirstChild());
+        }
+        else {
+        	getElement().appendChild(annotation.getElement());
+        }
         if ( this instanceof Annotation ) {
         	getElement().removeAttribute("content");
         	getElement().removeAttribute("datatype");        	
@@ -550,7 +557,14 @@ abstract class AnnotatableImpl extends NexmlWritableImpl implements Annotatable 
         	}
         }
         else {
-        	getElement().setAttribute("about","#" + getId());
+        	String about = getElement().getAttribute("about");
+        	if ( null == about || about.equals("") ) {
+        		String id = getId();
+        		if ( null == id || id.equals("") ) {
+        			id = identify(getElement(),false);
+        		}
+        		getElement().setAttribute("about","#" + id.replace(':', '_'));
+        	}
         }
         return annotation;
     }
