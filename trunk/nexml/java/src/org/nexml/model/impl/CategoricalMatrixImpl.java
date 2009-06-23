@@ -2,6 +2,7 @@ package org.nexml.model.impl;
 
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.nexml.model.CategoricalMatrix;
@@ -116,8 +117,15 @@ class CategoricalMatrixImpl extends
 	 */
 	public CharacterStateSet createCharacterStateSet() {
 		CharacterStateSetImpl characterStateSet = new CharacterStateSetImpl(getDocument());
+		List<Element> currentCharElements = getChildrenByTagName(getFormatElement(), "char");
+		if ( ! currentCharElements.isEmpty() ) {
+			Element firstCharElement = currentCharElements.get(0);
+			getFormatElement().insertBefore(characterStateSet.getElement(), firstCharElement);
+		}
+		else {
+			getFormatElement().appendChild( characterStateSet.getElement() );
+		}
 		mCharacterStateSets.add(characterStateSet);
-		getFormatElement().insertBefore( characterStateSet.getElement(), getFormatElement().getFirstChild() );
 		return characterStateSet;
 	}
 
