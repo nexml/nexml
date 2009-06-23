@@ -85,7 +85,7 @@ public class TestSerialization {
 		/**
 		 * Create a DNA matrix
 		 */
-        MolecularMatrix DNAMatrix = nexmlDocument.createMolecularMatrix(otus, "DnaCells");
+        MolecularMatrix DNAMatrix = nexmlDocument.createMolecularMatrix(otus, MolecularMatrix.DNA);
         DNAMatrix.setLabel("Molecular Matrix");
         CharacterStateSet DNAStateSet = DNAMatrix.getDNACharacterStateSet();
         CharacterState aState = DNAStateSet.lookupCharacterStateBySymbol("A");
