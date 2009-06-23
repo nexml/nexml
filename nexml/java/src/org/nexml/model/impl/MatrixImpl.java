@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
-
 import org.nexml.model.Character;
 import org.nexml.model.Matrix;
 import org.nexml.model.MatrixCell;
@@ -18,6 +16,7 @@ abstract class MatrixImpl<T> extends OTUsLinkableImpl<Character> implements
 		Matrix<T> {
 	private Element mFormatElement;
 	private Element mMatrixElement;	
+	private String mType;
 	
     /**
      * Protected constructors that take a DOM document object but not
@@ -56,6 +55,7 @@ abstract class MatrixImpl<T> extends OTUsLinkableImpl<Character> implements
 	}	
 
 	private final Map<OTU, Map<Character, MatrixCellImpl<T>>> mMatrixCells = new HashMap<OTU, Map<Character, MatrixCellImpl<T>>>();
+	private boolean mCompact;
 
 	/*
 	 * (non-Javadoc)
@@ -119,7 +119,7 @@ abstract class MatrixImpl<T> extends OTUsLinkableImpl<Character> implements
 		if ( null == rowElement ) {
 			rowElement = getDocument().createElement("row");
 			rowElement.setAttribute("otu", otu.getId());
-			rowElement.setAttribute("id", "a" + UUID.randomUUID());
+			identify(rowElement,true);
 			getMatrixElement().appendChild(rowElement);
 		}
 		return rowElement;
@@ -225,7 +225,53 @@ abstract class MatrixImpl<T> extends OTUsLinkableImpl<Character> implements
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see org.nexml.model.Matrix#getCharacters()
+	 */
     public List<Character> getCharacters() {
         return getThings();
     }
+    
+    /*
+     * (non-Javadoc)
+     * @see org.nexml.model.Matrix#setSeq(java.lang.String, org.nexml.model.OTU)
+     */
+    public void setSeq(String seq,OTU otu) {
+    	// check if we're switching types    	
+    	if ( ! mCompact ) {
+    		setType(getType(),true);
+    		System.err.println("Warning: unchecked conversion from Cells to Seqs matrix - do this only on matrices w/o cells");
+    	}    	
+    	Element row = getRowElement(otu);
+    	
+    	// remove all old seq and cell elements (if any),
+    	// but keep any other old nodes
+    	List<Element> oldElements = getChildrenByTagName(row, "cell");
+    	oldElements.addAll(getChildrenByTagName(row, "seq"));
+    	for ( Element oldElement : oldElements ) {
+    		row.removeChild(oldElement);
+    	}
+    	
+    	// then, create a new seq child element
+    	Element seqElement = getDocument().createElement("seq");
+    	seqElement.setTextContent(seq);
+    	row.appendChild(seqElement);    	
+    }
+
+	protected String getType() {
+		return mType;
+	}
+
+	protected void setType(String type, boolean compact) {
+		mType = type;
+		mCompact = compact;
+		String subType = compact ? "Seqs" : "Cells";
+		getElement().setAttributeNS(XSI_NS, XSI_TYPE, NEX_PREFIX+":"+type+subType );	
+	}
+	
+	protected void setType(String type) {
+		setType(type,false);
+	}	
+	
 }
