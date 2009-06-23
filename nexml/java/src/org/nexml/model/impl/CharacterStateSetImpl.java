@@ -14,6 +14,8 @@ import org.w3c.dom.Element;
 class CharacterStateSetImpl extends
 		SetManager<CharacterState> implements CharacterStateSet {
 	Set<CharacterState> mCharacterStates = new HashSet<CharacterState>();
+	private UncertainCharacterState mMissing;
+	private UncertainCharacterState mGap;
 	
     /**
      * Protected constructors that take a DOM document object but not
@@ -87,11 +89,33 @@ class CharacterStateSetImpl extends
 	 * @author rvosa
 	 */
 	public CharacterState createCharacterState(Object symbol) {
-		CharacterStateImpl characterStateImpl = new CharacterStateImpl(getDocument());
-		getElement().appendChild(characterStateImpl.getElement());
-		characterStateImpl.setSymbol(symbol);
-		getCharacterStates().add(characterStateImpl);
-		return characterStateImpl;
+		CharacterStateImpl characterStateImpl = null;
+		if ( null != symbol && symbol.toString().equals("?") ) {			
+			mMissing = createUncertainCharacterState(symbol, getCharacterStates());
+			return mMissing;
+		}
+		else if ( null != symbol && symbol.toString().equals("-") ) {
+			Set<CharacterState> members = new HashSet<CharacterState>();
+			mGap = createUncertainCharacterState(symbol, members);
+			addStateToMissing(mGap);
+			return mGap;
+		}
+		else {
+			characterStateImpl = new CharacterStateImpl(getDocument());
+			getElement().appendChild(characterStateImpl.getElement());
+			characterStateImpl.setSymbol(symbol);
+			getCharacterStates().add(characterStateImpl);
+			addStateToMissing(characterStateImpl);
+			return characterStateImpl;
+		}
+	}
+	
+	protected void addStateToMissing(CharacterState state) {
+		if ( null != mMissing ) {
+		    Set<CharacterState> currentMembersOfMissing = mMissing.getStates();
+		    currentMembersOfMissing.add(state);
+		    mMissing.setStates(currentMembersOfMissing);
+		}
 	}
 	
 	protected CharacterState createCharacterState(Element stateElement) {
@@ -119,6 +143,7 @@ class CharacterStateSetImpl extends
 		PolymorphicCharacterStateImpl polymorphicCharacterStateImpl = new PolymorphicCharacterStateImpl(getDocument());
 		polymorphicCharacterStateImpl.setSymbol(symbol);
 		polymorphicCharacterStateImpl.setStates(members);
+		getCharacterStates().add(polymorphicCharacterStateImpl);
 		return polymorphicCharacterStateImpl;
 	}
 	
@@ -155,6 +180,7 @@ class CharacterStateSetImpl extends
 		getElement().appendChild(uncertainCharacterStateImpl.getElement());
 		uncertainCharacterStateImpl.setSymbol(symbol);
 		uncertainCharacterStateImpl.setStates(members);
+		getCharacterStates().add(uncertainCharacterStateImpl);
 		return uncertainCharacterStateImpl;
 	}
 	
