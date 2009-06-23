@@ -1,9 +1,9 @@
 package org.nexml.model.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.UUID;
-
+import java.util.Map;
 import org.nexml.model.NexmlWritable;
 
 import org.w3c.dom.Document;
@@ -16,9 +16,14 @@ import org.w3c.dom.NodeList;
 abstract class NexmlWritableImpl implements NexmlWritable {
 	private Document mDocument = null;
 	private Element mElement;
+	private static long objectCounter = 0;
+	private static Map<String,Boolean> seenIdStrings = new HashMap<String,Boolean>();
 	protected static String XSI_NS = "http://www.w3.org/2001/XMLSchema-instance";
 	protected static String XSI_PREFIX = "xsi";
+	protected static String XSI_TYPE = XSI_PREFIX + ":type";
 	protected static String NEX_PREFIX = "nex";
+	private Map<String,String> prefixForNs = new HashMap<String,String>();
+	private Map<String, String> nsForPrefix = new HashMap<String,String>();
 
 	/** Default constructor. */
 	protected NexmlWritableImpl() {
@@ -36,7 +41,32 @@ abstract class NexmlWritableImpl implements NexmlWritable {
 	protected NexmlWritableImpl(Document document) {
 		mDocument = document;
 		mElement = document.createElementNS(DEFAULT_NAMESPACE, getTagName());
-		getElement().setAttribute("id", "a" + UUID.randomUUID());
+		identify(mElement);
+	}
+	
+	/**
+	 * Generates and attaches an id attribute to the provided element.
+	 * The id is intended to be unique within document scope.
+	 * 
+	 * @param element
+	 */
+	protected String identify(Element element,boolean setIdAttribute) {
+		String prefix = element.getTagName();
+		String id = prefix + objectCounter;
+		while ( seenIdStrings.containsKey(id) ) {
+			objectCounter++;
+			id = prefix + objectCounter;
+		}
+		if ( setIdAttribute ) {
+			element.setAttribute("id",id);
+		}
+		seenIdStrings.put(id,new Boolean(true));
+		objectCounter++;	
+		return id;
+	}
+	
+	protected String identify(Element element) {
+		return identify(element,true);
 	}
 
     /**
@@ -59,6 +89,7 @@ abstract class NexmlWritableImpl implements NexmlWritable {
 	protected NexmlWritableImpl(Document document,Element element) {
 		mDocument = document;
 		mElement = element;
+		seenIdStrings.put(getId(),new Boolean(true));
 	}
 
 	/**
@@ -107,6 +138,16 @@ abstract class NexmlWritableImpl implements NexmlWritable {
 	protected final Element getElement() {
 		return mElement;
 	}
+	
+	/**
+	 * Attaches an attribute node to the current element,
+	 * such that name="value"
+	 * @param name
+	 * @param value
+	 */
+	protected void setAttribute(String name,String value) {
+		getElement().setAttribute(name, value);
+	}
 
 	/**
 	 * Getter.
@@ -145,5 +186,59 @@ abstract class NexmlWritableImpl implements NexmlWritable {
 	 */
 
 	abstract String getTagName();
+	
+	protected void setNameSpace(Element element,String prefix, String nameSpaceURI) {
+		setNameSpace(element, prefix, nameSpaceURI, true);
+	}
+	
+	protected void setNameSpace(Element element,String prefix, String nameSpaceURI, boolean optimize) {
+		if ( null == prefix || null == nameSpaceURI ) {
+			return;
+		}
+		if ( optimize ) {
+			if ( nsForPrefix.containsKey(prefix) && prefixForNs.containsKey(nameSpaceURI) ) {				
+				if ( prefixForNs.get(nameSpaceURI).equals(prefix) && nsForPrefix.get(prefix).equals(nameSpaceURI) ) {
+					// here the method call simply re-affirms an existing namespace/prefix mapping
+					return; // do nothing
+				}
+				else {
+					// either the namespace of the prefix are bound to something else
+					// create a new NS statement on the argument node
+					element.setAttributeNS(						
+						"http://www.w3.org/2000/xmlns/",
+						"xmlns:" + prefix,
+						nameSpaceURI						
+					);
+				}
+			}		
+			else if ( ! nsForPrefix.containsKey(prefix) && ! prefixForNs.containsKey(nameSpaceURI) ) {
+				// neither have been seen before, create de novo on the root element
+				nsForPrefix.put(prefix, nameSpaceURI);
+				prefixForNs.put(nameSpaceURI, prefix);
+				while ( element.getParentNode() != null ) {
+					element = (Element) element.getParentNode();
+				}
+				element.setAttributeNS(
+					"http://www.w3.org/2000/xmlns/",
+					"xmlns:" + prefix,
+					nameSpaceURI
+				);
+			}	
+			else {
+				element.setAttributeNS(						
+					"http://www.w3.org/2000/xmlns/",
+					"xmlns:" + prefix,
+					nameSpaceURI						
+				);				
+			}
+		}
+		else {
+			element.setAttributeNS(						
+				"http://www.w3.org/2000/xmlns/",
+				"xmlns:" + prefix,
+				nameSpaceURI						
+			);			
+		}
+	}	
 	
 }
