@@ -2,7 +2,10 @@ package org.nexml.model.impl;
 
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
@@ -25,7 +28,6 @@ import org.w3c.dom.Element;
 public class DocumentImpl extends AnnotatableImpl implements Document {
 	private List<OTUs> mOtusList = new ArrayList<OTUs>();
 	private List<Matrix<?>> mMatrixList = new ArrayList<Matrix<?>>();
-
 	private List<TreeBlock> mTreeBlockList = new ArrayList<TreeBlock>();
 
     /**
@@ -114,35 +116,40 @@ public class DocumentImpl extends AnnotatableImpl implements Document {
 	}
 
 	private void setRootAttributes() {
-		getElement().setAttribute("version", "0.8");
-		getElement().setAttribute("generator", getClass().getName());
-		getElement().setPrefix("nex");
-		getElement().removeAttribute("id");
-		getElement().setAttributeNS(
-			"http://www.w3.org/2000/xmlns/",
-			"xmlns:xsi",
-			"http://www.w3.org/1999/XMLSchema-instance"
-		);
-		getElement().setAttributeNS(
-			"http://www.w3.org/2000/xmlns/",
-			"xmlns:xsd",			
-			"http://www.w3.org/2001/XMLSchema#"
-		);
-		getElement().setAttributeNS(
-			"http://www.w3.org/2000/xmlns/",
-			"xmlns:rdf",			
-			"http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-		);
-		getElement().setAttributeNS(
-			"http://www.w3.org/2000/xmlns/",
-			"xmlns:nex",
-			"http://www.nexml.org/1.0"
-		);
+		setAttribute("version", "0.8");
+		setAttribute("generator", getClass().getName());
+		Element nexmlElement = getElement();
+		nexmlElement.setPrefix("nex");
+		nexmlElement.removeAttribute("id");
+		setNameSpace(nexmlElement,"xsi","http://www.w3.org/1999/XMLSchema-instance");
+//		getElement().setAttributeNS(
+//			"http://www.w3.org/2000/xmlns/",
+//			"xmlns:xsi",
+//			"http://www.w3.org/1999/XMLSchema-instance"
+//		);
+		setNameSpace(nexmlElement,"xsd","http://www.w3.org/2001/XMLSchema#");
+//		getElement().setAttributeNS(
+//			"http://www.w3.org/2000/xmlns/",
+//			"xmlns:xsd",			
+//			"http://www.w3.org/2001/XMLSchema#"
+//		);
+		setNameSpace(nexmlElement,"rdf","http://www.w3.org/1999/02/22-rdf-syntax-ns#");
+//		getElement().setAttributeNS(
+//			"http://www.w3.org/2000/xmlns/",
+//			"xmlns:rdf",			
+//			"http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+//		);
+		setNameSpace(nexmlElement,"nex","http://www.nexml.org/1.0");		
+//		getElement().setAttributeNS(
+//			"http://www.w3.org/2000/xmlns/",
+//			"xmlns:nex",
+//			"http://www.nexml.org/1.0"
+//		);
 		getElement().setAttribute(
 			"xmlns",
 			"http://www.nexml.org/1.0"
 		);		
-	}
+	}	
 
 	protected DocumentImpl() {
 	}
@@ -202,7 +209,7 @@ public class DocumentImpl extends AnnotatableImpl implements Document {
 		getElement().appendChild(categoricalMatrix.getElement());
 		categoricalMatrix.setOTUs(otus);
 		categoricalMatrix.getElement().setAttributeNS(XSI_NS,
-				XSI_PREFIX + ":type", NEX_PREFIX + ":StandardCells");
+			XSI_TYPE, NEX_PREFIX + ":StandardCells");
 		return categoricalMatrix;
 	}
 
@@ -224,7 +231,7 @@ public class DocumentImpl extends AnnotatableImpl implements Document {
 		getElement().appendChild(continuousMatrix.getElement());
 		continuousMatrix.setOTUs(otus);
 		continuousMatrix.getElement().setAttributeNS(XSI_NS,
-				XSI_PREFIX + ":type", NEX_PREFIX + ":ContinuousCells");
+			XSI_TYPE, NEX_PREFIX + ":ContinuousCells");
 		return continuousMatrix;
 	}
 
@@ -245,12 +252,12 @@ public class DocumentImpl extends AnnotatableImpl implements Document {
 	 */
 	public MolecularMatrix createMolecularMatrix(OTUs otus, String type) {
 		MolecularMatrixImpl molecularMatrix = new MolecularMatrixImpl(
-				getDocument());
+				getDocument(),type);
 		mMatrixList.add(molecularMatrix);
 		getElement().appendChild(molecularMatrix.getElement());
 		molecularMatrix.setOTUs(otus);
-		molecularMatrix.getElement().setAttributeNS(XSI_NS,
-				XSI_PREFIX + ":type", NEX_PREFIX + ":" + type + "Cells");
+//		molecularMatrix.getElement().setAttributeNS(XSI_NS,
+//			XSI_TYPE, NEX_PREFIX + ":" + type + "Cells");
 		return molecularMatrix;
 	}
 
