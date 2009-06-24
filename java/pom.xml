@@ -1,0 +1,53 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                      http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.nexml.model</groupId>
+  <artifactId>nexml</artifactId>
+  <packaging>jar</packaging>
+  <version>1.0-SNAPSHOT</version>
+  <name>NeXML Java API</name>
+  <description>This is the core NeXML Java API. Running this goal will only compile org.nexml.model.*, no validator, or junit, or mesquite code will be built. The purpose of this pom is to automate creation of the latest core jar, and installation in the maven repository at nexml.org</description>
+  <url>http://nexml.org</url>
+  <developers>
+  	<developer>
+  		<id>rvos</id>
+  		<name>Rutger Vos</name>
+  		<email>rutgeraldo@gmail.com</email>
+  	</developer>
+  	<developer>
+  		<id>balhoff</id>
+  		<name>Jim Balhoff</name>
+  		<email>balhoff@nescent.org</email>
+  	</developer>  	
+  	<developer>
+  		<id>sdonnelly1</id>
+  		<name>Sam Donnelly</name>
+  		<email>samd@seas.upenn.edu</email>    	
+  	</developer>
+  	<developer>
+  		<id>pmidford</id>
+  		<name>Peter Midford</name>
+  		<email>peteremidford@yahoo.com</email>    	
+  	</developer>
+  </developers>
+  <properties>
+  	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties> 
+  <build>
+  	<sourceDirectory>src/org</sourceDirectory>
+  	<pluginManagement>
+  		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>1.5</source>
+					<target>1.5</target>
+				</configuration>
+			</plugin>  		
+  		</plugins>
+  	</pluginManagement>
+  </build>
+</project>
