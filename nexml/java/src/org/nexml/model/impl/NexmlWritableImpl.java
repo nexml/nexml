@@ -249,7 +249,11 @@ abstract class NexmlWritableImpl implements NexmlWritable {
 
 	public void setBaseURI(URI baseURI) {
 		mBaseURI = baseURI;
-		getDocument().getDocumentElement().setAttribute("xml:base",baseURI.toString());
+		Element element = getElement();
+		while ( element.getParentNode() != null ) {
+			element = (Element) element.getParentNode();
+		}
+		element.setAttribute("xml:base",baseURI.toString());
 	}
 	
 	
