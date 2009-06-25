@@ -294,11 +294,12 @@ public class AnnotationImpl extends AnnotatableImpl implements Annotation {
     	
     	if ( null != getBaseURI() ) {
 	    	String baseURIString = getBaseURI().toString();
+	    	int baseURILength = baseURIString.length();
 	    	
 	    	// truncate stringified value to omit base uri, if matches
-	    	if ( baseURIString.length() > 0 && ! baseURIString.equals("") && null != baseURIString ) {
-		    	if ( baseURIString.equalsIgnoreCase(valueString.substring(0,baseURIString.length()-1) ) ) {
-		    		getElement().setAttribute("href", valueString.substring(baseURIString.length()));
+	    	if ( baseURILength > 0 ) {
+		    	if ( valueString.startsWith(baseURIString) ) {
+		    		getElement().setAttribute("href", valueString.substring(baseURILength));
 		    	}
 	    	}
 	    	else {
