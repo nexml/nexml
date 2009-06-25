@@ -6,7 +6,7 @@
   <groupId>org.nexml.model</groupId>
   <artifactId>nexml</artifactId>
   <packaging>jar</packaging>
-  <version>1.2-SNAPSHOT</version>
+  <version>1.4-SNAPSHOT</version>
   <name>NeXML Java API</name>
   <description>This is the core NeXML Java API. Running this goal will only compile org.nexml.model.*, no validator, or junit, or mesquite code will be built. The purpose of this pom is to automate creation of the latest core jar, and installation in the maven repository at nexml.org</description>
   <url>http://nexml.org</url>
