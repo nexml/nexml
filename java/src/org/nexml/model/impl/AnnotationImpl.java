@@ -289,9 +289,20 @@ public class AnnotationImpl extends AnnotatableImpl implements Annotation {
      * @see org.nexml.model.Annotation#setValue(java.net.URI)
      */
     public void setValue(URI value) {
-    	mValue = value;
-		getElement().setAttribute("href", value.toString());
-		getElement().setAttribute("xsi:type","nex:ResourceMeta");    	
+    	mValue = value;    	
+    	String valueString = value.toString();
+    	
+    	if ( null != getBaseURI() ) {
+	    	String baseURIString = getBaseURI().toString();
+	    	// truncate stringified value to omit base uri, if matches
+	    	if ( baseURIString.equalsIgnoreCase(valueString.substring(0,baseURIString.length()-1) ) ) {
+	    		getElement().setAttribute("href", valueString.substring(baseURIString.length()));
+	    	}
+    	}
+    	else {
+    		getElement().setAttribute("href", valueString);			
+    	}
+    	getElement().setAttribute("xsi:type","nex:ResourceMeta");
     }
     
     /**

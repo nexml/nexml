@@ -1,6 +1,8 @@
 package org.nexml.model.impl;
 
 import java.io.StringWriter;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.xml.transform.OutputKeys;
@@ -26,6 +28,7 @@ public class DocumentImpl extends AnnotatableImpl implements Document {
 	private List<OTUs> mOtusList = new ArrayList<OTUs>();
 	private List<Matrix<?>> mMatrixList = new ArrayList<Matrix<?>>();
 	private List<TreeBlock> mTreeBlockList = new ArrayList<TreeBlock>();
+	private URI mBaseURI;
 
     /**
      * Protected constructors that take a DOM document object but not
