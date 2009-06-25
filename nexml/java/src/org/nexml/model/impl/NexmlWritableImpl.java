@@ -1,7 +1,6 @@
 package org.nexml.model.impl;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -26,6 +25,7 @@ abstract class NexmlWritableImpl implements NexmlWritable {
 	protected static String NEX_PREFIX = "nex";
 	private Map<String,String> prefixForNs = new HashMap<String,String>();
 	private Map<String, String> nsForPrefix = new HashMap<String,String>();
+	private URI mBaseURI;
 
 	/** Default constructor. */
 	protected NexmlWritableImpl() {
@@ -244,30 +244,12 @@ abstract class NexmlWritableImpl implements NexmlWritable {
 	}	
 	
 	public URI getBaseURI() {
-		Element element = getElement();
-		String baseURIString = element.getAttribute("xml:base");
-		while( null == baseURIString ) {
-			element = (Element)element.getParentNode();
-			baseURIString = element.getAttribute("xml:base");
-		}
-		if ( null != baseURIString ) {
-			try {
-				return new URI(baseURIString);
-			} catch (URISyntaxException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		return null;
+		return mBaseURI;
 	}
 
 	public void setBaseURI(URI baseURI) {
-		if ( null != getBaseURI() ) {
-			setAttribute("xml:base",baseURI.toString()); // i.e. attach to invocant element
-		}
-		else {
-			getDocument().getDocumentElement().setAttribute("xml:base",baseURI.toString()); // attach to root element
-		}
+		mBaseURI = baseURI;
+		getDocument().getDocumentElement().setAttribute("xml:base",baseURI.toString());
 	}
 	
 	
