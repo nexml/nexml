@@ -8,6 +8,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -19,7 +20,10 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.junit.Assert;
+import org.junit.Test;
 import org.nexml.model.Document;
+import org.nexml.model.impl.AnnotationImpl;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
@@ -39,7 +43,6 @@ public class TestBaseURI {
 			Assert.assertTrue(e.getMessage(), false);
 			e.printStackTrace();
 		}
-
 		
 		// we're going to namespace this in DC
 		URI predicateNS = null, baseURI = null, predicateValueURI = null;
@@ -50,27 +53,20 @@ public class TestBaseURI {
 		} catch (URISyntaxException e1) {
 			e1.printStackTrace();
 		}
-		
+		nexmlDocument.setBaseURI(baseURI);
+		Annotation annotation = nexmlDocument.addAnnotationValue("dc:relation", predicateNS, predicateValueURI);
+		Assert.assertEquals(predicateValueURI, (URI)annotation.getValue());
+		Assert.assertEquals("dc:relation",annotation.getRel());
 
 	    String nexml = nexmlDocument.getXmlString();
+	    Assert.assertTrue(nexml.contains("\"TB2:S1234\""));
 	    Document document = null;
 		try {
 			document = DocumentFactory.parse(new ByteArrayInputStream(nexml.getBytes()));
 		} catch (Exception e) {
 			e.printStackTrace();
 		};
-		List<OTUs> otus1 = document.getOTUsList();
-		System.out.println(document.getXmlString());
+		Assert.assertNotNull(document);
 	}
 	
-	private org.w3c.dom.Document createDocument () {
-		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-		DocumentBuilder documentBuilder = null;
-		try {
-			documentBuilder = documentBuilderFactory.newDocumentBuilder();
-		} catch (ParserConfigurationException e) {
-			e.printStackTrace();
-		}
-		return documentBuilder.newDocument();
-	}
 }
