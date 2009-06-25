@@ -1,6 +1,7 @@
 package org.nexml.model.impl;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -244,6 +245,22 @@ abstract class NexmlWritableImpl implements NexmlWritable {
 	}	
 	
 	public URI getBaseURI() {
+		if ( null == mBaseURI ) {
+			Element element = getElement();
+			while ( element != null ) {
+				String baseURIString = element.getAttribute("xml:base");
+				if ( baseURIString != null && baseURIString.length() > 0 ) {
+					try {
+						mBaseURI = new URI(baseURIString);
+					} catch (URISyntaxException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					break;
+				}
+				element = (Element) element.getParentNode();
+			}			
+		}
 		return mBaseURI;
 	}
 
