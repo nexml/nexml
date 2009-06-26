@@ -84,7 +84,7 @@ public class TestContinuousMatrix {
 			Assert.assertTrue(e.getMessage(), false);
 			e.printStackTrace();
 		}
-		System.out.println(doc.getXmlString());
+		//System.out.println(doc.getXmlString());
 		
 	}
 	
