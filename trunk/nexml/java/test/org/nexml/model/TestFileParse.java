@@ -5,6 +5,7 @@ package org.nexml.model;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Properties;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -20,7 +21,11 @@ import org.xml.sax.SAXException;
 public class TestFileParse {
 	@Test
 	public void parseCharacters() {
-		File file = new File("trunk/nexml/examples/trees.xml");
+		String nexmlRoot = System.getenv("NEXML_ROOT");
+		if ( nexmlRoot == null ) {
+			nexmlRoot = "/Users/rvosa/Documents/workspace/nexml/trunk/nexml";
+		}
+		File file = new File(nexmlRoot+"/examples/trees.xml");
 		Document doc = null;
 		try {
 			doc = DocumentFactory.parse(file);
@@ -34,7 +39,7 @@ public class TestFileParse {
 			Assert.assertTrue(e.getMessage(), false);
 			e.printStackTrace();
 		}
-		System.out.println(doc.getXmlString());
+		//System.out.println(doc.getXmlString());
 	}
 
 }

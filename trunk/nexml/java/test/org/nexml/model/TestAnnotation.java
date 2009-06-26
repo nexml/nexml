@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -56,27 +55,21 @@ public class TestAnnotation {
 		}
 		
 		// we're going to namespace all predicates in CDAO
-		URI ns = null;
-		try {
-			ns = new URI("http://evolutionaryontology.org/#");
-		} catch (URISyntaxException e1) {
-			e1.printStackTrace();
-		}
+		URI ns = URI.create("http://evolutionaryontology.org/#");
 		
 		// attaching a simple object, just to see that we can
 	    otu.addAnnotationValue("cdao:hasObject", ns, new Object());	
 	    
 	    /**
-	     * Set/Get a URI
+	     * Set/Get a URI as a dc:relation
 	     */
-	    try {
-			otu.addAnnotationValue("cdao:hasURI", ns, new URI("http://www.nexml.org"));
-			Set<Object> annos = otu.getRelValues("cdao:hasURI");
-			Object relValue = annos.iterator().next();
-			Assert.assertEquals(((URI)relValue).toString(),"http://www.nexml.org");
-		} catch (URISyntaxException e) {
-			e.printStackTrace();
-		}
+	    String baseURI = "http://www.nexml.org/PhyloWS/";
+	    nexmlDocument.setBaseURI(URI.create(baseURI));
+	    String valueURI = "http://www.nexml.org/PhyloWS/TB2:Tl1234";
+	    String dcns = "http://purl.org/dc/elements/1.1/";
+	    nexmlDocument.addAnnotationValue("dc:relation", URI.create(dcns), URI.create(valueURI));
+		otu.addAnnotationValue("dc:relation", URI.create(dcns), URI.create(valueURI));
+		Assert.assertEquals(otu.getRelValues("dc:relation").iterator().next().toString(),valueURI);
 	    
 	    /**
 	     * Set/Get a Calendar - doesn't work yet (because of
@@ -186,7 +179,7 @@ public class TestAnnotation {
 			e.printStackTrace();
 		};
 		List<OTUs> otus1 = document.getOTUsList();
-		System.out.println(document.getXmlString());
+		//System.out.println(document.getXmlString());
 		runEqualsTests(otus1.get(0).getAllOTUs().get(0));		
 	}
 	

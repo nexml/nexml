@@ -120,7 +120,7 @@ public class TestSerialization {
 		 */
 		InputStream is = null;
 		try {
-		    System.out.println(nexmlDocument.getXmlString());
+		    //System.out.println(nexmlDocument.getXmlString());
 			is = new ByteArrayInputStream(nexmlDocument.getXmlString().getBytes("UTF-8"));
 		} catch (UnsupportedEncodingException e1) {
 			Assert.assertFalse(e1.getMessage(), false);

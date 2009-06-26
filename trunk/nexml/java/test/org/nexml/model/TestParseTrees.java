@@ -16,8 +16,12 @@ public class TestParseTrees {
 
 	@Test
 	public void parseFloatTree() throws Throwable {
-		Document document = DocumentFactory.parse(new File("trunk/nexml/examples/trees.xml"));
-		System.out.println(document.getXmlString());
+		String nexmlRoot = System.getenv("NEXML_ROOT");
+		if ( nexmlRoot == null ) {
+			nexmlRoot = "/Users/rvosa/Documents/workspace/nexml/trunk/nexml";
+		}		
+		Document document = DocumentFactory.parse(new File(nexmlRoot+"/examples/trees.xml"));
+		//System.out.println(document.getXmlString());
 		TreeBlock treeBlock = document.getTreeBlockList().get(0);
 		Assert.assertNotNull("we should have a tree block", treeBlock);
 		Tree<?> floatTree = null;
@@ -43,8 +47,12 @@ public class TestParseTrees {
 
 	@Test
 	public void parseIntTree() throws Throwable {
-		Document document = DocumentFactory.parse(new File(
-						"trunk/nexml/examples/02_dogfish_no_taxrefs.xml"));
+		String nexmlRoot = System.getenv("NEXML_ROOT");
+		if ( nexmlRoot == null ) {
+			nexmlRoot = "/Users/rvosa/Documents/workspace/nexml/trunk/nexml";
+		}	
+		Document document = DocumentFactory.parse(new File(nexmlRoot+
+						"/examples/02_dogfish_no_taxrefs.xml"));
 		Assert.assertEquals("should be one tree", 1, document
 				.getTreeBlockList().size());
 		Assert.assertEquals("should be an int tree", "'the tree'", document
@@ -103,7 +111,7 @@ public class TestParseTrees {
 		newEdge.setLength(33);
 		Assert.assertEquals("length should be 33", Integer.valueOf(33), newEdge
 				.getLength());
-		System.out.println("xmlString: " + document.getXmlString());
+		//System.out.println("xmlString: " + document.getXmlString());
 	}
 
 	void findEdges(Node node, Tree<IntEdge> tree,
