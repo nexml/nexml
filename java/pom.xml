@@ -8,7 +8,7 @@
   <packaging>jar</packaging>
   <version>1.5-SNAPSHOT</version>
   <name>NeXML Java API</name>
-  <description>This is the core NeXML Java API. Running this goal will only compile org.nexml.model.*, no validator, or junit, or mesquite code will be built. The purpose of this pom is to automate creation of the latest core jar, and installation in the maven repository at nexml.org</description>
+  <description></description>
   <url>http://nexml.org</url>
   <developers>
   	<developer>
@@ -32,11 +32,41 @@
   		<email>peteremidford@yahoo.com</email>    	
   	</developer>
   </developers>
+  <repositories>
+    <repository>
+      <id>m2.nexml.repos</id>
+      <name>NeXML Remote Repository</name>
+      <url>http://nexml-dev.nescent.org/.m2/repository/</url>   
+    </repository>  
+    <repository>
+      <id>maven2</id>
+      <name>Default Maven2 Repository</name>
+      <url>http://repo1.maven.org/maven2</url>
+    </repository>
+  </repositories>
+  <dependencies>
+  	<dependency>
+  		<groupId>junit</groupId>
+  		<artifactId>junit</artifactId>
+  		<version>4.5</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>xerces</groupId>
+  		<artifactId>xerces</artifactId>
+  		<version>2.4.0</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>mesquite</groupId>
+  		<artifactId>mesquite</artifactId>
+  		<version>2.6+SNAPSHOT</version>
+  	</dependency>  	
+  </dependencies>
   <properties>
   	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties> 
   <build>
-  	<sourceDirectory>src/org</sourceDirectory>
+  	<sourceDirectory>src</sourceDirectory>
+  	<testSourceDirectory>test</testSourceDirectory>
   	<pluginManagement>
   		<plugins>
 			<plugin>
