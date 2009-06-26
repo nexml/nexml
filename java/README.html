@@ -24,6 +24,15 @@
                     Written and maintained by Rutger Vos with some help
                     from Wayne Maddison.
                 </li>
+		        <li class="folder">
+		            <a href="src/validator/">src/validator/</a>* contains a 
+		            <a href="http://xerces.apache.org/xerces-j/">Xerces-J</a>-based
+		            validator written by Terri Liebowitz of the San Diego
+		            Supercomputing Center, with modifications by Mark Holder.
+		            It is used to validate nexml instance documents against
+		            the schema (or, indeed, any xml instance document against
+		            any schema).
+		        </li>                
             </ul>
         </li>
         <li class="folder">
@@ -32,17 +41,28 @@
             API.
         </li>        
         <li class="folder">
-            <a href="validator/">validator/</a>* contains a 
-            <a href="http://xerces.apache.org/xerces-j/">Xerces-J</a>-based
-            validator written by Terri Liebowitz of the San Diego
-            Supercomputing Center, with modifications by Mark Holder.
-            It is used to validate nexml instance documents against
-            the schema (or, indeed, any xml instance document against
-            any schema).
-        </li>
-        <li class="folder">
             <a href="jars/">jars/</a>* contains dependencies for the code in the src/ and validator/
             folders. Not all these jars are required at present, it seems.
         </li>
 	</ul>
+	As of 26/6/09 the NeXML/Java project uses maven for building and dependency management. This
+	means that you can run goals such as <code>mvn test</code>, <code>mvn compile</code>, <code>
+	mvn install</code> and <code>mvn clean</code>. For more info, consult the <a href="pom.xml">pom.xml</a>.
+	In addition to using mvn to build and install the code here, you can also use the nexml maven 
+	repository at: 
+<pre>
+&lt;repository>
+   &lt;id>m2.nexml.repos&lt;/id>
+   &lt;name>NeXML Remote Repository&lt;/name>
+   &lt;url>http://nexml-dev.nescent.org/.m2/repository/&lt;/url>   
+&lt;/repository>  
+</pre>
+	From where you can download nexml as:
+<pre>
+&lt;dependency>
+   &lt;groupId>org.nexml.model&lt;/groupId>
+   &lt;artifactId>nexml&lt;/artifactId>
+   &lt;version>1.5-SNAPSHOT&lt;/version>
+&lt;/dependency>
+</pre>
 </p>
