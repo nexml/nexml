@@ -1,5 +1,6 @@
 #!/usr/bin/perl
 BEGIN {
+    unshift @INC, $ENV{'DOCUMENT_ROOT'} . '/perllib';
     unshift @INC, $ENV{'DOCUMENT_ROOT'} . '/nexml/perl/lib';
     unshift @INC, $ENV{'DOCUMENT_ROOT'} . '/nexml/site/lib'; 
     unshift @INC, 'perl/lib';   
