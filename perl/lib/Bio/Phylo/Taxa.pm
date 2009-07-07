@@ -335,11 +335,11 @@ Serializes invocant to nexus format.
 		my $nexus = "BEGIN TAXA;\n";
 		$nexus .=   "[! Taxa block written by " . ref($self) . " " . $self->VERSION . " on " . localtime() . " ]\n";
 		if ( $args{'-links'} ) {
-			$nexus .= "\tTITLE " . $self->get_internal_name . ";\n";
+			$nexus .= "\tTITLE " . $self->get_nexus_name . ";\n";
 		} 
 		$nexus .= "\tDIMENSIONS NTAX=" . $self->get_ntax . ";\n";
 		$nexus .= "\tTAXLABELS\n";
-		$nexus .= "\t\t" . $_->get_internal_name . "\n" for @{ $self->get_entities };
+		$nexus .= "\t\t" . $_->get_nexus_name . "\n" for @{ $self->get_entities };
 		$nexus .= "\t;\nEND;\n";
 	}
 
