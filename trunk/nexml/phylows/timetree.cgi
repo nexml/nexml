@@ -24,7 +24,7 @@ use Scalar::Util qw(looks_like_number);
 use HTML::Entities;
 use Bio::Phylo::Factory;
 use Bio::Phylo::IO 'unparse';
-use constant URL => 'http://69.36.181.148/time_query.php?';
+use constant URL => 'http://timetree.org/time_e_query.php?';
 
 my $cgi = CGI->new;
 my $lua = LWP::UserAgent->new;
