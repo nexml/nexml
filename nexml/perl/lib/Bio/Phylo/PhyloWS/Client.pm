@@ -30,15 +30,22 @@ Bio::Phylo::PhyloWS::Client - Base class for phylogenetic web service clients
 
 =head1 SYNOPSIS
 
- use Bio::Phylo::PhyloWS::Client;
- my $url = 'http://localhost:8080/treebase-web/phylows/';
- my $client = Bio::Phylo::PhyloWS::Client->new( '-url' => $tb2_query_url );
- my $result = $client->get_query_result( 
-    '-query'        => sprintf('tb.identifier.study="%s"','S1787'),
-    '-section'      => 'study',
-    '-recordSchema' => 'tree',
+ #!/usr/bin/perl
+ use strict;
+ use warnings;
+ use Bio::Phylo::Factory;
+ 
+ my $fac = Bio::Phylo::Factory->new;
+ my $client = $fac->create_client( '-url' => 'http://8ball.sdsc.edu:6666/treebase-web/phylows/' );
+ my $desc = $client->get_query_result( 
+	'-query'        => 'dcterms.identifier=S2484', 
+	'-section'      => 'study',
+	'-recordSchema' => 'tree',
  );
- print $result->to_xml;
+ for my $res ( @{ $desc->get_entities } ) {
+	my $proj = $client->get_record( '-guid' => $res->get_guid );
+	print $proj->to_nexus, "\n";
+ }
 
 =head1 DESCRIPTION
 
