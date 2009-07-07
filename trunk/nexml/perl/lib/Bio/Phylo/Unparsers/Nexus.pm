@@ -124,6 +124,11 @@ sub _to_string {
     	$nexus .= $blocks->to_nexus;
     }
     
+    # project?
+    elsif ( defined $type and $type == _PROJECT_ ) {
+    	$nexus = $blocks->to_nexus;
+    }    
+    
     # wrong!
     else {
     	throw 'ObjectMismatch' => "Can't unparse this object: $blocks";

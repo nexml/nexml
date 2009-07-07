@@ -30,6 +30,9 @@ BEGIN {
       	_DICTIONARY_
         _DOMCREATOR_
         _META_
+        _DESCRIPTION_
+        _RESOURCE_ 
+        _HTTP_SC_SEE_ALSO_
       	looks_like_number
       	looks_like_object
 		looks_like_hash
@@ -59,6 +62,9 @@ BEGIN {
                 _DICTIONARY_
                 _DOMCREATOR_
                 _META_
+                _DESCRIPTION_
+                _RESOURCE_
+                _HTTP_SC_SEE_ALSO_
             )
         ],
         'functions' => [
@@ -99,6 +105,11 @@ sub _DICTIONARY_   () { 17 }
 
 sub _DOMCREATOR_   () { 18 }
 sub _META_         () { 19 }
+
+sub _DESCRIPTION_  () { 20 }
+sub _RESOURCE_     () { 21 }
+
+sub _HTTP_SC_SEE_ALSO_ () { '303 See Other' }
 
 # this is a drop in replacement for Scalar::Util's function
 my $looks_like_number;

@@ -268,6 +268,10 @@ __PACKAGE__->_make_exceptions(
         'isa'         => 'Bio::Phylo::Util::Exceptions::System',
         'description' => "This kind of error happens when a file can not be accessed.",
     },
+    'Bio::Phylo::Util::Exceptions::NetworkError' => {
+        'isa'         => 'Bio::Phylo::Util::Exceptions::System',
+        'description' => "This kind of error happens when a network resource can not be accessed.",
+    },    
     'Bio::Phylo::Util::Exceptions::ExtensionError' => {
         'isa'         => [
         	'Bio::Phylo::Util::Exceptions::System',

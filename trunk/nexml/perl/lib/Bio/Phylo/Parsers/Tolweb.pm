@@ -108,6 +108,7 @@ sub _from_both {
 	my %opt = @_;
 
 	$self->{'_tree'} = $factory->create_tree;
+	$self->{'_tree'}->insert( $factory->create_node );
 	
 	# XML::Twig doesn't care if we parse from a handle or a string
 	my $xml = $opt{'-handle'} || $opt{'-string'};
@@ -118,14 +119,28 @@ sub _from_both {
 		$self->{'_twig'}->parseurl($opt{'-url'});
 	}
 	$logger->debug("done parsing xml");
-	
+
+    # now we build the tree structure	
+    my $root;
 	for my $node_id ( keys %{ $self->{'_node_of'} } ) {
 		if ( defined( my $parent_id = $self->{'_parent_of'}->{$node_id} ) ) {
 			my $child = $self->{'_node_of'}->{$node_id};
 			my $parent = $self->{'_node_of'}->{$parent_id};
 			$child->set_parent($parent);
 		}
+		else {
+		    $root = $self->{'_node_of'}->{$node_id};
+		}
 	}
+	$root->set_parent( $self->{'_tree'}->get_root );
+	$self->{'_tree'}->get_root->add_meta(
+	    $factory->create_meta(
+	        '-triple' => {
+	            'tba:ID' => $root->get_generic('ANCESTORWITHPAGE')
+	        }
+	    )
+	);
+	$logger->debug("done building tree");
 
 	# we're done, now grab the tree from its field
 	my $tree = $self->{'_tree'};
@@ -144,6 +159,8 @@ sub _from_both {
 	}
 	elsif ( $opt{'-as_project'} ) {
 		my $forest = $factory->create_forest;
+		$forest->insert($tree);
+		$logger->debug($forest->to_newick);
 		my $taxa = $forest->make_taxa;
 		my $proj = $factory->create_project;
 		$proj->insert($taxa,$forest);
@@ -155,15 +172,18 @@ sub _from_both {
 }
 
 sub _handle_node {
-	my ( $self, $twig, $node_elt ) = @_;	
-	my $node_obj = $factory->create_node;
+	my ( $self, $twig, $node_elt ) = @_;
+	$logger->debug("handling node $node_elt");
+	my $node_obj = $factory->create_node;	
 	my $id = $node_elt->att('ID');
+	$node_obj->set_generic( 'id' => $id );
 	$self->{'_node_of'}->{$id} = $node_obj;
+	
 	if ( my $parent = $node_elt->parent->parent ) {
 		$self->{'_parent_of'}->{$id} = $parent->att('ID');
+		$logger->debug("found parent node");
 	}
 	$self->{'_tree'}->insert($node_obj);
-	my $dict = $factory->create_dictionary;
 	for my $child_elt ( $node_elt->children ) {		
 		if ( $child_elt->tag eq 'NODES' or $child_elt->tag eq 'OTHERNAMES' ) {
 			next;
@@ -174,45 +194,27 @@ sub _handle_node {
 			}			
 		}
 		elsif ( $child_elt->tag eq 'DESCRIPTION' ) {
-		    $dict->insert(
-		        $factory->create_annotation(
-		            '-tag'    => 'string',
-		            '-value'  => $child_elt->text,
-		            '-xml_id' => 'description',
-		        )
+		    $node_obj->set_namespaces( 'dc' => 'http://purl.org/dc/elements/1.1/' );
+		    $node_obj->add_meta(
+		        $factory->create_meta( '-triple' => { 'dc:description' => $child_elt->text } )
 		    );
 		}
 		elsif ( my $text = $child_elt->text ) {
-		    $dict->insert(
-		        $factory->create_annotation(
-		            '-tag'    => 'string',
-		            '-value'  => $text,
-		            '-xml_id' => $child_elt->tag,
-		        )
+		    $node_obj->set_namespaces( 'tbe' => 'http://tolweb.org/elements#' );
+		    $node_obj->add_meta(
+		        $factory->create_meta( '-triple' => { 'tbe:' . $child_elt->tag => $text } )    
 		    );
 		}		
 	}
 	for my $att_name ( $node_elt->att_names ) {
-		if ( $att_name eq 'COMBINATION_DATE' ) {
-		    $dict->insert(
-		        $factory->create_annotation(
-                    '-tag'    => 'string',
-                    '-value'  => $node_elt->att($att_name),
-                    '-xml_id' => $att_name,
-		        )
-		    );
-		}
-		else {
-		    $dict->insert(
-		        $factory->create_annotation(
-		            '-tag'    => 'integer',
-		            '-value'  => $node_elt->att($att_name),
-		            '-xml_id' => $att_name,
-		        )
-		    );
-		}
-	}
-	$node_obj->add_dictionary( $dict );
+	    $node_obj->set_namespaces( 'tba' => 'http://tolweb.org/attributes#' );
+	    if ( $att_name eq 'ANCESTORWITHPAGE' ) {
+	        $node_obj->set_generic( 'ANCESTORWITHPAGE' => $node_elt->att($att_name) );
+	    }
+        $node_obj->add_meta(
+            $factory->create_meta( '-triple' => { 'tba:' . $att_name => $node_elt->att($att_name) } )		    
+        );
+ 	}
 	$twig->purge;
 }
 

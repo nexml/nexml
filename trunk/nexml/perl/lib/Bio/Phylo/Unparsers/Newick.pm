@@ -3,6 +3,7 @@ package Bio::Phylo::Unparsers::Newick;
 use strict;
 use Bio::Phylo::Forest::Tree;
 use Bio::Phylo::IO;
+use Bio::Phylo::Util::CONSTANT qw(:objecttypes);
 use vars qw(@ISA);
 
 @ISA=qw(Bio::Phylo::IO);
@@ -98,15 +99,54 @@ sub _new {
 sub _to_string {
     my $self = shift;
     my $tree = $self->{'PHYLO'};
-    my $root = $tree->get_root;
-    my %args;
-    for my $key ( qw(TRANSLATE TIPNAMES NHXKEYS NODELABELS BLFORMAT NHXSTYLE) ) {
-    	if ( my $val = $self->{$key} ) {
-    		my $arg = '-' . lc($key);
-    		$args{$arg} = $val;
-    	}
-    } 
-    return $root->to_newick( %args );
+    my $type = $tree->_type;
+    if ( $type == _TREE_ ) {
+        my $root = $tree->get_root;
+        my %args;
+        for my $key ( qw(TRANSLATE TIPNAMES NHXKEYS NODELABELS BLFORMAT NHXSTYLE) ) {
+            if ( my $val = $self->{$key} ) {
+                my $arg = '-' . lc($key);
+                $args{$arg} = $val;
+            }
+        } 
+        return $root->to_newick( %args );
+    }
+    elsif ( $type == _FOREST_ ) {
+        my $forest = $tree;
+        my $newick = "";
+        for my $tree ( @{ $forest->get_entities } ) {
+            my $root = $tree->get_root;
+            my %args;
+            for my $key ( qw(TRANSLATE TIPNAMES NHXKEYS NODELABELS BLFORMAT NHXSTYLE) ) {
+                if ( my $val = $self->{$key} ) {
+                    my $arg = '-' . lc($key);
+                    $args{$arg} = $val;
+                }
+            } 
+            $newick .= $root->to_newick( %args ) . "\n";        
+        }
+        return $newick;
+    }
+    elsif ( $type == _PROJECT_ ) {
+        my $project = $tree;
+        my $newick = "";
+        
+        for my $forest ( @{ $project->get_forests } ) {
+            for my $tree ( @{ $forest->get_entities } ) {
+                my $root = $tree->get_root;
+                my %args;
+                for my $key ( qw(TRANSLATE TIPNAMES NHXKEYS NODELABELS BLFORMAT NHXSTYLE) ) {
+                    if ( my $val = $self->{$key} ) {
+                        my $arg = '-' . lc($key);
+                        $args{$arg} = $val;
+                    }
+                } 
+                $newick .= $root->to_newick( %args ) . "\n";        
+            }
+        }
+        
+        return $newick;
+    }    
 }
 
 =begin comment

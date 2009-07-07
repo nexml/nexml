@@ -76,6 +76,12 @@ sub _new {
 sub _to_string {
 	my $self     = shift;
 	my $taxa_obj = $self->{'PHYLO'};
+	if ( $taxa_obj->can('_type') && $taxa_obj->_type == _PROJECT_ ) {
+	    return $taxa_obj->to_xml;
+	}
+	if ( $taxa_obj->can('_type') && $taxa_obj->_type == _DESCRIPTION_ ) {
+	    return $taxa_obj->to_xml;
+	}	
 	if ( $taxa_obj->can('_type') && $taxa_obj->_type != _TAXA_ ) {
 		if ( $taxa_obj->can('make_taxa') ) {
 			my $obj = $taxa_obj->make_taxa;

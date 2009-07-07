@@ -115,7 +115,7 @@ Pushes an object into its container.
 			return $self;
 		}
 		else {
-			throw 'ObjectMismatch' => "Failed insertion: @obj [in $self]";
+			throw 'ObjectMismatch' => "Failed insertion: [@obj] in [$self]";
 		}
 	}
 

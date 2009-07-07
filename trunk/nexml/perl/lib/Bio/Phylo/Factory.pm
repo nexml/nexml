@@ -21,6 +21,10 @@ my %class = (
     'generator'   => 'Bio::Phylo::Generator',
     'xmlwritable' => 'Bio::Phylo::Util::XMLWritable',
     'meta'        => 'Bio::Phylo::Meta',
+    'client'      => 'Bio::Phylo::PhyloWS::Client',
+    'server'      => 'Bio::Phylo::PhyloWS::Server',  
+    'resource'    => 'Bio::Phylo::PhyloWS::Resource',    
+    'description' => 'Bio::Phylo::PhyloWS::Resource::Description',
 );
 
 =head1 NAME
