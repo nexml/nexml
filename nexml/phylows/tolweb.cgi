@@ -28,7 +28,7 @@ if ( $ENV{'QUERY_STRING'} =~ /wsdl/ ) {
 	print "Content-type: text/xml\n\n" . $wsdl;
 	exit 0; 	
 }
-if ( $ENV{'PATH_INFO'} and $ENV{'PATH_INFO'} =~ m|Tree/ToLWeb:([0-9]+)$| ) {
+if ( $ENV{'PATH_INFO'} and $ENV{'PATH_INFO'} =~ m|tree/ToL:([0-9]+)$| ) {
 	my $nexml;
 	my $id  = $1;
 	my $url = URL . $id;	
@@ -65,6 +65,6 @@ if ( $ENV{'PATH_INFO'} and $ENV{'PATH_INFO'} =~ m|Tree/ToLWeb:([0-9]+)$| ) {
 	}		
 }
 else {
-	die "$ENV{'PATH_INFO'} => not a valid tolweb ID! URL needs to be /Tree/ToLWeb:{id}";
+	die "$ENV{'PATH_INFO'} => not a valid tolweb ID! URL needs to be /tree/ToL:{id}";
 }
 
