@@ -361,19 +361,19 @@ Serializer to nexus format.
 				for my $node ( @{ $tree->get_terminals } ) {
 					my $name;
 					if ( not $args{'-tipnames'} ) {
-						$name = $node->get_name;
+						$name = $node->get_nexus_name;
 					}
 					elsif ( $args{'-tipnames'} =~ /^internal$/i ) {
-						$name = $node->get_internal_name;
+						$name = $node->get_nexus_name;
 					}
 					elsif ( $args{'-tipnames'} =~ /^taxon/i
 						and $node->get_taxon )
 					{
 						if ( $args{'-tipnames'} =~ /^taxon_internal$/i ) {
-							$name = $node->get_taxon->get_internal_name;
+							$name = $node->get_taxon->get_nexus_name;
 						}
 						elsif ( $args{'-tipnames'} =~ /^taxon$/i ) {
-							$name = $node->get_taxon->get_name;
+							$name = $node->get_taxon->get_nexus_name;
 						}
 					}
 					else {
@@ -395,9 +395,9 @@ Serializer to nexus format.
 		  . localtime() . " ]\n";
 		if ( $args{'-links'} ) {
 			delete $args{'-links'};
-			$nexus .= "\tTITLE " . $self->get_internal_name . ";\n";
+			$nexus .= "\tTITLE " . $self->get_nexus_name . ";\n";
 			if ( my $taxa = $self->get_taxa ) {
-				$nexus .= "\tLINK TAXA=" . $taxa->get_internal_name . ";\n";
+				$nexus .= "\tLINK TAXA=" . $taxa->get_nexus_name . ";\n";
 			}
 		}
 
@@ -423,12 +423,12 @@ Serializer to nexus format.
 			if ( $tree->is_rooted ) {
 				if ( $args{'-rooting'} =~ /^token$/i ) {
 					$nexus .= "\tTREE "
-					  . $tree->get_internal_name . ' = '
+					  . $tree->get_nexus_name . ' = '
 					  . $tree->to_newick(%args) . "\n";
 				}
 				elsif ( $args{'-rooting'} =~ /^comment$/i ) {
 					$nexus .= "\tTREE "
-					  . $tree->get_internal_name
+					  . $tree->get_nexus_name
 					  . ' = [&R] '
 					  . $tree->to_newick(%args) . "\n";
 				}
@@ -441,19 +441,19 @@ Serializer to nexus format.
 						$args{'-nhxkeys'} = ['unrooted'];
 					}
 					$nexus .= "\tTREE "
-					  . $tree->get_internal_name . ' = '
+					  . $tree->get_nexus_name . ' = '
 					  . $tree->to_newick(%args) . "\n";
 				}
 			}
 			else {
 				if ( $args{'-rooting'} =~ /^token$/i ) {
 					$nexus .= "\tUTREE "
-					  . $tree->get_internal_name . ' = '
+					  . $tree->get_nexus_name . ' = '
 					  . $tree->to_newick(%args) . "\n";
 				}
 				elsif ( $args{'-rooting'} =~ /^comment$/i ) {
 					$nexus .= "\tTREE "
-					  . $tree->get_internal_name
+					  . $tree->get_nexus_name
 					  . ' = [&U] '
 					  . $tree->to_newick(%args) . "\n";
 				}
@@ -466,7 +466,7 @@ Serializer to nexus format.
 						$args{'-nhxkeys'} = ['unrooted'];
 					}
 					$nexus .= "\tTREE "
-					  . $tree->get_internal_name . ' = '
+					  . $tree->get_nexus_name . ' = '
 					  . $tree->to_newick(%args) . "\n";
 				}
 			}

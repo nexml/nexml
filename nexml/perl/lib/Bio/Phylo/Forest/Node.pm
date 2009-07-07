@@ -2218,17 +2218,17 @@ Serializes subtree subtended by invocant to newick string.
 			my $name;
 			if ( $node->is_terminal or $args{'-nodelabels'} ) {
 				if ( not $args{'-tipnames'} ) {
-					$name = $node->get_name;
+					$name = $node->get_nexus_name;
 				}
 				elsif ( $args{'-tipnames'} =~ /^internal$/i ) {
-					$name = $node->get_internal_name;
+					$name = $node->get_nexus_name;
 				}
 				elsif ( $args{'-tipnames'} =~ /^taxon/i and $node->get_taxon ) {
 					if ( $args{'-tipnames'} =~ /^taxon_internal$/i ) {
-						$name = $node->get_taxon->get_internal_name;
+						$name = $node->get_taxon->get_nexus_name;
 					}
 					elsif ( $args{'-tipnames'} =~ /^taxon$/i ) {
-						$name = $node->get_taxon->get_name;
+						$name = $node->get_taxon->get_nexus_name;
 					}
 				}
 				else {
