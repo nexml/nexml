@@ -120,6 +120,10 @@ sub _obj_from_elt {
 		my $dict = $self->_process_dictionary($dict_elt);
 		$obj->add_dictionary($dict);
 	}
+	for my $meta_elt ( $elt->children('meta') ) {
+	    my $meta = $self->_process_meta($meta_elt);
+	    $obj->add_meta($meta);
+	}
 	$self->_process_attributes($elt,$obj);
 	my $id = $elt->att('id');
 	my $tag = $elt->tag;
@@ -705,6 +709,36 @@ sub _process_listnode {
 	}
 
 	return $node_obj, $node_id, $parent_id;
+}
+
+# this method is called from within _obj_from_elt
+# to process RDFa metadata attachments embedded
+# in an element that maps onto a Bio::Phylo object
+sub _process_meta {
+    my ( $self, $meta_elt ) = @_;
+    my $predicate = $meta_elt->att('property') || $meta_elt->att('rel');
+    my $object = $meta_elt->att('content') || $meta_elt->att('href');
+    if ( $meta_elt->att('href') && $meta_elt->att('href') !~ m|http://|i ) {
+        $object = $self->_get_base_uri($meta_elt) . $object;
+    }
+    my $meta = $factory->create_meta( '-triple' => { $predicate => $object } );
+    for my $child_meta_elt ( $meta_elt->children('meta') ) {
+        $meta->add_meta( $self->_process_meta( $child_meta_elt ) );
+    }
+    return $meta;
+}
+
+sub _get_base_uri {
+    my ( $self, $elt ) = @_;
+    while ( not $elt->att('xml:base') ) {
+        if ( $elt->parent ) {
+            $elt = $elt->parent;
+        }
+        else {
+            last;
+        }
+    }
+    return $elt->att('xml:base');
 }
 
 # this method is called from within _obj_from_elt
