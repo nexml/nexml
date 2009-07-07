@@ -115,7 +115,7 @@ called 'meta', with RDFa compliant attributes.
     
     my $set_property = sub {
         my ( $self, $property ) = @_;
-        if ( $property =~ m/^([a-zA-Z0-9_]+):([a-zA-Z0-9_]+)$/ ) {
+        if ( $property =~ m/^([a-zA-Z_]+):([a-zA-Z0-9_\-\.]+)$/ ) {
             my ( $prefix, $prop ) = ( $1, $2 );
             if ( $self->get_namespaces( $prefix ) ) {
                 $self->set_attributes( 'property' => $property );

@@ -1072,8 +1072,8 @@ Serializes matrix to nexus format.
 		$string .= "\tMATRIX\n";
 		my $length = 0;
 		foreach my $datum ( @{ $self->get_entities } ) {
-			$length = length( $datum->get_name )
-			  if length( $datum->get_name ) > $length;
+			$length = length( $datum->get_nexus_name )
+			  if length( $datum->get_nexus_name ) > $length;
 		}
 		$length += 4;
 		my $sp = ' ';
@@ -1083,23 +1083,23 @@ Serializes matrix to nexus format.
 			# construct name
 			my $name;
 			if ( not $args{'-seqnames'} ) {
-				$name = $datum->get_name;
+				$name = $datum->get_nexus_name;
 			}
 			elsif ( $args{'-seqnames'} =~ /^internal$/i ) {
-				$name = $datum->get_internal_name;
+				$name = $datum->get_nexus_name;
 			}
 			elsif ( $args{'-seqnames'} =~ /^taxon/i and $datum->get_taxon ) {
 				if ( $args{'-seqnames'} =~ /^taxon_internal$/i ) {
-					$name = $datum->get_taxon->get_internal_name;
+					$name = $datum->get_taxon->get_nexus_name;
 				}
 				elsif ( $args{'-seqnames'} =~ /^taxon$/i ) {
-					$name = $datum->get_taxon->get_name;
+					$name = $datum->get_taxon->get_nexus_name;
 				}
 			}
 			else {
 				$name = $datum->get_generic( $args{'-seqnames'} );
 			}
-			$name = $datum->get_internal_name if not $name;
+			$name = $datum->get_nexus_name if not $name;
 			$string .= $name . ( $sp x ( $length - length($name) ) );
 			my @characters;
 			for my $i ( 0 .. ( $nchar - 1 ) ) {

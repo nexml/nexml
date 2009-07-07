@@ -269,7 +269,7 @@ Sets invocant name.
 	
 	        # check for bad characters
 	        if ( $name =~ m/(?:;|,|:|\(|\)|&|<|>\s)/ ) {
-	        	$logger->warn("the name '$name' might be invalid for some data formats");
+	        	$logger->info("the name '$name' might be invalid for some data formats");
 	
 #	            # had bad characters, but in quotes
 #	            if ( $name =~ m/^(['"])/ && $name =~ m/$1$/ ) {
@@ -427,6 +427,26 @@ Gets invocant's name.
     sub get_name {
         my $self = shift;
         return $name{$$self};
+    }
+
+=item get_nexus_name()
+
+Gets invocant's name, modified to be safely used in nexus files
+
+ Type    : Accessor
+ Title   : get_nexus_name
+ Usage   : my $name = $obj->get_nexus_name;
+ Function: Returns the object's name.
+ Returns : A string
+ Args    : None
+
+=cut
+
+    sub get_nexus_name {
+        my $self = shift;
+        my $name = $self->get_internal_name;
+        $name =~ s/\s+/_/g;
+        return $name;    
     }
 
 =item get_internal_name()
