@@ -73,7 +73,7 @@ for my $format (@formats) {
 	ok( $elt = _parse( undef, 'nex:nexml', $test, $dom), "parse XML structure as $format DOM");
 	ok( $doc->set_root($elt), "set $format document root element" );
 	SKIP : {
-	    skip 'NEXML_ROOT not set', 3 unless $ENV{'NEXML_ROOT'};
+	    skip 'env var NEXML_ROOT not set', 3 unless $ENV{'NEXML_ROOT'};
 	    ok( my $fh = File::Temp->new, 'make temp file' );
 	    my $fn = $fh->filename;
 	    ok( $doc->to_xml_file($fn), "write XML from $format DOM" );

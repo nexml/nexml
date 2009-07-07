@@ -289,7 +289,9 @@ Creates a taxa block from the objects contents if none exists yet.
 					}
 				}
 			}
-			$taxa->insert( map { $taxa{$_} } sort { $a cmp $b } keys %taxa );
+			if ( %taxa ) {
+			    $taxa->insert( map { $taxa{$_} } sort { $a cmp $b } keys %taxa );
+			}
 			$self->set_taxa( $taxa );
 			return $taxa;
 		}
