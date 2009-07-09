@@ -227,6 +227,10 @@ Gets a PhyloWS database record
 
 =back
 
+=cut
+
+# podinherit_insert_token
+
 =head1 SEE ALSO
 
 Also see the manual: L<Bio::Phylo::Manual> and L<http://rutgervos.blogspot.com>
