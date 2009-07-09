@@ -293,7 +293,7 @@ Gets a redirect URL if relevant
            undef (i.e. no redirect), but if this implementation
            is called to handle a request that specifies 
            'format=html' the request is forwarded to the
-           appropriate page on the http://tolweb.org website
+           appropriate page on the http://timetree.org website
 
 =cut
 
