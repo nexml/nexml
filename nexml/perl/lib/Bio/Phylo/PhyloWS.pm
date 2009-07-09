@@ -93,7 +93,7 @@ becomes the argument "-name" in the constructor.
 
 =item set_url()
 
-Sets invocant name.
+Sets invocant url.
 
  Type    : Mutator
  Title   : set_url
