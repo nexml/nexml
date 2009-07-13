@@ -10,13 +10,13 @@ import java.util.Set;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-import mesquite.categ.lib.CategoricalData;
-import mesquite.categ.lib.CategoricalState;
-import mesquite.categ.lib.DNAData;
-import mesquite.categ.lib.ProteinData;
-import mesquite.categ.lib.RNAData;
-import mesquite.cont.lib.ContinuousData;
-import mesquite.cont.lib.ContinuousState;
+import mesquite.categ.lib.CategoricalData; //CategoricalData.DATATYPENAME
+import mesquite.categ.lib.CategoricalState; //CharacterState mesCS = new CategoricalState();
+import mesquite.categ.lib.DNAData; //DNAData.DATATYPENAME 
+import mesquite.categ.lib.ProteinData; //ProteinData.DATATYPENAME
+import mesquite.categ.lib.RNAData; //RNAData.DATATYPENAME
+import mesquite.cont.lib.ContinuousData; //ContinuousData.DATATYPENAME // CharacterData mesMatrix instanceof ContinuousData
+import mesquite.cont.lib.ContinuousState; //mesCS = new ContinuousState(xmlDouble) //(ContinuousState)mesCS
 import mesquite.lib.Associable;
 import mesquite.lib.Bits;
 import mesquite.lib.DoubleArray;
@@ -59,6 +59,7 @@ import org.nexml.model.Node;
 import org.nexml.model.OTU;
 import org.nexml.model.OTUs;
 import org.nexml.model.TreeBlock;
+import org.nexml.model.impl.DocumentImpl;
 
 public class ObjectConverter extends MesquiteModule {
 	private static URI msqURI;
@@ -389,11 +390,26 @@ public class ObjectConverter extends MesquiteModule {
         		}
 				if ( mesCS != null ) {
 					mesMatrix.setState(mesCharacter, mesTaxon, mesCS);
+					//can add in character state stuff here
 				}
-				//readAnnotations(mesMatrix,xmlCharacter,mesCharacter);
-				mesCharacter++;        		
+
+				mesCharacter++;
 			}
 		}
+
+		logln("Size of characterNames: " + DocumentImpl.characterNames.size());
+		
+		String[] charNamesArr = (String[]) DocumentImpl.characterNames.toArray(new String[0]);
+
+		int charNamesNum = 0;
+		for (int i = 0; i < DocumentImpl.characterNames.size(); i++){
+			mesMatrix.setCharacterName(charNamesNum, charNamesArr[i]);
+			logln("charNamesArr[" + i + "]: " + charNamesArr[i]);
+			++charNamesNum;
+		}
+		charNamesNum = 0;
+		
+
 		mesMatrix.setUniqueID(xmlMatrix.getId());
 		mesMatrix.setName(xmlMatrix.getLabel());
 		mesMatrix.addToFile(mesFile, mesFile.getProject(), charTask);		
@@ -413,6 +429,8 @@ public class ObjectConverter extends MesquiteModule {
         	readAnnotations(mesTaxa,xmlOTU,mesTaxonIndex,mesTaxon);
         	mesTaxonIndex++;
         }	
+        
+        logln("From ObjectConverter's readTaxaBlocks, this.getProject().getHomeDirectoryName(): " + file.getProject().getHomeDirectoryName());
         return mesTaxa;
 	}	
 	
@@ -458,11 +476,9 @@ public class ObjectConverter extends MesquiteModule {
 			mesTreeVector.addElement(mesTree, false);
 			mesTree.setName(xmlNetwork.getLabel());	
 			Set<Object> xmlAnnotationValues = xmlNetwork.getAnnotationValues(msqTreePolytomyAssumption);
-			if ( ! xmlAnnotationValues.isEmpty() ) {
-				Object mesPolytomyAssumption = xmlAnnotationValues.iterator().next();
-				if ( mesPolytomyAssumption instanceof BigInteger ) {
-					mesTree.setPolytomiesAssumption(((BigInteger)mesPolytomyAssumption).intValue(),false);
-				}
+			Object mesPolytomyAssumption = xmlAnnotationValues.iterator().next();
+			if ( mesPolytomyAssumption instanceof BigInteger ) {
+				mesTree.setPolytomiesAssumption(((BigInteger)mesPolytomyAssumption).intValue(),false);
 			}
 			readAnnotations(mesTreeVector,xmlNetwork,mesTreeCount,mesTree);
 			Set<Node> xmlNodeSet = xmlNetwork.getNodes();
@@ -494,10 +510,7 @@ public class ObjectConverter extends MesquiteModule {
 		for ( Node xmlChild : xmlChildren ) {
 			int mesChild = mesTree.sproutDaughter(mesRoot, false);
 			Edge edge = xmlNetwork.getEdge(xmlRoot,xmlChild);
-			Double length = ((FloatEdge)edge).getLength();
-			if ( null != length ) {
-				mesTree.setBranchLength(mesChild,length,false);
-			}
+			mesTree.setBranchLength(mesChild,((FloatEdge)edge).getLength(),false);
 			readAnnotations(mesTree,edge,mesChild,mesTree);
 			readTree(xmlNetwork,xmlChild,xmlNetwork.getOutNodes(xmlChild),mesChild,mesTree);
 		}
