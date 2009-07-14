@@ -396,8 +396,6 @@ public class ObjectConverter extends MesquiteModule {
 				mesCharacter++;
 			}
 		}
-
-		logln("Size of characterNames: " + DocumentImpl.characterNames.size());
 		
 		String[] charNamesArr = (String[]) DocumentImpl.characterNames.toArray(new String[0]);
 
