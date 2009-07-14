@@ -404,7 +404,6 @@ public class ObjectConverter extends MesquiteModule {
 		int charNamesNum = 0;
 		for (int i = 0; i < DocumentImpl.characterNames.size(); i++){
 			mesMatrix.setCharacterName(charNamesNum, charNamesArr[i]);
-			logln("charNamesArr[" + i + "]: " + charNamesArr[i]);
 			++charNamesNum;
 		}
 		charNamesNum = 0;
