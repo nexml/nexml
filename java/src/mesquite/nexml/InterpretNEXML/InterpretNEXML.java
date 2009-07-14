@@ -54,11 +54,15 @@ public class InterpretNEXML extends FileInterpreterI {
 		} catch ( Exception e ) {
 			e.printStackTrace();
 		}	
+			//logln("1From InterpretNEXML, file.getPath produces: " + file.getPath());
+			//From InterpretNEXML, file.getPath produces: /home/kasia/Desktop/Vari_new.xml
+
 		ObjectConverter ov = new ObjectConverter(this);
 		// XXX pass properties here
 		Properties properties = new Properties();
 	    try {
 	        properties.load(this.getClass().getResourceAsStream ("predicateHandlerMapping.properties"));
+	        properties.put("path", file.getPath());
 	    } catch (IOException e) {
 	    	e.printStackTrace();
 	    }		
