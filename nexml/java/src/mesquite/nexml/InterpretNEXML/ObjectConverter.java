@@ -69,7 +69,7 @@ public class ObjectConverter extends MesquiteModule {
 	private String msqTreeUID  = msqPrefix + ":treeUID";
 	private String msqTreePolytomyAssumption = msqPrefix + ":treePolytomyAssumption";
 	private EmployerEmployee mEmployerEmployee;
-	private Properties mPredicateHandlerMapping = new Properties();
+	private static Properties mPredicateHandlerMapping = new Properties();
 	
 	public Document createDocumentFromProject(MesquiteProject mesProject) {
 		ListableVector mesTaxas = mesProject.getTaxas();
@@ -535,7 +535,7 @@ public class ObjectConverter extends MesquiteModule {
 		return true;
 	}
 
-	public Properties getPredicateHandlerMapping() {
+	public static Properties getPredicateHandlerMapping() {
 		return mPredicateHandlerMapping;
 	}
 
@@ -558,7 +558,7 @@ public class ObjectConverter extends MesquiteModule {
 		if ( null == ph ) {
 			ph = new PredicateHandlerImpl(subject,predicate,value);
 		}
-		logln("Using predicateHandler " + ph.toString());		
+		logln("Using predicateHandler " + ph.toString());
 		return ph;
 	}
 
