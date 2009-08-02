@@ -903,7 +903,7 @@ Serializes datum to nexml format.
 		}
 		else {
 			my @tmp = map { uc $_ } @char;
-			my $seq = Bio::Phylo::Util::XMLWritable->_new('seq');
+			my $seq = Bio::Phylo::Util::XMLWritable->new(-tag => 'seq');
 			my $seq_text = $self->get_type_object->join(\@tmp);
 			$xml .= $seq->get_xml_tag . "\n$seq_text\n" . "</".$seq->get_tag.">";
 		}

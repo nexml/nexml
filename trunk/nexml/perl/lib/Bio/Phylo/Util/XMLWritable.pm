@@ -675,7 +675,7 @@ Retrieves xml id for the element.
  Title   : get_dom_elt
  Usage   : $obj->get_dom_elt
  Function: Generates a DOM element from the invocant
- Returns : an XML::LibXML::Element object
+ Returns : a DOM element object (default XML::Twig)
  Args    : DOM factory object
 
 =cut
@@ -791,7 +791,7 @@ Serializes invocant to XML.
  Usage   : $obj->to_dom
  Function: Generates a DOM subtree from the invocant and
            its contained objects
- Returns : an XML::LibXML::Element object
+ Returns : a DOM element object (default: XML::Twig flavor)
  Args    : DOM factory object
  Note    : This is the generic function. It is redefined in the 
            classes below.
