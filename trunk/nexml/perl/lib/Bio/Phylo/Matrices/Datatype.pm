@@ -48,7 +48,7 @@ Datatype constructor.
 
  Type    : Constructor
  Title   : new
- Usage   : No direct usage, is called by TypeSafaData classes;
+ Usage   : No direct usage, is called by TypeSafeData classes;
  Function: Instantiates a Datatype object
  Returns : a Bio::Phylo::Matrices::Datatype child class
  Args    : $type (optional, one of continuous, custom, dna,
@@ -664,7 +664,10 @@ Writes data type definitions to xml
 			$xml .= "\n" . $self->get_xml_tag;
 			my $id_for_state = $self->get_ids_for_states(1);
 			my @states = sort { 
-			    $id_for_state->{$a} cmp $id_for_state->{$b} 
+                            my ($m,$n);
+			    ($m) = $id_for_state->{$a} =~ /([0-9]+)/;
+			    ($n) = $id_for_state->{$b} =~ /([0-9]+)/;
+			    $m <=> $n
 			} keys %{ $id_for_state };
 			for my $state ( @states ) {
 			    $xml .= $self->_state_to_xml( 
