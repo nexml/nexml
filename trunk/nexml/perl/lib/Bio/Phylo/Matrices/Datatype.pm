@@ -752,7 +752,7 @@ Analog to to_xml.
  Usage   : $type->to_dom
  Function: Generates a DOM subtree from the invocant
            and its contained objects
- Returns : an XML::LibXML::Element object
+ Returns : an <XML Package>::Element object
  Args    : none
 
 =cut
@@ -777,7 +777,12 @@ Analog to to_xml.
 		if ( my $lookup  = $self->get_lookup ) {
 		    $elt = $self->get_dom_elt($dom);
 		    my $id_for_state = $self->get_ids_for_states;
-		    my @states = sort  { $id_for_state->{$a} <=> $id_for_state->{$b} } 
+		    my @states = sort { 
+			my ($m,$n);
+			($m) = $id_for_state->{$a} =~ /([0-9]+)/;
+			($n) = $id_for_state->{$b} =~ /([0-9]+)/;
+			$m <=> $n
+		    } keys %{ $id_for_state };
 		    keys %{ $id_for_state };
 		    my $max_id = 0;
 		    for my $state ( @states ) {
