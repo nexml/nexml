@@ -37,46 +37,6 @@ This is the superclass for all objects that can be serialized to NeXML
 
 =head1 METHODS
 
-=head2 CONSTRUCTOR
-
-=over
-
-=item _new()
-
- Type    : Constructor
- Title   : _new
- Usage   : $obj = XMLWritable->new($tagname, @attributes)
- Function: Allows the creation of XMLable objects on the fly, 
-           for elements that do not possess their own Bio::Phylo
-           class
- Returns : $self
- Args    : ($tagname, @attributes)
- Note    : Namespace generation is supressed by default; do
-           $obj->clear_suppress_ns() to clear
-
-=cut
-
-	# XXX we don't need this!!! 
-	# Instead, use:
-	# Bio::Phylo::Util::XMLWritable->new( 
-	#    '-tag' => 'foo',
-	#    '-attributes' => { 'bar' => 'baz' }
-	#)
-    sub _new {
-    	throw 'API' => "Deprecated! Use XMLWritable->new( -tag => 'foo', -attributes => { 'bar' => 'baz' } )";
-    	$logger->warn("Deprecated! Use XMLWritable->new( -tag => 'foo', -attributes => { 'bar' => 'baz' } )");
-		my $class = shift;
-		my ( $tag, @attr ) = @_;
-		$class = ref($class) || $class;
-		my $self = $class->SUPER::new(); 
-		$self->set_tag($tag) if $tag;
-		$self->set_attributes(@attr) if @attr;
-		$self->set_suppress_ns;
-		return $self;
-    }
-
-=back
-
 =head2 MUTATORS
 
 =over
