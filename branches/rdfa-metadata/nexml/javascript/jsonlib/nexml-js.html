@@ -1,0 +1,22 @@
+<html>
+    <head>
+        <script type="text/javascript" src="nexml-trees.js"></script>
+        <script type="text/javascript" src="nexml-characters.js"></script>
+        <script type="text/javascript" src="json2.js"></script>
+        <script type="text/javascript" src="nexml.js"></script>
+    </head>
+    <body>
+    <pre id="output"></pre>
+        <script type="text/javascript">      
+            var nexml = new NeXML.Document(trees);    
+            var network = nexml.getTreesList()[0].getThingById('network','tree3');
+            log(network.getLabel());
+            log(JSON.stringify(network.getMeta()[0].getProperty()));
+            log(JSON.stringify(nexml));
+            function log(msg) {
+                var output = document.getElementById('output');
+                output.innerHTML = output.innerHTML + "\n" + msg;
+            }
+        </script>
+    </body>
+</html>

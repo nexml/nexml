@@ -1,0 +1,32 @@
+<h3 class="plain">Detailed results</h3>
+<p>
+    Below are the messages received from the parsing and validation operations (if any). They
+    are organized as debugging messages (<img class="icon" src="<% paths.strip(paths.include('bug.png')) %>"/>),
+    informational (<img class="icon" src="<% paths.strip(paths.include('lightbulb.png')) %>"/>),
+    warnings (<img class="icon" src="<% paths.strip(paths.include('error.png')) %>"/>), errors
+    (<img class="icon" src="<% paths.strip(paths.include('exclamation.png')) %>"/>) and fatal
+    exceptions (<img class="icon" src="<% paths.strip(paths.include('bomb.png')) %>"/>):
+</p>
+<ul>
+<% FOREACH msg = logmessages %>
+    <li class="<% msg.level %> validator">
+        <% IF msg.line %>
+            <a href="#line<% msg.line %>"><% encoder.encode_entities(msg.msg) %></a>
+        <% ELSE %>
+            <% encoder.encode_entities(msg.msg) %>
+        <% END %>
+    </li>
+<% END %>
+</ul>
+<h3 class="plain">Submitted contents</h3>
+<p>
+    Below are the contents (if any) that were submitted to this query:
+</p>
+<% counter = 0 %>
+<div style="width:470px;overflow:auto;margin-left:2em;padding-bottom:1em">
+    <% FOREACH line = lines %>
+        <% counter = counter + 1 %>    
+        <a name="line<% counter %>"></a>
+        <div title="<% counter %>" style="white-space:pre;font-family:courier"><span style="color:silver"><% counter %></span> <% encoder.encode_entities(line) %></div>
+    <% END %>
+</div>

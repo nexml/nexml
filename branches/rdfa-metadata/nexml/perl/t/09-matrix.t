@@ -1,0 +1,131 @@
+# $Id$
+use strict;
+#use warnings;
+use Test::More tests => 27;
+use Bio::Phylo::Matrices::Datum;
+use Bio::Phylo::Matrices::Matrix;
+use Bio::Phylo;
+use Bio::Phylo::Taxa::Taxon;
+use Bio::Phylo::Taxa;
+
+ok( my $matrix = Bio::Phylo::Matrices::Matrix->new( -type => 'STANDARD' ), '1 initialize' );
+
+$matrix->VERBOSE( -level => 0 );
+
+eval { $matrix->insert('BAD!') };
+ok( UNIVERSAL::isa( $@, 'Bio::Phylo::Util::Exceptions::ObjectMismatch' ), '2 insert bad data' );
+
+my $datum = Bio::Phylo::Matrices::Datum->new;
+my $taxon = Bio::Phylo::Taxa::Taxon->new;
+my $taxa  = Bio::Phylo::Taxa->new;
+$datum->set_name('datum');
+$datum->set_type('STANDARD');
+$datum->set_char('5');
+$datum->set_taxon( $taxon );
+$taxa->insert( $taxon );
+$matrix->set_taxa( $taxa );
+
+ok( $matrix->insert($datum), '3 insert good data' );
+
+# the get method
+eval { $matrix->get('frobnicate') };
+ok( UNIVERSAL::isa( $@, 'Bio::Phylo::Util::Exceptions::UnknownMethod' ), '4 get bad method' );
+ok( $matrix->get('get_entities'), '5 get good method' );
+
+# the get_data method
+ok( $matrix->get_entities, '6 get data' );
+
+# the get_by_value method
+ok( $matrix->get_by_value( -value => 'get_char', -lt => 6 ),
+    '7 get by value lt' );
+ok( $matrix->get_by_value( -value => 'get_char', -le => 5 ),
+    '8 get by value le' );
+ok( $matrix->get_by_value( -value => 'get_char', -gt => 4 ),
+    '9 get by value gt' );
+ok( $matrix->get_by_value( -value => 'get_char', -ge => 5 ),
+    '10 get by value ge' );
+ok( $matrix->get_by_value( -value => 'get_char', -eq => 5 ),
+    '11 get by value eq' );
+ok( ! scalar @{$matrix->get_by_value( -value => 'get_char', -lt => 4 )},
+    '12 get by value lt' );
+ok( ! scalar @{$matrix->get_by_value( -value => 'get_char', -le => 4 )},
+    '13 get by value le' );
+ok( ! scalar @{$matrix->get_by_value( -value => 'get_char', -gt => 6 )},
+    '14 get by value gt' );
+ok( ! scalar @{$matrix->get_by_value( -value => 'get_char', -ge => 6 )},
+    '15 get by value ge' );
+ok( ! scalar @{$matrix->get_by_value( -value => 'get_char', -eq => 6 )},
+    '16 get by value eq' );
+
+eval { $matrix->get_by_value( -value => 'frobnicate', -lt => 4 ) };
+ok( UNIVERSAL::isa( $@, 'Bio::Phylo::Util::Exceptions::UnknownMethod' ),
+    '17 get by value lt' );
+
+eval { $matrix->get_by_value( -value => 'frobnicate', -le => 4 ) };
+ok( UNIVERSAL::isa( $@, 'Bio::Phylo::Util::Exceptions::UnknownMethod' ),
+    '18 get by value le' );
+
+eval { $matrix->get_by_value( -value => 'frobnicate', -gt => 6 ) };
+ok( UNIVERSAL::isa( $@, 'Bio::Phylo::Util::Exceptions::UnknownMethod' ),
+    '19 get by value gt' );
+
+eval { $matrix->get_by_value( -value => 'frobnicate', -ge => 6 ) };
+ok( UNIVERSAL::isa( $@, 'Bio::Phylo::Util::Exceptions::UnknownMethod' ),
+    '20 get by value ge' );
+
+eval { $matrix->get_by_value( -value => 'frobnicate', -eq => 6 ) };
+ok( UNIVERSAL::isa( $@, 'Bio::Phylo::Util::Exceptions::UnknownMethod' ),
+    '21 get by value eq' );
+ok(
+    $matrix->get_by_regular_expression(
+        -value => 'get_type',
+        -match => qr/^STANDARD$/
+    ),
+    '22 get by re'
+);
+
+
+eval { $matrix->get_by_regular_expression(
+    -value => 'frobnicate',
+    -match => qr/^STANDARD$/
+    )
+};
+
+ok(
+    UNIVERSAL::isa( $@, 'Bio::Phylo::Util::Exceptions::UnknownMethod' ),
+    '23 get by re'
+);
+ok(
+    ! scalar @{$matrix->get_by_regular_expression(
+        -value => 'get_type',
+        -match => qr/^DNA$/
+    )},
+    '24 get by re'
+);
+eval { $matrix->get_by_regular_expression(
+    -value      => 'get_type',
+    -frobnicate => qr/^DNA$/)
+};
+ok(
+    UNIVERSAL::isa( $@, 'Bio::Phylo::Util::Exceptions::BadArgs' ),
+    '25 get by re'
+);
+ok( $matrix->DESTROY, '26 destroy' );
+ok( 
+    Bio::Phylo::Matrices::Matrix->new(
+        -type   => 'standard',
+        -lookup => {
+            '-' => [],
+            '1' => [ '1' ],
+            '2' => [ '2' ],
+            '3' => [ '3' ],
+            '?' => [ '1', '2', '3' ],            
+        },
+        -matrix => [
+            [ 'a' => 1, 1, 1 ],
+            [ 'b' => 2, 2, 2 ],
+            [ 'c' => 3, 3, 3 ],
+        ],
+    )->to_nexus,
+    '27 expanded constructor'
+);

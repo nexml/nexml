@@ -1,0 +1,43 @@
+/*
+    this graphviz graph documents the nexml inheritance tree
+    from <% currentFile %> upwards. Graph generated on <% currentDate %>
+    from template: $Id$    
+*/
+digraph inheritance {
+    label="Inheritance tree for complex types in ~<% paths.strip(currentFile) %>";
+    <% printed_edge = {} %>
+    <% printed_node = {} %>
+    <% FOREACH node = schema.complexTypeInFile(currentFile) %>
+        <% base = node.base %>
+        <% INCLUDE print_node %>
+        <% IF base %>            
+            <% WHILE base %>
+                <% INCLUDE print_edge %>
+                <% node = schema.complexType(base) %>
+                <% INCLUDE print_node %>
+                <% base = node.base %>
+            <% END %>
+        <% END %>
+    <% END %>
+}
+
+<% BLOCK print_node %>
+    <% name = node.name %>
+    <% UNLESS printed_node.$name %>
+        <% url = paths.transform(node.url) %>
+        <% IF node.abstract == 'true' %>
+            <% node.name %> [URL="<% url %>",shape=box,color=lightgrey,style=filled];
+        <% ELSE %>
+            <% node.name %> [URL="<% url %>",shape=box];        
+        <% END %>
+        <% printed_node.$name = 1 %>
+    <% END %>
+<% END %>
+
+<% BLOCK print_edge %>
+    <% name = base _ '->' _ node.name %>
+    <% UNLESS printed_edge.$name %>    
+        <% base %> -> <% node.name %> [color=<% node.inheritance == 'restriction' ? 'red' : 'blue' %>];
+        <% printed_edge.$name = 1 %>    
+    <% END %>
+<% END %>

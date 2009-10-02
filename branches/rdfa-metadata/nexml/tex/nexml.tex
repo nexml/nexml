@@ -1,0 +1,916 @@
+\documentclass{article} 
+% $Id$
+
+\author{Rutger A. Vos} 
+% This manuscript is supposed to be a manifesto of sorts, so anyone 
+% supporting the ideas outlined here is cordially invited to join in. 
+% Feel free to add your name here as another author: 
+% \author{Your Name Here}
+
+\title{Nexml: an XML format for phylogenetic data}
+\newcommand{\code}{\texttt} \usepackage{fullpage} \begin{document}
+\maketitle \tableofcontents
+
+\section{Introduction} Phylogenetic analyses are growing in size and
+scope. Extensible markup language, or XML\cite{citeulike:2580222}, is an
+increasingly popular way to represent scientific data in general
+\cite{citeulike:1937046} and bioinformatic data \cite{citeulike:242} in
+particular. Here we present a new XML format for phylogenetic data,
+which in honor of the commonly used nexus \cite{citeulike:2011773} flat
+file format is called ``nexml''.
+
+% In the first evoinfo\footnote{http://evoinfo.nescent.org} meeting 
+% the working group acknowledged the desirability of a formal 
+% ontology as the basis for data interoperability, and has chosen the 
+% development of an ontology as one of its goals. Such a formal 
+% ontology, for example in RDF, can be translated directly into a 
+% serialization protocol and into a file standard definition such as 
+% an XML Schema. However, the requirements of this ontology were not 
+% clearly established, and a serialization protocol for it would not 
+% automatically result in a ``convenient'' next generation file standard. 
+% Hence, some attendants argued 
+% \footnote{https://www.nescent.org/wg/evoinfo/images/7/7a/Standards.ppt}
+% that a more "bottom up" approach that starts with the design of a new
+% standard will help uncover the hidden requirements of the ontology and
+% generate the serialization protocol in the process. This page
+% describes recent discussion and ongoing work on the design of this new
+% standard. At the first meeting (20-23 May, 2007), the working group
+% decided that work on the future data exchange standard would primarily
+% proceed under the auspices of Rutger Vos who has reported on its
+% progress at the Fall '07 meeting. In internetworking and computer
+% network engineering, Request for Comments (RFC) documents are a series
+% of memoranda encompassing new research, innovations, and methodologies
+% applicable to Internet technologies. RFCs are meant for peer review
+% and to transmit new concepts, and are published through the Internet
+% Society. This document is therefore in strict terms not a ``real''
+% RFC, but it serves the same purpose: to provoke comment and discussion, 
+% and to disseminate information about the design process of nexml. The 
+% status of this document is neither that of a formal specification or 
+% recommendation, nor formally endorsed by evoinfo in its current stage.
+
+\subsection{Preamble} The following subsections introduce the context
+within which nexml development takes place, describing the
+interoperability problems faced by phylogeneticists, the requirements
+nexml needs to meet to address these problems, and the development
+approach that is being taken to meet these requirements.
+
+\subsection{Pressures} Current practices and ongoing developments in
+phylogenetics add pressure to the need for a new data standard. The
+working group is compiling a list of these issues, some of which
+include:
+
+\begin{itemize}
+
+\item \textbf{Many flat file formats and dialects}: in recent years,
+phylogeneticists have adopted a number of different file formats to
+store data such as trees and sequence alignments. Unfortunately, most
+flat file formats used for this purpose generally lack an exhaustive,
+formal specification - and even if they do, they have been extended in
+various ways. Examples of this abounded during the meeting; for
+instance:
+
+\begin{itemize}
+
+\item pipe-delimited meta-data fields in fasta files
+
+\item mutually exclusive syntax for polymorphy in nexus matrices:
+\verb={a,c}= vs. \verb=a&c=
+
+\item ``hot comments'' \footnote{http://www.c2.com/cgi/wiki?HotComments}
+in tree descriptions
+
+\item ``mixed'' data in mrbayes nexus matrices
+
+\item proprietary substitution model descriptions
+
+\item extensions of molecular symbols list beyond IUPAC standard
+
+\end{itemize}
+
+\item \textbf{Data hard or impossible to validate automatically}: for
+many file formats, no validation procedure exists - and given the
+proliferation of mutually exclusive dialects it's difficult to see how
+such a procedure could deduce validity unambiguously. What might be
+valid ``nexus'' to one program, is rejected by another program. This
+makes many types of compatibility issues hard to solve without extensive
+knowledge of file conventions ``in the wild''.
+
+\item \textbf{Bigger data sets}: meanwhile, phylogenetic analyses are
+continuously growing in size and complexity. Solving compatibility
+issues by hand is becoming too tedious.
+
+\item \textbf{Increased automation}: the growth in size and complexity
+of analyses has promoted development of automated systems for data
+analysis (pipelines/workflows) and data storage (databases). The purpose
+of a workflow is obviously defeated if it requires manual editing of
+data files between steps in the analysis. As well, the reproducibility
+of results obtained from complex workflows is in doubt if no formal
+facility exists for logging the steps undertaken during an analysis.
+
+\item \textbf{More data types}: since the introduction of the nexus file
+format, new types of analyses (e.g. Bayesian, ML) have gained ground,
+which have introduced new types of information (substitution models,
+priors and posteriors on branches) for which no standardized format
+exists.
+
+\item  \textbf{Nexus problems}: as the nexus file format is the most
+commonly used format in phylogenetics, the working group is compiling a
+separate list of nexus problems.
+
+\end{itemize}
+
+\subsection{Requirements} To address the issues described in the
+preceding section, a new standard should meet at least the following
+requirements:
+
+\begin{itemize}
+
+\item \textbf{Formalization}: the next standard implements a formal
+ontology and is defined by a schema (as in
+phyloxml\footnote{http://www.phyloxml.org/}), such that instance
+documents can be validated with great granularity, including for type
+safety for character data (per character), referential integrity between
+entities, validity of tree descriptions;
+
+\item \textbf{Extension}: the next standard extends current standards to
+include model descriptions, reticulate trees, arbitrary attachments on
+nodes, trees, tree sets, sites, sequences, alignments, etc.;
+
+\item \textbf{Data integration}: the next standard allows for the
+integration of data from disparate sources, e.g. from multiple files,
+from databases, from sets of alignments and trees, from existing
+ontologies;
+
+\item \textbf{Legacy compatibility}: the next standard is organized
+conceptually, and can be serialized or otherwise represented in ways
+that are understandable for legacy software, such as being able to
+express the standard nexus subset;
+
+\item \textbf{Analysis context description}: the next standard can
+represent meta-information such as analysis procedures, instance
+document changes, schema changes;
+
+\item \textbf{Parseability}: the next standard is easily parsed without
+the need for custom tokenization, both in compact and verbose
+representations;
+
+\end{itemize}
+
+\subsection{Approach}
+
+\begin{itemize}
+
+\item Development of the data exchange standard is now ongoing with
+input from various contributors, including, in alphabetical order, Jason
+Caravas\footnote{https://www.nescent.org/wg\_phyloinformatics/PhyloSoC:
+Phylogenetic\_XML} Mark  Holder, David Maddison, Wayne Maddison, Peter
+Midford, Andrew Rambaut, Jeet Sukumaran and Rutger Vos as well as other
+members of the evoinfo group and attendants of the
+pPOD\footnote{http://www.phylodata.org} kickoff meeting.
+
+\item The svn repository has migrated to
+sourceforge\footnote{https://nexml.svn.sourceforge.net/svnroot/nexml}.
+It contains a modularized XML schema (discussed on powerpoint
+slides\footnote{https://www.nescent.org/wg/evoinfo/images/2/23/Nexml.ppt
+}) and various instance
+documents\footnote{https://nexml.svn.sourceforge.net/svnroot/nexml/
+examples/} demonstrating representations of common phylogenetic data.
+
+\item Nexml parsers in
+perl\footnote{https://nexml.svn.sourceforge.net/svnroot/nexml/perl/},
+python and in
+java\footnote{https://nexml.svn.sourceforge.net/svnroot/nexml/java/} are
+under development.
+
+\item The domain name http://www.nexml.org has been registered, which
+will serve to identify the nexml namespace and for which some sort of
+web presence (e.g. a public storage of schema files, information about
+the format, an online validator) are in the early planning stages.
+
+\item NESCent has provided a staging
+server\footnote{http://nexml-dev.nescent.org} from which this web
+presence will be launched on the production server. At present we use
+this domain to aggregate data about the development process in one
+location.
+
+\item To facilitate development of the ontology, concepts introduced by
+the design of the schema and discussed on this wiki page will
+crossreference with the glossary.
+
+\item An online validation
+service\footnote{http://www.nexml.org/nexml/validator} is under
+development. You can reuse it by placing this in an html document:
+
+\begin{verbatim} 
+<form 
+    action="http://www.nexml.org/nexml/validator"
+    enctype="multipart/form-data" 
+    method="post"> 
+    <input type="file" name="file"/> 
+    <input type="submit"/>
+</form> 
+\end{verbatim}
+
+Or use it as a simple REST service: HTTP response code 201 means it's
+valid, 400 means it isn't. The validator goes through a two-step
+process:
+
+\item \textbf{grammar-based validation}: this is the part where we check
+an input file for sensible placement of elements, attributes and text
+nodes. We do this by validating against the xml schema using a Xerces-J
+validator writting by Terri Schwartz of the CIPRES-SDSC team.
+Unfortunately, some constraints we like to place on files cannot be
+expressed in schema language. For this we have to resort to the second
+step.
+
+\item \textbf{rule-based validation}: here we test whether chained
+remote references (rules such as ``matrix row X is part of characters
+block Y, which is linked to OTUs block Z. Therefore, X can only refer to
+an OTU that is part of Z'') make sense. We do this by parsing the file
+using Bio::Phylo's nexml parser.
+
+\end{itemize}
+
+\section{Design} The following subsections describe the design of the
+developing nexml standard. These descriptions are likely to both be in
+flux, and lagging behind the formal (one, true) XSD description in the
+svn
+repository\footnote{http://nexml.svn.sourceforge.net/viewvc/nexml/xsd/}.
+The reader is therefore advised to follow the links in the subsections
+to the XSD fragments and XML instance document examples that define the
+elements.
+
+\subsection{General design}
+
+\subsection{Verbosity} XML in general is usually far more verbose
+than flat file formats that convey the same information. Nexml is
+designed to allow both for verbose and compact representation of data.
+The rationale is that some use cases (e.g. submission of morphological
+observations to a database) require extensive annotation, whereas others
+(e.g. submission to a processing engine as part of a workflow) don't
+require a lot of metadata, only the bare bones needed to complete the
+analysis step.
+
+\subsection{References} Elements other than xml structural
+placeholders (e.g. the \code{matrix} element that lumps matrix rows
+together) all have the following properties: 
+\begin{itemize} 
+\item a required \code{id} attribute. This attribute is not a standard 
+XML id (which are file scoped), but of type \code{xs:NCName}, which have 
+the same string format restrictions but are free to have their scope defined
+by the schema. In the nexml schema, all such ids are scoped within their
+enclosing elements. This means that nodes must have an id that is unique
+within the tree that contains them, matrix rows must have ids unique
+within the matrix, etc. The rationale is that this minimizes the risk of
+clashes when combining data from multiple sources, and makes it easier
+to solve clashes should they occur (by re-assigning the id of the
+enclosing element). 
+\item some elements must refer to other elements: e.g. a matrix \code{row} 
+element must refer to a \code{otu} element. By
+convention, the attribute used to define the id of another element is
+named after that referenced element. For example, \code{<row otu="t1"
+id="r1"/>} means that the row element identified by id \code{r1} links
+to a otu element whose id is \code{t1}. Referenced elements in nexml
+always precede their references, which is why \code{otus} elements come
+before \code{characters} elements, for example. 
+\end{itemize}
+
+\subsection{Metadata} 
+To allow for the preservation of arbitrary labels and annotations, nexml 
+elements have: 
+\begin{itemize} 
+\item an optional \code{label} attribute, which is used to specify a
+human-readable label for the element. The only restriction on this
+attribute's value is that it is a valid xml string, which means that
+reserved xml tokens (such as the greater-than symbol >) must be escaped
+using xml entities. 
+\item zero or more \code{<dict/>} elements (dictionary attachments) can be 
+enclosed within them. These attachments, if present, precede any other 
+enclosed elements (the rationale is similar to that for having referenced 
+elements precede their references: it facilitates stream based parsing 
+strategies).
+\end{itemize}
+
+\subsubsection{Other common attributes} In addition to the shared
+attributes and structures described above, nexml elements also
+optionally have:
+
+\begin{itemize}
+
+\item a \code{class} attribute. This attribute has an id reference to a
+class defined earlier as its value. Its function is analogous to that of
+sets (e.g. OTU sets, character sets) in nexus, but instead of the set
+declaring what it contains here the nexml elements declare what set(s)
+they belong to. This is the idiomatic approach for XML, and is
+compatible with CSS styling.
+
+\item an \code{xml:base} attribute, from the core XML
+namespace\footnote{http://en.wikipedia.org/wiki/XML\_Namespace}. This
+attribute has an absolute URL as value, which is the base address upon
+which relative links defined later in a document are built. There is a
+similar facility in HTML (defined in the head of a document), which in
+practice is used to shorten URLs in pages by defining their shared path
+fragments in one location. The rationale for inclusion in nexml is
+similar, with the additional consideration that some
+XInclude\footnote{http://en.wikipedia.org/wiki/XInclude} processors
+place the attribute by default in the post-include
+infoset\footnote{http://en.wikipedia.org/wiki/Infoset}.
+
+\item an \code{xlink:href} attribute, from the
+XLink\footnote{http://en.wikipedia.org/wiki/XLink} namespace. This
+attribute has an absolute or relative URL as its value, which is used to
+create a unidirectional link from the element that has the attribute to
+another location.
+
+\item an \code{xml:id} attribute, from the core XML namespace. This
+attribute has a string of the same format as the nexml id as its value,
+except this id is file-scope unique. The attribute has no defined
+function within nexml, but some XInclude processors might include it.
+
+\item an \code{xml:lang} attribute, from the core XML namespace. This
+attribute has an RFC3066\footnote{http://www.ietf.org/rfc/rfc3066.txt}
+compliant language code (e.g. \code{en-US}) as its value, which is used
+to indicate the natural language in which text of the element or its
+children are written.
+
+\end{itemize}
+
+\subsection{Element description}
+
+\subsubsection{Root} 
+% [[http://nexml.svn.sourceforge.net/viewvc/*checkout*/nexml/xsd/nexml.xsd schema]], 
+% [[http://nexml.svn.sourceforge.net/viewvc/*checkout*/nexml/examples/nexml.xml example]]
+
+(Like all standalone xml files, nexml files start with the \code{<?xml
+version="1.0" encoding="some character encoding scheme"?>} processing
+instruction. The encoding scheme is used to specify what character set -
+e.g. some unicode flavor - is used. Hence, nexml files can include OTU
+descriptions in simplified Chinese, for example, without confusing
+parsers. Naturally,
+i18n\footnote{http://en.wikipedia.org/wiki/Internationalization\_and\_localization} 
+in terms of character sets is best used in combination
+with \code{xml:lang} attributes where appropriate.)
+
+The root element of the schema is called \code{nexml}. This root element
+has the following attributes:
+
+\begin{itemize}
+
+\item a required \code{version} attribute whose value is a decimal
+number indicating the nexml schema version. Until a revision occurs
+after the first release of nexml the value must be 1.0.
+
+\item an optional \code{generator} attribute, which is used to identify
+the program that generated the file. The attribute's value is a free
+form string. In addition, it will commonly define a number of xml
+namespace prefixes. (Where it says ``by convention'' in the list below,
+the convention applies to the three-letter prefixes which are free to
+vary in most cases, not the namespaces themselves):
+
+\item the xml namespace prefix that identifies xml schema semantics that
+might be inlined in the file. By convention this is of the format \\
+\code{xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"} so that
+parts of schema language used inside nexml (e.g. where a concrete
+subclass must be specified) are identified by the \code{xsi} prefix.
+
+\item the nexml namespace prefix, by convention of the format \\
+\code{xmlns:nex="http://www.nexml.org/1.0"}, so that  locations where
+nexml specific types are referenced (e.g. data type subclasses) these
+are identified by their \code{nex} prefix.
+
+\item the xml namespace prefix, required to be of the format \\
+\code{xmlns:xml="http://www.w3.org/XML/1998/namespace"}. This may be
+used, for example, to specify the base address of imported nexml
+snippets (using the \\ \code{xml:base="http://example.com/base.xml"}
+attribute) and to specify the language in which certain element contents
+are written (using, say, \code{xml:lang="nl"}).
+
+\end{itemize}
+
+Lastly, to associate the instance document with the nexml schema, it
+requires an attribute to specify the nexml schema location, and the
+namespace it applies to. This is of the format \\
+\code{xsi:schemaLocation="http://www.nexml.org/1.0 nexml.xsd"} (in a
+stable release the location of the schema would not be a local path -
+such as nexml.xsd - but a url). Notice that this attribute is a schema
+language snippet (identified by the \code{xsi:} prefix) that identifies
+a namespace (\code{http://www.nexml.org/1.0}) and associates it with a
+physical schema location (\code{../nexml.xsd}).
+
+
+Together, this makes the root element look something like the following:
+\begin{verbatim} 
+<?xml version="1.0" encoding="ISO-8859-1"?> 
+<nex:nexml
+    version="1.0" generator="eclipse"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:xml="http://www.w3.org/XML/1998/namespace"
+    xmlns:nex="http://www.nexml.org/1.0"
+    xsi:schemaLocation="http://www.nexml.org/1.0 ../nexml.xsd"> 
+    <!-- contents go here --> 
+</nexml> 
+\end{verbatim} 
+The root element can hold:
+
+\begin{itemize}
+
+\item zero or more attachment dictionaries,
+
+\item one or more OTUs elements,
+
+\item zero or more characters elements,
+
+\item zero or more trees elements (in mixed order with characters
+elements),
+
+\end{itemize}
+
+\subsubsection{OTUs} 
+% [[http://nexml.svn.sourceforge.net/viewvc/*checkout*/nexml/xsd/taxa/taxa.xsd schema]], 
+% [[http://nexml.svn.sourceforge.net/viewvc/*checkout*/nexml/examples/taxa.xml example]], 
+% [[http://www.nescent.org/wg\_evoinfo/ConceptGlossary#Operational\_Taxonomic\_Unit\_\_.28OTU.29 term]],
+
+In some phylogenetic analyses (such as Bayesian analyses that yield a
+set of trees) many nodes
+\footnote{http://www.nescent.org/wg\_evoinfo/ConceptGlossary\#Phylo\_Node} 
+- in different trees
+\footnote{http://www.nescent.org/wg\_evoinfo/ConceptGlossary\#Phylogeny}
+- refer to the same sequence. On the other hand, in some other analyses
+(such as those that involve simulation of a set of sequence alignments)
+many sequences - in different alignments - refer to the same node in the
+generating tree. This relationship can be normalized by creating a third
+entity from which one-to-many links point both to nodes and sequences.
+In nexus files, these entities are defined in the taxa block using a set
+of labels that sequences and nodes later on in the file must refer to.
+In nexml, this same functionality is provided by \code{otus} elements.
+The name change is a result of the progressing integration between
+phylogenetics and taxonomy
+\footnote{http://www.nescent.org/wg\_evoinfo/ConceptGlossary\#Organismal\_Taxonomy}, 
+which now causes concept confusion because of the
+overloading of the term ``taxa'' when it was introduced in the nexus
+standard.
+
+In its simplest form, a \code{otus} element looks something like this:
+\begin{verbatim} 
+<otus id="tax1"> 
+    <otu id="t1"/> 
+    <otu id="t2"/> 
+</otus>
+\end{verbatim} That is, the \code{otus} element and its contained
+\code{otu} elements require a (file level unique) id attribute. In
+addition, these elements can have an optional \code{label} attribute
+that defines a human readable name for the element, and can contain
+dictionary attachments.
+
+\subsubsection{Characters} 
+% [[http://nexml.svn.sourceforge.net/viewvc/*checkout*/nexml/xsd/characters/characters.xsd schema]], 
+% [[http://nexml.svn.sourceforge.net/viewvc/*checkout*/nexml/examples/characters.xml example]], 
+% [[http://www.nescent.org/wg_evoinfo/ConceptGlossary#Character-State_Data_Matrix term]]
+
+The \code{characters} element is somewhat analogous to the nexus
+characters blocks: it stores data such as molecular sequences,
+categorical data or continuous data. The element is different from the
+nexus characters block in that it allows for more detailed specification
+of the allowed states \textit{per character}, strict validation of the
+observed states, annotation of characters (columns), states, rows and
+individual observations using dictionaries. In addition, the
+\code{characters} element is designed to allow for representation of
+non-homologized data: the element is more accurately described as a
+bucket of observations and the allowed parameter space for those
+observations. Only if the boolean attribute \code{aligned} of the
+\code{matrix} element is set to ``1'' (true), can subsequent
+observations be assumed to be homologous across \code{row} elements.
+
+The schema specifies the \code{characters} element to be of an abstract
+type, so that instance documents need to specify the concrete subclass
+(i.e. datatype) using the \code{xsi:type} attribute. At present, six
+data types are supported: DNA, protein, restriction sites, standard
+categorical, continuous and RNA. For each of these data types there are
+two subclasses, whose names are constructed as "data type"Seqs (e.g.
+DnaSeqs) and "data type"Cells (e.g. DnaCells), the former being a
+compact representation with states listed as tokens in a sequence, the
+latter a verbose representation with states marked up granularly.
+
+\subsubsection{DNA} In its most compact form, a DNA sequence alignment
+as expressed in a \code{characters} element would look something like
+this: 
+\begin{verbatim} 
+<characters otus="tax1" id="m1" xsi:type="nex:DnaSeqs"> 
+    <matrix aligned="1"> 
+        <row id="r1" otu="t1"><seq>AACATATCTC</seq></row> 
+        <row id="r2" otu="t2"><seq>ATACCAGCAT</seq></row> 
+        <row id="r3" otu="t3"><seq>GAGGGTATGG</seq></row> 
+        <row id="r4" otu="t4"><seq>GGTCTTAGAG</seq></row> 
+        <row id="r5" otu="t5"><seq>CGTCACAGTG</seq></row> 
+    </matrix> 
+</characters>
+\end{verbatim} 
+\code{characters} elements are polymorphic in two ways:
+
+\begin{enumerate}
+
+\item The \code{xsi:type} attribute defines the data type, and thus the
+concrete character matrix subclass. In the example, the DNA subclass
+restricts the allowed symbols in the matrix to the IUPAC single
+character nucleotide symbols, allows omission of per-character state
+definitions, and allows concatenation of symbols into a string inside
+the \code{seq} element.
+
+\item The second polymorphism is in the granularity of observation mark
+up. The example above shows a compact representation where characters
+are concatenated as a string.
+
+\end{enumerate}
+
+The RNA subclasses are virtually identical to the equivalent DNA
+subclasses (only T vs U). The protein and restriction data types are
+similar in that they also don't require character definitions and can
+also be expressed as concatenated strings. This is because they both use
+single character symbols, whose allowed symbols are well-defined, namely
+as the IUPAC single character amino acid symbols and as 0 or 1,
+respectively. In all compact representations, gaps
+\footnote{http://www.nescent.org/wg\_evoinfo/ConceptGlossary\#Gap} and
+missing data are encoded as separate alignments, so that multiple
+alignments can be associated with the same sequence.
+
+\subsubsection{STANDARD} For other data types, the behavior of the
+\code{characters} element is different. For categorical data
+(\code{xsi:type = "nex:StandardCells"}), the \code{row} elements inside
+the \code{matrix} element must be preceded by a \code{format} element
+that specifies the allowed states
+\footnote{http://www.nescent.org/wg\_evoinfo/ConceptGlossary\#Character-
+State} per character
+\footnote{http://www.nescent.org/wg\_evoinfo/ConceptGlossary\#Character}
+. An example is shown below: 
+\begin{verbatim} 
+<!-- this goes inside characters element -->  
+<format> 
+    <!-- 
+        The first elements inside a format element are stateset 
+        definitions. In this example, there is a set of four 
+        states, each tagged with an id. The symbol attribute is 
+        a shorthand token. 
+    --> 
+    <states id="states1"> 
+        <state id="s1" symbol="1"/>
+        <state id="s2" symbol="2"/> 
+        <state id="s3" symbol="3"/> 
+        <state id="s4" symbol="4"/> 
+            <mapping state="s1" mstaxa="polymorphism"/> 
+            <mapping state="s2" mstaxa="polymorphism"/> 
+    </states>
+    
+    <!-- 
+        The matrix in this example contains two columns, both 
+        referring to the same stateset - and so cells in both 
+        columns can occupy one of four states. 
+    --> 
+    <char states="states1" id="c1"/> 
+    <char states="states1" id="c2"/> 
+</format>
+<!-- matrix element follows --> 
+\end{verbatim}
+
+In this case, then, the matrix holds two four-state characters. State
+\code{s4} functions as an ambiguity code, a state that actually means a
+set of two other states (\code{s1} and \code{s2}). Because the
+\code{mstaxa} attribute is set to \code{polymorphism}, the mapping to
+the two other states indicates true polymorphism (i.e. both states are
+observed in a population). The other value for the \code{mstaxa}
+attribute is \code{uncertain}. In practice, "polymorphism" can be read
+as "AND", and "uncertain" as "OR". \code{states}, \code{state} and
+\code{char}  elements can take dictionary attachments, which are loosely
+analogous to - but more powerful than - the nexus tokens CHARSTATELABELS
+and CHARLABELS, respectively.
+
+Subsequent \code{row} elements contain the mappings between the defined
+states and the actual observations. For example: 
+\begin{verbatim} 
+<!-- inside matrix element --> 
+<row id="r1" otu="t1"> 
+    <!-- 
+        Each cell must contain a reference to the column it
+        belongs to, and to a state allowed within that column. 
+    --> 
+    <cell char="c1" state="s2"/> 
+    <cell char="c2" state="s2"/> 
+</row>
+\end{verbatim}
+
+This structure means that the entity defined by OTU ``t2'' has state
+``s2'' (symbol 2) for both characters. Therefore, \code{cell} elements
+within different \code{row} elements are
+homologous\footnote{http://www.nescent.org/wg\_evoinfo/ConceptGlossary\#
+Homology} if they have the same value for the \code{char} attribute.
+DNA, RNA, protein and restriction data can be described in a similar,
+verbose way, with the ``state'' attribute's value being an IUPAC
+nucleotide symbol, an IUPAC amino acid symbol or a boolean (0/1),
+respectively, and the ``char'' attribute's value being the (zero-based)
+column number.
+
+In a compact representation, the same STANDARD information is marked up
+like this: 
+\begin{verbatim}<row id="r2" otu="t2"><seq>2 2</seq></row>\end{verbatim}
+
+Notice how this is similar to the compact DNA representation, except in
+the allowed symbols that are used (integers instead of IUPAC symbols)
+and that the symbols are space-separated (this is because STANDARD
+states aren't necessarily single-character symbols: integers greater
+than 9 are allowed also).
+
+\subsubsection{CONTINUOUS} For continuous data, the \code{format}
+element defines the characters (i.e. \code{char} elements) but not their
+states, and observations values (i.e. either the \code{state} attribute
+in verbose notation, or space-separated symbols in compact notation) are
+arbitrary precision floating point numbers.
+
+\subsubsection{Combining data} In some analyses, data of different types
+is analyzed jointly (e.g. mrbayes does this). Nexml does not currently
+facilitate this. It is likely that this will be implemented either using
+matrix sets or (less likely) using a MIXED concrete subclass.
+
+\subsubsection{Trees} 
+% [[http://nexml.svn.sourceforge.net/viewvc/*checkout*/nexml/xsd/trees/trees.xsd schema]], 
+% [[http://nexml.svn.sourceforge.net/viewvc/*checkout*/nexml/examples/trees.xml example]]
+
+Due to their nesting, tree descriptions as nested elements (as suggested
+in Joe Felsenstein's book \textit{Inferring Phylogenies}) can pose
+special problems for xml parsers: a parser can only hand off an element
+once all its children have been processed and stored in memory. Large
+trees described using nested elements can therefore develop huge memory
+requirements. Hence, nexml describes trees as node and
+edge\footnote{http://www.nescent.org/wg\_evoinfo/ConceptGlossary\#Branch
+\_.28Edge.29} tables instead, following the semantics for
+GraphML\footnote{http://graphml.graphdrawing.org/} (which is also
+discussed separately in the context of the study of related artefacts).
+\subsubsection{Tree} 
+% [[http://www.nescent.org/wg_evoinfo/ConceptGlossary#Phylogeny term]]
+
+The concrete subclasses \code{IntTree} and \code{FloatTree} describe a
+tree shape following GraphML semantics. The classes differ in that the
+optional \code{length} attribute is either an integer or a IEEE 754-1985
+compliant floating point number. Below is an example: 
+\begin{verbatim}
+<!-- A tree with float edges. --> 
+<tree id="tree1" xsi:type="nex:FloatTree" label="tree1"> 
+    <node id="n1" label="n1" root="true"/> 
+    <node id="n2" label="n2" otu="t1"/> 
+    <node id="n3" label="n3"/> 
+    <node id="n4" label="n4"/> 
+    <node id="n5" label="n5" otu="t3"/> 
+    <node id="n6" label="n6" otu="t2"/> 
+    <node id="n7" label="n7"/> 
+    <node id="n8" label="n8" otu="t5"/> 
+    <node id="n9" label="n9" otu="t4"/> 
+    <edge source="n1" target="n3" id="e1" length="0.34534"/> 
+    <edge source="n1" target="n2" id="e2" length="0.4353"/> 
+    <edge source="n3" target="n4" id="e3" length="0.324"/>
+    <edge source="n3" target="n7" id="e4" length="0.3247"/> 
+    <edge source="n4" target="n5" id="e5" length="0.234"/> 
+    <edge source="n4" target="n6" id="e6" length="0.3243"/> 
+    <edge source="n7" target="n8" id="e7" length="0.32443"/> 
+    <edge source="n7" target="n9" id="e8" length="0.2342"/> 
+</tree> 
+\end{verbatim} 
+This is an XML representation
+of the newick string \code{(((t4,t5)n7,(t2,t3)n4)n3,t1)n1;}. In this
+representation, the root
+\footnote{http://www.nescent.org/wg\_evoinfo/ConceptGlossary\#Root} is
+principally identified by having in-degree of zero, i.e. no \code{edge}
+element exists with a \code{target} attribute that references that node.
+However, an additional \code{root} attribute is also used to further
+indicate that this tree is in fact considered truly rooted. This
+attribute may be used on multiple nodes, to indicate multiple rootings.
+Tips
+\footnote{http://www.nescent.org/wg\_evoinfo/ConceptGlossary\#Terminal\_Node} 
+are identified by there being no \code{edge} elements with
+\code{source} attributes that reference them.
+
+To add additional objects to nodes or edges, such as bootstrap
+\footnote{http://www.nescent.org/wg\_evoinfo/ConceptGlossary\#Bootstrap\_.28Bootstrap\_confidence\_value.3B\_Bootstrap\_support\_value.29}
+values, a dictionary attachment is used.
+
+\subsubsection{Network} 
+% [[http://www.nescent.org/wg_evoinfo/ConceptGlossary#Phylogenetic_Network term]]
+
+The \code{IntNetwork} and \code{FloatNetwork} subclasses only differ
+from the tree subclasses in that the key constraints on the in-degree of
+nodes is lessened, so that a node can have multiple parents. In the
+example below, node \code{n6} has an additional parent node \code{n7},
+creating a reticulation: 
+\begin{verbatim} 
+<!-- A network with int edges. --> 
+<tree id="tree3" xsi:type="nex:IntNetwork" label="tree2"> 
+    <node id="n1" label="n1"/> 
+    <node id="n2" label="n2" otu="t1"/> 
+    <node id="n3" label="n3"/> 
+    <node id="n4" label="n4"/> 
+    <node id="n5" label="n5" otu="t3"/> 
+    <node id="n6" label="n6" otu="t2"/> 
+    <node id="n7" label="n7"/> 
+    <node id="n8" label="n8" otu="t5"/> 
+    <node id="n9" label="n9" otu="t4"/> 
+    <edge source="n1" target="n3" id="e1" length="1"/>
+    <edge source="n1" target="n2" id="e2" length="2"/> 
+    <edge source="n3" target="n4" id="e3" length="3"/> 
+    <edge source="n3" target="n7" id="e4" length="1"/> 
+    <edge source="n4" target="n5" id="e5" length="2"/> 
+    <edge source="n4" target="n6" id="e6" length="1"/> <!-- extra edge --> 
+    <edge source="n7" target="n6" id="e9" length="1"/> 
+    <edge source="n7" target="n8" id="e7" length="1"/> 
+    <edge source="n7" target="n9" id="e8" length="1"/> 
+</tree> 
+\end{verbatim}
+
+\subsubsection{Sets} 
+% [[http://nexml.svn.sourceforge.net/viewvc/*checkout*/nexml/xsd/meta/sets.xsd schema]]
+
+No formal design for a "set" of entities (a node set, an OTU set, etc.)
+exists yet. The intention is that nexml will provide a general facility
+to identifiable group elements, so that annotations and substitution
+models can be attached to these groups or to indicate that sets (e.g.
+matrices with different data types) are to be analyzed jointly. A first
+step has been the addition of the optional \code{class} attribute on
+elements. This attribute has a vector of identifiers as its value, such
+that the element can specify to which classes (i.e. sets) it belongs.
+This is different from nexus, where sets specify which elements they
+contain, but the approach suggested here is more idiomatic for xml, and
+is compatible with styling (e.g. using CSS).
+
+\subsubsection{Dictionaries} 
+% [[http://nexml.svn.sourceforge.net/viewvc/*checkout*/nexml/xsd/meta/annotations.xsd schema]]
+
+Future developments in phylogenetics are impossible to predict - new
+support values for nodes on trees may emerge, new types of annotations
+for DNA sequences, etc. In addition, the amount and types of metadata
+that can be attached to phylogenetic data are unlimited: some
+researchers may want to attach taxonomy database ids to otu elements, or
+genbank accession numbers to DNA and so on. A data exchange standard
+that attempts to limit the universe of ``stuff'' to attach to ``things''
+is likely to be headed for immediate obsolescence. The nexml standard
+therefore allows for attachment of arbitrary key/value pairs to:
+
+\begin{itemize}
+
+\item the root element,
+
+\item otus and otu elements,
+
+\item the characters element and its character definitions, state
+definitions, matrix rows, sequences and individual observations,
+
+\item the trees, individual tree elements and nodes.
+
+\end{itemize}
+
+Or, in general, any element that inherits from the
+% [http://nexml07gsoc.googlecode.com/svn/trunk/xsd/abstract.xsd Annotated]
+abstract type (i.e. everything other than placeholder elements).
+
+The semantics of these key/value pairs follow the conventions used in
+Apple's Mac OS X property list
+\footnote{http://en.wikipedia.org/wiki/Plist\#Mac\_OS\_X} format, a
+simple example being: 
+\begin{verbatim} 
+<dict> 
+    <key>description</key>
+    <string>This is a string based description of an element</string>
+</dict> 
+\end{verbatim} 
+A \code{dict} element contains a sequence of
+key/value pairs, where the \code{key} element contains a string (scoped
+to be unique within the enclosing dictionary), and the value can take on
+a number of different types:
+
+\begin{itemize}
+
+\item \code{integer} or \code{integervector}
+
+\item \code{float} or \code{floatvector}
+
+\item \code{string} or \code{stringvector}
+
+\item \code{boolean} or \code{booleanvector}
+
+\item \code{id} or \code{idvector}
+
+\item \code{date} or \code{datevector}, i.e. a restricted date/time
+format
+
+\item \code{url} or \code{urlvector}
+
+\item \code{base64} or \code{base64vector}, i.e. for base64 encoded
+binary data such as images;
+
+\item \code{dict} or \code{dictvector}, i.e. another dictionary,
+yielding a recursive data structure;
+
+\item \code{any}, i.e. XML from another namespace such as XHTML (for
+marked up text), SVG (for graphs), ant build scripts, etc.
+
+\end{itemize}
+
+The implication is that dictionaries map onto data structures much like
+hashtables, python dictionaries, or perl hashes but with type-safe
+values. In principle, this structure thus allows all kinds of things to
+be attached to elements, the only downside being that different
+researchers might use different substructures or types. For example:
+\begin{verbatim}<dict><key>genbank</key><id>NM_052988.2</id></dict>\end{verbatim} 
+and: 
+\begin{verbatim}<dict><key>accession</key><id>NM_052988.2</id></dict>\end{verbatim}
+would not be recognized to mean the same thing without human
+intervention. The solution is to create restricted subclasses such as an
+``accession'' class: 
+\begin{verbatim} 
+<dict xsi:type="db:accession">
+    <key>genbank</key>
+    <id>NM_052988.2</id>
+</dict>
+\end{verbatim} which would define a limited set of keys (e.g. genbank,
+dbj, ebi) and what type of value (e.g. \code{id}) is to follow. The same
+approach can obviously be used to refer to other databases such as those
+for taxonomies (e.g. ITIS) or morphology databases (e.g. Morphbank). In
+addition, \code{xsi:type} subclasses can be created to restrict other
+common types of attachments such a branch lengths or various node
+support values.
+
+Extension of the nexml standard by this kind of subclassing does not
+require changes in the core schema (which only references the
+superclass) so should not confuse (well-designed) nexml parsers.
+
+\subsubsection{Core restricted dictionaries} One of the
+predefined\footnote{http://nexml07gsoc.googlecode.com/svn/trunk/xsd/meta/meta.xsd} 
+optional dictionaries is a restricted structure that can be
+used to store revision control system (i.e. cvs, svn) keywords in a
+standardized format. Example: 
+\begin{verbatim} 
+<dict xsi:type="nex:RCSDate"> 
+    <key>date</key> 
+    <string>$Date: 2007-07-30 18:36:51 +0200 (Mon, 30 Jul 2007) $</string> 
+</dict> 
+<dict xsi:type="nex:RCSRev"> 
+    <key>rev</key> 
+    <string>$Rev: 74 $</string>
+</dict> 
+<dict xsi:type="nex:RCSAuthor"> 
+    <key>author</key>
+    <string>$Author: rutgeraldo $</string> 
+</dict> 
+<dict xsi:type="nex:RCSURL"> 
+    <key>url</key> 
+    <string>$URL: https://nexml07gsoc.googlecode.com/svn/trunk/examples/verbose.xml $</string> 
+</dict> 
+<dict xsi:type="nex:RCSId"> 
+    <key>id</key>
+    <string>$Id$</string> 
+</dict>
+<dict xsi:type="nex:RCSHeader"> 
+    <key>header</key> 
+    <string>$Header: $</string> 
+</dict> 
+\end{verbatim}
+
+\subsubsection{3rd party restricted dictionaries}
+
+The repository shows an example of how software authors can introduce
+their own restricted dictionaries in a separate namespace. There's an
+example
+file\footnote{http://nexml07gsoc.googlecode.com/svn/trunk/examples/mesquite.xml}, 
+and here's an example 
+schema\footnote{http://nexml07gsoc.googlecode.com/svn/trunk/examples/mesquite.xsd} 
+that illustrates this.
+
+\section{Resources}
+
+\subsection{XML Parsers} Below are the most commonly used open source
+XML parsers. Which should I use? Apache and MIT licenses are both
+compatible with closed source projects, i.e. no copyleft requirement.
+SAX is the stream-based api (more memory-efficient, but need to keep
+track of context yourself), DOM is the tree-based api (easier to
+traverse, harder on memory). Expat is also used under the hood by perl
+xml parser XML::Twig. It's (supposed to be) the fastest xml parser.
+Gnome is sometimes hard to build on Windows, so I'd use expat for SAX or
+xerces for DOM. For java, the nexml class libraries use whatever lives
+under org.xml.sax.*
+
+\begin{itemize}
+
+\item http://xerces.apache.org is Apache's XML parser, implements the
+SAX (recommended), SAX2 and DOM apis in C++, Java and Perl. Released
+under Apache license.
+
+\item http://xmlsoft.org is Gnome's XML parser, implements SAX/SAX2/DOM,
+written in C. Released under MIT License.
+
+\item http://expat.sourceforge.net implements the SAX api in C. Released
+under Apache license.
+
+\end{itemize}
+
+\section{Other XML projects}
+http://hobit.gsf.de/wiki/display/wiki/XML+Schemas maintains a wiki of
+other bioinformatics xml projects.
+
+\section{References} \bibliographystyle{alpha} \bibliography{refs}
+
+\end{document}

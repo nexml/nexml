@@ -1,0 +1,37 @@
+<% IF currentURL %>
+    <% breadCrumbs = paths.breadCrumbs(currentURL) %>
+    <% IF breadCrumbs %>
+        <div style="padding-bottom:1em;margin-top: 1em; margin-left: 10px;color: #888888">
+            <small>
+                <% FOREACH crumb = breadCrumbs %>
+                    <% IF crumb.url %>
+                        <a href="<% crumb.url %>"><% crumb.name %></a> /
+                    <% ELSE %>
+                        <% crumb.name %>
+                    <% END %>
+                <% END %>
+            </small>
+        </div>
+    <% END %>
+            
+    <div class="linkshare credit">
+        <% IF currentFeed %>
+            <a href="<% currentFeed %>">
+                <img class="icon" src="<% paths.strip(paths.include('feed.png')) %>" alt="rss"/>
+            </a> |
+        <% END %>
+       <a rel="nofollow" href="http://digg.com/submit?phase=2&amp;url=<% currentURL %>">
+            <img class="icon" src="<% paths.strip(paths.include('digg.gif')) %>" alt="digg"/>
+        </a> 
+        <a rel="nofollow" href="http://reddit.com/submit?url=<% currentURL %>">
+            <img class="icon" src="<% paths.strip(paths.include('reddit.gif')) %>" alt="reddit"/>
+        </a> 
+        <a rel="nofollow" href="http://del.icio.us/post?url=<% currentURL %>">
+            <img class="icon" src="<% paths.strip(paths.include('delicious.gif')) %>" alt="del.icio.us"/>
+        </a>   
+        <a rel="nofollow" href="http://www.facebook.com/share.php?u=<% currentURL %>">
+            <img class="icon" src="<% paths.strip(paths.include('facebook.gif')) %>" alt="facebook"/>
+        </a>        
+        <small> | <% currentDate %> &mdash;</small>        
+    </div> 
+<% END %>

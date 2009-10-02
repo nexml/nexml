@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+
+<project name="NeXML Java API" default="jar" basedir=".">
+	<description>NeXML Java API ant build</description>
+	<property name="src" value="src"/>
+	<property name="test" value="test"/>
+	<property name="classfiles" value="bin"/>
+	<property name="lib" value="jars"/>
+	<property name="revstring" value="$Rev$"/>
+	<property name="jarfile" value="nexml.jar"/>
+	<!-- this is a build file for ant: http://ant.apache.org/ -->	
+    <path id="classpath">
+        <fileset dir="${lib}">
+            <include name="*.jar"/>
+        </fileset>
+    </path>
+	
+	<target name="compile">
+		<mkdir dir="${classfiles}"/>
+	    <javac srcdir="${src}" destdir="${classfiles}">
+	        <exclude name="**/mesquite/nexml/InterpretNEXML/*"/>
+	        <classpath refid="classpath"/>
+	    </javac>
+	</target>
+	
+	<target name="mesquite">
+		<mkdir dir="${classfiles}"/>
+	    <javac srcdir="${src}" destdir="${classfiles}">
+	        <classpath refid="classpath"/>
+	    </javac>
+	</target>	
+	
+	<target name="build-test" depends="compile">
+	    <javac srcdir="${test}" destdir="${classfiles}" debug="yes">
+	        <classpath refid="project.classpath"/>
+	    </javac>
+	</target>
+	
+	<target name="test" depends="build-test" description="Unit tests">
+	        <junit fork="yes" printsummary="on" maxmemory="1024m">
+	            <classpath>
+	                <pathelement path="."/>
+	                <pathelement path="${classfiles}"/>
+	                <fileset dir="${lib}">
+	                    <include name="*.jar"/>
+	                </fileset>
+	            </classpath>
+	            <batchtest>
+	                <fileset dir="${test}"/>
+	            </batchtest>
+	        </junit>
+	</target>
+	
+    <target name="jar" depends="compile">
+        <jar destfile="${jarfile}">
+            <fileset dir="${classfiles}"/>
+        </jar>
+    </target>
+	
+    <target name="clean">
+        <delete dir="${classfiles}"/>
+        <delete file="${jarfile}"/>
+    </target>
+	
+</project>

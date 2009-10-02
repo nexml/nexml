@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	targetNamespace="http://www.nexml.org/1.0"
+	xmlns:xml="http://www.w3.org/XML/1998/namespace"
+	xmlns="http://www.nexml.org/1.0"
+	xmlns:xlink="http://www.w3.org/1999/xlink" 
+	xmlns:sawsdl="http://www.w3.org/ns/sawsdl"
+	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+	elementFormDefault="qualified">
+	
+	<xs:annotation>
+		<xs:documentation>
+			This module defines annotations that can be attached to
+			(almost) any nexml element. The markup for these annotations
+			is like that of xml-plists, such as are used by iTunes
+			libraries and other Mac OS X configuration files. However,
+			this module extends on that by defining more simple types
+			that can be used as values of the key/value pairs that
+			comprise the annotation. In particular, the additional types
+			are lists of atomic simple types, so that a value can be a
+			list of integers, for example.
+		</xs:documentation>
+	</xs:annotation>
+
+	<xs:import namespace="http://www.w3.org/XML/1998/namespace"
+		schemaLocation="../external/xml.xsd" />
+	<xs:import namespace="http://www.w3.org/1999/xlink"
+		schemaLocation="../external/xlink.xsd" />
+	<xs:import namespace="http://www.w3.org/ns/sawsdl" 
+		schemaLocation="../external/sawsdl.xsd"/>
+
+	<!-- the following types define attachments for objects -->
+
+	<!-- first define complex dict values -->
+	
+	<xs:simpleType name="IntegerVector">
+		<xs:list itemType="xs:integer" />
+	</xs:simpleType>
+	<xs:simpleType name="FloatVector">
+		<xs:list itemType="xs:float" />
+	</xs:simpleType>
+	<xs:simpleType name="StringVector">
+		<xs:list itemType="xs:string" />
+	</xs:simpleType>
+	<xs:simpleType name="BooleanVector">
+		<xs:list itemType="xs:boolean" />
+	</xs:simpleType>
+	<xs:simpleType name="DateVector">
+		<xs:list itemType="xs:dateTime" />
+	</xs:simpleType>
+	<xs:simpleType name="URIVector">
+		<xs:list itemType="xs:anyURI" />
+	</xs:simpleType>
+	<xs:simpleType name="IDVector">
+		<xs:list itemType="xs:NCName" />
+	</xs:simpleType>
+	<xs:simpleType name="Base64Vector">
+		<xs:list itemType="xs:base64Binary" />
+	</xs:simpleType>
+
+	<!-- now the complex structures -->
+
+	<xs:complexType name="Base" abstract="true">
+		<xs:annotation>
+			<xs:documentation>
+				The base type for all complexType definitions in the
+				nexml schema. This type allows a number of special
+				attributes:
+				<ul>
+					<li>xml:lang - for languages codes</li>
+					<li>
+						xml:base - see
+						<a href="http://www.w3.org/TR/xmlbase/">
+							http://www.w3.org/TR/xmlbase/
+						</a>
+					</li>
+					<li>
+						xml:id - see
+						<a href="http://www.w3.org/TR/xml-id/">
+							http://www.w3.org/TR/xml-id/
+						</a>
+					</li>
+					<li>xml:space - for whitespace handling</li>
+					<li>xlink:href - for links</li>
+					<li>class - for class membership</li>
+				</ul>
+				Also see http://www.w3.org/2001/xml.xsd for more
+				information on the xml and xlink attributes.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence />		
+		<xs:attributeGroup ref="xml:specialAttrs" />
+		<xs:attribute ref="xlink:href" use="optional" />
+		<xs:attribute name="class" type="IDVector" use="optional" />
+		<xs:anyAttribute namespace="##any" processContents="skip" />
+	</xs:complexType>
+
+	<!-- dict data structure -->
+	<xs:complexType name="Dict">
+		<xs:annotation>
+			<xs:documentation>
+				A dictionary; a sequence of key/value pairs, where the
+				value elements are of some type.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="Base">
+				<xs:sequence minOccurs="1" maxOccurs="unbounded">
+					<xs:choice minOccurs="1" maxOccurs="1">
+						<xs:element name="base64">
+							<xs:complexType>
+							    <xs:simpleContent>
+							      <xs:extension base="xs:base64Binary">
+							        <xs:attribute name="id" type="xs:NCName" use="required" />
+							      </xs:extension>
+							    </xs:simpleContent>
+							  </xs:complexType>							
+						</xs:element>
+						<xs:element name="base64vector">
+							<xs:complexType>
+							    <xs:simpleContent>
+							      <xs:extension base="Base64Vector">
+							        <xs:attribute name="id" type="xs:NCName" use="required" />
+							      </xs:extension>
+							    </xs:simpleContent>
+							  </xs:complexType>					
+						</xs:element>
+						<xs:element name="date">
+							<xs:complexType>
+							    <xs:simpleContent>
+							      <xs:extension base="xs:dateTime">
+							        <xs:attribute name="id" type="xs:NCName" use="required" />
+							      </xs:extension>
+							    </xs:simpleContent>
+							  </xs:complexType>							
+						</xs:element>
+						<xs:element name="datevector">
+							<xs:complexType>
+							    <xs:simpleContent>
+							      <xs:extension base="DateVector">
+							        <xs:attribute name="id" type="xs:NCName" use="required" />
+							      </xs:extension>
+							    </xs:simpleContent>
+							  </xs:complexType>							
+						</xs:element>
+						<xs:element name="boolean">
+							<xs:complexType>
+							    <xs:simpleContent>
+							      <xs:extension base="xs:boolean">
+							        <xs:attribute name="id" type="xs:NCName" use="required" />
+							      </xs:extension>
+							    </xs:simpleContent>
+							  </xs:complexType>							
+						</xs:element>
+						<xs:element name="booleanvector">
+							<xs:complexType>
+							    <xs:simpleContent>
+							      <xs:extension base="BooleanVector">
+							        <xs:attribute name="id" type="xs:NCName" use="required" />
+							      </xs:extension>
+							    </xs:simpleContent>
+							  </xs:complexType>							
+						</xs:element>
+						<xs:element name="float">
+							<xs:complexType>
+							    <xs:simpleContent>
+							      <xs:extension base="xs:float">
+							        <xs:attribute name="id" type="xs:NCName" use="required" />
+							      </xs:extension>
+							    </xs:simpleContent>
+							  </xs:complexType>						
+						</xs:element>
+						<xs:element name="floatvector">
+							<xs:complexType>
+							    <xs:simpleContent>
+							      <xs:extension base="FloatVector">
+							        <xs:attribute name="id" type="xs:NCName" use="required" />
+							      </xs:extension>
+							    </xs:simpleContent>
+							  </xs:complexType>												
+						</xs:element>
+						<xs:element name="id">
+							<xs:complexType>
+							    <xs:simpleContent>
+							      <xs:extension base="xs:ID">
+							        <xs:attribute name="id" type="xs:NCName" use="required" />
+							      </xs:extension>
+							    </xs:simpleContent>
+							  </xs:complexType>						
+						</xs:element>
+						<xs:element name="idvector">
+							<xs:complexType>
+							    <xs:simpleContent>
+							      <xs:extension base="IDVector">
+							        <xs:attribute name="id" type="xs:NCName" use="required" />
+							      </xs:extension>
+							    </xs:simpleContent>
+							  </xs:complexType>						
+						</xs:element>
+						<xs:element name="integer">
+							<xs:complexType>
+							    <xs:simpleContent>
+							      <xs:extension base="xs:integer">
+							        <xs:attribute name="id" type="xs:NCName" use="required" />
+							      </xs:extension>
+							    </xs:simpleContent>
+							  </xs:complexType>						
+						</xs:element>
+						<xs:element name="integervector">
+							<xs:complexType>
+							    <xs:simpleContent>
+							      <xs:extension base="IntegerVector">
+							        <xs:attribute name="id" type="xs:NCName" use="required" />
+							      </xs:extension>
+							    </xs:simpleContent>
+							  </xs:complexType>							
+						</xs:element>
+						<xs:element name="string">
+							<xs:complexType>
+							    <xs:simpleContent>
+							      <xs:extension base="xs:string">
+							        <xs:attribute name="id" type="xs:NCName" use="required" />
+							      </xs:extension>
+							    </xs:simpleContent>
+							  </xs:complexType>						
+						</xs:element>
+						<xs:element name="stringvector">
+							<xs:complexType>
+							    <xs:simpleContent>
+							      <xs:extension base="StringVector">
+							        <xs:attribute name="id" type="xs:NCName" use="required" />
+							      </xs:extension>
+							    </xs:simpleContent>
+							  </xs:complexType>							
+						</xs:element>
+						<xs:element name="uri">
+							<xs:complexType>
+							    <xs:simpleContent>
+							      <xs:extension base="xs:anyURI">
+							        <xs:attribute name="id" type="xs:NCName" use="required" />
+							      </xs:extension>
+							    </xs:simpleContent>
+							  </xs:complexType>							
+						</xs:element>
+						<xs:element name="urivector">
+							<xs:complexType>
+							    <xs:simpleContent>
+							      <xs:extension base="URIVector">
+							        <xs:attribute name="id" type="xs:NCName" use="required" />
+							      </xs:extension>
+							    </xs:simpleContent>
+							  </xs:complexType>						
+						</xs:element>
+						<xs:element name="dict" type="Dict" />
+						<xs:element name="dictvector" type="DictVector" />
+						<xs:element name="any" form="unqualified">
+							<xs:complexType>						
+								<xs:complexContent>								
+									<xs:extension base="xs:anyType">
+										<xs:attribute name="id" type="xs:NCName" use="required" />
+									</xs:extension>									
+								</xs:complexContent>
+							</xs:complexType>
+						</xs:element>
+					</xs:choice>
+				</xs:sequence>
+				<xs:attribute name="id" type="xs:NCName" use="required" />
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<!-- array data structure -->
+	<xs:complexType name="DictVector">
+		<xs:annotation>
+			<xs:documentation>
+				A vector of dictionaries.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="Base">
+				<xs:sequence minOccurs="1" maxOccurs="unbounded">
+					<xs:element name="dict" type="Dict" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+</xs:schema>

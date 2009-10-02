@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<description     
+    xmlns="http://www.w3.org/ns/wsdl"
+    xmlns:tns="http://www.nexml.org/1.0/definitions"
+    xmlns:whttp="http://www.w3.org/ns/wsdl/http"
+    xmlns:wsoap="http://www.w3.org/ns/wsdl/soap"
+    targetNamespace="http://www.nexml.org/1.0/definitions"        
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:nex="http://www.nexml.org/1.0"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"     
+    xsi:schemaLocation="http://www.w3.org/ns/wsdl http://www.w3.org/2007/06/wsdl/wsdl20.xsd">
+    
+    <!-- Type definitions -->
+    <types>
+        <xs:import             
+            schemaLocation="http://www.nexml.org/nexml/xsd/nexml.xsd"
+            namespace="http://www.nexml.org/1.0"/>
+    </types>
+    
+    <!-- Abstract interfaces -->
+    <interface name="RESTfulInterface">
+        <fault name="ClientError" element="nex:nexml"/>
+        <fault name="ServerError" element="nex:nexml"/>
+        <fault name="Redirection" element="nex:nexml"/>
+        <operation name="Get" pattern="http://www.w3.org/ns/wsdl/in-out">
+            <input messageLabel="GetMsg" element="nex:nexml"/>
+            <output messageLabel="SuccessfulMsg" element="nex:nexml"/>
+        </operation>
+        <operation name="Post" pattern="http://www.w3.org/ns/wsdl/in-out">
+            <input messageLabel="PostMsg" element="nex:nexml"/>
+            <output messageLabel="SuccessfulMsg" element="nex:nexml"/>
+        </operation>
+        <operation name="Put" pattern="http://www.w3.org/ns/wsdl/in-out">
+            <input messageLabel="PutMsg" element="nex:nexml"/>
+            <output messageLabel="SuccessfulMsg" element="nex:nexml"/>
+        </operation>
+        <operation name="Delete" pattern="http://www.w3.org/ns/wsdl/in-out">
+            <input messageLabel="DeleteMsg" element="nex:nexml"/>
+            <output messageLabel="SuccessfulMsg" element="nex:nexml"/>
+        </operation>
+    </interface>
+    
+    <!-- Concrete Binding Over HTTP -->
+    <binding name="RESTfulInterfaceHttpBinding" interface="tns:RESTfulInterface" 
+        type="http://www.w3.org/ns/wsdl/http">
+        <operation ref="tns:Get" whttp:method="GET"/>
+        <operation ref="tns:Post" whttp:method="POST" 
+            whttp:inputSerialization="application/x-www-form-urlencoded"/>
+        <operation ref="tns:Put" whttp:method="PUT" 
+            whttp:inputSerialization="application/x-www-form-urlencoded"/>
+        <operation ref="tns:Delete" whttp:method="DELETE"/>
+    </binding>    
+    
+    <!-- Concrete Binding with SOAP-->
+    <binding name="RESTfulInterfaceSoapBinding" interface="tns:RESTfulInterface" 
+        type="http://www.w3.org/ns/wsdl/soap" 
+        wsoap:protocol="http://www.w3.org/2003/05/soap/bindings/HTTP/"
+        wsoap:mepDefault="http://www.w3.org/2003/05/soap/mep/request-response">
+        <operation ref="tns:Get"/>
+        <operation ref="tns:Post" />
+        <operation ref="tns:Put" />
+        <operation ref="tns:Delete" />
+    </binding>
+        
+    <!-- Web Service offering endpoints for both the bindings-->
+    <service name="RESTfulService" interface="tns:RESTfulInterface">
+        <endpoint name="RESTfulServiceRestEndpoint" 
+            binding="tns:RESTfulInterfaceHttpBinding" 
+            address="http://www.example.com/rest/"/>
+        <endpoint name="RESTfulServiceSoapEndpoint" 
+            binding="tns:RESTfulInterfaceSoapBinding" 
+            address="http://www.example.com/soap/"/>
+    </service>
+    
+</description>

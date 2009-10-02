@@ -1,0 +1,48 @@
+<h3 class="plain">Prerequisites</h3>
+<p>
+	C++ bindings are generated from the <a href="../xsd">nexml schema files</a> using the <code>xsd</code>
+	tool from <a href="http://www.codesynthesis.com/products/xsd/download.xhtml">CodeSynthesis</a>,
+	and are then compiled with something like the <a href="driver.cxx">driver.cxx</a> file to yield 
+	an executable that processes nexml instance documents (presumably this would be part of an importer
+	that maps the beans objects created by the <code>xsd</code> tool onto your internal object model). 
+	The basic steps are as follows:
+	<ul>
+		<li class="rss">
+			<a href="http://www.codesynthesis.com/products/xsd/download.xhtml">Download</a> and install 
+			xsd-* for your platform.
+		</li>
+		<li class="rss">Download and install <a href="http://xerces.apache.org/xerces-c/">xerces-c</a>,
+			we need to include its headers during compiling and libxerces during linking.
+		</li>
+		<li class="rss">
+			<p>
+			Generate the headers and binding sources from the schema using the xsd tool.
+			The easiest way to do this is to run the <code>configure</code> script in the parent directory
+			and use make from that directory (if you are a developer, you will have to run
+			the <code>bootstrap.sh</code> shell script to create the <code>configure</code> script -- you will
+			also need up-to-date <code>autoconf</code> and <code>automake</code>).
+			You will need to use the <code>--with-xerces=</code> and <code>--with-code-syn-xsd</code>
+			arguments to <code>configure</code>
+			</p>
+
+			<p>
+			If you do not want to use the configure-based build, you can also 
+			build the C++ bindings using  something like this <a href="build.sh">shell
+			script</a> or this <a href="handwrittenMakefile">Makefile</a>. You may have to tweak these a little
+			depending on your install location and version for xsd and xerces-c.
+			The salient point
+			in these script examples is the command line invocation for <code>xsd</code>.
+			</p>
+		</li>
+		<li class="rss">
+			Create your own mappings between the xsd object model and that of your software. The
+			<a href="driver.cxx">driver.cxx</a> gives a simple example of where to start with that.
+			Make sure to use the flags to include and link to xsd, and xerces.
+			For example, compile with <code>-I$XERCES_HOME/include -I$XSD_HOME/$XSD_HOME/libxsd</code> and link with 
+			<code>-L$XERCES_HOME/lib -lxerces-c</code>.		
+
+		</li>
+	</ul>
+	
+	
+</p>

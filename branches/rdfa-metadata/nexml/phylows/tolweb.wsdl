@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions xmlns:http="http://schemas.xmlsoap.org/wsdl/http/"
+	xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/"
+	xmlns:tns="http://www.nexml.org/phylows/tolweb/"
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="tolweb"
+	targetNamespace="http://www.nexml.org/phylows/tolweb/"
+	xmlns:nex="http://www.nexml.org/1.0">
+	<wsdl:types>
+		<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+			<xsd:import namespace="http://www.nexml.org/1.0"
+				schemaLocation="http://www.nexml.org/1.0/nexml.xsd">
+			</xsd:import>
+		</xsd:schema>
+	</wsdl:types>
+	<wsdl:message name="TreeRequest">
+		<wsdl:part name="ToLWebTreeID" type="xsd:integer"></wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="TreeResponse">
+		<wsdl:part name="ToLWebTreeResponse" element="nex:nexml"/>
+	</wsdl:message>
+	<wsdl:portType name="tolweb">
+		<wsdl:operation name="Tree">
+			<wsdl:input message="tns:TreeRequest" />
+			<wsdl:output message="tns:TreeResponse" />
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding name="tolwebHTTP" type="tns:tolweb">
+		<http:binding verb="GET" />
+		<wsdl:operation name="Tree">
+			<http:operation location="Tree/ToLWeb:(ToLWebTreeID)" />
+			<wsdl:input>
+				<http:urlReplacement/>
+			</wsdl:input>
+			<wsdl:output>
+				<mime:content type="text/xml" part="ToLWebTreeResponse" />
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="tolweb">
+		<wsdl:port binding="tns:tolwebHTTP" name="tolwebHTTP">
+			<http:address
+				location="http://www.nexml.org/phylows/tolweb/" />
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>

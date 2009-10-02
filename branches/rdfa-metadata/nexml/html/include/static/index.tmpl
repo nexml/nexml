@@ -1,0 +1,206 @@
+<!-- TITLE: nexml - phylogenetic data as xml -->
+<!-- HEADING: Overview -->
+<div class="hiddenWidget" style="display:none">
+	<div id="my_div"></div>  
+	<script type="text/javascript">
+		initialize_ajax();
+		PhyloWidget.useFull(); // Use PhyloWidget Full 
+		var params = { width:530, height:300, tree:'PhyloWidget', search:'a' };
+		PhyloWidget.writeWidget(params); // Immediately inserts the applet code directly into the current document.
+	</script>	
+	<form action="#">
+		<input type="text" name="tree_id" id="tree_id" value="16299"></input>
+	    <input type="button" value="Draw this Tree of Life clade" onclick="fetch_tree()"></input>
+	</form>
+	<h3 class="headerstyle">
+	    Nexml in action: AJAX + PhyloWidget
+	</h3>
+	<p>
+		The <a rel="nofollow" href="http://www.phylowidget.org">PhyloWidget</a> applet
+		above demonstrates how nexml can be used in a web context: when you click
+		the 'Draw this Tree of Life clade' button, an AJAX request is sent to the 
+		nexml.org server. From there, a request is passed on to the 
+		<a href="http://www.tolweb.org" rel="nofollow">Tree of Life</a> server. The
+		ToL responds with its XML format, which is transformed into nexml on the
+		nexml.org server, where it is returned to the AJAX request. Your web browser 
+		then parses this nexml and passes it into the applet, where it is visualized.
+		To find the taxon ID of your favourite clade, visit the 
+		<a href="http://tolweb.org/tree/home.pages/groupsearch.html" rel="nofollow">
+		Tree of Life group search</a> page. (<em>Applet not working?</em> try the 
+		PhyloWidget <a href="http://www.phylowidget.org/troubleshooting.html" rel="nofollow">
+		troubleshooting</a> section.)
+	</p>
+</div>
+<p>
+    The <a rel="nofollow" href="http://www.citeulike.org/user/rvosa/article/2011773">
+    NEXUS file format</a> is a commonly used format for 
+    phylogenetic data. Unfortunately, over time, the format
+    has become overloaded - which has caused various
+    <a rel="nofollow" href="https://www.nescent.org/wg_evoinfo/NEXUS_Problems">
+    problems</a>. Meanwhile, new technologies around the
+    <a rel="nofollow" href="http://www.w3.org/XML/">XML</a> standard have
+    emerged. These technologies have the potential to greatly
+    simplify, and improve robustness, in the processing of phylogenetic data<!-- (for 
+    a quick visual demonstration of the integration of NeXML with web services
+    and client-side AJAX scripting, <a href="#" onclick="toggleClassDisplay('hiddenWidget')">click here</a>)-->:
+</p>
+<ul>
+<li class="rss">
+    <strong>Syntax validation</strong> &mdash; some of the issues hampering
+    interoperability are caused by the fact that no formal
+    specification exists for NEXUS and other flat files, and no unambiguous way
+    to validate them. Thanks to <a rel="nofollow" href="http://www.w3.org/XML/Schema">
+    XML Schema</a> we can now define a grammar against which 
+    data files can be validated syntactically.
+</li>
+<li class="rss">
+	<strong>Semantic annotation</strong> &mdash; another issue in current file
+	formats is that their semantics are not well-defined. For example, what does
+	it mean to use an ambiguity code in a matrix? Is it uncertainty or polymorphism?  	
+	With the wider <a rel="nofollow" href="https://www.nescent.org/wg_evoinfo/">
+    EvoInfo working group</a> we are developing an <a href="http://www.evolutionaryontology.org">
+    ontology</a> on which we are mapping nexml schema types so that the semantics
+    of data files become well-defined.
+</li>
+<li class="rss">
+    <strong>Web services</strong> &mdash; a number of different 
+    technologies (such as <a rel="nofollow" href="http://www.xmlrpc.com/">XML-RPC</a>, 
+    <a rel="nofollow" href="http://en.wikipedia.org/wiki/Representational_State_Transfer">REST</a> 
+    and <a rel="nofollow" href="http://www.w3.org/TR/soap/">SOAP</a>) have 
+    emerged allowing disparate, xml-based services to be glued together 
+    over the internet. Using such services, researchers can 
+    "farm out" their calculations to dedicated servers, such
+    as those of the <a rel="nofollow" href="http://www.phylo.org">CIPRES
+    project</a>. The wider plan is to integrate such services in
+    an <a href="https://www.nescent.org/wg_evoinfo/General_Ontology">ontology</a>-mediated architecture.
+</li>
+<!--li class="rss">
+    <strong>Native XML databases</strong> &mdash; relational
+    databases are based on a fixed schema. For phylogenetic
+    data this poses problems, because the field of phyloinformatics
+    moves very rapidly: new metrics and analysis types are
+    published constantly. 
+    <a rel="nofollow" href="http://xmldb-org.sourceforge.net/">XML databases</a>
+    are freed from this constraint, simplifying storage of
+    unusual data types.
+</li-->          
+</ul>
+<p>
+    Therefore, a group of developers of phylogenetic software have 
+    come together as part of the <a href="http://www.nescent.org">
+    NESCent</a> working group for <a href="https://www.nescent.org/wg_evoinfo">
+    evolutionary informatics</a> to develop a 
+    <a href="https://www.nescent.org/wg_evoinfo/Future_Data_Exchange_Standard">
+    new data exchange standard</a> based on these technologies.
+</p>
+<p class="internallink">
+
+  [ <a href="#top">Back to top</a> ]
+</p>
+<h3 class="headerstyle">
+    What are we doing about it?
+</h3>
+<p>
+    Nexml development is being undertaken in a number of
+    subprojects:
+</p>
+<ul>
+    <li class="rss">
+        In the first place, we're designing an XML schema. This
+        schema (designated as namespace http://www.nexml.org/1.0)
+        is documented on our 
+        <a href="https://www.nescent.org/wg_evoinfo/Future_Data_Exchange_Standard">wiki</a>;
+        the bleeding edge version is available from <a href="/code">svn</a>;
+        the <a href="/nexml/xsd">source code can be browsed</a> on our
+        site (it's a check out from our repository which is updated
+        every five minutes); for bug reports and feature requests please
+        visit our <a href="/nexml/html/index/tracker">issue tracker</a>
+        page.
+    </li>
+    <li class="rss">
+        Secondly, we're implementing nexml read/write abilities in a number of 
+        software packages:<br/>
+        <br/>
+        <img class="app" alt="Mesquite" src="<% paths.strip(paths.include('mesquite.gif')) %>"/>
+        <a rel="nofollow" href="http://mesquiteproject.org">Mesquite</a> now supports reading
+        and writing of nexml. This implementation has been developed by Peter Midford and Rutger
+        Vos.<br/>
+        <br/>
+        <img class="app" alt="DAMBE" src="<% paths.strip(paths.include('dambe.gif')) %>"/>
+        At the most recent EvoInfo meeting, Xuhua Xia demonstrated 
+        <a rel="nofollow" href="http://dambe.bio.uottawa.ca/dambe.asp">DAMBE</a>'s abilities
+        to read and write nexml data transparently.<br/>
+        <br/>
+        <img class="app" alt="R" src="<% paths.strip(paths.include('Rlogo.jpg')) %>"/>
+        The <a rel="nofollow" href="https://r-forge.r-project.org/projects/phylobase/">phylobase</a>
+        package for <a rel="nofollow" href="http://www.r-project.org/">R</a> reads and writes
+        tree descriptions, with character matrices under way. This implementation
+        is being developed by Aaron Mackey.<br/>
+        <br/>
+        <!--img class="app" alt="paup" src="<% paths.strip(paths.include('paup.gif')) %>"/>
+        David Swofford has started implementing nexml I/O for 
+        <a rel="nofollow" href="http://paup.csit.fsu.edu/">paup</a>. This implementation uses
+        C++ bindings analogous to xmlbeans.<br/>
+        <br/-->
+        <img class="app" alt="python" src="<% paths.strip(paths.include('python.jpg')) %>"/>
+        Jeet Sukumaran has implemented nexml I/O for python, in a package
+        tentatively called pyNexml.<br/>
+        <br/>
+        <img class="app" alt="BioPerl" src="<% paths.strip(paths.include('BioPerlLogo.png')) %>"/>
+        Chase Miller has implemented nexml I/O for 
+        <a rel="nofollow" href="http://www.bioperl.org">BioPerl</a>'s TreeIO and
+        AlignIO interfaces, which under the hood reuse Rutger Vos's 
+        <a href="http://search.cpan.org/~rvosa/Bio-Phylo/">Bio::Phylo</a>
+        parser libraries.<br/>
+        <br/>
+        <img class="app" alt="HIVQuery" src="<% paths.strip(paths.include('hivq.jpg')) %>"/>
+        Mark Jensen has implemented nexml compatability for the 
+        <a rel="nofollow" href="http://fortinbras.us/">HIVQuery</a> web 
+        application.<br/>
+        <!--br/>
+	    In addition, Sergei Kosakovsky Pond is interested in nexml IO for
+    	hyphy. We've also had (very tentative) conversations with
+    	Paul Lewis of NCL (the nexus class libraries in c++) about nexml
+    	integration. In short, a lot of active (but sometimes alpha stage) development
+    	is going on.-->        
+    </li>
+    <li class="rss">
+        Third, we're crossreferencing the nexml schema with the 
+        <a rel="nofollow" href="http://www.evolutionaryontology.org">Character Data Analysis Ontology</a>
+        which is being developed by other members of the EvoInfo working group.
+    </li>
+</ul>
+<p class="internallink">
+  [ <a href="#top">Back to top</a> ]
+</p>
+<h3 class="headerstyle">
+  Get involved!
+</h3>
+<p>
+  If you are interested in being involved in the nexml project
+  in any way, please do! Here are some ways to get involved:
+</p>
+<ul>
+	<li class="rss">
+		<strong>Get informed</strong> &mdash; information about the nexml
+		project is distributed over the <a href="http://www.nescent.org/wg_evoinfo/Future_Data_Exchange_Standard">wiki</a>
+		(for an overview of vision, plans, implementation), 
+		<a href="http://www.nexml.org/nexml/html/doc/schema-1/">documentation</a>
+		(for formal description of the schema) and the
+		<a href="https://lists.sourceforge.net/lists/listinfo/nexml-discuss">mailing list</a>
+		(for immediate plans and discussion).
+	</li>
+	<li class="rss">
+		<strong>Try it out</strong> &mdash; the download section of the 
+		website has nightly builds of bindings for various languages.
+		Take these for a spin!
+	</li>
+	<li class="rss">
+		<strong>Contribute</strong> &mdash; if you are a programmer interested
+		in extending nexml support, please contact us through the mailing
+		list to get commit support for the subversion repository.
+	</li>
+</ul>
+<p class="internallink">
+  [ <a href="#top">Back to top</a> ]
+</p>                

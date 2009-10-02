@@ -1,0 +1,141 @@
+<h3 class="plain">Description</h3><% schema.docsInFile(currentFile) %>
+<p><strong>Other views</strong> (open in new window):</p>
+<div class="credit linkshare">
+    <a href="inheritance/" target="nexml_inheritance">
+        <img 
+            class="icon" 
+            src="<% paths.strip(paths.include('chart_organisation.png')) %>" 
+            alt="organisation chart" /> inheritance tree
+    </a> |
+    <a href="inclusions/" target="nexml_inclusions">
+        <img 
+            class="icon" 
+            src="<% paths.strip(paths.include('sitemap.png')) %>" 
+            alt="file hierarchy" /> inclusions tree
+    </a> |    
+    <a href="<% paths.strip(currentFile) %>" target="nexml_source">
+        <img 
+            class="icon" 
+            src="<% paths.strip(paths.include('page_white_code_red.png')) %>" 
+            alt="xml schema code" /> schema source
+    </a>     
+</div>
+<% complexTypes = schema.complexTypeInFile(currentFile) %>
+<% IF complexTypes %>
+    <h3 class="headerstyle"><a name="complexTypes"></a>Complex types</h3>
+    
+    <% FOREACH type = complexTypes %>
+    
+        <!-- heading, description, inheritance -->
+        <% INCLUDE 'anyType_metadata.tmpl' %>
+        
+        <!-- attributes -->
+        <% attributes = type.attributes %>
+        <% IF attributes %>
+            <h5 class="level2 <% type.name %>">Attributes</h5>
+            <table class="level2 <% type.name %>">
+                <thead>
+                    <tr>
+                        <td>Name</td>
+                        <td>Type</td>                
+                        <td>Usage</td>                                    
+                    </tr>            
+                </thead>
+                <tbody>
+                    <% FOREACH attr = attributes %>
+                        <tr>
+                            <td><% attr.name %></td>
+                            <td>
+                                <% IF schema.simpleType(attr.type) %>
+                                    <a href="<% paths.transform(schema.simpleType(attr.type).url) %>">
+                                        <% attr.type %>
+                                    </a>
+                                <% ELSE %>
+                                    <a 
+                                        href="http://www.w3.org/TR/xmlschema-2/#<% attr.type.substr(3) %>"
+                                         rel="nofollow">
+                                        <% attr.type %>
+                                    </a>
+                                <% END %>
+                            </td>
+                            <td><% attr.use %></td>
+                        </tr>
+                    <% END %>
+                </tbody>
+            </table>
+        <% END %>    
+        
+        <!-- elementPatterns -->
+        <% node = type.elementPatterns %>
+        <% IF node.children %>
+            <h5 class="level2 <% type.name %>">Substructures</h5> 
+            <% INCLUDE recurse %>
+        <% END %>   
+        
+        <!-- prettified xml source -->
+        <% INCLUDE 'anyType_source.tmpl' %>  
+        <p class="internallink">[ <a href="#top">Back to top</a> ]</p>
+    <% END %>    
+<% END %>
+
+<% simpleTypes = schema.simpleTypeInFile(currentFile) %>
+<% IF simpleTypes %>
+    <h3 class="headerstyle"><a name="simpleTypes"></a>Simple types</h3>
+    
+    <% FOREACH type = simpleTypes %>
+    
+        <!-- heading, description, inheritance --> 
+        <% INCLUDE 'anyType_metadata.tmpl' %>
+        
+        <% facets = type.facets %>
+        <% IF facets.keys.first %>
+            <h5 class="level2 <% type.name %>">Facets</h5>
+            <table class="level2 <% type.name %>">
+                <thead>
+                    <tr>
+                        <td>Type</td>
+                        <td>Value</td>                
+                    </tr>
+                </thead>
+                <tbody>
+                    <% FOREACH facet IN facets.keys %>
+                        <tr>
+                            <td><% facet %></td>
+                            <td><% facets.$facet %></td>                
+                        </tr>
+                    <% END %> 
+                </tbody>
+            </table>
+        <% END %>  
+        
+        <!-- prettified xml source -->
+        <% INCLUDE 'anyType_source.tmpl' %>
+        <p class="internallink">[ <a href="#top">Back to top</a> ]</p>    
+    <% END %>    
+<% END %>
+
+<!-- subroutine for depth-first recursion in substructure -->
+<% BLOCK recurse %>
+    <ul class="level2 <% nested _ ' ' _ type.name %>">
+    <% FOREACH child = node.children %>    
+        <li class="level2 <% nested _ ' ' _ type.name %>">
+            <% IF child.elementName == 'element' %>
+                an <acronym title="<% child.explain %>">element</acronym> called "<% child.name %>", 
+                instance of <a href="<% paths.transform(schema.complexType(child.type).url) %>"><% child.type %></a>            
+                (<% child.minOccurs %>..<% child.maxOccurs %>).
+            <% ELSIF child.elementName == 'sequence' %>
+                a <acronym title="<% child.explain %>">sequence</acronym> of items 
+                (<% child.minOccurs %>..<% child.maxOccurs %>):
+            <% ELSIF child.elementName == 'choice' %>
+                a <acronym title="<% child.explain %>">choice</acronym> between items:
+            <% END %>    
+            <% children = child.children %>
+            <% IF children %>
+                <% INCLUDE recurse node = child nested = 'nested' %>
+            <% END %>
+        </li>        
+    <% END %>
+    </ul>
+<% END %>
+
+<% INCLUDE 'currentFile.tmpl' %>

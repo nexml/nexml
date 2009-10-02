@@ -1,0 +1,68 @@
+<p>
+	This subdirectory contains java code for NeXML processing.
+	Specifically, the directory structure is as follows:
+	<ul>
+        <li class="folder"><a href="src/">src/</a>* contains source code for the following 
+            subprojects:<br/><br/>
+            <ul>
+                <li class="folder">
+                    <a href="src/org/">src/org/</a>* contains the DOM-based core java 5 NeXML 
+                    reading/writing API developed by a 
+                    <a href="https://www.nescent.org/wg_evoinfo/Java_API_Library_to_NeXML_Subgroup">
+                    subgroup</a> of the 
+                    <a href="https://www.nescent.org/wg_evoinfo/Database_Interop_Hackathon">
+                    database interoperability hackathon</a> held at 
+                    <a href="http://www.nescent.org">NESCent</a> March 8-13 2009. The API contains
+                    interfaces in the <code>org.nexml.model</code> package and their implementations 
+                    in the <code>org.nexml.model.impl</code> package.
+                </li>
+                <li class="folder">
+                    <a href="src/mesquite">src/mesquite/</a>* contains classes for 
+                    <a href="http://mesquiteproject.org">mesquite</a>. 
+                    These classes use the <code>org.nexml.model.*</code> architecture, and so 
+                    function to illustrate how to use it in an application.
+                    Written and maintained by Rutger Vos with some help
+                    from Wayne Maddison.
+                </li>
+		        <li class="folder">
+		            <a href="src/validator/">src/validator/</a>* contains a 
+		            <a href="http://xerces.apache.org/xerces-j/">Xerces-J</a>-based
+		            validator written by Terri Liebowitz of the San Diego
+		            Supercomputing Center, with modifications by Mark Holder.
+		            It is used to validate nexml instance documents against
+		            the schema (or, indeed, any xml instance document against
+		            any schema).
+		        </li>                
+            </ul>
+        </li>
+        <li class="folder">
+            <a href="test/">test/</a>* contains 
+            <a href="http://www.junit.org/">JUnit</a> tests for the <code>org.nexml.model.*</code>
+            API.
+        </li>        
+        <li class="folder">
+            <a href="jars/">jars/</a>* contains dependencies for the code in the src/ and validator/
+            folders. Not all these jars are required at present, it seems.
+        </li>
+	</ul>
+	As of 26/6/09 the NeXML/Java project uses maven for building and dependency management. This
+	means that you can run goals such as <code>mvn test</code>, <code>mvn compile</code>, <code>
+	mvn install</code> and <code>mvn clean</code>. For more info, consult the <a href="pom.xml">pom.xml</a>.
+	In addition to using mvn to build and install the code here, you can also use the nexml maven 
+	repository at: 
+<pre>
+&lt;repository>
+   &lt;id>m2.nexml.repos&lt;/id>
+   &lt;name>NeXML Remote Repository&lt;/name>
+   &lt;url>http://nexml-dev.nescent.org/.m2/repository/&lt;/url>   
+&lt;/repository>  
+</pre>
+	From where you can download nexml as:
+<pre>
+&lt;dependency>
+   &lt;groupId>org.nexml.model&lt;/groupId>
+   &lt;artifactId>nexml&lt;/artifactId>
+   &lt;version>1.5-SNAPSHOT&lt;/version>
+&lt;/dependency>
+</pre>
+</p>
