@@ -29,7 +29,7 @@
         <xs:complexContent>
             <xs:restriction base="AbstractNode">
                 <xs:sequence minOccurs="1" maxOccurs="1">
-                    <xs:element name="dict" type="Dict" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element name="meta" type="Meta" minOccurs="0" maxOccurs="unbounded"/>
                 </xs:sequence>
             </xs:restriction>
         </xs:complexContent>
@@ -55,7 +55,7 @@
         <xs:complexContent>
             <xs:restriction base="AbstractEdge">
                 <xs:sequence minOccurs="1" maxOccurs="1">
-                    <xs:element name="dict" type="Dict" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element name="meta" type="Meta" minOccurs="0" maxOccurs="unbounded"/>
                 </xs:sequence>                
                 <xs:attribute name="length" type="xs:float"/>
             </xs:restriction>            
@@ -71,7 +71,7 @@
         <xs:complexContent>
             <xs:restriction base="AbstractEdge">
                 <xs:sequence minOccurs="1" maxOccurs="1">
-                    <xs:element name="dict" type="Dict" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element name="meta" type="Meta" minOccurs="0" maxOccurs="unbounded"/>
                 </xs:sequence>                   
                 <xs:attribute name="length" type="xs:integer"/>
             </xs:restriction>            

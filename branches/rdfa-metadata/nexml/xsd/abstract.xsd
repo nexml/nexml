@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xs:schema 
-    xmlns:xs="http://www.w3.org/2001/XMLSchema"
-    xmlns:xml="http://www.w3.org/XML/1998/namespace" 
-    xmlns:xlink="http://www.w3.org/1999/xlink"
-    targetNamespace="http://www.nexml.org/1.0"
-    xmlns="http://www.nexml.org/1.0"
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:xml="http://www.w3.org/XML/1998/namespace" xmlns:xlink="http://www.w3.org/1999/xlink"
+    targetNamespace="http://www.nexml.org/1.0" xmlns="http://www.nexml.org/1.0"
+    xmlns:xhtml="http://www.w3.org/1999/xhtml/datatypes/"
     elementFormDefault="qualified">
     
+    <xs:import namespace="http://www.w3.org/1999/xhtml/datatypes/" 
+        schemaLocation="external/xhtml-datatypes-1.xsd"/>
+
     <xs:include schemaLocation="meta/annotations.xsd"/>
     <xs:annotation>
         <xs:documentation>
@@ -15,7 +16,7 @@
             the child class can have more types of elements appended to the end of its children, and/or
             more attributes. Restriction means that the child class is more limited than the base class,
             in that it might have fewer child elements, fewer attributes, or more restricted child 
-            element types.<br /><br />
+            element types.<br/><br/>
             The nexml schema uses inheritance such that abstract superclasses - i.e. those defined in
             this module - extend each other to form a useful tree of superclasses, from which child
             classes then derive by restriction. This is done so that for any type there is always an
@@ -23,25 +24,26 @@
             instances won't have surprising substructures.
         </xs:documentation>
     </xs:annotation>
-    
-    <!-- a labelled element that encloses a key/value dictionary -->
-    <xs:complexType name="Annotated" abstract="true">
-        <xs:annotation>
-            <xs:documentation>
-                The Annotated complexType is a super class for objects that 
-                optionally have key/value annotations of type Dict.
-            </xs:documentation>
-        </xs:annotation>          
-        <xs:complexContent>
-            <xs:extension base="Base">
-                <xs:sequence>
-                    <xs:element name="dict" type="Dict" minOccurs="0" maxOccurs="unbounded"/>
-                </xs:sequence>
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>    
 
-    <!-- an IDTagged element with a human readable label -->
+    <!-- an element that can be annotated with RDFa-compliant metadata -->
+    <xs:complexType name="Annotated" abstract="true">
+          <xs:annotation>
+              <xs:documentation>
+                  The Annotated complexType is a super class for objects that 
+                  optionally have metadata annotations of type Meta.
+              </xs:documentation>
+          </xs:annotation>
+          <xs:complexContent>
+              <xs:extension base="Base">
+                  <xs:sequence>
+                    <xs:element name="meta" type="Meta" minOccurs="0" maxOccurs="unbounded"/>
+				</xs:sequence>
+                  <xs:attribute name="about" type="xhtml:URIorSafeCURIE" use="optional"/>
+              </xs:extension>
+          </xs:complexContent>
+      </xs:complexType>
+
+    <!-- an element with a human readable label -->
     <xs:complexType name="Labelled" abstract="true">
         <xs:annotation>
             <xs:documentation>
@@ -49,31 +51,30 @@
                 optionally have label attributes to use as a (non-unique)
                 name of type xs:string.
             </xs:documentation>
-        </xs:annotation>        
+        </xs:annotation>
         <xs:complexContent>
             <xs:extension base="Annotated">
                 <xs:attribute name="label" type="xs:string" use="optional"/>
             </xs:extension>
         </xs:complexContent>
-    </xs:complexType>    
-            
+    </xs:complexType>
+
     <!-- any element that requires an ID -->
     <xs:complexType name="IDTagged" abstract="true">
         <xs:annotation>
             <xs:documentation>
                 The IDTagged complexType is a super class for objects that require
-                unique id attributes of type xs:NCName. IDTagged doesn't define
-                scope for uniqueness, derivations are free to do so using xs:keyRef.
+                unique id attributes of type xs:ID. The id must be unique within the XML document.
             </xs:documentation>
         </xs:annotation>
         <xs:complexContent>
             <xs:extension base="Labelled">
                 <xs:sequence/>
-                <xs:attribute name="id" type="xs:NCName" use="required"/>
+                <xs:attribute name="id" type="xs:ID" use="required"/>
             </xs:extension>
-        </xs:complexContent>        
-    </xs:complexType>    
-    
+        </xs:complexContent>
+    </xs:complexType>
+
     <!-- elements that enclose "class" elements -->
     <xs:complexType name="Segmented" abstract="true">
         <xs:annotation>
@@ -92,8 +93,8 @@
                 </xs:sequence>
             </xs:extension>
         </xs:complexContent>
-    </xs:complexType>    
-    
+    </xs:complexType>
+
     <!-- an annotated element with a required link to an otu -->
     <xs:complexType name="TaxonLinked" abstract="true">
         <xs:annotation>
@@ -101,14 +102,14 @@
                 The TaxonLinked complexType is a super class for objects that 
                 require a taxon id reference.
             </xs:documentation>
-        </xs:annotation>         
+        </xs:annotation>
         <xs:complexContent>
             <xs:extension base="IDTagged">
-                <xs:attribute name="otu" type="xs:NCName" use="required"/>
+                <xs:attribute name="otu" type="xs:IDREF" use="required"/>
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
-    
+
     <!-- an annotated element with an optional link to an otu -->
     <xs:complexType name="OptionalTaxonLinked" abstract="true">
         <xs:annotation>
@@ -116,14 +117,14 @@
                 The OptionalOTULinked complexType is a super class for objects that 
                 that optionally have an otu id reference.
             </xs:documentation>
-        </xs:annotation>          
+        </xs:annotation>
         <xs:complexContent>
             <xs:extension base="IDTagged">
-                <xs:attribute name="otu" type="xs:NCName" use="optional"/>
+                <xs:attribute name="otu" type="xs:IDREF" use="optional"/>
             </xs:extension>
         </xs:complexContent>
-    </xs:complexType>    
-    
+    </xs:complexType>
+
     <!-- an annotated element with a required link to an otu container -->
     <xs:complexType name="TaxaLinked" abstract="true">
         <xs:annotation>
@@ -131,14 +132,14 @@
                 The TaxaLinked complexType is a super class for objects that 
                 that require an otus id reference.
             </xs:documentation>
-        </xs:annotation>         
+        </xs:annotation>
         <xs:complexContent>
             <xs:extension base="IDTagged">
-                <xs:attribute name="otus" type="xs:NCName" use="required"/>
+                <xs:attribute name="otus" type="xs:IDREF" use="required"/>
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
-    
+
     <!-- class element -->
     <xs:complexType name="Class" abstract="false">
         <xs:annotation>
@@ -153,8 +154,8 @@
             </xs:documentation>
         </xs:annotation>
         <xs:complexContent>
-            <xs:extension base="IDTagged"/>            
+            <xs:extension base="IDTagged"/>
         </xs:complexContent>
-    </xs:complexType>  
-           
+    </xs:complexType>
+
 </xs:schema>

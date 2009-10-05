@@ -34,7 +34,7 @@
         </xs:annotation>
         <xs:complexContent>
             <xs:extension base="Base">
-                <xs:attribute name="state" use="required" type="xs:NCName"/>
+                <xs:attribute name="state" use="required" type="xs:IDREF"/>
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
@@ -164,7 +164,7 @@
             <xs:extension base="IDTagged">
                 <xs:sequence minOccurs="1" maxOccurs="1"/>                
                 <xs:attribute name="tokens" type="MSTokenLength" use="optional"/>
-                <xs:attribute name="states" type="xs:NCName" use="optional"/>
+                <xs:attribute name="states" type="xs:IDREF" use="optional"/>
                 <xs:attribute name="codon" type="CodonPosition" use="optional"/>
             </xs:extension>
         </xs:complexContent>
