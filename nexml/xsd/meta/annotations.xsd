@@ -56,7 +56,6 @@
 		</xs:annotation>
 		<xs:sequence />		
 		<!-- <xs:attributeGroup ref="xml:specialAttrs" /> -->
-		<xs:attribute ref="xlink:href" use="optional" />
 		<xs:attribute name="class" type="xs:IDREFS" use="optional" />
 		<xs:anyAttribute namespace="##any" processContents="skip" />
 	</xs:complexType>
@@ -81,7 +80,7 @@
                     <xs:element name="meta" type="Meta" minOccurs="0" maxOccurs="unbounded"/>
 				</xs:sequence>
 				<xs:attribute name="href" type="xhtml:URI" use="optional"/>
-				<xs:attribute name="rel" type="xhtml:CURIEs" use="required"/>
+				<xs:attribute name="rel" type="xhtml:CURIE" use="required"/>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
@@ -98,7 +97,7 @@
 				<xs:sequence>
 					<xs:any minOccurs="0" maxOccurs="unbounded"/>
 				</xs:sequence>
-				<xs:attribute name="property" type="xhtml:CURIEs" use="required"/>
+				<xs:attribute name="property" type="xhtml:CURIE" use="required"/>
 				<xs:attribute name="datatype" type="xhtml:CURIE" use="optional"/>
 				<xs:attribute name="content" type="xs:string"/>
 			</xs:extension>
