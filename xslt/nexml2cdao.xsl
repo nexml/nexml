@@ -244,10 +244,10 @@
                 </xsl:otherwise>
             </xsl:choose>
             <cdao:belongs_to_TU>
-                <xsl:attribute name="rdf:about">#<xsl:value-of select="../@otu"/></xsl:attribute>
+                <xsl:attribute name="rdf:resource">#<xsl:value-of select="../@otu"/></xsl:attribute>
             </cdao:belongs_to_TU>
             <cdao:belongs_to_Character>
-                <xsl:attribute name="rdf:about">#<xsl:value-of select="@char"/></xsl:attribute>
+                <xsl:attribute name="rdf:resource">#<xsl:value-of select="@char"/></xsl:attribute>
             </cdao:belongs_to_Character>
             <xsl:choose>
                 <xsl:when test="contains(../../../@xsi:type, 'ContinuousCells')">
@@ -261,22 +261,22 @@
                 </xsl:when>
                 <xsl:when test="contains(../../../@xsi:type, 'StandardCells')">
                     <cdao:has_Standard_State>
-                        <xsl:attribute name="rdf:about">#<xsl:value-of select="@state"/></xsl:attribute>
+                        <xsl:attribute name="rdf:resource">#<xsl:value-of select="@state"/></xsl:attribute>
                     </cdao:has_Standard_State>
                 </xsl:when>
                 <xsl:when test="contains(../../../@xsi:type, 'DnaSeqs')">
                     <cdao:has_Nucleotide_State>
-                        <xsl:attribute name="rdf:about">#<xsl:value-of select="@state"/></xsl:attribute>
+                        <xsl:attribute name="rdf:resource">#<xsl:value-of select="@state"/></xsl:attribute>
                     </cdao:has_Nucleotide_State>
                 </xsl:when>
                 <xsl:when test="contains(../../../@xsi:type, 'RnaSeqs')">
                     <cdao:has_RNA_State>
-                        <xsl:attribute name="rdf:about">#<xsl:value-of select="@state"/></xsl:attribute>
+                        <xsl:attribute name="rdf:resource">#<xsl:value-of select="@state"/></xsl:attribute>
                     </cdao:has_RNA_State>
                 </xsl:when>
                 <xsl:otherwise>
                     <cdao:has_State>
-                        <xsl:attribute name="rdf:about">#<xsl:value-of select="@state"/></xsl:attribute>
+                        <xsl:attribute name="rdf:resource">#<xsl:value-of select="@state"/></xsl:attribute>
                     </cdao:has_State>
                 </xsl:otherwise>
             </xsl:choose>
@@ -298,12 +298,12 @@
                 rdf:resource="http://www.evolutionaryontology.org/cdao.owl#CharacterStateDataMatrix"/>
             <xsl:for-each select="../nex:format/nex:char">
                 <cdao:has_Character>
-                    <xsl:attribute name="rdf:about">#<xsl:value-of select="@id"/></xsl:attribute>
+                    <xsl:attribute name="rdf:resource">#<xsl:value-of select="@id"/></xsl:attribute>
                 </cdao:has_Character>
             </xsl:for-each>
             <xsl:for-each select="//nex:otus/nex:otu">
                 <cdao:has_TU>
-                    <xsl:attribute name="rdf:about">#<xsl:value-of select="@id"/></xsl:attribute>
+                    <xsl:attribute name="rdf:resource">#<xsl:value-of select="@id"/></xsl:attribute>
                 </cdao:has_TU>
             </xsl:for-each>
         </rdf:Description>
