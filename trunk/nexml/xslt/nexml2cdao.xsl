@@ -37,7 +37,7 @@
                 <xsl:when test="nex:node/@root = 'true'">
                     <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao.owl#RootedTree"/>
                     <cdao:has_Root>
-                        <xsl:attribute name="rdf:resource"><xsl:value-of
+                        <xsl:attribute name="rdf:resource">#<xsl:value-of
                                 select="nex:node[@root = 'true']/@id"/></xsl:attribute>
                     </cdao:has_Root>
                 </xsl:when>
@@ -317,7 +317,7 @@
         <xsl:param name="individualid"/>
         <xsl:param name="symbol"/>
         <rdf:Description>
-            <xsl:attribute name="rdf:about"><xsl:value-of
+            <xsl:attribute name="rdf:about">#<xsl:value-of
                     select="$individualid"/></xsl:attribute>
             <rdf:type>
                 <xsl:attribute name="rdf:resource">#<xsl:value-of select="$classname"
