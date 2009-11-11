@@ -91,7 +91,7 @@
             </cdao:belongs_to_Tree>
             <xsl:if test="@otu">
                 <cdao:represents_TU>
-                    <xsl:attribute name="rdf:resource"><xsl:value-of select="@otu"/></xsl:attribute>
+                    <xsl:attribute name="rdf:resource">#<xsl:value-of select="@otu"/></xsl:attribute>
                 </cdao:represents_TU>
             </xsl:if>
             <xsl:if test="../nex:node[ @root = 'true']">
