@@ -102,4 +102,106 @@
   <rdf:Description rdf:about="#otu35">
     <cdao:has_External_Reference xmlns:cdao="http://www.evolutionaryontology.org/cdao.owl#" rdf:resource="http://www.cbif.gc.ca/pls/itisca/taxa_xml.upwards?p_tsn=584740"/>
   </rdf:Description>
+  <rdf:Description rdf:about="#otu2">
+    <cdao:has_External_Reference xmlns:cdao="http://www.evolutionaryontology.org/cdao.owl#" rdf:resource="http://www.cbif.gc.ca/pls/itisca/taxa_xml.upwards?p_tsn=584785"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#otu3">
+    <cdao:has_External_Reference xmlns:cdao="http://www.evolutionaryontology.org/cdao.owl#" rdf:resource="http://www.cbif.gc.ca/pls/itisca/taxa_xml.upwards?p_tsn=584786"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#otu4">
+    <cdao:has_External_Reference xmlns:cdao="http://www.evolutionaryontology.org/cdao.owl#" rdf:resource="http://www.cbif.gc.ca/pls/itisca/taxa_xml.upwards?p_tsn=584783"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#otu5">
+    <cdao:has_External_Reference xmlns:cdao="http://www.evolutionaryontology.org/cdao.owl#" rdf:resource="http://www.cbif.gc.ca/pls/itisca/taxa_xml.upwards?p_tsn=584781"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#otu6">
+    <cdao:has_External_Reference xmlns:cdao="http://www.evolutionaryontology.org/cdao.owl#" rdf:resource="http://www.cbif.gc.ca/pls/itisca/taxa_xml.upwards?p_tsn=584776"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#otu7">
+    <cdao:has_External_Reference xmlns:cdao="http://www.evolutionaryontology.org/cdao.owl#" rdf:resource="http://www.cbif.gc.ca/pls/itisca/taxa_xml.upwards?p_tsn=584775"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#otu8">
+    <cdao:has_External_Reference xmlns:cdao="http://www.evolutionaryontology.org/cdao.owl#" rdf:resource="http://www.cbif.gc.ca/pls/itisca/taxa_xml.upwards?p_tsn=584774"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#otu9">
+    <cdao:has_External_Reference xmlns:cdao="http://www.evolutionaryontology.org/cdao.owl#" rdf:resource="http://www.cbif.gc.ca/pls/itisca/taxa_xml.upwards?p_tsn=584773"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#otu10">
+    <cdao:has_External_Reference xmlns:cdao="http://www.evolutionaryontology.org/cdao.owl#" rdf:resource="http://www.cbif.gc.ca/pls/itisca/taxa_xml.upwards?p_tsn=584772"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#otu11">
+    <cdao:has_External_Reference xmlns:cdao="http://www.evolutionaryontology.org/cdao.owl#" rdf:resource="http://example.org/Ctenomys_sp.ITA"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#otu12">
+    <cdao:has_External_Reference xmlns:cdao="http://www.evolutionaryontology.org/cdao.owl#" rdf:resource="http://example.org/Ctenomys_sp._MONTE"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#otu13">
+    <cdao:has_External_Reference xmlns:cdao="http://www.evolutionaryontology.org/cdao.owl#" rdf:resource="http://example.org/Ctenomys_sp._MINUT"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#otu14">
+    <cdao:has_External_Reference xmlns:cdao="http://www.evolutionaryontology.org/cdao.owl#" rdf:resource="http://example.org/Ctenomys_sp._LLATHU"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#otu15">
+    <cdao:has_External_Reference xmlns:cdao="http://www.evolutionaryontology.org/cdao.owl#" rdf:resource="http://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=88126"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#otu16">
+    <cdao:has_External_Reference xmlns:cdao="http://www.evolutionaryontology.org/cdao.owl#" rdf:resource="http://www.cbif.gc.ca/pls/itisca/taxa_xml.upwards?p_tsn=584768"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#otu17">
+    <cdao:has_External_Reference xmlns:cdao="http://www.evolutionaryontology.org/cdao.owl#" rdf:resource="http://www.cbif.gc.ca/pls/itisca/taxa_xml.upwards?p_tsn=584764"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#otu18">
+    <cdao:has_External_Reference xmlns:cdao="http://www.evolutionaryontology.org/cdao.owl#" rdf:resource="http://www.cbif.gc.ca/pls/itisca/taxa_xml.upwards?p_tsn=584763"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#otu19">
+    <cdao:has_External_Reference xmlns:cdao="http://www.evolutionaryontology.org/cdao.owl#" rdf:resource="http://www.cbif.gc.ca/pls/itisca/taxa_xml.upwards?p_tsn=584759"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#otu20">
+    <cdao:has_External_Reference xmlns:cdao="http://www.evolutionaryontology.org/cdao.owl#" rdf:resource="http://www.cbif.gc.ca/pls/itisca/taxa_xml.upwards?p_tsn=584758"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#otu21">
+    <cdao:has_External_Reference xmlns:cdao="http://www.evolutionaryontology.org/cdao.owl#" rdf:resource="http://www.cbif.gc.ca/pls/itisca/taxa_xml.upwards?p_tsn=584757"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#otu22">
+    <cdao:has_External_Reference xmlns:cdao="http://www.evolutionaryontology.org/cdao.owl#" rdf:resource="http://www.cbif.gc.ca/pls/itisca/taxa_xml.upwards?p_tsn=584756"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#otu23">
+    <cdao:has_External_Reference xmlns:cdao="http://www.evolutionaryontology.org/cdao.owl#" rdf:resource="http://www.cbif.gc.ca/pls/itisca/taxa_xml.upwards?p_tsn=584771"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#otu24">
+    <cdao:has_External_Reference xmlns:cdao="http://www.evolutionaryontology.org/cdao.owl#" rdf:resource="http://www.cbif.gc.ca/pls/itisca/taxa_xml.upwards?p_tsn=584754"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#otu25">
+    <cdao:has_External_Reference xmlns:cdao="http://www.evolutionaryontology.org/cdao.owl#" rdf:resource="http://www.cbif.gc.ca/pls/itisca/taxa_xml.upwards?p_tsn=584752"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#otu26">
+    <cdao:has_External_Reference xmlns:cdao="http://www.evolutionaryontology.org/cdao.owl#" rdf:resource="http://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=61868"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#otu27">
+    <cdao:has_External_Reference xmlns:cdao="http://www.evolutionaryontology.org/cdao.owl#" rdf:resource="http://www.cbif.gc.ca/pls/itisca/taxa_xml.upwards?p_tsn=584751"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#otu28">
+    <cdao:has_External_Reference xmlns:cdao="http://www.evolutionaryontology.org/cdao.owl#" rdf:resource="http://www.cbif.gc.ca/pls/itisca/taxa_xml.upwards?p_tsn=584750"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#otu29">
+    <cdao:has_External_Reference xmlns:cdao="http://www.evolutionaryontology.org/cdao.owl#" rdf:resource="http://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=88124"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#otu30">
+    <cdao:has_External_Reference xmlns:cdao="http://www.evolutionaryontology.org/cdao.owl#" rdf:resource="http://www.uniprot.org/taxonomy/77911"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#otu31">
+    <cdao:has_External_Reference xmlns:cdao="http://www.evolutionaryontology.org/cdao.owl#" rdf:resource="http://www.cbif.gc.ca/pls/itisca/taxa_xml.upwards?p_tsn=584747"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#otu32">
+    <cdao:has_External_Reference xmlns:cdao="http://www.evolutionaryontology.org/cdao.owl#" rdf:resource="http://www.cbif.gc.ca/pls/itisca/taxa_xml.upwards?p_tsn=584626"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#otu33">
+    <cdao:has_External_Reference xmlns:cdao="http://www.evolutionaryontology.org/cdao.owl#" rdf:resource="http://www.cbif.gc.ca/pls/itisca/taxa_xml.upwards?p_tsn=584743"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#otu34">
+    <cdao:has_External_Reference xmlns:cdao="http://www.evolutionaryontology.org/cdao.owl#" rdf:resource="http://www.cbif.gc.ca/pls/itisca/taxa_xml.upwards?p_tsn=584741"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#otu35">
+    <cdao:has_External_Reference xmlns:cdao="http://www.evolutionaryontology.org/cdao.owl#" rdf:resource="http://www.cbif.gc.ca/pls/itisca/taxa_xml.upwards?p_tsn=584740"/>
+  </rdf:Description>  
 </rdf:RDF>
