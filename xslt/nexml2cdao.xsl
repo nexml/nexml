@@ -317,7 +317,7 @@
         <xsl:param name="individualid"/>
         <xsl:param name="symbol"/>
         <rdf:Description>
-            <xsl:attribute name="rdf:about">#<xsl:value-of
+            <xsl:attribute name="rdf:about"><xsl:value-of
                     select="$individualid"/></xsl:attribute>
             <rdf:type>
                 <xsl:attribute name="rdf:resource">#<xsl:value-of select="$classname"
