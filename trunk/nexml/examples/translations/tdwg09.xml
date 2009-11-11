@@ -56,39 +56,29 @@
 			xsi:type="nex:ResourceMeta"/>
     </otu>
     <otu id="otu11" label="Ctenomys_sp.ITA" about="#otu11">
-    	<!--
 		<meta id="dict25" rel="cdao:has_External_Reference" 
-			href="http://www.cbif.gc.ca/pls/itisca/taxa_xml.upwards?p_tsn=584740" 
+			href="http://example.org/Ctenomys_sp.ITA" 
 			xsi:type="nex:ResourceMeta"/>        
-		-->            
     </otu>
     <otu id="otu12" label="Ctenomys_sp._MONTE" about="#otu12">
-    	<!--
 		<meta id="dict24" rel="cdao:has_External_Reference" 
-			href="http://www.cbif.gc.ca/pls/itisca/taxa_xml.upwards?p_tsn=584740" 
+			href="http://example.org/Ctenomys_sp._MONTE" 
 			xsi:type="nex:ResourceMeta"/>        
-		-->            
     </otu>
     <otu id="otu13" label="Ctenomys_sp._MINUT" about="#otu13">
-    	<!--
 		<meta id="dict23" rel="cdao:has_External_Reference" 
-			href="http://www.cbif.gc.ca/pls/itisca/taxa_xml.upwards?p_tsn=584740" 
+			href="http://example.org/Ctenomys_sp._MINUT" 
 			xsi:type="nex:ResourceMeta"/>        
-		-->            
     </otu>
     <otu id="otu14" label="Ctenomys_sp._LLATHU" about="#otu14">
-    	<!--
 		<meta id="dict22" rel="cdao:has_External_Reference" 
-			href="http://www.cbif.gc.ca/pls/itisca/taxa_xml.upwards?p_tsn=584740" 
-			xsi:type="nex:ResourceMeta"/>        
-		-->            
+			href="http://example.org/Ctenomys_sp._LLATHU" 
+			xsi:type="nex:ResourceMeta"/>
     </otu>
     <otu id="otu15" label="Ctenomys_rionegrensis" about="#otu15">
-    	<!--
 		<meta id="dict21" rel="cdao:has_External_Reference" 
-			href="http://www.cbif.gc.ca/pls/itisca/taxa_xml.upwards?p_tsn=584740" 
+			href="http://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=88126" 
 			xsi:type="nex:ResourceMeta"/>        
-		-->    
     </otu>
     <otu id="otu16" label="Ctenomys_porteousi" about="#otu16">
 		<meta id="dict20" rel="cdao:has_External_Reference" 
@@ -141,11 +131,9 @@
 			xsi:type="nex:ResourceMeta"/>
     </otu>
     <otu id="otu26" label="Ctenomys_goodfellowi" about="#otu26">
-    	<!--
 		<meta id="dict10" rel="cdao:has_External_Reference" 
-			href="http://www.cbif.gc.ca/pls/itisca/taxa_xml.upwards?p_tsn=584740" 
-			xsi:type="nex:ResourceMeta"/>        
-		-->        
+			href="http://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=61868" 
+			xsi:type="nex:ResourceMeta"/>
     </otu>
     <otu id="otu27" label="Ctenomys_fulvus" about="#otu27">
 		<meta id="dict9" rel="cdao:has_External_Reference" 
@@ -158,18 +146,14 @@
 			xsi:type="nex:ResourceMeta"/>
     </otu>
     <otu id="otu29" label="Ctenomys_flamarioni" about="#otu29">
-    	<!--
 		<meta id="dict7" rel="cdao:has_External_Reference" 
-			href="http://www.cbif.gc.ca/pls/itisca/taxa_xml.upwards?p_tsn=584740" 
+			href="http://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=88124" 
 			xsi:type="nex:ResourceMeta"/>        
-		-->    
     </otu>
     <otu id="otu30" label="Ctenomys_coyhaiquensis" about="#otu30">
-    	<!--
 		<meta id="dict6" rel="cdao:has_External_Reference" 
-			href="http://www.cbif.gc.ca/pls/itisca/taxa_xml.upwards?p_tsn=584740" 
+			href="http://www.uniprot.org/taxonomy/77911" 
 			xsi:type="nex:ResourceMeta"/>        
-		-->    
     </otu>
     <otu id="otu31" label="Ctenomys_conoveri" about="#otu31">
 		<meta id="dict5" rel="cdao:has_External_Reference" 
