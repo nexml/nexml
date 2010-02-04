@@ -33,7 +33,7 @@ class NexmlCharactersAdaptorSeqs : public NexmlCharactersAdaptor
 				}
 				else {
 					cout << "not DNASeqMatrix\n";
-					cout << "typeid(mat).name() = " << typeid(mat).name() << "\n";
+					cout << "typeid(mat).name() = " << typeid(*matP).name() << "\n";
 					if (dynamic_cast<const RNASeqMatrix *> (matP))
 						cout << "RNASeqMatrix\n";
 					else if (dynamic_cast<const AASeqMatrix *> (matP))
