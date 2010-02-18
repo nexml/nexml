@@ -61,7 +61,7 @@ sub as_string {
 		}
 		my $file = $frame->[1];
 		my $line = $frame->[2];
-		$string .= $method . "(" . join(', ', map { "'$_'" } @args ) . ") called at $file line $line\n";
+		$string .= $method . "(" . join(', ', map { "'$_'" } grep { $_ } @args ) . ") called at $file line $line\n";
 	}
 	return $string;
 }
