@@ -1004,14 +1004,17 @@ sub _trees {
 sub _translate {
     my $self = shift;
     my $i = $self->{'_i'}; 
-    if ( $i && $i == 1 ) {
+    if ( $i && $i == 1 ) { # actually, $i can be 0 according to BayesPhylogenies translation table
         $logger->info( "starting translation table" );
     }
-    if ( !$i && $_[0] =~ m/^\d+$/ ) {
+    if ( ! defined($i) && $_[0] =~ m/^\d+$/ ) {
         $self->{'_i'} = shift;
         $self->{'_translate'}->[ $self->{'_i'} ] = undef;
     }
-    elsif ( $i && exists $self->{'_translate'}->[$i] && ! defined $self->{'_translate'}->[$i] && $_[0] ne ';' ) {
+    elsif ( defined($i) 
+    		&& exists $self->{'_translate'}->[$i] 
+	    	&& ! defined $self->{'_translate'}->[$i] 
+    		&& $_[0] ne ';' ) {
         $self->{'_translate'}->[$i] = $_[0];
         $logger->debug( "Translation: $i => $_[0]" );
         $self->{'_i'} = undef;
@@ -1038,7 +1041,8 @@ sub _tree {
     {
         my $translated = $self->{'_tree'};
         my $translate  = $self->{'_translate'};
-        for my $i ( 1 .. $#{$translate} ) {
+        my $start = exists $translate->[0] ? 0 : 1; # BayesPhylogenies starts translation table w. 0
+        for my $i ( $start .. $#{$translate} ) {
             $translated =~ s/(\(|,)$i(,|\)|:)/$1$translate->[$i]$2/;
         }
         my ( $logtreename, $logtree ) = ( $self->{'_treename'}, $self->{'_tree'} );
