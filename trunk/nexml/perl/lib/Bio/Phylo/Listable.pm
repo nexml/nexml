@@ -669,7 +669,11 @@ Gets first element that has argument name
 			throw 'BadString' => "Can't search on name '$name'";
 		}
 		for my $obj ( @{ $self->get_entities } ) {
-			return $obj if $name eq $obj->get_name;
+			my $obj_name = $obj->get_name;
+			if ( $obj_name and $name eq $obj_name ) {
+				return $obj;
+			}
+#			return $obj if $name eq $obj->get_name;
 		}
 		return;
 	}
