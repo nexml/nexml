@@ -687,7 +687,7 @@ sub set_root_below {
 	}
 	else {
 		# XXX
-		$logger->warn;
+		$logger->info("Incomplete implementation reached");
 		$ancestors[0]->set_child( $ancestors[1] );
 	}
 
