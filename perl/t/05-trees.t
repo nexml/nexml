@@ -1,7 +1,7 @@
 # $Id$
 use strict;
 #use warnings;
-use Test::More tests => 13;
+use Test::More tests => 14;
 use Bio::Phylo::IO qw(parse);
 
 my $data;
@@ -60,6 +60,17 @@ eval { $trees->insert('BAD!') };
 ok( UNIVERSAL::isa( $@, 'Bio::Phylo::Util::Exceptions::ObjectMismatch' ) );
 ok( $trees->_container );
 ok( $trees->_type );
+
+my $newick = <<NEWICK;
+((A,B),C);
+((A,C),B);
+((A,B),C);
+NEWICK
+
+my $forest = parse( '-format' => 'newick', '-string' => $newick );
+my $cons = $forest->make_consensus(0.5);
+
+ok( $forest->first->calc_symdiff($cons) == 0, 'simple consensus' );
 
 __DATA__
 ((H:1,I:1):1,(G:1,(F:0.01,(E:0.3,(D:2,(C:0.1,(A:1,B:1)cherry:1):1):1):1):1):1):0;
