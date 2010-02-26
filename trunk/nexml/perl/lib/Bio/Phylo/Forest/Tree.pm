@@ -2100,6 +2100,27 @@ Clones invocant.
 
 =over
 
+=item to_nexus()
+
+Serializes invocant to nexus string.
+
+ Type    : Stringifier
+ Title   : to_nexus
+ Usage   : my $string = $tree->to_nexus;
+ Function: Turns the invocant tree object 
+           into a nexus string
+ Returns : SCALAR
+ Args    : Any arguments that can be passed to Bio::Phylo::Forest::to_nexus
+
+=cut
+
+	sub to_nexus {
+		my $self = shift;
+		my $forest = $fac->create_forest;
+		$forest->insert($self);
+		return $forest->to_nexus(@_);
+	}
+
 =item to_newick()
 
 Serializes invocant to newick string.
