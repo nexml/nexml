@@ -205,6 +205,94 @@ Validates taxon links of nodes in invocant's trees.
 		return $self;
 	}
 
+=item make_consensus()
+
+Creates a consensus tree.
+
+ Type    : Method
+ Title   : make_consensus
+ Usage   : my $tree = $obj->make_consensus
+ Function: Creates a consensus tree
+ Returns : $tree
+ Args    : Optional: a fraction that specifies the cutoff frequency for including
+           bipartitions in the consensus. Default is 1.0 (strict consensus). For
+           Majority Rule, use 0.5
+
+=cut
+
+	sub make_consensus {
+		my $self = shift;
+		my $perc = shift || 1.0;
+		my %seen_partitions;
+		my $tree_count = 0;
+		
+		# here we populate a hash whose keys are strings identifying all bipartitions in all trees
+		# in the forest. Because we construct these strings by concatenating (with an unlikely
+		# separator) all tips in that clade after sorting them alphabetically, we will get
+		# the same string in topologically identical clades across trees. We use these keys
+		# to keep a running tally of all seen bipartitions.
+		for my $tree ( @{ $self->get_entities } ) {
+			for my $node ( @{ $tree->get_internals } ) {
+			
+				# whoever puts this string in their input tree gets what he deserves!
+				my $clade = join '!\@\$%^&****unlikely_clade_separator***!\@\$%^&****',
+					sort { $a cmp $b } 
+					map  { $_->get_internal_name } @{ $node->get_terminals };
+				$seen_partitions{$clade}++;
+			}
+			$tree_count++;
+		}
+		
+		# here we remove the seen bipartitions that occur in fewer trees than in the specified
+		# fraction
+		my @partitions = keys %seen_partitions;
+		for my $partition ( @partitions ) {
+			if ( ( $seen_partitions{$partition} / $tree_count ) <= $perc ) {
+				delete $seen_partitions{$partition};
+			}
+		}
+		
+		# we now sort the clade strings by size, which automatically means once we start
+		# traversing them that we will visit the bipartitions in the right nesting order
+		my @sorted = sort { length($b) <=> length($a) } keys %seen_partitions;
+		my %seen_nodes;
+		my $tree = $factory->create_tree;
+		for my $partition ( @sorted ) {
+		
+			# now create the individual tip names again from the key string
+			my @tips = split /\Q!\@\$%^&****unlikely_clade_separator***!\@\$%^&****\E/, $partition;
+			
+			# create the tip object if we haven't done so already
+			for my $tip ( @tips ) {
+				if ( not exists $seen_nodes{$tip} ) {
+					my $node = $factory->create_node( '-name' => $tip, '-branch_length' => 1.0 );
+					$seen_nodes{$tip} = $node;
+					$tree->insert($node);
+				}
+			}
+			
+			# create the new parent node
+			my $new_parent = $factory->create_node( 
+				'-branch_length' => ( $seen_partitions{$partition} / $tree_count )
+			);
+			$tree->insert( $new_parent );
+			
+			# check to see if there is an old parent node: we want to squeeze the new parent
+			# node between the old parent and its children
+			my $old_parent = $seen_nodes{$tips[0]}->get_parent;
+			if ( $old_parent ) {
+				$new_parent->set_parent( $old_parent );
+			}
+			
+			# now assign the new parent to the tips in the current bipartition
+			for my $tip ( @tips ) {
+				my $node = $seen_nodes{$tip};
+				$node->set_parent( $new_parent );
+			}
+		}
+		return $tree;
+	}
+
 =item make_matrix()
 
 Creates an MRP matrix object.
