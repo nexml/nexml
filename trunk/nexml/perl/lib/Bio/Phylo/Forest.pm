@@ -3,7 +3,7 @@ package Bio::Phylo::Forest;
 use strict;
 use Bio::Phylo::Listable;
 use Bio::Phylo::Taxa::TaxaLinker;
-use Bio::Phylo::Util::CONSTANT qw(_NONE_ _FOREST_ _PROJECT_);
+use Bio::Phylo::Util::CONSTANT qw(_NONE_ _FOREST_ _PROJECT_ looks_like_hash);
 use Bio::Phylo::Util::Exceptions 'throw';
 use Bio::Phylo::Factory;
 use vars qw(@ISA);
@@ -214,17 +214,31 @@ Creates a consensus tree.
  Usage   : my $tree = $obj->make_consensus
  Function: Creates a consensus tree
  Returns : $tree
- Args    : Optional: a fraction that specifies the cutoff frequency for including
-           bipartitions in the consensus. Default is 1.0 (strict consensus). For
-           Majority Rule, use 0.5
+ Args    : Optional:
+	   -fraction => a fraction that specifies the cutoff frequency for including
+                        bipartitions in the consensus. Default is 0.5 (MajRule)
+	   -branches => 'frequency' or 'average', sets branch lengths to bipartition
+	                frequency or average branch length in input trees
 
 =cut
 
 	sub make_consensus {
 		my $self = shift;
-		my $perc = shift || 1.0;
+		my %args = looks_like_hash @_;
+		my $perc = $args{'-fraction'} || 0.5;
+		my $branches = $args{'-branches'} || 'freq';
 		my %seen_partitions;
+		my %clade_lengths;
 		my $tree_count = 0;
+		my $average = sub {
+			my @list = @_;
+			my $sum = 0;
+			for my $val ( @list ) {
+				$sum += $val if defined $val;
+			}
+			my $avg = $sum / scalar @list;
+			return $avg;
+		};
 		
 		# here we populate a hash whose keys are strings identifying all bipartitions in all trees
 		# in the forest. Because we construct these strings by concatenating (with an unlikely
@@ -239,12 +253,25 @@ Creates a consensus tree.
 					sort { $a cmp $b } 
 					map  { $_->get_internal_name } @{ $node->get_terminals };
 				$seen_partitions{$clade}++;
+				if ( not exists $clade_lengths{$clade} ) {
+					$clade_lengths{$clade} = [];
+				}
+				push @{ $clade_lengths{$clade} }, $node->get_branch_length;
+			}
+			for my $tip ( @{ $tree->get_terminals } ) {
+				my $clade = $tip->get_internal_name;
+				if ( not exists $clade_lengths{$clade} ) {
+					$clade_lengths{$clade} = [];
+				}
+				push @{ $clade_lengths{$clade} }, $tip->get_branch_length;				
 			}
 			$tree_count++;
 		}
 		
 		# here we remove the seen bipartitions that occur in fewer trees than in the specified
 		# fraction
+		my @by_size = sort { $seen_partitions{$b} <=> $seen_partitions{$a} } keys %seen_partitions;
+		my $largest = shift @by_size;
 		my @partitions = keys %seen_partitions;
 		for my $partition ( @partitions ) {
 			if ( ( $seen_partitions{$partition} / $tree_count ) <= $perc ) {
@@ -257,6 +284,10 @@ Creates a consensus tree.
 		my @sorted = sort { length($b) <=> length($a) } keys %seen_partitions;
 		my %seen_nodes;
 		my $tree = $factory->create_tree;
+		if ( @sorted == 0 ) {
+			push @sorted, $largest;
+			$seen_partitions{$largest} = $tree_count;
+		}
 		for my $partition ( @sorted ) {
 		
 			# now create the individual tip names again from the key string
@@ -265,16 +296,28 @@ Creates a consensus tree.
 			# create the tip object if we haven't done so already
 			for my $tip ( @tips ) {
 				if ( not exists $seen_nodes{$tip} ) {
-					my $node = $factory->create_node( '-name' => $tip, '-branch_length' => 1.0 );
+					my $node = $factory->create_node( '-name' => $tip );
+					if ( $branches =~ /^f/i ) {
+						$node->set_branch_length(1.0);
+					}
+					else {
+						$node->set_branch_length(
+							$average->(@{ $clade_lengths{$tip} })	
+						);
+					}
 					$seen_nodes{$tip} = $node;
 					$tree->insert($node);
 				}
 			}
 			
-			# create the new parent node
-			my $new_parent = $factory->create_node( 
-				'-branch_length' => ( $seen_partitions{$partition} / $tree_count )
-			);
+			# create the new parent node			
+			my $new_parent = $factory->create_node();
+			if ( $branches =~ /^f/i ) {
+				$new_parent->set_branch_length($seen_partitions{$partition} / $tree_count);
+			}
+			else {
+				$new_parent->set_branch_length($average->(@{ $clade_lengths{$partition} }));				
+			}
 			$tree->insert( $new_parent );
 			
 			# check to see if there is an old parent node: we want to squeeze the new parent
@@ -290,6 +333,9 @@ Creates a consensus tree.
 				$node->set_parent( $new_parent );
 			}
 		}
+		# theoretically, the root length should be 1.0 because this "partition is present
+		# in all trees. But it's too much trouble to stick :-)
+		$tree->get_root->set_branch_length();
 		return $tree;
 	}
 
