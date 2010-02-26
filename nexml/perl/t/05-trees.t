@@ -68,7 +68,7 @@ my $newick = <<NEWICK;
 NEWICK
 
 my $forest = parse( '-format' => 'newick', '-string' => $newick );
-my $cons = $forest->make_consensus(0.5);
+my $cons = $forest->make_consensus('-fraction' => 0.5);
 
 ok( $forest->first->calc_symdiff($cons) == 0, 'simple consensus' );
 
