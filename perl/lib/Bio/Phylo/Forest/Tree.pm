@@ -1838,24 +1838,56 @@ Prunes argument nodes from invocant.
 		my %names_to_delete = map { $_ => 1 } @{ $tips };
 		my %names_to_keep;
 		for my $tip ( @{ $self->get_entities } ) {
-		    my $name = $tip->get_internal_name;
-		    if ( not $names_to_delete{$name} ) {
-		        $names_to_keep{$name} = 1;
-		    }
-		}
-        $self->visit_depth_first(
-            '-post' => sub {
-                my $node = shift;
-                for my $tip ( @{ $node->get_terminals } ) {
-                    if ( not $names_to_keep{ $tip->get_internal_name } ) {
-                        $tip->get_parent->prune_child( $tip );
-                        $self->delete( $tip );
-                    }
-                }
-                $self->remove_unbranched_internals;
-            }
-        );
-		$self->remove_unbranched_internals;	
+			my $name = $tip->get_internal_name;
+			if ( not $names_to_delete{$name} ) {
+				$names_to_keep{$name} = 1;
+			}
+		}	
+		$self->visit_depth_first(
+			'-pre' => sub {
+				my $node = shift;
+				if ( $node->is_terminal && exists $names_to_delete{$node->get_internal_name} ) {
+					$node->set_generic( 'delete' => 1 );
+				}		
+			},
+			'-post' => sub {
+				my $node = shift;
+				if ( $node->is_internal ) {
+					my @terminals = @{ $node->get_terminals };
+					my $parent = $node->get_parent;
+					my $remaining = 0;
+					for my $tip ( @terminals ) {
+						if ( $tip->get_generic('delete') ) {
+							$node->prune_child( $tip );
+							$self->delete( $tip );
+						}
+						else {
+							$remaining++;
+						}
+					}
+					if ( $remaining == 0 ) {
+						if ( $parent ) {
+							$parent->prune_child( $node );						
+						}
+						$self->delete( $node );
+					}
+					elsif ( $remaining == 1 ) {
+						my $child = $node->get_children->[0];
+						if ( $parent ) {
+							$parent->set_child( $child );
+							my $cbl = $child->get_branch_length;
+							my $nbl = $node->get_branch_length;
+							my $bl;
+							$bl = $cbl if defined $cbl;
+							$bl += $nbl if defined $nbl;
+							$child->set_branch_length( $bl ) if defined $bl;
+							$parent->prune_child( $node );
+							$self->delete( $node );
+						}
+					}
+				}		
+			}		
+		);
 		return $self;
 	}
 
