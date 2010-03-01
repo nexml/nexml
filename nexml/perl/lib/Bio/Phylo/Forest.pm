@@ -216,7 +216,7 @@ Creates a consensus tree.
  Returns : $tree
  Args    : Optional:
 	   -fraction => a fraction that specifies the cutoff frequency for including
-                        bipartitions in the consensus. Default is 0.5 (MajRule)
+                    bipartitions in the consensus. Default is 0.5 (MajRule)
 	   -branches => 'frequency' or 'average', sets branch lengths to bipartition
 	                frequency or average branch length in input trees
 
@@ -299,11 +299,15 @@ Creates a consensus tree.
 					my $node = $factory->create_node( '-name' => $tip );
 					if ( $branches =~ /^f/i ) {
 						$node->set_branch_length(1.0);
+						$node->set_generic(
+							'average_branch_length' => $average->( @{ $clade_lengths{$tip} } )
+						);
 					}
 					else {
 						$node->set_branch_length(
 							$average->(@{ $clade_lengths{$tip} })	
 						);
+						$node->set_generic( 'bipartition_frequency' => 1.0 );
 					}
 					$seen_nodes{$tip} = $node;
 					$tree->insert($node);
@@ -314,9 +318,11 @@ Creates a consensus tree.
 			my $new_parent = $factory->create_node();
 			if ( $branches =~ /^f/i ) {
 				$new_parent->set_branch_length($seen_partitions{$partition} / $tree_count);
+				$new_parent->set_name( $average->(@{ $clade_lengths{$partition} }) );
 			}
 			else {
 				$new_parent->set_branch_length($average->(@{ $clade_lengths{$partition} }));				
+				$new_parent->set_name( $seen_partitions{$partition} / $tree_count );
 			}
 			$tree->insert( $new_parent );
 			
