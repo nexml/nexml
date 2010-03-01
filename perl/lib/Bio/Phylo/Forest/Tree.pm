@@ -1835,7 +1835,15 @@ Prunes argument nodes from invocant.
 			my @tmp = map { $_->get_name } @{ $tips->get_entities };
 			$tips = \@tmp;
 		}
-		my %names_to_delete = map { $_ => 1 } @{ $tips };
+		my %names_to_delete;
+		for my $tip ( @{ $tips } ) {
+			if ( blessed $tip ) {
+				$names_to_delete{$tip->get_internal_name} = 1;
+			}
+			else {
+				$names_to_delete{$tip} = 1;
+			}
+		}
 		my %names_to_keep;
 		for my $tip ( @{ $self->get_entities } ) {
 			my $name = $tip->get_internal_name;
@@ -1911,7 +1919,15 @@ Keeps argument nodes from invocant (i.e. prunes all others).
 			my @tmp = map { $_->get_name } @{ $tips->get_entities };
 			$tips = \@tmp;
 		}
-		my %keep_taxa = map { $_ => 1 } @{ $tips };
+		my %keep_taxa;
+		for my $tip ( @{ $tips } ) {
+			if ( blessed $tip ) {
+				$keep_taxa{ $tip->get_internal_name } = 1;
+			}
+			else {
+				$keep_taxa{ $tip } = 1;
+			}
+		}		
 		my @taxa_to_prune;
 		for my $tip ( @{ $tree->get_entities } ) {
 		    my $name = $tip->get_internal_name;
