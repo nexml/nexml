@@ -18,4 +18,4 @@ for my $tipname ( @tips ) {
     eval { $tree->prune_tips( [ $tipname ] ) };
     ok( ! $@ );
 }
-ok( scalar @{ $tree->get_entities } == 1 );
+ok( scalar @{ $tree->get_entities } == 0 );
