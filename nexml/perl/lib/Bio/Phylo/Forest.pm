@@ -476,7 +476,7 @@ Serializer to nexus format.
            # [%unrooted=off] if used, default is "comment"
            -rooting => one of (token|comment|nhx)
            
-           # to map taxon names to indices (default is false)
+           # to map taxon names to indices (default is true)
            -make_translate => 1 (autogenerate translation table, overrides -translate => {})
  Comments:
 
@@ -484,7 +484,7 @@ Serializer to nexus format.
 
 	sub to_nexus {
 		my $self = shift;
-		my %args = ( '-rooting' => 'comment', @_ );
+		my %args = ( '-rooting' => 'comment', '-make_translate' => 1, @_ );
 		my %translate;
 		my $nexus;
 
