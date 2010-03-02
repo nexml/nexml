@@ -22,6 +22,7 @@ INSTALLATION
 Bio::Phylo has the following required dependencies:
 	Scalar::Util (core)
 	Test::More (core)
+	IO::File (core)
 	IO::String (non-core, but installs everywhere)
 
 And the following optional dependencies:
@@ -49,7 +50,7 @@ http://support.microsoft.com/default.aspx?scid=kb;en-us;Q132084)
 
 AUTHOR
 
-Rutger Vos, rvos@interchange.ubc.ca
+Rutger Vos, rutgeraldo@gmail.com, http://rutgervos.blogspot.com
 
 BUGS
 
@@ -72,7 +73,7 @@ Read the manual: perldoc Bio::Phylo::Manual
 
 COPYRIGHT & LICENSE
 
-Copyright 2005-2007 Rutger Vos, All Rights Reserved. 
+Copyright 2005-2010 Rutger Vos, All Rights Reserved. 
 This program is free software; you can redistribute 
 it and/or modify it under the same terms as Perl itself.
 
