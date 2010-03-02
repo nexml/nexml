@@ -3,9 +3,9 @@ package Bio::Phylo::Parsers::Nexus;
 use strict;
 use Bio::Phylo::Factory;
 use Bio::Phylo::IO qw(parse);
-use Bio::Phylo::Util::CONSTANT qw(:objecttypes);
+use Bio::Phylo::Util::CONSTANT qw(:objecttypes looks_like_instance);
 use Bio::Phylo::Util::Exceptions qw(throw);
-use UNIVERSAL qw(isa);
+#use UNIVERSAL qw(isa);
 use vars qw(@ISA);
 
 # TODO: handle mixed? distances, splits, bipartitions
@@ -128,10 +128,10 @@ sub _new {
     # force data type references to be empty
     my $self = {};
     for my $key ( keys %defaults ) {
-    	if ( isa( $defaults{$key}, 'ARRAY' ) ) {
+    	if ( looks_like_instance( $defaults{$key}, 'ARRAY' ) ) {
     		$self->{$key} = [];
     	}
-    	elsif ( isa( $defaults{$key}, 'HASH') ) {
+    	elsif ( looks_like_instance( $defaults{$key}, 'HASH') ) {
     		$self->{$key} = {};
     	}
     	else {
@@ -500,10 +500,10 @@ sub _post_process {
     # force data type references to be empty    
     @{ $taxa } = ();
     for my $key ( keys %defaults ) {
-    	if ( isa( $defaults{$key}, 'ARRAY' ) ) {
+    	if ( looks_like_instance( $defaults{$key}, 'ARRAY' ) ) {
     		$self->{$key} = [];
     	}
-    	elsif ( isa( $defaults{$key}, 'HASH') ) {
+    	elsif ( looks_like_instance( $defaults{$key}, 'HASH') ) {
     		$self->{$key} = {};
     	}
     	else {
@@ -920,7 +920,7 @@ sub _matrix {
     # the tokens on a line). This is so that we can handle
     # interleaved matrices, which unfortunately need line breaks
     # in them.
-    if ( not isa($token, 'ARRAY') and uc($token) eq 'MATRIX' ) {
+    if ( not looks_like_instance($token, 'ARRAY') and uc($token) eq 'MATRIX' ) {
         $self->{'_linemode'} = 1;
         $logger->info( "starting matrix" );
         return;
@@ -928,7 +928,7 @@ sub _matrix {
     
     # a row inside the matrix, after adding tokens to row, nothing
     # else to do 
-    elsif ( isa($token, 'ARRAY') and not grep { /^;$/ } @{ $token } ) {
+    elsif ( looks_like_instance($token, 'ARRAY') and not grep { /^;$/ } @{ $token } ) {
 		$self->_add_tokens_to_row($token);
 		$logger->info( "adding tokens to row" );
 		return;
@@ -937,7 +937,7 @@ sub _matrix {
     # the last row of the matrix, after adding tokens to row,
     # instantiate & populate datum objects, link against taxa
     # objects
-    elsif ( isa($token, 'ARRAY') and grep { /^;$/ } @{ $token } ) {
+    elsif ( looks_like_instance($token, 'ARRAY') and grep { /^;$/ } @{ $token } ) {
 		$self->_add_tokens_to_row($token);
 
         # link to taxa

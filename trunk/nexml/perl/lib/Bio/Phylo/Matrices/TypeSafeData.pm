@@ -2,9 +2,9 @@
 package Bio::Phylo::Matrices::TypeSafeData;
 use Bio::Phylo::Listable ();
 use Bio::Phylo::Util::Exceptions 'throw';
-use Bio::Phylo::Util::CONSTANT qw(_MATRIX_ looks_like_hash looks_like_object);
+use Bio::Phylo::Util::CONSTANT qw(_MATRIX_ looks_like_hash looks_like_object looks_like_instance);
 use Bio::Phylo::Matrices::Datatype ();
-use UNIVERSAL 'isa';
+#use UNIVERSAL 'isa';
 use strict;
 use vars '@ISA';
 @ISA = qw(Bio::Phylo::Listable);
@@ -99,7 +99,7 @@ Set data type.
         my $self = shift;
         my $arg  = shift;
         my ( $type, @args );
-        if ( isa( $arg, 'ARRAY' ) ) {
+        if ( looks_like_instance( $arg, 'ARRAY' ) ) {
         	@args = @{ $arg };
         	$type = shift @args;
         }

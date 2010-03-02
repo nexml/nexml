@@ -7,7 +7,7 @@ use Bio::Phylo::Util::Exceptions 'throw';
 use Bio::Phylo::Util::XMLWritable ();
 use Bio::Phylo::Util::CONSTANT qw(:all);
 use Bio::Phylo::Factory ();
-use UNIVERSAL qw(isa can);
+#use UNIVERSAL qw(isa can);
 
 # classic @ISA manipulation, not using 'base'
 @ISA = qw(Bio::Phylo::Util::XMLWritable);
@@ -107,7 +107,7 @@ Pushes an object into its container.
 			$logger->info("inserting '@obj' in '$self'");
 			push @{ $entities{$$self} }, @obj;
 			for my $obj ( @obj ) {
-				if ( ref $obj and can( $obj, '_set_container' ) ) {
+				if ( looks_like_implementor( $obj, '_set_container' ) ) {
 					$obj->_set_container( $self );
 				}
 			}
@@ -137,7 +137,7 @@ Inserts argument object in invocant container at argument index.
 		$logger->debug("inserting '$obj' in '$self' at index $index");
 		if ( defined $obj and $self->can_contain($obj) ) {
 			$entities{$$self}->[$index] = $obj;
-			if ( can( $obj, '_set_container' ) ) {
+			if ( looks_like_implementor( $obj, '_set_container' ) ) {
 				$obj->_set_container($self);
 			}
 			$self->notify_listeners( 'insert_at_index', $obj );			
@@ -240,11 +240,11 @@ C<$taxon-E<gt>get_data> field.
 	sub cross_reference {
 		my ( $self, $taxa ) = @_;
 		my ( $selfref, $taxref ) = ( ref $self, ref $taxa );
-		if ( $taxa->can('get_entities') ) {
+		if ( looks_like_implementor($taxa, 'get_entities') ) {
 			my $ents = $self->get_entities;
 			if ( $ents && @{$ents} ) {
 				foreach ( @{$ents} ) {
-					if ( $_->can('get_name') && $_->can('set_taxon') ) {
+					if ( looks_like_implementor($_,'get_name') && looks_like_implementor($_,'set_taxon') ) {
 						my $tax = $taxa->get_entities;
 						if ( $tax && @{$tax} ) {
 							foreach my $taxon ( @{$tax} ) {
@@ -706,7 +706,7 @@ Gets elements that match regular expression from invocant container.
 		my %o    = looks_like_hash @_;
 		my @matches;
 		for my $e ( @{ $self->get_entities } ) {
-			if ( $o{-match} && isa( $o{-match}, 'Regexp' ) ) {
+			if ( $o{-match} && looks_like_instance( $o{-match}, 'Regexp' ) ) {
 				if (   $e->get( $o{-value} )
 					&& $e->get( $o{-value} ) =~ $o{-match} )
 				{
@@ -739,7 +739,7 @@ code reference on each.
 
 	sub visit {
 		my ( $self, $code ) = @_;
-		if ( isa( $code, 'CODE' ) ) {
+		if ( looks_like_instance( $code, 'CODE' ) ) {
 			for ( @{ $self->get_entities } ) {
 				$code->($_);
 			}
@@ -818,7 +818,7 @@ Attaches a listener (code ref) which is executed when contents change.
 		if ( not $listeners{$id} ) {
 			$listeners{$id} = [];
 		}
-		if ( isa( $listener, 'CODE' ) ) {
+		if ( looks_like_instance( $listener, 'CODE' ) ) {
 			push @{ $listeners{$id} }, $listener;
 		}
 		else {
@@ -876,7 +876,7 @@ Clones invocant.
 				my ( $obj, $clone ) = @_;
 				for my $ent ( @{ $obj->get_entities } ) {
 					my $copy = $ent;
-					if ( UNIVERSAL::can( $ent, 'clone' ) ) {
+					if ( looks_like_implementor( $ent, 'clone' ) ) {
 						$copy = $ent->clone;
 						$logger->debug(
 							"inserting a clone $copy of entity" .

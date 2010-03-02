@@ -1,8 +1,8 @@
 package Bio::Phylo::Meta;
 use Bio::Phylo::Listable ();
-use Bio::Phylo::Util::CONSTANT qw'_META_ looks_like_number';
+use Bio::Phylo::Util::CONSTANT qw'_META_ looks_like_number looks_like_instance';
 use Bio::Phylo::Util::Exceptions 'throw';
-use UNIVERSAL 'isa';
+#use UNIVERSAL 'isa';
 use vars qw'@ISA';
 use strict;
 @ISA=qw'Bio::Phylo::Listable';
@@ -98,7 +98,8 @@ called 'meta', with RDFa compliant attributes.
             }
         }
         else {
-            if ( isa($content, 'Bio::Phylo') and $content->_type == $TYPE_CONSTANT ) {
+            if ( looks_like_instance($content, 'Bio::Phylo') 
+            	and $content->_type == $TYPE_CONSTANT ) {
                 $self->insert($content)->set_attributes( %resource );
                 if ( my $prop = $self->get_attributes( 'property' ) ) {
                     $self->set_attributes( 'rel' => $prop );
