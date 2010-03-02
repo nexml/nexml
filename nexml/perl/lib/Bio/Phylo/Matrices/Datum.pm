@@ -6,9 +6,15 @@ use Bio::Phylo::Factory;
 use Bio::Phylo::Taxa::TaxonLinker;
 use Bio::Phylo::Util::Exceptions 'throw';
 use Bio::Phylo::Matrices::TypeSafeData ();
-use Bio::Phylo::Util::CONSTANT qw(:objecttypes looks_like_number looks_like_hash);
+use Bio::Phylo::Util::CONSTANT qw(
+	:objecttypes 
+	looks_like_number 
+	looks_like_hash
+	looks_like_instance
+	looks_like_implementor
+);
 use Bio::Phylo::Util::XMLWritable ();
-use UNIVERSAL qw(isa can);
+#use UNIVERSAL qw(isa can);
 @ISA = qw(
   Bio::Phylo::Matrices::TypeSafeData
   Bio::Phylo::Taxa::TaxonLinker
@@ -135,7 +141,7 @@ Datum constructor from Bio::Seq argument.
         my $seqstring = $seq->seq;
         if ( $seqstring and $seqstring =~ /\S/ ) {
         	eval { $self->set_char( $seqstring ) };
-        	if ( $@ and UNIVERSAL::isa($@,'Bio::Phylo::Util::Exceptions::InvalidData') ) {
+        	if ( $@ and looks_like_instance($@,'Bio::Phylo::Util::Exceptions::InvalidData') ) {
         		$logger->error(
         			"\nAn exception of type Bio::Phylo::Util::Exceptions::InvalidData was caught\n\n".
         			$@->description                                                                  .
@@ -229,7 +235,7 @@ Sets character state(s)
         $logger->info("setting $name $length chars '@_'");
         my @data;
         for my $arg (@_) {
-            if ( isa( $arg, 'ARRAY' ) ) {
+            if ( looks_like_instance( $arg, 'ARRAY' ) ) {
                 push @data, @{$arg};
             }
             else {
@@ -369,7 +375,7 @@ Sets list of annotations.
     sub set_annotations {
         my $self = shift;
         my @anno;
-        if ( scalar @_ == 1 and UNIVERSAL::isa( $_[0], 'ARRAY' ) ) {
+        if ( scalar @_ == 1 and looks_like_instance( $_[0], 'ARRAY' ) ) {
         	@anno = @{ $_[0] };
         }
         else {
@@ -383,7 +389,7 @@ Sets list of annotations.
                     throw 'OutOfBounds' => "Specified char ($i) does not exist!";
                 }
                 else {
-                    if ( isa( $anno[$i], 'HASH' ) ) {
+                    if ( looks_like_instance( $anno[$i], 'HASH' ) ) {
                         $annotations{$id}->[$i] = {}
                           if !$annotations{$id}->[$i];
                         while ( my ( $k, $v ) = each %{ $anno[$i] } ) {
@@ -640,14 +646,14 @@ Tests if invocant can contain argument.
             if ( $obj->isa('Bio::Phylo::Matrices::Datatype::Mixed') ) {
                 my @split;
                 for my $datum (@data) {
-                    if ( can( $datum, 'get_char' ) ) {
+                    if ( looks_like_implementor( $datum, 'get_char' ) ) {
                         my @tmp = $datum->get_char();
                         my $i   = $datum->get_position() - 1;
                         for (@tmp) {
                             $split[ $i++ ] = $_;
                         }
                     }
-                    elsif ( isa( $datum, 'ARRAY' ) ) {
+                    elsif ( looks_like_instance( $datum, 'ARRAY' ) ) {
                         push @split, @{$datum};
                     }
                     else {
@@ -931,7 +937,7 @@ Analog to to_xml.
 		my $dom = $_[0];
 		my @args = @_;
 		# handle dom factory object...
-		if ( isa($dom, 'SCALAR') && $dom->_type == _DOMCREATOR_ ) {
+		if ( looks_like_instance($dom, 'SCALAR') && $dom->_type == _DOMCREATOR_ ) {
 		    splice(@args, 0, 1);
 		}
 		else {

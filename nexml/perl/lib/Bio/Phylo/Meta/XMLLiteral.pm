@@ -1,7 +1,7 @@
 package Bio::Phylo::Meta::XMLLiteral;
-use Bio::Phylo::Util::CONSTANT qw'_META_';
+use Bio::Phylo::Util::CONSTANT qw'_META_ looks_like_instance looks_like_implementor';
 use Bio::Phylo::Util::Exceptions 'throw';
-use UNIVERSAL qw'isa can';
+#use UNIVERSAL qw'isa can';
 {
     my $TYPE_CONSTANT      = _META_;
     my $CONTAINER_CONSTANT = $TYPE_CONSTANT;
@@ -82,7 +82,7 @@ Serializes invocant to xml.
         my $xml = '';
 		for my $obj ( @objs ) {
 	        # for RDF::Core::Model objects
-	        if ( isa($obj, 'RDF::Core::Model') ) {
+	        if ( looks_like_instance($obj, 'RDF::Core::Model') ) {
 	            eval {
 	                require RDF::Core::Model::Serializer;
 	                my $serialized_model = '';
@@ -97,7 +97,7 @@ Serializes invocant to xml.
 	            }
 	        }	        
 	        # for XML::XMLWriter object
-	        elsif ( isa($obj, 'XML::XMLWriter') ) {
+	        elsif ( looks_like_instance($obj, 'XML::XMLWriter') ) {
 	            $xml .= $obj->get;
 	        }	        
 	        else {
@@ -108,7 +108,7 @@ Serializes invocant to xml.
 	            # XML::API => _as_string, XML::Code => code	            
 	            my @methods = qw(to_xml toString sprint _as_string code xmlify as_xml dump_tree as_XML);
 	            SERIALIZER: for my $method ( @methods ) {
-	                if ( can($obj,$method) ) {
+	                if ( looks_like_implementor($obj,$method) ) {
 	                    $xml .= $obj->$method;
 	                    last SERIALIZER;
 	                }

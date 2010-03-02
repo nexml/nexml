@@ -8,7 +8,7 @@ use strict;
 # In fact, we NEVER test class identity in any way, rather, we
 # use the duck-typing system looks_like_object( $obj, $CONST )
 # from Bio::Phylo::Util::CONSTANT
-use UNIVERSAL qw(isa);
+# use UNIVERSAL qw(isa);
 
 # we don't use 'our', for 5.005 compatibility
 use vars qw($VERSION $COMPAT $logger);
@@ -20,7 +20,7 @@ use Scalar::Util qw(weaken blessed);
 
 #... instead, Bio::Phylo::Util::CONSTANT can worry about it
 # in one location, perhaps using the S::U version, or a drop-in
-use Bio::Phylo::Util::CONSTANT qw(looks_like_number looks_like_hash);
+use Bio::Phylo::Util::CONSTANT qw(looks_like_number looks_like_hash looks_like_instance);
 use Bio::Phylo::Util::IDPool;             # creates unique object IDs
 use Bio::Phylo::Util::Exceptions 'throw'; # defines exception classes and throws
 use Bio::Phylo::Util::Logger;             # for logging, like log4perl/log4j 
@@ -386,7 +386,7 @@ Sets generic key/value pair(s).
             my %args;
 
             # have a single arg, a hash ref
-            if ( scalar @_ == 1 && isa( $_[0], 'HASH' ) ) {
+            if ( scalar @_ == 1 && looks_like_instance( $_[0], 'HASH' ) ) {
                 %args = %{ $_[0] };
             }
 
@@ -691,11 +691,11 @@ Serializes object to JSON string
                 next if not defined $val;        
                 push @json, "\"$key\":\"$val\"";
             }
-            elsif ( UNIVERSAL::isa($val,'HASH') ) {
+            elsif ( looks_like_instance($val,'HASH') ) {
                 next if not %{ $val };
                 push @json, "\"$key\":{" . $self->_hash_to_json($val) . '}';
             }
-            elsif ( UNIVERSAL::isa($val,'ARRAY') ) {
+            elsif ( looks_like_instance($val,'ARRAY') ) {
                 next if not @{ $val };
                 push @json, "\"$key\":[" . $self->_array_to_json($val) . ']';
             }
@@ -710,10 +710,10 @@ Serializes object to JSON string
             if ( not ref $val ) {
                 push @json, "\"$val\"";
             }
-            elsif ( UNIVERSAL::isa($val,'HASH') ) {
+            elsif ( looks_like_instance($val,'HASH') ) {
                 push @json, $self->_hash_to_json($val);
             }
-            elsif ( UNIVERSAL::isa($val,'ARRAY') ) {
+            elsif ( looks_like_instance($val,'ARRAY') ) {
                 push @json, $self->_array_to_json($val);
             }
         }   
@@ -795,7 +795,7 @@ Clones invocant.
 				# if they're code (not variables, for example)
 				my $get_ref = $class->can($getter);
 				my $set_ref = $class->can($setter);
-				if ( isa( $get_ref, 'CODE' ) and isa( $set_ref, 'CODE' ) ) {
+				if ( looks_like_instance( $get_ref, 'CODE' ) and looks_like_instance( $set_ref, 'CODE' ) ) {
 				    $methods{$getter} = $setter;
 				}
 	    	}
@@ -814,7 +814,7 @@ Clones invocant.
 	    	my $setter = $methods{$getter};
 	    	if ( exists $subs{$setter} ) {
 	    		$logger->info("method $setter for $clone overridden");
-	    		if ( isa( $subs{$setter}, 'CODE' ) ) {
+	    		if ( looks_like_instance( $subs{$setter}, 'CODE' ) ) {
 	    			$subs{$setter}->( $self, $clone );
 	    		}
 	    		delete $subs{$setter};
@@ -834,7 +834,7 @@ Clones invocant.
 		}
 
 		# execute additional code refs
-		$_->( $self, $clone ) for ( grep { isa( $_, 'CODE' ) } values %subs );
+		$_->( $self, $clone ) for ( grep { looks_like_instance( $_, 'CODE' ) } values %subs );
 		return $clone;
     }
 

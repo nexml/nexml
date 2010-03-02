@@ -1,11 +1,10 @@
 package Bio::Phylo::Util::Logger;
 use strict;
 use File::Spec;
-use Bio::Phylo::Util::CONSTANT 'looks_like_hash';
+use Bio::Phylo::Util::CONSTANT qw'looks_like_hash looks_like_instance';
 use Bio::Phylo::Util::Exceptions 'throw';
 use Config;
 use vars qw($volume $class_dir $file $VERBOSE $AUTOLOAD $TRACEBACK);
-use UNIVERSAL 'isa';
 
 BEGIN {
 	my $class_file = __FILE__;
@@ -75,7 +74,7 @@ CODE_TEMPLATE
 	sub set_listeners {
 		my ( $self, @args ) = @_;
 		for my $arg ( @args ) {
-			if ( isa( $arg, 'CODE' ) ) {
+			if ( looks_like_instance $arg, 'CODE' ) {
 				push @listeners, $arg;
 			}
 			else {
