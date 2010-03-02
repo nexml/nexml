@@ -34,10 +34,10 @@ BEGIN {
 # Read up on the Mediator design pattern to learn how this works.
 require Bio::Phylo::Mediators::TaxaMediator;  
 
-# Include the revision number from CIPRES subversion in $VERSION
+# Include the revision number from subversion in $VERSION
 my $rev = '$Id$';
 $rev =~ s/^[^\d]+(\d+)\b.*$/$1/;
-$VERSION = "0.17";
+$VERSION = "0.18";
 $VERSION .= "_$rev";
 {
     my $taxamediator = 'Bio::Phylo::Mediators::TaxaMediator';
