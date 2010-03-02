@@ -93,11 +93,9 @@ Bio::Phylo - Phylogenetic analysis using perl
 
 =head1 SYNOPSIS
 
- # verbosity goes from 0, only fatal messages, to 4: everything from
- # fatal -> error -> warning -> info -> debug (which is a lot)
- use Bio::Phylo verbose => 1;
- 
- # or:
+ # Actually, you would almost never use this module directly. This is 
+ # the base class for other modules.
+ use Bio::Phylo;
  Bio::Phylo->VERBOSE( -level => 1 ); # sets global verbosity to 'error'
  
  # sets verbosity for forest ojects to 'debug'
@@ -132,7 +130,7 @@ in L<Bio::Phylo::Util::Logger> of use to localize problems.
 
 =item new()
 
-The Bio::Phylo root constructor, is rarely used directly. Rather, many other 
+The Bio::Phylo root constructor is rarely used directly. Rather, many other 
 objects in Bio::Phylo internally go up the inheritance tree to this constructor. 
 The arguments shown here can therefore also be passed to any of the child 
 classes' constructors, which will pass them on up the inheritance tree. Generally, 
@@ -889,7 +887,7 @@ Returns suggested citation.
         my $self    = shift;
         my $name    = __PACKAGE__;
         my $version = __PACKAGE__->VERSION;
-        my $string  = qq{Rutger A. Vos, 2005-2009. $name: };
+        my $string  = qq{Rutger A. Vos, 2005-2010. $name: };
         $string .= qq{Phylogenetic analysis using Perl, version $version};
         return $string;
     }
