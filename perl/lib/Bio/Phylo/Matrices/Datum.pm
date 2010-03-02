@@ -5,9 +5,9 @@ use strict;
 use Bio::Phylo::Factory;
 use Bio::Phylo::Taxa::TaxonLinker;
 use Bio::Phylo::Util::Exceptions 'throw';
-use Bio::Phylo::Matrices::TypeSafeData;
+use Bio::Phylo::Matrices::TypeSafeData ();
 use Bio::Phylo::Util::CONSTANT qw(:objecttypes looks_like_number looks_like_hash);
-use Bio::Phylo::Util::XMLWritable;
+use Bio::Phylo::Util::XMLWritable ();
 use UNIVERSAL qw(isa can);
 @ISA = qw(
   Bio::Phylo::Matrices::TypeSafeData

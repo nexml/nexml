@@ -1,9 +1,9 @@
 # $Id$
 package Bio::Phylo::Matrices::TypeSafeData;
-use Bio::Phylo::Listable;
+use Bio::Phylo::Listable ();
 use Bio::Phylo::Util::Exceptions 'throw';
 use Bio::Phylo::Util::CONSTANT qw(_MATRIX_ looks_like_hash looks_like_object);
-use Bio::Phylo::Matrices::Datatype;
+use Bio::Phylo::Matrices::Datatype ();
 use UNIVERSAL 'isa';
 use strict;
 use vars '@ISA';

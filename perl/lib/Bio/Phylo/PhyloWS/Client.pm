@@ -1,7 +1,7 @@
 package Bio::Phylo::PhyloWS::Client;
 use strict;
 use Bio::Phylo::IO 'parse';
-use Bio::Phylo::PhyloWS;
+use Bio::Phylo::PhyloWS ();
 use Bio::Phylo::Factory;
 use Bio::Phylo::Util::Logger;
 use Bio::Phylo::Util::Exceptions 'throw';

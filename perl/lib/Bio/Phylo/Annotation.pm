@@ -1,6 +1,6 @@
 package Bio::Phylo::Annotation;
 use strict;
-use Bio::Phylo::Util::XMLWritable;
+use Bio::Phylo::Util::XMLWritable ();
 use Bio::Phylo::Util::CONSTANT qw(_ANNOTATION_ _DICTIONARY_);
 use vars '@ISA';
 use UNIVERSAL qw'can isa';

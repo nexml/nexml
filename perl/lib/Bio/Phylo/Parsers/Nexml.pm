@@ -1,9 +1,9 @@
 package Bio::Phylo::Parsers::Nexml;
 use strict;
-use Bio::Phylo::IO;
+use Bio::Phylo::IO ();
 use Bio::Phylo::Util::Exceptions 'throw';
 use Bio::Phylo::Factory;
-use Bio::Phylo::Util::XMLWritable;
+use Bio::Phylo::Util::XMLWritable ();
 use UNIVERSAL 'isa';
 use Data::Dumper;
 use vars qw(@ISA $VERSION);

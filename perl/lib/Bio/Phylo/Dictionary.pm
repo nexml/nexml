@@ -1,6 +1,6 @@
 package Bio::Phylo::Dictionary;
 use strict;
-use Bio::Phylo::Listable;
+use Bio::Phylo::Listable ();
 use Bio::Phylo::Util::CONSTANT qw(_DICTIONARY_ _NONE_);
 use Bio::Phylo::Util::Exceptions 'throw';
 use vars '@ISA';

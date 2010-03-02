@@ -42,17 +42,16 @@ $VERSION .= "_$rev";
 {
     my $taxamediator = 'Bio::Phylo::Mediators::TaxaMediator';
 
-    # The following allows for semantics like:
-    # 'use Bio::Phylo verbose => 1;' to increase verbosity,
-    # and 'use Bio::Phylo compat => bioperl;' to set adaptor
-    # compatibility mode
+    # Deprecated!
     sub import {
         my $class = shift;
         if (@_) {
+    		require Carp;
+	    	Carp::carp("Passing arguments to 'use $class' in this way is deprecated.");          
             my %opt = looks_like_hash @_;
 			while ( my ( $key, $value ) = each %opt ) {
 				if ( $key =~ qr/^VERBOSE$/i ) {
-					$logger->VERBOSE( '-level' => $value );
+					$logger->VERBOSE( '-level' => $value, -class => $class );
 				}
 				elsif ( $key =~ qr/^COMPAT$/i ) {
 					$COMPAT = ucfirst( lc($value) );
@@ -96,10 +95,15 @@ Bio::Phylo - Phylogenetic analysis using perl
  # Actually, you would almost never use this module directly. This is 
  # the base class for other modules.
  use Bio::Phylo;
- Bio::Phylo->VERBOSE( -level => 1 ); # sets global verbosity to 'error'
+ 
+ # sets global verbosity to 'error'
+ Bio::Phylo->VERBOSE( -level => Bio::Phylo::Util::Logger::ERROR );
  
  # sets verbosity for forest ojects to 'debug'
- Bio::Phylo->VERBOSE( -level => 4, -class => 'Bio::Phylo::Forest' );
+ Bio::Phylo->VERBOSE( 
+ 	-level => Bio::Phylo::Util::Logger::DEBUG, 
+ 	-class => 'Bio::Phylo::Forest' 
+ );
  
  # prints version, including SVN revision number
  print Bio::Phylo->VERSION;
@@ -252,10 +256,9 @@ Sets invocant name.
  Usage   : $obj->set_name($name);
  Function: Assigns an object's name.
  Returns : Modified object.
- Args    : Argument must be a string, will be single 
-           quoted if it contains [;|,|:\(|\)] 
-           or spaces. Preceding and trailing spaces
-           will be removed.
+ Args    : Argument must be a string. Ensure that this string is safe to use for
+           whatever output format you want to use (this differs between xml and
+           nexus, for example).
 
 =cut
 
@@ -837,17 +840,15 @@ Clones invocant.
 
 =item VERBOSE()
 
-Getter and setter for the verbose level. This comes in five levels: 0 = only
-fatal messages (though, when something fatal happens, you'll most likely get
-an exception object), 1 = errors (hopefully recoverable), 2 = warnings 
-(recoverable), 3 = info (useful diagnostics), 4 = debug (every method call)
+Getter and setter for the verbosity level. Refer to L<Bio::Phylo::Util::Logger> for more
+info on available verbosity levels.
 
  Type    : Accessor
  Title   : VERBOSE()
  Usage   : Bio::Phylo->VERBOSE( -level => $level )
  Function: Sets/gets verbose level
  Returns : Verbose level
- Args    : 0 <= $level && $level <= 4
+ Args    : -level => $level
  Comments:
 
 =cut

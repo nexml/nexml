@@ -3,9 +3,9 @@ package Bio::Phylo::Generator;
 use strict;
 use Bio::Phylo::Util::IDPool;
 use Bio::Phylo::Util::CONSTANT 'looks_like_hash';
-use Bio::Phylo::Forest;
-use Bio::Phylo::Forest::Tree;
-use Bio::Phylo::Forest::Node;
+use Bio::Phylo::Forest ();
+use Bio::Phylo::Forest::Tree ();
+use Bio::Phylo::Forest::Node ();
 use Bio::Phylo::Util::Exceptions 'throw';
 
 eval { require Math::Random };

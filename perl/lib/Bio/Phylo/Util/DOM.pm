@@ -1,7 +1,7 @@
 # $Id$
 package Bio::Phylo::Util::DOM;
 use strict;
-use Bio::Phylo;
+use Bio::Phylo ();
 use Bio::Phylo::Util::CONSTANT qw(_DOMCREATOR_);
 use Bio::Phylo::Util::Exceptions qw( throw );
 use File::Spec::Unix;

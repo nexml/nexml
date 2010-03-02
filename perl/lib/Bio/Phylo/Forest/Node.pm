@@ -4,9 +4,9 @@ use strict;
 use Bio::Phylo::Factory;
 use Bio::Phylo::Taxa::TaxonLinker;
 use Bio::Phylo::Util::CONSTANT qw(_NODE_ _TREE_ _TAXON_ _DOMCREATOR_ looks_like_number looks_like_object looks_like_hash);
-use Bio::Phylo::Listable;
+use Bio::Phylo::Listable ();
 use Bio::Phylo::Util::Exceptions 'throw';
-use Bio::Phylo::Util::XMLWritable;
+use Bio::Phylo::Util::XMLWritable ();
 use Scalar::Util 'weaken';
 
 no warnings 'recursion';

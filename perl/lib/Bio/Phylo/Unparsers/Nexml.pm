@@ -2,14 +2,13 @@
 # Subversion: $Rev: 190 $
 package Bio::Phylo::Unparsers::Nexml;
 use strict;
-use Bio::Phylo::IO;
+use Bio::Phylo::IO ();
 use Bio::Phylo::Util::CONSTANT qw(:objecttypes looks_like_object);
 use Bio::Phylo::Util::Exceptions 'throw';
 use vars qw(@ISA $VERSION);
 @ISA = qw(Bio::Phylo::IO);
 
-# One line so MakeMaker sees it.
-use Bio::Phylo; $VERSION = $Bio::Phylo::VERSION;
+use Bio::Phylo (); my $VERSION = $Bio::Phylo::VERSION;
 
 eval { require XML::Twig };
 if ( $@ ) {

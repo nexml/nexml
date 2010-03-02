@@ -1,7 +1,7 @@
 # $Id$
 package Bio::Phylo::Unparsers::Mrp;
 use strict;
-use Bio::Phylo::IO;
+use Bio::Phylo::IO ();
 use vars qw(@ISA);
 @ISA=qw(Bio::Phylo::IO);
 

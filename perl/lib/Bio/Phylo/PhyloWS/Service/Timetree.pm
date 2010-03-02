@@ -4,7 +4,7 @@ use warnings;
 use UNIVERSAL 'isa';
 use Bio::Phylo::IO 'parse';
 use Bio::Phylo::Factory;
-use Bio::Phylo::PhyloWS::Service;
+use Bio::Phylo::PhyloWS::Service ();
 use Bio::Phylo::Util::Logger;
 use Bio::Phylo::Util::Exceptions 'throw';
 use Bio::Phylo::Util::CONSTANT 'looks_like_hash';

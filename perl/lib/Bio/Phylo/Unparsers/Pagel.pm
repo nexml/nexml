@@ -1,8 +1,8 @@
 # $Id$
 package Bio::Phylo::Unparsers::Pagel;
 use strict;
-use Bio::Phylo::Forest::Tree;
-use Bio::Phylo::IO;
+use Bio::Phylo::Forest::Tree ();
+use Bio::Phylo::IO ();
 use vars qw(@ISA);
 
 @ISA=qw(Bio::Phylo::IO);

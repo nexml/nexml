@@ -1,5 +1,5 @@
 package Bio::Phylo::Project;
-use Bio::Phylo::Listable;
+use Bio::Phylo::Listable ();
 use Bio::Phylo::Util::CONSTANT qw(:objecttypes looks_like_object);
 use Bio::Phylo::Util::Exceptions 'throw';
 use UNIVERSAL 'isa';

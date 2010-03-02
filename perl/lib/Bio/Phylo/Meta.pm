@@ -1,5 +1,5 @@
 package Bio::Phylo::Meta;
-use Bio::Phylo::Listable;
+use Bio::Phylo::Listable ();
 use Bio::Phylo::Util::CONSTANT qw'_META_ looks_like_number';
 use Bio::Phylo::Util::Exceptions 'throw';
 use UNIVERSAL 'isa';
