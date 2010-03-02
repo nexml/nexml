@@ -31,9 +31,9 @@ use UNIVERSAL qw(isa);
 use vars qw(@ISA);
 
 BEGIN {
-    eval { require 'XML/Twig.pm' };
-    if (@_) {
-	throw 'ExtensionError' => "Failed to load XML::Twig: $@";
+    eval { require XML::Twig };
+    if ( $@ ) {
+		throw 'ExtensionError' => "Failed to load XML::Twig: $@";
     }
     @ISA = qw( Bio::Phylo::Util::DOM::DocumentI XML::Twig );
 }
@@ -215,8 +215,8 @@ sub to_xml_string {
 sub to_xml_file {
     my ($self, $file, @args) = @_;
     my $fh;
-    unless ( open $fh, ">$file" ) {
-	throw 'FileError' => "Problem with XML output file: $!";
+    unless ( open $fh, '>', $file ) {
+		throw 'FileError' => "Problem with XML output file: $!";
     }
     $self->print($fh, @args);
     return 1;

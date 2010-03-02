@@ -855,10 +855,9 @@ sub _reset_internal {
     $node->set_x(undef);
     $node->set_y(undef);
     my $children = $node->get_children;
-    foreach $node (@$children) {
-        _reset_internal($self,$node);
+    for my $child (@$children) {
+        _reset_internal($self,$child);
     }
-
 }
 
 =begin comment

@@ -148,7 +148,7 @@ Node constructor.
 		my $self = $class->SUPER::new(%args);
 		
 		if ( not $LOADED_WRAPPERS ) {
-			eval do { local $/; <DATA> };
+			eval do { local $/; <DATA> }; 
 			$LOADED_WRAPPERS++;
 		}	
 

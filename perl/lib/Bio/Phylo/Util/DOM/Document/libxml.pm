@@ -32,10 +32,10 @@ use UNIVERSAL qw(isa);
 use vars qw(@ISA);
 
 BEGIN {
-    eval { require 'XML/LibXML/Document.pm';
-           require 'XML/LibXML.pm' };
-    if (@_) {
-	throw 'ExtensionError' => "Failed to load XML::LibXML::Document: $@";
+    eval { 
+        require XML::LibXML };
+    if ($@) {
+		throw 'ExtensionError' => "Failed to load XML::LibXML::Document: $@";
     }
     @ISA = qw( Bio::Phylo::Util::DOM::DocumentI XML::LibXML::Document );
 }
@@ -167,7 +167,7 @@ sub get_element_by_id {
     }
     my $xp = "//*[\@id = '$id']";
     my $e = $self->get_root->find( $xp );
-    return undef unless $e;
+    return unless $e;
     $e = $e->shift;
     return bless( $e, 'Bio::Phylo::Util::DOM::Element::libxml');
 }

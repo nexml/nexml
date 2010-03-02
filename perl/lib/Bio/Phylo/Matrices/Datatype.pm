@@ -73,7 +73,7 @@ Datatype constructor.
         }
         my $typeclass = __PACKAGE__ . '::' . $type;
         my $self      = __PACKAGE__->SUPER::new( '-tag' => 'states' ); 
-        eval "require $typeclass";
+        eval "require $typeclass"; 
         if ( $@ ) {
         	throw 'BadFormat' => "'$type' is not a valid datatype";
         }
@@ -87,7 +87,7 @@ Datatype constructor.
         my $self  = shift;
         my ( $lookup, $missing, $gap );
         {
-            no strict 'refs';
+            no strict 'refs'; 
             $lookup  = ${ $class . '::LOOKUP'  };
             $missing = ${ $class . '::MISSING' }; 
             $gap     = ${ $class . '::GAP'     };
@@ -411,7 +411,7 @@ Gets state lookup table.
            my $class = ref $self;
            my $lookup;
            {
-                no strict 'refs';
+                no strict 'refs'; 
                 $lookup = ${ $class . '::LOOKUP'  };
                 use strict;
            }
