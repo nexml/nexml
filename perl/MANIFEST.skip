@@ -21,6 +21,8 @@ deleteme*
 \.cvsignore
 \.project
 \.includepath
+script\/
+lib\/Bio\/Phylo\/PhyloWS*
 Doxyfile
 lib\/Bio\/Tools\/Run\/MrBayes\.pm
 lib\/Bio\/Phylo\/BranchClust\.pm
