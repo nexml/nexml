@@ -3,8 +3,13 @@ package Bio::Phylo::Matrices::Datatype;
 use Bio::Phylo::Util::XMLWritable ();
 use Bio::Phylo::Factory;
 use Bio::Phylo::Util::Exceptions 'throw';
-use Bio::Phylo::Util::CONSTANT qw'_DOMCREATOR_ looks_like_hash';
-use UNIVERSAL 'isa';
+use Bio::Phylo::Util::CONSTANT qw(
+	_DOMCREATOR_ 
+	looks_like_hash 
+	looks_like_instance 
+	looks_like_implementor
+);
+#use UNIVERSAL 'isa';
 use strict;
 use vars '@ISA';
 @ISA = qw(Bio::Phylo::Util::XMLWritable);
@@ -118,7 +123,7 @@ Datatype constructor.
 			if ( $@ and not ref $@ and $@ =~ m/^Can't locate object method/ ) {
 				throw 'UnknownMethod' => "Processing argument '$key' as method '$mutator' failed: $@";
 			}
-			elsif ( UNIVERSAL::isa( $@, 'Bio::Phylo::Util::Exceptions') ) {
+			elsif ( looks_like_instance( $@, 'Bio::Phylo::Util::Exceptions') ) {
 				$@->rethrow;
 			}
 		}         
@@ -156,7 +161,7 @@ Sets state lookup table.
         
         # we have a value
         if ( defined $lookup ) {
-            if ( UNIVERSAL::isa( $lookup, 'HASH' ) ) {
+            if ( looks_like_instance( $lookup, 'HASH' ) ) {
                 $lookup{$id} = $lookup;
             }
             else {
@@ -478,10 +483,10 @@ Validates argument.
         my $self = shift;        
         my @data;
         for my $arg ( @_ ) {
-        	if ( UNIVERSAL::can( $arg, 'get_char') ) {
+        	if ( looks_like_implementor( $arg, 'get_char') ) {
         		push @data, $arg->get_char;
         	}
-        	elsif ( UNIVERSAL::isa( $arg, 'ARRAY') ) {
+        	elsif ( looks_like_instance( $arg, 'ARRAY') ) {
         		push @data, @{ $arg };
         	}
         	else {
@@ -762,7 +767,7 @@ Analog to to_xml.
 		my $dom = $_[0];
 		my @args = @_;
 		# handle dom factory object...
-		if ( isa($dom, 'SCALAR') && $dom->_type == _DOMCREATOR_ ) {
+		if ( looks_like_instance($dom, 'SCALAR') && $dom->_type == _DOMCREATOR_ ) {
 		    splice(@args, 0, 1);
 		}
 		else {

@@ -1,8 +1,8 @@
 package Bio::Phylo::Project;
 use Bio::Phylo::Listable ();
-use Bio::Phylo::Util::CONSTANT qw(:objecttypes looks_like_object);
+use Bio::Phylo::Util::CONSTANT qw(:objecttypes looks_like_object looks_like_instance);
 use Bio::Phylo::Util::Exceptions 'throw';
-use UNIVERSAL 'isa';
+#use UNIVERSAL 'isa';
 use vars '@ISA';
 use strict;
 @ISA=qw(Bio::Phylo::Listable);
@@ -161,7 +161,7 @@ Getter for matrix objects
 		my $dom = $_[0];
 		my @args = @_;
 		# handle dom factory object...
-		if ( isa($dom, 'SCALAR') && $dom->_type == _DOMCREATOR_ ) {
+		if ( looks_like_instance($dom, 'SCALAR') && $dom->_type == _DOMCREATOR_ ) {
 		    splice(@args, 0, 1);
 		}
 		else {

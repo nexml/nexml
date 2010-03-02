@@ -3,9 +3,10 @@ use strict;
 use Bio::Phylo::IO ();
 use Bio::Phylo::Util::Exceptions 'throw';
 use Bio::Phylo::Factory;
+use Bio::Phylo::Util::CONSTANT 'looks_like_instance';
 use Bio::Phylo::Util::XMLWritable ();
-use UNIVERSAL 'isa';
-use Data::Dumper;
+#use UNIVERSAL 'isa';
+#use Data::Dumper;
 use vars qw(@ISA $VERSION);
 @ISA = qw(Bio::Phylo::IO);
 
@@ -533,7 +534,7 @@ sub _process_cells {
 			my $lookup = $def_hash->{$char_idref};
 
 			# may not be a hash for continuous states
-			if ( isa( $lookup, 'HASH' ) and defined $lookup->{$state_idref} ) {
+			if ( looks_like_instance( $lookup, 'HASH' ) and defined $lookup->{$state_idref} ) {
 				$state = $lookup->{$state_idref};
 			}
 			else {

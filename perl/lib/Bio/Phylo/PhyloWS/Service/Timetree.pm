@@ -1,13 +1,13 @@
 package Bio::Phylo::PhyloWS::Service::Timetree;
 use strict;
 use warnings;
-use UNIVERSAL 'isa';
+#use UNIVERSAL 'isa';
 use Bio::Phylo::IO 'parse';
 use Bio::Phylo::Factory;
 use Bio::Phylo::PhyloWS::Service ();
 use Bio::Phylo::Util::Logger;
 use Bio::Phylo::Util::Exceptions 'throw';
-use Bio::Phylo::Util::CONSTANT 'looks_like_hash';
+use Bio::Phylo::Util::CONSTANT 'looks_like_hash looks_like_instance';
 use constant URL => 'http://timetree.org/time_e_query.php?';
 use vars '@ISA';
 @ISA=qw(Bio::Phylo::PhyloWS::Service);
@@ -39,12 +39,12 @@ for my $class ( @dependencies ) {
         my ( $tbody, $dates ) = @_;    
         my ( $pub, $taxona, $taxonb, $source, $data, $genes, $time );
         for my $tr ( $tbody->content_list ) {
-            if ( isa( $tr, 'HTML::Element' ) and $tr->tag eq 'tr' ) {
+            if ( looks_like_instance( $tr, 'HTML::Element' ) and $tr->tag eq 'tr' ) {
                 
                 # a header row
                 if ( $tr->attr('bgcolor') and $tr->attr('bgcolor') eq '#FFFFFF' ) {
                     for my $a ( $tr->descendents ) {
-                        if ( isa( $a, 'HTML::Element' ) and $a->tag eq 'a' ) {
+                        if ( looks_like_instance( $a, 'HTML::Element' ) and $a->tag eq 'a' ) {
                             my $href = $a->attr('href');
                             if ( $href =~ /\Q$pubmed\E(\d+)/ ) {
                                 $pub = $1;
@@ -56,7 +56,7 @@ for my $class ( @dependencies ) {
                 # a content row
                 elsif ( $tr->attr('class') eq 'collapsible' ) {
                     for my $div ( $tr->descendents ) {
-                        if ( isa( $div, 'HTML::Element' ) and $div->tag eq 'div' ) {
+                        if ( looks_like_instance( $div, 'HTML::Element' ) and $div->tag eq 'div' ) {
                             if ( $div->attr('class') eq 'mockTD' ) {
                                 if ( not defined $time ) {
                                     $time = $div->as_text;
@@ -100,11 +100,11 @@ for my $class ( @dependencies ) {
     my $find_tbody = sub {
         my ( $node, $dates ) = @_;
         for my $table ( $node->descendents ) {
-            if ( isa( $table, 'HTML::Element' ) ) {
+            if ( looks_like_instance( $table, 'HTML::Element' ) ) {
                 my $class = $table->attr('class');
                 if ( $table->tag eq 'table' and $class and $class eq 'collapsible' ) {           
                     for my $tbody ( $table->content_list ) {
-                        if ( isa( $tbody, 'HTML::Element' ) and $tbody->tag =~ /tbody/i ) {
+                        if ( looks_like_instance( $tbody, 'HTML::Element' ) and $tbody->tag =~ /tbody/i ) {
                             $process_tbody->( $tbody, $dates );
                         }
                     }            
@@ -134,12 +134,12 @@ for my $class ( @dependencies ) {
 
     my $normalize_query = sub {
         my ( $node, $taxon_a_ref, $taxon_b_ref, $sub ) = @_;
-        if ( UNIVERSAL::isa( $node, 'CQL::BooleanNode' ) ) {
+        if ( looks_like_instance( $node, 'CQL::BooleanNode' ) ) {
             $node->{'left'}  = $sub->( $node->{'left'},  $taxon_a_ref, $taxon_b_ref, $sub );
             $node->{'right'} = $sub->( $node->{'right'}, $taxon_a_ref, $taxon_b_ref, $sub ); 
             return $node;
         }
-        elsif ( UNIVERSAL::isa( $node, 'CQL::TermNode' ) ) {
+        elsif ( looks_like_instance( $node, 'CQL::TermNode' ) ) {
             if ( not $$taxon_a_ref ) {
                 $$taxon_a_ref = $node->getTerm();
             }

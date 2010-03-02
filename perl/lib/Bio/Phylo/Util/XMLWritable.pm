@@ -3,9 +3,16 @@ package Bio::Phylo::Util::XMLWritable;
 use strict;
 use Bio::Phylo ();
 use Bio::Phylo::Util::Exceptions 'throw';
-use Bio::Phylo::Util::CONSTANT qw(_DICTIONARY_ _META_ _DOMCREATOR_ looks_like_object looks_like_hash);
+use Bio::Phylo::Util::CONSTANT qw(
+	_DICTIONARY_ 
+	_META_ 
+	_DOMCREATOR_ 
+	looks_like_object 
+	looks_like_hash
+	looks_like_instance
+);
 use vars '@ISA';
-use UNIVERSAL 'isa';
+#use UNIVERSAL 'isa';
 @ISA=qw(Bio::Phylo);
 
 {
@@ -280,7 +287,7 @@ Assigns attributes for the element.
 	sub set_attributes {
 		my $self = shift;
 		my %attrs;
-		if ( scalar @_ == 1 and isa($_[0], 'HASH') ) {
+		if ( scalar @_ == 1 and looks_like_instance($_[0], 'HASH') ) {
 			%attrs = %{ $_[0] };
 		}
 		elsif ( scalar @_ % 2 == 0 ) {
@@ -345,7 +352,7 @@ Removes specified attribute
 	sub unset_attribute {
 		my ( $self, $attr ) = @_;
 		my $attrs = $attributes{ $self->get_id };
-		if ( $attrs and isa($attrs,'HASH') ) {
+		if ( $attrs and looks_like_instance($attrs,'HASH') ) {
 			delete $attrs->{$attr};
 		}
 		return $self;
@@ -580,7 +587,7 @@ Retrieves attributes for the element.
 		}
 		if ( $self->can('get_taxa') ) {
 			if ( my $taxa = $self->get_taxa ) {
-				$attrs->{'otus'} = $taxa->get_xml_id if UNIVERSAL::isa($taxa,'Bio::Phylo');
+				$attrs->{'otus'} = $taxa->get_xml_id if looks_like_instance($taxa,'Bio::Phylo');
 			}
 			else {
 				throw 'ObjectMismatch' => "$self can link to a taxa element, but doesn't";

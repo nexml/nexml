@@ -1,9 +1,14 @@
 package Bio::Phylo::Annotation;
 use strict;
 use Bio::Phylo::Util::XMLWritable ();
-use Bio::Phylo::Util::CONSTANT qw(_ANNOTATION_ _DICTIONARY_);
+use Bio::Phylo::Util::CONSTANT qw(
+	_ANNOTATION_ 
+	_DICTIONARY_ 
+	looks_like_instance 
+	looks_like_implementor
+);
 use vars '@ISA';
-use UNIVERSAL qw'can isa';
+#use UNIVERSAL qw'can isa';
 use Bio::Phylo::Util::Exceptions 'throw';
 @ISA=qw(Bio::Phylo::Util::XMLWritable);
 {
@@ -160,7 +165,7 @@ Serializes object to an xml string
         if ( ref($value) ) {
 
         	# for RDF::Core::Model objects
-        	if ( isa($value, 'RDF::Core::Model') ) {
+        	if ( looks_like_instance($value, 'RDF::Core::Model') ) {
         		eval {
         			require RDF::Core::Model::Serializer;
         			my $serialized_model = '';
@@ -177,7 +182,7 @@ Serializes object to an xml string
         	}         
         	
         	# for XML::XMLWriter object
-        	elsif ( isa($value, 'XML::XMLWriter') ) {
+        	elsif ( looks_like_instance($value, 'XML::XMLWriter') ) {
         		$value = $value->get;
         	}
         	
@@ -200,7 +205,7 @@ Serializes object to an xml string
 		        	if ( ref($v) ) {
 			        	my @methods = qw(to_xml toString sprint _as_string code xmlify as_xml dump_tree as_XML);
 			        	SERIALIZER: for my $method ( @methods ) {
-			        		if ( can($v,$method) ) {
+			        		if ( looks_like_implementor($v,$method) ) {
 			        			$concatenated .= $v->$method;
 			        			last SERIALIZER;
 			        		}
