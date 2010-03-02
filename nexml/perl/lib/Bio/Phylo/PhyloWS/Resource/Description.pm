@@ -1,4 +1,5 @@
 package Bio::Phylo::PhyloWS::Resource::Description;
+use strict;
 use Bio::Phylo::Listable ();
 use Bio::Phylo::PhyloWS::Resource ();
 use Bio::Phylo::Util::Exceptions 'throw';

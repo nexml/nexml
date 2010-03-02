@@ -105,7 +105,7 @@ Datum object constructor.
         $logger->info("constructor called for '$class'");
         
 		if ( not $LOADED_WRAPPERS ) {
-			eval do { local $/; <DATA> };
+			eval do { local $/; <DATA> }; 
 			die $@ if $@;
 			$LOADED_WRAPPERS++;
 		}        
@@ -617,7 +617,7 @@ doesn't contain the argument
 			}
 			$i++;
 		}
-		return undef;
+		return;
 	}    
 
 =back

@@ -1,4 +1,5 @@
 package Bio::Phylo::Set;
+use strict;
 use vars '@ISA';
 use Bio::Phylo::Listable ();
 use Bio::Phylo::Util::CONSTANT '_NONE_';

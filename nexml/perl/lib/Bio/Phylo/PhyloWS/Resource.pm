@@ -1,4 +1,5 @@
 package Bio::Phylo::PhyloWS::Resource;
+use strict;
 use Bio::Phylo::PhyloWS ();
 use Bio::Phylo::Util::XMLWritable ();
 use Bio::Phylo::Util::Exceptions 'throw';

@@ -210,7 +210,7 @@ Gets a redirect URL if relevant
 
     sub get_redirect {
         my ( $self, $cgi ) = @_;
-        return undef;
+        return;
     }
 
 =item get_description()

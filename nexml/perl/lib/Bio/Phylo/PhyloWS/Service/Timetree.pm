@@ -312,7 +312,7 @@ Gets a redirect URL if relevant
             . URI::Escape::uri_escape($taxon_b);
             return $url;            
         }
-        return undef;
+        return;
     }
 
 =back
