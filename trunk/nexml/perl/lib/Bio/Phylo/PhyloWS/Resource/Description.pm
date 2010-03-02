@@ -1,6 +1,6 @@
 package Bio::Phylo::PhyloWS::Resource::Description;
-use Bio::Phylo::Listable;
-use Bio::Phylo::PhyloWS::Resource;
+use Bio::Phylo::Listable ();
+use Bio::Phylo::PhyloWS::Resource ();
 use Bio::Phylo::Util::Exceptions 'throw';
 use Bio::Phylo::Util::CONSTANT qw(_DESCRIPTION_ _NONE_);
 use vars '@ISA';

@@ -1,7 +1,7 @@
 package Bio::Phylo::PhyloWS::Service::Tolweb;
 use Bio::Phylo::IO 'parse';
 use Bio::Phylo::Factory;
-use Bio::Phylo::PhyloWS::Service;
+use Bio::Phylo::PhyloWS::Service ();
 use Bio::Phylo::Util::Logger;
 use Bio::Phylo::Util::CONSTANT 'looks_like_hash';
 use constant URL => 'http://150.135.239.5/onlinecontributors/app?service=external&page=xml/TreeStructureService&page_depth=1&node_id=';

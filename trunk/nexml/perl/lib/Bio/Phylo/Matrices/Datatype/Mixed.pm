@@ -1,7 +1,7 @@
 # $Id$
 package Bio::Phylo::Matrices::Datatype::Mixed;
 use strict;
-use Bio::Phylo::Matrices::Datatype;
+use Bio::Phylo::Matrices::Datatype ();
 use Bio::Phylo::Util::Exceptions 'throw';
 use vars '@ISA';
 @ISA = qw(Bio::Phylo::Matrices::Datatype);

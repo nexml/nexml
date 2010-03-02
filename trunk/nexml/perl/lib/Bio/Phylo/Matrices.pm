@@ -2,7 +2,7 @@
 package Bio::Phylo::Matrices;
 use strict;
 #use warnings FATAL => 'all';
-use Bio::Phylo::Listable;
+use Bio::Phylo::Listable ();
 use Bio::Phylo::Util::CONSTANT qw(_NONE_ _MATRICES_);
 use vars qw(@ISA);
 

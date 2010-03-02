@@ -7,9 +7,9 @@ use Bio::Phylo::Taxa::TaxaLinker;
 use Bio::Phylo::IO qw(unparse);
 use Bio::Phylo::Util::CONSTANT qw(:objecttypes looks_like_hash);
 use Bio::Phylo::Util::Exceptions qw(throw);
-use Bio::Phylo::Util::XMLWritable;
-use Bio::Phylo::Matrices::TypeSafeData;
-use Bio::Phylo::Matrices::Datum;
+use Bio::Phylo::Util::XMLWritable ();
+use Bio::Phylo::Matrices::TypeSafeData ();
+use Bio::Phylo::Matrices::Datum ();
 use UNIVERSAL qw(isa);
 @ISA = qw(
   Bio::Phylo::Matrices::TypeSafeData

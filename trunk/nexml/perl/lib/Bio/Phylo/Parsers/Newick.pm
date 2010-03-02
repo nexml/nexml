@@ -1,8 +1,8 @@
 # $Id$
 package Bio::Phylo::Parsers::Newick;
 use strict;
-use Bio::Phylo::IO;
-use Bio::Phylo;
+use Bio::Phylo::IO ();
+use Bio::Phylo ();
 use Bio::Phylo::Factory;
 use vars qw(@ISA);
 @ISA=qw(Bio::Phylo::IO);

@@ -1,7 +1,7 @@
 # $Id$
 package Bio::Phylo::Matrices::Datatype::Continuous;
 use Bio::Phylo::Util::CONSTANT qw(looks_like_number);
-use Bio::Phylo::Matrices::Datatype;
+use Bio::Phylo::Matrices::Datatype ();
 use strict;
 use vars qw($LOOKUP $MISSING $GAP @ISA);
 @ISA=qw(Bio::Phylo::Matrices::Datatype);

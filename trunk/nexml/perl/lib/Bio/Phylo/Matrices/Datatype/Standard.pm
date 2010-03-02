@@ -1,6 +1,6 @@
 # $Id$
 package Bio::Phylo::Matrices::Datatype::Standard;
-use Bio::Phylo::Matrices::Datatype;
+use Bio::Phylo::Matrices::Datatype ();
 use strict;
 use vars qw($LOOKUP @ISA $MISSING $GAP);
 @ISA = qw(Bio::Phylo::Matrices::Datatype);

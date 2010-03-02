@@ -2,7 +2,7 @@
 package Bio::Phylo::Mediators::TaxaMediator;
 use strict;
 use Scalar::Util qw(weaken);
-use Bio::Phylo;
+use Bio::Phylo ();
 use Bio::Phylo::Util::Exceptions;
 
 # XXX this class only has weak references

@@ -1,7 +1,7 @@
 # $Id$
 package Bio::Phylo::Unparsers::Nexus;
 use strict;
-use Bio::Phylo::IO;
+use Bio::Phylo::IO ();
 use Bio::Phylo::Util::CONSTANT qw(:objecttypes);
 use Bio::Phylo::Util::Exceptions 'throw';
 use vars qw(@ISA);

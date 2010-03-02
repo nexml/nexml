@@ -3,7 +3,7 @@ package Bio::Phylo::Mediators::NodeMediator;
 use strict;
 use Scalar::Util qw(weaken);
 use Bio::Phylo::Util::Exceptions;
-use Bio::Phylo;
+use Bio::Phylo ();
 
 # XXX this class only has weak references
 
