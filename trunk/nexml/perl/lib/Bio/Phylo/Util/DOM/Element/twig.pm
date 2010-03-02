@@ -40,7 +40,7 @@ use Bio::Phylo::Util::Exceptions qw(throw);
 use vars qw(@ISA %extant_ids);
 
 BEGIN {
-    eval { require "XML/Twig.pm"; };
+    eval { require XML::Twig };
     if ($@) {
 	throw 'ExtensionError' => "Failed to load XML::Twig: $@";
     }
@@ -419,10 +419,10 @@ sub set_child {
 sub prune_child {
     my ($self, $child, @args) = @_;
     unless ( isa($child, 'XML::Twig::Elt') ) {
-	throw 'ObjectMismatch' => 'Argument is not an XML::Twig::Elt';
+		throw 'ObjectMismatch' => 'Argument is not an XML::Twig::Elt';
     }
     my $par = $child->parent;
-    return undef unless ( $par && ($par == $self) );
+    return unless ( $par && ($par == $self) );
     # or delete?
     $child->_manage_ids('DEL');
     $child->cut;

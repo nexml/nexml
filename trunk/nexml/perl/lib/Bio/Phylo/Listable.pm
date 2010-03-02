@@ -324,7 +324,7 @@ or undef if the list doesn't contain the argument
 			return $i if $ent->get_id == $id;
 			$i++;
 		}
-		return undef;
+		return;
 	}
 
 =item contains()

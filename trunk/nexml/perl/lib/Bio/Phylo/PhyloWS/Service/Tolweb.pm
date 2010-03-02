@@ -1,4 +1,5 @@
 package Bio::Phylo::PhyloWS::Service::Tolweb;
+use strict;
 use Bio::Phylo::IO 'parse';
 use Bio::Phylo::Factory;
 use Bio::Phylo::PhyloWS::Service ();
@@ -106,7 +107,7 @@ Gets a redirect URL if relevant
                 return "http://tolweb.org/$tolweb_id";
             }
         }
-        return undef;
+        return;
     }    
     
 =item get_supported_formats()

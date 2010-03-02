@@ -784,7 +784,7 @@ Clones invocant.
 		my %methods;
 		for my $package ( $class, @{$isa} ) {
 	    	my %symtable;
-		    eval "\%symtable = \%${package}::";
+		    eval "\%symtable = \%${package}::"; 
 		  SETTER: for my $setter ( keys %symtable ) {
 				next SETTER if $setter !~ m/^set_/;
 				my $getter = $setter;
@@ -952,7 +952,7 @@ Invocant destructor.
         # given multiple inheritance
         $logger->debug("going to clean up '$self'"); # XXX
         {
-            no strict 'refs';
+            no strict 'refs'; 
             for my $SUPER ( @{$isa} ) {
             	if ( $SUPER->can('_cleanup') ) {
 	                my $cleanup = "${SUPER}::_cleanup";
@@ -980,7 +980,7 @@ Invocant destructor.
             push @{$isa}, $class;
             my @isa;
             {
-                no strict 'refs';
+                no strict 'refs'; 
                 @isa = @{"${class}::ISA"};
                 use strict;
             }

@@ -1,4 +1,5 @@
 package Bio::Phylo::Factory;
+use strict;
 use vars '$AUTOLOAD';
 use Bio::Phylo::Util::Exceptions 'throw';
 use Bio::Phylo::Util::CONSTANT qw'looks_like_hash looks_like_class';

@@ -1,4 +1,5 @@
 package Bio::Phylo::Meta::XMLLiteral;
+use strict;
 use Bio::Phylo::Util::CONSTANT qw'_META_ looks_like_instance looks_like_implementor';
 use Bio::Phylo::Util::Exceptions 'throw';
 #use UNIVERSAL qw'isa can';

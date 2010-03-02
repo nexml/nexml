@@ -99,7 +99,7 @@ Tree constructor.
 		$logger->info("constructor called for '$class'");
 
 		if ( not $LOADED_WRAPPERS ) {
-			eval do { local $/; <DATA> };
+			eval do { local $/; <DATA> }; 
 			$LOADED_WRAPPERS++;
 		}	
 
@@ -203,12 +203,12 @@ Tree constructor from Bio::Tree::TreeI argument.
 			$_->set_first_daughter();
 			$_->set_last_daughter();
 		}
-		my ( $i, $j, $first, $next );
+		my ( $first, $next );
 
 		# mmmm... O(N^2)
-	  NODE: for $i ( 0 .. $#{$nodes} ) {
+	  NODE: for my $i ( 0 .. $#{$nodes} ) {
 			$first = $nodes->[$i];
-			for $j ( ( $i + 1 ) .. $#{$nodes} ) {
+			for my $j ( ( $i + 1 ) .. $#{$nodes} ) {
 				$next = $nodes->[$j];
 				my ( $firstp, $nextp ) =
 				  ( $first->get_parent, $next->get_parent );
@@ -1096,7 +1096,7 @@ Calculates the Pybus gamma statistic.
 			$prev = $length;
 		}
 		my $sum = 0;
-		eval "require Math::BigFloat";
+		eval { require Math::BigFloat };
 		if ($@) {                                   # BigFloat is not available.
 			for ( my $i = 2 ; $i < $n ; $i++ ) {
 				for ( my $k = 2 ; $k <= $i ; $k++ ) {

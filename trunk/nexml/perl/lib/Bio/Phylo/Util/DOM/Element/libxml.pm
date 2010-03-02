@@ -31,7 +31,7 @@ use UNIVERSAL qw(isa);
 use vars qw(@ISA);
 
 BEGIN {
-    eval { require 'XML/LibXML.pm';
+    eval { require XML::LibXML;
            XML::LibXML->import(':libxml') };
     if (@_) {
 	throw 'ExtensionError' => "Failed to load XML::LibXML: $@";
