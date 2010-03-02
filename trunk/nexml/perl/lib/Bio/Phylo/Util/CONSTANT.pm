@@ -109,6 +109,7 @@ sub _META_         () { 19 }
 sub _DESCRIPTION_  () { 20 }
 sub _RESOURCE_     () { 21 }
 
+# for PhyloWS
 sub _HTTP_SC_SEE_ALSO_ () { '303 See Other' }
 
 # this is a drop in replacement for Scalar::Util's function
