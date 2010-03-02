@@ -120,6 +120,12 @@ CODE_TEMPLATE
 	}	
 	
 	sub DESTROY {} # empty destructor so we don't go up inheritance tree at the end
+	# log levels
+	sub FATAL () { 0 }
+	sub ERROR () { 1 }
+	sub WARN  () { 2 }
+	sub INFO  () { 3 }
+	sub DEBUG () { 4 }
 	
 }
 
@@ -245,8 +251,35 @@ Constructor for Logger.
  Usage   : my $logger = Bio::Phylo::Util::Logger->new;
  Function: Instantiates a logger
  Returns : a Bio::Phylo::Util::Logger object
- Args    : -verbose => verbosity, 0 .. 4 (optional)
+ Args    : -verbose => Bio::Phylo::Util::Logger::INFO (DEBUG/INFO/WARN/ERROR/FATAL)
  		   -package => a package for which to set verbosity (optional)	
+
+=back
+
+=head2 VERBOSITY LEVELS
+
+=over
+
+=item FATAL
+
+Rarely happens, usually an exception is thrown instead.
+
+=item ERROR
+
+If this happens, something is seriously wrong that needs to be addressed.
+
+=item WARN
+
+If this happens, something is seriously wrong that needs to be addressed.
+
+=item INFO
+
+If something weird is happening, turn up verbosity to this level as it might
+explain some of the assumptions the code is making.
+
+=item DEBUG
+
+This is very verbose, probably only useful if you write core Bio::Phylo code.
 
 =back
 
