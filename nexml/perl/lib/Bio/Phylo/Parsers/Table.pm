@@ -1,7 +1,7 @@
 # $Id$
 package Bio::Phylo::Parsers::Table;
 use strict;
-use Bio::Phylo::IO;
+use Bio::Phylo::IO ();
 use Bio::Phylo::Factory;
 use vars qw(@ISA);
 

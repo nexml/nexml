@@ -1,8 +1,8 @@
 # $Id$
 package Bio::Phylo::Unparsers::Newick;
 use strict;
-use Bio::Phylo::Forest::Tree;
-use Bio::Phylo::IO;
+use Bio::Phylo::Forest::Tree ();
+use Bio::Phylo::IO ();
 use Bio::Phylo::Util::CONSTANT qw(:objecttypes);
 use vars qw(@ISA);
 

@@ -1,6 +1,6 @@
 # $Id$
 package Bio::Phylo::IO;
-use Bio::Phylo;
+use Bio::Phylo ();
 use Bio::Phylo::Util::CONSTANT qw(looks_like_class looks_like_hash);
 use Bio::Phylo::Util::Exceptions 'throw';
 use IO::File;

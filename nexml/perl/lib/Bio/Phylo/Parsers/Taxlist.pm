@@ -2,7 +2,7 @@
 package Bio::Phylo::Parsers::Taxlist;
 use strict;
 use Bio::Phylo::Factory;
-use Bio::Phylo::IO;
+use Bio::Phylo::IO ();
 use vars qw(@ISA);
 @ISA=qw(Bio::Phylo::IO);
 

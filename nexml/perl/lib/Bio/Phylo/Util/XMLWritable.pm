@@ -1,7 +1,7 @@
 # $Id$
 package Bio::Phylo::Util::XMLWritable;
 use strict;
-use Bio::Phylo;
+use Bio::Phylo ();
 use Bio::Phylo::Util::Exceptions 'throw';
 use Bio::Phylo::Util::CONSTANT qw(_DICTIONARY_ _META_ _DOMCREATOR_ looks_like_object looks_like_hash);
 use vars '@ISA';

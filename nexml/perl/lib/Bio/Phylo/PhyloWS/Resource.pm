@@ -1,6 +1,6 @@
 package Bio::Phylo::PhyloWS::Resource;
-use Bio::Phylo::PhyloWS;
-use Bio::Phylo::Util::XMLWritable;
+use Bio::Phylo::PhyloWS ();
+use Bio::Phylo::Util::XMLWritable ();
 use Bio::Phylo::Util::Exceptions 'throw';
 use Bio::Phylo::Util::CONSTANT qw(_DESCRIPTION_ _RESOURCE_);
 use vars '@ISA';

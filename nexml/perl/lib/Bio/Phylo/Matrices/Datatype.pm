@@ -1,6 +1,6 @@
 # $Id$
 package Bio::Phylo::Matrices::Datatype;
-use Bio::Phylo::Util::XMLWritable;
+use Bio::Phylo::Util::XMLWritable ();
 use Bio::Phylo::Factory;
 use Bio::Phylo::Util::Exceptions 'throw';
 use Bio::Phylo::Util::CONSTANT qw'_DOMCREATOR_ looks_like_hash';

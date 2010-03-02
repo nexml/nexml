@@ -1,7 +1,7 @@
 # $Id$
 package Bio::Phylo::Taxa;
 use strict;
-use Bio::Phylo::Listable;
+use Bio::Phylo::Listable ();
 use Bio::Phylo::Util::CONSTANT qw(_NONE_ _TAXA_ _FOREST_ _MATRIX_ _PROJECT_ looks_like_object);
 use Bio::Phylo::Mediators::TaxaMediator;
 use Bio::Phylo::Factory;

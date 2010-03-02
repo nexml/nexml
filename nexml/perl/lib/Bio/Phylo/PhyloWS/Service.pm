@@ -1,7 +1,7 @@
 package Bio::Phylo::PhyloWS::Service;
 use strict;
 use Bio::Phylo::Factory;
-use Bio::Phylo::PhyloWS;
+use Bio::Phylo::PhyloWS ();
 use Bio::Phylo::IO 'unparse';
 use Bio::Phylo::Util::CONSTANT qw(looks_like_hash _HTTP_SC_SEE_ALSO_);
 use Bio::Phylo::Util::Exceptions 'throw';

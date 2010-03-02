@@ -1,7 +1,7 @@
 package Bio::Phylo::Parsers::Tolweb;
 use strict;
 use warnings;
-use Bio::Phylo::IO;
+use Bio::Phylo::IO ();
 use Bio::Phylo::Util::Exceptions 'throw';
 use Bio::Phylo::Factory;
 use UNIVERSAL 'isa';
