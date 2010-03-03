@@ -4,11 +4,39 @@ use File::Spec;
 use Bio::Phylo::Util::CONSTANT qw'looks_like_hash looks_like_instance';
 use Bio::Phylo::Util::Exceptions 'throw';
 use Config;
-use vars qw($volume $class_dir $file $VERBOSE $AUTOLOAD $TRACEBACK);
+use vars qw(
+	$volume
+	$class_dir
+	$file
+	$VERBOSE
+	$AUTOLOAD
+	$TRACEBACK
+	@ISA
+	@EXPORT_OK
+	%EXPORT_TAGS
+);
 
 BEGIN {
+	require Exporter;
+	@ISA = qw(Exporter);
+	@EXPORT_OK = qw(DEBUG INFO WARN ERROR FATAL);
+	%EXPORT_TAGS = ( 'levels' => [ @EXPORT_OK ] );
 	my $class_file = __FILE__;
 	( $volume, $class_dir, $file ) = File::Spec->splitpath( $class_file );
+	
+	# By default, the logger formats its messages to show where the logging
+	# method (i.e. debug, info, warn, error or fatal) was called, (e.g in
+	# the synopsis the $logger->info method was called in Bio/Phylo.pm on
+	# line 280). However, in some cases you may want to have the message be
+	# formatted to originate earlier in the call stack. An example of
+	# this is in Bio::Phylo::Util::Exceptions, which calls $logger->error
+	# automatically every time an exception is thrown. This behaviour would
+	# not be very useful if the resulting message is shown to originate from
+	# within the "throw" method - so instead it seems to originate from
+	# where the exception was thrown, i.e. one frame up in the call stack.
+	# This behaviour can be achieved by changing the value of the
+	# $Bio::Phylo::Util::Logger::TRACEBACK variable. For each increment in
+	# that variable, the logger moves one frame up in the call stack.	
 	$TRACEBACK = 0;
 	$class_dir =~ s/Bio.Phylo.Util.?$//;
 #	printf STDERR "[ %s starting, will use PREFIX=%s where applicable ]\n", __PACKAGE__, $class_dir;
@@ -132,13 +160,22 @@ CODE_TEMPLATE
 
 =head1 NAME
 
-Bio::Phylo::Util::Logger - Logger of internal messages of several severity levels 
+Bio::Phylo::Util::Logger - Logger of internal messages of several severity
+levels 
 
 =head1 SYNOPSIS
 
  use strict;
- use Bio::Phylo::Util::Logger;
+ use Bio::Phylo::Util::Logger ':levels'; # import level constants
  use Bio::Phylo::IO 'parse';
+ use Bio::Phylo::Factory; 
+ 
+ # Set the verbosity level of the tree class.
+ # "DEBUG" is the most verbose level. All log messages
+ # emanating from the tree class will be 
+ # transmitted. For this to work the level constants
+ # have to have been imported!
+ use Bio::Phylo::Forest::Tree 'verbose' => DEBUG; # note: DEBUG is not quoted!
  
  # Create a file handle for logger to write to.
  # This is not necessary, by default the logger
@@ -146,24 +183,16 @@ Bio::Phylo::Util::Logger - Logger of internal messages of several severity level
  # to write to a file, as per this example.
  open my $fh, '>', 'parsing.log' or die $!;
  
- # Instantiate a logger object.
- my $logger = Bio::Phylo::Util::Logger->new;
- 
- # Set the verbosity level of the tree class.
- # 4 is the most verbose level. All log messages
- # emanating from the tree class will be 
- # transmitted
- $logger->VERBOSE( 
-     '-level' => 4,
-     '-class' => 'Bio::Phylo::Forest::Tree',
- );
+ # Create a logger object.
+ my $fac = Bio::Phylo::Factory->new;
+ my $logger = $fac->create_logger;
  
  # Set the verbosity level of the set_name
  # method in the base class. Messages coming
  # from this method will be transmitted.
  $logger->VERBOSE( 
-     '-level'  => 4,
-     '-method' => 'Bio::Phylo::set_name',
+     '-level'  => DEBUG, # note, not quoted, this is a constant!
+     '-method' => 'Bio::Phylo::set_name', # quoted, otherwise bareword error!
  );
  
  # 'Listeners' are subroutine references that
@@ -195,40 +224,36 @@ Bio::Phylo::Util::Logger - Logger of internal messages of several severity level
 
 The example above will write something like the following to the log file:
 
- INFO Bio::Phylo::Forest::Tree::new [$PREFIX/Bio/Phylo/Forest/Tree.pm, 88] - constructor called for 'Bio::Phylo::Forest::Tree'
- INFO Bio::Phylo::set_name [$PREFIX/Bio/Phylo.pm, 280] - setting name 'A'
- INFO Bio::Phylo::set_name [$PREFIX/Bio/Phylo.pm, 280] - setting name 'B'
- INFO Bio::Phylo::set_name [$PREFIX/Bio/Phylo.pm, 280] - setting name 'C'
- INFO Bio::Phylo::set_name [$PREFIX/Bio/Phylo.pm, 280] - setting name 'D'
- INFO Bio::Phylo::set_name [$PREFIX/Bio/Phylo.pm, 280] - setting name 'E'
+ INFO Bio::Phylo::Forest::Tree::new [$PREFIX/Bio/Phylo/Forest/Tree.pm, 99] - constructor called for 'Bio::Phylo::Forest::Tree'
+ INFO Bio::Phylo::set_name [$PREFIX/Bio/Phylo.pm, 281] - setting name 'A'
+ INFO Bio::Phylo::set_name [$PREFIX/Bio/Phylo.pm, 281] - setting name 'B'
+ INFO Bio::Phylo::set_name [$PREFIX/Bio/Phylo.pm, 281] - setting name 'C'
+ INFO Bio::Phylo::set_name [$PREFIX/Bio/Phylo.pm, 281] - setting name 'D'
+ INFO Bio::Phylo::set_name [$PREFIX/Bio/Phylo.pm, 281] - setting name 'E'
 
 =head1 DESCRIPTION
 
 This class defines a logger, a utility object for logging messages.
 The other objects in Bio::Phylo use this logger to give detailed feedback
-about what they are doing at per-class, per-method user-configurable log levels
-(debug, info, warn, error and fatal). 
+about what they are doing at per-class, per-method, user-configurable log levels
+(DEBUG, INFO, WARN, ERROR and FATAL). These log levels are constants that are
+optionally exported by this class by passing the ':levels' argument to your
+'use' statement, like so:
 
-By default, the logger formats its 
-messages to show where the logging method (i.e. DEBUG, INFO, WARN, ERROR or FATAL)
-was called, so in the above example the $logger->info method was called in
-Bio/Phylo.pm on line 280. However, in some cases you may want to have the
-message be formatted to originate earlier in the call stack. An example of
-this is in Bio::Phylo::Util::Exceptions, which calls $logger->error automatically 
-every time an exception is thrown. This behaviour would not be very useful if the
-resulting message is shown to originate from within the "throw" method - so
-instead it seems to originate from where the exception was thrown, i.e. one
-frame up in the call stack. This behaviour can be achieved by changing the value
-of the $Bio::Phylo::Util::Logger::TRACEBACK variable. For each increment in that
-variable, the logger moves one frame up in the call stack.
+ use Bio::Phylo::Util::Logger ':levels';
 
-The least verbose is level 0, in which case only 'fatal' messages are shown. 
-The most verbose level, 4, shows debugging messages, including from internal 
+If for some reason you don't want this behaviour (i.e. because there is
+something else by these same names in your namespace) you must use the fully
+qualified names for these levels, i.e. Bio::Phylo::Util::Logger::DEBUG and
+so on.
+
+The least verbose is level FATAL, in which case only 'fatal' messages are shown. 
+The most verbose level, DEBUG, shows debugging messages, including from internal 
 methods (i.e. ones that start with underscores, and special 'ALLCAPS' perl 
 methods like DESTROY or TIEARRAY). For example, to monitor what the root class 
 is doing, you would say:
 
- $logger->( -class => 'Bio::Phylo', -level => 4 )
+ $logger->( -class => 'Bio::Phylo', -level => DEBUG )
 
 To define global verbosity you can omit the -class argument. To set verbosity
 at a more granular level, you can use the -method argument, which takes a 
@@ -251,7 +276,7 @@ Constructor for Logger.
  Function: Instantiates a logger
  Returns : a Bio::Phylo::Util::Logger object
  Args    : -verbose => Bio::Phylo::Util::Logger::INFO (DEBUG/INFO/WARN/ERROR/FATAL)
- 		   -package => a package for which to set verbosity (optional)	
+ 	   -package => a package for which to set verbosity (optional)	
 
 =back
 
@@ -392,16 +417,16 @@ relative to which the paths to source files will be constructed.
 
 Setter for the verbose level. This comes in five levels: 
 
-	0 = only fatal messages (though, when something fatal happens, you'll most 
+	FATAL = only fatal messages (though, when something fatal happens, you'll most 
 	likely get an exception object), 
 	
-	1 = errors (hopefully recoverable), 
+	ERROR = errors (hopefully recoverable), 
 	
-	2 = warnings (recoverable), 
+	WARN = warnings (recoverable), 
 	
-	3 = info (useful diagnostics), 
+	INFO = info (useful diagnostics), 
 	
-	4 = debug (almost every method call)
+	DEBUG = debug (almost every method call)
 
 Without additional arguments, i.e. by just calling VERBOSE( -level => $level ),
 you set the global verbosity level. By default this is 2. By increasing this
