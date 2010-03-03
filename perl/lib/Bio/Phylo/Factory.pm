@@ -38,13 +38,14 @@ Bio::Phylo::Factory - Creator of objects, reduces hardcoded class names in code
  my $fac = Bio::Phylo::Factory->new;
  my $node = $fac->create_node( '-name' => 'node1' );
 
- # prints 'Bio::Phylo::Forest::Node'
+ # probably prints 'Bio::Phylo::Forest::Node'?
  print ref $node;
 
 =head1 DESCRIPTION
 
 The factory module is used to create other objects without having to 'use' 
-their classes.
+their classes. This allows for greater flexibility in Bio::Phylo's design,
+as class names are no longer hard-coded all over the place.
 
 =head1 METHODS
 
@@ -124,36 +125,36 @@ method.
  Function: Registers a class name for instantiation
  Returns : Invocant
  Args    : $class, a class name (required), or
-           'short_name' => $class, such that you
-           can subsequently call $fac->create_short_name()
+           'bar' => 'Foo::Bar', such that you
+           can subsequently call $fac->create_bar()
 
 =cut
 
 sub register_class {
-	my ( $self, @args ) = @_;
-	my ( $short, $class );
-	if ( @args == 1 ) {
-	    $class = $args[0];
-	}
-	else {
-	    ( $short, $class ) = @args;
-	}
+    my ( $self, @args ) = @_;
+    my ( $short, $class );
+    if ( @args == 1 ) {
+	$class = $args[0];
+    }
+    else {
+	( $short, $class ) = @args;
+    }
     my $path = $class;
     $path =~ s|::|/|g;
     $path .= '.pm';
     if ( not $INC{$path} ) {
         eval { require $path };
-		if ( $@ ) {
-			throw 'ExtensionError' => "Can't register $class - $@";
-		}        
+	    if ( $@ ) {
+		throw 'ExtensionError' => "Can't register $class - $@";
+	    }        
     }
-	if ( not defined $short ) {
-        $short = $class;
-        $short =~ s/.*://;
-        $short = lc $short;
-	}
-	$class{$short} = $class;
-	return $self;
+    if ( not defined $short ) {
+	$short = $class;
+	$short =~ s/.*://;
+	$short = lc $short;
+    }
+    $class{$short} = $class;
+    return $self;
 }
 
 sub AUTOLOAD {
