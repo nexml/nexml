@@ -1,4 +1,4 @@
-#$Id$
+# $Id: $
 
 =head1 NAME
 
@@ -12,7 +12,7 @@ Don't use directly; use Bio::Phylo::Util::DOM->new( -format => 'libxml' ) instea
 =head1 DESCRIPTION
 
 This module provides mappings the methods specified in the 
-L<Bio::Phylo::Util::DOM::DocumentI> interface to the C<XML::LibXML::Document>
+L<Bio::Phylo::Util::DOM::Document> abstract class to the C<XML::LibXML::Document>
 package.
 
 =head1 AUTHOR
@@ -23,21 +23,20 @@ Mark A. Jensen ( maj -at- fortinbras -dot- us )
 
 package Bio::Phylo::Util::DOM::Document::libxml;
 use strict;
-use warnings;
-use lib '../lib';
-use Bio::Phylo::Util::DOM::DocumentI;
-use Bio::Phylo::Util::DOM::Element::libxml; # for blessing 
+use Bio::Phylo::Util::DOM::Document ();
+use Bio::Phylo::Util::CONSTANT qw(looks_like_instance);
+use Bio::Phylo::Util::DOM::Element::libxml (); # for blessing 
 use Bio::Phylo::Util::Exceptions qw(throw);
-use UNIVERSAL qw(isa);
 use vars qw(@ISA);
 
 BEGIN {
-    eval { 
-        require XML::LibXML };
-    if ($@) {
-		throw 'ExtensionError' => "Failed to load XML::LibXML::Document: $@";
+    # XML::LibXML::Document is a package within the same file as XML::LibXML,
+    # no need to require-test it separately
+    eval { require XML::LibXML };
+    if ($@) {		
+	throw 'ExtensionError' => "Failed to load XML::LibXML::Document: $@";
     }
-    @ISA = qw( Bio::Phylo::Util::DOM::DocumentI XML::LibXML::Document );
+    @ISA = qw( Bio::Phylo::Util::DOM::Document XML::LibXML::Document );
 }
 
 
@@ -59,7 +58,7 @@ BEGIN {
 sub new {
     my ($class, @args) = @_;
     my $self = XML::LibXML::Document->new(@args);
-    bless($self, $class);
+    bless $self, $class;
     return $self;
 }
 
@@ -114,11 +113,13 @@ sub get_encoding {
 
 sub set_root {
     my ($self, $root) = @_;
-    unless (isa($root, 'XML::LibXML::Element')) {
+    if ( looks_like_instance $root, 'XML::LibXML::Element' ) {
+	$self->setDocumentElement($root);
+	return 1;
+    }
+    else {
 	throw 'ObjectMismatch' => "Argument is not an XML::LibXML::Element";
     }
-    $self->setDocumentElement($root);
-    return 1;
 }
 
 =item get_root()
@@ -167,9 +168,9 @@ sub get_element_by_id {
     }
     my $xp = "//*[\@id = '$id']";
     my $e = $self->get_root->find( $xp );
-    return unless $e;
+    return unless $e; # don't return undef explicitly, do it this way
     $e = $e->shift;
-    return bless( $e, 'Bio::Phylo::Util::DOM::Element::libxml');
+    return bless $e, 'Bio::Phylo::Util::DOM::Element::libxml';
 }
 
 =item get_elements_by_tagname()
@@ -196,38 +197,20 @@ sub get_elements_by_tagname {
 
 =over
 
-=item to_xml_string()
+=item to_xml()
 
  Type    : Serializer
- Title   : to_xml_string
- Usage   : $doc->to_xml_string
+ Title   : to_xml
+ Usage   : $doc->to_xml
  Function: Create XML string from document
  Returns : XML string
  Args    : Formatting arguments as allowed by underlying package
 
 =cut
 
-sub to_xml_string {
+sub to_xml {
     my ($self, @args) = @_;
     return $self->toString(@args);
-}
-
-=item to_xml_file()
-
- Type    : Serializer
- Title   : to_xml_file
- Usage   : $doc->to_xml_file()
- Function: Create XML file from document
- Returns : True on success
- Args    : filename, formatting arguments as allowed by underlying package
-
-=cut
-
-sub to_xml_file {
-    my ($self, $file, @args) = @_;
-    # catch error here?
-    $self->toFile($file, @args);
-    return 1;
 }
 
 =back

@@ -811,20 +811,20 @@ Analog to to_xml.
 		    my $special = $self->get_ids_for_special_symbols;
 		    if ( %{ $special } ) {
 				my $uss;
-				$uss = $dom->create_element('uncertain_state_set');
+				$uss = $dom->create_element('-tag'=>'uncertain_state_set');
 				$uss->set_attributes( 'id' => 's'.$special->{$gap} );
 				$uss->set_attributes( 'symbol' => '-' );
 				$elt->set_child($uss);
-				$uss = $dom->create_element('uncertain_state_set');
+				$uss = $dom->create_element('-tag'=>'uncertain_state_set');
 				$uss->set_attributes( 'id' => 's'.$special->{$missing} );
 				$uss->set_attributes( 'symbol' => '?' );
 				my $mbr;
 				for (@states) {
-				    $mbr = $dom->create_element('member');
+				    $mbr = $dom->create_element('-tag'=>'member');
 				    $mbr->set_attributes( 'state' => $id_for_state->{$_} );
 				    $uss->set_child($mbr);
 				}
-				$mbr = $dom->create_element('member');
+				$mbr = $dom->create_element('-tag'=>'member');
 				$mbr->set_attributes( 'state' => 's'.$special->{$gap} );
 				$uss->set_child($mbr);
 				$elt->set_child($uss);
@@ -845,11 +845,11 @@ Analog to to_xml.
 	        if ( scalar @mapping > 1 ) {
 	            my $tag = $polymorphism ? 'polymorphic_state_set' : 'uncertain_state_set';
 	
-			    $elt = $dom->create_element($tag);
+			    $elt = $dom->create_element('-tag'=>$tag);
 			    $elt->set_attributes( 'id' => $state_id );
 			    $elt->set_attributes( 'symbol' => $symbol );
 	            for my $map ( @mapping ) {
-					my $mbr = $dom->create_element('member');
+					my $mbr = $dom->create_element('-tag'=>'member');
 					$mbr->set_attributes('state' => $id_for_state->{ $map } );
 					$elt->set_child($mbr);
 	            }
@@ -858,7 +858,7 @@ Analog to to_xml.
 	        
 	        # no ambiguity
 	        else {
-		    $elt = $dom->create_element('state');
+		    $elt = $dom->create_element('-tag'=>'state');
 		    $elt->set_attributes( 'id' => $state_id );
 		    $elt->set_attributes( 'symbol' => $symbol ); 
 	        }

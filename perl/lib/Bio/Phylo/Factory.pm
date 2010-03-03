@@ -26,6 +26,9 @@ my %class = (
     'server'      => 'Bio::Phylo::PhyloWS::Server',  
     'resource'    => 'Bio::Phylo::PhyloWS::Resource',    
     'description' => 'Bio::Phylo::PhyloWS::Resource::Description',
+    'dom'         => 'Bio::Phylo::Util::DOM',
+    'document'    => 'Bio::Phylo::Util::DOM::Document',
+    'element'     => 'Bio::Phylo::Util::DOM::Element',
 );
 
 =head1 NAME

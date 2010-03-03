@@ -33,12 +33,14 @@ BEGIN {
         _DESCRIPTION_
         _RESOURCE_ 
         _HTTP_SC_SEE_ALSO_
+	_DOCUMENT_
+	_ELEMENT_
       	looks_like_number
       	looks_like_object
-		looks_like_hash
-		looks_like_class   
-		looks_like_instance
-		looks_like_implementor
+	looks_like_hash
+	looks_like_class   
+	looks_like_instance
+	looks_like_implementor
     );
     %EXPORT_TAGS = ( 
         'all'         => [ @EXPORT_OK ],
@@ -67,16 +69,18 @@ BEGIN {
                 _DESCRIPTION_
                 _RESOURCE_
                 _HTTP_SC_SEE_ALSO_
+		_DOCUMENT_
+		_ELEMENT_
             )
         ],
         'functions' => [
         	qw(
-        		looks_like_number
-        		looks_like_object
-        		looks_like_hash
-        		looks_like_class
-        		looks_like_instance
-        		looks_like_implementor
+		    looks_like_number
+		    looks_like_object
+		    looks_like_hash
+		    looks_like_class
+		    looks_like_instance
+		    looks_like_implementor
         	)
         ],    
     );
@@ -112,6 +116,9 @@ sub _META_         () { 19 }
 
 sub _DESCRIPTION_  () { 20 }
 sub _RESOURCE_     () { 21 }
+
+sub _DOCUMENT_     () { 22 }
+sub _ELEMENT_      () { 23 }
 
 # for PhyloWS
 sub _HTTP_SC_SEE_ALSO_ () { '303 See Other' }
@@ -193,10 +200,10 @@ sub looks_like_class($) {
 	$path     =~ s|::|/|g;
 	$path    .=  '.pm';
 	if ( not exists $INC{$path} ) {
-		eval { require $path };
-		if ( $@ ) {
-			throw 'ExtensionError' => $@;
-		}
+	    eval { require $path };
+	    if ( $@ ) {
+		throw 'ExtensionError' => $@;
+	    }
 	}
 	return $class;
 }
