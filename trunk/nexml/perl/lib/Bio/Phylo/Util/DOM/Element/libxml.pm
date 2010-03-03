@@ -26,7 +26,6 @@ use strict;
 use Bio::Phylo::Util::DOM::Element ();
 use Bio::Phylo::Util::Exceptions qw(throw);
 use Bio::Phylo::Util::CONSTANT qw(looks_like_instance looks_like_hash);
-use UNIVERSAL qw(isa);
 use vars qw(@ISA);
 
 BEGIN {
