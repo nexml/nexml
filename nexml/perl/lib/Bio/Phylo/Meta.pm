@@ -14,20 +14,21 @@ use strict;
     
 =head1 NAME
 
-Bio::Phylo::Meta - Single predicate/object annotation, attached to an xml-writable subject
+Bio::Phylo::Meta - Single predicate/object annotation, attached to an
+xml-writable subject
 
 =head1 SYNOPSIS
 
  use Bio::Phylo::Factory;
  my $fac = Bio::Phylo::Factory->new;
- my $base = 'http://8ball.sdsc.edu:6666/treebase-web/PhyloWS/tree/';
+ my $url = 'http://purl.org/phylo/treebase/phylows/study/TB2:S1787';
  my $proj = $fac->create_project->add_meta(
      $fac->create_meta(
          '-namespaces' => { 'cdao' => 'http://evolutionaryontology.org#' },
          '-triple'     => { 
              'cdao:hasMeta' => $fac->create_meta(
                  '-namespaces' => { 'cdao' => 'http://evolutionaryontology.org#' },
-                 '-triple'     => { 'cdao:has_External_Reference' => $base . 'TreeBASE:2602' }
+                 '-triple'     => { 'cdao:has_External_Reference' => $url }
              )
          }
      )
