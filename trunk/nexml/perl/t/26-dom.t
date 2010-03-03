@@ -83,7 +83,7 @@ foreach my $format (qw(twig libxml)) {
     # write to tempfile, run validation script (at ../script/nexvl.pl) on it
       ok( my $fh = File::Temp->new, 'make temp file' );
       my $fn = $fh->filename;
-      ok( $doc->to_xml_file($fn, 1), 'write XML from dom' );
+      ok( print $fh $doc->to_xml, 'write XML from dom' );
       $fn =~ s/\\/\//g;
       is(system( $ENV{'NEXML_ROOT'} . '/perl/script/nexvl.pl', '-Q', $fn) + 1, 1, 'dom-generated XML is valid NeXML');
       #is( (qx{ bash -c " if (./script/nexvl.pl -Q $fn) ; then echo -n 1 ; else echo -n 0 ; fi" })[0], 1, 'dom-generated XML is valid NeXML' );

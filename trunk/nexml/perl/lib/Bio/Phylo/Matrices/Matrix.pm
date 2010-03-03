@@ -1153,7 +1153,7 @@ Analog to to_xml.
 		my $normalized = $self->_normalize_symbols;
 		
 		# the format block
-	 	my $format_elt = $dom->create_element('format');
+	 	my $format_elt = $dom->create_element('-tag'=>'format');
 		my $to = $self->get_type_object;
 		$ids_for_states = $to->get_ids_for_states(1);
 		
@@ -1168,7 +1168,7 @@ Analog to to_xml.
 	
 		# the matrix block
 	
-		my $mx_elt = $dom->create_element('matrix');
+		my $mx_elt = $dom->create_element('-tag'=>'matrix');
 		my @char_ids;
 		for ( 0 .. $self->get_nchar ) {
 		    push @char_ids, 'c' . ($_+1);
@@ -1200,7 +1200,7 @@ Analog to to_xml.
 		for my $i ( 1 .. $self->get_nchar ) {
 		    my $char_id = 'c' . $i;
 		    my $label   = $labels->[ $i - 1 ];
-		    my $elt = $dom->create_element('char');
+		    my $elt = $dom->create_element('-tag'=>'char');
 		    $elt->set_attributes( 'id' => $char_id );
 		    $elt->set_attributes( 'label' => $label ) if $label;
 		    $elt->set_attributes( 'states' => $states_id ) if $states_id;

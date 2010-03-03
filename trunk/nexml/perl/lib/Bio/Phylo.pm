@@ -2,14 +2,6 @@
 package Bio::Phylo;
 use strict;
 
-# we import 'isa' to use it as a function, which we NEVER
-# use to test class identity - isa( $obj, 'Some::Class') -
-# but sometimes to test references, e.g. isa( $hash, 'HASH' ).
-# In fact, we NEVER test class identity in any way, rather, we
-# use the duck-typing system looks_like_object( $obj, $CONST )
-# from Bio::Phylo::Util::CONSTANT
-# use UNIVERSAL qw(isa);
-
 # we don't use 'our', for 5.005 compatibility
 use vars qw($VERSION $COMPAT $logger);
 
@@ -20,7 +12,11 @@ use Scalar::Util qw(weaken blessed);
 
 #... instead, Bio::Phylo::Util::CONSTANT can worry about it
 # in one location, perhaps using the S::U version, or a drop-in
-use Bio::Phylo::Util::CONSTANT qw(looks_like_number looks_like_hash looks_like_instance);
+use Bio::Phylo::Util::CONSTANT qw(
+    looks_like_number
+    looks_like_hash
+    looks_like_instance
+);
 use Bio::Phylo::Util::IDPool;             # creates unique object IDs
 use Bio::Phylo::Util::Exceptions 'throw'; # defines exception classes and throws
 use Bio::Phylo::Util::Logger;             # for logging, like log4perl/log4j 
@@ -37,17 +33,13 @@ require Bio::Phylo::Mediators::TaxaMediator;
 # Include the revision number from subversion in $VERSION
 my $rev = '$Id$';
 $rev =~ s/^[^\d]+(\d+)\b.*$/$1/;
-$VERSION = "0.18";
+$VERSION = "0.19";
 $VERSION .= "_$rev";
 {
     my $taxamediator = 'Bio::Phylo::Mediators::TaxaMediator';
-
-    # Deprecated!
     sub import {
         my $class = shift;
         if (@_) {
-    	    require Carp;
-	    Carp::carp("Passing arguments to 'use $class' in this way is deprecated.");          
             my %opt = looks_like_hash @_;
 	    while ( my ( $key, $value ) = each %opt ) {
 		if ( $key =~ qr/^VERBOSE$/i ) {
@@ -220,7 +212,7 @@ argument "-name" in the constructor.
 			$self->$mutator($value);
 		};
 		if ( $@ ) {
-		    if ( UNIVERSAL::can($@,'rethrow') ) {
+		    if ( blessed $@ and $@->can('rethrow') ) {
 			$@->rethrow;
 		    }
 		    elsif ( not ref($@) and $@ =~ /^Can't locate object method / ) {

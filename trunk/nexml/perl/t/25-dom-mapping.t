@@ -2,15 +2,13 @@ use Test::More;
 BEGIN {
     eval { require XML::LibXML::Reader };
     if ( $@ ) {
-         plan 'skip_all' => $@;
+         plan 'skip_all' => 'XML::LibXML not installed';
     }
     else {
         plan 'tests' => 82;
     }
 }
-use Test::Exception;
 use strict;
-use lib '../lib';
 use File::Temp;
 use File::Spec;
 
@@ -41,13 +39,13 @@ my $nexml_order = {
 my @formats     = qw( twig libxml );
 my @fac_methods = qw( create_element create_document get_format set_format );
 my @elt_methods = qw( new get_attributes set_attributes clear_attributes
-                   get_tagname set_tagname set_text get_text clear_text
-                   get_parent get_children get_first_child get_last_child
-                   get_next_sibling get_prev_sibling get_elements_by_tagname
-                   set_child prune_child to_xml_string );
+                   get_tag set_tag set_text get_text clear_text
+                   get_parent get_children get_first_daughter get_last_daughter
+                   get_next_sister get_previous_sister get_elements_by_tagname
+                   set_child prune_child to_xml );
 my @doc_methods = qw( new set_encoding get_encoding set_root get_root
                    get_element_by_id get_elements_by_tagname
-                   to_xml_string to_xml_file );
+                   to_xml );
 
 my $twig = XML::Twig->new();
 ok( $twig->parse( do { local $/; <DATA> } ), 'test data parsed');
@@ -62,7 +60,7 @@ for my $format (@formats) {
 	
 	can_ok( $dom, @fac_methods );
 	
-	ok( my $elt = $dom->create_element('boog'), "$format element" );
+	ok( my $elt = $dom->create_element('-tag' => 'boog'), "$format element" );
 	ok( my $doc = $dom->create_document, "$format document" );
 	
 	can_ok( $elt, @elt_methods);
@@ -76,7 +74,7 @@ for my $format (@formats) {
 	    skip 'env var NEXML_ROOT not set', 3 unless $ENV{'NEXML_ROOT'};
 	    ok( my $fh = File::Temp->new, 'make temp file' );
 	    my $fn = $fh->filename;
-	    ok( $doc->to_xml_file($fn), "write XML from $format DOM" );
+	    ok( print $fh $doc->to_xml, "write XML from $format DOM" );
 	    $fn =~ s/\\/\//g;
 	    is(system( $ENV{'NEXML_ROOT'} . '/perl/script/nexvl.pl', '-Q', $fn) + 1, 1, 'dom-generated XML is valid NeXML');	    
 	    #is( (qx{ bash -c " if (../script/nexvl.pl -Q $fn) ; then echo -n 1 ; else echo -n 0 ; fi" })[0], 1, 'dom-generated XML is valid NeXML' );
@@ -97,31 +95,33 @@ for my $format (@formats) {
 	ok( !$s11->get_text, "text is gone");
 	# test: traversal, prune methods - make sure ids of pruned descendants
 	#  disappear from document
-	ok( $s12->set_child( $dom->create_element('boog', 'id'=>'schlarb') ), 'test child');
+	ok( $s12->set_child( $dom->create_element(
+	    '-tag'        => 'boog',
+	    '-attributes' => {'id'=>'schlarb'}) ), 'test child');
 	ok( my $child = $doc->get_element_by_id('schlarb'), 'found child');
 	ok( !$s12->prune_child($elt), "can't prune a non-child");
 	ok( $s12->prune_child( $child ), "prune child");
 	ok( !$doc->get_element_by_id('schlarb'), "child gone by_id");
 	# test: clear_* methods
 	ok( my $row13 = $doc->get_element_by_id('row13'), "get row13");
-	is( $row13->get_attributes('label'), "otuD", "get label");
+	is( $row13->get_attributes('label')->{'label'}, "otuD", "get label");
 	ok( $row13->clear_attributes('label'), "clear label attempt");
-	ok( !$row13->get_attributes('label'), "label gone" );
+	ok( !$row13->get_attributes('label')->{'label'}, "label gone" );
 	ok( $row13->clear_attributes('id', 'otu'), "clear id, otu attrs");
-	ok( !$row13->get_attributes('otu'), "otu attr gone");
+	ok( !$row13->get_attributes('otu')->{'otu'}, "otu attr gone");
 	ok( !$doc->get_element_by_id('row13'), "row13 id gone by_id");
-	is( $row13->get_first_child->get_tagname, "cell", "first child");
-	is( $row13->get_next_sibling->get_attributes('label'), "otuE", "next sibling");
-	is( $row13->get_prev_sibling->get_attributes('label'), "otuC", "prev sibling");
-	is( $elt->get_first_child->get_tagname, "otus", "first child of root");
-	is( $elt->get_last_child->get_tagname, "characters", "last child of root");
+	is( $row13->get_first_daughter->get_tag, "cell", "first child");
+	is( $row13->get_next_sister->get_attributes('label')->{'label'}, "otuE", "next sibling");
+	is( $row13->get_previous_sister->get_attributes('label')->{'label'}, "otuC", "prev sibling");
+	is( $elt->get_first_daughter->get_tag, "otus", "first child of root");
+	is( $elt->get_last_daughter->get_tag, "characters", "last child of root");
     }
 } # formats
 
 sub _parse {
     my ($elt, $key, $h, $dom) = @_;
     unless ($elt) {
-	$elt = $dom->create_element($key);
+	$elt = $dom->create_element('-tag' => $key);
 	foreach my $k ( _order($key, keys %{$$h{$key}}) ) {
 	    _parse($elt, $k, $$h{$key}{$k}, $dom);
 	}
@@ -133,7 +133,7 @@ sub _parse {
 	    last;
 	};
 	/HASH/ && do {
-	    my $new_elt = $dom->create_element($key);
+	    my $new_elt = $dom->create_element('-tag' => $key);
 	    $elt->set_child($new_elt);
 	    foreach my $new_key (_order($key, keys %$h)) {
 		_parse($new_elt, $new_key, $$h{$new_key}, $dom);
