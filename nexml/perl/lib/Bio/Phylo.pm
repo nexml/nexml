@@ -46,20 +46,20 @@ $VERSION .= "_$rev";
     sub import {
         my $class = shift;
         if (@_) {
-    		require Carp;
-	    	Carp::carp("Passing arguments to 'use $class' in this way is deprecated.");          
+    	    require Carp;
+	    Carp::carp("Passing arguments to 'use $class' in this way is deprecated.");          
             my %opt = looks_like_hash @_;
-			while ( my ( $key, $value ) = each %opt ) {
-				if ( $key =~ qr/^VERBOSE$/i ) {
-					$logger->VERBOSE( '-level' => $value, -class => $class );
-				}
-				elsif ( $key =~ qr/^COMPAT$/i ) {
-					$COMPAT = ucfirst( lc($value) );
-				}
-				else {
-					throw 'BadArgs' => "'$key' is not a valid argument for import";
-				}
-			}
+	    while ( my ( $key, $value ) = each %opt ) {
+		if ( $key =~ qr/^VERBOSE$/i ) {
+		    $logger->VERBOSE( '-level' => $value, -class => $class );
+		}
+		elsif ( $key =~ qr/^COMPAT$/i ) {
+		    $COMPAT = ucfirst( lc($value) );
+		}
+		else {
+		    throw 'BadArgs' => "'$key' is not a valid argument for import";
+		}
+	    }
         }
         return 1;
     }
@@ -182,55 +182,55 @@ argument "-name" in the constructor.
         # processing arguments
         if ( @_ and @_ = looks_like_hash @_ ) {
 
-			# notify user
-			$logger->debug("going to process constructor args");
+	    # notify user
+	    $logger->debug("going to process constructor args");
 
-			# process all arguments
-			ARG: while (@_) {
-				my $key   = shift @_;
-				my $value = shift @_;
-				
-				# this is a bioperl arg, meant to set
-				# verbosity at a per class basis. In
-				# bioperl, the $verbose argument is
-				# subsequently carried around in that
-				# class, here we delegate that to the
-				# logger, which has roughly the same 
-				# effect.
-				if ( $key eq '-verbose' ) {
-					$logger->VERBOSE( 
-						'-level' => $value,
-						'-class' => $class,
-					);
-					next ARG;
-				}
+	    # process all arguments
+	    ARG: while (@_) {
+		my $key   = shift @_;
+		my $value = shift @_;
+		
+		# this is a bioperl arg, meant to set
+		# verbosity at a per class basis. In
+		# bioperl, the $verbose argument is
+		# subsequently carried around in that
+		# class, here we delegate that to the
+		# logger, which has roughly the same 
+		# effect.
+		if ( $key eq '-verbose' ) {
+			$logger->VERBOSE( 
+				'-level' => $value,
+				'-class' => $class,
+			);
+			next ARG;
+		}
 
-				# notify user
-				$logger->debug("processing arg '$key'");
+		# notify user
+		$logger->debug("processing arg '$key'");
 
-				# don't access data structures directly, call mutators
-				# in child classes or __PACKAGE__
-				my $mutator = $key;
-				$mutator =~ s/^-/set_/;
+		# don't access data structures directly, call mutators
+		# in child classes or __PACKAGE__
+		my $mutator = $key;
+		$mutator =~ s/^-/set_/;
 
-				# backward compat fixes:
-				$mutator =~ s/^set_pos$/set_position/;
-				$mutator =~ s/^set_matrix$/set_raw/;
-				eval {
-					$self->$mutator($value);
-				};
-				if ( $@ ) {
-					if ( UNIVERSAL::can($@,'rethrow') ) {
-						$@->rethrow;
-					}
-					elsif ( not ref($@) and $@ =~ /^Can't locate object method / ) {
-						throw 'BadArgs' => "The named argument '${key}' cannot be passed to the constructor";
-					}
-					else {
-						throw 'Generic' => $@;
-					}
-				}
-			}
+		# backward compat fixes:
+		$mutator =~ s/^set_pos$/set_position/;
+		$mutator =~ s/^set_matrix$/set_raw/;
+		eval {
+			$self->$mutator($value);
+		};
+		if ( $@ ) {
+		    if ( UNIVERSAL::can($@,'rethrow') ) {
+			$@->rethrow;
+		    }
+		    elsif ( not ref($@) and $@ =~ /^Can't locate object method / ) {
+			throw 'BadArgs' => "The named argument '${key}' cannot be passed to the constructor";
+		    }
+		    else {
+			throw 'Generic' => $@;
+		    }
+		}
+	    }
         }
 
         # register with mediator
@@ -395,13 +395,13 @@ Sets generic key/value pair(s).
                 %args = looks_like_hash @_;
             }
 
-			# notify user
-			$logger->info("setting generic key/value pairs %{args}");
+	    # notify user
+	    $logger->info("setting generic key/value pairs %{args}");
 
-			# fill up the hash
-			foreach my $key ( keys %args ) {
-				$generic{$id}->{$key} = $args{$key};
-			}
+	    # fill up the hash
+	    foreach my $key ( keys %args ) {
+		$generic{$id}->{$key} = $args{$key};
+	    }
         }
         return $self;
     }
@@ -576,8 +576,8 @@ Gets invocant's UID.
 =cut
 
     sub get_id {
-		my $self = shift;
-		return $$self;
+	my $self = shift;
+	return $$self;
     }
 
 =item get_logger()
@@ -643,10 +643,10 @@ Attempts to fetch an in-memory object by its UID
 
 =cut
 
-	sub get_obj_by_id {
-		my ( $class, $id ) = @_;
-		return $objects{$id};
-	}
+    sub get_obj_by_id {
+	my ( $class, $id ) = @_;
+	return $objects{$id};
+    }
 
 =item to_json()
 
