@@ -4,7 +4,7 @@ BEGIN {
         plan 'skip_all' => 'env var NEXML_ROOT not set';
     }
     else {
-    		Test::More->import('no_plan');
+    	Test::More->import('no_plan');
     }
 }
 use strict;

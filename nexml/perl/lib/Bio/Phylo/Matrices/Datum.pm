@@ -978,7 +978,7 @@ Analog to to_xml.
 				    else {
 						$s = uc $char[$i];
 				    }
-				    my $cell_elt = $dom->create_element('cell'); 
+				    my $cell_elt = $dom->create_element('-tag'=>'cell'); 
 				    $cell_elt->set_attributes( 'char' => $c );
 				    $cell_elt->set_attributes('state' => $s ); 
 				    $elt->set_child($cell_elt);
@@ -997,7 +997,7 @@ Analog to to_xml.
 				    else {
 						$s = $char[$i];
 				    }
-				    my $cell_elt = $dom->create_element('cell');
+				    my $cell_elt = $dom->create_element('-tag'=>'cell');
 				    $cell_elt->set_attributes('char' => $c);
 				    $cell_elt->set_attributes( 'state' => $s );
 				    $elt->set_child($cell_elt);
@@ -1008,9 +1008,10 @@ Analog to to_xml.
 		else {
 		    my @tmp = map { uc $_ } @char;
 		    my $seq = $self->get_type_object->join(\@tmp);
-		    my $seq_elt = $dom->create_element('seq');
+		    my $seq_elt = $dom->create_element('-tag'=>'seq');
 	#### create a text node here....
-		    $seq_elt->set_child( XML::LibXML::Text->new($seq) );
+		    $seq_elt->set_text($seq);
+		    #$seq_elt->set_child( XML::LibXML::Text->new($seq) );
 	####
 		    $elt->set_child($seq_elt);
 		}

@@ -12,7 +12,7 @@ Don't use directly; use Bio::Phylo::Util::DOM->new( -format => 'twig' ) instead.
 =head1 DESCRIPTION
 
 This module provides mappings the methods specified in the 
-L<Bio::Phylo::Util::DOM::DocumentI> interface to the 
+L<Bio::Phylo::Util::DOM::Document> abstract class to the 
 C<XML::Twig> package.
 
 =head1 AUTHOR
@@ -23,19 +23,17 @@ Mark A. Jensen ( maj -at- fortinbras -dot- us )
 
 package Bio::Phylo::Util::DOM::Document::twig;
 use strict;
-use warnings;
-use lib '../lib';
-use Bio::Phylo::Util::DOM::DocumentI;
+use Bio::Phylo::Util::DOM::Document;
 use Bio::Phylo::Util::Exceptions qw(throw);
-use UNIVERSAL qw(isa);
+use Bio::Phylo::Util::CONSTANT qw(looks_like_instance);
 use vars qw(@ISA);
 
 BEGIN {
     eval { require XML::Twig };
     if ( $@ ) {
-		throw 'ExtensionError' => "Failed to load XML::Twig: $@";
+	throw 'ExtensionError' => "Failed to load XML::Twig: $@";
     }
-    @ISA = qw( Bio::Phylo::Util::DOM::DocumentI XML::Twig );
+    @ISA = qw( Bio::Phylo::Util::DOM::Document XML::Twig );
 }
 
 =head2 Constructor
@@ -57,7 +55,7 @@ sub new {
     my ($class, @args) = @_;
     my $self = XML::Twig->new();
     $self->set_encoding();
-    bless($self, $class);
+    bless $self, $class;
     return $self;
 }
 
@@ -114,15 +112,17 @@ sub get_encoding {
 
 sub set_root {
     my ($self, $root) = @_;
-    unless (isa($root, 'XML::Twig::Elt')) {
+    if ( looks_like_instance $root, 'XML::Twig::Elt' ) {
+	XML::Twig::set_root($self, $root);
+	# manage ids
+	for ($root->descendants_or_self) {
+	    ${$self->{twig_id_list}}{$_->att('id')} = $_ if $_->att('id');
+	}
+	return 1;
+    }
+    else {
 	throw 'ObjectMisMatch' => 'Argument is not an XML::Twig::Elt';
     }
-    XML::Twig::set_root($self, $root);
-    # manage ids
-    for ($root->descendants_or_self) {
-	${$self->{twig_id_list}}{$_->att('id')} = $_ if $_->att('id');
-    }
-    return 1;
 }
 
 =item get_root()
@@ -185,41 +185,20 @@ sub get_elements_by_tagname {
 
 =over
 
-=item to_xml_string()
+=item to_xml()
 
  Type    : Serializer
- Title   : to_xml_string
- Usage   : $doc->to_xml_string
+ Title   : to_xml
+ Usage   : $doc->to_xml
  Function: Create XML string from document
  Returns : XML string
  Args    : Formatting arguments as allowed by underlying package
 
 =cut
 
-sub to_xml_string {
+sub to_xml {
     my ($self, @args) = @_;
     return $self->sprint(@args);
-}
-
-=item to_xml_file()
-
- Type    : Serializer
- Title   : to_xml_file
- Usage   : $doc->to_xml_file()
- Function: Create XML file from document
- Returns : True on success
- Args    : filename, formatting arguments as allowed by underlying package
-
-=cut
-
-sub to_xml_file {
-    my ($self, $file, @args) = @_;
-    my $fh;
-    unless ( open $fh, '>', $file ) {
-		throw 'FileError' => "Problem with XML output file: $!";
-    }
-    $self->print($fh, @args);
-    return 1;
 }
 
 =back

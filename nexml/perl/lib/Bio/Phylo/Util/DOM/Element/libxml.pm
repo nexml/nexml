@@ -12,7 +12,7 @@ Don't use directly; use Bio::Phylo::Util::DOM->new( -format => 'libxml' ) instea
 =head1 DESCRIPTION
 
 This module provides mappings the methods specified in the 
-L<Bio::Phylo::Util::DOM::ElementI> interface to the 
+L<Bio::Phylo::Util::DOM::Element> abstract class to the 
 C<XML::LibXML::Element> package.
 
 =head1 AUTHOR
@@ -23,20 +23,18 @@ Mark A. Jensen ( maj -at- fortinbras -dot- us )
 
 package Bio::Phylo::Util::DOM::Element::libxml;
 use strict;
-use warnings;
-use lib '../lib';
-use Bio::Phylo::Util::DOM::ElementI;
+use Bio::Phylo::Util::DOM::Element ();
 use Bio::Phylo::Util::Exceptions qw(throw);
+use Bio::Phylo::Util::CONSTANT qw(looks_like_instance looks_like_hash);
 use UNIVERSAL qw(isa);
 use vars qw(@ISA);
 
 BEGIN {
-    eval { require XML::LibXML;
-           XML::LibXML->import(':libxml') };
-    if (@_) {
+    eval { require XML::LibXML; XML::LibXML->import(':libxml') };
+    if ($@) {
 	throw 'ExtensionError' => "Failed to load XML::LibXML: $@";
     }
-    @ISA = qw( Bio::Phylo::Util::DOM::ElementI XML::LibXML::Element );
+    @ISA = qw( Bio::Phylo::Util::DOM::Element XML::LibXML::Element );
 }
 
 
@@ -52,21 +50,46 @@ BEGIN {
  Function: Create a new XML DOM element
  Returns : DOM element object
  Args    : Optional: 
-           $tag  - tag name as string
-           $attr - hashref of attributes/values
+           '-tag' => $tag  - tag name as string
+           '-attributes' => $attr - hashref of attributes/values
 
 =cut
 
 
 sub new {
-    my ($class, $tag, @attr_aa) = @_;
-    unless ($tag) {
+    my $class = shift;
+    if ( my %args = looks_like_hash @_ ) {
+	if ( $args{'-tag'} ) {
+	    my $self = XML::LibXML::Element->new($args{'-tag'} );
+	    bless $self, $class;
+	    delete $args{'-tag'};
+	    for my $key ( keys %args ) {
+		my $method = $key;
+		$method =~ s/^-//;
+		$method = 'set_' . $method;
+		eval { $self->$method( $args{$key} ); };
+		if ( $@ ) {
+		    if ( blessed $@ and $@->can('rethrow') ) {
+			$@->rethrow;
+		    }
+		    elsif ( not ref($@) and
+			$@ =~ /^Can't locate object method / ) {
+			throw 'BadArgs' => "The named argument '${key}' cannot be passed to the constructor";
+		    }
+		    else {
+			throw 'Generic' => $@;
+		    }
+		}
+	    }
+	    return $self;
+	}
+	else {
+	    throw 'BadArgs' => "Tag name required for XML::LibXML::Element";
+	}	
+    }
+    else {
 	throw 'BadArgs' => "Tag name required for XML::LibXML::Element";
     }
-    my $self = XML::LibXML::Element->new($tag);
-    bless($self, $class);
-    $self->set_attributes(@attr_aa);
-    return $self;
 }
 
 =back
@@ -75,36 +98,36 @@ sub new {
 
 =over
 
-=item get_tagname()
+=item get_tag()
 
  Type    : Accessor
- Title   : get_tagname
- Usage   : $elt->get_tagname()
+ Title   : get_tag
+ Usage   : $elt->get_tag()
  Function: Get tag name
  Returns : Tag name as scalar string
  Args    : none
 
 =cut
 
-sub get_tagname {
+sub get_tag {
     return shift->tagName;
 }
 
-=item set_tagname()
+=item set_tag()
 
  Type    : Mutator
- Title   : set_tagname
- Usage   : $elt->set_tagname( $tagname )
+ Title   : set_tag
+ Usage   : $elt->set_tag( $tagname )
  Function: Set tagname
  Returns : True on success
  Args    : Tag name as scalar string
 
 =cut
 
-sub set_tagname {
+sub set_tag {
     my ($self, $tagname, @args) = @_;
     $self->setNodeName($tagname);
-    return 1;
+    return $self;
 }
 
 =back 
@@ -126,9 +149,8 @@ sub set_tagname {
 
 sub get_attributes {
     my ($self, @attr_names) = @_;
-    my @ret;
-    push @ret, $self->getAttribute($_) for @attr_names;
-    return @ret > 1 ? @ret : $ret[0];
+    my %ret = map { $_ => $self->getAttribute($_) } @attr_names;
+    return \%ret;
 }
 
 =item set_attributes()
@@ -143,20 +165,18 @@ sub get_attributes {
 =cut
 
 sub set_attributes {
-    my ($self, $attrs, @attrs) = @_;
-    return 0 if !$attrs;
-    if (ref($attrs) eq 'HASH') {
-	@attrs = map { $_, $attrs->{$_} } keys %$attrs;
-    }
-    else {
-	@attrs = ($attrs, @attrs);
-    }
-    if (@attrs % 2) {
-	throw 'OddHash' => 'Attribute list not of form (key => value, ...)';
-    }
-    my %attrs = @attrs;
-    $self->setAttribute($_, $attrs{$_}) for keys %attrs;
-    return 1;
+    my $self = shift;
+    if ( @_ ) {
+	my %attr;
+	if ( @_ == 1 && looks_like_instance $_[0], 'HASH' ) {
+	    %attr = %{ $_[0] };
+	}
+	else {
+	    %attr = looks_like_hash @_;
+	}
+	$self->setAttribute($_, $attr{$_}) for keys %attr;
+    }    
+    return $self;
 }
 
 =item clear_attributes()
@@ -172,7 +192,7 @@ sub set_attributes {
 
 sub clear_attributes {
     my ($self, @attr_names) = @_;
-    return 0 unless @attr_names;
+    return 0 if not @attr_names;
     my %ret;
     $ret{$_} = $self->getAttribute($_) for @attr_names;
     $self->removeAttribute( $_ ) for @attr_names;
@@ -215,11 +235,13 @@ sub clear_attributes {
 
 sub set_text {
     my ($self, $text, @args) = @_;
-    unless ($text) {
-	throw 'BadArgs' => "No text specified";
+    if ($text) {
+	$self->appendTextNode( $text );
+	return $self;
     }
-    $self->appendTextNode( $text );
-    return 1;
+    else {
+	throw 'BadArgs' => "No text specified";
+    }        
 }
 
 =item get_text()
@@ -233,16 +255,16 @@ sub set_text {
 
 =cut
 
-no strict;
+#no strict;
 sub get_text {
     my ($self, @args) = @_;
     my $text;
     for ($self->childNodes) {
-		$text .= $_->nodeValue if $_->nodeType == XML_TEXT_NODE;
+	$text .= $_->nodeValue if $_->nodeType == XML_TEXT_NODE;
     }
-    return $text || undef;
+    return $text;
 }
-use strict;
+#use strict;
 
 =item clear_text()
 
@@ -255,16 +277,15 @@ use strict;
 
 =cut
 
-no strict;
+#no strict;
 sub clear_text {
     my ($self, @args) = @_;
     my @res = map { 
 	$_->nodeType == XML_TEXT_NODE ? $self->removeChild($_) : ()
     } $self->childNodes;
-    return 1 if @res;
-    return 0;
+    return !! scalar(@res);
 }
-use strict;
+#use strict;
 
 =back
 
@@ -285,7 +306,7 @@ use strict;
 
 sub get_parent {
     my $e = shift->parentNode;
-    return bless( $e, __PACKAGE__ );
+    return bless $e, __PACKAGE__;
 }
 
 =item get_children()
@@ -302,71 +323,71 @@ sub get_parent {
 sub get_children {
     my @ret = shift->childNodes;
     bless( $_, __PACKAGE__ ) for (@ret);
-    return @ret;
+    return \@ret;
 }
 
-=item get_first_child()
+=item get_first_daughter()
 
  Type    : Accessor
- Title   : get_first_child
- Usage   : $elt->get_first_child()
+ Title   : get_first_daughter
+ Usage   : $elt->get_first_daughter()
  Function: Get first child (as defined by underlying package) of invocant
  Returns : Element object or undef if invocant is childless
  Args    : none
 
 =cut
 
-sub get_first_child {
+sub get_first_daughter {
     my $e = shift->firstChild;
-    return bless($e, __PACKAGE__);
+    return bless $e, __PACKAGE__;
 }
 
-=item get_last_child()
+=item get_last_daughter()
 
  Type    : Accessor
- Title   : get_last_child
- Usage   : $elt->get_last_child()
+ Title   : get_last_daughter
+ Usage   : $elt->get_last_daughter()
  Function: Get last child (as defined by underlying package) of invocant
  Returns : Element object or undef if invocant is childless
  Args    : none
 
 =cut
 
-sub get_last_child {
+sub get_last_daughter {
     my $e = shift->lastChild;
-    return bless($e, __PACKAGE__);
+    return bless $e, __PACKAGE__;
 }
 
-=item get_next_sibling()
+=item get_next_sister()
 
  Type    : Accessor
- Title   : get_next_sibling
- Usage   : $elt->get_next_sibling()
+ Title   : get_next_sister
+ Usage   : $elt->get_next_sister()
  Function: Gets next sibling (as defined by underlying package) of invocant
  Returns : Element object or undef if invocant is the rightmost element
  Args    : none
 
 =cut
 
-sub get_next_sibling {
+sub get_next_sister {
     my $e = shift->nextSibling;
-    return bless($e, __PACKAGE__);
+    return bless $e, __PACKAGE__;
 }
 
-=item get_prev_sibling()
+=item get_previous_sister()
 
  Type    : Accessor
- Title   : get_prev_sibling
- Usage   : $elt->get_prev_sibling()
+ Title   : get_previous_sister
+ Usage   : $elt->get_previous_sister()
  Function: Get previous sibling (as defined by underlying package) of invocant
  Returns : Element object or undef if invocant is leftmost element
  Args    : none
 
 =cut
 
-sub get_prev_sibling {
+sub get_previous_sister {
     my $e = shift->previousSibling;
-    return bless($e, __PACKAGE__);
+    return bless $e, __PACKAGE__;
 }
 
 =item get_elements_by_tagname()
@@ -409,10 +430,12 @@ sub get_elements_by_tagname {
 
 sub set_child {
     my ($self, $child, @args) = @_;
-    unless (isa($child, 'XML::LibXML::Node')) {
-	throw 'ObjectMismatch' => "Argument is not an XML::LibXML::Node";
+    if ( looks_like_instance $child, 'XML::LibXML::Node' ) {
+	return $self->addChild($child);
     }
-    return $self->addChild($child);
+    else {
+	throw 'ObjectMismatch' => "Argument is not an XML::LibXML::Node";
+    }    
 }
 
 =item prune_child()
@@ -429,10 +452,12 @@ sub set_child {
 
 sub prune_child {
     my ($self, $child, @args) = @_;
-    unless (isa($child, 'XML::LibXML::Node')) {
-	throw 'ObjectMismatch' => "Argument is not an XML::LibXML::Node";
+    if ( looks_like_instance $child, 'XML::LibXML::Node' ) {
+	return $self->removeChild($child);
     }
-    return $self->removeChild($child);
+    else {
+	throw 'ObjectMismatch' => "Argument is not an XML::LibXML::Node";
+    }    
 }
 
 =back
@@ -441,18 +466,18 @@ sub prune_child {
 
 =over
 
-=item to_xml_string()
+=item to_xml()
 
  Type    : Serializer
- Title   : to_xml_string
- Usage   : $elt->to_xml_string
+ Title   : to_xml
+ Usage   : $elt->to_xml
  Function: Create XML string from subtree rooted by invocant
  Returns : XML string
  Args    : Formatting arguments as allowed by underlying package
 
 =cut
 
-sub to_xml_string {
+sub to_xml {
     my ($self, @args) = @_;
     return $self->toString(@args);
 }

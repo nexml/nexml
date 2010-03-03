@@ -12,7 +12,7 @@ Don't use directly; use Bio::Phylo::Util::DOM->new( -format => 'twig' ) instead.
 =head1 DESCRIPTION
 
 This module provides mappings the methods specified in the 
-L<Bio::Phylo::Util::DOM::ElementI> interface.
+L<Bio::Phylo::Util::DOM::Element> abstract class.
 
 =head1 AUTHOR
 
@@ -32,19 +32,18 @@ Mark A. Jensen ( maj -at- fortinbras -dot- us )
 
 package Bio::Phylo::Util::DOM::Element::twig;
 use strict;
-use warnings;
-use lib '../lib';
-use UNIVERSAL qw(isa);
-use Bio::Phylo::Util::DOM::ElementI;
+use Bio::Phylo::Util::CONSTANT qw(looks_like_instance looks_like_hash);
+use Bio::Phylo::Util::DOM::Element ();
 use Bio::Phylo::Util::Exceptions qw(throw);
 use vars qw(@ISA %extant_ids);
+use Scalar::Util 'blessed';
 
 BEGIN {
     eval { require XML::Twig };
     if ($@) {
 	throw 'ExtensionError' => "Failed to load XML::Twig: $@";
     }
-    @ISA = qw( Bio::Phylo::Util::DOM::ElementI XML::Twig::Elt );
+    @ISA = qw( Bio::Phylo::Util::DOM::Element XML::Twig::Elt );
 }
 
 =head2 Constructor
@@ -59,20 +58,42 @@ BEGIN {
  Function: Create a new XML DOM element
  Returns : DOM element object
  Args    : Optional: 
-           $tag  - tag name as string
-           $attr - hashref of attributes/values
+           '-tag'        => $tag  - tag name as string
+           '-attributes' => $attr - hashref of attributes/values
 
 =cut
 
 
 sub new {
-    my ($class, $tag, $attrs, @args) = @_;
-    my $self = XML::Twig::Elt->new($tag);
-    bless($self, $class);
-    return $self unless $attrs;
-    my @attrs = ($attrs, @args);
-    $self->set_attributes(@attrs);
-    $self->_manage_ids('ADD', @attrs);
+    my $class = shift;
+    my $self = XML::Twig::Elt->new;
+    bless $self, $class;
+    if ( @_ ) {
+	if ( my %arguments = looks_like_hash @_ ) {
+	    for my $key ( keys %arguments ) {
+		my $method = $key;
+		$method =~ s/^-//;
+		$method = 'set_' . $method;
+		eval { $self->$method( $arguments{$key} ); };
+		if ( $@ ) {
+		    if ( blessed $@ and $@->can('rethrow') ) {
+			$@->rethrow;
+		    }
+		    elsif ( not ref($@) and
+			$@ =~ /^Can't locate object method / ) {
+			throw 'BadArgs' => "The named argument '${key}' cannot be passed to the constructor";
+		    }
+		    else {
+			throw 'Generic' => $@;
+		    }
+		}
+	    }
+	    if ( $arguments{'-attributes'} ) {
+		my %attributes = %{ $arguments{'-attributes'} };
+		$self->_manage_ids( 'ADD', %attributes );
+	    }
+	}	
+    }
     return $self;
 }
 
@@ -82,36 +103,36 @@ sub new {
 
 =over
 
-=item get_tagname()
+=item get_tag()
 
  Type    : Accessor
- Title   : get_tagname
- Usage   : $elt->get_tagname()
+ Title   : get_tag
+ Usage   : $elt->get_tag()
  Function: Get tag name
  Returns : Tag name as scalar string
  Args    : none
 
 =cut
 
-sub get_tagname {
+sub get_tag {
     return shift->gi;
 }
 
-=item set_tagname()
+=item set_tag()
 
  Type    : Mutator
- Title   : set_tagname
- Usage   : $elt->set_tagname( $tagname )
+ Title   : set_tag
+ Usage   : $elt->set_tag( $tagname )
  Function: Set tagname
  Returns : True on success
  Args    : Tag name as scalar string
 
 =cut
 
-sub set_tagname {
-    my ($self, $tagname, @args) = @_;
+sub set_tag {
+    my ( $self, $tagname ) = @_;
     $self->set_gi($tagname);
-    return 1;
+    return $self;
 }
 
 =back 
@@ -132,9 +153,10 @@ sub set_tagname {
 =cut
 
 sub get_attributes {
-    my ($self, @attr_names) = @_;
-    my @ret = map { $self->att($_) } @attr_names;
-    return @ret > 1 ? @ret : $ret[0];
+    my ($self, @att_names) = @_;    
+    @att_names = $self->att_names if not @att_names;
+    my %ret = map { $_ => $self->att($_) } @att_names;
+    return \%ret;
 }
 
 =item set_attributes()
@@ -149,20 +171,19 @@ sub get_attributes {
 =cut
 
 sub set_attributes {
-    my ($self, $attrs, @attrs) = @_;
-    return 0 if !$attrs;
-    if (ref($attrs) eq 'HASH') {
-	@attrs = map { $_, $attrs->{$_} } keys %$attrs;
+    my $self = shift;
+    if ( @_ ) {
+	my %attr;
+	if ( @_ == 1 && looks_like_instance $_[0], 'HASH' ) {
+	    %attr = %{ $_[0] };
+	}
+	else {
+	    %attr = looks_like_hash @_;
+	}
+	$self->set_att(%attr);
+	$self->_manage_ids( 'ADD', %attr );
     }
-    else {
-	@attrs = ($attrs, @attrs);
-    }
-    if (@attrs % 2) {
-	throw 'OddHash' => 'Attribute list not of form (key => value, ...)';
-    }
-    $self->set_att( @attrs );
-    $self->_manage_ids('ADD',@attrs);
-    return 1;
+    return $self;
 }
 
 =item clear_attributes()
@@ -220,13 +241,15 @@ sub clear_attributes {
 =cut
 
 sub set_text {
-    my ($self, $text, @args) = @_;
-    unless ($text) {
+    my ( $self, $text, @args ) = @_;
+    if ( $text ) {
+	my $t = XML::Twig::Elt->new('#PCDATA', $text);
+	$t->paste( last_child => $self );
+	return 1;
+    }
+    else {
 	throw 'BadArgs' => "No text specified";
     }
-    my $t = XML::Twig::Elt->new('#PCDATA', $text);
-    $t->paste( last_child => $self );
-    return 1;
 }
 
 =item get_text()
@@ -297,66 +320,66 @@ sub get_parent {
 =cut
 
 sub get_children {
-    return shift->children();
+    return [ shift->children() ];
 }
 
-=item get_first_child()
+=item get_first_daughter()
 
  Type    : Accessor
- Title   : get_first_child
- Usage   : $elt->get_first_child()
+ Title   : get_first_daughter
+ Usage   : $elt->get_first_daughter()
  Function: Get first child (as defined by underlying package) of invocant
  Returns : Element object or undef if invocant is childless
  Args    : none
 
 =cut
 
-sub get_first_child {
+sub get_first_daughter {
     return shift->first_child();
 }
 
-=item get_last_child()
+=item get_last_daughter()
 
  Type    : Accessor
- Title   : get_last_child
- Usage   : $elt->get_last_child()
+ Title   : get_last_daughter
+ Usage   : $elt->get_last_daughter()
  Function: Get last child (as defined by underlying package) of invocant
  Returns : Element object or undef if invocant is childless
  Args    : none
 
 =cut
 
-sub get_last_child {
+sub get_last_daughter {
     return shift->last_child();
 }
 
-=item get_next_sibling()
+=item get_next_sister()
 
  Type    : Accessor
- Title   : get_next_sibling
- Usage   : $elt->get_next_sibling()
+ Title   : get_next_sister
+ Usage   : $elt->get_next_sister()
  Function: Gets next sibling (as defined by underlying package) of invocant
  Returns : Element object or undef if invocant is the rightmost element
  Args    : none
 
 =cut
 
-sub get_next_sibling {
+sub get_next_sister {
     return shift->next_sibling();
 }
 
-=item get_prev_sibling()
+=item get_previous_sister()
 
  Type    : Accessor
- Title   : get_prev_sibling
- Usage   : $elt->get_prev_sibling()
+ Title   : get_previous_sister
+ Usage   : $elt->get_previous_sister()
  Function: Get previous sibling (as defined by underlying package) of invocant
  Returns : Element object or undef if invocant is leftmost element
  Args    : none
 
 =cut
 
-sub get_prev_sibling {
+sub get_previous_sister {
     return shift->prev_sibling();
 }
 
@@ -396,12 +419,14 @@ sub get_elements_by_tagname {
 
 sub set_child {
     my ($self, $child, @args) = @_;
-    unless ( isa($child, 'XML::Twig::Elt') ) {
+    if ( looks_like_instance $child, 'XML::Twig::Elt' ) {
+	$child->paste( last_child => $self );
+	$self->_manage_ids('ADD');
+	return $child;	
+    }
+    else {
 	throw 'ObjectMismatch' => 'Argument is not an XML::Twig::Elt';
     }
-    $child->paste( last_child => $self );
-    $self->_manage_ids('ADD');
-    return $child;
 }
 
 =item prune_child()
@@ -418,15 +443,17 @@ sub set_child {
 
 sub prune_child {
     my ($self, $child, @args) = @_;
-    unless ( isa($child, 'XML::Twig::Elt') ) {
-		throw 'ObjectMismatch' => 'Argument is not an XML::Twig::Elt';
+    if ( looks_like_instance $child, 'XML::Twig::Elt' ) {
+	my $par = $child->parent;
+	return unless ( $par && ($par == $self) );
+        # or delete?
+        $child->_manage_ids('DEL');
+        $child->cut;
+        return $child;	
     }
-    my $par = $child->parent;
-    return unless ( $par && ($par == $self) );
-    # or delete?
-    $child->_manage_ids('DEL');
-    $child->cut;
-    return $child;
+    else {
+	throw 'ObjectMismatch' => 'Argument is not an XML::Twig::Elt';
+    }
 }
 
 =back
@@ -435,18 +462,18 @@ sub prune_child {
 
 =over
 
-=item to_xml_string()
+=item to_xml()
 
  Type    : Serializer
- Title   : to_xml_string
- Usage   : $elt->to_xml_string
+ Title   : to_xml
+ Usage   : $elt->to_xml
  Function: Create XML string from subtree rooted by invocant
  Returns : XML string
  Args    : Formatting arguments as allowed by underlying package
 
 =cut
 
-sub to_xml_string {
+sub to_xml {
     return shift->sprint(@_);
 }
 

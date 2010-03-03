@@ -1,6 +1,47 @@
 package Bio::Phylo::Util::StackTrace;
 use strict;
 
+=head1 NAME
+
+Bio::Phylo::Util::StackTrace - Stack traces for exceptions
+
+=head1 SYNOPSIS
+
+ use Bio::Phylo::Util::StackTrace;
+ my $trace = Bio::Phylo::Util::StackTrace->new;
+ print $trace->as_string;
+
+=head1 DESCRIPTION
+
+This is a simple stack trace object that is used by
+L<Bio::Phylo::Util::Exceptions>. At the moment of its instantiation,
+it creates a full list of all frames in the call stack (except those
+originating from with the exceptions class). These can subsequently
+be stringified by calling as_string().
+
+(If you have no idea what any of this means, don't worry: this class
+is mostly for internal usage. You can probably ignore this safely.)
+
+=head1 METHODS
+
+=head2 CONSTRUCTOR
+
+=over
+
+=item new()
+
+Stack trace object constructor.
+
+ Type    : Constructor
+ Title   : new
+ Usage   : my $trace = Bio::Phylo::Util::StackTrace->new
+ Function: Instantiates a Bio::Phylo::Util::StackTrace
+           object.
+ Returns : A Bio::Phylo::Util::StackTrace.
+ Args    : None
+
+=cut
+
 sub new {
 	my $class = shift;
 	my $self = [];
@@ -23,14 +64,33 @@ sub new {
 sub _skip_me {
 	my $class = shift;
 	my $skip = 0;
-	if ( UNIVERSAL::isa( $class, 'Bio::Phylo::Util::Exceptions') ) {
+	if ( $class->isa('Bio::Phylo::Util::Exceptions') ) {
 		$skip++;
 	}
-	if ( UNIVERSAL::isa( $class, 'Bio::Phylo::Util::ExceptionFactory' ) ) {
+	if ( $class->isa('Bio::Phylo::Util::ExceptionFactory') ) {
 		$skip++;
 	}
 	return $skip;
 }
+
+=back
+
+=head2 SERIALIZERS
+
+=over
+
+=item as_string()
+
+Creates a string representation of the stack trace
+
+ Type    : Serializer
+ Title   : as_string
+ Usage   : print $trace->as_string
+ Function: Creates a string representation of the stack trace
+ Returns : String
+ Args    : None
+
+=cut
 
 =begin comment
 
@@ -70,5 +130,29 @@ sub as_string {
 	}
 	return $string;
 }
+
+=back
+
+=cut
+
+=head1 SEE ALSO
+
+=over
+
+=item L<Bio::Phylo::Util::Exceptions>
+
+The stack trace object is used internally by the exception classes.
+
+=item L<Bio::Phylo::Manual>
+
+Also see the manual: L<Bio::Phylo::Manual> and L<http://rutgervos.blogspot.com>.
+
+=back
+
+=head1 REVISION
+
+ $Id: Datum.pm 1237 2010-03-02 23:27:06Z rvos $
+
+=cut
 
 1;

@@ -10,6 +10,7 @@ use Bio::Phylo::Util::CONSTANT qw(
 	looks_like_object 
 	looks_like_hash
 	looks_like_instance
+	looks_like_implementor
 );
 use vars '@ISA';
 #use UNIVERSAL 'isa';
@@ -350,10 +351,10 @@ Removes specified attribute
 =cut
 
 	sub unset_attribute {
-		my ( $self, $attr ) = @_;
+		my $self = shift;
 		my $attrs = $attributes{ $self->get_id };
 		if ( $attrs and looks_like_instance($attrs,'HASH') ) {
-			delete $attrs->{$attr};
+			delete $attrs->{$_} for @_;
 		}
 		return $self;
 	}
@@ -653,7 +654,7 @@ Retrieves xml id for the element.
 		unless (looks_like_object $dom, _DOMCREATOR_) {
 		    throw 'BadArgs' => 'DOM factory object not provided';
 		}
-		my $elt = $dom->create_element($self->get_tag);
+		my $elt = $dom->create_element( '-tag' => $self->get_tag );
 		my %attrs = %{ $self->get_attributes };
 		for my $key ( keys %attrs ) {
 		    $elt->set_attributes( $key => $attrs{$key} );
@@ -663,7 +664,7 @@ Retrieves xml id for the element.
 		if ( @{ $dictionaries } ) {
 		    $elt->set_child( $_->to_dom($dom) ) for @{ $dictionaries };
 		}
-		if ( UNIVERSAL::can($self,'get_sets') ) {
+		if ( looks_like_implementor $self,'get_sets' ) {
 		    my $sets = $self->get_sets;
 		    $elt->set_child( $_->to_dom($dom) ) for @{ $sets };
 		}
@@ -737,7 +738,7 @@ Serializes invocant to XML.
 	    my $xml = '';
 		if ( $self->can('get_entities') ) {
 			for my $ent ( @{ $self->get_entities } ) {
-				if ( UNIVERSAL::can($ent,'to_xml') ) {					
+				if ( looks_like_implementor $ent,'to_xml' ) {					
 					$xml .= "\n" . $ent->to_xml;
 				}
 			}

@@ -2,8 +2,9 @@
 package Bio::Phylo::Util::DOM;
 use strict;
 use Bio::Phylo ();
-use Bio::Phylo::Util::CONSTANT qw(_DOMCREATOR_);
+use Bio::Phylo::Util::CONSTANT qw(_DOMCREATOR_ looks_like_class);
 use Bio::Phylo::Util::Exceptions qw( throw );
+use Bio::Phylo::Factory;
 use File::Spec::Unix;
 use vars qw(@ISA $DOM);
 
@@ -14,7 +15,7 @@ use vars qw(@ISA $DOM);
 
 my $CONSTANT_TYPE = _DOMCREATOR_;
 my (%format);
-my $PERLNS = 'Bio::Phylo::Util::DOM';
+my $fac = Bio::Phylo::Factory->new;
 
 =head1 NAME
 
@@ -36,7 +37,9 @@ manipulation. DOM formats currently available are C<XML::Twig> and
 C<XML::LibXML>.  For any C<XMLWritable> object, use C<to_dom> in place
 of C<to_xml> to create DOM nodes.
 
-The C<doc()> method is also added to the C<Bio::Phylo::Project> class. It returns a NeXML document as a DOM object populated by the current contents of the C<Bio::Phylo::Project> object.
+The C<doc()> method is also added to the C<Bio::Phylo::Project> class. It
+returns a NeXML document as a DOM object populated by the current contents
+of the C<Bio::Phylo::Project> object.
 
 =head1 MOTIVATION
 
@@ -113,9 +116,10 @@ installed.
 
 =head1 INTERFACE METHODS
 
-The minimal DOM interface specifies the following methods. Details can be obtained from the C<ElementI> and C<DocumentI> POD.
+The minimal DOM interface specifies the following methods. Details can be
+obtained from the C<Element> and C<Document> POD.
 
-=head2 Bio::Phylo::Util::DOM::ElementI - DOM Element Interface
+=head2 Bio::Phylo::Util::DOM::Element - DOM Element abstract class
 
  get_tagname()
  set_tagname()
@@ -139,7 +143,7 @@ The minimal DOM interface specifies the following methods. Details can be obtain
 
  to_xml_string()
 
-=head2 Bio::Phylo::Util::DOM::DocumentI - DOM Document Interface
+=head2 Bio::Phylo::Util::DOM::Document - DOM Document
 
  get_encoding()
  set_encoding()
@@ -171,23 +175,8 @@ The minimal DOM interface specifies the following methods. Details can be obtain
 =cut
 
 sub new {
-    my $class = shift;
-    my @args = @_;
-    my ($format);
-    if (!(@args % 2)) {
-	my %args = @args;
-	$format = $args{'-format'};
-    }
-    else {
-	($format) = @args;
-    }
-    my $self = $class->SUPER::new(@args);
-    unless ($self->get_format) {
-		$self->set_format('twig'); # use XML::Twig bindings as default
-    }
-    $self->_load_dom_modules();
-    $Bio::Phylo::Util::DOM::DOM = $self; 
-    return $self;
+    my $self = shift->SUPER::new( '-format' => 'twig', @_ );
+    return $DOM = $self;
 }
 
 =item create_element()
@@ -204,13 +193,12 @@ sub new {
 =cut
 
 sub create_element { 
-    my $self = shift;
-    my @args = @_;
-    unless ($self->get_format) {
-		throw 'BadArgs' => 'DOM creator format not set';
+    if ( my $format = shift->get_format ) {
+	return $fac->create_element( '-format' => $format, @_ );
     }
-    my $format = $self->get_format;
-    return "Bio::Phylo::Util::DOM::Element::$format"->new(@args);
+    else {
+	throw 'BadArgs' => 'DOM creator format not set';
+    }
 }
 
 =item create_document()
@@ -225,13 +213,12 @@ sub create_element {
 =cut
 
 sub create_document {
-    my $self = shift;
-    my @args = @_;
-    unless ($self->get_format) {
-		throw 'BadArgs' => 'DOM creator format not set';
+    if ( my $format = shift->get_format ) {
+	return $fac->create_document( '-format' => $format, @_ );
     }
-    my $format = $self->get_format;
-    return "Bio::Phylo::Util::DOM::Document::$format"->new(@args);
+    else {
+	throw 'BadArgs' => 'DOM creator format not set';
+    }
 }
 
 =item set_format()
@@ -247,7 +234,8 @@ sub create_document {
 
 sub set_format {
     my $self = shift;
-    return $format{$$self} = shift;
+    $format{$$self} = shift;
+    return $self;
 }
     
 =item get_format()
@@ -266,44 +254,6 @@ sub get_format {
     return $format{$$self};
 }
     
-=item _load_dom_module()
-
- Type    : Internal
- Title   : _load_dom_modules
- Usage   : $obj->_load_dom_modules()
- Function: Loads requested DOM format packages
- Returns : True on success
- Args    : format
-
-=cut
-
-sub _load_dom_modules {
-    # much ripped from BioPerl (Bio::Root::Root)/maj
-    my $self = shift;
-    my ($name, $load);
-    my $fmt = $self->get_format;
-    return 0 unless $fmt;
-    foreach (qw( Element Document ) ) {
-		$name = $PERLNS."::${_}::$fmt";
-		if ($name !~ /^([\w:]+)$/) {
-		    throw 'ExtensionError' => "$name is an illegal perl package name";
-		} 
-		else { 
-		    $name = $1;
-		}
-	
-		$load = "$name.pm";
-		$load = File::Spec::Unix->catfile((split(/::/,$load)));
-		eval {
-		    require $load;
-		};
-		if ( $@ ) {
-		    throw 'ExtensionError' => "Failed to load module $name. ".$@;
-		}
-    }
-    return 1;
-}
-
 =begin comment
 
  Type    : Internal method
@@ -319,13 +269,32 @@ sub _load_dom_modules {
 
 sub _type { $CONSTANT_TYPE }
 
+=begin comment
+
+ Type    : Internal method
+ Title   : _cleanup
+ Usage   : $node->_cleanup;
+ Function:
+ Returns : CONSTANT
+ Args    :
+
+=end comment
+
+=cut
+
+sub _cleanup {
+    my $self = shift;
+    delete $format{$$self};    
+}
+
 =back
 
 =cut
 
 =head1 SEE ALSO
 
-The DOM creator interfaces: L<Bio::Phylo::Util::DOM::ElementI>, L<Bio::Phylo::Util::DOM::DocumentI>
+The DOM creator abstract classes: L<Bio::Phylo::Util::DOM::Element>,
+L<Bio::Phylo::Util::DOM::Document>
 
 =head1 AUTHOR
 
@@ -336,3 +305,5 @@ Mark A. Jensen  (maj -at- fortinbras -dot- us)
 The C<Bio::Phylo::Annotation> class is not yet DOMized.
 
 =cut
+
+1;

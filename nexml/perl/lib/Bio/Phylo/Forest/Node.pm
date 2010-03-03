@@ -2338,10 +2338,14 @@ Serializes subtree subtended by invocant to newick string.
 		if ( my $length = shift(@nodes)->get_branch_length ) {
 		    my $target = $self->get_xml_id;
 		    my $id = "edge" . $self->get_id;
-		    my $elt = $dom->create_element('rootedge');
-		    $elt->set_attributes('target' => $target);
-		    $elt->set_attributes('id' => $id);
-		    $elt->set_attributes('length' => $length);
+		    my $elt = $dom->create_element(
+			'-tag' => 'rootedge',
+			'-attributes' => {
+				'target' => $target,
+				'id'     => $id,
+				'length' => $length,
+			}
+		    );
 		    push @elts, $elt;
 		}
 		
@@ -2351,10 +2355,14 @@ Serializes subtree subtended by invocant to newick string.
 		    my $target = $node->get_xml_id;
 		    my $id     = "edge" . $node->get_id;
 		    my $length = $node->get_branch_length;
-		    my $elt = $dom->create_element('edge');
-		    $elt->set_attributes('source' => $source);
-		    $elt->set_attributes('target' => $target);
-		    $elt->set_attributes('id' => $id);
+		    my $elt = $dom->create_element(
+			'-tag' => 'edge',
+			'-attributes' => {
+				'source' => $source,
+				'target' => $target,
+				'id'     => $id,
+			}
+		    );
 		    $elt->set_attributes('length' => $length) if ( defined $length );
 		    push @elts, $elt;
 		}
