@@ -1,16 +1,12 @@
-#$Id$
-
-# need separate interfaces for Element, Document, ... instead?
-
-package Bio::Phylo::Util::DOM::ElementI;
+# $Id: $
+package Bio::Phylo::Util::DOM::Element;
 use strict;
-use warnings;
-use lib '../lib';
 use Bio::Phylo::Util::Exceptions qw(throw);
+use Bio::Phylo::Util::CONSTANT qw(_ELEMENT_ looks_like_hash looks_like_class);
 
 =head1 NAME
 
-Bio::Phylo::Util::DOM::ElementI - Abstract interface class for
+Bio::Phylo::Util::DOM::Element - Abstract class for
 flexible XML document object model implementation
 
 =head1 SYNOPSIS
@@ -48,15 +44,19 @@ Mark A. Jensen - maj -at- fortinbras -dot- us
  Function: Create a new XML DOM element
  Returns : DOM element object
  Args    : Optional: 
-           $tag  - tag name as string
-           $attr - hashref of attributes/values
+           '-tag' => $tag  - tag name as string
+           '-attr'    => $attr - hashref of attributes/values
 
 =cut
 
 
 sub new {
-    my ($class, $tag, $attrs, @args) = @_;
-    $class->throw_not_implemented;
+    my $class = shift;
+    if ( my %args = looks_like_hash @_ ) {
+	$class = __PACKAGE__ . '::' . lc $args{'-format'};
+	delete $args{'-format'};
+	return looks_like_class($class)->new(%args);
+    }
 }
 
 =back
@@ -82,36 +82,34 @@ sub new {
 
 =over
 
-=item get_tagname()
+=item get_tag()
 
  Type    : Accessor
- Title   : get_tagname
- Usage   : $elt->get_tagname()
+ Title   : get_tag
+ Usage   : $elt->get_tag()
  Function: Get tag name
  Returns : Tag name as scalar string
  Args    : none
 
 =cut
 
-sub get_tagname {
-    my ($self, @args) = @_;
-    $self->throw_not_implemented;
+sub get_tag {
+    throw 'NotImplemented' => "Can't call 'get_tag' on interface";
 }
 
-=item set_tagname()
+=item set_tag()
 
  Type    : Mutator
- Title   : set_tagname
- Usage   : $elt->set_tagname( $tagname )
+ Title   : set_tag
+ Usage   : $elt->set_tag( $tagname )
  Function: Set tagname
  Returns : True on success
  Args    : Tag name as scalar string
 
 =cut
 
-sub set_tagname {
-    my ($self, $tagname, @args) = @_;
-    $self->throw_not_implemented;
+sub set_tag {
+    throw 'NotImplemented' => "Can't call 'set_tag' on interface";
 }
 
 =back 
@@ -126,14 +124,13 @@ sub set_tagname {
  Title   : get_attributes
  Usage   : $elt->get_attributes( @attribute_names )
  Function: Get attribute values
- Returns : Array of attribute values
- Args    : [an array of] attribute name[s] as string[s]
+ Returns : A hash ref of key/value pairs
+ Args    : Optional, [a list of] attribute name[s] as string[s]
 
 =cut
 
 sub get_attributes {
-    my ($self, @attr_names) = @_;
-    $self->throw_not_implemented;
+    throw 'NotImplemented' => "Can't call 'get_attributes' on interface";
 }
 
 =item set_attributes()
@@ -148,8 +145,7 @@ sub get_attributes {
 =cut
 
 sub set_attributes {
-    my ($self, @attr_aa) = @_;
-    $self->throw_not_implemented;
+    throw 'NotImplemented' => "Can't call 'set_attributes' on interface";
 }
 
 =item clear_attributes()
@@ -164,8 +160,7 @@ sub set_attributes {
 =cut
 
 sub clear_attributes {
-    my ($self, @attr_names) = @_;
-    $self->throw_not_implemented;
+    throw 'NotImplemented' => "Can't call 'clear_attributes' on interface";
 }
 
 =back
@@ -186,8 +181,7 @@ sub clear_attributes {
 =cut
 
 sub set_text {
-    my ($self, $text, @args) = @_;
-    $self->throw_not_implemented;
+    throw 'NotImplemented' => "Can't call 'set_text' on interface";
 }
 
 =item get_text()
@@ -202,8 +196,7 @@ sub set_text {
 =cut
 
 sub get_text {
-    my ($self, @args) = @_;
-    $self->throw_not_implemented;
+    throw 'NotImplemented' => "Can't call 'get_text' on interface";
 }
 
 =item clear_text()
@@ -218,8 +211,7 @@ sub get_text {
 =cut
 
 sub clear_text {
-    my ($self, @args) = @_;
-    $self->throw_not_implemented;
+    throw 'NotImplemented' => "Can't call 'clear_text' on interface";
 }
 
 =back
@@ -240,8 +232,7 @@ sub clear_text {
 =cut
 
 sub get_parent {
-    my $self = shift;
-    $self->throw_not_implemented;
+    throw 'NotImplemented' => "Can't call 'get_parent' on interface";
 }
 
 =item get_children()
@@ -250,78 +241,73 @@ sub get_parent {
  Title   : get_children
  Usage   : $elt->get_children()
  Function: Get child nodes of invocant
- Returns : Array of Elements
+ Returns : Array ref of Elements
  Args    : none
 
 =cut
 
 sub get_children {
-    my $self = shift;
-    $self->throw_not_implemented;
+    throw 'NotImplemented' => "Can't call 'get_children' on interface";
 }
 
-=item get_first_child()
+=item get_first_daughter()
 
  Type    : Accessor
- Title   : get_first_child
- Usage   : $elt->get_first_child()
+ Title   : get_first_daughter
+ Usage   : $elt->get_first_daughter()
  Function: Get first child (as defined by underlying package) of invocant
  Returns : Element object or undef if invocant is childless
  Args    : none
 
 =cut
 
-sub get_first_child {
-    my $self = shift;
-    $self->throw_not_implemented;
+sub get_first_daughter {
+    throw 'NotImplemented' => "Can't call 'get_first_daughter' on interface";
 }
 
-=item get_last_child()
+=item get_last_daughter()
 
  Type    : Accessor
- Title   : get_last_child
- Usage   : $elt->get_last_child()
+ Title   : get_last_daughter
+ Usage   : $elt->get_last_daughter()
  Function: Get last child (as defined by underlying package) of invocant
  Returns : Element object or undef if invocant is childless
  Args    : none
 
 =cut
 
-sub get_last_child {
-    my $self = shift;
-    $self->throw_not_implemented;
+sub get_last_daughter {
+    throw 'NotImplemented' => "Can't call 'get_last_daughter' on interface";
 }
 
-=item get_next_sibling()
+=item get_next_sister()
 
  Type    : Accessor
- Title   : get_next_sibling
- Usage   : $elt->get_next_sibling()
+ Title   : get_next_sister
+ Usage   : $elt->get_next_sister()
  Function: Gets next sibling (as defined by underlying package) of invocant
  Returns : Element object or undef if invocant is the rightmost element
  Args    : none
 
 =cut
 
-sub get_next_sibling {
-    my $self = shift;
-    $self->throw_not_implemented;
+sub get_next_sister {
+    throw 'NotImplemented' => "Can't call 'get_next_sister' on interface";
 }
 
-=item get_prev_sibling()
+=item get_previous_sister()
 
  Type    : Accessor
- Title   : get_prev_sibling
- Usage   : $elt->get_prev_sibling()
+ Title   : get_previous_sister
+ Usage   : $elt->get_previous_sister()
  Function: Get previous sibling (as defined by underlying package) of invocant
  Returns : Element object or undef if invocant is leftmost element
  Args    : none
 
 =cut
 
-sub get_prev_sibling {
-    my $self = shift;
-    $self->throw_not_implemented;
+sub get_previous_sister {
+    throw 'NotImplemented' => "Can't call 'get_previous_sister' on interface";
 }
 
 =item get_elements_by_tagname()
@@ -337,8 +323,7 @@ sub get_prev_sibling {
 =cut
 
 sub get_elements_by_tagname {
-    my ($self, $tagname, @args) = @_;
-    $self->throw_not_implemented;
+    throw 'NotImplemented' => "Can't call 'get_elements_by_tagname' on interface";
 }
 
 =back
@@ -359,8 +344,7 @@ sub get_elements_by_tagname {
 =cut
 
 sub set_child {
-    my ($self, $child, @args) = @_;
-    $self->throw_not_implemented;
+    throw 'NotImplemented' => "Can't call 'set_child' on interface";
 }
 
 =item prune_child()
@@ -376,8 +360,7 @@ sub set_child {
 =cut
 
 sub prune_child {
-    my ($self, $child, @args) = @_;
-    $self->throw_not_implemented;
+    throw 'NotImplemented' => "Can't call 'prune_child' on interface";
 }
 
 =back
@@ -386,70 +369,19 @@ sub prune_child {
 
 =over
 
-=item to_xml_string()
+=item to_xml()
 
  Type    : Serializer
- Title   : to_xml_string
- Usage   : $elt->to_xml_string
+ Title   : to_xml
+ Usage   : $elt->to_xml
  Function: Create XML string from subtree rooted by invocant
  Returns : XML string
  Args    : Formatting arguments as allowed by underlying package
 
 =cut
 
-sub to_xml_string {
-    my ($self, @args) = @_;
-    $self->throw_not_implemented;
-}
-
-=back
-
-=head2 Internal methods
-
-=over
-
-=item throw_not_implemented()
-
- Type    : Exception
- Title   : throw_not_implemented
- Usage   : $elt->throw_not_implemented
- Function: Throw exception to indicate a method is not overridden in an
-           instance class
- Returns : Bio::Phylo::Util::Exceptions object
- Args    : none
-
-=cut
-
-sub throw_not_implemented {
-    my $self = shift;
-    throw 'NotImplemented' => "This DOM method is not implemented in the instance class";
-}
-
-=item  _rearrange()
-
- Type    : 
- Title   : _rearrange
- Usage   : my ($arg1, $arg2, ...) = _rearrange( [qw( arg1 arg2 ... )], @input_args
- Function: Assign a named argument list to subroutine-local variables
- Returns : rearranged argument values
- Args    : arrayref to argument names, copy of argument array
- Note    : Ripped from BioPerl RootI.pm
-
-=cut
-
-sub _rearrange {
-#    my $dummy = shift;
-    my $order = shift;
-    
-    return @_ unless (substr($_[0]||'',0,1) eq '-');
-    push @_,undef unless $#_ %2;
-    my %param;
-    while( @_ ) {
-	(my $key = shift) =~ tr/a-z\055/A-Z/d; #deletes all dashes!
-	$param{$key} = shift;
-    }
-    map { $_ = uc($_) } @$order;
-    return @param{@$order};
+sub to_xml {
+    throw 'NotImplemented' => "Can't call 'to_xml' on interface";
 }
 
 =back

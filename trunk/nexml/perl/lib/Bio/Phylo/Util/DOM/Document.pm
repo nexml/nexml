@@ -1,16 +1,12 @@
-#$Id$
-
-# argument passthrus
-
-package Bio::Phylo::Util::DOM::DocumentI;
+# $Id: $
+package Bio::Phylo::Util::DOM::Document;
 use strict;
-use warnings;
-use lib '../lib';
 use Bio::Phylo::Util::Exceptions qw(throw);
+use Bio::Phylo::Util::CONSTANT qw(_DOCUMENT_ looks_like_hash looks_like_class);
 
 =head1 NAME
 
-Bio::Phylo::Util::DOM::DocumentI - Abstract interface class for
+Bio::Phylo::Util::DOM::Document - Abstract class for
 flexible XML document object model implementation
 
 =head1 SYNOPSIS
@@ -52,8 +48,12 @@ Mark A. Jensen - maj -at- fortinbras -dot- us
 =cut
 
 sub new {
-    my ($class, @args) = @_;
-    $class->throw_not_implemented;
+    my $class = shift;
+    if ( my %args = looks_like_hash @_ ) {
+	$class = __PACKAGE__ . '::' . lc $args{'-format'};
+	delete $args{'-format'};
+	return looks_like_class($class)->new(%args);
+    }
 }
 
 =back
@@ -76,8 +76,7 @@ sub new {
 =cut
 
 sub set_encoding {
-    my ($self, $encoding, @args) = @_;
-    $self->throw_not_implemented;
+    throw 'NotImplemented' => "Can't call 'set_encoding' on interface";
 }
 
 =item get_encoding()
@@ -92,8 +91,7 @@ sub set_encoding {
 =cut
 
 sub get_encoding {
-    my ($self, @args) = @_;
-    $self->throw_not_implemented;
+    throw 'NotImplemented' => "Can't call 'get_encoding' on interface";
 }
 
 =item set_root()
@@ -108,8 +106,7 @@ sub get_encoding {
 =cut
 
 sub set_root {
-    my ($self, $root) = @_;
-    $self->throw_not_implemented;
+    throw 'NotImplemented' => "Can't call 'set_root' on interface";
 }
 
 =item get_root()
@@ -124,8 +121,7 @@ sub set_root {
 =cut
 
 sub get_root {
-    my $self = shift;
-    $self->throw_not_implemented;
+    throw 'NotImplemented' => "Can't call 'get_root' on interface";
 }
 
 =back
@@ -148,8 +144,7 @@ sub get_root {
 =cut
 
 sub get_element_by_id {
-    my ($self, $id, @args) = @_;
-    $self->throw_not_implemented;
+    throw 'NotImplemented' => "Can't call 'get_element_by_id' on interface";
 }
 
 =item get_elements_by_tagname()
@@ -164,8 +159,7 @@ sub get_element_by_id {
 =cut
 
 sub get_elements_by_tagname {
-    my ($self, $tagname, @args) = @_;
-    $self->throw_not_implemented;
+    throw 'NotImplemented' => "Can't call 'get_elements_by_tagname' on interface";
 }
 
 =back
@@ -174,86 +168,19 @@ sub get_elements_by_tagname {
 
 =over
 
-=item to_xml_string()
+=item to_xml()
 
  Type    : Serializer
- Title   : to_xml_string
- Usage   : $doc->to_xml_string
+ Title   : to_xml
+ Usage   : $doc->to_xml
  Function: Create XML string from document
  Returns : XML string
  Args    : Formatting arguments as allowed by underlying package
 
 =cut
 
-sub to_xml_string {
-    my ($self, @args) = @_;
-    $self->throw_not_implemented;
-}
-
-=item to_xml_file()
-
- Type    : Serializer
- Title   : to_xml_file
- Usage   : $doc->to_xml_file()
- Function: Create XML file from document
- Returns : True on success
- Args    : filename, formatting arguments as allowed by underlying package
-
-=cut
-
-sub to_xml_file {
-    my ($self, $file, @args) = @_;
-    $self->throw_not_implemented;
-}
-
-=back
-
-=head2 Internal methods
-
-=over
-
-=item throw_not_implemented()
-
- Type    : Exception
- Title   : throw_not_implemented
- Usage   : $elt->throw_not_implemented
- Function: Throw exception to indicate a method is not overridden in an
-           instance class
- Returns : Bio::Phylo::Util::Exceptions object
- Args    : none
-
-=cut
-
-sub throw_not_implemented {
-    my $self = shift;
-    throw 'NotImplemented' => "This DOM method is not implemented in the instance class";
-}
-
-=item  _rearrange()
-
- Type    : 
- Title   : _rearrange
- Usage   : my ($arg1, $arg2, ...) = _rearrange( [qw( arg1 arg2 ... )], @input_args
- Function: Assign a named argument list to subroutine-local variables
- Returns : rearranged argument values
- Args    : arrayref to argument names, copy of argument array
- Note    : Ripped from BioPerl RootI.pm
-
-=cut
-
-sub _rearrange {
-#    my $dummy = shift;
-    my $order = shift;
-    
-    return @_ unless (substr($_[0]||'',0,1) eq '-');
-    push @_,undef unless $#_ %2;
-    my %param;
-    while( @_ ) {
-	(my $key = shift) =~ tr/a-z\055/A-Z/d; #deletes all dashes!
-	$param{$key} = shift;
-    }
-    map { $_ = uc($_) } @$order; 
-    return @param{@$order};
+sub to_xml {
+    throw 'NotImplemented' => "Can't call 'to_xml_string' on interface";
 }
 
 =back
