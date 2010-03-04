@@ -20,7 +20,7 @@ use vars qw(@ISA $DOM);
 
 =head1 NAME
 
-Bio::Phylo::NeXML::DOM - Drop-in XML DOM support for C<Bio::Phylo>
+Bio::Phylo::NeXML::DOM - XML DOM support for Bio::Phylo
 
 =head1 SYNOPSIS
 
