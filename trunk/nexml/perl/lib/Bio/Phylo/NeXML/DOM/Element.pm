@@ -1,12 +1,12 @@
 # $Id: $
-package Bio::Phylo::Util::DOM::Element;
+package Bio::Phylo::NeXML::DOM::Element;
 use strict;
 use Bio::Phylo::Util::Exceptions qw(throw);
 use Bio::Phylo::Util::CONSTANT qw(_ELEMENT_ looks_like_hash looks_like_class);
 
 =head1 NAME
 
-Bio::Phylo::Util::DOM::Element - Abstract class for
+Bio::Phylo::NeXML::DOM::Element - Abstract class for
 flexible XML document object model implementation
 
 =head1 SYNOPSIS
@@ -40,7 +40,7 @@ Mark A. Jensen - maj -at- fortinbras -dot- us
 
  Type    : Constructor
  Title   : new
- Usage   : $elt = Bio::Phylo::Util::DOM::Element->new($tag, $attr)
+ Usage   : $elt = Bio::Phylo::NeXML::DOM::Element->new($tag, $attr)
  Function: Create a new XML DOM element
  Returns : DOM element object
  Args    : Optional: 
@@ -53,7 +53,7 @@ Mark A. Jensen - maj -at- fortinbras -dot- us
 sub new {
     my $class = shift;
     if ( my %args = looks_like_hash @_ ) {
-	$class = __PACKAGE__ . '::' . lc $args{'-format'};
+	$class = __PACKAGE__ . '::' . ucfirst(lc($args{'-format'}));
 	delete $args{'-format'};
 	return looks_like_class($class)->new(%args);
     }

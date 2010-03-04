@@ -1,15 +1,15 @@
-package Bio::Phylo::Meta::XMLLiteral;
+package Bio::Phylo::NeXML::Meta::XMLLiteral;
 use strict;
 use Bio::Phylo::Util::CONSTANT qw'_META_ looks_like_instance looks_like_implementor';
 use Bio::Phylo::Util::Exceptions 'throw';
-#use UNIVERSAL qw'isa can';
+
 {
     my $TYPE_CONSTANT      = _META_;
     my $CONTAINER_CONSTANT = $TYPE_CONSTANT;
     
 =head1 NAME
 
-Bio::Phylo::Meta::XMLLiteral - Annotation value adaptor, no direct usage
+Bio::Phylo::NeXML::Meta::XMLLiteral - Annotation value adaptor, no direct usage
 
 =head1 SYNOPSIS
 
@@ -17,7 +17,7 @@ Bio::Phylo::Meta::XMLLiteral - Annotation value adaptor, no direct usage
 
 =head1 DESCRIPTION
 
-No direct usage, is used internally by L<Bio::Phylo::Meta> to
+No direct usage, is used internally by L<Bio::Phylo::NeXML::Meta> to
 wrap objects into a common adaptor class for serialization to
 XML.
 
@@ -31,9 +31,9 @@ XML.
 
  Type    : Constructor
  Title   : new
- Usage   : my $lit = Bio::Phylo::Meta::XMLLiteral->new;
- Function: Initializes a Bio::Phylo::Meta::XMLLiteral object.
- Returns : A Bio::Phylo::Meta::XMLLiteral object.
+ Usage   : my $lit = Bio::Phylo::NeXML::Meta::XMLLiteral->new;
+ Function: Initializes a Bio::Phylo::NeXML::Meta::XMLLiteral object.
+ Returns : A Bio::Phylo::NeXML::Meta::XMLLiteral object.
  Args    : An object (or array ref of objects) to wrap,
            either a 'RDF::Core::Model' (or subclass),
            an 'XML::XMLWriter' or (subclass) or any
@@ -129,7 +129,7 @@ Serializes invocant to xml.
 
 =over
 
-=item L<Bio::Phylo::Meta>
+=item L<Bio::Phylo::NeXML::Meta>
 
 =item L<Bio::Phylo::Manual>
 

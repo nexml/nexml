@@ -1,8 +1,9 @@
-# $Id$
-package Bio::Phylo::Util::XMLWritable;
+# $Id: XMLWritable.pm 1242 2010-03-03 20:37:23Z rvos $
+package Bio::Phylo::NeXML::Writable;
 use strict;
 use Bio::Phylo ();
 use Bio::Phylo::Util::Exceptions 'throw';
+use Bio::Phylo::NeXML::DOM;
 use Bio::Phylo::Util::CONSTANT qw(
 	_DICTIONARY_ 
 	_META_ 
@@ -13,7 +14,6 @@ use Bio::Phylo::Util::CONSTANT qw(
 	looks_like_implementor
 );
 use vars '@ISA';
-#use UNIVERSAL 'isa';
 @ISA=qw(Bio::Phylo);
 
 {
@@ -32,7 +32,7 @@ use vars '@ISA';
 
 =head1 NAME
 
-Bio::Phylo::Util::XMLWritable - Superclass for objects that serialize to NeXML
+Bio::Phylo::NeXML::Writable - Superclass for objects that serialize to NeXML
 
 =head1 SYNOPSIS
 
@@ -64,7 +64,7 @@ This is the superclass for all objects that can be serialized to NeXML
  Notes   : This is a global for the XMLWritable class, so that in a recursive
  		   to_xml call the outermost element contains the namespace definitions.
  		   This method can also be called as a static class method, i.e.
- 		   Bio::Phylo::Util::XMLWritable->set_namespaces(
+ 		   Bio::Phylo::NeXML::Writable->set_namespaces(
  		   'dwc' => 'http://www.namespaceTBD.org/darwin2');
 
 =cut
@@ -148,7 +148,7 @@ This is the superclass for all objects that can be serialized to NeXML
  Usage   : $obj->add_meta($meta);
  Function: Adds a metadata attachment to the object
  Returns : $self
- Args    : A Bio::Phylo::Meta object
+ Args    : A Bio::Phylo::NeXML::Meta object
 
 =cut
     
@@ -198,7 +198,7 @@ This is the superclass for all objects that can be serialized to NeXML
  Usage   : $obj->remove_meta($meta);
  Function: Removes a metadata attachment from the object
  Returns : $self
- Args    : Bio::Phylo::Meta
+ Args    : Bio::Phylo::NeXML::Meta
 
 =cut
 
@@ -416,7 +416,7 @@ Retrieves the metadata for the element.
  Title   : get_meta
  Usage   : my @meta = @{ $obj->get_meta };
  Function: Retrieves the metadata for the element.
- Returns : An array ref of Bio::Phylo::Meta objects
+ Returns : An array ref of Bio::Phylo::NeXML::Meta objects
  Args    : None.
 
 =cut
@@ -480,7 +480,7 @@ Retrieves tag string
 			$xml .= $_->to_xml for @{ $meta };
 			$has_contents++			
 		}
-		if ( UNIVERSAL::can($self,'get_sets') ) {
+		if ( looks_like_implementor $self,'get_sets' ) {
 			my $sets = $self->get_sets;
 			if ( @{ $sets } ) {
 				$xml .= '>' if not @{ $dictionaries } and not @{ $meta };
@@ -568,9 +568,9 @@ Retrieves attributes for the element.
 		if ( not exists $attrs->{'id'} ) {
 			$attrs->{'id'} = $self->get_xml_id;
 		}
-		if ( UNIVERSAL::can( $self, '_get_container') ) {
+		if ( $self->can('_get_container') ) {
 			my $container = $self->_get_container;
-			if ( UNIVERSAL::can( $self, 'get_tree' ) ) {
+			if ( $self->can('get_tree') ) {
 				$container = $self->get_tree;
 			}
 			if ( $container ) {
@@ -650,7 +650,7 @@ Retrieves xml id for the element.
 
     sub get_dom_elt {
 		my ($self,$dom) = @_;
-		$dom ||= $Bio::Phylo::Util::DOM::DOM;
+		$dom ||= Bio::Phylo::NeXML::DOM->get_dom;
 		unless (looks_like_object $dom, _DOMCREATOR_) {
 		    throw 'BadArgs' => 'DOM factory object not provided';
 		}
@@ -765,25 +765,27 @@ Serializes invocant to XML.
            classes below.
 =cut
 
-    sub to_dom {
+	sub to_dom {
 		my ($self, $dom) = @_;
-		$dom ||= $Bio::Phylo::Util::DOM::DOM;
-		unless (looks_like_object $dom, _DOMCREATOR_) {
-		    throw 'BadArgs' => 'DOM factory object not provided';
-		}
-		my $elt = $self->get_dom_elt($dom);
-		if ( $self->can('get_entities') ) {
-		    for my $ent ( @{ $self->get_entities } ) {
-				if ( UNIVERSAL::can($ent,'to_dom') ) { 
-				    $elt->set_child( $ent->to_dom($dom) );
+		$dom ||= Bio::Phylo::NeXML::DOM->get_dom;
+		if ( looks_like_object $dom, _DOMCREATOR_ ) {
+			my $elt = $self->get_dom_elt($dom);
+			if ( $self->can('get_entities') ) {
+			    for my $ent ( @{ $self->get_entities } ) {
+				if ( looks_like_implementor $ent,'to_dom' ) { 
+					$elt->set_child( $ent->to_dom($dom) );
 				}
-		    }
+			    }
+			}
+			return $elt;                
 		}
-		return $elt;
-    }
+		else {
+			throw 'BadArgs' => 'DOM factory object not provided';
+		}
+	}
 
 	sub _cleanup { 
-    	my $self = shift;
+		my $self = shift;
 		my $id = $self->get_id;
 		for my $field (@fields) {
 			delete $field->{$id};
@@ -802,7 +804,7 @@ Also see the manual: L<Bio::Phylo::Manual> and L<http://rutgervos.blogspot.com>.
 
 =head1 REVISION
 
- $Id$
+ $Id: XMLWritable.pm 1242 2010-03-03 20:37:23Z rvos $
 
 =cut
 

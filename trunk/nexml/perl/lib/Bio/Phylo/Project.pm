@@ -165,7 +165,7 @@ Getter for matrix objects
 		    splice(@args, 0, 1);
 		}
 		else {
-		    $dom = $Bio::Phylo::Util::DOM::DOM;
+		    $dom = $Bio::Phylo::NeXML::DOM::DOM;
 		    unless ($dom) {
 				throw 'BadArgs' => 'DOM factory object not provided';
 		    }
@@ -265,7 +265,7 @@ Serializes invocant to NEXUS.
 
     sub to_dom {
 		my ($self, $dom) = @_;
-		$dom ||= $Bio::Phylo::Util::DOM::DOM;
+		$dom ||= $Bio::Phylo::NeXML::DOM::DOM;
 		unless (looks_like_object $dom, _DOMCREATOR_) {
 		    throw 'BadArgs' => 'DOM factory object not provided';
 		}

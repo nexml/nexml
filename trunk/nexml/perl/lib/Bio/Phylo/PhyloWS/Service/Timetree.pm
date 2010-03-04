@@ -1,13 +1,12 @@
 package Bio::Phylo::PhyloWS::Service::Timetree;
 use strict;
 use warnings;
-#use UNIVERSAL 'isa';
 use Bio::Phylo::IO 'parse';
 use Bio::Phylo::Factory;
 use Bio::Phylo::PhyloWS::Service ();
 use Bio::Phylo::Util::Logger;
 use Bio::Phylo::Util::Exceptions 'throw';
-use Bio::Phylo::Util::CONSTANT 'looks_like_hash looks_like_instance';
+use Bio::Phylo::Util::CONSTANT qw'looks_like_hash looks_like_instance';
 use constant URL => 'http://timetree.org/time_e_query.php?';
 use vars '@ISA';
 @ISA=qw(Bio::Phylo::PhyloWS::Service);

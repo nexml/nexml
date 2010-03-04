@@ -13,8 +13,7 @@ use Bio::Phylo::Util::CONSTANT qw(
 	looks_like_instance
 	looks_like_implementor
 );
-use Bio::Phylo::Util::XMLWritable ();
-#use UNIVERSAL qw(isa can);
+use Bio::Phylo::NeXML::Writable ();
 @ISA = qw(
   Bio::Phylo::Matrices::TypeSafeData
   Bio::Phylo::Taxa::TaxonLinker
@@ -909,7 +908,7 @@ Serializes datum to nexml format.
 		}
 		else {
 			my @tmp = map { uc $_ } @char;
-			my $seq = Bio::Phylo::Util::XMLWritable->new(-tag => 'seq');
+			my $seq = Bio::Phylo::NeXML::Writable->new(-tag => 'seq');
 			my $seq_text = $self->get_type_object->join(\@tmp);
 			$xml .= $seq->get_xml_tag . "\n$seq_text\n" . "</".$seq->get_tag.">";
 		}
@@ -941,7 +940,7 @@ Analog to to_xml.
 		    splice(@args, 0, 1);
 		}
 		else {
-		    $dom = $Bio::Phylo::Util::DOM::DOM;
+		    $dom = $Bio::Phylo::NeXML::DOM::DOM;
 		    unless ($dom) {
 				throw 'BadArgs' => 'DOM factory object not provided';
 		    }

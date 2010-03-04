@@ -1,6 +1,6 @@
 # $Id$
 package Bio::Phylo::Matrices::Datatype::Continuous;
-use Bio::Phylo::Util::CONSTANT qw(looks_like_number);
+use Bio::Phylo::Util::CONSTANT qw(looks_like_number looks_like_implementor looks_like_instance);
 use Bio::Phylo::Matrices::Datatype ();
 use strict;
 use vars qw($LOOKUP $MISSING $GAP @ISA);
@@ -101,10 +101,10 @@ Validates arguments for data validity.
 		my $self = shift;
 		my @data;
 		for my $arg (@_) {
-			if ( UNIVERSAL::can( $arg, 'get_char' ) ) {
+			if ( looks_like_implementor $arg, 'get_char' ) {
 				push @data, $arg->get_char;
 			}
-			elsif ( UNIVERSAL::isa( $arg, 'ARRAY' ) ) {
+			elsif ( looks_like_instance $arg, 'ARRAY' ) {
 				push @data, @{$arg};
 			}
 			else {

@@ -1,6 +1,6 @@
 # $Id$
 use strict;
-#use warnings;
+use Bio::Phylo::Util::CONSTANT 'looks_like_instance';
 use Test::More tests => 7;
 use Bio::Phylo;
 use Bio::Phylo::Taxa;
@@ -19,13 +19,13 @@ my $taxon = Bio::Phylo::Taxa::Taxon->new;
 $taxa->insert($taxon);
 
 eval { $trees->cross_reference($taxa) };
-ok( UNIVERSAL::isa( $@, 'Bio::Phylo::Util::Exceptions::ObjectMismatch' ), '2 bad crossref' );
+ok( looks_like_instance( $@, 'Bio::Phylo::Util::Exceptions::ObjectMismatch' ), '2 bad crossref' );
 
 eval { $taxa->cross_reference($taxa) };
-ok( UNIVERSAL::isa( $@, 'Bio::Phylo::Util::Exceptions::ObjectMismatch' ),  '3 bad crossref' );
+ok( looks_like_instance( $@, 'Bio::Phylo::Util::Exceptions::ObjectMismatch' ),  '3 bad crossref' );
 
 eval { $taxa->insert($tree) };
-ok( UNIVERSAL::isa( $@, 'Bio::Phylo::Util::Exceptions::ObjectMismatch' ),'4 insert obj bad' );
+ok( looks_like_instance( $@, 'Bio::Phylo::Util::Exceptions::ObjectMismatch' ),'4 insert obj bad' );
 
 ok( $trees->first,                   '5 get first tree' );
 ok( $trees->last,                    '6 get last tree' );

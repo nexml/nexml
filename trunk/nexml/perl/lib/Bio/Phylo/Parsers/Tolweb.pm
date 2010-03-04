@@ -5,7 +5,6 @@ use Bio::Phylo::IO ();
 use Bio::Phylo::Util::Exceptions 'throw';
 use Bio::Phylo::Util::CONSTANT 'looks_like_instance';
 use Bio::Phylo::Factory;
-#use UNIVERSAL 'isa';
 use vars qw(@ISA $VERSION);
 @ISA = qw(Bio::Phylo::IO);
 

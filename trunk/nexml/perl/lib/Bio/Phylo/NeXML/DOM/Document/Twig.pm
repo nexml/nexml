@@ -1,36 +1,40 @@
-# $Id: $
-package Bio::Phylo::Util::DOM::Document;
-use strict;
-use Bio::Phylo::Util::Exceptions qw(throw);
-use Bio::Phylo::Util::CONSTANT qw(_DOCUMENT_ looks_like_hash looks_like_class);
+#$Id$
 
 =head1 NAME
 
-Bio::Phylo::Util::DOM::Document - Abstract class for
-flexible XML document object model implementation
+Bio::Phylo::NeXML::DOM::Document::Twig - XML DOM document mappings to the
+C<XML::Twig> package
 
 =head1 SYNOPSIS
 
-Not used directly.
+Don't use directly; use Bio::Phylo::NeXML::DOM->new( -format => 'twig' ) instead.
 
 =head1 DESCRIPTION
 
-This module describes an abstract implementation of a DOM document as
-expected by Bio::Phylo. The methods here must be overridden in any
-concrete implementation. The idea is that different implementations
-use a particular XML DOM package, binding the methods here to
-analogous package methods.
-
-This set of methods is intentionally minimal. The concrete instances
-of this class should inherit both from DocumentI and the underlying XML DOM
-object class, so that package-specific methods can be directly
-accessed from the instantiated object.
+This module provides mappings the methods specified in the 
+L<Bio::Phylo::NeXML::DOM::Document> abstract class to the 
+C<XML::Twig> package.
 
 =head1 AUTHOR
 
-Mark A. Jensen - maj -at- fortinbras -dot- us
+Mark A. Jensen ( maj -at- fortinbras -dot- us )
 
 =cut
+
+package Bio::Phylo::NeXML::DOM::Document::Twig;
+use strict;
+use Bio::Phylo::NeXML::DOM::Document;
+use Bio::Phylo::Util::Exceptions qw(throw);
+use Bio::Phylo::Util::CONSTANT qw(looks_like_instance);
+use vars qw(@ISA);
+
+BEGIN {
+    eval { require XML::Twig };
+    if ( $@ ) {
+	throw 'ExtensionError' => "Failed to load XML::Twig: $@";
+    }
+    @ISA = qw( Bio::Phylo::NeXML::DOM::Document XML::Twig );
+}
 
 =head2 Constructor
 
@@ -40,7 +44,7 @@ Mark A. Jensen - maj -at- fortinbras -dot- us
 
  Type    : Constructor
  Title   : new
- Usage   : $doc = Bio::Phylo::Util::Dom::Document->new(@args)
+ Usage   : $doc = Bio::Phylo::NeXML::DOM::Document->new(@args)
  Function: Create a Document object using the underlying package
  Returns : Document object or undef on fail
  Args    : Package-specific arguments
@@ -48,12 +52,11 @@ Mark A. Jensen - maj -at- fortinbras -dot- us
 =cut
 
 sub new {
-    my $class = shift;
-    if ( my %args = looks_like_hash @_ ) {
-	$class = __PACKAGE__ . '::' . lc $args{'-format'};
-	delete $args{'-format'};
-	return looks_like_class($class)->new(%args);
-    }
+    my ($class, @args) = @_;
+    my $self = XML::Twig->new();
+    $self->set_encoding();
+    bless $self, $class;
+    return $self;
 }
 
 =back
@@ -76,7 +79,9 @@ sub new {
 =cut
 
 sub set_encoding {
-    throw 'NotImplemented' => "Can't call 'set_encoding' on interface";
+    my ($self, $encoding, @args) = @_;
+    $self->set_encoding($encoding);
+    return 1;
 }
 
 =item get_encoding()
@@ -91,7 +96,7 @@ sub set_encoding {
 =cut
 
 sub get_encoding {
-    throw 'NotImplemented' => "Can't call 'get_encoding' on interface";
+    return shift->encoding;
 }
 
 =item set_root()
@@ -106,7 +111,18 @@ sub get_encoding {
 =cut
 
 sub set_root {
-    throw 'NotImplemented' => "Can't call 'set_root' on interface";
+    my ($self, $root) = @_;
+    if ( looks_like_instance $root, 'XML::Twig::Elt' ) {
+	XML::Twig::set_root($self, $root);
+	# manage ids
+	for ($root->descendants_or_self) {
+	    ${$self->{twig_id_list}}{$_->att('id')} = $_ if $_->att('id');
+	}
+	return 1;
+    }
+    else {
+	throw 'ObjectMisMatch' => 'Argument is not an XML::Twig::Elt';
+    }
 }
 
 =item get_root()
@@ -121,7 +137,7 @@ sub set_root {
 =cut
 
 sub get_root {
-    throw 'NotImplemented' => "Can't call 'get_root' on interface";
+    return shift->root;
 }
 
 =back
@@ -144,7 +160,7 @@ sub get_root {
 =cut
 
 sub get_element_by_id {
-    throw 'NotImplemented' => "Can't call 'get_element_by_id' on interface";
+    return shift->elt_id(shift);
 }
 
 =item get_elements_by_tagname()
@@ -159,7 +175,8 @@ sub get_element_by_id {
 =cut
 
 sub get_elements_by_tagname {
-    throw 'NotImplemented' => "Can't call 'get_elements_by_tagname' on interface";
+    my ($self, $tagname, @args) = @_;
+    return $self->get_root->get_elements_by_tagname($tagname);
 }
 
 =back
@@ -180,7 +197,8 @@ sub get_elements_by_tagname {
 =cut
 
 sub to_xml {
-    throw 'NotImplemented' => "Can't call 'to_xml_string' on interface";
+    my ($self, @args) = @_;
+    return $self->sprint(@args);
 }
 
 =back

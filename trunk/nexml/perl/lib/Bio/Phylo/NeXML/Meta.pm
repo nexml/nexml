@@ -1,20 +1,21 @@
-package Bio::Phylo::Meta;
-use Bio::Phylo::Listable ();
-use Bio::Phylo::Util::CONSTANT qw'_META_ looks_like_number looks_like_instance';
-use Bio::Phylo::Util::Exceptions 'throw';
-#use UNIVERSAL 'isa';
-use vars qw'@ISA';
+package Bio::Phylo::NeXML::Meta;
 use strict;
-@ISA=qw'Bio::Phylo::Listable';
+use Bio::Phylo::Listable ();
+use Bio::Phylo::Util::CONSTANT qw(_META_ looks_like_number looks_like_instance);
+use Bio::Phylo::Util::Exceptions 'throw';
+use Bio::Phylo::Factory;
+use vars qw(@ISA);
+@ISA=qw(Bio::Phylo::Listable);
 
 {
+    my $fac = Bio::Phylo::Factory->new;
     my @fields = \( my( %property, %content ) );
     my $TYPE_CONSTANT      = _META_;
     my $CONTAINER_CONSTANT = $TYPE_CONSTANT;
     
 =head1 NAME
 
-Bio::Phylo::Meta - Single predicate/object annotation, attached to an
+Bio::Phylo::NeXML::Meta - Single predicate/object annotation, attached to an
 xml-writable subject
 
 =head1 SYNOPSIS
@@ -36,18 +37,19 @@ xml-writable subject
 
 =head1 DESCRIPTION
 
-To comply with the NeXML standard (L<http://www.nexml.org>), Bio::Phylo implements
-metadata annotations which consist conceptually of RDF triples where the subject
-is a container object that subclasses of L<Bio::Phylo::Util::XMLWritable>, and the
-predicate and object are defined in this class. 
+To comply with the NeXML standard (L<http://www.nexml.org>), Bio::Phylo
+implements metadata annotations which consist conceptually of RDF triples where
+the subject is a container object that subclasses
+L<Bio::Phylo::NeXML::Writable>, and the predicate and object are defined in
+this class. 
 
-The objects of the triples provided by this class can be of any simple type (string,
-number) or one of L<XML::DOM>, L<XML::GDOME>, L<XML::LibXML>, L<XML::Twig>, L<XML::DOM2>,
-L<XML::DOMBacked>, L<XML::Handler>, L<XML::Element>, L<XML::API>, L<XML::Code> or
-L<XML::XMLWriter> or L<RDF::Core::Model>.
+The objects of the triples provided by this class can be of any simple type
+(string, number) or one of L<XML::DOM>, L<XML::GDOME>, L<XML::LibXML>,
+L<XML::Twig>, L<XML::DOM2>, L<XML::DOMBacked>, L<XML::Handler>, L<XML::Element>,
+L<XML::API>, L<XML::Code> or L<XML::XMLWriter> or L<RDF::Core::Model>.
 
-When serialized, the Bio::Phylo::Meta object in NeXML is typically written out as an element 
-called 'meta', with RDFa compliant attributes.
+When serialized, the Bio::Phylo::NeXML::Meta object in NeXML is typically written out
+as an element called 'meta', with RDFa compliant attributes.
 
 =head1 METHODS
 
@@ -59,9 +61,9 @@ called 'meta', with RDFa compliant attributes.
 
  Type    : Constructor
  Title   : new
- Usage   : my $anno = Bio::Phylo::Meta->new;
- Function: Initializes a Bio::Phylo::Meta object.
- Returns : A Bio::Phylo::Meta object.
+ Usage   : my $anno = Bio::Phylo::NeXML::Meta->new;
+ Function: Initializes a Bio::Phylo::NeXML::Meta object.
+ Returns : A Bio::Phylo::NeXML::Meta object.
  Args    : optional constructor arguments are key/value
  		   pairs where the key corresponds with any of
  		   the methods that starts with set_ (i.e. mutators) 
@@ -90,7 +92,8 @@ called 'meta', with RDFa compliant attributes.
             else {
                 $self->set_attributes( 'content' => $content, %literal );            
                 if ( looks_like_number $content ) {
-                	my $dt = $content == int($content) && $content !~ /\./ ? 'integer' : 'float';
+                	my $dt = $content == int($content)
+			    && $content !~ /\./ ? 'integer' : 'float';
                 	$self->set_attributes( 'datatype' => 'xsd:' . $dt );
                 }
                 else {
@@ -99,8 +102,8 @@ called 'meta', with RDFa compliant attributes.
             }
         }
         else {
-            if ( looks_like_instance($content, 'Bio::Phylo') 
-            	and $content->_type == $TYPE_CONSTANT ) {
+            if ( looks_like_instance $content, 'Bio::Phylo'
+		and $content->_type == $TYPE_CONSTANT ) {
                 $self->insert($content)->set_attributes( %resource );
                 if ( my $prop = $self->get_attributes( 'property' ) ) {
                     $self->set_attributes( 'rel' => $prop );
@@ -108,8 +111,10 @@ called 'meta', with RDFa compliant attributes.
                 }                
             }
             else {
-                $self->set_attributes( 'datatype' => 'rdf:XMLLiteral', %literal );
-                $self->insert(Bio::Phylo::Meta::XMLLiteral->new($content));
+                $self->set_attributes(
+		    'datatype' => 'rdf:XMLLiteral', %literal
+		);
+                $self->insert( $fac->create_xmlliteralnew($content) );
             }        
         }
         return $self;
@@ -152,7 +157,7 @@ Populates the triple, assuming that the invocant is attached to a subject.
            $object    - any of the valid object types: a number,
                         a string, a url, a nested annotation
                         or anything that can be adapted by
-                        Bio::Phylo::Meta::XMLLiteral 
+                        Bio::Phylo::NeXML::Meta::XMLLiteral 
 
 =cut    
     
@@ -216,9 +221,9 @@ Returns triple predicate
 
 Annotation objects are combined into a dictionary.
 
-=item L<Bio::Phylo::Util::XMLWritable>
+=item L<Bio::Phylo::NeXML::Writable>
 
-This object inherits from L<Bio::Phylo::Util::XMLWritable>, so methods
+This object inherits from L<Bio::Phylo::NeXML::Writable>, so methods
 defined there are also applicable here.
 
 =item L<Bio::Phylo::Manual>

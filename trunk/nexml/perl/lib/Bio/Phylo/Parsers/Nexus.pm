@@ -5,7 +5,6 @@ use Bio::Phylo::Factory;
 use Bio::Phylo::IO qw(parse);
 use Bio::Phylo::Util::CONSTANT qw(:objecttypes looks_like_instance);
 use Bio::Phylo::Util::Exceptions qw(throw);
-#use UNIVERSAL qw(isa);
 use vars qw(@ISA);
 
 # TODO: handle mixed? distances, splits, bipartitions

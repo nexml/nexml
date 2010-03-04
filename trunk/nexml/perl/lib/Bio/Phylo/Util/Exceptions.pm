@@ -7,6 +7,7 @@ BEGIN {
 	@EXPORT_OK=qw(throw);
 }
 use Bio::Phylo::Util::StackTrace;
+use Bio::Phylo::Util::CONSTANT 'looks_like_instance';
 use overload 'bool' => sub { 1 }, 'fallback' => 1, '""' => \&as_string;
 
 sub new {
@@ -89,7 +90,7 @@ sub caught {
 		$class = shift;
 	}
 	if ( $@ ) {
-		if ( UNIVERSAL::isa( $@, $class ) ) {
+		if ( looks_like_instance $@, $class ) {
 			return $@;
 		}
 		else {
