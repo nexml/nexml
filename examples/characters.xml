@@ -13,16 +13,6 @@
     xmlns:nex="http://www.nexml.org/1.0"
     xmlns="http://www.nexml.org/1.0">
     
-    <!-- revision control metadata -->
-    <dict id="dict1">
-        <string id="author">$Author$</string>
-        <string id="date">$Date$</string>
-        <string id="header">$Header: $</string>
-        <string id="id">$Id$</string>
-        <string id="rev">$Rev$</string>
-        <string id="url">$URL$</string>
-    </dict>          
-    
     <!--  
         For more discussion of the structure of the taxa
         element, refer to 'taxa.xml'
