@@ -2,7 +2,7 @@ use Test::More;
 BEGIN {
     eval { require Bio::TreeIO };
     if ( $@ ) {
-        plan 'skip_all' => "BioPerl not installed, won't test";
+        plan 'skip_all' => "BioPerl not installed";
     }
     else {
     	Test::More->import('no_plan');
