@@ -208,6 +208,27 @@ obtained from the C<Element> and C<Document> POD.
 	}
     }
 
+=item parse_element()
+
+ Type    : Factory method
+ Title   : parse_element
+ Usage   : $elt = $dom->parse_element($text)
+ Function: Create a new XML DOM element from XML text
+ Returns : DOM element
+ Args    : An XML String
+
+=cut
+
+    sub parse_element {
+	if ( my $f = shift->get_format ) {
+	    return looks_like_class(__PACKAGE__.'::Element::'.$f)
+		->parse_element(shift);
+	}
+	else {
+	    throw 'BadArgs' => 'DOM creator format not set';
+	}	
+    }
+
 =item create_document()
 
  Type    : Creator
@@ -226,6 +247,27 @@ obtained from the C<Element> and C<Document> POD.
 	else {
 	    throw 'BadArgs' => 'DOM creator format not set';
 	}
+    }
+
+=item parse_document()
+
+ Type    : Factory method
+ Title   : parse_document
+ Usage   : $doc = $dom->parse_document($text)
+ Function: Create a new XML DOM document from XML text
+ Returns : DOM document
+ Args    : An XML String
+
+=cut
+
+    sub parse_document {
+	if ( my $format = shift->get_format ) {
+	    my $implementation = __PACKAGE__ . '::' . $format;
+	    return $implementation->parse_document(shift);
+	}
+	else {
+	    throw 'BadArgs' => 'DOM creator format not set';
+	}	
     }
 
 =back
@@ -270,7 +312,7 @@ obtained from the C<Element> and C<Document> POD.
 
     sub get_format {
 	my $self = shift;
-	return $format{$$self};
+	return ucfirst(lc($format{$$self}));
     }
 
 =item get_dom()
@@ -284,7 +326,7 @@ obtained from the C<Element> and C<Document> POD.
 
 =cut
 
-    sub get_dom { $DOM }
+    sub get_dom { $DOM ||= __PACKAGE__->new }
     
 =begin comment
 

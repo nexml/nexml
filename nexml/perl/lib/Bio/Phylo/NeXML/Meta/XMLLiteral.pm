@@ -1,6 +1,10 @@
 package Bio::Phylo::NeXML::Meta::XMLLiteral;
 use strict;
-use Bio::Phylo::Util::CONSTANT qw'_META_ looks_like_instance looks_like_implementor';
+use Bio::Phylo::Util::CONSTANT qw(
+    _META_
+    looks_like_instance
+    looks_like_implementor
+);
 use Bio::Phylo::Util::Exceptions 'throw';
 
 {
@@ -31,7 +35,7 @@ XML.
 
  Type    : Constructor
  Title   : new
- Usage   : my $lit = Bio::Phylo::NeXML::Meta::XMLLiteral->new;
+ Usage   : my $lit = Bio::Phylo::NeXML::Meta::XMLLiteral->new($obj);
  Function: Initializes a Bio::Phylo::NeXML::Meta::XMLLiteral object.
  Returns : A Bio::Phylo::NeXML::Meta::XMLLiteral object.
  Args    : An object (or array ref of objects) to wrap,
@@ -80,42 +84,47 @@ Serializes invocant to xml.
         my $self = shift;
         my $objs = $$self;
         my @objs = ref($objs) eq 'ARRAY' ? @{ $objs } : ( $objs );
-        my $xml = '';
-		for my $obj ( @objs ) {
-	        # for RDF::Core::Model objects
-	        if ( looks_like_instance($obj, 'RDF::Core::Model') ) {
-	            eval {
-	                require RDF::Core::Model::Serializer;
-	                my $serialized_model = '';
-	                my $serializer = RDF::Core::Model::Serializer->new(
-	                    'Model'  => $obj,
-	                    'Output' => \$serialized_model,
-	                );   
-	                $xml .= $serialized_model;     			
-	            };
-	            if ( $@ ) {
-	                throw 'API' => $@;
-	            }
-	        }	        
-	        # for XML::XMLWriter object
-	        elsif ( looks_like_instance($obj, 'XML::XMLWriter') ) {
-	            $xml .= $obj->get;
-	        }	        
-	        else {
-	            # duck-typing
-	            # Bio::Phylo => to_xml, XML::DOM,XML::GDOME,XML::LibXML => toString, XML::Twig => sprint
-	            # XML::DOM2 => xmlify, XML::DOMBacked => as_xml,
-	            # XML::Handler => dump_tree, XML::Element => as_XML
-	            # XML::API => _as_string, XML::Code => code	            
-	            my @methods = qw(to_xml toString sprint _as_string code xmlify as_xml dump_tree as_XML);
-	            SERIALIZER: for my $method ( @methods ) {
-	                if ( looks_like_implementor($obj,$method) ) {
-	                    $xml .= $obj->$method;
-	                    last SERIALIZER;
-	                }
-	            }
-	        }
+        my $xml  = '';
+	for my $obj ( @objs ) {
+	    # for RDF::Core::Model objects
+	    if ( looks_like_instance($obj, 'RDF::Core::Model') ) {
+		eval {
+		    require RDF::Core::Model::Serializer;
+		    my $serialized_model = '';
+		    my $serializer = RDF::Core::Model::Serializer->new(
+			'Model'  => $obj,
+			'Output' => \$serialized_model,
+		    );   
+		    $xml .= $serialized_model;     			
+		};
+		if ( $@ ) {
+		    throw 'API' => $@;
 		}
+	    }	        
+	    # for XML::XMLWriter object
+	    elsif ( looks_like_instance($obj, 'XML::XMLWriter') ) {
+		$xml .= $obj->get;
+	    }	        
+	    else {
+		# duck-typing
+		# Bio::Phylo => to_xml,
+		# XML::DOM,XML::GDOME,XML::LibXML => toString,
+		# XML::Twig => sprint
+		# XML::DOM2 => xmlify,
+		# XML::DOMBacked => as_xml,
+		# XML::Handler => dump_tree,
+		# XML::Element => as_XML
+		# XML::API => _as_string,
+		# XML::Code => code	            
+		my @methods = qw(to_xml toString sprint _as_string code xmlify as_xml dump_tree as_XML);
+		SERIALIZER: for my $method ( @methods ) {
+		    if ( looks_like_implementor($obj,$method) ) {
+			$xml .= $obj->$method;
+			last SERIALIZER;
+		    }
+		}
+	    }
+	}
         return $xml;        
     }
     
