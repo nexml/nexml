@@ -1,11 +1,11 @@
 package Bio::Phylo::PhyloWS::Resource;
 use strict;
 use Bio::Phylo::PhyloWS ();
-use Bio::Phylo::Util::XMLWritable ();
+use Bio::Phylo::NeXML::Writable ();
 use Bio::Phylo::Util::Exceptions 'throw';
 use Bio::Phylo::Util::CONSTANT qw(_DESCRIPTION_ _RESOURCE_);
 use vars '@ISA';
-@ISA=qw(Bio::Phylo::PhyloWS Bio::Phylo::Util::XMLWritable);
+@ISA=qw(Bio::Phylo::PhyloWS Bio::Phylo::NeXML::Writable);
 
 {
     my @fields = \( my( %guid, %format ) );

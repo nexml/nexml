@@ -1,37 +1,38 @@
 # $Id$
-package Bio::Phylo::Util::DOM;
+package Bio::Phylo::NeXML::DOM;
 use strict;
 use Bio::Phylo ();
 use Bio::Phylo::Util::CONSTANT qw(_DOMCREATOR_ looks_like_class);
 use Bio::Phylo::Util::Exceptions qw( throw );
 use Bio::Phylo::Factory;
 use File::Spec::Unix;
-use vars qw(@ISA $DOM);
 
 # store DOM factory object as a global here, to avoid proliferation of 
 # function arguments
-
+use vars qw(@ISA $DOM);
 @ISA = qw(Bio::Phylo);
 
-my $CONSTANT_TYPE = _DOMCREATOR_;
-my (%format);
-my $fac = Bio::Phylo::Factory->new;
+{
+
+    my $CONSTANT_TYPE = _DOMCREATOR_;
+    my (%format);
+    my $fac = Bio::Phylo::Factory->new;
 
 =head1 NAME
 
-Bio::Phylo::Util::DOM - Drop-in XML DOM support for C<Bio::Phylo>
+Bio::Phylo::NeXML::DOM - Drop-in XML DOM support for C<Bio::Phylo>
 
 =head1 SYNOPSIS
 
- use Bio::Phylo::Util::DOM;
+ use Bio::Phylo::NeXML::DOM;
  use Bio::Phylo::IO qw( parse );
- Bio::Phylo::Util::DOM->new(-format => 'twig');
+ Bio::Phylo::NeXML::DOM->new(-format => 'twig');
  my $project = parse( -file=>'my.nex', -format=>'nexus' );
  my $nex_twig = $project->doc();
 
 =head1 DESCRIPTION
 
-This module adds C<to_dom> methods to L<Bio::Phylo::Util::XMLWritable>
+This module adds C<to_dom> methods to L<Bio::Phylo::NeXML::Writable>
 classes, which provide NeXML-valid objects for document object model
 manipulation. DOM formats currently available are C<XML::Twig> and
 C<XML::LibXML>.  For any C<XMLWritable> object, use C<to_dom> in place
@@ -58,7 +59,7 @@ object model (DOM). Many of these packages allow extremely flexible
 computation over large datasets stored in XML format, and admit the
 use of XML-related facilities such as XPath and XSLT programmatically.
 
-The purpose of C<Bio::Phylo::Util::DOM> is to introduce integrated DOM
+The purpose of C<Bio::Phylo::NeXML::DOM> is to introduce integrated DOM
 object creation and manipulation to C<Bio::Phylo>, both to make DOM
 computation in C<Bio::Phylo> more convenient, and also to provide a
 platform for potentially more sophisticated C<Bio::Phylo> modules to
@@ -69,7 +70,7 @@ come.
 Besides the notion that DOM capability should be optional for the user,
 there are two main design ideas. First, for each C<Bio::Phylo> object
 that can be parsed/written as NeXML (i.e., for each
-C<Bio::Phylo::Util::XMLWritable> object), we provide analogous method
+C<Bio::Phylo::NeXML::Writable> object), we provide analogous method
 for creating a representative DOM object, or element. These elements
 are aggregatable in a DOM document object, whose native stringifying
 method can be used to generate valid NeXML. 
@@ -88,11 +89,11 @@ bindings for two popular packages, C<XML::Twig> and C<XML::LibXML>.
 Another priority was simplicity of use; most of the details remain
 under the hood in practice. The C<Bio/Phylo/Util/DOM.pm> file defines the
 C<to_dom()> method for each C<XMLWritable> package, as well as the
-C<Bio::Phylo::Util::DOM> package proper. The C<DOM> object is a
+C<Bio::Phylo::NeXML::DOM> package proper. The C<DOM> object is a
 factory that is used to create Element and Document objects; it is an
 inside-out object that subclasses C<Bio::Phylo>. To curb the
 proliferation of method arguments, a DOM factory instance (set by the
-latest invocation of C<Bio::Phylo::Util::DOM-E<gt>new()>) is maintained in
+latest invocation of C<Bio::Phylo::NeXML::DOM-E<gt>new()>) is maintained in
 a package global. This is used by default for object creation with DOM
 methods if a DOM factory object is not explicitly provided in the
 argument list.
@@ -103,9 +104,9 @@ the default implementation is C<XML::Twig>, which is already required
 by C<Bio::Phylo>. Thus, for example, one can use the DOM to convert
 a Nexus file to a DOM representation as follows:
 
- use Bio::Phylo::Util::DOM;
+ use Bio::Phylo::NeXML::DOM;
  use Bio::Phylo::IO qw( parse );
- Bio::Phylo::Util::DOM->new();
+ Bio::Phylo::NeXML::DOM->new();
  my $project = parse( -file=>'my.nex', -format=>'nexus' );
  my $nex_twig =  $project->doc();
  # The end.
@@ -119,7 +120,7 @@ installed.
 The minimal DOM interface specifies the following methods. Details can be
 obtained from the C<Element> and C<Document> POD.
 
-=head2 Bio::Phylo::Util::DOM::Element - DOM Element abstract class
+=head2 Bio::Phylo::NeXML::DOM::Element - DOM Element abstract class
 
  get_tagname()
  set_tagname()
@@ -143,7 +144,7 @@ obtained from the C<Element> and C<Document> POD.
 
  to_xml_string()
 
-=head2 Bio::Phylo::Util::DOM::Document - DOM Document
+=head2 Bio::Phylo::NeXML::DOM::Document - DOM Document
 
  get_encoding()
  set_encoding()
@@ -159,67 +160,79 @@ obtained from the C<Element> and C<Document> POD.
 
 =head1 METHODS
 
-=head2 CONSTRUCTORS
+=head2 CONSTRUCTOR
 
 =over
 
 =item new()
 
- Type    : Factory constructor
+ Type    : Constructor
  Title   : new
- Usage   : $dom = Bio::Phylo::Util::DOM->new(-format=>$format)
+ Usage   : $dom = Bio::Phylo::NeXML::DOM->new(-format=>$format)
  Function: Create a new DOM factory
  Returns : DOM object
- Args    : format - DOM format (defaults to 'twig')
+ Args    : optional: -format => DOM format (defaults to 'twig')
 
 =cut
 
-sub new {
-    my $self = shift->SUPER::new( '-format' => 'twig', @_ );
-    return $DOM = $self;
-}
+    sub new {
+	my $self = shift->SUPER::new( '-format' => 'twig', @_ );
+	return $DOM = $self;
+    }
+
+=back
+
+=head2 FACTORY METHODS
+
+=over
 
 =item create_element()
 
- Type    : Creator
+ Type    : Factory method
  Title   : create_element
- Usage   : $elt = Bio::Phylo::Util::DOM->new_document(-format=>$format)
+ Usage   : $elt = $dom->create_element()
  Function: Create a new XML DOM element
- Returns : DOM document
+ Returns : DOM element
  Args    : Optional:
            -tag => $tag_name
            -attr => \%attr_hash
 
 =cut
 
-sub create_element { 
-    if ( my $format = shift->get_format ) {
-	return $fac->create_element( '-format' => $format, @_ );
+    sub create_element { 
+	if ( my $format = shift->get_format ) {
+	    return $fac->create_element( '-format' => $format, @_ );
+	}
+	else {
+	    throw 'BadArgs' => 'DOM creator format not set';
+	}
     }
-    else {
-	throw 'BadArgs' => 'DOM creator format not set';
-    }
-}
 
 =item create_document()
 
  Type    : Creator
  Title   : create_document
- Usage   : $doc = Bio::Phylo::Util::DOM->new_document(-format=>$format)
+ Usage   : $doc = $dom->create_document()
  Function: Create a new XML DOM document
  Returns : DOM document
  Args    : Package-specific args
 
 =cut
 
-sub create_document {
-    if ( my $format = shift->get_format ) {
-	return $fac->create_document( '-format' => $format, @_ );
+    sub create_document {
+	if ( my $format = shift->get_format ) {
+	    return $fac->create_document( '-format' => $format, @_ );
+	}
+	else {
+	    throw 'BadArgs' => 'DOM creator format not set';
+	}
     }
-    else {
-	throw 'BadArgs' => 'DOM creator format not set';
-    }
-}
+
+=back
+
+=head2 MUTATORS
+
+=over
 
 =item set_format()
 
@@ -232,12 +245,18 @@ sub create_document {
 
 =cut
 
-sub set_format {
-    my $self = shift;
-    $format{$$self} = shift;
-    return $self;
-}
-    
+    sub set_format {
+	my $self = shift;
+	$format{$$self} = shift;
+	return $self;
+    }
+
+=back
+
+=head2 ACCESSORS
+
+=over
+
 =item get_format()
 
  Type    : Accessor
@@ -249,10 +268,23 @@ sub set_format {
 
 =cut
 
-sub get_format {
-    my $self = shift;
-    return $format{$$self};
-}
+    sub get_format {
+	my $self = shift;
+	return $format{$$self};
+    }
+
+=item get_dom()
+
+ Type    : Static accessor
+ Title   : get_dom
+ Usage   : __PACKAGE__->get_dom()
+ Function: Get the singleton DOM object
+ Returns : instance of this __PACKAGE__
+ Args    : none
+
+=cut
+
+    sub get_dom { $DOM }
     
 =begin comment
 
@@ -267,7 +299,7 @@ sub get_format {
 
 =cut
 
-sub _type { $CONSTANT_TYPE }
+    sub _type { $CONSTANT_TYPE }
 
 =begin comment
 
@@ -282,10 +314,10 @@ sub _type { $CONSTANT_TYPE }
 
 =cut
 
-sub _cleanup {
-    my $self = shift;
-    delete $format{$$self};    
-}
+    sub _cleanup {
+	my $self = shift;
+	delete $format{$$self};    
+    }
 
 =back
 
@@ -293,17 +325,19 @@ sub _cleanup {
 
 =head1 SEE ALSO
 
-The DOM creator abstract classes: L<Bio::Phylo::Util::DOM::Element>,
-L<Bio::Phylo::Util::DOM::Document>
+The DOM creator abstract classes: L<Bio::Phylo::NeXML::DOM::Element>,
+L<Bio::Phylo::NeXML::DOM::Document>
 
 =head1 AUTHOR
 
-Mark A. Jensen  (maj -at- fortinbras -dot- us)
+Mark A. Jensen  (maj -at- fortinbras -dot- us), refactored by Rutger Vos
 
 =head1 TODO
 
 The C<Bio::Phylo::Annotation> class is not yet DOMized.
 
 =cut
+
+}
 
 1;

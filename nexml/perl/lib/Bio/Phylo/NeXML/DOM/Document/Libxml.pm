@@ -1,19 +1,19 @@
-#$Id$
+# $Id: $
 
 =head1 NAME
 
-Bio::Phylo::Util::DOM::Document::twig - XML DOM document mappings to the
-C<XML::Twig> package
+Bio::Phylo::NeXML::DOM::Document::Libxml - XML DOM document mappings to the 
+C<XML::LibXML> package
 
 =head1 SYNOPSIS
 
-Don't use directly; use Bio::Phylo::Util::DOM->new( -format => 'twig' ) instead.
+Don't use directly; use Bio::Phylo::NeXML::DOM->new( -format => 'libxml' ) instead.
 
 =head1 DESCRIPTION
 
 This module provides mappings the methods specified in the 
-L<Bio::Phylo::Util::DOM::Document> abstract class to the 
-C<XML::Twig> package.
+L<Bio::Phylo::NeXML::DOM::Document> abstract class to the C<XML::LibXML::Document>
+package.
 
 =head1 AUTHOR
 
@@ -21,20 +21,24 @@ Mark A. Jensen ( maj -at- fortinbras -dot- us )
 
 =cut
 
-package Bio::Phylo::Util::DOM::Document::twig;
+package Bio::Phylo::NeXML::DOM::Document::Libxml;
 use strict;
-use Bio::Phylo::Util::DOM::Document;
-use Bio::Phylo::Util::Exceptions qw(throw);
+use Bio::Phylo::NeXML::DOM::Document ();
 use Bio::Phylo::Util::CONSTANT qw(looks_like_instance);
+use Bio::Phylo::NeXML::DOM::Element::Libxml (); # for blessing 
+use Bio::Phylo::Util::Exceptions qw(throw);
 use vars qw(@ISA);
 
 BEGIN {
-    eval { require XML::Twig };
-    if ( $@ ) {
-	throw 'ExtensionError' => "Failed to load XML::Twig: $@";
+    # XML::LibXML::Document is a package within the same file as XML::LibXML,
+    # no need to require-test it separately
+    eval { require XML::LibXML };
+    if ($@) {		
+	throw 'ExtensionError' => "Failed to load XML::LibXML::Document: $@";
     }
-    @ISA = qw( Bio::Phylo::Util::DOM::Document XML::Twig );
+    @ISA = qw( Bio::Phylo::NeXML::DOM::Document XML::LibXML::Document );
 }
+
 
 =head2 Constructor
 
@@ -44,7 +48,7 @@ BEGIN {
 
  Type    : Constructor
  Title   : new
- Usage   : $doc = Bio::Phylo::Util::Dom::Document->new(@args)
+ Usage   : $doc = Bio::Phylo::NeXML::DOM::Document->new(@args)
  Function: Create a Document object using the underlying package
  Returns : Document object or undef on fail
  Args    : Package-specific arguments
@@ -53,8 +57,7 @@ BEGIN {
 
 sub new {
     my ($class, @args) = @_;
-    my $self = XML::Twig->new();
-    $self->set_encoding();
+    my $self = XML::LibXML::Document->new(@args);
     bless $self, $class;
     return $self;
 }
@@ -79,9 +82,7 @@ sub new {
 =cut
 
 sub set_encoding {
-    my ($self, $encoding, @args) = @_;
-    $self->set_encoding($encoding);
-    return 1;
+    return shift->setEncoding(shift);
 }
 
 =item get_encoding()
@@ -112,16 +113,12 @@ sub get_encoding {
 
 sub set_root {
     my ($self, $root) = @_;
-    if ( looks_like_instance $root, 'XML::Twig::Elt' ) {
-	XML::Twig::set_root($self, $root);
-	# manage ids
-	for ($root->descendants_or_self) {
-	    ${$self->{twig_id_list}}{$_->att('id')} = $_ if $_->att('id');
-	}
+    if ( looks_like_instance $root, 'XML::LibXML::Element' ) {
+	$self->setDocumentElement($root);
 	return 1;
     }
     else {
-	throw 'ObjectMisMatch' => 'Argument is not an XML::Twig::Elt';
+	throw 'ObjectMismatch' => "Argument is not an XML::LibXML::Element";
     }
 }
 
@@ -137,7 +134,7 @@ sub set_root {
 =cut
 
 sub get_root {
-    return shift->root;
+    return shift->documentElement;
 }
 
 =back
@@ -159,8 +156,21 @@ sub get_root {
 
 =cut
 
+# the XML::LibXML::Document::get_element_by_id() retrieves only 
+# via @xml:id attributes in a general XML file. This is a kludge
+# using an XPath expression to find an unqualified id attribute
+# that matches.
+
 sub get_element_by_id {
-    return shift->elt_id(shift);
+    my ($self, $id) = @_;
+    unless ($id) {
+	throw 'BadArgs' => "Argument 'id' required";
+    }
+    my $xp = "//*[\@id = '$id']";
+    my $e = $self->get_root->find( $xp );
+    return unless $e; # don't return undef explicitly, do it this way
+    $e = $e->shift;
+    return bless $e, 'Bio::Phylo::NeXML::DOM::Element::Libxml';
 }
 
 =item get_elements_by_tagname()
@@ -176,7 +186,9 @@ sub get_element_by_id {
 
 sub get_elements_by_tagname {
     my ($self, $tagname, @args) = @_;
-    return $self->get_root->get_elements_by_tagname($tagname);
+    my @a = $self->getElementsByTagName($tagname);
+    bless($_, 'Bio::Phylo::NeXML::DOM::Element::Libxml') for (@a);
+    return @a;
 }
 
 =back
@@ -198,11 +210,11 @@ sub get_elements_by_tagname {
 
 sub to_xml {
     my ($self, @args) = @_;
-    return $self->sprint(@args);
+    return $self->toString(@args);
 }
 
 =back
 
-=cut
+=cut    
 
 1;

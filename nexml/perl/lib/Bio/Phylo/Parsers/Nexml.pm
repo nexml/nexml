@@ -4,9 +4,7 @@ use Bio::Phylo::IO ();
 use Bio::Phylo::Util::Exceptions 'throw';
 use Bio::Phylo::Factory;
 use Bio::Phylo::Util::CONSTANT 'looks_like_instance';
-use Bio::Phylo::Util::XMLWritable ();
-#use UNIVERSAL 'isa';
-#use Data::Dumper;
+use Bio::Phylo::NeXML::Writable ();
 use vars qw(@ISA $VERSION);
 @ISA = qw(Bio::Phylo::IO);
 
@@ -117,9 +115,9 @@ sub _obj_from_elt {
 	my $method = "create_$class";
 	my $obj = $factory->$method( %args );
 
+	# <dict/> elements are deprecated
 	for my $dict_elt ( $elt->children('dict') ) {
-		my $dict = $self->_process_dictionary($dict_elt);
-		$obj->add_dictionary($dict);
+		$logger->warn( $self->_pos . " dict elements are deprecated!");
 	}
 	for my $meta_elt ( $elt->children('meta') ) {
 	    my $meta = $self->_process_meta($meta_elt);
@@ -171,7 +169,7 @@ sub _new {
 		            if ( $att_name =~ /^xmlns:(.+)$/ ) {
 		                my $prefix = $1;
 		                my $ns = $elt->att($att_name);
-		                Bio::Phylo::Util::XMLWritable->set_namespaces( $prefix => $ns );
+		                Bio::Phylo::NeXML::Writable->set_namespaces( $prefix => $ns );
 		            }
 		        }
 		    }
@@ -742,96 +740,4 @@ sub _get_base_uri {
     return $elt->att('xml:base');
 }
 
-# this method is called from within _obj_from_elt
-# to process dictionary key/value pairs embedded
-# in an element that maps onto a Bio::Phylo object
-sub _process_dictionary {
-	my ( $self, $dict_elt ) = @_;
-	my $dict     = $factory->create_dictionary;
-	my @children = $dict_elt->children;	
-	$self->_process_attributes($dict_elt,$dict);
-
-	# loop over items two at a time, i.e. key/value
-	for my $child ( @children ) {
-		my $value_type = $child->tag;
-		if ( $value_type ne 'dict' ) {
-			my $key = $child->att('id');		
-			my $anno = $factory->create_annotation( 
-				'-tag'    => $value_type,
-				'-xml_id' => $key 
-			);
-			$self->_process_attributes($child,$anno);
-	
-			# simple types, no any or nested dict
-			if ( $value_type !~ qr/^(?:dict|any)/ ) {
-				# simple value
-				if ( $value_type !~ qr/vector$/ ) {
-					$anno->set_value($child->text);
-				}
-				# vector value
-				else {
-					$anno->set_value( [ split /\s+/, $child->text ] );
-				}
-			}
-	
-			# any type can have arbitrary attributes
-			elsif ( $value_type eq 'any' ) {
-				$anno->set_value( [ $child->children ] );
-			}
-			$dict->insert($anno);
-		}
-
-		# nested dictionary, recurse
-		elsif ( $value_type eq 'dict' ) {
-			$dict->insert($self->_process_dictionary($child));
-		}
-	}
-
-#	# loop over items two at a time, i.e. key/value
-#	for ( my $i = 0 ; $i <= $#children ; $i += 2 ) {
-#		my $key        = $children[$i]->text;
-#		my $value      = $children[ $i + 1 ];
-#		my $value_type = $value->tag;
-#
-#		# simple types, no any or nested dict
-#		if ( $value_type !~ qr/^(?:dict|any)/ ) {
-#			my $value_text = $value->text;
-#
-#			# simple value
-#			if ( $value_type !~ qr/vector$/ ) {
-#				$dict->{$key} = [ $value_type, $value_text ];
-#			}
-#
-#			# vector value
-#			else {
-#				$dict->{$key} = [ $value_type, [ split /\s+/, $value_text ] ];
-#			}
-#		}
-#
-#		# any type can have arbitrary attributes
-#		elsif ( $value_type eq 'any' ) {
-#			my @names = $value->att_names;
-#
-#			# store attributes, e.g. xmlns:h
-#			my $any = {};
-#			for my $name (@names) {
-#				$any->{$name} = $value->att($name);
-#			}
-#			$dict->{$key} = [ $any, $value ];
-#		}
-#
-#		# nested dictionary, recurse
-#		elsif ( $value_type eq 'dict' ) {
-#			$dict->{$key} = [ 'dict', $self->_process_dictionary($value) ];
-#		}
-#
-#		# nested dictionary list, recurse
-#		elsif ( $value_type eq 'dictvector' ) {
-#			my @dicts;
-#			push @dicts, $self->_process_dictionary($_) for $value->children;
-#			$dict->{$key} = [ 'dictvector', \@dicts ];
-#		}
-#	}
-	return $dict;
-}
 1;

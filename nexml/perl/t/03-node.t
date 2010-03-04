@@ -1,6 +1,6 @@
 # $Id$
 use strict;
-#use warnings;
+use Bio::Phylo::Util::CONSTANT 'looks_like_instance';
 use Test::More tests => 73;
 use Bio::Phylo::IO qw(parse unparse);
 use Bio::Phylo::Forest::Node;
@@ -26,13 +26,13 @@ ok( my @tips      = @{ $right_tip->get_sisters },  '11 get sisters' );
 ok( !$left_tip->is_sister_of($right_tip),          '12 ! is sister of' );
 
 eval { $node->get('BAD!') };
-ok( UNIVERSAL::isa( $@, 'Bio::Phylo::Util::Exceptions::UnknownMethod' ),'13 ! get ' );
+ok( looks_like_instance( $@, 'Bio::Phylo::Util::Exceptions::UnknownMethod' ),'13 ! get ' );
 
 eval { $node->set_name(':();,') };
 ok( $node->get_name eq ':();,',    '14 ! name ' );
 
 eval { $node->set_branch_length('BAD!') };
-ok( UNIVERSAL::isa( $@, 'Bio::Phylo::Util::Exceptions::BadNumber' ),    '15 ! branch_length ' );
+ok( looks_like_instance( $@, 'Bio::Phylo::Util::Exceptions::BadNumber' ),    '15 ! branch_length ' );
 
 ok( !$node->is_internal,                         '16 ! is internal' );
 ok( !$node->is_sister_of($root),                 '17 ! is sister of' );
@@ -51,19 +51,19 @@ ok( !$root->get_ancestors,                       '29 ! get ancestors' );
 ok( !$root->is_sister_of($node),                 '30 ! is sister of' );
 
 eval { $root->set_parent('BAD!') };
-ok( UNIVERSAL::isa( $@, 'Bio::Phylo::Util::Exceptions::ObjectMismatch' ), '31 ! parent' );
+ok( looks_like_instance( $@, 'Bio::Phylo::Util::Exceptions::ObjectMismatch' ), '31 ! parent' );
 
 eval { $root->set_first_daughter('BAD!') };
-ok( UNIVERSAL::isa( $@, 'Bio::Phylo::Util::Exceptions::ObjectMismatch' ), '32 ! first daughter' );
+ok( looks_like_instance( $@, 'Bio::Phylo::Util::Exceptions::ObjectMismatch' ), '32 ! first daughter' );
 
 eval { $root->set_last_daughter('BAD!') };
-ok( UNIVERSAL::isa( $@, 'Bio::Phylo::Util::Exceptions::ObjectMismatch' ), '33 ! last daughter' );
+ok( looks_like_instance( $@, 'Bio::Phylo::Util::Exceptions::ObjectMismatch' ), '33 ! last daughter' );
 
 eval { $root->set_next_sister('BAD!') };
-ok( UNIVERSAL::isa( $@, 'Bio::Phylo::Util::Exceptions::ObjectMismatch' ), '34 ! next sister' );
+ok( looks_like_instance( $@, 'Bio::Phylo::Util::Exceptions::ObjectMismatch' ), '34 ! next sister' );
 
 eval { $root->set_previous_sister('BAD!') };
-ok( UNIVERSAL::isa( $@, 'Bio::Phylo::Util::Exceptions::ObjectMismatch' ), '35 ! previous sister' );
+ok( looks_like_instance( $@, 'Bio::Phylo::Util::Exceptions::ObjectMismatch' ), '35 ! previous sister' );
 
 ok( $root->set_parent(undef),                    '36 ! parent' );
 ok( $root->get_children,                         '37 get children' );
@@ -98,13 +98,13 @@ ok( $node1->get_mrca($node3)->get_id == $node2->get_id, '60 is descendant of' );
 ok( !$node1->get_taxon,                           '61 get no taxon' );
 
 eval { $node1->set_taxon('BAD!') };
-ok( UNIVERSAL::isa( $@, 'Bio::Phylo::Util::Exceptions::ObjectMismatch' ), '62 set bad taxon' );
+ok( looks_like_instance( $@, 'Bio::Phylo::Util::Exceptions::ObjectMismatch' ), '62 set bad taxon' );
 undef($@);
 
 ok( $node1->set_taxon( Bio::Phylo::Taxa::Taxon->new ),  '63 set good taxon' );
 
 eval { $node1->set_taxon( Bio::Phylo::Forest::Node->new ) };
-ok( UNIVERSAL::isa( $@, 'Bio::Phylo::Util::Exceptions::ObjectMismatch' ), '64 set bad taxon' );
+ok( looks_like_instance( $@, 'Bio::Phylo::Util::Exceptions::ObjectMismatch' ), '64 set bad taxon' );
 undef($@);
 
 ok( $node->_container,                            '65 get container' );

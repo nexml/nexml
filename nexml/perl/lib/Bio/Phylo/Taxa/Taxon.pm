@@ -1,13 +1,13 @@
 # $Id$
 package Bio::Phylo::Taxa::Taxon;
 use strict;
-use Bio::Phylo::Util::XMLWritable ();
+use Bio::Phylo::NeXML::Writable ();
 use Bio::Phylo::Util::CONSTANT qw(_DATUM_ _NODE_ _TAXON_ _TAXA_ looks_like_object);
 use Bio::Phylo::Mediators::TaxaMediator;
 use vars qw(@ISA);
 
 # classic @ISA manipulation, not using 'base'
-@ISA = qw(Bio::Phylo::Util::XMLWritable);
+@ISA = qw(Bio::Phylo::NeXML::Writable);
 {
 	
 	my $TYPE_CONSTANT      = _TAXON_;

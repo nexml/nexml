@@ -4,13 +4,12 @@ use strict;
 use vars qw(@ISA);
 use Scalar::Util qw(blessed weaken);
 use Bio::Phylo::Util::Exceptions 'throw';
-use Bio::Phylo::Util::XMLWritable ();
+use Bio::Phylo::NeXML::Writable ();
 use Bio::Phylo::Util::CONSTANT qw(:all);
 use Bio::Phylo::Factory ();
-#use UNIVERSAL qw(isa can);
 
 # classic @ISA manipulation, not using 'base'
-@ISA = qw(Bio::Phylo::Util::XMLWritable);
+@ISA = qw(Bio::Phylo::NeXML::Writable);
 {
 
 	my $logger = __PACKAGE__->get_logger;
@@ -1162,9 +1161,9 @@ Iterate over a set of taxa.
 
 =over
 
-=item L<Bio::Phylo::Util::XMLWritable>
+=item L<Bio::Phylo::NeXML::Writable>
 
-This object inherits from L<Bio::Phylo::Util::XMLWritable>, so methods
+This object inherits from L<Bio::Phylo::NeXML::Writable>, so methods
 defined there are also applicable here.
 
 =back

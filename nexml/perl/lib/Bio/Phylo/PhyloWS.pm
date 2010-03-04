@@ -3,7 +3,6 @@ use strict;
 use Bio::Phylo ();
 use Bio::Phylo::Util::CONSTANT 'looks_like_hash';
 use Bio::Phylo::Util::Exceptions 'throw';
-#use UNIVERSAL 'isa';
 
 use vars qw(@ISA %MIMETYPE);
 @ISA=qw(Bio::Phylo);

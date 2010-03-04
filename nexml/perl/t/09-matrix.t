@@ -1,6 +1,6 @@
 # $Id$
 use strict;
-#use warnings;
+use Bio::Phylo::Util::CONSTANT 'looks_like_instance';
 use Test::More tests => 27;
 use Bio::Phylo::Matrices::Datum;
 use Bio::Phylo::Matrices::Matrix;
@@ -13,7 +13,7 @@ ok( my $matrix = Bio::Phylo::Matrices::Matrix->new( -type => 'STANDARD' ), '1 in
 $matrix->VERBOSE( -level => 0 );
 
 eval { $matrix->insert('BAD!') };
-ok( UNIVERSAL::isa( $@, 'Bio::Phylo::Util::Exceptions::ObjectMismatch' ), '2 insert bad data' );
+ok( looks_like_instance( $@, 'Bio::Phylo::Util::Exceptions::ObjectMismatch' ), '2 insert bad data' );
 
 my $datum = Bio::Phylo::Matrices::Datum->new;
 my $taxon = Bio::Phylo::Taxa::Taxon->new;
@@ -29,7 +29,7 @@ ok( $matrix->insert($datum), '3 insert good data' );
 
 # the get method
 eval { $matrix->get('frobnicate') };
-ok( UNIVERSAL::isa( $@, 'Bio::Phylo::Util::Exceptions::UnknownMethod' ), '4 get bad method' );
+ok( looks_like_instance( $@, 'Bio::Phylo::Util::Exceptions::UnknownMethod' ), '4 get bad method' );
 ok( $matrix->get('get_entities'), '5 get good method' );
 
 # the get_data method
@@ -58,23 +58,23 @@ ok( ! scalar @{$matrix->get_by_value( -value => 'get_char', -eq => 6 )},
     '16 get by value eq' );
 
 eval { $matrix->get_by_value( -value => 'frobnicate', -lt => 4 ) };
-ok( UNIVERSAL::isa( $@, 'Bio::Phylo::Util::Exceptions::UnknownMethod' ),
+ok( looks_like_instance( $@, 'Bio::Phylo::Util::Exceptions::UnknownMethod' ),
     '17 get by value lt' );
 
 eval { $matrix->get_by_value( -value => 'frobnicate', -le => 4 ) };
-ok( UNIVERSAL::isa( $@, 'Bio::Phylo::Util::Exceptions::UnknownMethod' ),
+ok( looks_like_instance( $@, 'Bio::Phylo::Util::Exceptions::UnknownMethod' ),
     '18 get by value le' );
 
 eval { $matrix->get_by_value( -value => 'frobnicate', -gt => 6 ) };
-ok( UNIVERSAL::isa( $@, 'Bio::Phylo::Util::Exceptions::UnknownMethod' ),
+ok( looks_like_instance( $@, 'Bio::Phylo::Util::Exceptions::UnknownMethod' ),
     '19 get by value gt' );
 
 eval { $matrix->get_by_value( -value => 'frobnicate', -ge => 6 ) };
-ok( UNIVERSAL::isa( $@, 'Bio::Phylo::Util::Exceptions::UnknownMethod' ),
+ok( looks_like_instance( $@, 'Bio::Phylo::Util::Exceptions::UnknownMethod' ),
     '20 get by value ge' );
 
 eval { $matrix->get_by_value( -value => 'frobnicate', -eq => 6 ) };
-ok( UNIVERSAL::isa( $@, 'Bio::Phylo::Util::Exceptions::UnknownMethod' ),
+ok( looks_like_instance( $@, 'Bio::Phylo::Util::Exceptions::UnknownMethod' ),
     '21 get by value eq' );
 ok(
     $matrix->get_by_regular_expression(
@@ -92,7 +92,7 @@ eval { $matrix->get_by_regular_expression(
 };
 
 ok(
-    UNIVERSAL::isa( $@, 'Bio::Phylo::Util::Exceptions::UnknownMethod' ),
+    looks_like_instance( $@, 'Bio::Phylo::Util::Exceptions::UnknownMethod' ),
     '23 get by re'
 );
 ok(
@@ -107,7 +107,7 @@ eval { $matrix->get_by_regular_expression(
     -frobnicate => qr/^DNA$/)
 };
 ok(
-    UNIVERSAL::isa( $@, 'Bio::Phylo::Util::Exceptions::BadArgs' ),
+    looks_like_instance( $@, 'Bio::Phylo::Util::Exceptions::BadArgs' ),
     '25 get by re'
 );
 ok( $matrix->DESTROY, '26 destroy' );

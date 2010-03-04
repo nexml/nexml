@@ -4,7 +4,6 @@ use Bio::Phylo::Listable ();
 use Bio::Phylo::Util::Exceptions 'throw';
 use Bio::Phylo::Util::CONSTANT qw(_MATRIX_ looks_like_hash looks_like_object looks_like_instance);
 use Bio::Phylo::Matrices::Datatype ();
-#use UNIVERSAL 'isa';
 use strict;
 use vars '@ISA';
 @ISA = qw(Bio::Phylo::Listable);
