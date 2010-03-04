@@ -56,6 +56,21 @@ sub new {
     }
 }
 
+=item parse_document()
+
+ Type    : Factory method
+ Title   : parse_document
+ Usage   : $doc = $dom->parse_document($text)
+ Function: Create a new XML DOM document from XML text
+ Returns : DOM document
+ Args    : An XML String
+
+=cut
+
+sub parse_document {
+    throw 'NotImplemented' => "Can't call 'parse_document' on interface";
+}
+
 =back
 
 =cut 

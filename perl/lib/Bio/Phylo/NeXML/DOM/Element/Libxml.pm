@@ -91,6 +91,26 @@ sub new {
     }
 }
 
+=item parse_element()
+
+ Type    : Factory method
+ Title   : parse_element
+ Usage   : $elt = $dom->parse_element($text)
+ Function: Create a new XML DOM element from XML text
+ Returns : DOM element
+ Args    : An XML String
+
+=cut
+
+sub parse_element {
+    my ( $class, $text ) = @_;
+    my $dom = XML::LibXML->load_xml($text);
+    my $root = $dom->documentElement();
+    bless $root, __PACKAGE__;
+    Bio::Phylo::NeXML::DOM::Element::_recurse_bless($root);
+    return $root;
+}
+
 =back
 
 =head2 Tagname mutators/accessors
