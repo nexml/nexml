@@ -7,10 +7,9 @@ use Bio::Phylo::Taxa::TaxaLinker;
 use Bio::Phylo::IO qw(unparse);
 use Bio::Phylo::Util::CONSTANT qw(:objecttypes looks_like_hash looks_like_instance);
 use Bio::Phylo::Util::Exceptions qw(throw);
-use Bio::Phylo::Util::XMLWritable ();
+use Bio::Phylo::NeXML::Writable ();
 use Bio::Phylo::Matrices::TypeSafeData ();
 use Bio::Phylo::Matrices::Datum ();
-#use UNIVERSAL qw(isa);
 @ISA = qw(
   Bio::Phylo::Matrices::TypeSafeData
   Bio::Phylo::Taxa::TaxaLinker
@@ -1136,7 +1135,7 @@ Analog to to_xml.
 		    splice(@args, 0, 1);
 		}
 		else {
-		    $dom = $Bio::Phylo::Util::DOM::DOM;
+		    $dom = $Bio::Phylo::NeXML::DOM::DOM;
 		    unless ($dom) {
 				throw 'BadArgs' => 'DOM factory object not provided';
 		    }

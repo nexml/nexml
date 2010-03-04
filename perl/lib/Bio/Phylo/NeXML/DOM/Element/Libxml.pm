@@ -2,17 +2,18 @@
 
 =head1 NAME
 
-Bio::Phylo::Util::DOM::Element::twig - XML DOM mappings to the 
-C<XML::Twig> package
+Bio::Phylo::NeXML::DOM::Element::Libxml - XML DOM element mappings to the 
+C<XML::LibXML> package
 
 =head1 SYNOPSIS
 
-Don't use directly; use Bio::Phylo::Util::DOM->new( -format => 'twig' ) instead.
+Don't use directly; use Bio::Phylo::NeXML::DOM->new( -format => 'libxml' ) instead.
 
 =head1 DESCRIPTION
 
 This module provides mappings the methods specified in the 
-L<Bio::Phylo::Util::DOM::Element> abstract class.
+L<Bio::Phylo::NeXML::DOM::Element> abstract class to the 
+C<XML::LibXML::Element> package.
 
 =head1 AUTHOR
 
@@ -20,31 +21,21 @@ Mark A. Jensen ( maj -at- fortinbras -dot- us )
 
 =cut
 
-# note: we do our own updates of the Twig id list (the property
-# $twig->{twig_id_list}, since according to the XML::Twig source
-# "WARNING: at the moment the id list is not updated reliably" which
-# evidently means that it isn't updated at all, unless the special
-# add_id method is used. Since we want to create elements independent
-# of the twig, I felt more in control doing it by by hand. The kludge
-# allows the use of the Twig method elt_id() to "get_element_by_id"
-# off a document object.
-
-
-package Bio::Phylo::Util::DOM::Element::twig;
+package Bio::Phylo::NeXML::DOM::Element::Libxml;
 use strict;
-use Bio::Phylo::Util::CONSTANT qw(looks_like_instance looks_like_hash);
-use Bio::Phylo::Util::DOM::Element ();
+use Bio::Phylo::NeXML::DOM::Element ();
 use Bio::Phylo::Util::Exceptions qw(throw);
-use vars qw(@ISA %extant_ids);
-use Scalar::Util 'blessed';
+use Bio::Phylo::Util::CONSTANT qw(looks_like_instance looks_like_hash);
+use vars qw(@ISA);
 
 BEGIN {
-    eval { require XML::Twig };
+    eval { require XML::LibXML; XML::LibXML->import(':libxml') };
     if ($@) {
-	throw 'ExtensionError' => "Failed to load XML::Twig: $@";
+	throw 'ExtensionError' => "Failed to load XML::LibXML: $@";
     }
-    @ISA = qw( Bio::Phylo::Util::DOM::Element XML::Twig::Elt );
+    @ISA = qw( Bio::Phylo::NeXML::DOM::Element XML::LibXML::Element );
 }
+
 
 =head2 Constructor
 
@@ -54,11 +45,11 @@ BEGIN {
 
  Type    : Constructor
  Title   : new
- Usage   : $elt = Bio::Phylo::Util::DOM::Element->new($tag, $attr)
+ Usage   : $elt = Bio::Phylo::NeXML::DOM::Element->new($tag, $attr)
  Function: Create a new XML DOM element
  Returns : DOM element object
  Args    : Optional: 
-           '-tag'        => $tag  - tag name as string
+           '-tag' => $tag  - tag name as string
            '-attributes' => $attr - hashref of attributes/values
 
 =cut
@@ -66,15 +57,16 @@ BEGIN {
 
 sub new {
     my $class = shift;
-    my $self = XML::Twig::Elt->new;
-    bless $self, $class;
-    if ( @_ ) {
-	if ( my %arguments = looks_like_hash @_ ) {
-	    for my $key ( keys %arguments ) {
+    if ( my %args = looks_like_hash @_ ) {
+	if ( $args{'-tag'} ) {
+	    my $self = XML::LibXML::Element->new($args{'-tag'} );
+	    bless $self, $class;
+	    delete $args{'-tag'};
+	    for my $key ( keys %args ) {
 		my $method = $key;
 		$method =~ s/^-//;
 		$method = 'set_' . $method;
-		eval { $self->$method( $arguments{$key} ); };
+		eval { $self->$method( $args{$key} ); };
 		if ( $@ ) {
 		    if ( blessed $@ and $@->can('rethrow') ) {
 			$@->rethrow;
@@ -88,13 +80,15 @@ sub new {
 		    }
 		}
 	    }
-	    if ( $arguments{'-attributes'} ) {
-		my %attributes = %{ $arguments{'-attributes'} };
-		$self->_manage_ids( 'ADD', %attributes );
-	    }
+	    return $self;
+	}
+	else {
+	    throw 'BadArgs' => "Tag name required for XML::LibXML::Element";
 	}	
     }
-    return $self;
+    else {
+	throw 'BadArgs' => "Tag name required for XML::LibXML::Element";
+    }
 }
 
 =back
@@ -115,7 +109,7 @@ sub new {
 =cut
 
 sub get_tag {
-    return shift->gi;
+    return shift->tagName;
 }
 
 =item set_tag()
@@ -130,8 +124,8 @@ sub get_tag {
 =cut
 
 sub set_tag {
-    my ( $self, $tagname ) = @_;
-    $self->set_gi($tagname);
+    my ($self, $tagname, @args) = @_;
+    $self->setNodeName($tagname);
     return $self;
 }
 
@@ -153,9 +147,8 @@ sub set_tag {
 =cut
 
 sub get_attributes {
-    my ($self, @att_names) = @_;    
-    @att_names = $self->att_names if not @att_names;
-    my %ret = map { $_ => $self->att($_) } @att_names;
+    my ($self, @attr_names) = @_;
+    my %ret = map { $_ => $self->getAttribute($_) } @attr_names;
     return \%ret;
 }
 
@@ -180,9 +173,8 @@ sub set_attributes {
 	else {
 	    %attr = looks_like_hash @_;
 	}
-	$self->set_att(%attr);
-	$self->_manage_ids( 'ADD', %attr );
-    }
+	$self->setAttribute($_, $attr{$_}) for keys %attr;
+    }    
     return $self;
 }
 
@@ -199,10 +191,10 @@ sub set_attributes {
 
 sub clear_attributes {
     my ($self, @attr_names) = @_;
+    return 0 if not @attr_names;
     my %ret;
-    $ret{$_} = $self->att($_) for @attr_names;
-    $self->_manage_ids('DEL', @attr_names); # must come before actual removal
-    $self->del_att( @attr_names );
+    $ret{$_} = $self->getAttribute($_) for @attr_names;
+    $self->removeAttribute( $_ ) for @attr_names;
     return %ret;
 }
 
@@ -241,15 +233,14 @@ sub clear_attributes {
 =cut
 
 sub set_text {
-    my ( $self, $text, @args ) = @_;
-    if ( $text ) {
-	my $t = XML::Twig::Elt->new('#PCDATA', $text);
-	$t->paste( last_child => $self );
-	return 1;
+    my ($self, $text, @args) = @_;
+    if ($text) {
+	$self->appendTextNode( $text );
+	return $self;
     }
     else {
 	throw 'BadArgs' => "No text specified";
-    }
+    }        
 }
 
 =item get_text()
@@ -258,15 +249,21 @@ sub set_text {
  Title   : get_text
  Usage   : $elt->get_text()
  Function: Retrieve direct #TEXT descendants as (concatenated) string
- Returns : scalar string (the text content)
+ Returns : scalar string (the text content) or undef if no text nodes
  Args    : none
 
 =cut
 
+#no strict;
 sub get_text {
     my ($self, @args) = @_;
-    return $self->text;
+    my $text;
+    for ($self->childNodes) {
+	$text .= $_->nodeValue if $_->nodeType == XML_TEXT_NODE;
+    }
+    return $text;
 }
+#use strict;
 
 =item clear_text()
 
@@ -279,13 +276,15 @@ sub get_text {
 
 =cut
 
+#no strict;
 sub clear_text {
     my ($self, @args) = @_;
-    my @res;
-    @res = map { $_->is_text ? do { $_->delete; 1 }  : () } $self->children;
-    return 1 if @res;
-    return 0;
+    my @res = map { 
+	$_->nodeType == XML_TEXT_NODE ? $self->removeChild($_) : ()
+    } $self->childNodes;
+    return !! scalar(@res);
 }
+#use strict;
 
 =back
 
@@ -305,7 +304,8 @@ sub clear_text {
 =cut
 
 sub get_parent {
-    return shift->parent();
+    my $e = shift->parentNode;
+    return bless $e, __PACKAGE__;
 }
 
 =item get_children()
@@ -320,7 +320,9 @@ sub get_parent {
 =cut
 
 sub get_children {
-    return [ shift->children() ];
+    my @ret = shift->childNodes;
+    bless( $_, __PACKAGE__ ) for (@ret);
+    return \@ret;
 }
 
 =item get_first_daughter()
@@ -335,7 +337,8 @@ sub get_children {
 =cut
 
 sub get_first_daughter {
-    return shift->first_child();
+    my $e = shift->firstChild;
+    return bless $e, __PACKAGE__;
 }
 
 =item get_last_daughter()
@@ -350,7 +353,8 @@ sub get_first_daughter {
 =cut
 
 sub get_last_daughter {
-    return shift->last_child();
+    my $e = shift->lastChild;
+    return bless $e, __PACKAGE__;
 }
 
 =item get_next_sister()
@@ -365,7 +369,8 @@ sub get_last_daughter {
 =cut
 
 sub get_next_sister {
-    return shift->next_sibling();
+    my $e = shift->nextSibling;
+    return bless $e, __PACKAGE__;
 }
 
 =item get_previous_sister()
@@ -380,7 +385,8 @@ sub get_next_sister {
 =cut
 
 sub get_previous_sister {
-    return shift->prev_sibling();
+    my $e = shift->previousSibling;
+    return bless $e, __PACKAGE__;
 }
 
 =item get_elements_by_tagname()
@@ -397,7 +403,9 @@ sub get_previous_sister {
 
 sub get_elements_by_tagname {
     my ($self, $tagname, @args) = @_;
-    return $self->descendants_or_self( $tagname );
+    my @a = $self->getElementsByTagName($tagname);
+    bless($_, __PACKAGE__) for (@a);
+    return @a;
 }
 
 =back
@@ -414,19 +422,19 @@ sub get_elements_by_tagname {
  Function: Add child element object to invocant's descendants
  Returns : the element object added
  Args    : Element object
+ Note    : See caution at 
+           L<http://search.cpan.org/~pajas/XML-LibXML-1.69/lib/XML/LibXML/Node.pod#addChild>
 
 =cut
 
 sub set_child {
     my ($self, $child, @args) = @_;
-    if ( looks_like_instance $child, 'XML::Twig::Elt' ) {
-	$child->paste( last_child => $self );
-	$self->_manage_ids('ADD');
-	return $child;	
+    if ( looks_like_instance $child, 'XML::LibXML::Node' ) {
+	return $self->addChild($child);
     }
     else {
-	throw 'ObjectMismatch' => 'Argument is not an XML::Twig::Elt';
-    }
+	throw 'ObjectMismatch' => "Argument is not an XML::LibXML::Node";
+    }    
 }
 
 =item prune_child()
@@ -443,17 +451,12 @@ sub set_child {
 
 sub prune_child {
     my ($self, $child, @args) = @_;
-    if ( looks_like_instance $child, 'XML::Twig::Elt' ) {
-	my $par = $child->parent;
-	return unless ( $par && ($par == $self) );
-        # or delete?
-        $child->_manage_ids('DEL');
-        $child->cut;
-        return $child;	
+    if ( looks_like_instance $child, 'XML::LibXML::Node' ) {
+	return $self->removeChild($child);
     }
     else {
-	throw 'ObjectMismatch' => 'Argument is not an XML::Twig::Elt';
-    }
+	throw 'ObjectMismatch' => "Argument is not an XML::LibXML::Node";
+    }    
 }
 
 =back
@@ -474,64 +477,12 @@ sub prune_child {
 =cut
 
 sub to_xml {
-    return shift->sprint(@_);
+    my ($self, @args) = @_;
+    return $self->toString(@args);
 }
 
 =back
 
-=cut    
-
-sub _manage_ids {
-    my ($self, $action, @attrs) = @_;
-    for ($action) {
-	$_ eq 'ADD' && do {
-	    my %attrs = @attrs;
-	    if (%attrs) { # changing/adding id attribute
-		my $id = $attrs{id};
-		if ($id) {
-		    $extant_ids{$id} = $self; # log this id 
-		    ${$self->twig->{twig_id_list}}{$id} = $self if $self->twig;
-		}
-		else {
-		    return 0;
-		}
-	    }
-	    else { # add this element and its descendants
-		# if all elements were created with new(), they all should
-		# logged in %extant_ids
-		if ($self->twig) {
-		    for ($self->descendants_or_self) {
-			${$self->twig->{twig_id_list}}{$_->att('id')} = $_ if $_->att('id');
-		    }
-		}
-	    }
-	    last;
-	};
-	$_ eq 'DEL' && do {
-	    if (@attrs) {
-		if (grep /^id$/, @attrs) {
-		    my $id = $self->att('id');
-		    delete $extant_ids{$id}; # clear this id 
-		    delete ${$self->twig->{twig_id_list}}{$id} if $self->twig;
-		}
-		else {
-		    return 0;
-		}
-	    }
-	    else {
-		if ($self->twig) {
-		    delete $extant_ids{$_->att('id')} for $self->descendants_or_self;
-		    delete ${$self->twig->{twig_id_list}}{$_->att('id')} for $self->descendants_or_self;
-		}
-	    }
-	    last;
-	};
-	do { 
-	    throw 'BadArgs' => 'Unknown action for _manage_ids()';
-	};
-    }
-    return 1;
-}
-
+=cut
 
 1;

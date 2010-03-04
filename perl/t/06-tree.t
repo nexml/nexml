@@ -1,6 +1,6 @@
 # $Id$
 use strict;
-#use warnings;
+use Bio::Phylo::Util::CONSTANT 'looks_like_instance';
 use Test::More tests => 48;
 use Bio::Phylo::IO qw(parse unparse);
 use Bio::Phylo::Forest::Node;
@@ -68,19 +68,19 @@ ok( !$unresolved->is_binary,             '18 is binary' );
 ok( !$unresolved->is_ultrametric,        '19 is ultrametric' );
 
 eval { $unresolved->calc_rohlf_stemminess };
-ok( UNIVERSAL::isa( $@, 'Bio::Phylo::Util::Exceptions::ObjectMismatch' ), '20 calc rohlf stemminess' );
+ok( looks_like_instance( $@, 'Bio::Phylo::Util::Exceptions::ObjectMismatch' ), '20 calc rohlf stemminess' );
 
 eval { $unresolved->calc_imbalance };
-ok( UNIVERSAL::isa( $@, 'Bio::Phylo::Util::Exceptions::ObjectMismatch' ), '21 calc imbalance' );
+ok( looks_like_instance( $@, 'Bio::Phylo::Util::Exceptions::ObjectMismatch' ), '21 calc imbalance' );
 
 eval { $unresolved->calc_branching_times };
-ok( UNIVERSAL::isa( $@, 'Bio::Phylo::Util::Exceptions::ObjectMismatch' ), '22 calc branching times' );
+ok( looks_like_instance( $@, 'Bio::Phylo::Util::Exceptions::ObjectMismatch' ), '22 calc branching times' );
 
 eval { $unresolved->calc_ltt };
-ok( UNIVERSAL::isa( $@, 'Bio::Phylo::Util::Exceptions::ObjectMismatch' ), '23 calc ltt' );
+ok( looks_like_instance( $@, 'Bio::Phylo::Util::Exceptions::ObjectMismatch' ), '23 calc ltt' );
 
 eval { $tree->insert('BAD!') };
-ok( UNIVERSAL::isa( $@, 'Bio::Phylo::Util::Exceptions::ObjectMismatch' ), '24 insert bad obj' );
+ok( looks_like_instance( $@, 'Bio::Phylo::Util::Exceptions::ObjectMismatch' ), '24 insert bad obj' );
 
 # tests
 ok( !$tree->is_ultrametric(0.01), '25 is ultrametric' );
@@ -129,10 +129,10 @@ my $undef = $treeset->[3];
 $root = $undef->get_root;
 
 eval { $undef->calc_rohlf_stemminess };
-ok( UNIVERSAL::isa( $@, 'Bio::Phylo::Util::Exceptions::ObjectMismatch' ), '44 calc rohlf stemminess' );
+ok( looks_like_instance( $@, 'Bio::Phylo::Util::Exceptions::ObjectMismatch' ), '44 calc rohlf stemminess' );
 
 eval { $undef->get('BAD!') };
-ok( UNIVERSAL::isa( $@, 'Bio::Phylo::Util::Exceptions::UnknownMethod' ), '45 bad arg get' );
+ok( looks_like_instance( $@, 'Bio::Phylo::Util::Exceptions::UnknownMethod' ), '45 bad arg get' );
 ok( $undef->calc_imbalance,         '46 calc imbalance' );
 
 # trying to create a cyclical tree, no mas!

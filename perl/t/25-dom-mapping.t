@@ -2,17 +2,21 @@ use Test::More;
 BEGIN {
     eval { require XML::LibXML::Reader };
     if ( $@ ) {
-         plan 'skip_all' => 'XML::LibXML not installed';
+        plan 'skip_all' => 'XML::LibXML not installed';
+    }
+    eval { require XML::Twig };
+    if ( $@ ) {
+	plan 'skip_all' => 'XML::Twig not installed';
     }
     else {
         plan 'tests' => 82;
     }
 }
 use strict;
-use File::Temp;
+use File::Temp qw(tempfile);
 use File::Spec;
 
-use_ok('Bio::Phylo::Util::DOM');
+use_ok('Bio::Phylo::NeXML::DOM');
 use_ok('XML::Twig');
 
 # check if XML::LibXML is available
@@ -55,7 +59,7 @@ $test = {'nex:nexml'=>$test};
 for my $format (@formats) {
     SKIP : {
 	skip "XML::LibXML not present; skipping", 39 unless (($format eq 'twig') || $TEST_XML_LIBXML);
-	ok( my $dom = Bio::Phylo::Util::DOM->new(-format => $format),
+	ok( my $dom = Bio::Phylo::NeXML::DOM->new(-format => $format),
 	    "$format object" );
 	
 	can_ok( $dom, @fac_methods );
@@ -72,9 +76,9 @@ for my $format (@formats) {
 	ok( $doc->set_root($elt), "set $format document root element" );
 	SKIP : {
 	    skip 'env var NEXML_ROOT not set', 3 unless $ENV{'NEXML_ROOT'};
-	    ok( my $fh = File::Temp->new, 'make temp file' );
-	    my $fn = $fh->filename;
-	    ok( print $fh $doc->to_xml, "write XML from $format DOM" );
+	    my ( $fh, $fn ) = tempfile();
+	    ok( $fh, 'make temp file' );
+	    ok( print( $fh $doc->to_xml ), "write XML from $format DOM" );
 	    $fn =~ s/\\/\//g;
 	    is(system( $ENV{'NEXML_ROOT'} . '/perl/script/nexvl.pl', '-Q', $fn) + 1, 1, 'dom-generated XML is valid NeXML');	    
 	    #is( (qx{ bash -c " if (../script/nexvl.pl -Q $fn) ; then echo -n 1 ; else echo -n 0 ; fi" })[0], 1, 'dom-generated XML is valid NeXML' );
