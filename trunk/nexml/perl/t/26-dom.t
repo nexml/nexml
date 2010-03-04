@@ -51,7 +51,7 @@ foreach (@xml_objects) {
 # test data
 use Bio::Phylo::IO qw( parse );
 my $data = do {local $/; <DATA>};
-ok( my $test = parse( -string=> $data, -format=>'nexml' ), 'parse 01_basic.xml');
+ok( my $test = parse( -string=> $data, -format=>'nexml' ), 'parse <DATA>');
 
 # factory object
 ok( my $fac = Bio::Phylo::Factory->new(), 'make factory' );
