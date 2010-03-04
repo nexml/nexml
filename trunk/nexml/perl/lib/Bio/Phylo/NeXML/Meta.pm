@@ -1,7 +1,13 @@
 package Bio::Phylo::NeXML::Meta;
 use strict;
 use Bio::Phylo::Listable ();
-use Bio::Phylo::Util::CONSTANT qw(_META_ looks_like_number looks_like_instance);
+use Bio::Phylo::Util::CONSTANT qw(
+    _DOMCREATOR_
+    _META_
+    looks_like_number
+    looks_like_instance
+    looks_like_object
+);
 use Bio::Phylo::Util::Exceptions 'throw';
 use Bio::Phylo::Factory;
 use vars qw(@ISA);
@@ -96,6 +102,9 @@ as an element called 'meta', with RDFa compliant attributes.
 			    && $content !~ /\./ ? 'integer' : 'float';
                 	$self->set_attributes( 'datatype' => 'xsd:' . $dt );
                 }
+		elsif ( $content eq 'true' or $content eq 'false' ) {
+                    $self->set_attributes( 'datatype' => 'xsd:boolean' );
+		}
                 else {
                     $self->set_attributes( 'datatype' => 'xsd:string' );
                 }        
@@ -112,9 +121,10 @@ as an element called 'meta', with RDFa compliant attributes.
             }
             else {
                 $self->set_attributes(
-		    'datatype' => 'rdf:XMLLiteral', %literal
+		    'datatype' => 'rdf:XMLLiteral', %resource
 		);
-                $self->insert( $fac->create_xmlliteralnew($content) );
+                $self->insert( $fac->create_xmlliteral($content) );
+		$self->unset_attribute( 'content' );
             }        
         }
         return $self;
@@ -206,6 +216,45 @@ Returns triple predicate
 =cut     
     
     sub get_predicate { $property{ shift->get_id } }
+
+=back
+
+=head2 SERIALIZERS
+
+=over
+
+=item to_dom()
+
+ Type    : Serializer
+ Title   : to_dom
+ Usage   : $obj->to_dom
+ Function: Generates a DOM subtree from the invocant and
+           its contained objects
+ Returns : a DOM element object (default: XML::Twig flavor)
+ Args    : DOM factory object
+ Note    : This is the generic function. It is redefined in the 
+           classes below.
+=cut
+
+    sub to_dom {
+	my ($self, $dom) = @_;
+	$dom ||= Bio::Phylo::NeXML::DOM->get_dom;
+	if ( looks_like_object $dom, _DOMCREATOR_ ) {
+		my $elt = $self->get_dom_elt($dom);
+		if ( $self->can('get_entities') ) {
+		    for my $ent ( @{ $self->get_entities } ) {
+			if ( looks_like_implementor $ent,'to_dom' ) { 
+				$elt->set_child( $ent->to_dom($dom) );
+			}
+		    }
+		}
+		return $elt;                
+	}
+	else {
+		throw 'BadArgs' => 'DOM factory object not provided';
+	}	
+    }
+
     
 =back
 

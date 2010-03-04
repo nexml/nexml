@@ -28,7 +28,7 @@ use vars '@ISA';
     	'rdf' => 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
     	'xsd' => 'http://www.w3.org/2001/XMLSchema#',
     );
-    my @fields = \( my ( %tag, %id, %attributes, %identifiable, %dictionaries, %suppress_ns, %meta ) );
+    my @fields = \( my ( %tag, %id, %attributes, %identifiable, %suppress_ns, %meta ) );
 
 =head1 NAME
 
@@ -118,28 +118,28 @@ This is the superclass for all objects that can be serialized to NeXML
 	    $suppress_ns{$id} = 0;
 	}
 
-=item add_dictionary()
-
- Type    : Mutator
- Title   : add_dictionary
- Usage   : $obj->add_dictionary($dict);
- Function: Adds a dictionary attachment to the object
- Returns : $self
- Args    : Bio::Phylo::Dictionary
-
-=cut
-
-    sub add_dictionary {
-        my ( $self, $dict ) = @_;
-        if ( looks_like_object $dict, $DICTIONARY_CONSTANT ) {
-            my $id = $self->get_id;
-            if ( not $dictionaries{$id} ) {
-                $dictionaries{$id} = [];
-            }
-            push @{ $dictionaries{$id} }, $dict;
-        }
-        return $self;
-    }
+#=item add_dictionary()
+#
+# Type    : Mutator
+# Title   : add_dictionary
+# Usage   : $obj->add_dictionary($dict);
+# Function: Adds a dictionary attachment to the object
+# Returns : $self
+# Args    : Bio::Phylo::Dictionary
+#
+#=cut
+#
+#    sub add_dictionary {
+#        my ( $self, $dict ) = @_;
+#        if ( looks_like_object $dict, $DICTIONARY_CONSTANT ) {
+#            my $id = $self->get_id;
+#            if ( not $dictionaries{$id} ) {
+#                $dictionaries{$id} = [];
+#            }
+#            push @{ $dictionaries{$id} }, $dict;
+#        }
+#        return $self;
+#    }
 
 =item add_meta()
 
@@ -165,31 +165,31 @@ This is the superclass for all objects that can be serialized to NeXML
         return $self;
     }    
 
-=item remove_dictionary()
-
- Type    : Mutator
- Title   : remove_dictionary
- Usage   : $obj->remove_dictionary($dict);
- Function: Removes a dictionary attachment from the object
- Returns : $self
- Args    : Bio::Phylo::Dictionary
-
-=cut
-
-    sub remove_dictionary {
-        my ( $self, $dict ) = @_;
-        my $id = $self->get_id;
-        my $dict_id = $dict->get_id;
-        if ( $dictionaries{$id} ) {
-            DICT: for my $i ( 0 .. $#{ $dictionaries{$id} } ) {
-                if ( $dictionaries{$id}->[$i]->get_id == $dict_id ) {
-                    splice @{ $dictionaries{$id} }, $i, 1;
-                    last DICT;
-                }
-            }
-        }
-        return $self;
-    }
+#=item remove_dictionary()
+#
+# Type    : Mutator
+# Title   : remove_dictionary
+# Usage   : $obj->remove_dictionary($dict);
+# Function: Removes a dictionary attachment from the object
+# Returns : $self
+# Args    : Bio::Phylo::Dictionary
+#
+#=cut
+#
+#    sub remove_dictionary {
+#        my ( $self, $dict ) = @_;
+#        my $id = $self->get_id;
+#        my $dict_id = $dict->get_id;
+#        if ( $dictionaries{$id} ) {
+#            DICT: for my $i ( 0 .. $#{ $dictionaries{$id} } ) {
+#                if ( $dictionaries{$id}->[$i]->get_id == $dict_id ) {
+#                    splice @{ $dictionaries{$id} }, $i, 1;
+#                    last DICT;
+#                }
+#            }
+#        }
+#        return $self;
+#    }
 
 =item remove_meta()
 
@@ -389,24 +389,24 @@ Removes specified attribute
 		} 
 	}
 
-=item get_dictionaries()
-
-Retrieves the dictionaries for the element.
-
- Type    : Accessor
- Title   : get_dictionaries
- Usage   : my @dicts = @{ $obj->get_dictionaries };
- Function: Retrieves the dictionaries for the element.
- Returns : An array ref of Bio::Phylo::Dictionary objects
- Args    : None.
-
-=cut
-
-    sub get_dictionaries {
-        my $self = shift;
-        my $id = $self->get_id;
-        return $dictionaries{$id} || [];
-    }
+#=item get_dictionaries()
+#
+#Retrieves the dictionaries for the element.
+#
+# Type    : Accessor
+# Title   : get_dictionaries
+# Usage   : my @dicts = @{ $obj->get_dictionaries };
+# Function: Retrieves the dictionaries for the element.
+# Returns : An array ref of Bio::Phylo::Dictionary objects
+# Args    : None.
+#
+#=cut
+#
+#    sub get_dictionaries {
+#        my $self = shift;
+#        my $id = $self->get_id;
+#        return $dictionaries{$id} || [];
+#    }
 
 =item get_meta()
 
@@ -467,23 +467,23 @@ Retrieves tag string
 			$xml .= ' ' . $key . '="' . $attrs{$key} . '"';
 		}
 		my $has_contents = 0;
-		my $dictionaries = $self->get_dictionaries;
-		if ( @{ $dictionaries } ) {
-		    $xml .= '>';
-		    $xml .= $_->to_xml for @{ $dictionaries };
-		    $has_contents++;
-		    
-		}
+		#my $dictionaries = $self->get_dictionaries;
+		#if ( @{ $dictionaries } ) {
+		#    $xml .= '>';
+		#    $xml .= $_->to_xml for @{ $dictionaries };
+		#    $has_contents++;
+		#    
+		#}
 		my $meta = $self->get_meta;
 		if ( @{ $meta } ) {
-			$xml .= '>' if not @{ $dictionaries };
+			$xml .= '>';# if not @{ $dictionaries };
 			$xml .= $_->to_xml for @{ $meta };
 			$has_contents++			
 		}
 		if ( looks_like_implementor $self,'get_sets' ) {
 			my $sets = $self->get_sets;
 			if ( @{ $sets } ) {
-				$xml .= '>' if not @{ $dictionaries } and not @{ $meta };
+				$xml .= '>' if not @{ $meta };
 				$xml .= $_->to_xml for @{ $sets };
 				$has_contents++;
 			}
@@ -660,10 +660,13 @@ Retrieves xml id for the element.
 		    $elt->set_attributes( $key => $attrs{$key} );
 		}
 	
-		my $dictionaries = $self->get_dictionaries;
-		if ( @{ $dictionaries } ) {
-		    $elt->set_child( $_->to_dom($dom) ) for @{ $dictionaries };
+		for my $meta ( @{ $self->get_meta } ) {
+			$elt->set_child( $meta->to_dom($dom) );
 		}
+		#my $dictionaries = $self->get_dictionaries;
+		#if ( @{ $dictionaries } ) {
+		#    $elt->set_child( $_->to_dom($dom) ) for @{ $dictionaries };
+		#}
 		if ( looks_like_implementor $self,'get_sets' ) {
 		    my $sets = $self->get_sets;
 		    $elt->set_child( $_->to_dom($dom) ) for @{ $sets };
@@ -716,7 +719,7 @@ method indicates whether that is the case.
 
 =back
 
-=head2 SERIALIZER
+=head2 SERIALIZERS
 
 =over
 

@@ -59,6 +59,30 @@ sub new {
     }
 }
 
+=item parse_element()
+
+ Type    : Factory method
+ Title   : parse_element
+ Usage   : $elt = $dom->parse_element($text)
+ Function: Create a new XML DOM element from XML text
+ Returns : DOM element
+ Args    : An XML String
+
+=cut
+
+sub parse_element {
+    throw 'NotImplemented' => "Can't call 'get_tag' on interface";
+}
+
+sub _recurse_bless {
+    my $node = shift;
+    my $class = ref $node;
+    for my $child ( @{ $node->get_children } ) {
+	bless $child, $class;
+	_recurse_bless($child);
+    }
+}
+
 =back
 
 =head2 Namespace accessors/mutators
