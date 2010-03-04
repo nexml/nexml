@@ -104,7 +104,7 @@ use LWP::UserAgent;
 use HTML::Parser;
 use Getopt::Std;
 use File::Spec;
-use constant VURL =>'http://nexml-dev.nescent.org/nexml/validator.cgi';
+use constant VURL =>'http://nexml.org/nexml/validator.cgi';
 
 $main::VERSION = 0.1;
 my %opts;
