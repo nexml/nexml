@@ -32,7 +32,3 @@ lib\/xs*
 lib\/util*
 README.html
 build.sh
-t\/21-bioperl-tree\.t
-t\/22-bioperl-node\.t
-t\/23-bioperl-treeio\.t
-t\/24-bioperl-alignio\.t
