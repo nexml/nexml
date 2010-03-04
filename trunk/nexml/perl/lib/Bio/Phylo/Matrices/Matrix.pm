@@ -1438,28 +1438,31 @@ Also see the manual: L<Bio::Phylo::Manual> and L<http://rutgervos.blogspot.com>.
 __DATA__
 
 my %CONSERVATION_GROUPS = (
-            'strong' => [ qw(
-						 STA
-						 NEQK
-						 NHQK
-						 NDEQ
-						 QHRK
-						 MILV
-						 MILF
-						 HY
-						 FYW )],
-				'weak' => [ qw(
-                      CSA
-					       ATV
-					       SAG
-					       STNK
-					       STPA
-					       SGND
-					       SNDEQK
-					       NDEQHK
-					       NEQHRK
-					       FVLIM
-					       HFY )],);
+        'strong' => [ qw(
+		STA
+		NEQK
+		NHQK
+		NDEQ
+		QHRK
+		MILV
+		MILF
+		HY
+		FYW
+	)],
+	'weak' => [ qw(
+                CSA
+		ATV
+		SAG
+		STNK
+		STPA
+		SGND
+		SNDEQK
+		NDEQHK
+		NEQHRK
+		FVLIM
+		HFY
+	)],
+);
 
 sub description {
 	my ( $self, $desc ) = @_;
@@ -1467,6 +1470,18 @@ sub description {
 		$self->set_desc( $desc );
 	}
 	return $self->get_desc;
+}
+
+sub num_sequences {
+	my ( $self, $num ) = @_;
+	# setter?
+	return scalar @{ $self->get_entities };
+}
+
+sub datatype {
+	my ( $self, $type ) = @_;
+	# setter?
+	return uc $self->get_type;
 }
 
 sub score {
@@ -2049,5 +2064,7 @@ sub max_metaname_length {
     return $maxname;
 }
 
+
+sub get_SeqFeatures { return }
 
 
