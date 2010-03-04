@@ -9,7 +9,7 @@ BEGIN {
 	plan 'skip_all' => 'XML::Twig not installed';
     }
     else {
-        plan 'tests' => 81;
+        plan 'tests' => 80;
     }
 }
 
@@ -35,7 +35,6 @@ use_ok('Bio::Phylo::NeXML::DOM');
 use_ok('Bio::Phylo::NeXML::Writable');
 use_ok('Bio::Phylo::Util::Exceptions');
 use_ok('Bio::Phylo::Util::CONSTANT');
-use_ok('XML::Simple');
 use_ok('XML::LibXML');
 use_ok('XML::LibXML::Reader');
 
