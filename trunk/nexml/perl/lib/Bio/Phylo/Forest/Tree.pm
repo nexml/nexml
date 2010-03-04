@@ -24,7 +24,6 @@ else {
 my $LOADED_WRAPPERS = 0;
 
 {
-	#my $mediator = Bio::Phylo::Mediators::NodeMediator->new;
 	my $logger = __PACKAGE__->get_logger;
 	my ( $TYPE_CONSTANT, $CONTAINER_CONSTANT ) = ( _TREE_, _FOREST_ );
 	my @fields = \( my ( %default, %rooted ) );
