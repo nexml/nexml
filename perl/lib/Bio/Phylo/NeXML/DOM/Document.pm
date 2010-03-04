@@ -6,8 +6,8 @@ use Bio::Phylo::Util::CONSTANT qw(_DOCUMENT_ looks_like_hash looks_like_class);
 
 =head1 NAME
 
-Bio::Phylo::NeXML::DOM::Document - Abstract class for
-flexible XML document object model implementation
+Bio::Phylo::NeXML::DOM::Document - XML DOM Abstract class for
+flexible document object model implementation
 
 =head1 SYNOPSIS
 
