@@ -1849,6 +1849,10 @@ Visits nodes depth first
             # specifies traversal order, default 'ltr' means first_daugher -> next_sister
             # traversal, alternate value 'rtl' means last_daughter -> previous_sister traversal
             -order          => 'ltr', # ltr = left-to-right, 'rtl' = right-to-left
+            
+            # passes sister node as second argument to pre_sister and post_sister subs,
+            # and daughter node as second argument to pre_daughter and post_daughter subs
+            -with_relatives => 1 # or any other true value
  Comments: 
 
 =cut
@@ -1867,6 +1871,18 @@ Visits nodes depth first
 	sub visit_depth_first {
 		my $self = shift;
 		my %args = looks_like_hash @_;
+# 		my @keys = qw(pre pre_daughter post_daughter in pre_sister post_sister post order with_relatives);
+# 		my %permitted_keys = map { "-${_}" => 1 } @keys;		
+# 		for my $key ( keys %args ) {
+# 			if ( not exists $permitted_keys{$key} ) {
+# 				throw 'BadArgs' => "Can't use argument $key";
+# 			}
+# 			if ( $key ne "-with_relatives" or $key ne "-order" ) {
+# 				if ( not looks_like_instance $args{$key}, 'CODE' ) {
+# 					throw 'BadArgs' => "Argument $key must be a code reference";
+# 				}
+# 			}
+# 		}
 
 		if ( $args{'-order'} and $args{'-order'} =~ /^rtl$/i ) {
 			$args{'-sister_method'}   = 'get_previous_sister';
@@ -1889,9 +1905,11 @@ Visits nodes depth first
 		$args{'-pre'}->($node) if $args{'-pre'};
 
 		if ( my $daughter = $node->$daughter_method ) {
-			$args{'-pre_daughter'}->($node) if $args{'-pre_daughter'};
+			my @args = ( $node );
+			push @args, $daughter if $args{'-with_relatives'};
+			$args{'-pre_daughter'}->(@args) if $args{'-pre_daughter'};
 			$daughter->_visit_depth_first(%args);
-			$args{'-post_daughter'}->($node) if $args{'-post_daughter'};
+			$args{'-post_daughter'}->(@args) if $args{'-post_daughter'};
 		}
 		else {
 			$args{'-no_daughter'}->($node) if $args{'-no_daughter'};
@@ -1900,9 +1918,11 @@ Visits nodes depth first
 		$args{'-in'}->($node) if $args{'-in'};
 
 		if ( my $sister = $node->$sister_method ) {
-			$args{'-pre_sister'}->($node) if $args{'-pre_sister'};
+			my @args = ( $node );
+			push @args, $sister if $args{'-with_relatives'};		
+			$args{'-pre_sister'}->(@args) if $args{'-pre_sister'};
 			$sister->_visit_depth_first(%args);
-			$args{'-post_sister'}->($node) if $args{'-post_sister'};
+			$args{'-post_sister'}->(@args) if $args{'-post_sister'};
 		}
 		else {
 			$args{'-no_sister'}->($node) if $args{'-no_sister'};
