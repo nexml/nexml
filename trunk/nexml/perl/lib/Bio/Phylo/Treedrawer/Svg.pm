@@ -98,7 +98,12 @@ sub _draw {
         $class{'circle'} = $is_terminal ? 'taxon_circle' : 'node_circle';
         $class{'text'}   = $is_terminal ? 'taxon_text'   : 'node_text';
         $r = $is_terminal ? int($drawer->get_tip_radius) : int($drawer->get_node_radius);
-        my %circle = ( 'cx' => int($node->get_x), 'cy' => int($node->get_y), 'r' => $r, 'class' => $class{'circle'} );
+        my %circle = ( 
+        	'cx'    => int($node->get_x), 
+        	'cy'    => int($node->get_y), 
+        	'r'     => $r, 
+        	'class' => $class{'circle'} 
+        );
         my $x = int( $node->get_x + $drawer->get_text_horiz_offset );
         my $y = int( $node->get_y + $drawer->get_text_vert_offset );
         my %text = ( 'x' => $x, 'y' => $y, 'class' => $class{'text'} );
