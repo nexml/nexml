@@ -756,56 +756,106 @@ sub draw {
     my $root = $self->get_tree->get_root;
 
     #Reset the stored data in the tree
-    $self->_reset_internal($root);    
+    $self->_reset_internal($root); 
+    
+    $self->_compute_rooted_coordinates;
         
-    if ( $self->get_mode eq 'CLADO' ) {
-        $self->_compute_rooted_clado_coordinates;
-    }
-    elsif ( $self->get_mode eq 'PHYLO' ) {
-        $self->_compute_rooted_phylo_coordinates;
-    }    
+#     if ( $self->get_mode eq 'CLADO' ) {
+#         $self->_compute_rooted_clado_coordinates;
+#     }
+#     elsif ( $self->get_mode eq 'PHYLO' ) {
+#         $self->_compute_rooted_phylo_coordinates;
+#     }    
     
     return $self->render;
 }
 
-sub _compute_rooted_clado_coordinates {
-	my $self = shift;
-	my $root = $self->get_tree->get_root;
-    my $tips = $self->get_tree->calc_number_of_terminals;
-    my ( $width,   $height )    = ( $self->get_width,   $self->get_height );
-    my ( $padding, $textwidth ) = ( $self->get_padding, $self->get_text_width );
-    my $maxpath = $root->calc_max_nodes_to_tips;
-    $self->_set_scalex(
-        ( ( $width - ( ( 2 * $padding ) + $textwidth ) ) / $maxpath ) );
-    $self->_set_scaley( ( ( $height - ( 2 * $padding ) ) / ( $tips + 1 ) ) );
-    $self->_x_positions_clado;    
-    $self->_y_terminals(0);
-    $self->_y_terminals($root);
-    $self->get_tree->get_root->set_y(0);
-    $self->_y_internals;	
+sub _compute_rooted_coordinates {
+	my $td = shift;
+	my $tree = $td->get_tree;
+	my $phylo   = $td->get_mode =~ /^p/i ? 1 : 0;
+	my $padding = $td->get_padding;
+	my $width   = $td->get_width - ( $td->get_text_width + ( $padding * 2 ) );
+	my $height  = $td->get_height - ( $padding * 2 );
+	my ( $tip_counter, $tallest_tip ) = ( 0, 0 );
+	$tree->visit_depth_first(
+		'-pre' => sub {
+			my $node = shift;
+			if ( my $parent = $node->get_parent ) {
+				my $parent_x = $parent->get_x || 0;
+				my $x = $phylo ? $node->get_branch_length || 0 : 1;
+				$node->set_x( $x + $parent_x );
+			}
+			else { 
+				$node->set_x(0); # root
+			}
+		},
+		'-no_daughter' => sub {
+			my $node = shift;
+			$node->set_y( $tip_counter++ );
+			my $x = $node->get_x;
+			$tallest_tip = $x if $x > $tallest_tip;
+		},
+		'-post_daughter' => sub {
+			my $node = shift;
+			my ( $child_count, $child_y ) = ( 0, 0 );
+			for my $child ( @{ $node->get_children } ) {
+				$child_count++;
+				$child_y += $child->get_y;
+			}
+			$node->set_y( $child_y / $child_count );
+		},
+	);
+	$tree->visit(
+		sub {
+			my $node = shift;
+			$node->set_x( $padding + $node->get_x * ( $width / $tallest_tip ) );
+			$node->set_y( $padding + $node->get_y * ( $height / $tip_counter ) );
+			if ( ! $phylo && $node->is_terminal ) {
+				$node->set_x( $padding + $tallest_tip * ( $width / $tallest_tip ) );
+			}
+		}
+	);
 }
 
-sub _compute_rooted_phylo_coordinates {
-	my $self = shift;
-	my $root = $self->get_tree->get_root;
-    my $tips = $self->get_tree->calc_number_of_terminals;
-    my ( $width,   $height )    = ( $self->get_width,   $self->get_height );
-    my ( $padding, $textwidth ) = ( $self->get_padding, $self->get_text_width );
-    my $maxpath = $root->calc_max_path_to_tips;
-    if ( not $maxpath ) {
-        $logger->warn("no branch lengths on tree, switching to clado mode");
-        $self->_compute_clado_coordinates;
-        return;
-    }
-    $self->_set_scalex(
-        ( ( $width - ( ( 2 * $padding ) + $textwidth ) ) / $maxpath ) );
-    $self->_set_scaley( ( ( $height - ( 2 * $padding ) ) / ( $tips + 1 ) ) );
-    $self->_x_positions_phylo;    
-    $self->_y_terminals(0);
-    $self->_y_terminals($root);
-    $self->get_tree->get_root->set_y(0);
-    $self->_y_internals;	
-}
+# sub _compute_rooted_clado_coordinates {
+# 	my $self = shift;
+# 	my $root = $self->get_tree->get_root;
+#     my $tips = $self->get_tree->calc_number_of_terminals;
+#     my ( $width,   $height )    = ( $self->get_width,   $self->get_height );
+#     my ( $padding, $textwidth ) = ( $self->get_padding, $self->get_text_width );
+#     my $maxpath = $root->calc_max_nodes_to_tips;
+#     $self->_set_scalex(
+#         ( ( $width - ( ( 2 * $padding ) + $textwidth ) ) / $maxpath ) );
+#     $self->_set_scaley( ( ( $height - ( 2 * $padding ) ) / ( $tips + 1 ) ) );
+#     $self->_x_positions_clado;    
+#     $self->_y_terminals(0);
+#     $self->_y_terminals($root);
+#     $self->get_tree->get_root->set_y(0);
+#     $self->_y_internals;	
+# }
+# 
+# sub _compute_rooted_phylo_coordinates {
+# 	my $self = shift;
+# 	my $root = $self->get_tree->get_root;
+#     my $tips = $self->get_tree->calc_number_of_terminals;
+#     my ( $width,   $height )    = ( $self->get_width,   $self->get_height );
+#     my ( $padding, $textwidth ) = ( $self->get_padding, $self->get_text_width );
+#     my $maxpath = $root->calc_max_path_to_tips;
+#     if ( not $maxpath ) {
+#         $logger->warn("no branch lengths on tree, switching to clado mode");
+#         $self->_compute_clado_coordinates;
+#         return;
+#     }
+#     $self->_set_scalex(
+#         ( ( $width - ( ( 2 * $padding ) + $textwidth ) ) / $maxpath ) );
+#     $self->_set_scaley( ( ( $height - ( 2 * $padding ) ) / ( $tips + 1 ) ) );
+#     $self->_x_positions_phylo;    
+#     $self->_y_terminals(0);
+#     $self->_y_terminals($root);
+#     $self->get_tree->get_root->set_y(0);
+#     $self->_y_internals;	
+# }
 
 =item render()
 
@@ -860,134 +910,134 @@ sub _reset_internal {
     }
 }
 
-=begin comment
-
- Type    : Internal method.
- Title   : _x_positions
- Usage   : $treedrawer->_x_positions;
- Function:
- Returns :
- Args    :
-
-=end comment
-
-=cut
-
-sub _x_positions_phylo {
-    my $self    = shift;
-    my $tree    = $self->get_tree;
-    my $root    = $tree->get_root;
-    my $scalex  = $self->_get_scalex;
-    my $padding = $self->get_padding;
-    foreach my $node ( @{ $tree->get_entities } ) {
-        my $x = ( $node->calc_path_to_root * $scalex ) + $padding;
-        $node->set_x( $x );
-    }
-}
-
-=begin comment
-
- Type    : Internal method.
- Title   : _x_positions_clado
- Usage   : $treedrawer->_x_positions_clado;
- Function:
- Returns :
- Args    :
-
-=end comment
-
-=cut
-
-sub _x_positions_clado {
-    my $self    = shift;
-    my $tree    = $self->get_tree;
-    my $root    = $tree->get_root;
-    my $longest = $root->calc_max_nodes_to_tips;
-    my $scalex  = $self->_get_scalex;
-    my $padding = $self->get_padding;
-    for my $tip ( @{ $tree->get_terminals } ) {
-        $tip->set_x( $longest * $scalex );
-    }
-    for my $internal ( @{ $tree->get_internals } ) {
-        my $id = $internal->get_id;
-        my $longest1 = 0;
-        for my $node ( @{ $tree->get_entities } ) {
-            my ( $n, $current1 ) = ( $node, 0 );
-            if ( $n->is_terminal && $n->get_parent ) {
-                while ( $n->get_parent ) {
-                    $current1++;
-                    $n = $n->get_parent;
-                    if ( $n->get_id == $id && $current1 > $longest1 ) {
-                        $longest1 = $current1;
-                    }
-                }
-            }
-        }
-        my $xc = $longest - $longest1;
-        $internal->set_x( ( $xc * $scalex ) + $padding );
-    }
-}
-
-=begin comment
-
- Type    : Internal method.
- Title   : _y_terminals
- Usage   : $treedrawer->_y_terminals;
- Function:
- Returns :
- Args    : tree root
-
-=end comment
-
-=cut
-
-{
-
-    sub _y_terminals {
-        my ($self, $node) = @_;
-        if ($node == 0) { $tips = 0.000_000_000_000_01; return; }
-        if ( !$node->get_first_daughter ) {
-            $tips++;
-            $node->set_y( ( $tips * $self->_get_scaley ) + $self->get_padding );
-        }
-        else {
-            $node = $node->get_first_daughter;
-            $self->_y_terminals($node);
-            while ( $node->get_next_sister ) {
-                $node = $node->get_next_sister;
-                $self->_y_terminals($node);
-            }
-        }
-    }
-}
-
-=begin comment
-
- Type    : Internal method.
- Title   : _y_internals
- Usage   : $treedrawer->_y_internals;
- Function:
- Returns :
- Args    :
-
-=end comment
-
-=cut
-
-sub _y_internals {
-    my $self = shift;
-    my $tree = $self->get_tree;
-    while ( !$tree->get_root->get_y ) {
-        foreach my $e ( @{ $tree->get_internals } ) {
-            my $y1 = $e->get_first_daughter->get_y;
-            my $y2 = $e->get_last_daughter->get_y;
-            if ( $y1 && $y2 ) {
-                my $y = ( $y1 + $y2 ) / 2;
-                $e->set_y( $y );
-            }
-        }
-    }
-}
+# =begin comment
+# 
+#  Type    : Internal method.
+#  Title   : _x_positions
+#  Usage   : $treedrawer->_x_positions;
+#  Function:
+#  Returns :
+#  Args    :
+# 
+# =end comment
+# 
+# =cut
+# 
+# sub _x_positions_phylo {
+#     my $self    = shift;
+#     my $tree    = $self->get_tree;
+#     my $root    = $tree->get_root;
+#     my $scalex  = $self->_get_scalex;
+#     my $padding = $self->get_padding;
+#     foreach my $node ( @{ $tree->get_entities } ) {
+#         my $x = ( $node->calc_path_to_root * $scalex ) + $padding;
+#         $node->set_x( $x );
+#     }
+# }
+# 
+# =begin comment
+# 
+#  Type    : Internal method.
+#  Title   : _x_positions_clado
+#  Usage   : $treedrawer->_x_positions_clado;
+#  Function:
+#  Returns :
+#  Args    :
+# 
+# =end comment
+# 
+# =cut
+# 
+# sub _x_positions_clado {
+#     my $self    = shift;
+#     my $tree    = $self->get_tree;
+#     my $root    = $tree->get_root;
+#     my $longest = $root->calc_max_nodes_to_tips;
+#     my $scalex  = $self->_get_scalex;
+#     my $padding = $self->get_padding;
+#     for my $tip ( @{ $tree->get_terminals } ) {
+#         $tip->set_x( $longest * $scalex );
+#     }
+#     for my $internal ( @{ $tree->get_internals } ) {
+#         my $id = $internal->get_id;
+#         my $longest1 = 0;
+#         for my $node ( @{ $tree->get_entities } ) {
+#             my ( $n, $current1 ) = ( $node, 0 );
+#             if ( $n->is_terminal && $n->get_parent ) {
+#                 while ( $n->get_parent ) {
+#                     $current1++;
+#                     $n = $n->get_parent;
+#                     if ( $n->get_id == $id && $current1 > $longest1 ) {
+#                         $longest1 = $current1;
+#                     }
+#                 }
+#             }
+#         }
+#         my $xc = $longest - $longest1;
+#         $internal->set_x( ( $xc * $scalex ) + $padding );
+#     }
+# }
+# 
+# =begin comment
+# 
+#  Type    : Internal method.
+#  Title   : _y_terminals
+#  Usage   : $treedrawer->_y_terminals;
+#  Function:
+#  Returns :
+#  Args    : tree root
+# 
+# =end comment
+# 
+# =cut
+# 
+# {
+# 
+#     sub _y_terminals {
+#         my ($self, $node) = @_;
+#         if ($node == 0) { $tips = 0.000_000_000_000_01; return; }
+#         if ( !$node->get_first_daughter ) {
+#             $tips++;
+#             $node->set_y( ( $tips * $self->_get_scaley ) + $self->get_padding );
+#         }
+#         else {
+#             $node = $node->get_first_daughter;
+#             $self->_y_terminals($node);
+#             while ( $node->get_next_sister ) {
+#                 $node = $node->get_next_sister;
+#                 $self->_y_terminals($node);
+#             }
+#         }
+#     }
+# }
+# 
+# =begin comment
+# 
+#  Type    : Internal method.
+#  Title   : _y_internals
+#  Usage   : $treedrawer->_y_internals;
+#  Function:
+#  Returns :
+#  Args    :
+# 
+# =end comment
+# 
+# =cut
+# 
+# sub _y_internals {
+#     my $self = shift;
+#     my $tree = $self->get_tree;
+#     while ( !$tree->get_root->get_y ) {
+#         foreach my $e ( @{ $tree->get_internals } ) {
+#             my $y1 = $e->get_first_daughter->get_y;
+#             my $y2 = $e->get_last_daughter->get_y;
+#             if ( $y1 && $y2 ) {
+#                 my $y = ( $y1 + $y2 ) / 2;
+#                 $e->set_y( $y );
+#             }
+#         }
+#     }
+# }
 
 =back
 
