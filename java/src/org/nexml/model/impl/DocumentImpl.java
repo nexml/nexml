@@ -129,8 +129,14 @@ public class DocumentImpl extends AnnotatableImpl implements Document {
 	private void setRootAttributes() {
 		getElement().setAttribute("version", "0.8");
 		getElement().setAttribute("generator", getClass().getName());
-		getElement().setPrefix("nex");
+		getElement().setPrefix(NEX_PREFIX);
 		getElement().removeAttribute("id");
+		getElement().setAttributeNS(
+			"http://www.w3.org/2000/xmlns/", 
+			"xmlns:" + NEX_PREFIX, 
+			DEFAULT_NAMESPACE
+		);
+		getElement().setAttribute("xmlns", DEFAULT_NAMESPACE);
 		getElement().setAttributeNS(
 			"http://www.w3.org/2000/xmlns/",
 			"xmlns:xsi",
