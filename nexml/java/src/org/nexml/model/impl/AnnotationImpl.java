@@ -301,6 +301,9 @@ public class AnnotationImpl extends AnnotatableImpl implements Annotation {
 		    	if ( valueString.startsWith(baseURIString) ) {
 		    		getElement().setAttribute("href", valueString.substring(baseURILength));
 		    	}
+		    	else {
+		    		getElement().setAttribute("href", valueString);
+		    	}
 	    	}
 	    	else {
 	    		getElement().setAttribute("href", valueString);			
@@ -328,7 +331,7 @@ public class AnnotationImpl extends AnnotatableImpl implements Annotation {
 		// * http://en.wikipedia.org/wiki/RDFa#XHTML.2BRDFa_1.0_example
 		getElement().setAttribute("content",value.toString());
     	
-    }
+    }//base
     
     /** 
      * these setters are the default JAXB mappings, see
