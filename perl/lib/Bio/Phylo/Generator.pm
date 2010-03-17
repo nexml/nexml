@@ -1,12 +1,10 @@
 # $Id$
 package Bio::Phylo::Generator;
 use strict;
-use Bio::Phylo::Util::IDPool;
 use Bio::Phylo::Util::CONSTANT 'looks_like_hash';
-use Bio::Phylo::Forest ();
-use Bio::Phylo::Forest::Tree ();
-use Bio::Phylo::Forest::Node ();
 use Bio::Phylo::Util::Exceptions 'throw';
+use Bio::Phylo::Factory;
+use Bio::Phylo::Util::Logger;
 
 eval { require Math::Random };
 if ( $@ ) {
@@ -16,7 +14,8 @@ Math::Random->import('random_exponential');
 
 {
 
-	my $logger = Bio::Phylo::Forest->get_logger;
+	my $logger  = Bio::Phylo::Util::Logger->new;
+	my $factory = Bio::Phylo::Factory->new;
 
 =head1 NAME
 
@@ -101,12 +100,14 @@ object populated with Yule/Hey trees.
  Args    : -tips  => number of terminal nodes,
            -model => either 'yule' or 'hey',
            -trees => number of trees to generate
+	   Optional: -factory => a Bio::Phylo::Factory object
 
 =cut
 
 	sub gen_rand_pure_birth {
 		my $random  = shift;
 		my %options = looks_like_hash @_;
+		my $fac = $options{'-factory'} || $factory;
 		my ( $yule, $hey );
 		if ( $options{'-model'} =~ m/yule/i ) {
 			$yule = 1;
@@ -117,11 +118,11 @@ object populated with Yule/Hey trees.
 		else {
 			throw 'BadFormat' => "model \"$options{'-model'}\" not implemented";
 		}
-		my $forest = Bio::Phylo::Forest->new;
+		my $forest = $fac->create_forest;
 		for ( 0 .. $options{'-trees'} ) {
 
 			# instantiate new tree object
-			my $tree = Bio::Phylo::Forest::Tree->new;
+			my $tree = $fac->create_tree;
 
 			# $i = a counter, $bl = branch length
 			my ( $i, $bl ) = 1;
@@ -135,13 +136,12 @@ object populated with Yule/Hey trees.
 			}
 
 			# instantiate root node
-			my $root = Bio::Phylo::Forest::Node->new( '-name' => 'root' );
+			my $root = $fac->create_node( '-name' => 'root' );
 			$root->set_branch_length(0);
 			$tree->insert($root);
 
 			for ( 1 .. 2 ) {
-				my $node =
-				  Bio::Phylo::Forest::Node->new( '-name' => "node.$i.$_" );
+				my $node = $fac->create_node( '-name' => "node.$i.$_" );
 				$node->set_branch_length($bl);
 				$tree->insert($node);
 				$node->set_parent($root);
@@ -173,8 +173,7 @@ object populated with Yule/Hey trees.
 				my $parent = $tips[$j];
 
 				for ( 1 .. 2 ) {
-					my $node =
-					  Bio::Phylo::Forest::Node->new( '-name' => "node.$i.$_" );
+					my $node = $fac->create_node( '-name' => "node.$i.$_" );
 					$node->set_branch_length($bl);
 					$tree->insert($node);
 					$node->set_parent($parent);
@@ -220,12 +219,14 @@ not sampled from a distribution).
  Args    : -tips  => number of terminal nodes,
            -model => either 'yule' or 'hey'
            -trees => number of trees to generate
+	   Optional: -factory => a Bio::Phylo::Factory object
 
 =cut
 
 	sub gen_exp_pure_birth {
 		my $random  = shift;
 		my %options = looks_like_hash @_;
+		my $fac = $options{'-factory'} || $factory;
 		my ( $yule, $hey );
 		if ( $options{'-model'} =~ m/yule/i ) {
 			$yule = 1;
@@ -236,11 +237,11 @@ not sampled from a distribution).
 		else {
 			throw 'BadFormat' => "model \"$options{'-model'}\" not implemented";
 		}
-		my $forest = Bio::Phylo::Forest->new;
+		my $forest = $fac->create_forest;
 		for ( 0 .. $options{'-trees'} ) {
 
 			# instantiate new tree object
-			my $tree = Bio::Phylo::Forest::Tree->new;
+			my $tree = $fac->create_tree;
 
 			# $i = a counter, $bl = branch length
 			my ( $i, $bl ) = 1;
@@ -254,14 +255,13 @@ not sampled from a distribution).
 			}
 
 			# instantiate root node
-			my $root = Bio::Phylo::Forest::Node->new( '-name' => 'root' );
+			my $root = $fac->create_node( '-name' => 'root' );
 			$root->set_branch_length(0);
 			$tree->insert($root);
 
 			# instantiate children
 			for ( 1 .. 2 ) {
-				my $node =
-				  Bio::Phylo::Forest::Node->new( '-name' => "node.$i.$_" );
+				my $node = $fac->create_node( '-name' => "node.$i.$_" );
 				$node->set_branch_length($bl);
 				$tree->insert($node);
 				$node->set_parent($root);
@@ -294,8 +294,7 @@ not sampled from a distribution).
 
 				# instantiate children
 				for ( 1 .. 2 ) {
-					my $node =
-					  Bio::Phylo::Forest::Node->new( '-name' => "node.$i.$_" );
+					my $node = $fac->create_node( '-name' => "node.$i.$_" );
 					$node->set_branch_length($bl);
 					$tree->insert($node);
 					$node->set_parent($parent);
@@ -333,19 +332,21 @@ such that all shapes are equally probable.
            shape, with branch lengths = 1;
  Returns : A Bio::Phylo::Forest object.
  Args    : -tips  => number of terminal nodes,
-           -trees => number of trees to generate
+           -trees => number of trees to generate,
+	   Optional: -factory => a Bio::Phylo::Factory object
 
 =cut
 
 	sub gen_equiprobable {
 		my $random  = shift;
 		my %options = looks_like_hash @_;
-		my $forest  = Bio::Phylo::Forest->new( '-name' => 'Equiprobable' );
+		my $fac = $options{'-factory'} || $factory;
+		my $forest  = $fac->create_forest( '-name' => 'Equiprobable' );
 		for ( 0 .. $options{'-trees'} ) {
-			my $tree = Bio::Phylo::Forest::Tree->new( '-name' => 'Tree' . $_ );
+			my $tree = $fac->create_tree( '-name' => 'Tree' . $_ );
 			for my $i ( 1 .. ( $options{'-tips'} + ( $options{'-tips'} - 1 ) ) )
 			{
-				my $node = Bio::Phylo::Forest::Node->new(
+				my $node = $fac->create_node(
 					'-name'          => 'Node' . $i,
 					'-branch_length' => 1,
 				);
