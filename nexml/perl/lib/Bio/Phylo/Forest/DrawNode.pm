@@ -11,12 +11,13 @@ use vars '@ISA';
 	        %y, 
 	        %radius, 
 	        %node_colour,
+		%node_outline_colour,
 	        %node_shape,
 	        %node_image,	        
 	        %branch_color,
 	        %branch_shape,
-            %branch_width,	
-            %branch_style,
+		%branch_width,	
+		%branch_style,
 	        %font_face,
 	        %font_size,
 	        %font_style,
@@ -129,6 +130,24 @@ and text attributes, etc.
         return $self;
     }
 
+=item set_node_outline_colour()
+
+ Type    : Mutator
+ Title   : set_node_outline_colour
+ Usage   : $node->set_node_outline_colour($node_outline_colour);
+ Function: Sets node outline colour
+ Returns : $self
+ Args    : node_colour
+
+=cut
+
+    sub set_node_outline_colour {
+        my ( $self, $node_colour ) = @_;
+        my $id = $self->get_id;
+        $node_outline_colour{$id} = $node_colour;
+        return $self;
+    }
+
 =item set_node_shape()
 
  Type    : Mutator
@@ -216,7 +235,6 @@ and text attributes, etc.
         my ( $self, $branch_width ) = @_;
         my $id = $self->get_id;
         $branch_width{$id} = $branch_width;
-        $self->_apply_to_nodes( 'set_branch_width', $branch_width );                        
         return $self;
     }
 
@@ -418,6 +436,23 @@ and text attributes, etc.
         my $self = shift;
         my $id = $self->get_id;
         return $node_colour{$id};
+    }
+
+=item get_node_outline_colour()
+
+ Type    : Accessor
+ Title   : get_node_outline_colour
+ Usage   : my $node_outline_colour = $node->get_node_outline_colour();
+ Function: Gets node outline colour
+ Returns : node_colour
+ Args    : NONE
+
+=cut
+
+    sub get_node_outline_colour {
+        my $self = shift;
+        my $id = $self->get_id;
+        return $node_outline_colour{$id};
     }
 
 =item get_node_shape()
