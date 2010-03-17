@@ -26,7 +26,7 @@ inside
 
 =head1 DESCRIPTION
 
-This module creates a scalable vector graphic from a Bio::Phylo::Trees::Tree
+This module creates a scalable vector graphic from a Bio::Phylo::Forest::DrawTree
 object. It is called by the L<Bio::Phylo::Treedrawer> object, so look there to
 learn how to create tree drawings. (For extra per-node formatting, attach a hash 
 reference to the node, like so: 
@@ -111,7 +111,7 @@ sub _draw {
         if ( my $style = $node->get_generic('svg') ) {
         	%args = ( 'style' => $style );
         }
-		my $invocant = $url ? $svg->tag( 'a', 'xlink:href' => $url ) : $svg;
+	my $invocant = $url ? $svg->tag( 'a', 'xlink:href' => $url ) : $svg;
         $invocant->tag( 'circle', %circle, %args );
         $svg->tag( 'text', %text, %args )->cdata( $name );        
         if ( $node->get_parent ) {
