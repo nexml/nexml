@@ -4,11 +4,19 @@ use warnings;
 use ExtUtils::MakeMaker;
 use File::Find;
 
-check_prereq( 'SVG', 'Math::Random', 'XML::Twig' );
+check_prereq( qw(
+    SVG
+    Math::Random
+    XML::Twig
+    XML::LibXML
+    Math::CDF
+    List::Util
+    SWF::Builder
+) );
 
 WriteMakefile(
     'NAME'         => 'Bio-Phylo',
-    'AUTHOR'       => 'Rutger Vos <rvosa@interchange.ubc.ca>',
+    'AUTHOR'       => 'Rutger Vos',
     'PL_FILES'     => {},
     'EXE_FILES'    => [],
     'VERSION_FROM' => 'lib/Bio/Phylo.pm',    
