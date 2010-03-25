@@ -875,26 +875,26 @@ Serializes matrix to nexml format.
         # representations for non-numerical states..."normalization"
         # provides this mapping....
 
-        sub _normalize_symbols {
-	    my $self = shift;
-	    if ( $self->get_type =~ /^standard$/i ) {
-		my $to = $self->get_type_object;
-		my $lookup = $self->get_lookup;
-		my @states = keys %{ $lookup };
-		if ( my @letters = sort { $a cmp $b } grep { /[a-z]/i } @states ) {
-		    my @numbers  = sort { $a <=> $b } grep { /^\d+$/ } @states;
-		    my $i = $numbers[-1];
-		    my %map = map { $_ => ++$i } @letters;
-		    return \%map;
+	sub _normalize_symbols {
+		my $self = shift;
+		if ( $self->get_type =~ /^standard$/i ) {
+			my $to = $self->get_type_object;
+			my $lookup = $self->get_lookup;
+			my @states = keys %{ $lookup };
+			if ( my @letters = sort { $a cmp $b } grep { /[a-z]/i } @states ) {
+				my @numbers  = sort { $a <=> $b } grep { /^\d+$/ } @states;
+				my $i = $numbers[-1];
+				my %map = map { $_ => ++$i } @letters;
+				return \%map;
+			}
+			else {
+				return {};
+			}
 		}
 		else {
-		    return {};
+			return {};
 		}
-	    }
-	    else {
-		return {};
-	    }
-}
+	}
 	
 	sub _write_char_labels {
 		my ( $self, $states_id ) = @_;
