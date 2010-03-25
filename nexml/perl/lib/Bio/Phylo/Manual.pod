@@ -7,7 +7,7 @@ Bio::Phylo::Manual - High-level user guide
 This is the manual for Bio::Phylo. Bio::Phylo is a perl5 package for
 phylogenetic analysis. For installation instructions, read the README
 file in the root directory of the distribution. The stable URL for the
-most recent distribution is L<http://search.cpan.org/~rvosa/Bio-Phylo/>.
+most recent distribution is L<http://search.cpan.org/dist/Bio-Phylo/>.
 
 More documentation can be found as embedded L<perldoc> in the classes
 of this release. Note that Bio::Phylo uses inheritance to a great extent,
