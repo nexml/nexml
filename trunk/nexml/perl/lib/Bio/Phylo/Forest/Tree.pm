@@ -1739,41 +1739,6 @@ Sets all root-to-tip path lengths equal.
 		return $tree;
 	}
 
-=item deroot()
-
-Collapses the root into a basal polytomy
-
- Type    : Tree manipulator
- Title   : deroot
- Usage   : $tree->deroot;
- Function: Collapses the root into a basal polytomy
- Returns : The modified invocant.
- Args    : None
- Comments: After calling this method, there is still a node that has no parents, but it
-           has become a polytomy. This means that is_rooted will return 'false', but get_root
-           will still return a node object.
-
-=cut
-
-	sub deroot {
-		my $tree = shift;
-		if ( my $root = $tree->get_root ) {
-			for my $child ( @{ $root->get_children } ) {
-				my $cbl = $child->get_branch_length;
-				for my $grandchild ( @{ $child->get_children } ) {
-					my $gcbl = $grandchild->get_branch_length;
-					if ( defined $cbl ) {
-						$grandchild->set_branch_length( $cbl + $gcbl || 0 );
-					}
-					$grandchild->set_parent( $root );
-				}			
-				$root->delete( $child );
-				$tree->delete( $child );
-			}
-		}
-		return $tree;
-	}
-
 =item scale()
 
 Scales the tree to the specified height.
