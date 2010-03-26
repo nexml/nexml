@@ -84,6 +84,7 @@ as an element called 'meta', with RDFa compliant attributes.
     
     my $set_content = sub {
         my ( $self, $content ) = @_;
+        my $predicateName = 'property';
         $content{ $self->get_id } = $content;
         my %resource = ( 'xsi:type' => 'nex:ResourceMeta' );
         my %literal  = ( 'xsi:type' => 'nex:LiteralMeta'  );
@@ -93,40 +94,39 @@ as an element called 'meta', with RDFa compliant attributes.
                 if ( my $prop = $self->get_attributes( 'property' ) ) {
                     $self->set_attributes( 'rel' => $prop );
                     $self->unset_attribute( 'property' );
+                    $predicateName = 'rel';
                 }
             }
             else {
                 $self->set_attributes( 'content' => $content, %literal );            
                 if ( looks_like_number $content ) {
-                	my $dt = $content == int($content)
-			    && $content !~ /\./ ? 'integer' : 'float';
+                	my $dt = $content == int($content) && $content !~ /\./ ? 'integer' : 'float';
                 	$self->set_attributes( 'datatype' => 'xsd:' . $dt );
                 }
-		elsif ( $content eq 'true' or $content eq 'false' ) {
-                    $self->set_attributes( 'datatype' => 'xsd:boolean' );
-		}
+				elsif ( $content eq 'true' or $content eq 'false' ) {
+							$self->set_attributes( 'datatype' => 'xsd:boolean' );
+				}
                 else {
                     $self->set_attributes( 'datatype' => 'xsd:string' );
                 }        
             }
         }
         else {
-            if ( looks_like_instance $content, 'Bio::Phylo'
-		and $content->_type == $TYPE_CONSTANT ) {
+            if ( looks_like_instance $content, 'Bio::Phylo' and $content->_type == $TYPE_CONSTANT ) {
                 $self->insert($content)->set_attributes( %resource );
                 if ( my $prop = $self->get_attributes( 'property' ) ) {
                     $self->set_attributes( 'rel' => $prop );
                     $self->unset_attribute( 'property' );
+                    $predicateName = 'rel';
                 }                
             }
             else {
-                $self->set_attributes(
-		    'datatype' => 'rdf:XMLLiteral', %resource
-		);
+                $self->set_attributes( 'datatype' => 'rdf:XMLLiteral', %resource );
                 $self->insert( $fac->create_xmlliteral($content) );
-		$self->unset_attribute( 'content' );
+				$self->unset_attribute( 'content' );
             }        
         }
+        $property{ shift->get_id } = $predicateName;
         return $self;
     };
     
@@ -215,7 +215,11 @@ Returns triple predicate
 
 =cut     
     
-    sub get_predicate { $property{ shift->get_id } }
+    sub get_predicate { 
+    	my $self = shift;
+    	my $predicateName = $property{ $self->get_id };
+    	return $self->get_attributes->{$predicateName};
+    }
 
 =back
 
@@ -237,22 +241,22 @@ Returns triple predicate
 =cut
 
     sub to_dom {
-	my ($self, $dom) = @_;
-	$dom ||= Bio::Phylo::NeXML::DOM->get_dom;
-	if ( looks_like_object $dom, _DOMCREATOR_ ) {
-		my $elt = $self->get_dom_elt($dom);
-		if ( $self->can('get_entities') ) {
-		    for my $ent ( @{ $self->get_entities } ) {
-			if ( looks_like_implementor $ent,'to_dom' ) { 
-				$elt->set_child( $ent->to_dom($dom) );
+		my ($self, $dom) = @_;
+		$dom ||= Bio::Phylo::NeXML::DOM->get_dom;
+		if ( looks_like_object $dom, _DOMCREATOR_ ) {
+			my $elt = $self->get_dom_elt($dom);
+			if ( $self->can('get_entities') ) {
+				for my $ent ( @{ $self->get_entities } ) {
+				if ( looks_like_implementor $ent,'to_dom' ) { 
+					$elt->set_child( $ent->to_dom($dom) );
+				}
+				}
 			}
-		    }
+			return $elt;                
 		}
-		return $elt;                
-	}
-	else {
-		throw 'BadArgs' => 'DOM factory object not provided';
-	}	
+		else {
+			throw 'BadArgs' => 'DOM factory object not provided';
+		}	
     }
 
     
