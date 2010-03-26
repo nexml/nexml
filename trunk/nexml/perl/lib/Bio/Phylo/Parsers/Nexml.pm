@@ -723,13 +723,13 @@ sub _process_meta {
     }
     my $meta = $factory->create_meta( '-triple' => { $predicate => $object } );
     for my $child_meta_elt ( $meta_elt->children() ) {
-	if ( $child_meta_elt->gi eq 'meta' ) {
-		$meta->add_meta( $self->_process_meta( $child_meta_elt ) );
-	}
-	else {
-		my $lit = Bio::Phylo::NeXML::Meta::XMLLiteral->new($child_meta_elt);
-		$meta->set_triple( $predicate => $lit );
-	}
+		if ( $child_meta_elt->gi eq 'meta' ) {
+			$meta->add_meta( $self->_process_meta( $child_meta_elt ) );
+		}
+		else {
+			my $lit = Bio::Phylo::NeXML::Meta::XMLLiteral->new($child_meta_elt);
+			$meta->set_triple( $predicate => $lit );
+		}
     }
     return $meta;
 }
