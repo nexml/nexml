@@ -87,42 +87,165 @@ sub _draw {
           . "\ttext.scale_label    {}\n"
           . "\tline.scale_major    {}\n"
           . "\tline.scale_minor    {}\n" );
-    for my $node ( @{ $self->{'TREE'}->get_entities } ) {
-        my $name = $node->get_name || ' ';
-        my $url  = $node->get_url;         
-        $name =~ s/_/ /g;
-        $name =~ s/^'(.*)'$/$1/;
-        $name =~ s/^"(.*)"$/$1/;        
-        my ( %class, $r );
-        my $is_terminal  = $node->is_terminal;
-        $class{'circle'} = $is_terminal ? 'taxon_circle' : 'node_circle';
-        $class{'text'}   = $is_terminal ? 'taxon_text'   : 'node_text';
-        $r = $is_terminal ? int($drawer->get_tip_radius) : int($drawer->get_node_radius);
-        my %circle = ( 
-        	'cx'    => int($node->get_x), 
-        	'cy'    => int($node->get_y), 
-        	'r'     => $r, 
-        	'class' => $class{'circle'} 
-        );
-        my $x = int( $node->get_x + $drawer->get_text_horiz_offset );
-        my $y = int( $node->get_y + $drawer->get_text_vert_offset );
-        my %text = ( 'x' => $x, 'y' => $y, 'class' => $class{'text'} );
-        my %args;
-        if ( my $style = $node->get_generic('svg') ) {
-        	%args = ( 'style' => $style );
-        }
-	my $invocant = $url ? $svg->tag( 'a', 'xlink:href' => $url ) : $svg;
-        $invocant->tag( 'circle', %circle, %args );
-        $svg->tag( 'text', %text, %args )->cdata( $name );        
-        if ( $node->get_parent ) {
-            $self->_draw_line($node);
-        }
-    }
+    $self->{'TREE'}->visit_depth_first(
+		'-post' => sub {
+			my $node = shift;
+			my $is_terminal  = $node->is_terminal;
+			my ( %class, $r );
+			$class{'circle'} = $is_terminal ? 'taxon_circle' : 'node_circle';
+			$class{'text'}   = $is_terminal ? 'taxon_text'   : 'node_text';
+			$r = $is_terminal 
+				? $node->get_radius || $drawer->get_tip_radius 
+				: $node->get_radius || $drawer->get_node_radius;
+			my $url  = $node->get_url;
+			my $invocant = $url ? $svg->tag( 'a', 'xlink:href' => $url ) : $svg;
+			$self->_draw_line($node) if $node->get_parent;			
+			$self->_draw_circle( 
+				$node->get_x, 
+				$node->get_y, 
+				$r,
+				$node->get_branch_width,
+				$node->get_branch_color,
+				$node->get_node_colour,
+				$invocant
+			);			
+			if ( $node->get_collapsed ) {
+				$self->_draw_collapsed( $node );
+			}
+			else {			
+				if ( my $name = $node->get_name ) {
+					$name =~ s/_/ /g;
+					$name =~ s/^'(.*)'$/$1/;
+					$name =~ s/^"(.*)"$/$1/;				
+					my $x = int( $node->get_x + $drawer->get_text_horiz_offset );
+					my $y = int( $node->get_y + $drawer->get_text_vert_offset );
+					my %text = ( 'x' => $x, 'y' => $y, 'class' => $class{'text'} );
+					$svg->tag( 'text', %text )->cdata( $name );
+				}
+			}
+		}
+    );
     $self->_draw_pies;
     $self->_draw_scale;
     $self->_draw_legend;
     undef %colors;
-    return $self->{'SVG'}->render;
+    return $self->_api->render;
+}
+
+sub _api { shift->{'SVG'} }
+
+sub _draw_collapsed {
+	my ( $self, $node ) = @_;
+	my $td = $self->{'DRAWER'};
+	$node->set_collapsed( 0 );
+	my $tallest = 0;
+	$node->visit_level_order(
+		sub {
+			my $n = shift;
+			my $height;
+			if ( $n->get_id == $node->get_id ) {
+				$height = 0;
+			}
+			else {
+				$height = $n->get_parent->get_generic('height') + $n->get_branch_length;
+			}
+			$n->set_generic( 'height' => $height );
+			$tallest = $height if $height > $tallest;
+		}	
+	);
+	my $style = $node->get_branch_style;
+	my ( $x1, $y1 ) = ( $node->get_x, $node->get_y );
+	my $x2 = ( $tallest * $td->_get_scalex + $node->get_x );
+	my $padding = $td->get_padding;
+	my $cladew = $td->get_collapsed_clade_width;
+	my @ys = ( ( $y1 + ( ( $cladew ) / 2 ) * $td->_get_scaley ) - $padding,  
+	           ( $y1 - ( ( $cladew + 1 ) / 2 ) * $td->_get_scaley ) + $padding );
+    my $points = $self->_api->get_path(
+    	'x' => [ int $x1, int $x2,    int $x2,    int $x1 ],
+    	'y' => [ int $y1, int $ys[0], int $ys[1], int $y1 ],
+    	'-type' => 'polygon',
+    );
+    my $polygon = $self->_api->polygon( 
+    	%$points, 
+    	'id'    => 'collapsed' . $node->get_id,     	
+    	'class' => 'collapsed',
+		'style' => {
+			'fill'   => $node->get_node_colour || 'white',
+			'stroke' => $node->get_branch_color || 'black',
+			'stroke-width' => $node->get_branch_width || 1,
+		}     	
+    );
+	if ( my $name = $node->get_name ) {	
+		$name =~ s/_/ /g;
+		$name =~ s/^'(.*)'$/$1/;
+		$name =~ s/^"(.*)"$/$1/;		
+		my $x = int( $x2 + $self->{'DRAWER'}->get_text_horiz_offset );
+		my $y = int( $y1 + $self->{'DRAWER'}->get_text_vert_offset );
+		my %text = ( 'x' => $x, 'y' => $y, 'class' => 'collapsed_text' );
+		if ( $style ) {
+			$self->_api->tag( 'text', %text, 'style' => $style )->cdata( $name );
+		}
+		else {
+			$self->_api->tag( 'text', %text )->cdata( $name );		
+		}
+	}        
+    $node->set_collapsed(1);
+}
+
+sub _draw_circle {
+	my ( $self, $x, $y, $radius, $width, $stroke, $fill, $api ) = @_;
+	if ( $radius ) {
+		my $svg = $api || $self->_api;
+		my %circle = (
+			'cx'    => int $x,
+			'cy'    => int $y,
+			'r'     => int $radius,
+			'style' => {
+				'fill'   => $fill || 'white',
+				'stroke' => $stroke || 'black',
+				'stroke-width' => $width || 1,
+			},
+		);	
+		return $svg->tag( 'circle', %circle );
+	}	
+}
+
+sub _draw_curve {
+	my ( $self, $x1, $y1, $x2, $y2, $width, $color ) = @_;
+	my $points = qq{M$x1,$y1 C$x1,$y2 $x2,$y2 $x2,$y2};
+	return $self->{'SVG'}->path( 
+		'd'     => $points,
+		'style' => {
+			'stroke'       => $color || 'black',
+			'stroke-width' => $width || 1,
+		}
+	);
+}
+
+sub _draw_multi {
+	my ( $self, $x1, $y1, $x2, $y2, $width, $color ) = @_;
+	my $points = qq{$x1,$y1 $x1,$y2 $x2,$y2};
+	return $self->_api->polyline(
+		'points' => $points,
+		'style' => {
+			'stroke'       => $color || 'black',
+			'stroke-width' => $width || 1,
+		}
+	);	
+}
+
+sub _draw_raw_line {
+	my ( $self, $x1, $y1, $x2, $y2, $width, $color ) = @_;
+	return $self->_api->line(
+		'x1' => $x1,
+		'y1' => $y1,
+		'x2' => $x2,
+		'y2' => $y2,
+		'style' => {
+			'stroke'       => $color || 'black',
+			'stroke-width' => $width || 1,
+		}		
+	);
 }
 
 =begin comment
@@ -206,7 +329,7 @@ sub _draw_pies {
 sub _draw_scale {
     my $self    = shift;
     my $drawer  = $self->{'DRAWER'};
-    my $svg     = $self->{'SVG'};
+    my $svg     = $self->_api;
     my $tree    = $self->{'TREE'};
     my $root    = $tree->get_root;
     my $rootx   = $root->get_x;
@@ -286,7 +409,7 @@ sub _draw_scale {
 sub _draw_legend {
     my $self = shift;
     if (%colors) {
-        my $svg       = $self->{'SVG'};
+        my $svg       = $self->_api;
         my $tree      = $self->{'TREE'};
         my $draw      = $self->{'DRAWER'};
         my @keys      = keys %colors;
@@ -349,47 +472,16 @@ sub _draw_line {
       ( int $pnode->get_x, int $node->get_x, $node_hash->{'svg'} );
     my ( $y1, $y2 ) = ( int $pnode->get_y, int $node->get_y );
     if ( $self->{'DRAWER'}->get_shape eq 'CURVY' ) {
-        my $points = qq{M$x1,$y1 C$x1,$y2 $x2,$y2 $x2,$y2};
-        if ($style) {
-            $self->{'SVG'}->path(
-                'd'     => $points,
-                'style' => $style,
-            );
-        }
-        else {
-            $self->{'SVG'}->path( 'd' => $points, );
-        }
+    	return $self->_draw_curve( 
+    		$x1, $y1, $x2, $y2, $node->get_branch_width, $node->get_branch_color );
     }
     elsif ( $self->{'DRAWER'}->get_shape eq 'RECT' ) {
-        my $points = qq{$x1,$y1 $x1,$y2 $x2,$y2};
-        if ($style) {
-            $self->{'SVG'}->polyline(
-                'points' => $points,
-                'style'  => $style,
-            );
-        }
-        else {
-            $self->{'SVG'}->polyline( 'points' => $points, );
-        }
+    	return $self->_draw_multi( 
+    		$x1, $y1, $x2, $y2, $node->get_branch_width, $node->get_branch_color );
     }
     elsif ( $self->{'DRAWER'}->get_shape eq 'DIAG' ) {
-        if ($style) {
-            $self->{'SVG'}->line(
-                'x1'    => $x1,
-                'y1'    => $y1,
-                'x2'    => $x2,
-                'y2'    => $y2,
-                'style' => $style,
-            );
-        }
-        else {
-            $self->{'SVG'}->line(
-                'x1' => $x1,
-                'y1' => $y1,
-                'x2' => $x2,
-                'y2' => $y2,
-            );
-        }
+    	return $self->_draw_raw_line( 
+    		$x1, $y1, $x2, $y2, $node->get_branch_width, $node->get_branch_color );
     }
 }
 
