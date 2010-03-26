@@ -118,29 +118,6 @@ This is the superclass for all objects that can be serialized to NeXML
 	    $suppress_ns{$id} = 0;
 	}
 
-#=item add_dictionary()
-#
-# Type    : Mutator
-# Title   : add_dictionary
-# Usage   : $obj->add_dictionary($dict);
-# Function: Adds a dictionary attachment to the object
-# Returns : $self
-# Args    : Bio::Phylo::Dictionary
-#
-#=cut
-#
-#    sub add_dictionary {
-#        my ( $self, $dict ) = @_;
-#        if ( looks_like_object $dict, $DICTIONARY_CONSTANT ) {
-#            my $id = $self->get_id;
-#            if ( not $dictionaries{$id} ) {
-#                $dictionaries{$id} = [];
-#            }
-#            push @{ $dictionaries{$id} }, $dict;
-#        }
-#        return $self;
-#    }
-
 =item add_meta()
 
  Type    : Mutator
@@ -153,43 +130,17 @@ This is the superclass for all objects that can be serialized to NeXML
 =cut
     
     sub add_meta {
-        my ( $self, $meta ) = @_;
-        if ( looks_like_object $meta, $META_CONSTANT ) {
+        my ( $self, $meta_obj ) = @_;
+        if ( looks_like_object $meta_obj, $META_CONSTANT ) {
             my $id = $self->get_id;
-            if ( not $meta{$id} ) {
+            if ( not $meta{$id} ) {            	
                 $meta{$id} = [];
             }
-            push @{ $meta{$id} }, $meta;
+            push @{ $meta{$id} }, $meta_obj;
             $self->set_attributes( 'about' => '#' . $self->get_xml_id );
         }
         return $self;
-    }    
-
-#=item remove_dictionary()
-#
-# Type    : Mutator
-# Title   : remove_dictionary
-# Usage   : $obj->remove_dictionary($dict);
-# Function: Removes a dictionary attachment from the object
-# Returns : $self
-# Args    : Bio::Phylo::Dictionary
-#
-#=cut
-#
-#    sub remove_dictionary {
-#        my ( $self, $dict ) = @_;
-#        my $id = $self->get_id;
-#        my $dict_id = $dict->get_id;
-#        if ( $dictionaries{$id} ) {
-#            DICT: for my $i ( 0 .. $#{ $dictionaries{$id} } ) {
-#                if ( $dictionaries{$id}->[$i]->get_id == $dict_id ) {
-#                    splice @{ $dictionaries{$id} }, $i, 1;
-#                    last DICT;
-#                }
-#            }
-#        }
-#        return $self;
-#    }
+    }
 
 =item remove_meta()
 
@@ -389,25 +340,6 @@ Removes specified attribute
 		} 
 	}
 
-#=item get_dictionaries()
-#
-#Retrieves the dictionaries for the element.
-#
-# Type    : Accessor
-# Title   : get_dictionaries
-# Usage   : my @dicts = @{ $obj->get_dictionaries };
-# Function: Retrieves the dictionaries for the element.
-# Returns : An array ref of Bio::Phylo::Dictionary objects
-# Args    : None.
-#
-#=cut
-#
-#    sub get_dictionaries {
-#        my $self = shift;
-#        my $id = $self->get_id;
-#        return $dictionaries{$id} || [];
-#    }
-
 =item get_meta()
 
 Retrieves the metadata for the element.
@@ -467,13 +399,6 @@ Retrieves tag string
 			$xml .= ' ' . $key . '="' . $attrs{$key} . '"';
 		}
 		my $has_contents = 0;
-		#my $dictionaries = $self->get_dictionaries;
-		#if ( @{ $dictionaries } ) {
-		#    $xml .= '>';
-		#    $xml .= $_->to_xml for @{ $dictionaries };
-		#    $has_contents++;
-		#    
-		#}
 		my $meta = $self->get_meta;
 		if ( @{ $meta } ) {
 			$xml .= '>';# if not @{ $dictionaries };
@@ -716,6 +641,46 @@ method indicates whether that is the case.
 	sub is_ns_suppressed {
 	    return $suppress_ns{ shift->get_id }
 	}
+	
+=back
+
+=head2 CLONER
+
+=over
+
+=item clone()
+
+Clones invocant.
+
+ Type    : Utility method
+ Title   : clone
+ Usage   : my $clone = $object->clone;
+ Function: Creates a copy of the invocant object.
+ Returns : A copy of the invocant.
+ Args    : NONE.
+ Comments: Cloning is currently experimental, use with caution.
+
+=cut
+
+	sub clone {
+		my $self = shift;
+		$logger->info("cloning $self");
+		my %subs = @_;
+		
+		# some extra logic to copy characters from source to target
+		if ( not exists $subs{'add_meta'} ) {
+			$subs{'add_meta'} = sub {
+				my ( $obj, $clone ) = @_;
+				for my $meta ( @{ $obj->get_meta } ) {
+					$clone->add_meta( $meta );
+				}
+			};	
+		}
+		
+		return $self->SUPER::clone(%subs);
+	
+	}	
+	
 
 =back
 
