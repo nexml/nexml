@@ -76,8 +76,8 @@ sub new {
         'MODE'              => 'PHYLO',
         'SHAPE'             => 'CURVY',
         'PADDING'           => 50,
-        'NODE_RADIUS'       => 1,
-        'TIP_RADIUS'        => 1,
+        'NODE_RADIUS'       => 0,
+        'TIP_RADIUS'        => 0,
         'TEXT_HORIZ_OFFSET' => 6,
         'TEXT_VERT_OFFSET'  => 4,
         'TEXT_WIDTH'        => 150,
@@ -86,6 +86,7 @@ sub new {
         '_SCALEY'           => 1,
         'FORMAT'            => 'Svg',
         'SCALE'             => undef,
+        'COLLAPSED_WIDTH'   => 6,
     };
     bless $self, $class;
     
@@ -221,7 +222,7 @@ Sets tree drawing shape.
 
 sub set_shape {
     my ( $self, $shape ) = @_;
-    if ( $shape =~ m/^(?:rect|diag|curvy)$/i ) {
+    if ( $shape =~ m/^(?:rect|diag|curvy)/i ) {
         $self->{'SHAPE'} = uc $shape;
     }
     else {
@@ -274,6 +275,30 @@ sub set_node_radius {
     }
     else {
     	throw 'BadNumber' => "'$radius' is not a valid node radius value";
+    }
+    return $self;
+}
+
+=item set_collapsed_clade_width()
+
+Sets collapsed clade width.
+
+ Type    : Mutator
+ Title   : set_collapsed_clade_width
+ Usage   : $treedrawer->set_collapsed_clade_width(6);
+ Function: sets the width of collapsed clade triangles relative to uncollapsed tips
+ Returns :
+ Args    : Positive number
+
+=cut
+
+sub set_collapsed_clade_width {
+    my ( $self, $width ) = @_;
+    if ( looks_like_number $width && $width > 0 ) {
+        $self->{'COLLAPSED_WIDTH'} = $width;
+    }
+    else {
+    	throw 'BadNumber' => "'$width' is not a valid image width";
     }
     return $self;
 }
@@ -559,6 +584,21 @@ Gets image padding.
 
 sub get_padding { shift->{'PADDING'} }
 
+=item get_collapsed_clade_width()
+
+Gets collapsed clade width.
+
+ Type    : Mutator
+ Title   : get_collapsed_clade_width
+ Usage   : $w = $treedrawer->get_collapsed_clade_width();
+ Function: gets the width of collapsed clade triangles relative to uncollapsed tips
+ Returns : Positive number
+ Args    : None
+
+=cut
+
+sub get_collapsed_clade_width { shift->{'COLLAPSED_WIDTH'} }
+
 =item get_node_radius()
 
 Gets node radius.
@@ -766,49 +806,59 @@ sub draw {
 sub _compute_rooted_coordinates {
     my $td = shift;
     my $tree = $td->get_tree;
-    my $phylo   = $td->get_mode =~ /^p/i ? 1 : 0;
+    my $phylo   = $td->get_mode =~ /^p/i ? 1 : 0; # phylogram or cladogram
     my $padding = $td->get_padding;
     my $width   = $td->get_width - ( $td->get_text_width + ( $padding * 2 ) );
     my $height  = $td->get_height - ( $padding * 2 );
+	my $cladew  = $td->get_collapsed_clade_width;    
     my ( $tip_counter, $tallest_tip ) = ( 0, 0 );
     $tree->visit_depth_first(
-	'-pre' => sub {
-	    my $node = shift;
-	    if ( my $parent = $node->get_parent ) {
-		my $parent_x = $parent->get_x || 0;
-		my $x = $phylo ? $node->get_branch_length || 0 : 1;
-		$node->set_x( $x + $parent_x );
-	    }
-	    else { 
-		$node->set_x(0); # root
-	    }
-	},
-	'-no_daughter' => sub {
-	    my $node = shift;
-	    $node->set_y( $tip_counter++ );
-	    my $x = $node->get_x;
-	    $tallest_tip = $x if $x > $tallest_tip;
-	},
-	'-post_daughter' => sub {
-	    my $node = shift;
-	    my ( $child_count, $child_y ) = ( 0, 0 );
-	    for my $child ( @{ $node->get_children } ) {
-		$child_count++;
-		$child_y += $child->get_y;
-	    }
-	    $node->set_y( $child_y / $child_count );
-	},
+		'-pre' => sub {
+			my $node = shift;
+			if ( my $parent = $node->get_parent ) {
+				my $parent_x = $parent->get_x || 0;
+				my $x = $phylo ? $node->get_branch_length || 0 : 1;
+				$node->set_x( $x + $parent_x );
+			}
+			else { 
+				$node->set_x(0); # root
+			}
+		},
+		'-no_daughter' => sub {
+			my $node = shift;
+			if ( $node->get_collapsed ) {
+				$tip_counter += ( $cladew / 2 );
+				$node->set_y( $tip_counter );
+				$tip_counter += ( $cladew / 2 );
+			}
+			else {
+				$node->set_y( $tip_counter++ );
+			}
+			my $x = $node->get_x;
+			$tallest_tip = $x if $x > $tallest_tip;
+		},
+		'-post_daughter' => sub {
+			my $node = shift;
+			my ( $child_count, $child_y ) = ( 0, 0 );
+			for my $child ( @{ $node->get_children } ) {
+				$child_count++;
+				$child_y += $child->get_y;
+			}
+			$node->set_y( $child_y / $child_count );
+		},
     );
     $tree->visit(
-	sub {
-	    my $node = shift;
-	    $node->set_x( $padding + $node->get_x * ( $width / $tallest_tip ) );
-	    $node->set_y( $padding + $node->get_y * ( $height / $tip_counter ) );
-	    if ( ! $phylo && $node->is_terminal ) {
-		$node->set_x( $padding + $tallest_tip * ( $width / $tallest_tip ) );
-	    }
-	}
+		sub {
+			my $node = shift;
+			$node->set_x( $padding + $node->get_x * ( $width / $tallest_tip ) );
+			$node->set_y( $padding + $node->get_y * ( $height / $tip_counter ) );
+			if ( ! $phylo && $node->is_terminal ) {
+				$node->set_x( $padding + $tallest_tip * ( $width / $tallest_tip ) );
+			}
+		}
     );
+    $td->_set_scaley( $height / $tip_counter );
+    $td->_set_scalex( $width  / $tallest_tip );
 }
 
 =item render()
