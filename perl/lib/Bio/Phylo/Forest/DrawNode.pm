@@ -18,6 +18,7 @@ use vars '@ISA';
 	        %branch_shape,
 		%branch_width,	
 		%branch_style,
+			%collapsed,
 	        %font_face,
 	        %font_size,
 	        %font_style,
@@ -57,6 +58,24 @@ and text attributes, etc.
 =head2 MUTATORS
 
 =over
+
+=item set_collapsed()
+
+ Type    : Mutator
+ Title   : set_collapsed
+ Usage   : $node->set_collapsed(1);
+ Function: Sets whether the node's descendants are shown as collapsed into a triangle
+ Returns : $self
+ Args    : true or false value
+
+=cut
+
+	sub set_collapsed {
+		my ( $self, $collapsed ) = @_;
+		my $id = $self->get_id;
+		$collapsed{$id} = $collapsed;
+		return $self;
+	}
 
 =item set_x()
 
@@ -369,6 +388,94 @@ and text attributes, etc.
 =head2 ACCESSORS
 
 =over
+
+=item get_collapsed()
+
+ Type    : Mutator
+ Title   : get_collapsed
+ Usage   : something() if $node->get_collapsed();
+ Function: Gets whether the node's descendants are shown as collapsed into a triangle
+ Returns : true or false value
+ Args    : NONE
+
+=cut
+
+    sub get_collapsed {
+        my $self = shift;
+        my $id = $self->get_id;
+        return $collapsed{$id};
+    }
+
+=item get_first_daughter()
+
+Gets invocant's first daughter.
+
+ Type    : Accessor
+ Title   : get_first_daughter
+ Usage   : my $f_daughter = $node->get_first_daughter;
+ Function: Retrieves a node's leftmost daughter.
+ Returns : Bio::Phylo::Forest::Node
+ Args    : NONE
+
+=cut
+
+    sub get_first_daughter {
+    	my $self = shift;
+    	if ( $self->get_collapsed ) {
+    		return;
+    	}
+    	else {
+    		return $self->SUPER::get_first_daughter;
+    	}
+    }
+
+=item get_last_daughter()
+
+Gets invocant's last daughter.
+
+ Type    : Accessor
+ Title   : get_last_daughter
+ Usage   : my $l_daughter = $node->get_last_daughter;
+ Function: Retrieves a node's rightmost daughter.
+ Returns : Bio::Phylo::Forest::Node
+ Args    : NONE
+
+=cut
+
+    sub get_last_daughter {
+    	my $self = shift;
+    	if ( $self->get_collapsed ) {
+    		return;
+    	}
+    	else {
+    		return $self->SUPER::get_last_daughter;
+    	}    	
+    }
+
+=item get_children()
+
+Gets invocant's immediate children.
+
+ Type    : Query
+ Title   : get_children
+ Usage   : my @children = @{ $node->get_children };
+ Function: Returns an array reference of immediate
+           descendants, ordered from left to right.
+ Returns : Array reference of
+           Bio::Phylo::Forest::Node objects.
+ Args    : NONE
+
+=cut
+
+    sub get_children {
+    	my $self = shift;
+    	if ( $self->get_collapsed ) {
+    		return [];
+    	}
+    	else {
+    		return $self->SUPER::get_children;
+    	}      
+    }
 
 =item get_x()
 
