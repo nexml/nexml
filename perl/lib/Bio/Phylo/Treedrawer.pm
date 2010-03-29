@@ -5,7 +5,7 @@ use Bio::Phylo::Util::Logger;
 use Bio::Phylo::Forest::DrawTree ();
 use Bio::Phylo::Util::Exceptions 'throw';
 use Bio::Phylo::Util::CONSTANT qw(_TREE_ looks_like_number looks_like_object looks_like_hash looks_like_class);
-my @fields = qw(WIDTH HEIGHT MODE SHAPE PADDING NODE_RADIUS TIP_RADIUS TEXT_HORIZ_OFFSET TEXT_VERT_OFFSET TEXT_WIDTH TREE _SCALEX _SCALEY SCALE FORMAT);
+my @fields = qw(WIDTH BRANCH_WIDTH HEIGHT MODE SHAPE PADDING NODE_RADIUS TIP_RADIUS TEXT_HORIZ_OFFSET TEXT_VERT_OFFSET TEXT_WIDTH TREE _SCALEX _SCALEY SCALE FORMAT);
 
 my $tips = 0.000_000_000_000_01;
 my $logger = Bio::Phylo::Util::Logger->new;
@@ -87,6 +87,7 @@ sub new {
         'FORMAT'            => 'Svg',
         'SCALE'             => undef,
         'COLLAPSED_WIDTH'   => 6,
+        'BRANCH_WIDTH'      => 1,
     };
     bless $self, $class;
     
@@ -153,6 +154,30 @@ sub set_width {
     }
     else {
     	throw 'BadNumber' => "'$width' is not a valid image width";
+    }
+    return $self;
+}
+
+=item set_branch_width()
+
+Sets branch width.
+
+ Type    : Mutator
+ Title   : set_branch_width
+ Usage   : $treedrawer->set_branch_width(1);
+ Function: sets the width of branch lines
+ Returns :
+ Args    : Integer width in pixels.
+
+=cut
+
+sub set_branch_width {
+    my ( $self, $width ) = @_;
+    if ( looks_like_number $width && $width > 0 ) {
+        $self->{'BRANCH_WIDTH'} = $width;
+    }
+    else {
+    	throw 'BadNumber' => "'$width' is not a valid branch width";
     }
     return $self;
 }
@@ -522,6 +547,21 @@ Gets image width.
 =cut
 
 sub get_width { shift->{'WIDTH'} }
+
+=item get_branch_width()
+
+Gets branch width.
+
+ Type    : Mutator
+ Title   : get_branch_width
+ Usage   : my $w = $treedrawer->get_branch_width();
+ Function: gets the width of branch lines
+ Returns :
+ Args    : Integer width in pixels.
+
+=cut
+
+sub get_branch_width { shift->{'BRANCH_WIDTH'} }
 
 =item get_height()
 
