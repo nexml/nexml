@@ -88,7 +88,7 @@ sub _draw {
           . "\tline.scale_major    {}\n"
           . "\tline.scale_minor    {}\n" );
     $self->{'TREE'}->visit_depth_first(
-		'-post' => sub {
+		'-pre' => sub {
 			my $node = shift;
 			my $is_terminal  = $node->is_terminal;
 			my ( %class, $r );
@@ -165,6 +165,7 @@ sub _draw_collapsed {
     	'y' => [ int $y1, int $ys[0], int $ys[1], int $y1 ],
     	'-type' => 'polygon',
     );
+    my $width = $node->get_branch_width || $self->{'DRAWER'}->get_branch_width;
     my $polygon = $self->_api->polygon( 
     	%$points, 
     	'id'    => 'collapsed' . $node->get_id,     	
@@ -172,7 +173,7 @@ sub _draw_collapsed {
 		'style' => {
 			'fill'   => $node->get_node_colour || 'white',
 			'stroke' => $node->get_branch_color || 'black',
-			'stroke-width' => $node->get_branch_width || 1,
+			'stroke-width' => $width,
 		}     	
     );
 	if ( my $name = $node->get_name ) {	
@@ -471,17 +472,18 @@ sub _draw_line {
     my ( $x1, $x2, $style ) =
       ( int $pnode->get_x, int $node->get_x, $node_hash->{'svg'} );
     my ( $y1, $y2 ) = ( int $pnode->get_y, int $node->get_y );
+    my $width = $node->get_branch_width || $self->{'DRAWER'}->get_branch_width;
     if ( $self->{'DRAWER'}->get_shape eq 'CURVY' ) {
     	return $self->_draw_curve( 
-    		$x1, $y1, $x2, $y2, $node->get_branch_width, $node->get_branch_color );
+    		$x1, $y1, $x2, $y2, $width, $node->get_branch_color );
     }
     elsif ( $self->{'DRAWER'}->get_shape eq 'RECT' ) {
     	return $self->_draw_multi( 
-    		$x1, $y1, $x2, $y2, $node->get_branch_width, $node->get_branch_color );
+    		$x1, $y1, $x2, $y2, $width, $node->get_branch_color );
     }
     elsif ( $self->{'DRAWER'}->get_shape eq 'DIAG' ) {
     	return $self->_draw_raw_line( 
-    		$x1, $y1, $x2, $y2, $node->get_branch_width, $node->get_branch_color );
+    		$x1, $y1, $x2, $y2, $width, $node->get_branch_color );
     }
 }
 
