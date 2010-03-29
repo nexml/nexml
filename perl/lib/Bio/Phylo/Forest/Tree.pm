@@ -474,12 +474,29 @@ Get most recent common ancestor of argument nodes.
 
 	sub get_mrca {
 		my ( $tree, $nodes ) = @_;
-		my $mrca;
-		for my $i ( 1 .. $#{$nodes} ) {
-			$mrca ? $mrca = $mrca->get_mrca( $nodes->[$i] ) : $mrca =
-			  $nodes->[0]->get_mrca( $nodes->[$i] );
+		if ( not $nodes or not @{ $nodes } ) {
+			return;
 		}
-		return $mrca;
+		elsif ( scalar @{ $nodes } == 1 ) {
+			return $nodes->[0];
+		}
+		else {
+			my $node1 = shift @{ $nodes };
+			my $node2 = shift @{ $nodes };
+			my $anc1 = $node1->get_ancestors;
+			my $anc2 = $node2->get_ancestors;
+			unshift @{ $anc1 }, $node1;
+			unshift @{ $anc2 }, $node2;
+			TRAVERSAL: for my $i ( 0 .. $#{ $anc1 } ) {
+				for my $j ( 0 .. $#{ $anc2 } ) {
+					if ( $anc1->[$i] == $anc2->[$j] ) {
+						unshift @{ $nodes }, $anc1->[$i];
+						last TRAVERSAL;
+					}
+				}
+			}
+			return $tree->get_mrca( $nodes );
+		}
 	}
 
 =back
