@@ -1089,16 +1089,21 @@ Gets invocant's terminal descendants.
 
 	sub get_terminals {
 		my $self = shift;
-		my @terminals;
-		my $desc = $self->get_descendants;
-		if ( @{$desc} ) {
-			foreach ( @{$desc} ) {
-				if ( $_->is_terminal ) {
-					push @terminals, $_;
+		if ( $self->is_terminal ) {
+			return [ $self ];
+		}
+		else {
+			my @terminals;
+			my $desc = $self->get_descendants;
+			if ( @{$desc} ) {
+				foreach ( @{$desc} ) {
+					if ( $_->is_terminal ) {
+						push @terminals, $_;
+					}
 				}
 			}
+			return \@terminals;
 		}
-		return \@terminals;
 	}
 
 =item get_internals()
