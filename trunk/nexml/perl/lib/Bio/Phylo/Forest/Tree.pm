@@ -348,10 +348,25 @@ Get terminal nodes.
 	sub get_terminals {
 		my $self = shift;
 		my @terminals;
-		for ( @{ $self->get_entities } ) {
-			if ( $_->is_terminal ) {
-				push @terminals, $_;
-			}
+		if ( my $root = $self->get_root ) {
+			$root->visit_level_order(
+				sub {
+					my $node = shift;
+					if ( $node->is_terminal ) {
+						push @terminals, $node;
+					}
+				}
+			);
+		}
+		else {
+			$self->visit(
+				sub {
+					my $n = shift;
+					if ( $n->is_terminal ) {
+						push @terminals, $n;
+					}
+				}
+			)
 		}
 		return \@terminals;
 	}
@@ -380,11 +395,14 @@ Get internal nodes.
 	sub get_internals {
 		my $self = shift;
 		my @internals;
-		foreach ( @{ $self->get_entities } ) {
-			if ( $_->is_internal ) {
-				push @internals, $_;
+		$self->visit_level_order(
+			sub {
+				my $node = shift;
+				if ( $node->is_internal ) {
+					push @internals, $node;
+				}
 			}
-		}
+		);
 		return \@internals;
 	}
 
@@ -437,7 +455,7 @@ Retrieves the node furthest from the root.
 
 		# has (at least some) branch lengths
 		if ( $self->calc_tree_length ) {
-			$criterion = 'calc_path_to_root',;
+			$criterion = 'calc_path_to_root';
 		}
 		else {
 			$criterion = 'calc_nodes_to_root';
@@ -1708,7 +1726,12 @@ Visits nodes in a level order traversal.
 
 	sub visit_level_order {
 		my ( $tree, $sub ) = @_;
-		$tree->get_root->visit_level_order($sub);
+		if ( my $root = $tree->get_root ) {
+			$root->visit_level_order($sub);
+		}
+		else {
+			throw 'BadArgs' => 'Tree has no root';
+		}
 		return $tree;
 	}
 
