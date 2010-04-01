@@ -4,8 +4,33 @@ use strict;
 use Bio::Phylo::Util::Logger;
 use Bio::Phylo::Forest::DrawTree ();
 use Bio::Phylo::Util::Exceptions 'throw';
-use Bio::Phylo::Util::CONSTANT qw(_TREE_ looks_like_number looks_like_object looks_like_hash looks_like_class);
-my @fields = qw(WIDTH BRANCH_WIDTH HEIGHT MODE SHAPE PADDING NODE_RADIUS TIP_RADIUS TEXT_HORIZ_OFFSET TEXT_VERT_OFFSET TEXT_WIDTH TREE _SCALEX _SCALEY SCALE FORMAT);
+use Bio::Phylo::Util::CONSTANT qw(
+    _TREE_
+    looks_like_number
+    looks_like_object
+    looks_like_hash
+    looks_like_class
+);
+
+my @fields = qw(
+	WIDTH 
+	BRANCH_WIDTH 
+	HEIGHT 
+	MODE 
+	SHAPE 
+	PADDING 
+	NODE_RADIUS 
+	TIP_RADIUS 
+	TEXT_HORIZ_OFFSET 
+	TEXT_VERT_OFFSET 
+	TEXT_WIDTH 
+	TREE 
+	_SCALEX 
+	_SCALEY 
+	SCALE 
+	FORMAT
+	COLLAPSED_CLADE_WIDTH
+);
 
 my $tips = 0.000_000_000_000_01;
 my $logger = Bio::Phylo::Util::Logger->new;
@@ -86,8 +111,8 @@ sub new {
         '_SCALEY'           => 1,
         'FORMAT'            => 'Svg',
         'SCALE'             => undef,
-        'COLLAPSED_WIDTH'   => 6,
         'BRANCH_WIDTH'      => 1,
+        'COLLAPSED_CLADE_WIDTH' => 6,	
     };
     bless $self, $class;
     
@@ -100,6 +125,38 @@ sub new {
         }
     }
     return $self;
+}
+
+sub _cascading_setter {
+    my ( $self, $value ) = @_;
+    my ( $package, $filename, $line, $subroutine ) = caller(1);
+    $subroutine =~ s/.*://;
+    $logger->debug($subroutine);
+    if ( my $tree = $self->get_tree ) {
+	if ( $tree->can($subroutine) ) {
+	    $tree->$subroutine($value);
+	}
+    }
+    $subroutine =~ s/^set_//;
+    $self->{uc $subroutine} = $value;	
+    return $self;
+}
+
+sub _cascading_getter {
+    my ( $self, $invocant ) = @_;
+    my ( $package, $filename, $line, $subroutine ) = caller(1);
+    $subroutine =~ s/.*://;
+    $logger->debug($subroutine);
+    if ( $invocant ) {
+	if ( $invocant->can($subroutine) ) {
+	    my $value = $invocant->$subroutine();
+	    if ( defined $value ) {
+		return $value;
+	    }
+	}
+    }
+    $subroutine =~ s/^get_//;
+    return $self->{uc $subroutine};
 }
 
 =back
@@ -117,8 +174,7 @@ Sets image format.
  Usage   : $treedrawer->set_format('Svg');
  Function: Sets the drawer submodule.
  Returns :
- Args    : Name of an image format (currently 
-           only Svg supported)
+ Args    : Name of an image format
 
 =cut
 
@@ -154,30 +210,6 @@ sub set_width {
     }
     else {
     	throw 'BadNumber' => "'$width' is not a valid image width";
-    }
-    return $self;
-}
-
-=item set_branch_width()
-
-Sets branch width.
-
- Type    : Mutator
- Title   : set_branch_width
- Usage   : $treedrawer->set_branch_width(1);
- Function: sets the width of branch lines
- Returns :
- Args    : Integer width in pixels.
-
-=cut
-
-sub set_branch_width {
-    my ( $self, $width ) = @_;
-    if ( looks_like_number $width && $width > 0 ) {
-        $self->{'BRANCH_WIDTH'} = $width;
-    }
-    else {
-    	throw 'BadNumber' => "'$width' is not a valid branch width";
     }
     return $self;
 }
@@ -276,78 +308,6 @@ sub set_padding {
     }
     else {
     	throw 'BadNumber' => "'$padding' is not a valid padding value";
-    }
-    return $self;
-}
-
-=item set_node_radius()
-
-Sets node radius.
-
- Type    : Mutator
- Title   : set_node_radius
- Usage   : $treedrawer->set_node_radius(20);
- Function: Sets the node radius in pixels.
- Returns :
- Args    : Integer value in pixels.
-
-=cut
-
-sub set_node_radius {
-    my ( $self, $radius ) = @_;
-    if ( looks_like_number $radius && $radius >= 0 ) {
-        $self->{'NODE_RADIUS'} = $radius;
-    }
-    else {
-    	throw 'BadNumber' => "'$radius' is not a valid node radius value";
-    }
-    return $self;
-}
-
-=item set_collapsed_clade_width()
-
-Sets collapsed clade width.
-
- Type    : Mutator
- Title   : set_collapsed_clade_width
- Usage   : $treedrawer->set_collapsed_clade_width(6);
- Function: sets the width of collapsed clade triangles relative to uncollapsed tips
- Returns :
- Args    : Positive number
-
-=cut
-
-sub set_collapsed_clade_width {
-    my ( $self, $width ) = @_;
-    if ( looks_like_number $width && $width > 0 ) {
-        $self->{'COLLAPSED_WIDTH'} = $width;
-    }
-    else {
-    	throw 'BadNumber' => "'$width' is not a valid image width";
-    }
-    return $self;
-}
-
-=item set_tip_radius()
-
-Sets tip radius.
-
- Type    : Mutator
- Title   : set_tip_radius
- Usage   : $treedrawer->set_tip_radius(20);
- Function: Sets the tip radius in pixels.
- Returns :
- Args    : Integer value in pixels.
-
-=cut
-
-sub set_tip_radius {
-    my ( $self, $radius ) = @_;
-    if ( looks_like_number $radius && $radius >= 0 ) {
-        $self->{'TIP_RADIUS'} = $radius;
-    }
-    else {
-    	throw 'BadNumber' => "'$radius' is not a valid tip radius value";
     }
     return $self;
 }
@@ -514,6 +474,108 @@ sub set_scale_options {
 
 =back
 
+=head2 CASCADING MUTATORS
+
+=over
+
+=item set_branch_width()
+
+Sets branch width.
+
+ Type    : Mutator
+ Title   : set_branch_width
+ Usage   : $treedrawer->set_branch_width(1);
+ Function: sets the width of branch lines
+ Returns :
+ Args    : Integer width in pixels.
+
+=cut
+
+sub set_branch_width {
+    my ( $self, $width ) = @_;
+    if ( looks_like_number $width && $width > 0 ) {
+        $self->_cascading_setter($width);
+    }
+    else {
+    	throw 'BadNumber' => "'$width' is not a valid branch width";
+    }
+    return $self;
+}
+
+=item set_node_radius()
+
+Sets node radius.
+
+ Type    : Mutator
+ Title   : set_node_radius
+ Usage   : $treedrawer->set_node_radius(20);
+ Function: Sets the node radius in pixels.
+ Returns :
+ Args    : Integer value in pixels.
+
+=cut
+
+sub set_node_radius {
+    my ( $self, $radius ) = @_;
+    if ( looks_like_number $radius && $radius >= 0 ) {
+        $self->_cascading_setter($radius);
+    }
+    else {
+    	throw 'BadNumber' => "'$radius' is not a valid node radius value";
+    }
+    return $self;
+}
+
+=item set_collapsed_clade_width()
+
+Sets collapsed clade width.
+
+ Type    : Mutator
+ Title   : set_collapsed_clade_width
+ Usage   : $treedrawer->set_collapsed_clade_width(6);
+ Function: sets the width of collapsed clade triangles relative to uncollapsed tips
+ Returns :
+ Args    : Positive number
+
+=cut
+
+sub set_collapsed_clade_width {
+    my ( $self, $width ) = @_;
+    if ( looks_like_number $width && $width > 0 ) {
+        $self->_cascading_setter($width);
+    }
+    else {
+    	throw 'BadNumber' => "'$width' is not a valid image width";
+    }
+    return $self;
+}
+
+=item set_tip_radius()
+
+Sets tip radius.
+
+ Type    : Mutator
+ Title   : set_tip_radius
+ Usage   : $treedrawer->set_tip_radius(20);
+ Function: Sets the tip radius in pixels.
+ Returns :
+ Args    : Integer value in pixels.
+
+=cut
+
+sub set_tip_radius {
+    my ( $self, $radius ) = @_;
+    if ( looks_like_number $radius && $radius >= 0 ) {
+        $self->_cascading_setter($radius);
+    }
+    else {
+    	throw 'BadNumber' => "'$radius' is not a valid tip radius value";
+    }
+    return $self;
+}
+
+=back
+
 =head2 ACCESSORS
 
 =over
@@ -522,7 +584,7 @@ sub set_scale_options {
 
 Gets image format.
 
- Type    : Mutator
+ Type    : Accessor
  Title   : get_format
  Usage   : my $format = $treedrawer->get_format;
  Function: Gets the image format.
@@ -537,7 +599,7 @@ sub get_format { shift->{'FORMAT'} }
 
 Gets image width.
 
- Type    : Mutator
+ Type    : Accessor
  Title   : get_width
  Usage   : my $width = $treedrawer->get_width;
  Function: Gets the width of the drawer canvas.
@@ -547,21 +609,6 @@ Gets image width.
 =cut
 
 sub get_width { shift->{'WIDTH'} }
-
-=item get_branch_width()
-
-Gets branch width.
-
- Type    : Mutator
- Title   : get_branch_width
- Usage   : my $w = $treedrawer->get_branch_width();
- Function: gets the width of branch lines
- Returns :
- Args    : Integer width in pixels.
-
-=cut
-
-sub get_branch_width { shift->{'BRANCH_WIDTH'} }
 
 =item get_height()
 
@@ -623,51 +670,6 @@ Gets image padding.
 =cut
 
 sub get_padding { shift->{'PADDING'} }
-
-=item get_collapsed_clade_width()
-
-Gets collapsed clade width.
-
- Type    : Mutator
- Title   : get_collapsed_clade_width
- Usage   : $w = $treedrawer->get_collapsed_clade_width();
- Function: gets the width of collapsed clade triangles relative to uncollapsed tips
- Returns : Positive number
- Args    : None
-
-=cut
-
-sub get_collapsed_clade_width { shift->{'COLLAPSED_WIDTH'} }
-
-=item get_node_radius()
-
-Gets node radius.
-
- Type    : Accessor
- Title   : get_node_radius
- Usage   : my $node_radius = $treedrawer->get_node_radius;
- Function: Gets the node radius in pixels.
- Returns : SCALAR
- Args    : None.
-
-=cut
-
-sub get_node_radius { shift->{'NODE_RADIUS'} }
-
-=item get_tip_radius()
-
-Gets tip radius.
-
- Type    : Accessor
- Title   : get_tip_radius
- Usage   : my $tip_radius = $treedrawer->get_tip_radius;
- Function: Gets the tip radius in pixels.
- Returns : SCALAR
- Args    : None.
-
-=cut
-
-sub get_tip_radius { shift->{'TIP_RADIUS'} }
 
 =item get_text_horiz_offset()
 
@@ -753,6 +755,84 @@ Gets time scale option.
 =cut
 
 sub get_scale_options { shift->{'SCALE'} }
+
+=back
+
+=head2 CASCADING ACCESSORS
+
+=over
+
+=item get_branch_width()
+
+Gets branch width.
+
+ Type    : Accessor
+ Title   : get_branch_width
+ Usage   : my $w = $treedrawer->get_branch_width();
+ Function: gets the width of branch lines
+ Returns :
+ Args    : Integer width in pixels.
+
+=cut
+
+sub get_branch_width { 
+    my $self = shift;
+    return $self->_cascading_getter(@_);
+}
+
+=item get_collapsed_clade_width()
+
+Gets collapsed clade width.
+
+ Type    : Mutator
+ Title   : get_collapsed_clade_width
+ Usage   : $w = $treedrawer->get_collapsed_clade_width();
+ Function: gets the width of collapsed clade triangles relative to uncollapsed tips
+ Returns : Positive number
+ Args    : None
+
+=cut
+
+sub get_collapsed_clade_width { 
+    my $self = shift;
+    return $self->_cascading_getter(@_);
+}
+
+=item get_node_radius()
+
+Gets node radius.
+
+ Type    : Accessor
+ Title   : get_node_radius
+ Usage   : my $node_radius = $treedrawer->get_node_radius;
+ Function: Gets the node radius in pixels.
+ Returns : SCALAR
+ Args    : None.
+
+=cut
+
+sub get_node_radius { 
+    my $self = shift;
+    return $self->_cascading_getter(@_);
+}
+
+=item get_tip_radius()
+
+Gets tip radius.
+
+ Type    : Accessor
+ Title   : get_tip_radius
+ Usage   : my $tip_radius = $treedrawer->get_tip_radius;
+ Function: Gets the tip radius in pixels.
+ Returns : SCALAR
+ Args    : None.
+
+=cut
+
+sub get_tip_radius { 
+    my $self = shift;
+    return $self->_cascading_getter(@_);
+}
 
 =begin comment
 
@@ -850,52 +930,52 @@ sub _compute_rooted_coordinates {
     my $padding = $td->get_padding;
     my $width   = $td->get_width - ( $td->get_text_width + ( $padding * 2 ) );
     my $height  = $td->get_height - ( $padding * 2 );
-	my $cladew  = $td->get_collapsed_clade_width;    
+    my $cladew  = $td->get_collapsed_clade_width;    
     my ( $tip_counter, $tallest_tip ) = ( 0, 0 );
     $tree->visit_depth_first(
-		'-pre' => sub {
-			my $node = shift;
-			if ( my $parent = $node->get_parent ) {
-				my $parent_x = $parent->get_x || 0;
-				my $x = $phylo ? $node->get_branch_length || 0 : 1;
-				$node->set_x( $x + $parent_x );
-			}
-			else { 
-				$node->set_x(0); # root
-			}
-		},
-		'-no_daughter' => sub {
-			my $node = shift;
-			if ( $node->get_collapsed ) {
-				$tip_counter += ( $cladew / 2 );
-				$node->set_y( $tip_counter );
-				$tip_counter += ( $cladew / 2 );
-			}
-			else {
-				$node->set_y( $tip_counter++ );
-			}
-			my $x = $node->get_x;
-			$tallest_tip = $x if $x > $tallest_tip;
-		},
-		'-post_daughter' => sub {
-			my $node = shift;
-			my ( $child_count, $child_y ) = ( 0, 0 );
-			for my $child ( @{ $node->get_children } ) {
-				$child_count++;
-				$child_y += $child->get_y;
-			}
-			$node->set_y( $child_y / $child_count );
-		},
+	'-pre' => sub {
+	    my $node = shift;
+	    if ( my $parent = $node->get_parent ) {
+		my $parent_x = $parent->get_x || 0;
+		my $x = $phylo ? $node->get_branch_length || 0 : 1;
+		$node->set_x( $x + $parent_x );
+	    }
+	    else { 
+		$node->set_x(0); # root
+	    }
+	},
+	'-no_daughter' => sub {
+	    my $node = shift;
+	    if ( $node->get_collapsed ) {
+		$tip_counter += ( ($cladew-2) / 2 );
+		$node->set_y( $tip_counter );
+		$tip_counter += ( ($cladew-2) / 2 ) + 1;
+	    }
+	    else {
+		$node->set_y( $tip_counter++ );
+	    }
+	    my $x = $node->get_x;
+	    $tallest_tip = $x if $x > $tallest_tip;
+	},
+	'-post_daughter' => sub {
+	    my $node = shift;
+	    my ( $child_count, $child_y ) = ( 0, 0 );
+	    for my $child ( @{ $node->get_children } ) {
+		$child_count++;
+		$child_y += $child->get_y;
+	    }
+	    $node->set_y( $child_y / $child_count );
+	},
     );
     $tree->visit(
-		sub {
-			my $node = shift;
-			$node->set_x( $padding + $node->get_x * ( $width / $tallest_tip ) );
-			$node->set_y( $padding + $node->get_y * ( $height / $tip_counter ) );
-			if ( ! $phylo && $node->is_terminal ) {
-				$node->set_x( $padding + $tallest_tip * ( $width / $tallest_tip ) );
-			}
-		}
+	sub {
+	    my $node = shift;
+	    $node->set_x( $padding + $node->get_x * ( $width / $tallest_tip ) );
+	    $node->set_y( $padding + $node->get_y * ( $height / $tip_counter ) );
+	    if ( ! $phylo && $node->is_terminal ) {
+		$node->set_x( $padding + $tallest_tip * ( $width / $tallest_tip ) );
+	    }
+	}
     );
     $td->_set_scaley( $height / $tip_counter );
     $td->_set_scalex( $width  / $tallest_tip );

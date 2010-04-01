@@ -12,6 +12,7 @@ use vars '@ISA';
             %width,
             %height,
             %node_radius,
+	    %tip_radius,
             %node_colour,
             %node_shape,
             %node_image,
@@ -19,6 +20,7 @@ use vars '@ISA';
             %branch_shape,
             %branch_width,
             %branch_style,
+	    %collapsed_width,            
             %font_face,
             %font_size,
             %font_style,
@@ -159,6 +161,25 @@ Tree constructor.
         return $self;
     }
 
+=item set_tip_radius()
+
+ Type    : Mutator
+ Title   : set_tip_node_radius
+ Usage   : $tree->set_tip_radius($node_radius);
+ Function: Sets tip radius
+ Returns : $self
+ Args    : tip radius
+
+=cut
+
+    sub set_tip_radius {
+        my ( $self, $r ) = @_;
+        my $id = $self->get_id;
+        $tip_radius{$id} = $r;
+        $self->_apply_to_nodes( 'set_tip_radius', $r );
+        return $self;
+    }    
+
 =item set_node_colour()
 
  Type    : Mutator
@@ -177,6 +198,7 @@ Tree constructor.
         $self->_apply_to_nodes( 'set_node_colour', $node_colour );        
         return $self;
     }
+    *set_node_color = \&set_node_colour;
 
 =item set_node_shape()
 
@@ -215,6 +237,27 @@ Tree constructor.
         $self->_apply_to_nodes( 'set_node_image', $node_image );        
         return $self;
     }
+    
+=item set_collapsed_clade_width()
+
+Sets collapsed clade width.
+
+ Type    : Mutator
+ Title   : set_collapsed_clade_width
+ Usage   : $tree->set_collapsed_clade_width(6);
+ Function: sets the width of collapsed clade triangles relative to uncollapsed tips
+ Returns :
+ Args    : Positive number
+
+=cut
+
+    sub set_collapsed_clade_width {
+        my ( $self, $width ) = @_;
+        my $id = $self->get_id;
+        $collapsed_width{$id} = $width;
+        $self->_apply_to_nodes( 'set_collapsed_clade_width', $width );        
+        return $self;
+    }    
 
 =item set_branch_color()
 
@@ -234,6 +277,7 @@ Tree constructor.
         $self->_apply_to_nodes( 'set_branch_color', $branch_color );                
         return $self;
     }
+    *set_branch_colour = \&set_branch_colour;
 
 =item set_branch_shape()
 
@@ -695,6 +739,7 @@ Tree constructor.
         my $id = $self->get_id;
         return $node_colour{$id};
     }
+    *get_node_color = \&get_node_colour;
 
 =item get_node_shape()
 
@@ -730,6 +775,25 @@ Tree constructor.
         return $node_image{$id};
     }
 
+=item get_collapsed_clade_width()
+
+Gets collapsed clade width.
+
+ Type    : Mutator
+ Title   : get_collapsed_clade_width
+ Usage   : $w = $tree->get_collapsed_clade_width();
+ Function: gets the width of collapsed clade triangles relative to uncollapsed tips
+ Returns : Positive number
+ Args    : None
+
+=cut
+
+    sub get_collapsed_clade_width {
+        my $self = shift;
+        my $id = $self->get_id;
+        return $collapsed_width{$id};
+    }
+
 =item get_branch_color()
 
  Type    : Accessor
@@ -746,6 +810,7 @@ Tree constructor.
         my $id = $self->get_id;
         return $branch_color{$id};
     }
+    *get_branch_colour = \&get_branch_color;
 
 =item get_branch_shape()
 
