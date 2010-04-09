@@ -38,7 +38,7 @@ Bio::Phylo::EvolutionaryModels->import('sample');
     );
     
     eval {
-         # XXX was ARRAY
+         # I'd like to make the sample a forest object
         ok( looks_like_object($sample,_FOREST_), "sample is a forest" );
     };
     ok( scalar @{ $sample } == 5, "sample has 5 trees" );
@@ -63,12 +63,11 @@ Bio::Phylo::EvolutionaryModels->import('sample');
         'model' => \&Bio::Phylo::EvolutionaryModels::constant_rate_birth_death,
     );
     eval {
-        # XXX was ARRAY
+        # I'd like to make the sample a forest object
         ok( looks_like_object($sample,_FOREST_), "sample is a forest" ); 
     };
     ok( scalar @{ $sample } == 5, "sample has 5 trees" );
     for my $t ( @{ $sample } ) {
-        # XXX should be 10, was 11
         my $count = scalar @{ $t->get_terminals };
         ok( $count == 10, "tree has ${count}==10 tips" );
     }
@@ -100,12 +99,12 @@ Bio::Phylo::EvolutionaryModels->import('sample');
         'model_options'     => { 'birth_rate' => 1, 'death_rate' => .8 },
         'model' => \&Bio::Phylo::EvolutionaryModels::constant_rate_birth_death,    
     );
-    eval {                              
-        ok( looks_like_object $sample, _FOREST_ ); # XXX was ARRAY
+    eval {
+        # I'd like to make the sample a forest object
+        ok( looks_like_object $sample, _FOREST_ );
     };
     ok( scalar @{ $sample } == 5 );
     for my $t ( @{ $sample } ) {
-        # XXX should be 10, was 11
         my $count = scalar @{ $t->get_terminals };
         ok( $count == 10, "tree has ${count}==10 tips" );
     }    
@@ -133,12 +132,13 @@ Bio::Phylo::EvolutionaryModels->import('sample');
         'model' => \&Bio::Phylo::EvolutionaryModels::constant_rate_birth,    
     );
     
-    eval {                              
-        ok( looks_like_object $sample, _FOREST_ ); # XXX was ARRAY
+    eval {
+        # I'd like to make the sample a forest object
+        ok( looks_like_object $sample, _FOREST_ );
     };
     ok( scalar @{ $sample } == 5 );
     for my $t ( @{ $sample } ) {
-        ok( scalar @{ $t->get_terminals } == 10 ); # XXX should be 10, was 11
+        ok( scalar @{ $t->get_terminals } == 10 );
     }    
 }
 
@@ -152,11 +152,12 @@ Bio::Phylo::EvolutionaryModels->import('sample');
         'algorithm'     => 'constant_rate_bd',
         'model_options' => { 'birth_rate' => 1, 'death_rate' => .8 }
     );
-    eval {                              
-        ok( looks_like_object $sample, _FOREST_ ); # XXX was ARRAY
+    eval {
+        # I'd like to make the sample a forest object
+        ok( looks_like_object $sample, _FOREST_ );
     };
     ok( scalar @{ $sample } == 5 );
     for my $t ( @{ $sample } ) {
-        ok( scalar @{ $t->get_terminals } == 10 ); # XXX should be 10, was 11
+        ok( scalar @{ $t->get_terminals } == 10 );
     }
 }
