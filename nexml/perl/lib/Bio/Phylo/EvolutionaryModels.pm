@@ -1,6 +1,6 @@
 package Bio::Phylo::EvolutionaryModels;
 use strict;
-use warnings;
+#use warnings;
 use Bio::Phylo::Util::Exceptions 'throw';
 use Bio::Phylo::Factory;
 #use Math::CDF qw(qnorm qbeta);
@@ -280,13 +280,31 @@ sub sample {
         use threads;
         use threads::shared;
         @output = ([],[]);
-                $SIG{'KILL'} = sub { foreach (@threads) { $_->kill('KILL')->detach(); }; threads->exit(); };
+        $SIG{'KILL'} = sub { foreach (@threads) { $_->kill('KILL')->detach(); }; threads->exit(); };
         #Start the threads
-        for ((1..$options{threads})) {
+        for my $i ( 1 .. $options{'threads'} ) {
             @_ = ();
+            my $ceil = ceil( $options{'sample_size'} / $options{'threads'} );
+            
+            # if we have 2 thread, and sample size is 5, we want one thread
+            # to make 3 trees, and the other 2 trees. In the previous
+            # implementation they both made $ceil, which would have been 3
+            # trees for each thread,             
+            my $sample_size_for_thread;
+            if ( ($options{'sample_size'}-(($i-1)*$ceil)) < $ceil ) {
+                $sample_size_for_thread = $options{'sample_size'}-(($i-1)*$ceil);
+            }
+            else {
+                $sample_size_for_thread = $ceil;
+            }            
+            
             #Note the list context of the return argument here determines
             #the data type returned from the thread.
-            ($threads[$_-1]) = threads->new(\&_sample_newick, %options, sample_size => ceil($options{sample_size}/$options{threads}));     
+            ($threads[$i-1]) = threads->new(
+                \&_sample_newick,
+                %options,
+                'sample_size' => $sample_size_for_thread
+            );
         }
 
         #Wait for them to finish and combine the data
@@ -342,7 +360,7 @@ sub sample {
 sub _sample_newick {
     my %options = @_;
 
-    my $algorithm = 'sample_'.$options{algorithm};
+    my $algorithm = 'sample_'.$options{'algorithm'};
 
     # Thread 'cancellation' signal handler
     $SIG{'KILL'} = sub { threads->exit(); };
@@ -395,8 +413,13 @@ sub sample_b {
     #While we have insufficient samples
     while (scalar @sample < $options{sample_size}) {
         #Generate a candidate model run
-        my $candidate = &$model(%{$options{model_options}},
-                                tree_size => $options{tree_size}+1);    
+        my $candidate = &$model(
+            %{ $options{'model_options'} },
+            # XXX tree was previously set to $options{tree_size} + 1,
+            # which meant we returned trees with 11 tips when tree_size
+            # was 10. That seemed odd!
+            'tree_size' => $options{'tree_size'}, # XXX changed +1
+        );    
         #Check that the tree has no extinctions
         unless ($candidate->is_ultrametric(1e-6)) {
             throw 'BadFormat'
@@ -463,28 +486,34 @@ sub sample_bd {
     my @expected_summary;
 
     #Convenience variables
-    my $model = $options{model};
-    my $nstar = $options{algorithm_options}->{nstar};
-    my $rate = $options{algorithm_options}->{rate};
+    my $model = $options{'model'};
+    my $nstar = $options{'algorithm_options'}->{'nstar'};
+    my $rate = $options{'algorithm_options'}->{'rate'};
 
+    # While we have insufficient samples. Depending on whether this sub
+    # is called from within multiple threads, the value of sample_size might
+    # be less than that supplied by a script using this module.
+    while (scalar @sample < $options{'sample_size'}) {
 
-    #While we have insufficient samples
-    while (scalar @sample < $options{sample_size}) {
-        #Generate a candidate model run
-        my $candidate = &$model(%{$options{model_options}},
-                                tree_size => $nstar);    
+        # Generate a candidate model run
+        my $candidate = &$model(
+            %{ $options{'model_options'} },
+            'tree_size' => $nstar
+        );    
 
-        #Get the lineage through time data
-        my ($time,$count) = lineage_through_time($candidate);
+        # Get the lineage through time data
+        my ($time,$count) = lineage_through_time( $candidate );
 
-        #Reorganise the lineage through time data
-        #@duration contains the length of the intervals with the right number of species
-        #@start contains the starting times of these intervals
-        #@prob contains the cumulative probability of each interval being selected
-        #$total_duration contains the sum of the interval lengths
+        # Reorganise the lineage through time data
+        # @duration contains the length of the intervals with the right number
+        #           of species
+        # @start contains the starting times of these intervals
+        # @prob contains the cumulative probability of each interval being
+        #       selected
+        # $total_duration contains the sum of the interval lengths
         my (@duration, @start, @prob, $total_duration);
-        for (my $index = 0; $index < scalar @{$time} - 1; $index++) {
-            if ( $count->[$index] == $options{tree_size} ) {
+        for my $index ( 0 .. $#{ $time } ) {
+            if ( $count->[$index] == $options{'tree_size'} ) {
                 push(@duration, $time->[$index+1] - $time->[$index]);
                 push(@start, $time->[$index]);
                 $total_duration += $duration[-1];
@@ -513,7 +542,7 @@ sub sample_bd {
                 for ($interval = 0; $interval_choice > $prob[$interval]; $interval++) {}
 
                 #Truncate the tree at a random point during this interval
-                truncate_tree_time($tree,    $duration[$interval]*rand(1) + $start[$interval] );
+                truncate_tree_time($tree, $duration[$interval]*rand(1) + $start[$interval] );
                 #Add the tree to our sample    
                 push(@sample,$tree);
 
@@ -612,9 +641,9 @@ sub sample_incomplete_sampling_bd {
 
         for (my $index = 0; $index < scalar @{$time} - 1; $index++) {
             if ( $count->[$index] >= $options{tree_size} ) {
-				$size_stats[$count->[$index]-$options{tree_size}] += $time->[$index]*$sampling_probability->[$count->[$index]-$options{tree_size}];
-			}
-		}
+		$size_stats[ $count->[$index] - $options{tree_size} ] += $time->[$index]*$sampling_probability->[$count->[$index]-$options{tree_size}];
+	    }
+	}
 
         #Reorganise the lineage through time data
         #@duration contains the length of intervals with more than tree_size species
@@ -627,7 +656,8 @@ sub sample_incomplete_sampling_bd {
             if ( $count->[$index] >= $options{tree_size} ) {
                 push(@duration, $time->[$index+1] - $time->[$index]);
                 push(@start, $time->[$index]);
-                $total_prob += $duration[-1]*$sampling_probability->[$count->[$index]-$options{tree_size}];
+                $total_prob += $duration[-1]
+                    * $sampling_probability->[ $count->[$index] - $options{tree_size} ];
                 push(@prob, $total_prob);
             }
         }
@@ -957,18 +987,18 @@ sub constant_rate_birth_death {
     my %options = @_;
     
     #Check that we have a termination condition
-    unless (defined $options{tree_size} xor defined $options{tree_age}) {
+    unless ( defined $options{'tree_size'} xor defined $options{'tree_age'} ) {
         #Error here.
         return undef;    
     }
     
     #Set the undefined condition to infinity
-    $options{tree_size} = 1e6 unless defined $options{tree_size};
-    $options{tree_age} = 1e6 unless defined $options{tree_age};
+    $options{'tree_size'} = 1e6 unless defined $options{'tree_size'};
+    $options{'tree_age'} = 1e6 unless defined $options{'tree_age'};
     
     #Set default rates
-    $options{birth_rate} = 1 unless defined ($options{birth_rate});
-    delete $options{death_rate} if defined ($options{death_rate}) && $options{death_rate} == 0;
+    $options{'birth_rate'} = 1 unless defined ($options{'birth_rate'});
+    delete $options{'death_rate'} if defined ($options{'death_rate'}) && $options{'death_rate'} == 0;
 
     #Each node gets an ID number this tracks these
     my $node_id = 0;
@@ -985,24 +1015,24 @@ sub constant_rate_birth_death {
     my $time = 0;
     my $tree_size = 1;
     #Check whether we have a non-zero root edge
-    if (defined $options{root_edge} && $options{root_edge}) {
+    if (defined $options{'root_edge'} && $options{'root_edge'}) {
         #Non-zero root. We set the time to the first speciation event
-        $next_speciation = -log(rand)/$options{birth_rate}/$tree_size;    
+        $next_speciation = -log(rand)/$options{'birth_rate'}/$tree_size;    
     } else {
         #Zero root, we want a speciation event straight away
         $next_speciation = 0;
     }    
     #Time of the first extinction event. If no extinction we always 
     #set the extinction event after the current speciation event
-     if (defined $options{death_rate}) {
-         $next_extinction = -log(rand)/$options{death_rate}/$tree_size; 
+     if (defined $options{'death_rate'}) {
+         $next_extinction = -log(rand)/$options{'death_rate'}/$tree_size; 
      } else {
          $next_extinction = $next_speciation + 1; 
      }    
     
     #While the tree has not become extinct and the termination criterion 
     #has not been achieved we create new speciation and extinction events 
-    while ($tree_size > 0 && $tree_size < $options{tree_size} && $time < $options{tree_age}) {
+    while ($tree_size > 0 && $tree_size < $options{'tree_size'} && $time < $options{'tree_age'}) {
 
         
         #Add the time since the last event to all terminal species
@@ -1049,9 +1079,9 @@ sub constant_rate_birth_death {
         $tree_size = scalar @terminals;    
         return $tree unless $tree_size;
         
-        $next_speciation = -log($r1)/$options{birth_rate}/$tree_size;
-         if (defined $options{death_rate}) {
-             $next_extinction = -log($r2)/$options{death_rate}/$tree_size; 
+        $next_speciation = -log($r1)/$options{'birth_rate'}/$tree_size;
+         if (defined $options{'death_rate'}) {
+             $next_extinction = -log($r2)/$options{'death_rate'}/$tree_size; 
          } else {
              $next_extinction = $next_speciation + 1; 
          }    
