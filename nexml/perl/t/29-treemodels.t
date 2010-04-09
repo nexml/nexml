@@ -1,4 +1,6 @@
 use Test::More 'no_plan';
+use strict;
+use warnings;
 use Bio::Phylo::Util::CONSTANT qw(
     looks_like_object
     looks_like_instance
@@ -22,6 +24,8 @@ Bio::Phylo::EvolutionaryModels->import('sample');
         'tree_size'  => 10
     );
     ok(looks_like_object($tree,_TREE_), "object is a tree");
+    my $tipcount = scalar @{ $tree->get_terminals };
+    ok(10==$tipcount, "tree has ${tipcount}==10 tips");
 }
 
 # Example B
@@ -118,7 +122,7 @@ Bio::Phylo::EvolutionaryModels->import('sample');
 # model
 {
     my $random_pendant_function = sub { 
-        %options = @_;
+        my %options = @_;
         return -log(rand) / $options{'birth_rate'} / $options{'tree_size'};
     };
      
