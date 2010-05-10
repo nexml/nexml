@@ -1221,29 +1221,47 @@ Calculates stemminess measure from Rohlf et al. (1990).
 =cut
 
 	sub calc_rohlf_stemminess {
+		# invocant is a tree
 		my $self = shift;
-		if ( !$self->is_ultrametric(0.01) ) {
-			throw 'ObjectMismatch' => 'Rohlf stemminess only possible for ultrametric trees';
-		}
-		my @internals            = @{ $self->get_internals };
-		my $total                = 0;
-		my $one_over_t_minus_two = 1 / ( scalar @internals - 1 );
-		foreach my $node (@internals) {
-			if ( $node->get_parent ) {
-				my $Wj_i   = $node->get_branch_length;
-				my $parent = $node->get_parent;
-				my $hj     = $parent->calc_min_path_to_tips;
+		
+		# all internal nodes in the tree
+		my @internals = @{ $self->get_internals };
+		
+		# all terminal nodes in the tree
+		my @terminals = @{ $self->get_terminals };
+		
+		# this will become the sum of all STni
+		my $total = 0;
+		
+		# 1/(t-2), by which we multiply total
+		my $one_over_t_minus_two = 1 / ( scalar @terminals - 2 );
+		
+		# iterate over all nodes, as per equation (1)
+		for my $node ( @internals ) {
+			
+			# only process nodes that aren't the root
+			if ( my $parent = $node->get_parent ) {
+				
+				# Wj->i is defined as "the length of the edge
+				# (in time units) between HTU i (a hypothetical
+				# taxonomic unit, i.e. an internal node) and
+				# its ancestor j"
+				my $Wj_i = $node->get_branch_length;
+				
+				# hj is defined as "the 'height' of HTU j (the
+				# time of its origin, a known quantity since we
+				# know the true tree in these simulations)".
+				my $hj   = $parent->calc_path_to_root;
 				if ( !$hj ) {
 					next;
 				}
+				
+				# as per equation (2) in Rohlf et al. (1990)
 				$total += ( $Wj_i / $hj );
 			}
 		}
-		unless ($total) {
-			throw 'ObjectMismatch' => 'it looks like all branches were of length zero';
-		}
-		my $crs = $one_over_t_minus_two * $total;
-		return $crs;
+		# multiply by 1/(t-2) as per equation (1)
+		return $one_over_t_minus_two * $total;
 	}
 
 =item calc_resolution()
