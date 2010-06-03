@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema 
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
-    targetNamespace="http://www.nexml.org/1.0"
-    xmlns="http://www.nexml.org/1.0"
+    targetNamespace="http://www.nexml.org/2009"
+    xmlns="http://www.nexml.org/2009"
     elementFormDefault="qualified">
     <xs:annotation>
         <xs:documentation>
@@ -28,7 +28,7 @@
         <xs:complexContent>
             <xs:restriction base="AbstractNode">
                 <xs:sequence minOccurs="1" maxOccurs="1">
-                    <xs:element name="dict" type="Dict" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element name="meta" type="Meta" minOccurs="0" maxOccurs="unbounded"/>
                 </xs:sequence>
             </xs:restriction>
         </xs:complexContent>
@@ -55,7 +55,7 @@
         <xs:complexContent>
             <xs:restriction base="AbstractEdge">
                 <xs:sequence minOccurs="1" maxOccurs="1">
-                    <xs:element name="dict" type="Dict" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element name="meta" type="Meta" minOccurs="0" maxOccurs="unbounded"/>
                 </xs:sequence>                
                 <xs:attribute name="length" type="xs:float"/>
             </xs:restriction>
@@ -71,7 +71,7 @@
         <xs:complexContent>
             <xs:restriction base="AbstractRootEdge">
                 <xs:sequence minOccurs="1" maxOccurs="1">
-                    <xs:element name="dict" type="Dict" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element name="meta" type="Meta" minOccurs="0" maxOccurs="unbounded"/>
                 </xs:sequence>                
                 <xs:attribute name="length" type="xs:float"/>
             </xs:restriction>
@@ -87,7 +87,7 @@
         <xs:complexContent>
             <xs:restriction base="AbstractEdge">
                 <xs:sequence minOccurs="1" maxOccurs="1">
-                    <xs:element name="dict" type="Dict" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element name="meta" type="Meta" minOccurs="0" maxOccurs="unbounded"/>
                 </xs:sequence>                
                 <xs:attribute name="length" type="xs:integer"/>
             </xs:restriction>
@@ -103,7 +103,7 @@
         <xs:complexContent>
             <xs:restriction base="AbstractRootEdge">
                 <xs:sequence minOccurs="1" maxOccurs="1">
-                    <xs:element name="dict" type="Dict" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element name="meta" type="Meta" minOccurs="0" maxOccurs="unbounded"/>
                 </xs:sequence>                
                 <xs:attribute name="length" type="xs:integer"/>
             </xs:restriction>
@@ -119,7 +119,7 @@
         <xs:complexContent>
             <xs:restriction base="AbstractTree">
                 <xs:sequence minOccurs="1" maxOccurs="1">
-                	<xs:element name="dict" type="Dict" minOccurs="0" maxOccurs="unbounded"/>                	
+                	<xs:element name="meta" type="Meta" minOccurs="0" maxOccurs="unbounded"/>                	
                     <xs:element minOccurs="1" maxOccurs="unbounded" name="node" type="TreeNode"/>
                     <xs:element minOccurs="0" maxOccurs="1" name="rootedge" type="TreeFloatRootEdge"/>
                     <xs:element minOccurs="1" maxOccurs="unbounded" name="edge" type="TreeFloatEdge"/>
@@ -137,7 +137,7 @@
         <xs:complexContent>
             <xs:restriction base="AbstractTree">
                 <xs:sequence minOccurs="1" maxOccurs="1">
-					<xs:element name="dict" type="Dict" minOccurs="0" maxOccurs="unbounded"/>                
+					<xs:element name="meta" type="Meta" minOccurs="0" maxOccurs="unbounded"/>                
                     <xs:element minOccurs="1" maxOccurs="unbounded" name="node" type="TreeNode"/>
                     <xs:element minOccurs="0" maxOccurs="1" name="rootedge" type="TreeIntRootEdge"/>
                     <xs:element minOccurs="1" maxOccurs="unbounded" name="edge" type="TreeIntEdge"/>
