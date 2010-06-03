@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema 
 	xmlns:xs="http://www.w3.org/2001/XMLSchema" 
-	targetNamespace="http://www.nexml.org/1.0"
-    xmlns="http://www.nexml.org/1.0" 
+	targetNamespace="http://www.nexml.org/2009"
+    xmlns="http://www.nexml.org/2009"
     xmlns:sawsdl="http://www.w3.org/ns/sawsdl"
     xmlns:xml="http://www.w3.org/XML/1998/namespace"
     elementFormDefault="qualified">
@@ -111,7 +111,7 @@
         <xs:complexContent>
             <xs:restriction base="AbstractStates">
                 <xs:sequence minOccurs="1" maxOccurs="1">
-                    <xs:element name="dict" minOccurs="0" maxOccurs="unbounded" type="Dict"/>
+                    <xs:element name="meta" minOccurs="0" maxOccurs="unbounded" type="Meta"/>
                     <xs:element name="state" type="DNAState" minOccurs="0" maxOccurs="unbounded"/>
                     <xs:element name="polymorphic_state_set" type="DNAPolymorphicStateSet" minOccurs="0" maxOccurs="unbounded"/>
                     <xs:element name="uncertain_state_set" type="DNAUncertainStateSet" minOccurs="0" maxOccurs="unbounded"/>                    
@@ -133,12 +133,12 @@
         <xs:complexContent>
             <xs:restriction base="AbstractChar">
                 <xs:sequence minOccurs="1" maxOccurs="1">
-                    <xs:element name="dict" minOccurs="0" maxOccurs="unbounded" type="Dict"/>
+                    <xs:element name="meta" minOccurs="0" maxOccurs="unbounded" type="Meta"/>
                 </xs:sequence>    
                 <xs:attribute name="tokens" type="MSTokenLength" use="prohibited"/>                            
-                <xs:attribute name="states" type="xs:NCName" use="required"/>
+                <xs:attribute name="states" type="xs:IDREF" use="required"/>
                 <xs:attribute name="codon" type="CodonPosition" use="optional"/>
-                <xs:attribute name="id" type="xs:NCName" use="required"/>
+                <xs:attribute name="id" type="xs:ID" use="required"/>
             </xs:restriction>
         </xs:complexContent>
     </xs:complexType>
@@ -168,10 +168,10 @@
         <xs:complexContent>
             <xs:restriction base="AbstractObs">
                 <xs:sequence minOccurs="1" maxOccurs="1">
-                    <xs:element name="dict" minOccurs="0" maxOccurs="unbounded" type="Dict"/>
+                    <xs:element name="meta" minOccurs="0" maxOccurs="unbounded" type="Meta"/>
                 </xs:sequence>
-                <xs:attribute name="char" use="required" type="xs:NCName"/>
-                <xs:attribute name="state" use="required" type="xs:NCName"/>
+                <xs:attribute name="char" use="required" type="xs:IDREF"/>
+                <xs:attribute name="state" use="required" type="xs:IDREF"/>
             </xs:restriction>
         </xs:complexContent>
     </xs:complexType>
@@ -194,7 +194,7 @@
         <xs:complexContent>
             <xs:restriction base="AbstractSeqRow">
                 <xs:sequence minOccurs="1" maxOccurs="1">
-                    <xs:element name="dict" minOccurs="0" maxOccurs="unbounded" type="Dict"/>
+                    <xs:element name="meta" minOccurs="0" maxOccurs="unbounded" type="Meta"/>
                     <xs:element name="seq" minOccurs="1" maxOccurs="1" type="DNASeq"/>
                 </xs:sequence>
             </xs:restriction>
@@ -208,7 +208,7 @@
         <xs:complexContent>
             <xs:restriction base="AbstractObsRow">
                 <xs:sequence minOccurs="1" maxOccurs="1">
-                    <xs:element name="dict" minOccurs="0" maxOccurs="unbounded" type="Dict"/>
+                    <xs:element name="meta" minOccurs="0" maxOccurs="unbounded" type="Meta"/>
                     <xs:element name="cell" minOccurs="1" maxOccurs="unbounded" type="DNAObs"/>
                 </xs:sequence>
             </xs:restriction>
@@ -254,7 +254,7 @@
         <xs:complexContent>
             <xs:restriction base="AbstractSeqs">
                 <xs:sequence minOccurs="1" maxOccurs="1">
-                    <xs:element name="dict" minOccurs="0" maxOccurs="unbounded" type="Dict"/>
+                    <xs:element name="meta" minOccurs="0" maxOccurs="unbounded" type="Meta"/>
                     <xs:element name="format" minOccurs="1" maxOccurs="1" type="DNAFormat"/>
                     <xs:element name="matrix" minOccurs="1" maxOccurs="1" type="DNASeqMatrix"/>
                 </xs:sequence>
@@ -271,7 +271,7 @@
         <xs:complexContent>
             <xs:restriction base="AbstractCells">
                 <xs:sequence minOccurs="1" maxOccurs="1">
-                    <xs:element name="dict" minOccurs="0" maxOccurs="unbounded" type="Dict"/>
+                    <xs:element name="meta" minOccurs="0" maxOccurs="unbounded" type="Meta"/>
                     <xs:element name="format" minOccurs="1" maxOccurs="1" type="DNAFormat"/>
                     <xs:element name="matrix" minOccurs="1" maxOccurs="1" type="DNAObsMatrix"/>                   
                 </xs:sequence>

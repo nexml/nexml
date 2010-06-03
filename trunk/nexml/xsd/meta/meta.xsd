@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema 
     xmlns:xs="http://www.w3.org/2001/XMLSchema" 
-    targetNamespace="http://www.nexml.org/1.0"
-    xmlns="http://www.nexml.org/1.0"
+    targetNamespace="http://www.nexml.org/2009"
+    xmlns="http://www.nexml.org/2009"
     elementFormDefault="qualified">
     <xs:annotation>
         <xs:documentation>
@@ -43,7 +43,7 @@
             <xs:restriction base="Dict">
                 <xs:sequence minOccurs="1" maxOccurs="1">
                     <xs:element name="key" type="DateKey" minOccurs="1" maxOccurs="1"/>
-                    <xs:element name="string" type="DateVal" minOccurs="1" maxOccurs="1"/>                  
+                    <xs:element name="string" type="DateVal" minOccurs="1" maxOccurs="1"/>
                 </xs:sequence>
             </xs:restriction>
         </xs:complexContent>
