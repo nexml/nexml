@@ -2,8 +2,8 @@
 <xs:schema 
     xmlns:xs="http://www.w3.org/2001/XMLSchema" 
     xmlns:sawsdl="http://www.w3.org/ns/sawsdl"
-    targetNamespace="http://www.nexml.org/1.0"
-    xmlns="http://www.nexml.org/1.0"
+    targetNamespace="http://www.nexml.org/2009"
+    xmlns="http://www.nexml.org/2009"
     elementFormDefault="qualified">
     <xs:annotation>
         <xs:documentation>
@@ -48,8 +48,8 @@
         </xs:annotation>
         <xs:complexContent>
             <xs:extension base="IDTagged">       
-                <xs:attribute name="source" type="xs:NCName" use="required"/>
-                <xs:attribute name="target" type="xs:NCName" use="required"/>   
+                <xs:attribute name="source" type="xs:IDREF" use="required"/>
+                <xs:attribute name="target" type="xs:IDREF" use="required"/>   
                 <xs:attribute name="length" type="xs:anySimpleType" use="optional"/>             
             </xs:extension>            
         </xs:complexContent>         
@@ -67,7 +67,7 @@
         </xs:annotation>
         <xs:complexContent>
             <xs:extension base="IDTagged">             
-                <xs:attribute name="target" type="xs:NCName" use="required"/>  
+                <xs:attribute name="target" type="xs:IDREF" use="required"/>  
                 <xs:attribute name="length" type="xs:anySimpleType" use="optional"/>              
             </xs:extension>            
         </xs:complexContent>         
