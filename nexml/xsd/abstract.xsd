@@ -2,10 +2,9 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
     xmlns:xml="http://www.w3.org/XML/1998/namespace" xmlns:xlink="http://www.w3.org/1999/xlink"
     targetNamespace="http://www.nexml.org/2009" xmlns="http://www.nexml.org/2009"
-    xmlns:xhtml="http://www.w3.org/1999/xhtml/datatypes/"
-    elementFormDefault="qualified">
-    
-    <xs:import namespace="http://www.w3.org/1999/xhtml/datatypes/" 
+    xmlns:xhtml="http://www.w3.org/1999/xhtml/datatypes/" elementFormDefault="qualified">
+
+    <xs:import namespace="http://www.w3.org/1999/xhtml/datatypes/"
         schemaLocation="external/xhtml-datatypes-1.xsd"/>
 
     <xs:include schemaLocation="meta/annotations.xsd"/>
@@ -27,21 +26,21 @@
 
     <!-- an element that can be annotated with RDFa-compliant metadata -->
     <xs:complexType name="Annotated" abstract="true">
-          <xs:annotation>
-              <xs:documentation>
+        <xs:annotation>
+            <xs:documentation>
                   The Annotated complexType is a super class for objects that 
                   optionally have metadata annotations of type Meta.
               </xs:documentation>
-          </xs:annotation>
-          <xs:complexContent>
-              <xs:extension base="Base">
-                  <xs:sequence>
+        </xs:annotation>
+        <xs:complexContent mixed="true">
+            <xs:extension base="Base">
+                <xs:sequence>
                     <xs:element name="meta" type="Meta" minOccurs="0" maxOccurs="unbounded"/>
-				</xs:sequence>
-                  <xs:attribute name="about" type="xhtml:URIorSafeCURIE" use="optional"/>
-              </xs:extension>
-          </xs:complexContent>
-      </xs:complexType>
+                </xs:sequence>
+                <xs:attribute name="about" type="xhtml:URIorSafeCURIE" use="optional"/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
 
     <!-- an element with a human readable label -->
     <xs:complexType name="Labelled" abstract="true">
@@ -52,7 +51,7 @@
                 name of type xs:string.
             </xs:documentation>
         </xs:annotation>
-        <xs:complexContent>
+        <xs:complexContent mixed="true">
             <xs:extension base="Annotated">
                 <xs:attribute name="label" type="xs:string" use="optional"/>
             </xs:extension>
@@ -67,16 +66,15 @@
                 unique id attributes of type xs:ID. The id must be unique within the XML document.
             </xs:documentation>
         </xs:annotation>
-        <xs:complexContent>
+        <xs:complexContent mixed="true">
             <xs:extension base="Labelled">
                 <xs:sequence/>
-                <xs:attribute name="id" type="xs:ID" use="required"/>
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
 
     <!-- elements that enclose "class" elements -->
-    <xs:complexType name="Segmented" abstract="true">
+    <xs:complexType name="Segmented" abstract="true" mixed="true">
         <xs:annotation>
             <xs:documentation>
                 The Segmented complexType is for elements that contain multiple child 
@@ -86,7 +84,7 @@
                 to.
             </xs:documentation>
         </xs:annotation>
-        <xs:complexContent>
+        <xs:complexContent mixed="true">
             <xs:extension base="IDTagged">
                 <xs:sequence>
                     <xs:element name="class" type="Class" minOccurs="0" maxOccurs="unbounded"/>
@@ -103,7 +101,7 @@
                 require a taxon id reference.
             </xs:documentation>
         </xs:annotation>
-        <xs:complexContent>
+        <xs:complexContent mixed="true">
             <xs:extension base="IDTagged">
                 <xs:attribute name="otu" type="xs:IDREF" use="required"/>
             </xs:extension>
