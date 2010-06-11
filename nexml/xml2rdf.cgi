@@ -35,7 +35,13 @@ if ( $ENV{'PATH_INFO'} || $q->param('url') ) {
 		$url = 'http:/' . $ENV{'PATH_INFO'};
 	}
 	else {
-		$url = $q->param('url');
+		if ( $ENV{'REQUEST_METHOD'} eq 'GET' ) {
+			require URI::Escape;
+			$url = URI::Escape::uri_unescape($q->param('url'));
+		}
+		else {
+			$url = $q->param('url');
+		}
 	}
 	my $response = $ua->get($url);
 	if ( $response->is_success ) {

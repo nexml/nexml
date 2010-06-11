@@ -1,4 +1,12 @@
-use Test::More 'no_plan';
+use Test::More;
+BEGIN {
+    if ( not $ENV{'EVOLUTIONARY_MODELS'} ) {
+        plan 'skip_all' => 'env var EVOLUTIONARY_MODELS not set';
+    }
+    else {
+    	Test::More->import('no_plan');
+    }
+}
 use strict;
 use warnings;
 use Bio::Phylo::Util::CONSTANT qw(
