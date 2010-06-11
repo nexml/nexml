@@ -12,6 +12,7 @@ use Bio::Phylo::Util::CONSTANT qw(
 	looks_like_hash
 	looks_like_instance
 	looks_like_implementor
+	:namespaces
 );
 use vars '@ISA';
 @ISA=qw(Bio::Phylo);
@@ -22,11 +23,11 @@ use vars '@ISA';
     my $DICTIONARY_CONSTANT = _DICTIONARY_;
     my $META_CONSTANT = _META_;
     my %namespaces = (
-    	'nex' => 'http://www.nexml.org/1.0',
-    	'xml' => 'http://www.w3.org/XML/1998/namespace',
-    	'xsi' => 'http://www.w3.org/2001/XMLSchema-instance',
-    	'rdf' => 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
-    	'xsd' => 'http://www.w3.org/2001/XMLSchema#',
+    	'nex' => _NS_NEXML_,
+    	'xml' => _NS_XML_,
+    	'xsi' => _NS_XSI_,
+    	'rdf' => _NS_RDF_,
+    	'xsd' => _NS_XSD_,
     );
     my @fields = \( my ( %tag, %id, %attributes, %identifiable, %suppress_ns, %meta ) );
 

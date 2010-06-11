@@ -18,6 +18,7 @@ use CGI::Carp 'fatalsToBrowser';
 use Bio::Phylo::IO qw(parse unparse);
 use Bio::Phylo::Factory;
 use HTML::Entities;
+use Bio::Phylo::Util::CONSTANT ':namespaces';
 use constant URL => 'http://150.135.239.5/onlinecontributors/app?service=external&page=xml/TreeStructureService&node_id=';
 
 if ( $ENV{'QUERY_STRING'} =~ /wsdl/ ) {
@@ -39,22 +40,20 @@ if ( $ENV{'PATH_INFO'} and $ENV{'PATH_INFO'} =~ m|tree/ToL:([0-9]+)$| ) {
 			'-url'    => $url
 		);
 		my ( $forest, $project ) = ( $fac->create_forest, $fac->create_project );
-		my $dict = $fac->create_dictionary;		
 		$forest->insert( $tree );
 		$project->insert( $forest );
-		$dict->insert(
-		    $fac->create_annotation( 
-		        '-xml_id' => 'source',
-		        '-tag'    => 'uri',
-		        '-value'  => encode_entities($url),
-		    ),
-		    $fac->create_annotation( 
-		        '-xml_id' => 'webpage',
-		        '-tag'    => 'uri',
-		        '-value'  => 'http://tolweb.org/' . $id,
-		    ),		    
+		$forest->add_meta( 
+			$fac->create_meta(
+				'-namespaces' => { 'dcterms' => _NS_DCTERMS_ },
+				'-triple'     => { 'dcterms:identifier' => $id },
+			)
 		);
-		$forest->add_dictionary( $dict );
+		$forest->add_meta( 
+			$fac->create_meta(
+				'-namespaces' => { 'owl' => _NS_OWL_ },		
+				'-triple'     => { 'owl:sameAs' => 'http://tolweb.org/' . $id }
+			)
+		);		
 		$nexml = $project->to_xml; 
 	};
 	if ( $nexml and not $@ ) {

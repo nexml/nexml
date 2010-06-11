@@ -1224,6 +1224,11 @@ Calculates stemminess measure from Rohlf et al. (1990).
 		# invocant is a tree
 		my $self = shift;
 		
+		throw ObjectMismatch => "This algorithm isn't generalized to
+			deal with multifurcations" if $self->calc_resolution < 1;
+		throw ObjectMismatch => "This algorithm requires branch lengths"
+			unless $self->calc_tree_length;
+		
 		# all internal nodes in the tree
 		my @internals = @{ $self->get_internals };
 		
@@ -1237,7 +1242,7 @@ Calculates stemminess measure from Rohlf et al. (1990).
 		my $one_over_t_minus_two = 1 / ( scalar @terminals - 2 );
 		
 		# iterate over all nodes, as per equation (1)
-		for my $node ( @internals ) {
+			for my $node ( @internals ) {
 			
 			# only process nodes that aren't the root
 			if ( my $parent = $node->get_parent ) {
