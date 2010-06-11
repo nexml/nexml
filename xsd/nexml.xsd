@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xs:schema 
-	xmlns="http://www.nexml.org/2009" 
-	xmlns:xs="http://www.w3.org/2001/XMLSchema" 
-	targetNamespace="http://www.nexml.org/2009"
-	elementFormDefault="qualified">
+<xs:schema xmlns="http://www.nexml.org/2009" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  targetNamespace="http://www.nexml.org/2009" elementFormDefault="qualified">
   <xs:annotation>
     <xs:documentation>
       This module constitutes in effect the 'main' class of the nexml schema.
@@ -18,14 +15,14 @@
       $Id: $
     </xs:documentation>
   </xs:annotation>
-  
+
   <xs:include schemaLocation="taxa/taxa.xsd"/>
   <xs:include schemaLocation="characters/characters.xsd"/>
   <xs:include schemaLocation="trees/trees.xsd"/>
-  <xs:include schemaLocation="meta/annotations.xsd"></xs:include>
+  <xs:include schemaLocation="meta/annotations.xsd"/>
   <!-- xs:include schemaLocation="meta/meta.xsd"/-->
   <!--<xs:include schemaLocation="models/models.xsd"/>-->
-  
+
   <xs:simpleType name="Nexml1_0">
     <xs:annotation>
       <xs:documentation>
@@ -38,20 +35,20 @@
       <xs:pattern value="0\.9"/>
     </xs:restriction>
   </xs:simpleType>
-  
-  <xs:complexType name="Nexml">
+
+  <xs:complexType name="Nexml" mixed="true">
     <xs:annotation>
       <xs:documentation>
         The root element for nexml.
       </xs:documentation>
     </xs:annotation>
-    <xs:complexContent>
+    <xs:complexContent mixed="true">
       <xs:extension base="Annotated">
         <xs:sequence maxOccurs="unbounded" minOccurs="0">
-          <xs:element maxOccurs="unbounded" minOccurs="1" name="otus" type="Taxa"/>        
+          <xs:element maxOccurs="unbounded" minOccurs="1" name="otus" type="Taxa"/>
           <xs:sequence maxOccurs="unbounded" minOccurs="0">
             <xs:choice>
-              <xs:element maxOccurs="unbounded" minOccurs="0" name="characters" type="AbstractBlock"/>                                                                 
+              <xs:element maxOccurs="unbounded" minOccurs="0" name="characters" type="AbstractBlock"/>
               <xs:element maxOccurs="unbounded" minOccurs="0" name="trees" type="Trees">
                 <xs:key name="tree">
                   <xs:selector xpath="./tree"/>
@@ -59,10 +56,10 @@
                 </xs:key>
               </xs:element>
             </xs:choice>
-          </xs:sequence>     
+          </xs:sequence>
         </xs:sequence>
         <xs:attribute name="version" type="Nexml1_0" use="required"/>
-        <xs:attribute name="generator" type="xs:string" use="optional"/>        
+        <xs:attribute name="generator" type="xs:string" use="optional"/>
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
@@ -70,7 +67,7 @@
   <!-- the root of the document -->
   <xs:element name="nexml" type="Nexml">
 
-    <!-- keys for child-of-root biodata containers: taxa, characters trees -->    
+    <!-- keys for child-of-root biodata containers: taxa, characters trees -->
     <xs:key name="taxa">
       <xs:selector xpath="./taxa"/>
       <xs:field xpath="@id"/>
@@ -83,11 +80,11 @@
       <xs:selector xpath="./trees"/>
       <xs:field xpath="@id"/>
     </xs:key>
-    
+
     <xs:key name="taxon">
       <xs:selector xpath="./taxa/taxon"/>
       <xs:field xpath="@id"/>
-    </xs:key>    
+    </xs:key>
 
     <!-- links to taxon objects: from row to taxon, from node to taxon -->
     <xs:keyref name="rowTaxonRef" refer="taxon">
@@ -101,7 +98,7 @@
     <xs:keyref name="nestedNodeTaxonRef" refer="taxon">
       <xs:selector xpath="./trees/tree/root/internal/*/terminal"/>
       <xs:field xpath="@taxon"/>
-    </xs:keyref>    
+    </xs:keyref>
 
   </xs:element>
 </xs:schema>

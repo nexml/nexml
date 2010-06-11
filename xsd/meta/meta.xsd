@@ -30,7 +30,7 @@
             <xs:pattern value="$Date: .*$"/>
         </xs:restriction>
     </xs:simpleType> 
-    <xs:complexType name="RCSDate">
+    <!--xs:complexType name="RCSDate">
         <xs:annotation>
             <xs:documentation>
                 a simple key/value pair, where key 
@@ -47,7 +47,7 @@
                 </xs:sequence>
             </xs:restriction>
         </xs:complexContent>
-    </xs:complexType>       
+    </xs:complexType-->       
 
     <!-- same thing for svn $Rev: $ -->
     <xs:simpleType name="RevKey">
@@ -60,7 +60,7 @@
             <xs:pattern value="$Rev: .*$"/>
         </xs:restriction>
     </xs:simpleType>  
-    <xs:complexType name="RCSRev">
+    <!--xs:complexType name="RCSRev">
         <xs:annotation>
             <xs:documentation>
                 a simple key/value pair, where key 
@@ -77,7 +77,7 @@
                 </xs:sequence>
             </xs:restriction>
         </xs:complexContent>
-    </xs:complexType> 
+    </xs:complexType--> 
 
     <!-- same thing for svn $Author: $ -->
     <xs:simpleType name="AuthorKey">
@@ -90,7 +90,7 @@
             <xs:pattern value="$Author: .*$"/>
         </xs:restriction>
     </xs:simpleType>    
-    <xs:complexType name="RCSAuthor">
+    <!--xs:complexType name="RCSAuthor">
         <xs:annotation>
             <xs:documentation>
                 a simple key/value pair, where key 
@@ -107,7 +107,7 @@
                 </xs:sequence>
             </xs:restriction>
         </xs:complexContent>
-    </xs:complexType>     
+    </xs:complexType-->     
 
     <!-- same thing for svn $URL: $ -->
     <xs:simpleType name="URLKey">
@@ -120,7 +120,7 @@
             <xs:pattern value="$URL: .*$"/>
         </xs:restriction>
     </xs:simpleType> 
-    <xs:complexType name="RCSURL">
+    <!--xs:complexType name="RCSURL">
         <xs:annotation>
             <xs:documentation>
                 a simple key/value pair, where key 
@@ -137,7 +137,7 @@
                 </xs:sequence>
             </xs:restriction>
         </xs:complexContent>
-    </xs:complexType>        
+    </xs:complexType-->        
 
     <!-- same thing for svn $Id: $ -->
     <xs:simpleType name="IdKey">
@@ -150,7 +150,7 @@
             <xs:pattern value="$Id: .*$"/>
         </xs:restriction>
     </xs:simpleType> 
-    <xs:complexType name="RCSId">
+    <!--xs:complexType name="RCSId">
         <xs:annotation>
             <xs:documentation>
                 a simple key/value pair, where key 
@@ -167,7 +167,7 @@
                 </xs:sequence>
             </xs:restriction>
         </xs:complexContent>
-    </xs:complexType>        
+    </xs:complexType-->        
 
     <!-- same thing for svn $Header: $ -->
     <xs:simpleType name="HeaderKey">
@@ -180,7 +180,7 @@
             <xs:pattern value="$Header: .*$"/>
         </xs:restriction>
     </xs:simpleType>  
-    <xs:complexType name="RCSHeader">
+    <!--xs:complexType name="RCSHeader">
         <xs:annotation>
             <xs:documentation>
                 a simple key/value pair, where key 
@@ -197,7 +197,7 @@
                 </xs:sequence>
             </xs:restriction>
         </xs:complexContent>
-    </xs:complexType>
+    </xs:complexType-->
 
     <!-- this is just syntax sugar to indicate that 
         the elements within the <any> tag are
@@ -220,7 +220,7 @@
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
-    <xs:complexType name="DC">
+    <!--xs:complexType name="DC">
         <xs:complexContent>
             <xs:restriction base="Dict">
                 <xs:sequence minOccurs="1" maxOccurs="1">
@@ -229,7 +229,7 @@
                 </xs:sequence>
             </xs:restriction>
         </xs:complexContent>
-    </xs:complexType>
+    </xs:complexType-->
     
     <!-- this is a wrapper around XHTML -->
     <xs:simpleType name="XHTMLKey">
@@ -250,7 +250,7 @@
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
-    <xs:complexType name="XHTML">
+    <!--xs:complexType name="XHTML">
         <xs:complexContent>
             <xs:restriction base="Dict">
                 <xs:sequence minOccurs="1" maxOccurs="1">
@@ -259,7 +259,7 @@
                 </xs:sequence>
             </xs:restriction>
         </xs:complexContent>
-    </xs:complexType>    
+    </xs:complexType-->    
 
     <!-- this is a wrapper around RSS -->
     <xs:simpleType name="RSSKey">
@@ -280,7 +280,7 @@
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
-    <xs:complexType name="RSS">
+    <!--xs:complexType name="RSS">
         <xs:complexContent>
             <xs:restriction base="Dict">
                 <xs:sequence minOccurs="1" maxOccurs="1">
@@ -289,6 +289,6 @@
                 </xs:sequence>
             </xs:restriction>
         </xs:complexContent>
-    </xs:complexType> 
+    </xs:complexType--> 
 
 </xs:schema>

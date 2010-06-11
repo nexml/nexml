@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-    targetNamespace="http://www.nexml.org/2009"
-    xmlns:sawsdl="http://www.w3.org/ns/sawsdl"
-    xmlns="http://www.nexml.org/2009"
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.nexml.org/2009"
+    xmlns:sawsdl="http://www.w3.org/ns/sawsdl" xmlns="http://www.nexml.org/2009"
     elementFormDefault="qualified">
     <xs:annotation>
         <xs:documentation>
@@ -18,23 +16,24 @@
     <!-- 
         The following type definitions build up a taxa block  
     -->
-    
+
     <!-- Otu data type -->
-    <xs:complexType name="Taxon" sawsdl:modelReference="http://evolutionaryontology-dev.nescent.org/cdao.owl#TU">
+    <xs:complexType name="Taxon"
+        sawsdl:modelReference="http://evolutionaryontology-dev.nescent.org/cdao.owl#TU">
         <xs:complexContent>
             <xs:extension base="IDTagged"/>
         </xs:complexContent>
     </xs:complexType>
-    
+
     <!-- Otus data type -->
     <xs:complexType name="Taxa">
-        <xs:complexContent>
+        <xs:complexContent mixed="true">
             <xs:extension base="IDTagged">
                 <xs:sequence>
-                    <xs:element name="otu" type="Taxon" minOccurs="0" maxOccurs="unbounded"/>                    
+                    <xs:element name="otu" type="Taxon" minOccurs="0" maxOccurs="unbounded"/>
                 </xs:sequence>
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
-    
+
 </xs:schema>
