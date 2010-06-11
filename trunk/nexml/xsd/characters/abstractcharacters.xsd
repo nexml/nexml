@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xs:schema 
-	xmlns:xs="http://www.w3.org/2001/XMLSchema"
-	xmlns:sawsdl="http://www.w3.org/ns/sawsdl" 
-	targetNamespace="http://www.nexml.org/2009"
-    xmlns="http://www.nexml.org/2009"
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:sawsdl="http://www.w3.org/ns/sawsdl"
+    targetNamespace="http://www.nexml.org/2009" xmlns="http://www.nexml.org/2009"
     elementFormDefault="qualified">
     <xs:annotation>
         <xs:documentation>
@@ -20,7 +17,7 @@
     </xs:annotation>
 
     <xs:include schemaLocation="../abstract.xsd"/>
-    
+
     <xs:complexType name="AbstractMapping" abstract="true">
         <xs:annotation>
             <xs:documentation>
@@ -38,7 +35,7 @@
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
-    
+
     <xs:simpleType name="AbstractSymbol">
         <xs:annotation>
             <xs:documentation>
@@ -61,16 +58,15 @@
                 enclose zero or more AbstractMapping elements to resolve ambiguities.
             </xs:documentation>
         </xs:annotation>
-        <xs:complexContent>
+        <xs:complexContent mixed="true">
             <xs:extension base="IDTagged">
-                <xs:sequence minOccurs="1" maxOccurs="1">
-                </xs:sequence>
+                <xs:sequence minOccurs="1" maxOccurs="1"> </xs:sequence>
                 <xs:attribute name="symbol" type="xs:anySimpleType" use="required"/>
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
-    
-    <xs:complexType name="AbstractUncertainStateSet" abstract="true">
+
+    <xs:complexType name="AbstractUncertainStateSet" abstract="true" mixed="true">
         <xs:annotation>
             <xs:documentation> 
                 The AbstractState type is the superclass for a state definition.
@@ -79,16 +75,17 @@
                 enclose zero or more AbstractMapping elements to resolve ambiguities.
             </xs:documentation>
         </xs:annotation>
-        <xs:complexContent>
+        <xs:complexContent mixed="true">
             <xs:extension base="AbstractState">
                 <xs:sequence minOccurs="1" maxOccurs="1">
-                    <xs:element name="member" type="AbstractMapping" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element name="member" type="AbstractMapping" minOccurs="0"
+                        maxOccurs="unbounded"/>
                 </xs:sequence>
             </xs:extension>
         </xs:complexContent>
-    </xs:complexType>    
-    
-    <xs:complexType name="AbstractPolymorphicStateSet" abstract="true">
+    </xs:complexType>
+
+    <xs:complexType name="AbstractPolymorphicStateSet" abstract="true" mixed="true">
         <xs:annotation>
             <xs:documentation> 
                 The AbstractState type is the superclass for a state definition.
@@ -97,15 +94,16 @@
                 enclose zero or more AbstractMapping elements to resolve ambiguities.
             </xs:documentation>
         </xs:annotation>
-        <xs:complexContent>
+        <xs:complexContent mixed="true">
             <xs:extension base="AbstractUncertainStateSet">
                 <xs:sequence minOccurs="1" maxOccurs="1">
-                    <xs:element name="uncertain_state_set" type="AbstractUncertainStateSet" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element name="uncertain_state_set" type="AbstractUncertainStateSet"
+                        minOccurs="0" maxOccurs="unbounded"/>
                 </xs:sequence>
             </xs:extension>
         </xs:complexContent>
-    </xs:complexType>     
-    
+    </xs:complexType>
+
     <!-- TODO place constraint on symbol unicity -->
     <xs:complexType name="AbstractStates" abstract="true">
         <xs:annotation>
@@ -113,17 +111,20 @@
                 A container for a set of AbstractState elements.
             </xs:documentation>
         </xs:annotation>
-        <xs:complexContent>
+        <xs:complexContent mixed="true">
             <xs:extension base="IDTagged">
                 <xs:sequence minOccurs="1" maxOccurs="1">
-                    <xs:element name="state" type="AbstractState" minOccurs="0" maxOccurs="unbounded"/>
-                    <xs:element name="polymorphic_state_set" type="AbstractPolymorphicStateSet" minOccurs="0" maxOccurs="unbounded"/>
-                    <xs:element name="uncertain_state_set" type="AbstractUncertainStateSet" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element name="state" type="AbstractState" minOccurs="0"
+                        maxOccurs="unbounded"/>
+                    <xs:element name="polymorphic_state_set" type="AbstractPolymorphicStateSet"
+                        minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element name="uncertain_state_set" type="AbstractUncertainStateSet"
+                        minOccurs="0" maxOccurs="unbounded"/>
                 </xs:sequence>
             </xs:extension>
-        </xs:complexContent>        
+        </xs:complexContent>
     </xs:complexType>
-    
+
     <xs:simpleType name="CodonPosition">
         <xs:annotation>
             <xs:documentation>
@@ -135,7 +136,7 @@
             <xs:maxInclusive value="3"/>
         </xs:restriction>
     </xs:simpleType>
-    
+
     <xs:simpleType name="MSTokenLength">
         <xs:annotation>
             <xs:documentation>
@@ -149,7 +150,8 @@
         <xs:restriction base="xs:positiveInteger"/>
     </xs:simpleType>
 
-    <xs:complexType name="AbstractChar" abstract="true" sawsdl:modelReference="http://evolutionaryontology-dev.nescent.org/cdao.owl#Character">
+    <xs:complexType name="AbstractChar" abstract="true"
+        sawsdl:modelReference="http://evolutionaryontology-dev.nescent.org/cdao.owl#Character">
         <xs:annotation>
             <xs:documentation> 
                 The AbstractChar type is the superclass for a column definition, which may
@@ -160,9 +162,9 @@
             </xs:documentation>
             <xs:appinfo>Character</xs:appinfo>
         </xs:annotation>
-        <xs:complexContent>
+        <xs:complexContent mixed="true">
             <xs:extension base="IDTagged">
-                <xs:sequence minOccurs="1" maxOccurs="1"/>                
+                <xs:sequence minOccurs="1" maxOccurs="1"/>
                 <xs:attribute name="tokens" type="MSTokenLength" use="optional"/>
                 <xs:attribute name="states" type="xs:IDREF" use="optional"/>
                 <xs:attribute name="codon" type="CodonPosition" use="optional"/>
@@ -170,7 +172,7 @@
         </xs:complexContent>
     </xs:complexType>
 
-    <xs:complexType name="AbstractFormat" abstract="true">
+    <xs:complexType name="AbstractFormat" abstract="true" mixed="true">
         <xs:annotation>
             <xs:documentation> 
                 The AbstractFormat type is the superclass for the element
@@ -179,12 +181,14 @@
                 AbstractChar elements that specify which AbstractStates apply to which matrix columns.
             </xs:documentation>
         </xs:annotation>
-        <xs:complexContent>
+        <xs:complexContent mixed="true">
             <xs:extension base="Annotated">
                 <xs:sequence minOccurs="1" maxOccurs="1">
-                    <xs:element name="states" minOccurs="0" maxOccurs="unbounded" type="AbstractStates"/>
-                    <xs:element name="char" minOccurs="0" maxOccurs="unbounded" type="AbstractChar"/>
-                </xs:sequence>                
+                    <xs:element name="states" minOccurs="0" maxOccurs="unbounded"
+                        type="AbstractStates"/>
+                    <xs:element name="char" minOccurs="0" maxOccurs="unbounded" type="AbstractChar"
+                    />
+                </xs:sequence>
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
@@ -219,7 +223,7 @@
         </xs:annotation>
         <xs:restriction base="xs:string"/>
     </xs:simpleType>
-    
+
     <xs:simpleType name="AbstractTokenList">
         <xs:annotation>
             <xs:documentation>
@@ -228,7 +232,7 @@
                 Examples of this are continuous character data (where the compact 
                 representation is a list of space-separated floating point numbers) and
                 standard categorical data (which is represented as integers, which can be
-                > 9, and hence need to be space-separated).
+                &gt; 9, and hence need to be space-separated).
             </xs:documentation>
         </xs:annotation>
         <xs:list itemType="xs:double"/>
@@ -243,7 +247,7 @@
                 contains a single seq element with raw character data.
             </xs:documentation>
         </xs:annotation>
-        <xs:complexContent>
+        <xs:complexContent mixed="true">
             <xs:extension base="TaxonLinked">
                 <xs:sequence minOccurs="1" maxOccurs="1">
                     <xs:element name="seq" minOccurs="1" maxOccurs="1" type="xs:anySimpleType"/>
@@ -251,8 +255,8 @@
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
-    
-    <xs:complexType name="AbstractObsRow" abstract="true">
+
+    <xs:complexType name="AbstractObsRow" abstract="true" mixed="true">
         <xs:annotation>
             <xs:documentation> 
                 The AbstractObsRow represents a single row in a matrix. The row
@@ -261,48 +265,51 @@
                 contains multiple obs elements.
             </xs:documentation>
         </xs:annotation>
-        <xs:complexContent>
+        <xs:complexContent mixed="true">
             <xs:extension base="TaxonLinked">
                 <xs:sequence minOccurs="1" maxOccurs="1">
                     <xs:element name="cell" minOccurs="1" maxOccurs="unbounded" type="AbstractObs"/>
                 </xs:sequence>
             </xs:extension>
         </xs:complexContent>
-    </xs:complexType>    
+    </xs:complexType>
 
-    <xs:complexType name="AbstractSeqMatrix" abstract="true">
+    <xs:complexType name="AbstractSeqMatrix" abstract="true" mixed="true">
         <xs:annotation>
             <xs:documentation> 
                 The AbstractSeqMatrix super class is the abstract type for a
                 &lt;matrix&gt; element that contains rows which hold raw character sequences. 
             </xs:documentation>
         </xs:annotation>
-        <xs:complexContent>
+        <xs:complexContent mixed="true">
             <xs:extension base="Annotated">
-                <xs:sequence minOccurs="1" maxOccurs="1">            
-                    <xs:element name="row" minOccurs="1" maxOccurs="unbounded" type="AbstractSeqRow"/> 
-                </xs:sequence>                
+                <xs:sequence minOccurs="1" maxOccurs="1">
+                    <xs:element name="row" minOccurs="1" maxOccurs="unbounded" type="AbstractSeqRow"
+                    />
+                </xs:sequence>
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
-    
-    <xs:complexType name="AbstractObsMatrix" abstract="true">
+
+    <xs:complexType name="AbstractObsMatrix" abstract="true" mixed="true">
         <xs:annotation>
             <xs:documentation>                
                 The AbstractObsMatrix super class is the abstract type for a
                 &lt;matrix&gt; element that contains rows which hold granular state observations.
             </xs:documentation>
         </xs:annotation>
-        <xs:complexContent>
+        <xs:complexContent mixed="true">
             <xs:extension base="Annotated">
-                <xs:sequence minOccurs="1" maxOccurs="1">            
-                    <xs:element name="row" minOccurs="1" maxOccurs="unbounded" type="AbstractObsRow"/> 
-                </xs:sequence>                
+                <xs:sequence minOccurs="1" maxOccurs="1">
+                    <xs:element name="row" minOccurs="1" maxOccurs="unbounded" type="AbstractObsRow"
+                    />
+                </xs:sequence>
             </xs:extension>
         </xs:complexContent>
-    </xs:complexType>    
-    
-    <xs:complexType name="AbstractBlock" abstract="true" sawsdl:modelReference="http://evolutionaryontology-dev.nescent.org/cdao.owl#CharacterStateDataMatrix">
+    </xs:complexType>
+
+    <xs:complexType name="AbstractBlock" abstract="true"
+        sawsdl:modelReference="http://evolutionaryontology-dev.nescent.org/cdao.owl#CharacterStateDataMatrix">
         <xs:annotation>
             <xs:documentation>
                 The AbstractBlock is the superclass for blocks that contain
@@ -310,31 +317,31 @@
             </xs:documentation>
             <xs:appinfo>Character_State_Data_Matrix</xs:appinfo>
         </xs:annotation>
-        <xs:complexContent>
+        <xs:complexContent mixed="true">
             <xs:extension base="TaxaLinked">
                 <xs:sequence minOccurs="1" maxOccurs="1">
-                    <xs:element name="format" minOccurs="0" maxOccurs="1" type="AbstractFormat"/> 
-                </xs:sequence>                
+                    <xs:element name="format" minOccurs="0" maxOccurs="1" type="AbstractFormat"/>
+                </xs:sequence>
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
 
-    <xs:complexType name="AbstractSeqs" abstract="true">
+    <xs:complexType name="AbstractSeqs" abstract="true" mixed="true">
         <xs:annotation>
             <xs:documentation> 
                 The AbstractSeqBlock type is the superclass for character blocks that
                 consist of raw character sequences.
             </xs:documentation>
         </xs:annotation>
-        <xs:complexContent>
+        <xs:complexContent mixed="true">
             <xs:extension base="AbstractBlock">
                 <xs:sequence minOccurs="1" maxOccurs="1">
-                    <xs:element name="matrix" minOccurs="1" maxOccurs="1" type="AbstractSeqMatrix"/> 
+                    <xs:element name="matrix" minOccurs="1" maxOccurs="1" type="AbstractSeqMatrix"/>
                 </xs:sequence>
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
-    
+
     <xs:complexType name="AbstractCells" abstract="true">
         <xs:annotation>
             <xs:documentation> 
@@ -342,13 +349,13 @@
                 consist of granular character state observations. 
             </xs:documentation>
         </xs:annotation>
-        <xs:complexContent>
+        <xs:complexContent mixed="true">
             <xs:extension base="AbstractBlock">
                 <xs:sequence minOccurs="1" maxOccurs="1">
-                    <xs:element name="matrix" minOccurs="1" maxOccurs="1" type="AbstractObsMatrix"/> 
+                    <xs:element name="matrix" minOccurs="1" maxOccurs="1" type="AbstractObsMatrix"/>
                 </xs:sequence>
             </xs:extension>
         </xs:complexContent>
-    </xs:complexType>    
-      
+    </xs:complexType>
+
 </xs:schema>
