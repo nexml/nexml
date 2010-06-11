@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Komodo Project File - DO NOT EDIT -->
 <project id="52f87a86-7232-6042-be6b-9b08f84426d2" kpf_version="4" name="BioPhylo.kpf">
+<folder id="928869a7-3830-9847-926f-55125575f0c9" idref="52f87a86-7232-6042-be6b-9b08f84426d2/lib/Bio/Phylo" name="Generator">
+</folder>
 <preference-set idref="52f87a86-7232-6042-be6b-9b08f84426d2">
   <string id="import_exclude_matches">*.*~;*.bak;*.tmp;CVS;.#*;*.pyo;*.pyc;.svn;*%*;tmp*.html;.DS_Store</string>
   <string id="import_include_matches"></string>

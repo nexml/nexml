@@ -3,7 +3,7 @@ use strict;
 use warnings;
 use Bio::Phylo::IO ();
 use Bio::Phylo::Util::Exceptions 'throw';
-use Bio::Phylo::Util::CONSTANT 'looks_like_instance';
+use Bio::Phylo::Util::CONSTANT qw'looks_like_instance :namespaces';
 use Bio::Phylo::Factory;
 use vars qw(@ISA $VERSION);
 @ISA = qw(Bio::Phylo::IO);
@@ -136,7 +136,7 @@ sub _from_both {
 	$self->{'_tree'}->get_root->add_meta(
 	    $factory->create_meta(
 	        '-triple' => {
-	            'tba:ID' => $root->get_generic('ANCESTORWITHPAGE')
+	            'tba:id' => $root->get_generic('ANCESTORWITHPAGE')
 	        }
 	    )
 	);
@@ -194,25 +194,25 @@ sub _handle_node {
 			}			
 		}
 		elsif ( $child_elt->tag eq 'DESCRIPTION' ) {
-		    $node_obj->set_namespaces( 'dc' => 'http://purl.org/dc/elements/1.1/' );
+		    $node_obj->set_namespaces( 'dc' => _NS_DC_ );
 		    $node_obj->add_meta(
 		        $factory->create_meta( '-triple' => { 'dc:description' => $child_elt->text } )
 		    );
 		}
 		elsif ( my $text = $child_elt->text ) {
-		    $node_obj->set_namespaces( 'tbe' => 'http://tolweb.org/elements#' );
+		    $node_obj->set_namespaces( 'tbe' => _NS_TWE_ );
 		    $node_obj->add_meta(
-		        $factory->create_meta( '-triple' => { 'tbe:' . $child_elt->tag => $text } )    
+		        $factory->create_meta( '-triple' => { 'tbe:' . lc($child_elt->tag) => $text } )    
 		    );
 		}		
 	}
 	for my $att_name ( $node_elt->att_names ) {
-	    $node_obj->set_namespaces( 'tba' => 'http://tolweb.org/attributes#' );
-	    if ( $att_name eq 'ANCESTORWITHPAGE' ) {
-	        $node_obj->set_generic( 'ANCESTORWITHPAGE' => $node_elt->att($att_name) );
+	    $node_obj->set_namespaces( 'tba' => _NS_TWA_ );
+	    if ( $att_name eq 'ancestorwithpage' ) {
+	        $node_obj->set_generic( 'ancestorwithpage' => $node_elt->att($att_name) );
 	    }
         $node_obj->add_meta(
-            $factory->create_meta( '-triple' => { 'tba:' . $att_name => $node_elt->att($att_name) } )		    
+            $factory->create_meta( '-triple' => { 'tba:' . lc($att_name) => $node_elt->att($att_name) } )		    
         );
  	}
 	$twig->purge;
