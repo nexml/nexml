@@ -37,13 +37,13 @@
 		  http://en.wikipedia.org/wiki/XLink
 -->
 <nex:nexml 
-	version="0.8"
+	version="0.9"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.nexml.org/1.0 ../xsd/nexml.xsd"
-	xmlns:nex="http://www.nexml.org/1.0"
 	generator="mesquite"
 	xmlns:xlink="http://www.w3.org/1999/xlink"
-	xmlns="http://www.nexml.org/1.0">
+	xmlns:nex="http://www.nexml.org/2009"
+	xmlns="http://www.nexml.org/2009"
+	xsi:schemaLocation="http://www.nexml.org/2009 ../xsd/nexml.xsd">
 	<!--
 		The taxa element is analogous to the taxa block in nexus
 		files. Like all elements that capture things that might
@@ -66,7 +66,6 @@
 		label="My taxa block" 
 		xml:base="http://example.org/" 
 		xml:id="taxa1" 
-		class="taxset1" 
 		xml:lang="EN" 
 		xlink:href="#taxa1">
 		<!--  
