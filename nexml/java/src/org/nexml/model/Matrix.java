@@ -29,11 +29,17 @@ public interface Matrix<T> extends OTUsLinkable {
 	 */
 	MatrixCell<T> getCell(OTU otu, Character character);
 	
+
+	/**
+	 * Returns a list of the characters ("columns") in the matrix
+	 * @return list of character
+	 */
+	List<Character> getCharacters();
+
 	/**
 	 * Removes a column from the matrix
 	 * @param character
 	 */
-	List<Character> getCharacters();
 	
 	void removeCharacter(Character character);
 	
