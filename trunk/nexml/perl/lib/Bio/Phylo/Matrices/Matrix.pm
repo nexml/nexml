@@ -5,7 +5,12 @@ use strict;
 use Bio::Phylo::Factory;
 use Bio::Phylo::Taxa::TaxaLinker;
 use Bio::Phylo::IO qw(unparse);
-use Bio::Phylo::Util::CONSTANT qw(:objecttypes looks_like_hash looks_like_instance);
+use Bio::Phylo::Util::CONSTANT qw(
+	:objecttypes 
+	looks_like_hash 
+	looks_like_instance 
+	looks_like_number
+);
 use Bio::Phylo::Util::Exceptions qw(throw);
 use Bio::Phylo::NeXML::Writable ();
 use Bio::Phylo::Matrices::TypeSafeData ();
@@ -734,7 +739,12 @@ Creates bootstrapped clone.
  Usage   : my $bootstrap = $object->bootstrap;
  Function: Creates bootstrapped clone.
  Returns : A bootstrapped clone of the invocant.
- Args    : NONE
+ Args    : Optional, a subroutine reference that returns a random
+           integer between 0 (inclusive) and the argument provided
+           to it (exclusive). The default implementation is to use
+           sub { int( rand( shift ) ) }, a user might override this
+           by providing an implementation with a better random number
+           generator.
  Comments: The bootstrapping algorithm uses perl's random number
            generator to create a new series of indices (without
            replacement) of the same length as the original matrix.
@@ -745,12 +755,69 @@ Creates bootstrapped clone.
 =cut
 
 	sub bootstrap {
-		my $self = shift;		
+		my $self = shift;
+		my $gen = shift || sub { int(rand(shift)) };
 		my $clone = $self->clone;
 		my $nchar = $clone->get_nchar;
 		my @indices;
-		push @indices, int(rand($nchar)) for ( 1 .. $nchar );
+		push @indices, $gen->($nchar) for ( 1 .. $nchar );
 		@indices = sort { $a <=> $b } @indices;
+		for my $row ( @{ $clone->get_entities } ) {
+			my @anno = @{ $row->get_annotations };	
+			my @char = @{ $row->get_entities };
+			my @resampled = @char[@indices];
+			$row->set_char(@resampled);
+			if ( @anno ) {
+				my @re_anno = @anno[@indices];
+				$row->set_annotations(@re_anno);
+			}
+		}
+		my @labels = @{ $clone->get_charlabels };
+		if ( @labels ) {
+			my @re_labels = @labels[@indices];
+			$clone->set_charlabels(\@re_labels);
+		}
+		return $clone;
+	}
+
+=item jackknife()
+
+Creates jackknifed clone.
+
+ Type    : Utility method
+ Title   : jackknife
+ Usage   : my $bootstrap = $object->jackknife(0.5);
+ Function: Creates jackknifed clone.
+ Returns : A jackknifed clone of the invocant.
+ Args    : * Required, a number between 0 and 1, representing the
+             fraction of characters to jackknife. 
+           * Optional, a subroutine reference that returns a random
+             integer between 0 (inclusive) and the argument provided
+             to it (exclusive). The default implementation is to use
+             sub { int( rand( shift ) ) }, a user might override this
+             by providing an implementation with a better random number
+             generator.
+ Comments: The jackknife algorithm uses perl's random number
+           generator to create a new series of indices of cells to keep.
+           These indices are first sorted, then applied to the 
+           cloned sequences. Annotations (if present) stay connected
+           to the resampled cells.
+
+=cut
+
+	sub jackknife {
+		my ( $self, $prop ) = @_;
+		if ( not looks_like_number $prop or $prop >= 1 or $prop < 0 ) {
+			throw 'BadNumber' => "Jackknifing proportion must be a number between 0 and 1";
+		}
+		my $gen = $_[2] || sub { int(rand(shift)) };
+		my $clone = $self->clone;
+		my $nchar = $clone->get_nchar;
+		my ( %indices, @indices );
+		while ( scalar keys %indices < ( $nchar - int( $nchar * $prop ) ) ) {
+			$indices{ $gen->($nchar) } = 1;
+		}
+		@indices = sort { $a <=> $b } keys %indices;
 		for my $row ( @{ $clone->get_entities } ) {
 			my @anno = @{ $row->get_annotations };	
 			my @char = @{ $row->get_entities };
