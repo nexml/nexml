@@ -103,7 +103,6 @@ public abstract class TreeImpl<E extends Edge> extends NetworkImpl<E> implements
 		Set<E> edges = new HashSet<E>();
 		for (NetworkObject networkObject : getThings()) {
 			if (networkObject instanceof Edge) {
-				@SuppressWarnings("unchecked")
 				E edge = (E) networkObject;
 				edges.add(edge);
 			}
