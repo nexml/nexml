@@ -14,6 +14,7 @@
 	<property name="xercesfolder" value="xerces"/>
 	<property name="mesquitezip" value="mesquite-nexml.zip"/>
 	<property name="mesquite-classpaths-xml" value="${resources}/classpaths.xml"/>
+	<property name="mesquite-properties" value="mesquite/nexml/InterpretNEXML/predicateHandlerMapping.properties"/>
 	<property environment="env"/>
 	
 	<!-- CORE LIBRARY -->
@@ -79,6 +80,13 @@
 			<fileset dir="${classfiles}"/>
 			<file file="${mesquite-classpaths-xml}"/>
 		</zip>
+	</target>
+	
+	<target name="mesquite-install" depends="build-mesquite">
+		<copy todir="${env.MESQUITE_ROOT}">
+			<fileset dir="${classfiles}"/>
+		</copy>
+		<copyfile dest="${env.MESQUITE_ROOT}/${mesquite-properties}" src="${src}/${mesquite-properties}"/>
 	</target>
 	
 	<!-- JUNIT TESTS -->
