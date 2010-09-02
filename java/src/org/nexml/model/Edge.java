@@ -9,7 +9,6 @@ public interface Edge extends NetworkObject {
 
 	/**
 	 * Sets the source (parent?) node of the invocant edge
-	 * @return a node object
 	 */
 	void setSource(Node source);
 
@@ -21,8 +20,20 @@ public interface Edge extends NetworkObject {
 
 	/**
 	 * Sets the target (child?) node of the invocant edge
-	 * @return a node object
 	 */
 	void setTarget(Node target);
+	
+	/**
+	 * Gets the edge length as a number
+	 * @return an edge length
+	 */
+	Number getLength();
+	
+	/**
+	 * Sets the edge length as a number
+	 * @param an edge length
+	 * 
+	 */
+	void setLength(Number length);
 	
 }
