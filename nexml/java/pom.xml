@@ -49,6 +49,7 @@
   		<groupId>junit</groupId>
   		<artifactId>junit</artifactId>
   		<version>4.5</version>
+  		<scope>test</scope>
   	</dependency>
   	<dependency>
   		<groupId>xerces</groupId>
@@ -75,8 +76,12 @@
 				<configuration>
 					<source>1.5</source>
 					<target>1.5</target>
+					<excludes>
+						<exclude>**/*XmlValidator.java</exclude>
+						<exclude>**/InterpretNEXML/*.java</exclude>
+					</excludes>
 				</configuration>
-			</plugin>  		
+			</plugin>	
   		</plugins>
   	</pluginManagement>
   </build>
