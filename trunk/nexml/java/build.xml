@@ -4,35 +4,93 @@
 	<description>NeXML Java API ant build</description>
 	<property name="src" value="src"/>
 	<property name="test" value="test"/>
+	<property name="resources" value="resources"/>
 	<property name="classfiles" value="bin"/>
 	<property name="lib" value="jars"/>
 	<property name="revstring" value="$Rev$"/>
 	<property name="jarfile" value="nexml.jar"/>
-	<!-- this is a build file for ant: http://ant.apache.org/ -->	
-    <path id="classpath">
-        <fileset dir="${lib}">
-            <include name="*.jar"/>
-        </fileset>
-    </path>
+	<property name="validatorjar" value="validator.jar"/>
+	<property name="xercesjar" value="xercesImpl.jar"/>
+	<property name="xercesfolder" value="xerces"/>
+	<property name="mesquitezip" value="mesquite-nexml.zip"/>
+	<property name="mesquite-classpaths-xml" value="${resources}/classpaths.xml"/>
+	<property environment="env"/>
 	
-	<target name="compile">
+	<!-- CORE LIBRARY -->
+	<target name="compile" depends="clean">
 		<mkdir dir="${classfiles}"/>
 	    <javac srcdir="${src}" destdir="${classfiles}">
 	        <exclude name="**/mesquite/nexml/InterpretNEXML/*"/>
-	        <classpath refid="classpath"/>
+	    	<exclude name="**/validator/*"/>
 	    </javac>
 	</target>
 	
-	<target name="mesquite">
+    <target name="jar" depends="compile">
+        <jar destfile="${jarfile}">
+            <fileset dir="${classfiles}"/>
+        </jar>
+    </target>	
+	
+	<!-- VALIDATOR -->
+    <path id="classpath-validator">
+        <fileset dir="${lib}">
+            <include name="${xercesjar}"/>
+        </fileset>
+    </path>	
+	
+	<target name="build-validator" depends="clean">
 		<mkdir dir="${classfiles}"/>
 	    <javac srcdir="${src}" destdir="${classfiles}">
-	        <classpath refid="classpath"/>
-	    </javac>
+	        <exclude name="**/mesquite/nexml/InterpretNEXML/*"/>
+	    	<exclude name="**/org/nexml/model/**"/>
+	    	<classpath refid="classpath-validator"/>
+	    </javac>		
+	</target>
+	
+    <target name="validator" depends="build-validator">
+    	<mkdir dir="${xercesfolder}"/>
+    	<unzip src="${lib}/${xercesjar}" dest="${xercesfolder}"/>
+        <jar destfile="${validatorjar}">
+            <fileset dir="${classfiles}"/>
+            <fileset dir="${xercesfolder}"/>
+        	<manifest>
+        		<attribute name="Main-Class" value="validator.ValidateNeXML"/>
+        	</manifest>        	
+        </jar>
+    </target>	
+	
+	
+	<!-- MESQUITE -->	
+	<path id="classpath-mesquite">
+		<pathelement path="${env.MESQUITE_ROOT}"/>
+	</path>	
+	
+	<target name="build-mesquite" depends="clean">
+		<mkdir dir="${classfiles}"/>
+		<echo message="Using MESQUITE_ROOT=${toString:classpath-mesquite}"/>		
+		<javac srcdir="${src}" destdir="${classfiles}">
+			<exclude name="**/validator/*"/>	
+			<classpath refid="classpath-mesquite"/>
+		</javac>
 	</target>	
+	
+	<target name="mesquite" depends="build-mesquite">
+		<zip destfile="${mesquitezip}">
+			<fileset dir="${classfiles}"/>
+			<file file="${mesquite-classpaths-xml}"/>
+		</zip>
+	</target>
+	
+	<!-- JUNIT TESTS -->
+	<path id="classpath-junit">
+        <fileset dir="${lib}">
+            <include name="junit-4.5.jar"/>
+        </fileset>	
+	</path>
 	
 	<target name="build-test" depends="compile">
 	    <javac srcdir="${test}" destdir="${classfiles}" debug="yes">
-	        <classpath refid="project.classpath"/>
+	        <classpath refid="classpath-junit"/>
 	    </javac>
 	</target>
 	
@@ -42,7 +100,7 @@
 	                <pathelement path="."/>
 	                <pathelement path="${classfiles}"/>
 	                <fileset dir="${lib}">
-	                    <include name="*.jar"/>
+	                    <include name="junit-4.5.jar"/>
 	                </fileset>
 	            </classpath>
 	            <batchtest>
@@ -51,15 +109,13 @@
 	        </junit>
 	</target>
 	
-    <target name="jar" depends="compile">
-        <jar destfile="${jarfile}">
-            <fileset dir="${classfiles}"/>
-        </jar>
-    </target>
-	
+	<!-- CLEANUP -->
     <target name="clean">
         <delete dir="${classfiles}"/>
+    	<delete dir="${xercesfolder}"/>
         <delete file="${jarfile}"/>
+    	<delete file="${mesquitezip}"/>
+    	<delete file="${validatorjar}"/>
     </target>
 	
 </project>

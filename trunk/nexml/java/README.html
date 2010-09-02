@@ -37,13 +37,23 @@
         </li>
         <li class="folder">
             <a href="test/">test/</a>* contains 
-            <a href="http://www.junit.org/">JUnit</a> tests for the <code>org.nexml.model.*</code>
-            API.
+            <a href="http://www.junit.org/">JUnit4</a> tests for the <code>org.nexml.model.*</code>
+            API. Some of the tests attempt to parse files from the nexml/examples folder. The tests 
+            try to find these files by building a path relative to the NEXML_ROOT environment variable,
+            which should point to nexml/trunk/nexml/, i.e. inside it should be the examples folder. If 
+            you are building and running inside eclipse, you might create a run configuration for all the
+            junit tests (Test runner JUnit 4) and add NEXML_ROOT and its values to the environment tab.
         </li>        
         <li class="folder">
-            <a href="jars/">jars/</a>* contains dependencies for the code in the src/ and validator/
-            folders. Not all these jars are required at present, it seems.
+            <a href="jars/">jars/</a>* contains dependencies for the code in the src/ and test/
+            folders. As of 1 Sept 2010, all seemingly extraneous jars have been removed, leaving 
+            only the JUnit jar (for testing), and the Xerces jar (for the validator).
         </li>
+        <li class="rss">
+            <a href="build.sh">build.sh</a> this is a simple shell script that 
+            invokes maven, using the <a href="pom.xml">pom.xml</a> to build and 
+            install the nexml libraries in your local maven repository.
+        </li>        
 	</ul>
 	As of 26/6/09 the NeXML/Java project uses maven for building and dependency management. This
 	means that you can run goals such as <code>mvn test</code>, <code>mvn compile</code>, <code>

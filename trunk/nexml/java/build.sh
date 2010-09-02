@@ -3,5 +3,10 @@
 # if you downloaded this from sourceforge or somewhere else and you
 # don't know what to do with it, don't worry: you probably don't need
 # it.
-mvn install -Dmaven.test.skip=true -DcreateChecksum=true
-mvn clean
+ant jar
+mv nexml.jar ../downloads
+ant validator
+mv validator.jar ../downloads
+ant mesquite
+mv mesquite-nexml.zip ../downloads
+ant clean
