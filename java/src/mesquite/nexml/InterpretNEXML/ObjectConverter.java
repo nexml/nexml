@@ -473,9 +473,11 @@ public class ObjectConverter extends MesquiteModule {
 			mesTreeVector.addElement(mesTree, false);
 			mesTree.setName(xmlNetwork.getLabel());	
 			Set<Object> xmlAnnotationValues = xmlNetwork.getAnnotationValues(msqTreePolytomyAssumption);
-			Object mesPolytomyAssumption = xmlAnnotationValues.iterator().next();
-			if ( mesPolytomyAssumption instanceof BigInteger ) {
-				mesTree.setPolytomiesAssumption(((BigInteger)mesPolytomyAssumption).intValue(),false);
+			if ( ! xmlAnnotationValues.isEmpty() ) {
+				Object mesPolytomyAssumption = xmlAnnotationValues.iterator().next();
+				if ( mesPolytomyAssumption instanceof BigInteger ) {
+					mesTree.setPolytomiesAssumption(((BigInteger)mesPolytomyAssumption).intValue(),false);
+				}
 			}
 			readAnnotations(mesTreeVector,xmlNetwork,mesTreeCount,mesTree);
 			Set<Node> xmlNodeSet = xmlNetwork.getNodes();
@@ -507,7 +509,7 @@ public class ObjectConverter extends MesquiteModule {
 		for ( Node xmlChild : xmlChildren ) {
 			int mesChild = mesTree.sproutDaughter(mesRoot, false);
 			Edge edge = xmlNetwork.getEdge(xmlRoot,xmlChild);
-			mesTree.setBranchLength(mesChild,((FloatEdge)edge).getLength(),false);
+			mesTree.setBranchLength(mesChild,edge.getLength().doubleValue(),false);
 			readAnnotations(mesTree,edge,mesChild,mesTree);
 			readTree(xmlNetwork,xmlChild,xmlNetwork.getOutNodes(xmlChild),mesChild,mesTree);
 		}
