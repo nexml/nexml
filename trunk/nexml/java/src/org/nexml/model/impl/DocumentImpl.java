@@ -254,13 +254,10 @@ public class DocumentImpl extends AnnotatableImpl implements Document {
 	 * @author pmidford
 	 */
 	public MolecularMatrix createMolecularMatrix(OTUs otus, String type) {
-		MolecularMatrixImpl molecularMatrix = new MolecularMatrixImpl(
-				getDocument());
+		MolecularMatrixImpl molecularMatrix = new MolecularMatrixImpl(getDocument(),type);
 		mMatrixList.add(molecularMatrix);
 		getElement().appendChild(molecularMatrix.getElement());
 		molecularMatrix.setOTUs(otus);
-		molecularMatrix.getElement().setAttributeNS(XSI_NS,
-				XSI_PREFIX + ":type", NEX_PREFIX + ":" + type + "Cells");
 		return molecularMatrix;
 	}
 
