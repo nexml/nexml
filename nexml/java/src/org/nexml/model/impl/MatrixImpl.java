@@ -33,6 +33,11 @@ abstract class MatrixImpl<T> extends OTUsLinkableImpl<Character> implements
 		super(document);
 	}
 	
+	protected MatrixImpl(Document document,String type) {
+		super(document);
+		setType(type);
+	}
+	
     /**
      * Protected constructors are intended for recursive parsing, i.e.
      * starting from the root element (which maps onto DocumentImpl) we
