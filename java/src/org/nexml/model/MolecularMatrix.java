@@ -6,12 +6,20 @@ public interface MolecularMatrix extends Matrix<CharacterState> {
 	public static final String DNA = "Dna";
 	public static final String RNA = "Rna";
 	public static final String Protein = "Protein";
+	
 	/**
-	 * Gets the charactere state sets associated with the
+	 * Gets the character state sets associated with the
 	 * invocant matrix. Typically, this would be a single,
 	 * fixed state set.
 	 */
 	Set<CharacterStateSet> getCharacterStateSets();
+	
+	/**
+	 * Gets the default character state set. Typically this
+	 * will be a fixed, IUPAC-compliant state set.
+	 * @return
+	 */
+	CharacterStateSet getCharacterStateSet();
 	
 	/**
 	 * Creates and returns a new character state set
