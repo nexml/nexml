@@ -88,12 +88,13 @@ class MolecularMatrixImpl extends
 				row.removeChild(seqElement);
 			}
 		}
+		setType(typeName);
 		setOTUs(otus);
 	}	
 	
 	protected MolecularMatrixImpl(Document document, String type) {
-		this(document);
-		setType(type);
+		super(document,type);
+		this.createCharacterStateSet();
 	}
 
 	protected MolecularCharacterStateSetImpl createCharacterStateSet(Element statesElement,String typeName) {
@@ -123,10 +124,13 @@ class MolecularMatrixImpl extends
 	 * @author rvosa
 	 */
 	public CharacterStateSet createCharacterStateSet() {
-		CharacterStateSetImpl characterStateSet = new CharacterStateSetImpl(getDocument());
-		mCharacterStateSets.add(characterStateSet);
-		getFormatElement().insertBefore( characterStateSet.getElement(), getFormatElement().getFirstChild() );
-		return characterStateSet;
+		if ( mCharacterStateSets.isEmpty() ) {
+			MolecularCharacterStateSetImpl characterStateSet = new MolecularCharacterStateSetImpl(getDocument(),getType());	
+			mCharacterStateSets.add(characterStateSet);
+			getFormatElement().insertBefore( characterStateSet.getElement(), getFormatElement().getFirstChild() );
+			mMolecularCharacterStates = characterStateSet;
+		}
+		return mMolecularCharacterStates;
 	}
 
 	/*
@@ -172,36 +176,21 @@ class MolecularMatrixImpl extends
 			}
 		}
 		return null;
-	}	
+	}
+	
+	private CharacterStateSet getMolecularCharacterStateSet(String datatype) {
+	    if (mMolecularCharacterStates == null){
+	        return createCharacterStateSet();
+	    }	
+	    return mMolecularCharacterStates;	    
+	}
 
 	/*
 	 * (non-Javadoc)
 	 * @see org.nexml.model.MolecularMatrix#getDNACharacterStateSet()
 	 */
 	public CharacterStateSet getDNACharacterStateSet() {
-	    if (mMolecularCharacterStates == null){
-	        mMolecularCharacterStates = new MolecularCharacterStateSetImpl(getDocument());
-	    }
-	    CharacterStateSet result = mMolecularCharacterStates.getDNAStateSet();
-	    CharacterStateSetImpl characterStateSet = (CharacterStateSetImpl)result;
-	    if (mCharacterStateSets.add(characterStateSet)){
-	    	Element characterStateSetElement = characterStateSet.getElement();
-	    	Element formatElementChild = (Element) getFormatElement().getFirstChild();
-	    	if ( characterStateSetElement.getOwnerDocument() != getDocument() ) {
-	    		/**
-	    		 * XXX
-	    		 * Under some obscure conditions (i.e. running the whole test suite at once)
-	    		 * an exception is thrown saying that characterStateSetElement originates from
-	    		 * a different DOM document then the current one UNLESS we do the import here.
-	    		 * Obviously there's something wrong elsewhere in the code - but I can't figure
-	    		 * it out.
-	    		 */
-	    		characterStateSetElement = (Element) getDocument().importNode(characterStateSetElement,true);
-	    	}
-	    	getFormatElement().insertBefore( characterStateSetElement, formatElementChild );
-	        mMolecularCharacterStates.fillDNAStateSet();
-	    }
-	    return result;
+		return getMolecularCharacterStateSet(DNA);
 	}
 
 	/*
@@ -209,29 +198,7 @@ class MolecularMatrixImpl extends
 	 * @see org.nexml.model.MolecularMatrix#getRNACharacterStateSet()
 	 */
 	public CharacterStateSet getRNACharacterStateSet() {
-        if (mMolecularCharacterStates == null){
-            mMolecularCharacterStates = new MolecularCharacterStateSetImpl(getDocument());
-        }
-        CharacterStateSet result = mMolecularCharacterStates.getRNAStateSet();
-        CharacterStateSetImpl characterStateSet = (CharacterStateSetImpl)result;
-        if (mCharacterStateSets.add(characterStateSet)){
-	    	Element characterStateSetElement = characterStateSet.getElement();
-	    	Element formatElementChild = (Element) getFormatElement().getFirstChild();
-	    	if ( characterStateSetElement.getOwnerDocument() != getDocument() ) {
-	    		/**
-	    		 * XXX
-	    		 * Under some obscure conditions (i.e. running the whole test suite at once)
-	    		 * an exception is thrown saying that characterStateSetElement originates from
-	    		 * a different DOM document then the current one UNLESS we do the import here.
-	    		 * Obviously there's something wrong elsewhere in the code - but I can't figure
-	    		 * it out.
-	    		 */
-	    		characterStateSetElement = (Element) getDocument().importNode(characterStateSetElement,true);
-	    	}
-	    	getFormatElement().insertBefore( characterStateSetElement, formatElementChild );        	
-            mMolecularCharacterStates.fillRNAStateSet();
-        }
-        return result;
+		return getMolecularCharacterStateSet(RNA);
      }
     
 	/*
@@ -239,29 +206,7 @@ class MolecularMatrixImpl extends
 	 * @see org.nexml.model.MolecularMatrix#getProteinCharacterStateSet()
 	 */
     public CharacterStateSet getProteinCharacterStateSet(){
-        if (mMolecularCharacterStates == null){
-            mMolecularCharacterStates = new MolecularCharacterStateSetImpl(getDocument());
-        }
-        CharacterStateSet result = mMolecularCharacterStates.getProteinStateSet();
-        CharacterStateSetImpl characterStateSet = (CharacterStateSetImpl)result;
-        if (mCharacterStateSets.add(characterStateSet)){
-	    	Element characterStateSetElement = characterStateSet.getElement();
-	    	Element formatElementChild = (Element) getFormatElement().getFirstChild();
-	    	if ( characterStateSetElement.getOwnerDocument() != getDocument() ) {
-	    		/**
-	    		 * XXX
-	    		 * Under some obscure conditions (i.e. running the whole test suite at once)
-	    		 * an exception is thrown saying that characterStateSetElement originates from
-	    		 * a different DOM document then the current one UNLESS we do the import here.
-	    		 * Obviously there's something wrong elsewhere in the code - but I can't figure
-	    		 * it out.
-	    		 */
-	    		characterStateSetElement = (Element) getDocument().importNode(characterStateSetElement,true);
-	    	}
-	    	getFormatElement().insertBefore( characterStateSetElement, formatElementChild );        	
-            mMolecularCharacterStates.fillProteinStateSet();
-        }
-        return result;
+    	return getMolecularCharacterStateSet(Protein);
     }
 
 	public CharacterState parseSymbol(String symbol) {
@@ -298,6 +243,22 @@ class MolecularMatrixImpl extends
 		}		
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public CharacterStateSet getCharacterStateSet() {
+		if ( getType().equals(DNA) ) {
+			return getDNACharacterStateSet();
+		}
+		else if ( getType().equals(RNA) ) {
+			return getRNACharacterStateSet();
+		}
+		else if ( getType().equals(Protein) ) {
+			return getProteinCharacterStateSet();
+		}
+		else {
+			throw new Error("No default state set for type "+getType());
+		}
 	}
 
  }
