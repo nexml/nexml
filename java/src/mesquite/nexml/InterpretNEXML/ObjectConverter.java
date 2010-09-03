@@ -3,12 +3,10 @@ package mesquite.nexml.InterpretNEXML;
 import java.lang.reflect.Constructor;
 import java.math.BigInteger;
 import java.net.URI;
-import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 import java.util.Set;
-
-import javax.xml.parsers.ParserConfigurationException;
 
 import mesquite.categ.lib.CategoricalData; //CategoricalData.DATATYPENAME
 import mesquite.categ.lib.CategoricalState; //CharacterState mesCS = new CategoricalState();
@@ -59,10 +57,9 @@ import org.nexml.model.Node;
 import org.nexml.model.OTU;
 import org.nexml.model.OTUs;
 import org.nexml.model.TreeBlock;
-import org.nexml.model.impl.DocumentImpl;
 
 public class ObjectConverter extends MesquiteModule {
-	private static URI msqURI;
+	private static URI msqURI = URI.create("http://mesquiteproject.org#");
 	private String msqPrefix = "msq";
 	private String msqTaxaUID  = msqPrefix + ":taxaUID";
 	private String msqTaxonUID = msqPrefix + ":taxonUID";
@@ -70,13 +67,24 @@ public class ObjectConverter extends MesquiteModule {
 	private String msqTreePolytomyAssumption = msqPrefix + ":treePolytomyAssumption";
 	private EmployerEmployee mEmployerEmployee;
 	private static Properties mPredicateHandlerMapping = new Properties();
+	private static boolean debugging = true;
 	
+	private static void debug(String s) {
+		if (debugging)
+			mesquite.lib.MesquiteMessage.notifyProgrammer(s);
+	}
+	
+	/**
+	 * 
+	 * @param mesProject
+	 * @return
+	 */
 	public Document createDocumentFromProject(MesquiteProject mesProject) {
 		ListableVector mesTaxas = mesProject.getTaxas();
 		Document xmlProject = writeProject(mesProject);
 		try {
 			writeTaxaBlocks(xmlProject,mesTaxas);
-			writeCharacterBlocks(xmlProject,mesProject.getCharacterMatrices());
+			writeCharacterBlocks(xmlProject,mesProject.getCharacterMatrices());			
 			for ( int i = 0; i < mesTaxas.size(); i++ ) {
 				Listable[] treeVectors = mesProject.getCompatibleFileElements(TreeVector.class, mesTaxas.elementAt(i));
 				writeTreeBlocks(xmlProject,treeVectors);
@@ -87,11 +95,23 @@ public class ObjectConverter extends MesquiteModule {
 		return xmlProject;
 	}
 	
+	/**
+	 * 
+	 * @param mesProject
+	 * @param predicateHandlerMapping
+	 * @return
+	 */
 	public Document createDocumentFromProject(MesquiteProject mesProject,Properties predicateHandlerMapping) {
 		mPredicateHandlerMapping = predicateHandlerMapping;
 		return createDocumentFromProject(mesProject);
 	}
 	
+	/**
+	 * 
+	 * @param mesTaxa
+	 * @param xmlProject
+	 * @return
+	 */
 	private OTUs findEquivalentTaxa(Taxa mesTaxa,Document xmlProject) {
 		for ( OTUs xmlTaxa : xmlProject.getOTUsList() ) {
 			Set<Object> msqUIDs = xmlTaxa.getAnnotationValues(msqTaxaUID);
@@ -102,6 +122,12 @@ public class ObjectConverter extends MesquiteModule {
 		return null;
 	}
 	
+	/**
+	 * 
+	 * @param mesTaxon
+	 * @param xmlTaxa
+	 * @return
+	 */
 	private OTU findEquivalentTaxon(Taxon mesTaxon,OTUs xmlTaxa) {
 		Integer mesTaxonIndex = mesTaxon.getNumber();
 		for ( OTU xmlTaxon : xmlTaxa.getAllOTUs() ) {
@@ -113,6 +139,15 @@ public class ObjectConverter extends MesquiteModule {
 		return null;
 	}
 	
+	/**
+	 * 
+	 * @param mesTree
+	 * @param xmlTree
+	 * @param mesNode
+	 * @param xmlRoot
+	 * @param xmlParentNode
+	 * @param xmlTaxa
+	 */
 	private void writeTree(Tree mesTree,org.nexml.model.Tree<FloatEdge> xmlTree,int mesNode,Node xmlRoot,Node xmlParentNode,OTUs xmlTaxa) {
 		xmlRoot.setLabel(mesTree.getNodeLabel(mesNode));
 		readAnnotations((MesquiteTree)mesTree,xmlRoot,mesNode,mesTree);
@@ -133,6 +168,11 @@ public class ObjectConverter extends MesquiteModule {
 		}
 	}	
 
+	/**
+	 * 
+	 * @param xmlProject
+	 * @param treeVectors
+	 */
 	private void writeTreeBlocks(Document xmlProject,Listable[] treeVectors) {
 		for ( int i = 0; i < treeVectors.length; i++ ) {	
 			TreeVector mesTrees = (TreeVector)treeVectors[i];
@@ -159,6 +199,13 @@ public class ObjectConverter extends MesquiteModule {
 		}		
 	}	
 	
+	/**
+	 * 
+	 * @param nr
+	 * @param annotatable
+	 * @param value
+	 * @param subject
+	 */
 	private void writeAnnotation(NameReference nr,Annotatable annotatable,Object value,Object subject) {
 		String handlerClassName = getPredicateHandlerMapping().getProperty(nr.getName());
 		PredicateHandler ph = null;
@@ -177,6 +224,13 @@ public class ObjectConverter extends MesquiteModule {
 		annotatable.addAnnotationValue(ph.getProperty(),ph.getURI(),ph.getValue());
 	}
 	
+	/**
+	 * 
+	 * @param associable
+	 * @param annotatable
+	 * @param segmentCount
+	 * @param subject
+	 */
 	private void writeAnnotations(Associable associable, Annotatable annotatable, int segmentCount,Object subject) {		
 		int numDoubs = associable.getNumberAssociatedDoubles();
 		for ( int i = 0; i < numDoubs; i++ ){  
@@ -204,72 +258,81 @@ public class ObjectConverter extends MesquiteModule {
 		
 	}
 	
+	/**
+	 * 
+	 * @param xmlProject
+	 * @param mesCharacters
+	 */
 	@SuppressWarnings("unchecked")
 	private void writeCharacterBlocks(Document xmlProject,ListableVector mesCharacters) {
+		debug("Going to write character blocks");
 		for ( int i = 0; i < mesCharacters.size(); i++ ) {
+			debug("Writing character block "+i);
 			CharacterData mesData = (CharacterData)mesCharacters.elementAt(i);
     		Taxa mesTaxa = mesData.getTaxa();
     		OTUs xmlTaxa = findEquivalentTaxa(mesTaxa,xmlProject);			
     		org.nexml.model.Matrix<?> xmlMatrix = null;		
     		CharacterStateSet xmlCharacterStateSet = null;
-			String dataType = mesData.getDataTypeName();
-			boolean isMolecularMatrix = false;
-			String molecularMatrixSubtype = null;
-			if ( dataType.equalsIgnoreCase(DNAData.DATATYPENAME) ) {
+			String mesDataType = mesData.getDataTypeName();
+			debug("Data type is "+mesDataType);
+			boolean xmlIsMolecularMatrix = false;
+			String xmlMolecularMatrixSubtype = null;
+			if ( mesDataType.equalsIgnoreCase(DNAData.DATATYPENAME) ) {
 				xmlMatrix = xmlProject.createMolecularMatrix(xmlTaxa,MolecularMatrix.DNA);
 				xmlCharacterStateSet = ((MolecularMatrix)xmlMatrix).getDNACharacterStateSet();
-				isMolecularMatrix = true;
-				molecularMatrixSubtype = MolecularMatrix.DNA;
+				xmlIsMolecularMatrix = true;
+				xmlMolecularMatrixSubtype = MolecularMatrix.DNA;
 			}
-			else if ( dataType.equalsIgnoreCase(RNAData.DATATYPENAME) ) {
+			else if ( mesDataType.equalsIgnoreCase(RNAData.DATATYPENAME) ) {
 				xmlMatrix = xmlProject.createMolecularMatrix(xmlTaxa,MolecularMatrix.RNA);	
 				xmlCharacterStateSet = ((MolecularMatrix)xmlMatrix).getRNACharacterStateSet();	
-				isMolecularMatrix = true;
-				molecularMatrixSubtype = MolecularMatrix.RNA;
+				xmlIsMolecularMatrix = true;
+				xmlMolecularMatrixSubtype = MolecularMatrix.RNA;
 			}    		
-			else if ( dataType.equalsIgnoreCase(ProteinData.DATATYPENAME) ) {
+			else if ( mesDataType.equalsIgnoreCase(ProteinData.DATATYPENAME) ) {
 				xmlMatrix = xmlProject.createMolecularMatrix(xmlTaxa,MolecularMatrix.Protein); 		
 				xmlCharacterStateSet = ((MolecularMatrix)xmlMatrix).getProteinCharacterStateSet();	
-				isMolecularMatrix = true;
-				molecularMatrixSubtype = MolecularMatrix.Protein;
+				xmlIsMolecularMatrix = true;
+				xmlMolecularMatrixSubtype = MolecularMatrix.Protein;
 			}
-			else if ( dataType.equalsIgnoreCase(ContinuousData.DATATYPENAME) ) {
+			else if ( mesDataType.equalsIgnoreCase(ContinuousData.DATATYPENAME) ) {
 				xmlMatrix = xmlProject.createContinuousMatrix(xmlTaxa);      			
 			}
-			else if ( dataType.equalsIgnoreCase(CategoricalData.DATATYPENAME) ) {
+			else if ( mesDataType.equalsIgnoreCase(CategoricalData.DATATYPENAME) ) {
 				xmlMatrix = xmlProject.createCategoricalMatrix(xmlTaxa);   
 				xmlCharacterStateSet = ((CategoricalMatrix)xmlMatrix).createCharacterStateSet();
 			}
+			else {
+				debug("Can't write data type "+mesDataType);
+			}
     		int mesNchar = mesData.getNumChars();
+    		List<Character> xmlCharacters = new ArrayList<Character>(mesNchar);
+    		for ( int j = 0; j < mesNchar; j++ ) {
+    			Character xmlChar = xmlMatrix.createCharacter(xmlCharacterStateSet);
+    			xmlCharacters.add(xmlChar);
+    		}
+    		
     		for ( int j = 0; j < mesData.getNumTaxa(); j++ ) {
+    			debug("Writing states for taxon "+j);
     			CharacterState[] mesChars = mesData.getCharacterStateArray(j, 0, mesNchar);
     			Taxon mesTaxon = mesData.getTaxa().getTaxon(j);
     			OTU xmlTaxon = findEquivalentTaxon(mesTaxon,xmlTaxa);    			
-    			String[] chars = new String[mesNchar];
     			for ( int k = 0; k < mesNchar; k++ ) {
-    				Character xmlChar = xmlMatrix.createCharacter(xmlCharacterStateSet);
+    				debug("Writing state "+k+" for taxon "+j);
+    				Character xmlChar = xmlCharacters.get(k);
     				String mesCharString = mesChars[k].toDisplayString();
-    				chars[k] = mesCharString;
     				if ( mesCharString != null && !mesCharString.equals("-") ) {    					
-    					//Object xmlCellValue = xmlMatrix.parseSymbol(mesCharString);
-    					if ( dataType.equalsIgnoreCase(ContinuousData.DATATYPENAME) ) {
+    					if ( mesDataType.equalsIgnoreCase(ContinuousData.DATATYPENAME) ) {
     						MatrixCell<Double> xmlCell = (MatrixCell<Double>) xmlMatrix.getCell(xmlTaxon,xmlChar);
-    						Double xmlCellValue = (Double)xmlMatrix.parseSymbol(mesCharString);
-    						xmlCell.setValue(xmlCellValue);
+    						xmlCell.setValue((Double)xmlMatrix.parseSymbol(mesCharString));
     					}
-    					else if ( dataType.equalsIgnoreCase(CategoricalData.DATATYPENAME) ) {    						
-    						MatrixCell<CharacterState> xmlCell = (MatrixCell<CharacterState>) xmlMatrix.getCell(xmlTaxon,xmlChar);
-    						CharacterState xmlCellValue = (CharacterState)xmlMatrix.parseSymbol(mesCharString);
-    						xmlCell.setValue(xmlCellValue);
+    					else if ( mesDataType.equalsIgnoreCase(CategoricalData.DATATYPENAME) ) {    						
+    						MatrixCell<org.nexml.model.CharacterState> xmlCell = (MatrixCell<org.nexml.model.CharacterState>) xmlMatrix.getCell(xmlTaxon,xmlChar);
+    						xmlCell.setValue((org.nexml.model.CharacterState)xmlMatrix.parseSymbol(mesCharString));
     					}
-    					else if ( isMolecularMatrix ) {
-    						MatrixCell<CharacterState> xmlCell = (MatrixCell<CharacterState>) xmlMatrix.getCell(xmlTaxon,xmlChar);
-    						CharacterState xmlCellValue = (CharacterState)((MolecularMatrix)xmlMatrix).parseSymbol(mesCharString,molecularMatrixSubtype);
-    						try {
-    							xmlCell.setValue(xmlCellValue);
-    						} catch ( ClassCastException e ) {
-    							e.printStackTrace();
-    						}
+    					else if ( xmlIsMolecularMatrix ) {
+    						MatrixCell<org.nexml.model.CharacterState> xmlCell = (MatrixCell<org.nexml.model.CharacterState>) xmlMatrix.getCell(xmlTaxon,xmlChar);
+    						xmlCell.setValue((org.nexml.model.CharacterState)((MolecularMatrix)xmlMatrix).parseSymbol(mesCharString,xmlMolecularMatrixSubtype));
     					}    					
     				}
     			}    			
@@ -277,6 +340,11 @@ public class ObjectConverter extends MesquiteModule {
 		}
 	}	
 	
+	/**
+	 * 
+	 * @param xmlProject
+	 * @param mesTaxas
+	 */
 	private void writeTaxaBlocks(Document xmlProject,ListableVector mesTaxas) {
 		for ( int i = 0; i < mesTaxas.size(); i++ ) {
 			OTUs otus = xmlProject.createOTUs();
@@ -298,27 +366,30 @@ public class ObjectConverter extends MesquiteModule {
 		}		
 	}	
 	
+	/**
+	 * 
+	 * @param mesProject
+	 * @return
+	 */
 	private Document writeProject(MesquiteProject mesProject) {
-		Document xmlProject = null;
-		try {
-			xmlProject = DocumentFactory.createDocument();
-		} catch (ParserConfigurationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}		
+		Document xmlProject = DocumentFactory.safeCreateDocument();		
 		return xmlProject;
 	}
 	
-	public ObjectConverter (EmployerEmployee employerEmployee) {
-		try {
-			msqURI = new URI("http://mesquiteproject.org#");
-		} catch (URISyntaxException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	/**
+	 * 
+	 * @param employerEmployee
+	 */
+	public ObjectConverter (EmployerEmployee employerEmployee) { 
 		mEmployerEmployee = employerEmployee;
 	}
 	
+	/**
+	 * 
+	 * @param xmlDocument
+	 * @param project
+	 * @return
+	 */
 	public MesquiteProject fillProjectFromNexml(Document xmlDocument,MesquiteProject project) {
 		//MesquiteProject pr = mEmployerEmployee.getProject();
 		List<OTUs> xmlOTUsList = xmlDocument.getOTUsList();		
@@ -336,13 +407,28 @@ public class ObjectConverter extends MesquiteModule {
 		return project;
 	}
 	
+	/**
+	 * 
+	 * @param xmlDocument
+	 * @param mesProject
+	 * @param predicateHandlerMapping
+	 * @return
+	 */
 	public MesquiteProject fillProjectFromNexml(Document xmlDocument,MesquiteProject mesProject, Properties predicateHandlerMapping) {
 		setPredicateHandlerMapping(predicateHandlerMapping);
 		return fillProjectFromNexml(xmlDocument,mesProject);		
 	}
 	
+	/**
+	 * 
+	 * @param mesProject
+	 * @param mesFile
+	 * @param xmlMatrix
+	 * @param mesTaxa
+	 */
 	private void readCharacterBlocks (MesquiteProject mesProject, MesquiteFile mesFile,Matrix<?> xmlMatrix,Taxa mesTaxa) {		
 		String mesDataType = null;
+		debug("Going to read characters element "+xmlMatrix.getId());
 		if ( xmlMatrix instanceof ContinuousMatrix ) {
 			mesDataType = ContinuousData.DATATYPENAME;
 		}
@@ -353,19 +439,31 @@ public class ObjectConverter extends MesquiteModule {
 			mesDataType = DNAData.DATATYPENAME;			
 		}		
 		if ( mesDataType != null ) {
+			debug("Going to read matrix of type "+mesDataType);
 			readMatrix(mesDataType,xmlMatrix,mesFile,mesTaxa);
+		}
+		else {
+			debug("Can't process datatype "+xmlMatrix.getClass().getSimpleName());
 		}
 	}
 	
+	/**
+	 * 
+	 * @param mesDataType
+	 * @param xmlMatrix
+	 * @param mesFile
+	 * @param mesTaxa
+	 */
 	private void readMatrix(String mesDataType,Matrix<?> xmlMatrix,MesquiteFile mesFile,Taxa mesTaxa) {
 		CharactersManager charTask = (CharactersManager)mEmployerEmployee.findElementManager(CharacterData.class);
 		mesquite.lib.characters.CharacterData mesMatrix = charTask.newCharacterData(mesTaxa, 0, mesDataType);
 		OTUs xmlOTUs = xmlMatrix.getOTUs();
 		List<OTU> xmlOTUList = xmlOTUs.getAllOTUs();
+		List<Character> xmlCharacterList = xmlMatrix.getCharacters();		
 		for ( OTU xmlOTU : xmlOTUList ) {
 			String xmlOTUId = xmlOTU.getId();
+			debug("Reading characters for OTU "+xmlOTUId);
 			int mesTaxon = mesTaxa.findByUniqueID(xmlOTUId);			
-			List<Character> xmlCharacterList = xmlMatrix.getCharacters();
 			int mesCharacter = 0 ;
 			for ( Character xmlCharacter : xmlCharacterList ) {
 				CharacterState mesCS = null;
@@ -397,21 +495,28 @@ public class ObjectConverter extends MesquiteModule {
 			}
 		}
 		
-		String[] charNamesArr = (String[]) DocumentImpl.characterNames.toArray(new String[0]);
-
-		int charNamesNum = 0;
-		for (int i = 0; i < DocumentImpl.characterNames.size(); i++){
-			mesMatrix.setCharacterName(charNamesNum, charNamesArr[i]);
-			++charNamesNum;
+		debug("Going to read character names");
+		int ic = 0;
+		for ( Character xmlCharacter : xmlCharacterList ) {
+			String name = xmlCharacter.getLabel();
+			if ( null != name && ! name.equals("")  ) {
+				mesMatrix.setCharacterName(ic, name);
+			}
+			ic++;
 		}
-		charNamesNum = 0;
-		
 
 		mesMatrix.setUniqueID(xmlMatrix.getId());
 		mesMatrix.setName(xmlMatrix.getLabel());
 		mesMatrix.addToFile(mesFile, mesFile.getProject(), charTask);		
 	}	
 	
+	/**
+	 * 
+	 * @param project
+	 * @param file
+	 * @param xmlOTUs
+	 * @return
+	 */
 	private Taxa readTaxaBlocks (MesquiteProject project, MesquiteFile file, OTUs xmlOTUs) {
 		TaxaManager taxaTask = (TaxaManager)mEmployerEmployee.findElementManager(mesquite.lib.Taxa.class);
 		int xmlOTUListSize = xmlOTUs.getAllOTUs().size();
@@ -431,6 +536,13 @@ public class ObjectConverter extends MesquiteModule {
         return mesTaxa;
 	}	
 	
+	/**
+	 * 
+	 * @param associable
+	 * @param annotatable
+	 * @param segmentCount
+	 * @param subject
+	 */
 	private void readAnnotations(Associable associable,Annotatable annotatable,int segmentCount,Object subject) {
 		Set<Annotation> allAnnotations = annotatable.getAllAnnotations();
 		for ( Annotation annotation : allAnnotations ) {
@@ -464,6 +576,13 @@ public class ObjectConverter extends MesquiteModule {
 		
 	}	
 	
+	/**
+	 * 
+	 * @param mesProject
+	 * @param mesFile
+	 * @param xmlTreeBlock
+	 * @param referencedTaxa
+	 */
 	private void readTreeBlocks (MesquiteProject mesProject, MesquiteFile mesFile, TreeBlock xmlTreeBlock, Taxa referencedTaxa) {
 		TreesManager mesTreeTask = (TreesManager)mEmployerEmployee.findElementManager(TreeVector.class);
 		TreeVector mesTreeVector = mesTreeTask.makeNewTreeBlock(referencedTaxa, xmlTreeBlock.getLabel(), mesFile);
@@ -497,6 +616,14 @@ public class ObjectConverter extends MesquiteModule {
 		mesTreeVector.addToFile(mesFile, mesProject, mesTreeTask);
 	}
 	
+	/**
+	 * 
+	 * @param xmlNetwork
+	 * @param xmlRoot
+	 * @param xmlChildren
+	 * @param mesRoot
+	 * @param mesTree
+	 */
 	private void readTree(Network<?> xmlNetwork, Node xmlRoot, Set<Node> xmlChildren, int mesRoot, MesquiteTree mesTree) {
 		OTU xmlOTU = xmlRoot.getOTU();
 		if ( xmlOTU != null ) {
@@ -514,34 +641,60 @@ public class ObjectConverter extends MesquiteModule {
 			readTree(xmlNetwork,xmlChild,xmlNetwork.getOutNodes(xmlChild),mesChild,mesTree);
 		}
 	}
-
-	@SuppressWarnings("unchecked")
+	
+	/*
+	 * (non-Javadoc)
+	 * @see mesquite.lib.MesquiteModule#getDutyClass()
+	 */
 	@Override
-	public Class getDutyClass() {
+	public Class<?> getDutyClass() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see mesquite.lib.MesquiteModule#getName()
+	 */
 	@Override
 	public String getName() {
 		// TODO Auto-generated method stub
 		return "NeXML object converter";
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see mesquite.lib.MesquiteModule#startJob(java.lang.String, java.lang.Object, boolean)
+	 */
 	@Override
 	public boolean startJob(String arguments, Object condition, boolean hiredByName) {
 		// TODO Auto-generated method stub
 		return true;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public static Properties getPredicateHandlerMapping() {
 		return mPredicateHandlerMapping;
 	}
 
+	/**
+	 * 
+	 * @param predicateHandlerMapping
+	 */
 	public void setPredicateHandlerMapping(Properties predicateHandlerMapping) {
 		mPredicateHandlerMapping = predicateHandlerMapping;
 	}	
 	
+	/**
+	 * 
+	 * @param subject
+	 * @param predicate
+	 * @param value
+	 * @return
+	 */
 	private PredicateHandler getPredicateHandler(Object subject,String predicate,Object value) {
 		String handlerClassName = getPredicateHandlerMapping().getProperty(predicate);
 		PredicateHandler ph = null;
