@@ -22,6 +22,21 @@ public class DocumentFactory {
 	static public Document createDocument() throws ParserConfigurationException {
 		return new DocumentImpl(getDocumentBuilder().newDocument());
 	}
+	
+	/**
+	 * Creates a new NeXML document, to be populated programmatically.
+	 * Catches ParserConfigurationException internally, prints stack trace
+	 * @return an org.nexml.model.Document object
+	 */
+	static public Document safeCreateDocument() {
+		Document doc = null;
+		try {
+			doc = new DocumentImpl(getDocumentBuilder().newDocument());
+		} catch (ParserConfigurationException e) {
+			e.printStackTrace();
+		}
+		return doc;
+	}
 
 	/**
 	 * Parses a NeXML document, returns a populated object hierarchy
