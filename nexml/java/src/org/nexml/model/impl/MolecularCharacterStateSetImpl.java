@@ -5,6 +5,7 @@ import java.util.Set;
 
 import org.nexml.model.CharacterState;
 import org.nexml.model.CharacterStateSet;
+import org.nexml.model.MolecularMatrix;
 import org.nexml.model.UncertainCharacterState;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -16,18 +17,28 @@ import org.w3c.dom.Element;
  *
  */
 class MolecularCharacterStateSetImpl extends CharacterStateSetImpl{
+	private boolean isFilled = false;
 
 	protected MolecularCharacterStateSetImpl(Document document) {
         super(document);
     }
 	
+	protected MolecularCharacterStateSetImpl(Document document, String type) {
+		super(document);
+		if ( MolecularMatrix.DNA.equals(type) ) {
+			getDNAStateSet();
+		}
+		else if ( MolecularMatrix.RNA.equals(type) ) {
+			getRNAStateSet();
+		}
+		else if ( MolecularMatrix.Protein.equals(type) ) {
+			getProteinStateSet();
+		}
+	}
+	
 	protected MolecularCharacterStateSetImpl(Document document,Element element) {
         super(document,element);
-    }	
-
-    private static MolecularCharacterStateSetImpl DNAStateSet = null;
-    private static MolecularCharacterStateSetImpl RNAStateSet = null;
-    private static MolecularCharacterStateSetImpl ProteinStateSet = null;
+    }
 
     /*
      * (non-Javadoc)
@@ -61,128 +72,124 @@ class MolecularCharacterStateSetImpl extends CharacterStateSetImpl{
      * TODO: Test this
      */
     CharacterStateSet getDNAStateSet(){
-        if (DNAStateSet == null){
-            DNAStateSet = new MolecularCharacterStateSetImpl(getDocument());
-        }
-        return (CharacterStateSet)DNAStateSet;
+    	if ( ! isFilled ) {
+    		fillDNAStateSet();
+    		isFilled = true;
+    	}
+    	return this;
     }
 
     /**
      * fills the preexisting DNAStateSet.  See comments above.
      */
-    void fillDNAStateSet(){
-        DNAStateSet.mCharacterStates = new HashSet<CharacterState>();
-        CharacterState aState = DNAStateSet.createCharacterState("A");
-        DNAStateSet.getCharacterStates().add(aState);
-        aState.setLabel("s1");
-        CharacterState cState = DNAStateSet.createCharacterState("C");
-        DNAStateSet.getCharacterStates().add(cState);
-        cState.setLabel("s2");
-        CharacterState gState = DNAStateSet.createCharacterState("G");
-        DNAStateSet.getCharacterStates().add(gState);
-        gState.setLabel("s3");
-        CharacterState tState = DNAStateSet.createCharacterState("T");
-        DNAStateSet.getCharacterStates().add(tState);
-        tState.setLabel("s4");
+    private void fillDNAStateSet(){
+        mCharacterStates = new HashSet<CharacterState>();    	
+        
+        // A
+        CharacterState aState = createCharacterState("A");
+        getCharacterStates().add(aState);
+
+        // C
+        CharacterState cState = createCharacterState("C");
+        getCharacterStates().add(cState);
+
+        // G
+        CharacterState gState = createCharacterState("G");
+        getCharacterStates().add(gState);
+
+        // T
+        CharacterState tState = createCharacterState("T");
+        getCharacterStates().add(tState);
+
+        // K => (G,T)
         Set<CharacterState> kSet = new HashSet<CharacterState>(2);
         kSet.add(gState);
         kSet.add(tState);
-        UncertainCharacterState kState = DNAStateSet.createUncertainCharacterState("K", kSet);
-        DNAStateSet.getCharacterStates().add(kState);
-        kState.setLabel("s5");
+        getCharacterStates().add(createUncertainCharacterState("K", kSet));
+
+        // M => (A,C)
         Set<CharacterState> mSet = new HashSet<CharacterState>(2);
         mSet.add(aState);
         mSet.add(cState);
-        UncertainCharacterState mState = DNAStateSet.createUncertainCharacterState("M", mSet);
-        DNAStateSet.getCharacterStates().add(mState);
-        mState.setLabel("s6");
+        getCharacterStates().add(createUncertainCharacterState("M", mSet));
+
+        // R => (A,G)
         Set<CharacterState> rSet = new HashSet<CharacterState>(2);
         rSet.add(aState);
         rSet.add(gState);
-        UncertainCharacterState rState = DNAStateSet.createUncertainCharacterState("R", rSet);
-        DNAStateSet.getCharacterStates().add(rState);
-        rState.setLabel("s7");
+        getCharacterStates().add(createUncertainCharacterState("R", rSet));
+
+        // S => (C,G)
         Set<CharacterState> sSet = new HashSet<CharacterState>(2);
         sSet.add(cState);
         sSet.add(gState);
-        UncertainCharacterState sState = DNAStateSet.createUncertainCharacterState("S", sSet);
-        DNAStateSet.getCharacterStates().add(sState);
-        sState.setLabel("s8");
+        getCharacterStates().add(createUncertainCharacterState("S", sSet));
+
+        // W => (A,T)
         Set<CharacterState> wSet = new HashSet<CharacterState>(2);
         wSet.add(aState);
         wSet.add(tState);
-        UncertainCharacterState wState = DNAStateSet.createUncertainCharacterState("W", wSet);
-        DNAStateSet.getCharacterStates().add(wState);
-        wState.setLabel("s9");
+        getCharacterStates().add(createUncertainCharacterState("W", wSet));
+
+        // Y => (A,T)
         Set<CharacterState> ySet = new HashSet<CharacterState>(2);
-        ySet.add(aState);
+        ySet.add(cState);
         ySet.add(tState);
-        UncertainCharacterState yState = DNAStateSet.createUncertainCharacterState("Y",ySet);
-        DNAStateSet.getCharacterStates().add(yState);
-        yState.setLabel("s10");
+        getCharacterStates().add(createUncertainCharacterState("Y",ySet));
+
+        // B => (C,G,T)
         Set<CharacterState> bSet = new HashSet<CharacterState>(3);
         bSet.add(cState);
         bSet.add(gState);
         bSet.add(tState);
-        UncertainCharacterState bState = DNAStateSet.createUncertainCharacterState("B",bSet);
-        DNAStateSet.getCharacterStates().add(bState);
-        bState.setLabel("s11");
+        getCharacterStates().add(createUncertainCharacterState("B",bSet));
+
+        // D => (A,G,T)
         Set<CharacterState> dSet = new HashSet<CharacterState>(3);
         dSet.add(aState);
         dSet.add(gState);
         dSet.add(tState);
-        UncertainCharacterState dState = DNAStateSet.createUncertainCharacterState("D",dSet);
-        DNAStateSet.getCharacterStates().add(dState);
-        dState.setLabel("s12");
+        getCharacterStates().add(createUncertainCharacterState("D",dSet));
+
+        // H => (A,C,T)
         Set<CharacterState> hSet = new HashSet<CharacterState>(3);
         hSet.add(aState);
         hSet.add(cState);
         hSet.add(tState);
-        UncertainCharacterState hState = DNAStateSet.createUncertainCharacterState("H",dSet);
-        DNAStateSet.getCharacterStates().add(hState);
-        hState.setLabel("s13");
+        getCharacterStates().add(createUncertainCharacterState("H",dSet));
+
+        // V => (A,C,G)
         Set<CharacterState> vSet = new HashSet<CharacterState>(3);
         vSet.add(aState);
         vSet.add(cState);
         vSet.add(gState);
-        UncertainCharacterState vState = DNAStateSet.createUncertainCharacterState("V",vSet);
-        DNAStateSet.getCharacterStates().add(vState);
-        vState.setLabel("s14");
+        getCharacterStates().add(createUncertainCharacterState("V",vSet));
+
+        // N => (A,C,G,T)
         Set<CharacterState> nSet = new HashSet<CharacterState>(4);
         nSet.add(aState);
         nSet.add(cState);
         nSet.add(gState);
         nSet.add(tState);
-        UncertainCharacterState nState = DNAStateSet.createUncertainCharacterState("N",nSet);
-        DNAStateSet.getCharacterStates().add(nState);
-        nState.setLabel("s15");
-        UncertainCharacterState xState = DNAStateSet.createUncertainCharacterState("X",nSet);
-        DNAStateSet.getCharacterStates().add(xState);
-        xState.setLabel("s16");
+        UncertainCharacterState nState = this.createUncertainCharacterState("N",nSet);
+        getCharacterStates().add(nState);
+
+        // X => (A,C,G,T)
+        getCharacterStates().add(createUncertainCharacterState("X",nSet));
+
+        // - => ()
         Set <CharacterState> gapSet = new HashSet<CharacterState>();
-        UncertainCharacterState gapState = DNAStateSet.createUncertainCharacterState("-",gapSet);
-        DNAStateSet.getCharacterStates().add(gapState);
-        gapState.setLabel("s17");
+        UncertainCharacterState gapState = createUncertainCharacterState("-",gapSet);
+        getCharacterStates().add(gapState);
+
+        // ? => (A,C,G,T,-)
         Set <CharacterState> unKnownSet = new HashSet<CharacterState>();
         unKnownSet.add(aState);
         unKnownSet.add(cState);
         unKnownSet.add(gState);
-        unKnownSet.add(tState); //others, through gap? XXX maybe just fundamental states?
-        unKnownSet.add(kState);
-        unKnownSet.add(mState);
-        unKnownSet.add(rState);
-        unKnownSet.add(sState);
-        unKnownSet.add(wState);
-        unKnownSet.add(yState);
-        unKnownSet.add(bState);
-        unKnownSet.add(dState);
-        unKnownSet.add(hState);
-        unKnownSet.add(vState);
-        unKnownSet.add(nState);
+        unKnownSet.add(tState);
         unKnownSet.add(gapState);
-        UncertainCharacterState unKnownState = DNAStateSet.createUncertainCharacterState("?",unKnownSet);
-        DNAStateSet.getCharacterStates().add(unKnownState);
-        unKnownState.setLabel("s18");
+        getCharacterStates().add(createUncertainCharacterState("?",unKnownSet));
     }
 
     /**
@@ -192,10 +199,11 @@ class MolecularCharacterStateSetImpl extends CharacterStateSetImpl{
      * See above comments for DNAStateSet
     */
     CharacterStateSet getRNAStateSet(){
-        if (RNAStateSet == null){
-            RNAStateSet = new MolecularCharacterStateSetImpl(getDocument());
-        }
-        return (CharacterStateSet)RNAStateSet;
+    	if ( ! isFilled ) {
+    		fillRNAStateSet();
+    		isFilled = true;
+    	}
+    	return this;
     }
 
     /**
@@ -205,120 +213,115 @@ class MolecularCharacterStateSetImpl extends CharacterStateSetImpl{
      * @note copying from the DNAStateSet and changing T -> U, and in all the uncertain sets
      * seems more trouble than the cut and paste.
      */
-    void fillRNAStateSet(){
-        RNAStateSet.mCharacterStates = new HashSet<CharacterState>();
-        CharacterState aState = RNAStateSet.createCharacterState("A");
-        RNAStateSet.getCharacterStates().add(aState);
-        aState.setLabel("s1");
-        CharacterState cState = RNAStateSet.createCharacterState("C");
-        RNAStateSet.getCharacterStates().add(cState);
-        cState.setLabel("s2");
-        CharacterState gState = RNAStateSet.createCharacterState("G");
-        RNAStateSet.getCharacterStates().add(gState);
-        gState.setLabel("s3");
-        CharacterState uState = RNAStateSet.createCharacterState("U");
-        RNAStateSet.getCharacterStates().add(uState);
-        uState.setLabel("s4");
+    private void fillRNAStateSet(){
+        mCharacterStates = new HashSet<CharacterState>();
+        
+        // A
+        CharacterState aState = createCharacterState("A");
+        getCharacterStates().add(aState);
+        
+        // C
+        CharacterState cState = createCharacterState("C");
+        getCharacterStates().add(cState);
+        
+        // G
+        CharacterState gState = createCharacterState("G");
+        getCharacterStates().add(gState);
+        
+        // U
+        CharacterState uState = createCharacterState("U");
+        getCharacterStates().add(uState);
+        
+        // K => (G,U)
         Set<CharacterState> kSet = new HashSet<CharacterState>(2);
         kSet.add(gState);
         kSet.add(uState);
-        UncertainCharacterState kState = RNAStateSet.createUncertainCharacterState("K", kSet);
-        RNAStateSet.getCharacterStates().add(kState);
-        kState.setLabel("s5");
+        getCharacterStates().add(createUncertainCharacterState("K", kSet));
+        
+        // M => (A,C)
         Set<CharacterState> mSet = new HashSet<CharacterState>(2);
         mSet.add(aState);
         mSet.add(cState);
-        UncertainCharacterState mState = RNAStateSet.createUncertainCharacterState("M", mSet);
-        RNAStateSet.getCharacterStates().add(mState);
-        mState.setLabel("s6");
+        getCharacterStates().add(createUncertainCharacterState("M", mSet));
+        
+        // R => (A,G)
         Set<CharacterState> rSet = new HashSet<CharacterState>(2);
         rSet.add(aState);
         rSet.add(gState);
-        UncertainCharacterState rState = RNAStateSet.createUncertainCharacterState("R", rSet);
-        RNAStateSet.getCharacterStates().add(rState);
-        rState.setLabel("s7");
+        getCharacterStates().add(createUncertainCharacterState("R", rSet));
+        
+        // S => (C,G)
         Set<CharacterState> sSet = new HashSet<CharacterState>(2);
         sSet.add(cState);
         sSet.add(gState);
-        UncertainCharacterState sState = RNAStateSet.createUncertainCharacterState("S", sSet);
-        RNAStateSet.getCharacterStates().add(sState);
-        sState.setLabel("s8");
+        getCharacterStates().add(createUncertainCharacterState("S", sSet));
+        
+        // W => (A,U)
         Set<CharacterState> wSet = new HashSet<CharacterState>(2);
         wSet.add(aState);
         wSet.add(uState);
-        UncertainCharacterState wState = RNAStateSet.createUncertainCharacterState("W", wSet);
-        RNAStateSet.getCharacterStates().add(wState);
-        wState.setLabel("s9");
+        getCharacterStates().add(createUncertainCharacterState("W", wSet));
+        
+        // Y => (C,U)
         Set<CharacterState> ySet = new HashSet<CharacterState>(2);
-        ySet.add(aState);
+        ySet.add(cState);
         ySet.add(uState);
-        UncertainCharacterState yState = RNAStateSet.createUncertainCharacterState("Y",ySet);
-        RNAStateSet.getCharacterStates().add(yState);
-        yState.setLabel("s10");
+        getCharacterStates().add(createUncertainCharacterState("Y",ySet));
+        
+        // B => (C,G,U)
         Set<CharacterState> bSet = new HashSet<CharacterState>(3);
         bSet.add(cState);
         bSet.add(gState);
         bSet.add(uState);
-        UncertainCharacterState bState = RNAStateSet.createUncertainCharacterState("B",bSet);
-        RNAStateSet.getCharacterStates().add(bState);
-        bState.setLabel("s11");
+        getCharacterStates().add(createUncertainCharacterState("B",bSet));
+        
+        // D => (A,G,U)
         Set<CharacterState> dSet = new HashSet<CharacterState>(3);
         dSet.add(aState);
         dSet.add(gState);
         dSet.add(uState);
-        UncertainCharacterState dState = RNAStateSet.createUncertainCharacterState("D",dSet);
-        RNAStateSet.getCharacterStates().add(dState);
-        dState.setLabel("s12");
+        getCharacterStates().add(createUncertainCharacterState("D",dSet));
+        
+        // H => (A,C,U)
         Set<CharacterState> hSet = new HashSet<CharacterState>(3);
         hSet.add(aState);
         hSet.add(cState);
         hSet.add(uState);
-        UncertainCharacterState hState = RNAStateSet.createUncertainCharacterState("H",dSet);
-        RNAStateSet.getCharacterStates().add(hState);
-        hState.setLabel("s13");
+        getCharacterStates().add(createUncertainCharacterState("H",dSet));
+        
+        // V => (A,C,G)
         Set<CharacterState> vSet = new HashSet<CharacterState>(3);
         vSet.add(aState);
         vSet.add(cState);
         vSet.add(gState);
-        UncertainCharacterState vState = RNAStateSet.createUncertainCharacterState("V",vSet);
-        RNAStateSet.getCharacterStates().add(vState);
-        vState.setLabel("s14");
+        getCharacterStates().add(createUncertainCharacterState("V",vSet));
+        
+        // N => (A,C,G,U)
         Set<CharacterState> nSet = new HashSet<CharacterState>(4);
         nSet.add(aState);
         nSet.add(cState);
         nSet.add(gState);
         nSet.add(uState);
-        UncertainCharacterState nState = RNAStateSet.createUncertainCharacterState("N",nSet);
-        RNAStateSet.getCharacterStates().add(nState);
-        nState.setLabel("s15");
-        UncertainCharacterState xState = RNAStateSet.createUncertainCharacterState("X",nSet);
-        RNAStateSet.getCharacterStates().add(xState);
-        xState.setLabel("s16");
+        UncertainCharacterState nState = createUncertainCharacterState("N",nSet);
+        getCharacterStates().add(nState);
+        
+        // X => (A,C,G,U)
+        getCharacterStates().add(createUncertainCharacterState("X",nSet));
+        
+        // - => ()
         Set <CharacterState> gapSet = new HashSet<CharacterState>();
-        UncertainCharacterState gapState = RNAStateSet.createUncertainCharacterState("-",gapSet);
-        RNAStateSet.getCharacterStates().add(gapState);
-        gapState.setLabel("s17");
+        UncertainCharacterState gapState = createUncertainCharacterState("-",gapSet);
+        getCharacterStates().add(gapState);
+        
+        // ? => (A,C,G,U,-)
         Set <CharacterState> unKnownSet = new HashSet<CharacterState>();
         unKnownSet.add(aState);
         unKnownSet.add(cState);
         unKnownSet.add(gState);
-        unKnownSet.add(uState); //others, through gap? XXX maybe just fundamental states?
-        unKnownSet.add(kState);
-        unKnownSet.add(mState);
-        unKnownSet.add(rState);
-        unKnownSet.add(sState);
-        unKnownSet.add(wState);
-        unKnownSet.add(yState);
-        unKnownSet.add(bState);
-        unKnownSet.add(dState);
-        unKnownSet.add(hState);
-        unKnownSet.add(vState);
-        unKnownSet.add(nState);
+        unKnownSet.add(uState);
         unKnownSet.add(gapState);
-        UncertainCharacterState unKnownState = RNAStateSet.createUncertainCharacterState("?",unKnownSet);
-        RNAStateSet.getCharacterStates().add(unKnownState);
-        unKnownState.setLabel("s18");
-        unKnownState.setSymbol("?");
+        UncertainCharacterState unKnownState = createUncertainCharacterState("?",unKnownSet);
+        getCharacterStates().add(unKnownState);
     }
     
     
@@ -330,10 +333,11 @@ class MolecularCharacterStateSetImpl extends CharacterStateSetImpl{
     */
 
     public CharacterStateSet getProteinStateSet(){
-        if (ProteinStateSet == null){
-            ProteinStateSet = new MolecularCharacterStateSetImpl(getDocument());
-        }
-        return (CharacterStateSet)ProteinStateSet;
+    	if ( ! isFilled ) {
+    		fillProteinStateSet();
+    		isFilled = true;
+    	}
+    	return this;
     }
         
     /**
@@ -341,70 +345,145 @@ class MolecularCharacterStateSetImpl extends CharacterStateSetImpl{
      * 
      * See the comments for DNAStateSet.  
      */
-    void fillProteinStateSet(){    
-        ProteinStateSet.mCharacterStates = new HashSet<CharacterState>();
-        CharacterState aState = ProteinStateSet.createCharacterState("A");
-        ProteinStateSet.getCharacterStates().add(aState);
-        aState.setLabel("s1");
-        CharacterState cState = ProteinStateSet.createCharacterState("C");
-        ProteinStateSet.getCharacterStates().add(cState);
-        cState.setLabel("s2");
-        CharacterState dState = ProteinStateSet.createCharacterState("D");
-        ProteinStateSet.getCharacterStates().add(dState);
-        dState.setLabel("s3");
-        CharacterState eState = ProteinStateSet.createCharacterState("E");
-        ProteinStateSet.getCharacterStates().add(eState);
-        eState.setLabel("s4");
-        CharacterState fState = ProteinStateSet.createCharacterState("F");
-        ProteinStateSet.getCharacterStates().add(fState);
-        fState.setLabel("s5");
-        CharacterState gState = ProteinStateSet.createCharacterState("G");
-        ProteinStateSet.getCharacterStates().add(gState);
-        gState.setLabel("s6");
-        CharacterState hState = ProteinStateSet.createCharacterState("H");
-        ProteinStateSet.getCharacterStates().add(hState);
-        hState.setLabel("s7");
-        CharacterState iState = ProteinStateSet.createCharacterState("I");
-        ProteinStateSet.getCharacterStates().add(iState);
-        iState.setLabel("s8");
-        CharacterState kState = ProteinStateSet.createCharacterState("K");
-        ProteinStateSet.getCharacterStates().add(kState);
-        kState.setLabel("s9");
-        CharacterState lState = ProteinStateSet.createCharacterState("L");
-        ProteinStateSet.getCharacterStates().add(lState);
-        lState.setLabel("s10");
-        CharacterState mState = ProteinStateSet.createCharacterState("M");
-        ProteinStateSet.getCharacterStates().add(mState);
-        mState.setLabel("s11");
-        CharacterState nState = ProteinStateSet.createCharacterState("N");
-        ProteinStateSet.getCharacterStates().add(nState);
-        nState.setLabel("s12");
-        CharacterState pState = ProteinStateSet.createCharacterState("P");
-        ProteinStateSet.getCharacterStates().add(pState);
-        pState.setLabel("s13");
-        CharacterState qState = ProteinStateSet.createCharacterState("Q");
-        ProteinStateSet.getCharacterStates().add(qState);
-        qState.setLabel("s14");
-        CharacterState rState = ProteinStateSet.createCharacterState("R");
-        ProteinStateSet.getCharacterStates().add(rState);
-        rState.setLabel("s15");
-        CharacterState sState = ProteinStateSet.createCharacterState("S");
-        ProteinStateSet.getCharacterStates().add(sState);
-        sState.setLabel("s16");
-        CharacterState tState = ProteinStateSet.createCharacterState("T");
-        ProteinStateSet.getCharacterStates().add(tState);
-        tState.setLabel("s17");
-        CharacterState vState = ProteinStateSet.createCharacterState("V");
-        ProteinStateSet.getCharacterStates().add(vState);
-        vState.setLabel("s18");
-        CharacterState wState = ProteinStateSet.createCharacterState("W");
-        ProteinStateSet.getCharacterStates().add(wState);
-        wState.setLabel("s19");
-        CharacterState yState = ProteinStateSet.createCharacterState("Y");
-        ProteinStateSet.getCharacterStates().add(yState);
-        yState.setLabel("s20");
+    private void fillProteinStateSet(){    
+        mCharacterStates = new HashSet<CharacterState>();
+        Set <CharacterState> xStateSet = new HashSet<CharacterState>();
+        
+        // Alanine
+        CharacterState aState = createCharacterState("A");
+        getCharacterStates().add(aState);
+        xStateSet.add(aState);
+        
+        // Aspartic acid or asparagine
+        CharacterState bState = createCharacterState("B");
+        getCharacterStates().add(bState);
+        xStateSet.add(bState);
+        
+        // Cysteine
+        CharacterState cState = createCharacterState("C");
+        getCharacterStates().add(cState);
+        xStateSet.add(cState);
+        
+        // Aspartic acid
+        CharacterState dState = createCharacterState("D");
+        getCharacterStates().add(dState);
+        xStateSet.add(dState);
+        
+        // Glutamic acid
+        CharacterState eState = createCharacterState("E");
+        getCharacterStates().add(eState);
+        xStateSet.add(eState);
+        
+        // Phenylanine
+        CharacterState fState = createCharacterState("F");
+        getCharacterStates().add(fState);
+        xStateSet.add(fState);
+        
+        // Glycine
+        CharacterState gState = createCharacterState("G");
+        getCharacterStates().add(gState);
+        xStateSet.add(gState);
+        
+        // Histidine
+        CharacterState hState = createCharacterState("H");
+        getCharacterStates().add(hState);
+        xStateSet.add(hState);
+        
+        // Isoleucine
+        CharacterState iState = createCharacterState("I");
+        getCharacterStates().add(iState);
+        xStateSet.add(iState);
+        
+        // Lysine
+        CharacterState kState = createCharacterState("K");
+        getCharacterStates().add(kState);
+        xStateSet.add(kState);
+        
+        // Leucine
+        CharacterState lState = createCharacterState("L");
+        getCharacterStates().add(lState);
+        xStateSet.add(lState);
+        
+        // Methionine
+        CharacterState mState = createCharacterState("M");
+        getCharacterStates().add(mState);
+        xStateSet.add(mState);
+        
+        // Asparagine
+        CharacterState nState = createCharacterState("N");
+        getCharacterStates().add(nState);
+        xStateSet.add(nState);
+        
+        // Proline
+        CharacterState pState = createCharacterState("P");
+        getCharacterStates().add(pState);
+        xStateSet.add(pState);
+        
+        // Glutamine
+        CharacterState qState = createCharacterState("Q");
+        getCharacterStates().add(qState);
+        xStateSet.add(qState);
+        
+        // Arginine
+        CharacterState rState = createCharacterState("R");
+        getCharacterStates().add(rState);
+        xStateSet.add(rState);
+        
+        // Serine
+        CharacterState sState = createCharacterState("S");
+        getCharacterStates().add(sState);
+        xStateSet.add(sState);
+        
+        // Threonine
+        CharacterState tState = createCharacterState("T");
+        getCharacterStates().add(tState);
+        xStateSet.add(tState);
+        
+        // Selenocysteine
+        CharacterState uState = createCharacterState("U");
+        getCharacterStates().add(uState);
+        xStateSet.add(uState);
+        
+        // Valine
+        CharacterState vState = createCharacterState("V");
+        getCharacterStates().add(vState);
+        xStateSet.add(vState);
+        
+        // Tryptophan
+        CharacterState wState = createCharacterState("W");
+        getCharacterStates().add(wState);
+        xStateSet.add(wState);
+        
+        // Tyrosine
+        CharacterState yState = createCharacterState("Y");
+        getCharacterStates().add(yState);
+        xStateSet.add(yState);
+        
+        // Glutamic acid or glutamine
+        CharacterState zState = createCharacterState("Z");
+        getCharacterStates().add(zState);
+        xStateSet.add(zState);
+
+        UncertainCharacterState xState = createUncertainCharacterState("X",xStateSet);
+        getCharacterStates().add(xState);
+
 
     }
-  
+
+    /**
+     * Makes working with predefined sets, (e.g. molecular) easier by allowing searching for states
+     * @author rvos
+     */
+    public CharacterState lookupCharacterStateBySymbol(String symbol){
+        if (symbol == null){
+            return null;
+        }
+        for (CharacterState cs : getCharacterStates()){
+            if (symbol.equals(cs.getSymbol())){
+                return cs;
+            }
+        }
+        throw new Error("Symbol "+symbol+" not allowed in predefined state set");
+    }
     
 }
