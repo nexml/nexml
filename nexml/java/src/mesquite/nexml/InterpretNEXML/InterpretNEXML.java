@@ -35,7 +35,7 @@ public class InterpretNEXML extends FileInterpreterI {
 	}
 	
 /*.................................................................................................................*/
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	public boolean canExportData(Class dataClass) {  
 		return true;
 	}
