@@ -69,6 +69,7 @@ public interface Annotatable extends NexmlWritable {
     Annotation addAnnotationValue(String property, URI nameSpaceURI, Duration value);  
     Annotation addAnnotationValue(String property, URI nameSpaceURI, QName value);
     Annotation addAnnotationValue(String property, URI nameSpaceURI, Source value);  
-    Annotation addAnnotationValue(String property, URI nameSpaceURI, XMLGregorianCalendar value);    
+    Annotation addAnnotationValue(String property, URI nameSpaceURI, XMLGregorianCalendar value);
+    Annotation addAnnotationValue(String property, URI nameSpaceURI, java.lang.Character value);
 
 }
