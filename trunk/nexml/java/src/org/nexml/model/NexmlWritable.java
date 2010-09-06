@@ -1,7 +1,8 @@
 package org.nexml.model;
 
 public interface NexmlWritable {
-	String DEFAULT_NAMESPACE = "http://www.nexml.org/1.0";
+	String DEFAULT_NAMESPACE = "http://www.nexml.org/2009";
+	String DEFAULT_VERSION = "0.9";
 
 	/**
 	 * Gets the value of the label attribute. This is simply
