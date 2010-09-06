@@ -56,7 +56,7 @@ public class TreeBlockImpl extends OTUsLinkableImpl<Network<?>> implements
 		super(document, item);
 		setOTUs(otus);
 		for ( Element networkElement : getChildrenByTagName(item,NetworkImpl.getTagNameClass())) {
-			if ( networkElement.getAttribute(XSI_PREFIX + ":type").indexOf("Int") > 0 ) {
+			if ( networkElement.getAttribute(XSI_TYPE).indexOf("Int") > 0 ) {
 				addThing(new IntNetworkImpl(document,networkElement,(OTUsImpl)otus));
 			}
 			else {
@@ -64,7 +64,7 @@ public class TreeBlockImpl extends OTUsLinkableImpl<Network<?>> implements
 			}
 		}
 		for ( Element treeElement : getChildrenByTagName(item,TreeImpl.getTagNameClass())) {
-			if ( treeElement.getAttribute(XSI_PREFIX + ":type").indexOf("Int") > 0 ) {
+			if ( treeElement.getAttribute(XSI_TYPE).indexOf("Int") > 0 ) {
 				addThing(new IntTreeImpl(document,treeElement,(OTUsImpl)otus));
 			}
 			else {
@@ -81,8 +81,7 @@ public class TreeBlockImpl extends OTUsLinkableImpl<Network<?>> implements
 		IntNetworkImpl network = new IntNetworkImpl(getDocument());
 		addThing(network);
 		getElement().appendChild(network.getElement());
-		network.getElement().setAttributeNS(XSI_NS, XSI_PREFIX + ":type",
-				NEX_PREFIX + ":IntNetwork");
+		network.getElement().setAttributeNS(XSI_URI, XSI_TYPE, NEX_PRE + ":IntNetwork");
 		return network;
 	}
 
@@ -97,8 +96,7 @@ public class TreeBlockImpl extends OTUsLinkableImpl<Network<?>> implements
 		FloatNetworkImpl network = new FloatNetworkImpl(getDocument());
 		addThing(network);
 		getElement().appendChild(network.getElement());
-		network.getElement().setAttributeNS(XSI_NS, XSI_PREFIX + ":type",
-				NEX_PREFIX + ":FloatNetwork");
+		network.getElement().setAttributeNS(XSI_URI, XSI_TYPE, NEX_PRE + ":FloatNetwork");
 		return network;
 	}
 
@@ -121,8 +119,7 @@ public class TreeBlockImpl extends OTUsLinkableImpl<Network<?>> implements
 	public Tree<FloatEdge> createFloatTree() {
 		FloatTreeImpl tree = new FloatTreeImpl(getDocument());
 		getElement().appendChild(tree.getElement());
-		tree.getElement().setAttributeNS(XSI_NS, XSI_PREFIX + ":type",
-				NEX_PREFIX + ":FloatTree");
+		tree.getElement().setAttributeNS(XSI_URI, XSI_TYPE, NEX_PRE + ":FloatTree");
 		return tree;
 	}
 
@@ -135,8 +132,7 @@ public class TreeBlockImpl extends OTUsLinkableImpl<Network<?>> implements
 	public Tree<IntEdge> createIntTree() {
 		IntTreeImpl tree = new IntTreeImpl(getDocument());
 		getElement().appendChild(tree.getElement());
-		tree.getElement().setAttributeNS(XSI_NS, XSI_PREFIX + ":type",
-				NEX_PREFIX + ":IntTree");
+		tree.getElement().setAttributeNS(XSI_URI, XSI_TYPE, NEX_PRE + ":IntTree");
 		return tree;
 	}
 
