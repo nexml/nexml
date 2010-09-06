@@ -272,7 +272,7 @@ abstract class MatrixImpl<T> extends OTUsLinkableImpl<Character> implements
 		mType = type;
 		mCompact = compact;
 		String subType = compact ? "Seqs" : "Cells";
-		getElement().setAttributeNS(XSI_NS, XSI_TYPE, NEX_PREFIX+":"+type+subType );	
+		getElement().setAttributeNS(XSI_URI, XSI_TYPE, NEX_PRE+":"+type+subType );	
 	}
 	
 	protected void setType(String type) {
