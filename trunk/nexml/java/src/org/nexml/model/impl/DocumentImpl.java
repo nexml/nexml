@@ -27,7 +27,7 @@ public class DocumentImpl extends AnnotatableImpl implements Document {
 	private List<OTUs> mOtusList = new ArrayList<OTUs>();
 	private List<Matrix<?>> mMatrixList = new ArrayList<Matrix<?>>();
 	private List<TreeBlock> mTreeBlockList = new ArrayList<TreeBlock>();
-	public static Collection<String> characterNames = new ArrayList<String>();
+	public static Collection<String> characterNames = new ArrayList<String>(); // XXX THIS IS WRONG!
 
     /**
      * Protected constructors that take a DOM document object but not
@@ -91,10 +91,10 @@ public class DocumentImpl extends AnnotatableImpl implements Document {
 			}
 			
 			
-			String xsiType = charsBlock.getAttribute(XSI_PREFIX+":type");
+			String xsiType = charsBlock.getAttribute(XSI_TYPE);
 			Matrix<?> matrix = null;
 			xsiType = xsiType.replaceAll("Seqs", "Cells");
-			charsBlock.setAttribute(XSI_PREFIX+":type", xsiType);
+			charsBlock.setAttribute(XSI_TYPE, xsiType);
 			if (xsiType.indexOf("Continuous") > 0) {
 				matrix = new ContinuousMatrixImpl(getDocument(), charsBlock, 
 					(OTUsImpl)getOTUsById(charsBlock.getAttribute("otus")));
@@ -127,31 +127,15 @@ public class DocumentImpl extends AnnotatableImpl implements Document {
 	}
 
 	private void setRootAttributes() {
-		getElement().setAttribute("version", "0.8");
+		getElement().setAttribute("version", DEFAULT_VERSION);
 		getElement().setAttribute("generator", getClass().getName());
-		getElement().setPrefix(NEX_PREFIX);
+		getElement().setPrefix(NEX_PRE);
 		getElement().removeAttribute("id");
-		getElement().setAttributeNS(
-			"http://www.w3.org/2000/xmlns/", 
-			"xmlns:" + NEX_PREFIX, 
-			DEFAULT_NAMESPACE
-		);
-		getElement().setAttribute("xmlns", DEFAULT_NAMESPACE);
-		getElement().setAttributeNS(
-			"http://www.w3.org/2000/xmlns/",
-			"xmlns:xsi",
-			"http://www.w3.org/1999/XMLSchema-instance"
-		);
-		getElement().setAttributeNS(
-			"http://www.w3.org/2000/xmlns/",
-			"xmlns:xsd",			
-			"http://www.w3.org/2001/XMLSchema#"
-		);
-		getElement().setAttributeNS(
-			"http://www.w3.org/2000/xmlns/",
-			"xmlns:rdf",			
-			"http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-		);
+		getElement().setAttribute( XMLNS_PRE, DEFAULT_NAMESPACE);
+		getElement().setAttributeNS( XMLNS_URI, XMLNS_PRE + ":" + NEX_PRE, DEFAULT_NAMESPACE );
+		getElement().setAttributeNS( XMLNS_URI, XMLNS_PRE + ":" + XSI_PRE, XSI_URI );
+		getElement().setAttributeNS( XMLNS_URI, XMLNS_PRE + ":" + XSD_PRE, XS_URI + "#" );
+		getElement().setAttributeNS( XMLNS_URI, XMLNS_PRE + ":" + RDF_PRE, RDF_URI + "#" );
 	}
 
 	protected DocumentImpl() {
@@ -211,8 +195,7 @@ public class DocumentImpl extends AnnotatableImpl implements Document {
 		mMatrixList.add(categoricalMatrix);
 		getElement().appendChild(categoricalMatrix.getElement());
 		categoricalMatrix.setOTUs(otus);
-		categoricalMatrix.getElement().setAttributeNS(XSI_NS,
-				XSI_PREFIX + ":type", NEX_PREFIX + ":StandardCells");
+		categoricalMatrix.getElement().setAttributeNS(XSI_URI, XSI_TYPE, NEX_PRE + ":StandardCells");
 		return categoricalMatrix;
 	}
 
@@ -233,8 +216,7 @@ public class DocumentImpl extends AnnotatableImpl implements Document {
 		mMatrixList.add(continuousMatrix);
 		getElement().appendChild(continuousMatrix.getElement());
 		continuousMatrix.setOTUs(otus);
-		continuousMatrix.getElement().setAttributeNS(XSI_NS,
-				XSI_PREFIX + ":type", NEX_PREFIX + ":ContinuousCells");
+		continuousMatrix.getElement().setAttributeNS(XSI_URI, XSI_TYPE, NEX_PRE + ":ContinuousCells");
 		return continuousMatrix;
 	}
 
