@@ -1,15 +1,17 @@
 package org.nexml.model.impl;
 
+import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
@@ -28,6 +30,39 @@ import org.w3c.dom.NodeList;
 
 public class AnnotationImpl extends AnnotatableImpl implements Annotation {
 	private Object mValue;
+	
+	@SuppressWarnings("serial")
+	private Map<String,Class<?>> classForXsdType = new HashMap<String, Class<?>>() {{
+		put(XSD_PRE+":decimal", BigDecimal.class);
+		put(XSD_PRE+":integer", BigInteger.class);
+		put(XSD_PRE+":boolean", Boolean.class);
+		put(XSD_PRE+":byte", Byte.class);
+		put(XSD_PRE+":QName", QName.class);
+		put(XSD_PRE+":double", Double.class);
+		put(XSD_PRE+":float", Float.class);
+		put(XSD_PRE+":long", Long.class);
+		put(XSD_PRE+":short", Short.class);
+		put(XSD_PRE+":string", String.class);
+		put(XSD_PRE+":char", CharWrapper.class);
+		put(XSD_PRE+":dateTime", DateTimeWrapper.class);
+		put(XSD_PRE+":base64Binary", Base64BinaryWrapper.class);
+		put(XSD_PRE+":duration", DurationWrapper.class);
+		
+	}};
+	
+	@SuppressWarnings("serial")
+	private Map<Class<?>,String> xsdTypeForClass = new HashMap<Class<?>,String>() {{
+		for ( String xsdType : classForXsdType.keySet() ) {
+			put(classForXsdType.get(xsdType), xsdType);
+		}
+		put(Date.class, XSD_PRE+":dateTime");
+		put(Calendar.class, XSD_PRE+":dateTime");
+		put(UUID.class, XSD_PRE+":string");
+		put(java.awt.Image.class, XSD_PRE+":base64Binary");
+		put(Duration.class, XSD_PRE+":duration");
+		put(java.lang.Character.class, XSD_PRE+":char");
+		put(Source.class, XSD_PRE+":base64Binary");
+	}};
 	
 	/**
 	 * Class version of {@code getTagName()}.
@@ -68,73 +103,30 @@ public class AnnotationImpl extends AnnotatableImpl implements Annotation {
         super(document, element);
         if ( element.hasAttribute("content") ) {
             String datatype = element.getAttribute("datatype");
-            String content = element.getAttribute("content");        	
-	        if ( datatype.equals("xsd:decimal") ) {
-	        	mValue = new BigDecimal(content);
-	        }
-	        else if ( datatype.equals("xsd:integer") ) {
-	        	mValue = new BigInteger(content);
-	        }
-	        else if ( datatype.equals("xsd:boolean") ) {
-	        	mValue = new Boolean(content);
-	        }
-	        else if ( datatype.equals("xsd:byte") ) {
-	        	mValue = new Byte(content);
-	        }
-	        else if ( datatype.equals("xsd:dateTime") ) {
-	        	try {
-					mValue = DateFormat.getDateTimeInstance().parse(content);
-				} catch (ParseException e) {
-					// TODO Auto-generated catch block
+            String content = element.getAttribute("content");  
+            if ( classForXsdType.containsKey(datatype) ) {
+            	try {
+					mValue = classForXsdType.get(datatype).getConstructor(String.class).newInstance(content);
+				} catch (IllegalArgumentException e) {
+					e.printStackTrace();
+				} catch (SecurityException e) {
+					e.printStackTrace();
+				} catch (InstantiationException e) {
+					e.printStackTrace();
+				} catch (IllegalAccessException e) {
+					e.printStackTrace();
+				} catch (InvocationTargetException e) {
+					e.printStackTrace();
+				} catch (NoSuchMethodException e) {
 					e.printStackTrace();
 				}
-	        }
-	        else if ( datatype.equals("xsd:double") ) {
-	        	mValue = new Double(content);
-	        }
-	        else if ( datatype.equals("xsd:float") ) {
-	        	mValue = new Float(content);
-	        }
-	        else if ( datatype.equals("xsd:long") ) {
-	        	mValue = new Long(content);
-	        }
-	        else if ( datatype.equals("xsd:short") ) {
-	        	mValue = new Short(content);
-	        }
-	        else if ( datatype.equals("xsd:string") ) {
-	        	mValue = new String(content);
-	        }
-	        else if ( datatype.equals("xsd:anySimpleType") ) {
+            }
+	        else if ( datatype.equals(XSD_PRE+":anySimpleType") ) {
 	        	mValue = new SimpleObject(content);
-	        }
-	        else if ( datatype.equals("xsd:base64Binary") ) {
-	        	byte[] bytes = content.getBytes();
-	        	mValue = new Byte[bytes.length];
-	        	for ( int i = 0; i < bytes.length; i++ ) {
-	        		((Byte[])mValue)[i] = bytes[i];
-	        	}
-	        }
-	        else if ( datatype.equals("xsd:duration") ) {
-	        	DatatypeFactory dtf = null;
-				try {
-					dtf = DatatypeFactory.newInstance();
-				} catch (DatatypeConfigurationException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-	        	mValue = dtf.newDuration(content);
-	        }
-	        else if ( datatype.equals("xsd:QName") ) {
-	        	mValue = new QName(content);
 	        }
         }
         else if ( element.hasAttribute("href") ) {
-        	try {
-				mValue = new URI(element.getAttribute("href"));
-			} catch (URISyntaxException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+        	mValue = URI.create(element.getAttribute("href"));
         }
         // there is no content or href
         else {
@@ -224,6 +216,10 @@ public class AnnotationImpl extends AnnotatableImpl implements Annotation {
 		}
     }
     
+    /*
+     * (non-Javadoc)
+     * @see org.nexml.model.Annotation#setValue(org.nexml.model.Annotation)
+     */
     public void setValue(Annotation value) {
     	mValue = value;
     	getElement().setAttribute("xsi:type","nex:ResourceMeta");
@@ -260,6 +256,10 @@ public class AnnotationImpl extends AnnotatableImpl implements Annotation {
 		}		    	    	
     }
     
+    /*
+     * (non-Javadoc)
+     * @see org.nexml.model.Annotation#setValue(org.w3c.dom.Node)
+     */
     public void setValue(Node value) {
         mValue = value;
         getElement().setAttribute("datatype", "rdf:XMLLiteral");
@@ -342,7 +342,7 @@ public class AnnotationImpl extends AnnotatableImpl implements Annotation {
      * @see org.nexml.model.Annotation#setValue(java.lang.Byte[])
      */
     public void setValue(Byte[] value) {    
-    	setValueAttributes("xsd:base64Binary",value);	
+    	setValueAttributes(xsdTypeForClass.get(value.getClass()),value);	
     } 
     
     /*
@@ -350,15 +350,15 @@ public class AnnotationImpl extends AnnotatableImpl implements Annotation {
      * @see org.nexml.model.Annotation#setValue(java.math.BigDecimal)
      */
     public void setValue(BigDecimal value) {
-    	setValueAttributes("xsd:decimal",value);	
-    }    
+    	setValueAttributes(xsdTypeForClass.get(value.getClass()),value);	
+    }
     
     /*
      * (non-Javadoc)
      * @see org.nexml.model.Annotation#setValue(java.math.BigInteger)
      */
     public void setValue(BigInteger value) {
-    	setValueAttributes("xsd:integer",value); 	
+    	setValueAttributes(xsdTypeForClass.get(value.getClass()),value); 	
     }
     
     /*
@@ -366,7 +366,7 @@ public class AnnotationImpl extends AnnotatableImpl implements Annotation {
      * @see org.nexml.model.Annotation#setValue(java.lang.Boolean)
      */
     public void setValue(Boolean value) {
-    	setValueAttributes("xsd:boolean",value);      	
+    	setValueAttributes(xsdTypeForClass.get(value.getClass()),value);      	
     }
     
     /*
@@ -374,7 +374,7 @@ public class AnnotationImpl extends AnnotatableImpl implements Annotation {
      * @see org.nexml.model.Annotation#setValue(java.lang.Byte)
      */
     public void setValue(Byte value) {
-    	setValueAttributes("xsd:byte",value);      	
+    	setValueAttributes(xsdTypeForClass.get(value.getClass()),value);      	
     }
     
     /*
@@ -382,7 +382,7 @@ public class AnnotationImpl extends AnnotatableImpl implements Annotation {
      * @see org.nexml.model.Annotation#setValue(java.util.Calendar)
      */
     public void setValue(Calendar value) {
-    	setValueAttributes("xsd:dateTime",value);    	
+    	setValueAttributes(xsdTypeForClass.get(value.getClass()),value);    	
     }    
     
     /*
@@ -390,7 +390,7 @@ public class AnnotationImpl extends AnnotatableImpl implements Annotation {
      * @see org.nexml.model.Annotation#setValue(java.util.Date)
      */
     public void setValue(Date value) {
-    	setValueAttributes("xsd:dateTime",value);      	
+    	setValueAttributes(xsdTypeForClass.get(value.getClass()),value);      	
     }
     
     /*
@@ -398,7 +398,7 @@ public class AnnotationImpl extends AnnotatableImpl implements Annotation {
      * @see org.nexml.model.Annotation#setValue(java.lang.Double)
      */
     public void setValue(Double value) {
-    	setValueAttributes("xsd:double",value);      	
+    	setValueAttributes(xsdTypeForClass.get(value.getClass()),value);      	
     }    
     
     /*
@@ -406,7 +406,7 @@ public class AnnotationImpl extends AnnotatableImpl implements Annotation {
      * @see org.nexml.model.Annotation#setValue(java.lang.Float)
      */
     public void setValue(Float value) {
-    	setValueAttributes("xsd:float",value);      	
+    	setValueAttributes(xsdTypeForClass.get(value.getClass()),value);      	
     }
     
     /*
@@ -414,7 +414,7 @@ public class AnnotationImpl extends AnnotatableImpl implements Annotation {
      * @see org.nexml.model.Annotation#setValue(java.lang.Integer)
      */
     public void setValue(Integer value) {
-    	setValueAttributes("xsd:integer",value);     	
+    	setValueAttributes(xsdTypeForClass.get(value.getClass()),value);     	
     }
     
     /*
@@ -422,7 +422,7 @@ public class AnnotationImpl extends AnnotatableImpl implements Annotation {
      * @see org.nexml.model.Annotation#setValue(java.lang.Long)
      */
     public void setValue(Long value) {
-    	setValueAttributes("xsd:long",value);      	
+    	setValueAttributes(xsdTypeForClass.get(value.getClass()),value);      	
     }
     
     /*
@@ -430,7 +430,7 @@ public class AnnotationImpl extends AnnotatableImpl implements Annotation {
      * @see org.nexml.model.Annotation#setValue(java.lang.Short)
      */
     public void setValue(Short value) {
-    	setValueAttributes("xsd:short",value);      	
+    	setValueAttributes(xsdTypeForClass.get(value.getClass()),value);      	
     }
     
     /*
@@ -438,7 +438,7 @@ public class AnnotationImpl extends AnnotatableImpl implements Annotation {
      * @see org.nexml.model.Annotation#setValue(java.util.UUID)
      */
     public void setValue(UUID value) {
-    	setValueAttributes("xsd:string",value);      	
+    	setValueAttributes(xsdTypeForClass.get(value.getClass()),value);      	
     }
     
     /*
@@ -446,7 +446,7 @@ public class AnnotationImpl extends AnnotatableImpl implements Annotation {
      * @see org.nexml.model.Annotation#setValue(java.lang.String)
      */
     public void setValue(String value) {
-    	setValueAttributes("xsd:string",value);      	
+    	setValueAttributes(xsdTypeForClass.get(value.getClass()),value);      	
     }    
     
     /*
@@ -454,7 +454,7 @@ public class AnnotationImpl extends AnnotatableImpl implements Annotation {
      * @see org.nexml.model.Annotation#setValue(java.awt.Image)
      */
     public void setValue(java.awt.Image value) {
-    	setValueAttributes("xsd:base64Binary",value);  	
+    	setValueAttributes(xsdTypeForClass.get(value.getClass()),value);  	
     }   
     
     /*
@@ -462,7 +462,7 @@ public class AnnotationImpl extends AnnotatableImpl implements Annotation {
      * @see org.nexml.model.Annotation#setValue(javax.xml.datatype.Duration)
      */
     public void setValue(Duration value) {
-    	setValueAttributes("xsd:duration",value);      	
+    	setValueAttributes(xsdTypeForClass.get(value.getClass()),value);      	
     }    
     
     /*
@@ -470,15 +470,23 @@ public class AnnotationImpl extends AnnotatableImpl implements Annotation {
      * @see org.nexml.model.Annotation#setValue(javax.xml.namespace.QName)
      */
     public void setValue(QName value) {
-    	setValueAttributes("xsd:QName",value);      	
-    } 
+    	setValueAttributes(xsdTypeForClass.get(value.getClass()),value);      	
+    }    
+    
+    /*
+     * (non-Javadoc)
+     * @see org.nexml.model.Annotation#setValue(java.lang.Character)
+     */
+    public void setValue(java.lang.Character value) {
+    	setValueAttributes(xsdTypeForClass.get(value.getClass()),value);
+    }
     
     /*
      * (non-Javadoc)
      * @see org.nexml.model.Annotation#setValue(javax.xml.transform.Source)
      */
     public void setValue(Source value) {
-    	setValueAttributes("xsd:base64Binary",value);    	
+    	setValueAttributes(xsdTypeForClass.get(value.getClass()),value);    	
     }    
     
     /*
@@ -512,10 +520,80 @@ public class AnnotationImpl extends AnnotatableImpl implements Annotation {
     		return mValue;
     	}
     }
+    
+    class CharWrapper {
+    	private java.lang.Character mValue;
+    	public CharWrapper(String value) {
+    		mValue = new java.lang.Character(value.charAt(0));
+    	}
+    	public String toString() {
+    		return mValue.toString();
+    	}
+    }
+    
+    class DateTimeWrapper {
+    	private Date mValue;
+    	public DateTimeWrapper(String value) {
+    	    try {
+    			mValue = DateFormat.getDateTimeInstance().parse(value);
+    		} catch (ParseException e) {
+    			e.printStackTrace();
+    		}
+    	}
+    	public String toString() {
+    		return mValue.toString();
+    	}
+    }
+    
+    class Base64BinaryWrapper {
+    	private Byte[] mValue;
+    	public Base64BinaryWrapper(String value) {
+    		byte[] bytes = value.getBytes();
+        	mValue = new Byte[bytes.length];
+        	for ( int i = 0; i < bytes.length; i++ ) {
+        		((Byte[])mValue)[i] = bytes[i];
+        	}    		
+    	}
+    	public String toString() {
+    		StringBuffer sb = new StringBuffer();
+    		for ( int i = 0; i < mValue.length; i++ ) {
+    			sb.append(mValue[i]);
+    		}
+    		return sb.toString();
+    	}
+    }
+    
+    class DurationWrapper {
+    	private Duration mValue;
+    	public DurationWrapper(String value) {
+        	DatatypeFactory dtf = null;
+			try {
+				dtf = DatatypeFactory.newInstance();
+			} catch (DatatypeConfigurationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+        	mValue = dtf.newDuration(value);
+    	}
+    	public String toString() {
+    		return mValue.toString();
+    	}
+    }
+	
 
-	public Set<Annotation> getAllAnnotations() {
-		// TODO Auto-generated method stub
-		return null;
+	@Override
+	public boolean isValueMapped(Class<?> valueClass) {
+		return xsdTypeForClass.containsKey(valueClass);
+	}
+	
+	public String getXsdType() {
+		Class<?> valueClass = mValue.getClass();
+		if ( xsdTypeForClass.containsKey(valueClass) ) {
+			return xsdTypeForClass.get(mValue.getClass());
+		}
+		else {
+			return XSD_PRE+":anySimpleType";
+		}
 	}
     
 }
