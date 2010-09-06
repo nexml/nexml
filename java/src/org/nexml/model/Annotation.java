@@ -23,6 +23,7 @@ import org.w3c.dom.Node;
  * <meta property="dc:name">Homer</meta>
  * <meta rel="dc:creator" href="http://www.example.com/Homer"/>
  * </otu>
+ * @param <T>
  */
 public interface Annotation extends Annotatable {
     
@@ -33,7 +34,6 @@ public interface Annotation extends Annotatable {
 	public String getProperty();
 
 	/**
-	 * XXX how to define namespaces?
 	 * Sets a CURIE predicate, e.g. dc:name
 	 * @param property
 	 */
@@ -74,26 +74,32 @@ public interface Annotation extends Annotatable {
 	public void setValue(Object value);	    
 	public void setValue(NodeList value);
 	public void setValue(Node value);
-	public void setValue(Element value);	    
-	public void setValue(URI value);
-	public void setValue(Byte[] value);
+	public void setValue(Element value);
+	
+	public void setValue(URI value);	
 	public void setValue(BigDecimal value);
 	public void setValue(BigInteger value);   
 	public void setValue(Boolean value);
-	public void setValue(Byte value);
-	public void setValue(Calendar value);   
-	public void setValue(Date value);
 	public void setValue(Double value);   
 	public void setValue(Float value);
 	public void setValue(Integer value);
 	public void setValue(Long value);
 	public void setValue(Short value);
-	public void setValue(UUID value);
 	public void setValue(String value);
-	public void setValue(java.awt.Image value);
-	public void setValue(Duration value);  
 	public void setValue(QName value);
+	
+	public void setValue(Byte value);
+	public void setValue(Calendar value);   
+	public void setValue(Date value);	
+	public void setValue(Byte[] value);
+	public void setValue(UUID value);	
+	public void setValue(java.awt.Image value);
+	public void setValue(Duration value);  	
 	public void setValue(Source value);  
 	public void setValue(XMLGregorianCalendar value);
+	public void setValue(java.lang.Character value);
+	
+	public boolean isValueMapped(Class<?> valueClass);
+	public String getXsdType();
 
 }
