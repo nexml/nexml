@@ -211,7 +211,10 @@ abstract class AnnotatableImpl extends NexmlWritableImpl implements Annotatable 
 	    }	
 	    else if ( value instanceof Calendar ) {
 	        return addAnnotationValue(property,nameSpaceURI,(Calendar)value);
-	    }	
+	    }
+	    else if ( value instanceof java.lang.Character ) {
+	    	return addAnnotationValue(property,nameSpaceURI,(java.lang.Character)value);
+	    }
 	    else if ( value instanceof Date ) {
 	        return addAnnotationValue(property,nameSpaceURI,(Date)value);
 	    }	
@@ -432,6 +435,16 @@ abstract class AnnotatableImpl extends NexmlWritableImpl implements Annotatable 
         Annotation annotation = addAnnotationValueHelper(property,nameSpaceURI,false);
         annotation.setValue(value);    
         return annotation;       
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see org.nexml.model.Annotatable#addAnnotationValue(java.lang.String, java.net.URI, java.lang.Character)
+	 */
+	public Annotation addAnnotationValue(String property, URI nameSpaceURI, java.lang.Character value){
+		Annotation annotation = addAnnotationValueHelper(property,nameSpaceURI,false);
+		annotation.setValue(value);
+		return annotation;
 	}
 	
 	/*
