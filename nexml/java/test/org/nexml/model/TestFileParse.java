@@ -5,8 +5,6 @@ package org.nexml.model;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Properties;
-
 import javax.xml.parsers.ParserConfigurationException;
 
 import junit.framework.Assert;
@@ -39,7 +37,7 @@ public class TestFileParse {
 			Assert.assertTrue(e.getMessage(), false);
 			e.printStackTrace();
 		}
-		//System.out.println(doc.getXmlString());
+		System.out.println(doc.getXmlString());
 	}
 
 }
