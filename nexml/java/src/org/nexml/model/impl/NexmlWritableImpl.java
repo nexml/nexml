@@ -16,14 +16,25 @@ import org.w3c.dom.NodeList;
  * Base DOM implementation of {@code NexmlWritable}.
  */
 abstract class NexmlWritableImpl implements NexmlWritable {
+
 	private Document mDocument = null;
 	private Element mElement;
 	private static long objectCounter = 0;
 	private static Map<String,Boolean> seenIdStrings = new HashMap<String,Boolean>();
-	protected static String XSI_NS = "http://www.w3.org/2001/XMLSchema-instance";
-	protected static String XSI_PREFIX = "xsi";
-	protected static String XSI_TYPE = XSI_PREFIX + ":type";
-	protected static String NEX_PREFIX = "nex";
+	
+	protected static String XSI_URI = javax.xml.XMLConstants.W3C_XML_SCHEMA_INSTANCE_NS_URI;
+	protected static String XMLNS_URI = javax.xml.XMLConstants.XMLNS_ATTRIBUTE_NS_URI;
+	protected static String XS_URI = javax.xml.XMLConstants.W3C_XML_SCHEMA_NS_URI;
+	protected static String RDF_URI = "http://www.w3.org/1999/02/22-rdf-syntax-ns";
+
+	protected static String XMLNS_PRE = javax.xml.XMLConstants.XMLNS_ATTRIBUTE;
+	protected static String XSI_PRE = "xsi";
+	protected static String XSD_PRE = "xsd";
+	protected static String NEX_PRE = "nex";
+	protected static String RDF_PRE = "rdf";
+	
+	protected static String XSI_TYPE = XSI_PRE + ":type";
+	
 	private Map<String,String> prefixForNs = new HashMap<String,String>();
 	private Map<String, String> nsForPrefix = new HashMap<String,String>();
 	private URI mBaseURI;
@@ -207,11 +218,7 @@ abstract class NexmlWritableImpl implements NexmlWritable {
 				else {
 					// either the namespace of the prefix are bound to something else
 					// create a new NS statement on the argument node
-					element.setAttributeNS(						
-						"http://www.w3.org/2000/xmlns/",
-						"xmlns:" + prefix,
-						nameSpaceURI						
-					);
+					element.setAttributeNS(	XMLNS_URI, XMLNS_PRE + ":" + prefix, nameSpaceURI );
 				}
 			}		
 			else if ( ! nsForPrefix.containsKey(prefix) && ! prefixForNs.containsKey(nameSpaceURI) ) {
@@ -221,26 +228,14 @@ abstract class NexmlWritableImpl implements NexmlWritable {
 				while ( element.getParentNode() != null ) {
 					element = (Element) element.getParentNode();
 				}
-				element.setAttributeNS(
-					"http://www.w3.org/2000/xmlns/",
-					"xmlns:" + prefix,
-					nameSpaceURI
-				);
+				element.setAttributeNS( XMLNS_URI, XMLNS_PRE + ":" + prefix, nameSpaceURI );
 			}	
 			else {
-				element.setAttributeNS(						
-					"http://www.w3.org/2000/xmlns/",
-					"xmlns:" + prefix,
-					nameSpaceURI						
-				);				
+				element.setAttributeNS(	XMLNS_URI, XMLNS_PRE + ":" + prefix, nameSpaceURI );
 			}
 		}
 		else {
-			element.setAttributeNS(						
-				"http://www.w3.org/2000/xmlns/",
-				"xmlns:" + prefix,
-				nameSpaceURI						
-			);			
+			element.setAttributeNS( XMLNS_URI, XMLNS_PRE + ":" + prefix, nameSpaceURI );			
 		}
 	}	
 	
