@@ -71,7 +71,7 @@ class CategoricalMatrixImpl extends
 			}
 			for ( Element seqElement : getChildrenByTagName(row, "seq")) {
 				String seq = seqElement.getTextContent();
-				String[] states = element.getAttribute(XSI_PREFIX+":type").indexOf("Standard") > 0 
+				String[] states = element.getAttribute(XSI_TYPE).indexOf("Standard") > 0 
 					? seq.split("\\s+") : seq.split("\\s*");
 				int k = 0;
 				STATE: for ( int j = 0; j < states.length; j++ ) {
