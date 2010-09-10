@@ -194,12 +194,12 @@ public class TestAnnotation {
 	}
 	
 	private void runEqualsTests(Annotatable otu) {
-		DatatypeFactory dtf = null;
-		try {
-			dtf = DatatypeFactory.newInstance();
-		} catch (DatatypeConfigurationException e) {
-			e.printStackTrace();
-		}		
+//		DatatypeFactory dtf = null;
+//		try {
+//			dtf = DatatypeFactory.newInstance();
+//		} catch (DatatypeConfigurationException e) {
+//			e.printStackTrace();
+//		}		
 		testEquals("cdao:hasBigDecimal", new BigDecimal(0.5),otu);
 	    testEquals("cdao:hasBoolean",new Boolean(true),otu);
 	    testEquals("cdao:hasBigInteger",new BigInteger("1"),otu);
@@ -209,7 +209,7 @@ public class TestAnnotation {
 	    testEquals("cdao:hasLong",new Long(14),otu);
 	    testEquals("cdao:hasShort",new Short("15"),otu);
 	    testEquals("cdao:hasString","foo",otu);
-	    testEquals("cdao:hasDuration",dtf.newDuration(1),otu);
+//	    testEquals("cdao:hasDuration",dtf.newDuration(1),otu);
 	    testEquals("cdao:hasQName",new QName("foo"),otu); 		
 	}
 	
