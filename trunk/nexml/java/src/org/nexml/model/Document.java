@@ -57,11 +57,27 @@ public interface Document extends Annotatable {
 	 * Returns a list of all matrices inside the document.
 	 */
 	List<Matrix<?>> getMatrices();
+	
+	/**
+	 * Returns a list of all matrices associated with the 
+	 * supplied OTUs
+	 * @param otus
+	 * @return
+	 */
+	List<Matrix<?>> getMatrices(OTUs otus);
 
 	/**
 	 * Returns a list of all tree blocks inside the document.
 	 */
 	List<TreeBlock> getTreeBlockList();
+	
+	/**
+	 * Returns a list of all tree blocks associated with
+	 * the supplied OTUs
+	 * @param otus
+	 * @return
+	 */
+	List<TreeBlock> getTreeBlockList(OTUs otus);
 
 	/**
 	 * Returns a NeXML serialization of the document.
