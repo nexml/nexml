@@ -596,4 +596,30 @@ public class AnnotationImpl extends AnnotatableImpl implements Annotation {
 		}
 	}
     
+	public URI getPredicateNamespace() {
+		String property = getProperty();
+		if ( null == property || "".equals(property) ) {
+			property = getRel();
+		}
+		String[] parts = property.split(":");
+		String prefix = parts[0];
+		if ( null != prefix && ! "".equals(prefix) ) {
+			Element elt = getElement();
+			String xmlns = elt.getAttribute(XMLNS_PRE+":"+prefix); 
+			while ( null == xmlns || "".equals(xmlns) ) {
+				if ( elt.getParentNode() instanceof Element ) {
+					elt = (Element)elt.getParentNode();
+					xmlns = elt.getAttribute(XMLNS_PRE+":"+prefix);
+				}
+				else {
+					break;
+				}
+			}
+			if ( null != xmlns && ! "".equals(xmlns) ) {
+				return URI.create(xmlns);
+			}
+		}
+		return null;
+	}
+	
 }
