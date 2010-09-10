@@ -143,4 +143,21 @@ public class TreeBlockImpl extends OTUsLinkableImpl<Network<?>> implements
 	public Iterator<Network<?>> iterator() {
 		return getThings().iterator();
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.nexml.model.Segmented#getSegmentCount()
+	 */
+	@Override
+	public int getSegmentCount() {
+		return getThings().size();
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see org.nexml.model.Segmented#getSegment(int)
+	 */
+	public Network<?> getSegment(int i) {
+		return getThings().get(i);
+	}
 }
