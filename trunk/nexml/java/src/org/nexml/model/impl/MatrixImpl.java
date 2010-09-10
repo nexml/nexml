@@ -277,6 +277,14 @@ abstract class MatrixImpl<T> extends OTUsLinkableImpl<Character> implements
 	
 	protected void setType(String type) {
 		setType(type,false);
-	}	
+	}
+	
+	public int getSegmentCount() {
+		return getCharacters().size();
+	}
+	
+	public Character getSegment(int index) {
+		return getCharacters().get(index);
+	}
 	
 }
