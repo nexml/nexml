@@ -7,8 +7,8 @@ import java.io.FileInputStream;
 import mesquite.lib.MesquiteFile;
 import mesquite.lib.MesquiteProject;
 import mesquite.lib.duties.FileInterpreterI;
-import mesquite.nexml.InterpretNEXML.NexmlReader.NexmlReader;
-import mesquite.nexml.InterpretNEXML.NexmlWriter.NexmlWriter;
+import mesquite.nexml.InterpretNEXML.NexmlReaders.NexmlReader;
+import mesquite.nexml.InterpretNEXML.NexmlWriters.NexmlWriter;
 
 import org.nexml.model.Document;
 import org.nexml.model.DocumentFactory;

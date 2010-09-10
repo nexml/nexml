@@ -1,4 +1,4 @@
-package mesquite.nexml.InterpretNEXML.NexmlWriter;
+package mesquite.nexml.InterpretNEXML.NexmlWriters;
 
 import mesquite.lib.EmployerEmployee;
 import mesquite.lib.FileElement;

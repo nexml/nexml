@@ -1,7 +1,7 @@
 /**
  * 
  */
-package mesquite.nexml.InterpretNEXML.NexmlReader;
+package mesquite.nexml.InterpretNEXML.NexmlReaders;
 
 import mesquite.lib.EmployerEmployee;
 import mesquite.lib.FileElement;
