@@ -163,4 +163,14 @@ class OTUsImpl extends SetManager<OTU> implements OTUs {
 		// TODO Auto-generated method stub
 
 	}
+
+	@Override
+	public int getSegmentCount() {
+		return getThings().size();
+	}
+
+	@Override
+	public OTU getSegment(int index) {
+		return getThings().get(index);
+	}
 }
