@@ -1,4 +1,4 @@
-package mesquite.nexml.InterpretNEXML.NexmlWriter;
+package mesquite.nexml.InterpretNEXML.NexmlWriters;
 
 import java.util.List;
 
