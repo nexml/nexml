@@ -28,66 +28,76 @@ public class TestAnnotationTypes {
 		Assert.assertEquals("xsd:decimal", annotation.getXsdType());
 		Assert.assertEquals(BigDecimal.class, annotation.getValue().getClass());
 		Assert.assertEquals(new BigDecimal("0.1"), new BigDecimal(annotation.getValue().toString()));
+		Assert.assertEquals(nameSpaceURI, annotation.getPredicateNamespace());
 		
 		// BigInteger
 		annotation = otus.addAnnotationValue("kt:hasBigInteger", nameSpaceURI, new BigInteger("1"));
 		Assert.assertEquals("xsd:integer", annotation.getXsdType());
 		Assert.assertEquals(BigInteger.class, annotation.getValue().getClass());
 		Assert.assertEquals(new BigInteger("1"), new BigInteger(annotation.getValue().toString()));
+		Assert.assertEquals(nameSpaceURI, annotation.getPredicateNamespace());
 		
 		// Boolean
 		annotation = otus.addAnnotationValue("kt:hasBoolean", nameSpaceURI, true);
 		Assert.assertEquals("xsd:boolean", annotation.getXsdType());
 		Assert.assertEquals(Boolean.class, annotation.getValue().getClass());
 		Assert.assertEquals(new Boolean("true"), new Boolean(annotation.getValue().toString()));
+		Assert.assertEquals(nameSpaceURI, annotation.getPredicateNamespace());
 		
 		// Byte
 		annotation = otus.addAnnotationValue("kt:hasByte", nameSpaceURI, new Byte("1"));
 		Assert.assertEquals("xsd:byte", annotation.getXsdType());
 		Assert.assertEquals(Byte.class, annotation.getValue().getClass());
 		Assert.assertEquals(new Byte("1"), new Byte(annotation.getValue().toString()));
+		Assert.assertEquals(nameSpaceURI, annotation.getPredicateNamespace());
 		
 		// QName
 		annotation = otus.addAnnotationValue("kt:hasQName", nameSpaceURI, new QName("foo"));
 		Assert.assertEquals("xsd:QName", annotation.getXsdType());
 		Assert.assertEquals(QName.class, annotation.getValue().getClass());
 		Assert.assertEquals(new QName("foo"), new QName(annotation.getValue().toString()));
+		Assert.assertEquals(nameSpaceURI, annotation.getPredicateNamespace());
 		
 		// Double
 		annotation = otus.addAnnotationValue("kt:hasDouble", nameSpaceURI, new Double("1.5"));
 		Assert.assertEquals("xsd:double", annotation.getXsdType());
 		Assert.assertEquals(Double.class, annotation.getValue().getClass());
 		Assert.assertEquals(new Double("1.5"), new Double(annotation.getValue().toString()));
+		Assert.assertEquals(nameSpaceURI, annotation.getPredicateNamespace());
 		
 		// Float
 		annotation = otus.addAnnotationValue("kt:hasFloat", nameSpaceURI, new Float("1.6"));
 		Assert.assertEquals("xsd:float", annotation.getXsdType());
 		Assert.assertEquals(Float.class, annotation.getValue().getClass());
 		Assert.assertEquals(new Float("1.6"), new Float(annotation.getValue().toString()));
+		Assert.assertEquals(nameSpaceURI, annotation.getPredicateNamespace());
 		
 		// Long
 		annotation = otus.addAnnotationValue("kt:hasLong", nameSpaceURI, new Long("10"));
 		Assert.assertEquals("xsd:long", annotation.getXsdType());
 		Assert.assertEquals(Long.class, annotation.getValue().getClass());		
-		Assert.assertEquals(new Long("10"), new Long(annotation.getValue().toString()));				
+		Assert.assertEquals(new Long("10"), new Long(annotation.getValue().toString()));	
+		Assert.assertEquals(nameSpaceURI, annotation.getPredicateNamespace());
 		
 		// Short
 		annotation = otus.addAnnotationValue("kt:hasShort", nameSpaceURI, new Short("5"));
 		Assert.assertEquals("xsd:short", annotation.getXsdType());
 		Assert.assertEquals(Short.class, annotation.getValue().getClass());
 		Assert.assertEquals(new Short("5"), new Short(annotation.getValue().toString()));
+		Assert.assertEquals(nameSpaceURI, annotation.getPredicateNamespace());
 		
 		// String
 		annotation = otus.addAnnotationValue("kt:hasString", nameSpaceURI, "bar");
 		Assert.assertEquals("xsd:string", annotation.getXsdType());
 		Assert.assertEquals(String.class, annotation.getValue().getClass());
 		Assert.assertEquals("bar", annotation.getValue().toString());
+		Assert.assertEquals(nameSpaceURI, annotation.getPredicateNamespace());
 		
 		// URL (has no xsd type)
 		annotation = otus.addAnnotationValue("kt:hasURL", nameSpaceURI, URI.create("http://example.org"));
 		Assert.assertEquals(URI.class, annotation.getValue().getClass());
 		Assert.assertEquals(URI.create("http://example.org"), URI.create(annotation.getValue().toString()));
-		System.out.print(doc.getXmlString());
+		Assert.assertEquals(nameSpaceURI, annotation.getPredicateNamespace());
 	}
 	
 	@Test
@@ -113,6 +123,7 @@ public class TestAnnotationTypes {
 		for ( OTUs otus : doc.getOTUsList() ) {
 			for ( Annotation annotation : otus.getAllAnnotations() ) {
 				Assert.assertNotSame(Object.class, annotation.getValue().getClass());
+				Assert.assertEquals(URI.create("http://example.org/knownTypes"), annotation.getPredicateNamespace());
 			}
 		}
 	}	
