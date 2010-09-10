@@ -13,16 +13,16 @@
 	<property name="xercesjar" value="xercesImpl.jar"/>
 	<property name="xercesfolder" value="xerces"/>
 	<property name="mesquitezip" value="mesquite-nexml.zip"/>
-	<property name="mesquite-classpaths-xml" value="${resources}/classpaths.xml"/>
-	<property name="mesquite-properties" value="mesquite/nexml/InterpretNEXML/predicateHandlerMapping.properties"/>
+	<property name="mesquite-properties" value="mesquite/nexml/InterpretNEXML/AnnotationHandlers/predicateHandlerMapping.properties"/>
+	<property name="mesquite-ns-properties" value="mesquite/nexml/InterpretNEXML/AnnotationHandlers/namespaceHandlerMapping.properties"/>
 	<property environment="env"/>
 	
 	<!-- CORE LIBRARY -->
 	<target name="compile" depends="clean">
 		<mkdir dir="${classfiles}"/>
-	    <javac srcdir="${src}" destdir="${classfiles}">
-	        <exclude name="**/mesquite/nexml/InterpretNEXML/*"/>
-	    	<exclude name="**/validator/*"/>
+	    <javac srcdir="${src}" destdir="${classfiles}" debug="true" debuglevel="lines,source">
+	        <exclude name="**/mesquite/nexml/InterpretNEXML/**"/>
+	    	<exclude name="**/validator/**"/>
 	    </javac>
 	</target>
 	
@@ -41,8 +41,8 @@
 	
 	<target name="build-validator" depends="clean">
 		<mkdir dir="${classfiles}"/>
-	    <javac srcdir="${src}" destdir="${classfiles}">
-	        <exclude name="**/mesquite/nexml/InterpretNEXML/*"/>
+	    <javac srcdir="${src}" destdir="${classfiles}" debug="true" debuglevel="lines,source">
+	        <exclude name="**/mesquite/nexml/InterpretNEXML/**"/>
 	    	<exclude name="**/org/nexml/model/**"/>
 	    	<classpath refid="classpath-validator"/>
 	    </javac>		
@@ -63,13 +63,13 @@
 	
 	<!-- MESQUITE -->	
 	<path id="classpath-mesquite">
-		<pathelement path="${env.MESQUITE_ROOT}"/>
+		<pathelement path="${env.MESQUITE_ROOT}"/>		
 	</path>	
 	
 	<target name="build-mesquite" depends="clean">
 		<mkdir dir="${classfiles}"/>
 		<echo message="Using MESQUITE_ROOT=${toString:classpath-mesquite}"/>		
-		<javac srcdir="${src}" destdir="${classfiles}">
+		<javac srcdir="${src}" destdir="${classfiles}" debug="true" debuglevel="lines,source">
 			<exclude name="**/validator/*"/>	
 			<classpath refid="classpath-mesquite"/>
 		</javac>
@@ -78,7 +78,6 @@
 	<target name="mesquite" depends="build-mesquite">
 		<zip destfile="${mesquitezip}">
 			<fileset dir="${classfiles}"/>
-			<file file="${mesquite-classpaths-xml}"/>
 		</zip>
 	</target>
 	
@@ -87,6 +86,7 @@
 			<fileset dir="${classfiles}"/>
 		</copy>
 		<copyfile dest="${env.MESQUITE_ROOT}/${mesquite-properties}" src="${src}/${mesquite-properties}"/>
+		<copyfile dest="${env.MESQUITE_ROOT}/${mesquite-ns-properties}" src="${src}/${mesquite-ns-properties}"/>		
 	</target>
 	
 	<!-- JUNIT TESTS -->
@@ -97,7 +97,7 @@
 	</path>
 	
 	<target name="build-test" depends="compile">
-	    <javac srcdir="${test}" destdir="${classfiles}" debug="yes">
+	    <javac srcdir="${test}" destdir="${classfiles}" debug="true" debuglevel="lines,source">
 	        <classpath refid="classpath-junit"/>
 	    </javac>
 	</target>
