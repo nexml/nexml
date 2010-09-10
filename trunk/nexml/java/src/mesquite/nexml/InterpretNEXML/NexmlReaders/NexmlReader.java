@@ -1,4 +1,4 @@
-package mesquite.nexml.InterpretNEXML.NexmlReader;
+package mesquite.nexml.InterpretNEXML.NexmlReaders;
 
 import java.util.ArrayList;
 import java.util.List;
