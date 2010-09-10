@@ -4,12 +4,11 @@
 package mesquite.nexml.InterpretNEXML;
 
 import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.Properties;
-
 import mesquite.lib.MesquiteFile;
 import mesquite.lib.MesquiteProject;
 import mesquite.lib.duties.FileInterpreterI;
+import mesquite.nexml.InterpretNEXML.NexmlReader.NexmlReader;
+import mesquite.nexml.InterpretNEXML.NexmlWriter.NexmlWriter;
 
 import org.nexml.model.Document;
 import org.nexml.model.DocumentFactory;
@@ -54,19 +53,8 @@ public class InterpretNEXML extends FileInterpreterI {
 		} catch ( Exception e ) {
 			e.printStackTrace();
 		}	
-			//logln("1From InterpretNEXML, file.getPath produces: " + file.getPath());
-			//From InterpretNEXML, file.getPath produces: /home/kasia/Desktop/Vari_new.xml
-
-		ObjectConverter ov = new ObjectConverter(this);
-		// XXX pass properties here
-		Properties properties = new Properties();
-	    try {
-	        properties.load(this.getClass().getResourceAsStream ("predicateHandlerMapping.properties"));
-	        properties.put("path", file.getPath());
-	    } catch (IOException e) {
-	    	e.printStackTrace();
-	    }		
-		ov.fillProjectFromNexml(xmlDocument, project,properties);			
+		NexmlReader nr = new NexmlReader(this);		
+	    nr.fillProjectFromNexml(xmlDocument,project);			
 	}		
 
 /* ============================  exporting ============================*/
@@ -79,19 +67,9 @@ public class InterpretNEXML extends FileInterpreterI {
 	
 	/*.................................................................................................................*/
 	public boolean exportFile(MesquiteFile file, String arguments) {
-		// XXX Arguments args = new Arguments(new Parser(arguments), true);
 		MesquiteProject mesProject = getProject();
-		ObjectConverter objectConverter = new ObjectConverter(this);
-		
-		// XXX pass properties here
-		Properties properties = new Properties();
-	    try {
-	    	properties.load(this.getClass().getResourceAsStream ("predicateHandlerMapping.properties"));
-	    } catch (IOException e) {
-	    	e.printStackTrace();
-	    }
-	    		
-		Document xmlProject = objectConverter.createDocumentFromProject(mesProject,properties);
+		NexmlWriter nw = new NexmlWriter(this);			    		
+		Document xmlProject = nw.createDocumentFromProject(mesProject);
 		StringBuffer outputBuffer = new StringBuffer();		
 		String xmlString = null;
 		try {
@@ -112,7 +90,7 @@ public class InterpretNEXML extends FileInterpreterI {
    	 
  	/** returns an explanation of what the module does.*/
  	public String getExplanation() {
- 		return "Imports and exports NeXML1.0 files (see http://www.nexml.org)" ;
+ 		return "Imports and exports NeXML2009 files (see http://www.nexml.org)" ;
    	 }
 	/*.................................................................................................................*/
 
