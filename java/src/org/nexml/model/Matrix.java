@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * @param <T> should be either a {@code Double} or {@CharacterState}.
  */
-public interface Matrix<T> extends OTUsLinkable {
+public interface Matrix<T> extends OTUsLinkable, Annotatable, Segmented {
 	/**
 	 * Gets all matrix cell objects for the provided OTU
 	 * @param otu 
