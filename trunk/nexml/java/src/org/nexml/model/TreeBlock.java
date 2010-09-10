@@ -1,6 +1,6 @@
 package org.nexml.model;
 
-public interface TreeBlock extends Iterable<Network<?>>, OTUsLinkable {
+public interface TreeBlock extends Iterable<Network<?>>, OTUsLinkable, Annotatable, Segmented {
 	/**
 	 * Creates a new network with integer branch lengths
 	 * @return a parameterized network object

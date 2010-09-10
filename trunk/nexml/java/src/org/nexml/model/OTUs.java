@@ -6,7 +6,7 @@ import java.util.Set;
 /**
  * An OTU set.
  */
-public interface OTUs extends Annotatable, Iterable<OTU> {
+public interface OTUs extends Annotatable, Iterable<OTU>, Segmented {
 
 	/**
 	 * Create a new {@code OTUs}.
