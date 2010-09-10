@@ -327,4 +327,41 @@ public class DocumentImpl extends AnnotatableImpl implements Document {
 		return null;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see org.nexml.model.Document#getMatrices(org.nexml.model.OTUs)
+	 */
+	@Override
+	public List<Matrix<?>> getMatrices(OTUs otus) {
+		if ( null == otus ) {
+			return null;
+		}
+		List<Matrix<?>> matricesForOTUs = new ArrayList<Matrix<?>>();
+		for ( Matrix<?> matrix : getMatrices()) {
+			if ( otus.equals(matrix.getOTUs()) ) {
+				matricesForOTUs.add(matrix);
+			}
+		}
+		return matricesForOTUs;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.nexml.model.Document#getTreeBlockList(org.nexml.model.OTUs)
+	 */
+	@Override
+	public List<TreeBlock> getTreeBlockList(OTUs otus) {
+		if ( null == otus ) {
+			return null;
+		}
+		List<TreeBlock> treeBlocksForOTUs = new ArrayList<TreeBlock>();
+		for ( TreeBlock treeBlock : getTreeBlockList() ) {
+			if ( otus.equals(treeBlock.getOTUs()) ) {
+				treeBlocksForOTUs.add(treeBlock);
+			}
+		}
+		return treeBlocksForOTUs;
+	}
+
+
 }
