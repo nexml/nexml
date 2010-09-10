@@ -101,5 +101,6 @@ public interface Annotation extends Annotatable {
 	
 	public boolean isValueMapped(Class<?> valueClass);
 	public String getXsdType();
+	public URI getPredicateNamespace();
 
 }
