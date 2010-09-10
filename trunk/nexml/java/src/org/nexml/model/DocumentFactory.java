@@ -51,6 +51,24 @@ public class DocumentFactory {
 			throws ParserConfigurationException, SAXException, IOException {
 		return createDocument(getDocumentBuilder().parse(inputStream));
 	}
+	
+	/**
+	 * Like parse, but wraps it in a try/catch block
+	 * @param inputStream
+	 * @return
+	 */
+	static public Document safeParse(InputStream inputStream) {
+		try {
+			return parse(inputStream);
+		} catch (ParserConfigurationException e) {
+			e.printStackTrace();
+		} catch (SAXException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 
 	/**
 	 * Parses a NeXML document, returns a populated object hierarchy
@@ -65,6 +83,24 @@ public class DocumentFactory {
 			ParserConfigurationException {
 		return createDocument(getDocumentBuilder().parse(uri));
 	}
+	
+	/**
+	 * Like parse, but wraps it in a try/catch block
+	 * @param inputStream
+	 * @return
+	 */
+	static public Document safeParse(String uri) {
+		try {
+			return parse(uri);
+		} catch (ParserConfigurationException e) {
+			e.printStackTrace();
+		} catch (SAXException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}	
 
 	/**
 	 * Parses a NeXML document, returns a populated object hierarchy
@@ -79,6 +115,24 @@ public class DocumentFactory {
 			ParserConfigurationException {
 		return createDocument(getDocumentBuilder().parse(file));
 	}
+	
+	/**
+	 * Like parse, but wraps it in a try/catch block
+	 * @param inputStream
+	 * @return
+	 */
+	static public Document safeParse(File file) {
+		try {
+			return parse(file);
+		} catch (ParserConfigurationException e) {
+			e.printStackTrace();
+		} catch (SAXException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}	
 
 	/**
 	 * Parses a NeXML document, returns a populated object hierarchy
@@ -94,6 +148,24 @@ public class DocumentFactory {
 		return createDocument(getDocumentBuilder().parse(inputSource));
 	}
 
+	/**
+	 * Like parse, but wraps it in a try/catch block
+	 * @param inputStream
+	 * @return
+	 */
+	static public Document safeParse(InputSource inputSource) {
+		try {
+			return parse(inputSource);
+		} catch (ParserConfigurationException e) {
+			e.printStackTrace();
+		} catch (SAXException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}	
+	
 	static private Document createDocument(org.w3c.dom.Document domDocument) {
 		return new DocumentImpl(domDocument, domDocument.getDocumentElement());
 	}
