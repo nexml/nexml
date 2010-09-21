@@ -25,14 +25,14 @@
     </xs:annotation>
 
     <!-- an element that can be annotated with RDFa-compliant metadata -->
-    <xs:complexType name="Annotated" abstract="true">
+    <xs:complexType name="Annotated" abstract="true" mixed="false">
         <xs:annotation>
             <xs:documentation>
                   The Annotated complexType is a super class for objects that 
                   optionally have metadata annotations of type Meta.
               </xs:documentation>
         </xs:annotation>
-        <xs:complexContent mixed="true">
+        <xs:complexContent mixed="false">
             <xs:extension base="Base">
                 <xs:sequence>
                     <xs:element name="meta" type="Meta" minOccurs="0" maxOccurs="unbounded"/>
@@ -51,7 +51,7 @@
                 name of type xs:string.
             </xs:documentation>
         </xs:annotation>
-        <xs:complexContent mixed="true">
+        <xs:complexContent mixed="false">
             <xs:extension base="Annotated">
                 <xs:attribute name="label" type="xs:string" use="optional"/>
             </xs:extension>
@@ -59,14 +59,14 @@
     </xs:complexType>
 
     <!-- any element that requires an ID -->
-    <xs:complexType name="IDTagged" abstract="true">
+    <xs:complexType name="IDTagged" abstract="true" mixed="false">
         <xs:annotation>
             <xs:documentation>
                 The IDTagged complexType is a super class for objects that require
                 unique id attributes of type xs:ID. The id must be unique within the XML document.
             </xs:documentation>
         </xs:annotation>
-        <xs:complexContent mixed="true">
+        <xs:complexContent mixed="false">
             <xs:extension base="Labelled">
                 <xs:sequence/>
             </xs:extension>
@@ -74,7 +74,7 @@
     </xs:complexType>
 
     <!-- elements that enclose "class" elements -->
-    <xs:complexType name="Segmented" abstract="true" mixed="true">
+    <xs:complexType name="Segmented" abstract="true" mixed="false">
         <xs:annotation>
             <xs:documentation>
                 The Segmented complexType is for elements that contain multiple child 
@@ -84,7 +84,7 @@
                 to.
             </xs:documentation>
         </xs:annotation>
-        <xs:complexContent mixed="true">
+        <xs:complexContent mixed="false">
             <xs:extension base="IDTagged">
                 <xs:sequence>
                     <xs:element name="class" type="Class" minOccurs="0" maxOccurs="unbounded"/>
@@ -101,7 +101,7 @@
                 require a taxon id reference.
             </xs:documentation>
         </xs:annotation>
-        <xs:complexContent mixed="true">
+        <xs:complexContent mixed="false">
             <xs:extension base="IDTagged">
                 <xs:attribute name="otu" type="xs:IDREF" use="required"/>
             </xs:extension>
@@ -151,9 +151,8 @@
                 and is used for example for cascading style sheets.
             </xs:documentation>
         </xs:annotation>
-        <xs:complexContent>
+        <xs:complexContent mixed="false">
             <xs:extension base="IDTagged"/>
         </xs:complexContent>
     </xs:complexType>
-
 </xs:schema>
