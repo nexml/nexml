@@ -73,14 +73,15 @@
     </xs:complexType>
 
     <xs:complexType name="AbstractTree" abstract="true"
-        sawsdl:modelReference="http://evolutionaryontology-dev.nescent.org/cdao.owl#Tree">
+        sawsdl:modelReference="http://evolutionaryontology-dev.nescent.org/cdao.owl#Tree"
+        mixed="false">
         <xs:annotation>
             <xs:documentation>
                 The AbstractTree superclass is what a concrete tree inherits
                 from.
             </xs:documentation>
         </xs:annotation>
-        <xs:complexContent mixed="true">
+        <xs:complexContent mixed="false">
             <xs:extension base="IDTagged">
                 <xs:sequence minOccurs="1" maxOccurs="1">
                     <xs:element name="node" type="AbstractNode" minOccurs="1" maxOccurs="unbounded"/>
@@ -100,7 +101,7 @@
                 from.
             </xs:documentation>
         </xs:annotation>
-        <xs:complexContent mixed="true">
+        <xs:complexContent mixed="false">
             <xs:extension base="IDTagged">
                 <xs:sequence minOccurs="1" maxOccurs="1">
                     <xs:element name="node" type="AbstractNode" minOccurs="1" maxOccurs="unbounded"/>
@@ -118,7 +119,7 @@
                 from.
             </xs:documentation>
         </xs:annotation>
-        <xs:complexContent mixed="true">
+        <xs:complexContent mixed="false">
             <xs:extension base="IDTagged">
                 <xs:sequence minOccurs="1" maxOccurs="1">
                     <xs:choice minOccurs="0" maxOccurs="unbounded">
