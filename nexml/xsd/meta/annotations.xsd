@@ -19,7 +19,7 @@
 	<xs:import namespace="http://www.w3.org/1999/xhtml/datatypes/"
 		schemaLocation="../external/xhtml-datatypes-1.xsd"/>
 
-	<xs:complexType name="Base" abstract="true">
+	<xs:complexType name="Base" abstract="true" mixed="false">
 		<xs:annotation>
 			<xs:documentation>
 				The base type for all complexType definitions in the
