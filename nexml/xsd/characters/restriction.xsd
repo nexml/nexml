@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xs:schema 
-	xmlns:xs="http://www.w3.org/2001/XMLSchema" 
-	targetNamespace="http://www.nexml.org/2009"
-    xmlns="http://www.nexml.org/2009"
-    xmlns:xml="http://www.w3.org/XML/1998/namespace"
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.nexml.org/2009"
+    xmlns="http://www.nexml.org/2009" xmlns:xml="http://www.w3.org/XML/1998/namespace"
     elementFormDefault="qualified">
     <xs:include schemaLocation="abstractcharacters.xsd"/>
-    
+
     <!--
     <xs:import namespace="http://www.w3.org/XML/1998/namespace"
         schemaLocation="http://www.w3.org/2001/xml.xsd"/>-->
@@ -20,14 +17,14 @@
             element, whose value-space is limited to 0 or 1. In a compact 
             notation, the same data is represented as a sequence of tokens (whitespace is allowed but has no meaning).
         </xs:documentation>
-    </xs:annotation>     
+    </xs:annotation>
     <xs:simpleType name="RestrictionToken">
         <xs:restriction base="xs:integer">
             <xs:minInclusive value="0"/>
             <xs:maxInclusive value="1"/>
         </xs:restriction>
     </xs:simpleType>
-    
+
     <!--
         A restriction site matrix only has presence (1) or absence (0), so
         state definitions and ambiguity mappings are omitted.
@@ -50,7 +47,7 @@
         <xs:complexContent>
             <xs:restriction base="AbstractState">
                 <xs:sequence minOccurs="1" maxOccurs="1"/>
-                <xs:attribute name="symbol" type="RestrictionToken" use="required"/>                
+                <xs:attribute name="symbol" type="RestrictionToken" use="required"/>
             </xs:restriction>
         </xs:complexContent>
     </xs:complexType>
@@ -68,7 +65,7 @@
                     <xs:element name="state" type="RestrictionState" minOccurs="2" maxOccurs="2"/>
                 </xs:sequence>
             </xs:restriction>
-        </xs:complexContent>        
+        </xs:complexContent>
     </xs:complexType>
 
     <xs:complexType name="RestrictionChar">
@@ -82,15 +79,15 @@
             <xs:restriction base="AbstractChar">
                 <xs:sequence minOccurs="1" maxOccurs="1">
                     <xs:element name="meta" minOccurs="0" maxOccurs="unbounded" type="Meta"/>
-                </xs:sequence>    
-                <xs:attribute name="tokens" type="MSTokenLength" use="prohibited"/>            
+                </xs:sequence>
+                <xs:attribute name="tokens" type="MSTokenLength" use="prohibited"/>
                 <xs:attribute name="states" type="xs:IDREF" use="required"/>
                 <xs:attribute name="codon" type="CodonPosition" use="prohibited"/>
                 <xs:attribute name="id" type="xs:ID" use="required"/>
             </xs:restriction>
         </xs:complexContent>
     </xs:complexType>
-    
+
     <xs:complexType name="RestrictionFormat" abstract="false">
         <xs:annotation>
             <xs:documentation> The RestrictionFormat class is the container of restriction column definitions.
@@ -99,13 +96,15 @@
         <xs:complexContent>
             <xs:restriction base="AbstractFormat">
                 <xs:sequence minOccurs="1" maxOccurs="1">
-                    <xs:element name="states" type="RestrictionStates" minOccurs="1" maxOccurs="unbounded"/>
-                    <xs:element name="char" type="RestrictionChar" minOccurs="1" maxOccurs="unbounded"/>
+                    <xs:element name="states" type="RestrictionStates" minOccurs="1"
+                        maxOccurs="unbounded"/>
+                    <xs:element name="char" type="RestrictionChar" minOccurs="1"
+                        maxOccurs="unbounded"/>
                 </xs:sequence>
             </xs:restriction>
         </xs:complexContent>
     </xs:complexType>
-    
+
     <xs:complexType name="RestrictionObs" abstract="false">
         <xs:annotation>
             <xs:documentation> 
@@ -123,7 +122,7 @@
             </xs:restriction>
         </xs:complexContent>
     </xs:complexType>
-    
+
     <xs:simpleType name="RestrictionSeq">
         <xs:annotation>
             <xs:documentation> 
@@ -132,10 +131,10 @@
             </xs:documentation>
         </xs:annotation>
         <xs:restriction base="xs:string">
-            <xs:pattern value="[01\s]*"></xs:pattern>
+            <xs:pattern value="[01\s]*"/>
         </xs:restriction>
     </xs:simpleType>
-    
+
     <xs:complexType name="RestrictionMatrixSeqRow" abstract="false">
         <xs:annotation>
             <xs:documentation>
@@ -152,7 +151,7 @@
             </xs:restriction>
         </xs:complexContent>
     </xs:complexType>
-    
+
     <xs:complexType name="RestrictionMatrixObsRow" abstract="false">
         <xs:annotation>
             <xs:documentation> 
@@ -164,12 +163,13 @@
             <xs:restriction base="AbstractObsRow">
                 <xs:sequence minOccurs="1" maxOccurs="1">
                     <xs:element name="meta" minOccurs="0" maxOccurs="unbounded" type="Meta"/>
-                    <xs:element name="cell" minOccurs="1" maxOccurs="unbounded" type="RestrictionObs"/>
+                    <xs:element name="cell" minOccurs="1" maxOccurs="unbounded"
+                        type="RestrictionObs"/>
                 </xs:sequence>
             </xs:restriction>
         </xs:complexContent>
     </xs:complexType>
-    
+
     <xs:complexType name="RestrictionSeqMatrix" abstract="false">
         <xs:annotation>
             <xs:documentation>
@@ -178,13 +178,14 @@
         </xs:annotation>
         <xs:complexContent>
             <xs:restriction base="AbstractSeqMatrix">
-                <xs:sequence minOccurs="1" maxOccurs="1">                    
-                    <xs:element name="row" minOccurs="1" maxOccurs="unbounded" type="RestrictionMatrixSeqRow"/>
+                <xs:sequence minOccurs="1" maxOccurs="1">
+                    <xs:element name="row" minOccurs="1" maxOccurs="unbounded"
+                        type="RestrictionMatrixSeqRow"/>
                 </xs:sequence>
             </xs:restriction>
         </xs:complexContent>
     </xs:complexType>
-    
+
     <xs:complexType name="RestrictionObsMatrix" abstract="false">
         <xs:annotation>
             <xs:documentation>
@@ -194,12 +195,13 @@
         <xs:complexContent>
             <xs:restriction base="AbstractObsMatrix">
                 <xs:sequence minOccurs="1" maxOccurs="1">
-                    <xs:element name="row" minOccurs="1" maxOccurs="unbounded" type="RestrictionMatrixObsRow"/>
+                    <xs:element name="row" minOccurs="1" maxOccurs="unbounded"
+                        type="RestrictionMatrixObsRow"/>
                 </xs:sequence>
             </xs:restriction>
         </xs:complexContent>
     </xs:complexType>
-    
+
     <xs:complexType name="RestrictionSeqs" abstract="false">
         <xs:annotation>
             <xs:documentation>
@@ -212,12 +214,13 @@
                 <xs:sequence minOccurs="1" maxOccurs="1">
                     <xs:element name="meta" minOccurs="0" maxOccurs="unbounded" type="Meta"/>
                     <xs:element name="format" minOccurs="1" maxOccurs="1" type="RestrictionFormat"/>
-                    <xs:element name="matrix" minOccurs="1" maxOccurs="1" type="RestrictionSeqMatrix"/>
+                    <xs:element name="matrix" minOccurs="1" maxOccurs="1"
+                        type="RestrictionSeqMatrix"/>
                 </xs:sequence>
             </xs:restriction>
         </xs:complexContent>
     </xs:complexType>
-    
+
     <xs:complexType name="RestrictionCells" abstract="false">
         <xs:annotation>
             <xs:documentation>
@@ -230,10 +233,11 @@
                 <xs:sequence minOccurs="1" maxOccurs="1">
                     <xs:element name="meta" minOccurs="0" maxOccurs="unbounded" type="Meta"/>
                     <xs:element name="format" minOccurs="1" maxOccurs="1" type="RestrictionFormat"/>
-                    <xs:element name="matrix" minOccurs="1" maxOccurs="1" type="RestrictionObsMatrix"/>                   
+                    <xs:element name="matrix" minOccurs="1" maxOccurs="1"
+                        type="RestrictionObsMatrix"/>
                 </xs:sequence>
             </xs:restriction>
         </xs:complexContent>
     </xs:complexType>
-    
+
 </xs:schema>
