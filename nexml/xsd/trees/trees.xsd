@@ -14,13 +14,13 @@
     <xs:include schemaLocation="tree.xsd"/>
     <xs:include schemaLocation="network.xsd"/>
 
-    <xs:complexType name="Trees" abstract="false" mixed="true">
+    <xs:complexType name="Trees" abstract="false" mixed="false">
         <xs:annotation>
             <xs:documentation>
                 A concrete container for tree objects.
             </xs:documentation>
         </xs:annotation>
-        <xs:complexContent mixed="true">
+        <xs:complexContent mixed="false">
             <xs:extension base="TaxaLinked">
                 <xs:sequence minOccurs="1" maxOccurs="1">
                     <xs:choice minOccurs="0" maxOccurs="unbounded">
