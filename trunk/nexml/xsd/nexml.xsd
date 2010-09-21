@@ -36,13 +36,13 @@
     </xs:restriction>
   </xs:simpleType>
 
-  <xs:complexType name="Nexml" mixed="true">
+  <xs:complexType name="Nexml" mixed="false">
     <xs:annotation>
       <xs:documentation>
         The root element for nexml.
       </xs:documentation>
     </xs:annotation>
-    <xs:complexContent mixed="true">
+    <xs:complexContent mixed="false">
       <xs:extension base="Annotated">
         <xs:sequence maxOccurs="unbounded" minOccurs="0">
           <xs:element maxOccurs="unbounded" minOccurs="1" name="otus" type="Taxa"/>
