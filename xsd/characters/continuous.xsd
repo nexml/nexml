@@ -19,7 +19,7 @@
 
 
     <xs:simpleType name="ContinuousToken">
-        <xs:restriction base="xs:float"/>
+        <xs:restriction base="xs:double"/>
     </xs:simpleType>
 
     <xs:complexType name="ContinuousChar"
