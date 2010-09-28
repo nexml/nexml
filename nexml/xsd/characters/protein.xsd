@@ -3,6 +3,7 @@
     xmlns:sawsdl="http://www.w3.org/ns/sawsdl" xmlns="http://www.nexml.org/2009"
     xmlns:xml="http://www.w3.org/XML/1998/namespace" elementFormDefault="qualified">
     <xs:include schemaLocation="abstractcharacters.xsd"/>
+    <xs:include schemaLocation="../meta/sets.xsd"/>
 
     <xs:annotation>
         <xs:documentation>
@@ -10,10 +11,10 @@
             <a href="../abstract">abstract</a> character matrix components 
             that all character matrices must implement. The subclasses
             defined here apply to amino acid character data. In a verbose notation, 
-            this data is represented as the "state" attribute of the &lt;cell&gt; 
-            element, whose value-space is limited to the IUPAC single character
-            nucleotide symbols. In a compact notation, the same data 
-            is represented as a sequence of tokens (whitespace is allowed but has no meaning).
+            this data is represented as the "state" attribute which references an
+            explicitly defined state (either fundamental or ambiguous).
+            In a compact notation, the same data is represented as a sequence of 
+            tokens (whitespace is allowed but has no meaning).
         </xs:documentation>
     </xs:annotation>
 
@@ -23,7 +24,6 @@
                 The AAToken simple type is a restriction of AbstractSymbol 
                 that defines an IUPAC single character amino acid symbol.
             </xs:documentation>
-            <xs:appinfo>AminoAcid</xs:appinfo>
         </xs:annotation>
         <xs:restriction base="AbstractSymbol">
             <xs:pattern value="[\*\-\?ABCDEFGHIKLMNPQRSTUVWXYZ]"/>
@@ -35,12 +35,8 @@
         sawsdl:modelReference="http://evolutionaryontology-dev.nescent.org/cdao.owl#AminoAcidResidueCharacter">
         <xs:annotation>
             <xs:documentation> 
-                A concrete implementation of the AbstractChar element. In this implementation
-                there is no reference to explicitly defined states, as we use the IUPAC standard.
-                There must be an identifier ("id") that is of type xs:nonNegativeInteger to 
-                define the column number.
+                A concrete implementation of the AbstractChar element.
             </xs:documentation>
-            <xs:appinfo>Amino_Acid_Character</xs:appinfo>
         </xs:annotation>
         <xs:complexContent>
             <xs:restriction base="AbstractChar">
@@ -65,6 +61,7 @@
                 <xs:sequence minOccurs="1" maxOccurs="1">
                     <xs:element name="states" type="AAStates" minOccurs="1" maxOccurs="unbounded"/>
                     <xs:element name="char" type="AAChar" minOccurs="1" maxOccurs="unbounded"/>
+                    <xs:element name="set" minOccurs="0" maxOccurs="unbounded" type="CharSet"/>
                 </xs:sequence>
             </xs:restriction>
         </xs:complexContent>
@@ -85,6 +82,7 @@
                         minOccurs="0" maxOccurs="unbounded"/>
                     <xs:element name="uncertain_state_set" type="AAUncertainStateSet" minOccurs="0"
                         maxOccurs="unbounded"/>
+                    <xs:element name="set" type="StateSet" minOccurs="0" maxOccurs="unbounded"/>
                 </xs:sequence>
             </xs:restriction>
         </xs:complexContent>
@@ -93,10 +91,7 @@
     <xs:complexType name="AAPolymorphicStateSet">
         <xs:annotation>
             <xs:documentation> 
-                The AbstractState type is the superclass for a state definition.
-                The element encloses a required AbstractSymbol element that in restricted concrete
-                subclasses must be of a sensible type such as a single IUPAC character. It may
-                enclose zero or more AbstractMapping elements to resolve ambiguities.
+                The AAPolymorphicStateSet defines a polymorphic ambiguity mapping.
             </xs:documentation>
         </xs:annotation>
         <xs:complexContent>
@@ -114,10 +109,7 @@
     <xs:complexType name="AAUncertainStateSet">
         <xs:annotation>
             <xs:documentation> 
-                The AbstractState type is the superclass for a state definition.
-                The element encloses a required AbstractSymbol element that in restricted concrete
-                subclasses must be of a sensible type such as a single IUPAC character. It may
-                enclose zero or more AbstractMapping elements to resolve ambiguities.
+                The AAUncertainStateSet defines an uncertain ambiguity mapping.                
             </xs:documentation>
         </xs:annotation>
         <xs:complexContent>
@@ -143,7 +135,7 @@
         <xs:annotation>
             <xs:documentation> 
                 This is a concrete implementation of the state element, which requires
-                a symbol element, in this case restricted to DNAToken, i.e. a single IUPAC nucleotide
+                a symbol element, in this case restricted to AAToken, i.e. a single IUPAC amino acid
                 symbol, and optional mapping elements to refer to other states.
             </xs:documentation>
         </xs:annotation>
@@ -162,7 +154,6 @@
             	This is a single cell in a matrix containing
             	an amino acid observation. 
             </xs:documentation>
-            <xs:appinfo>Amino_Acid_State_Datum</xs:appinfo>
         </xs:annotation>
         <xs:complexContent>
             <xs:restriction base="AbstractObs">
@@ -210,6 +201,7 @@
                 <xs:sequence minOccurs="1" maxOccurs="1">
                     <xs:element name="meta" minOccurs="0" maxOccurs="unbounded" type="Meta"/>
                     <xs:element name="cell" minOccurs="1" maxOccurs="unbounded" type="AAObs"/>
+                    <xs:element name="set" minOccurs="0" maxOccurs="unbounded" type="CellSet"/>
                 </xs:sequence>
             </xs:restriction>
         </xs:complexContent>
@@ -226,6 +218,7 @@
                 <xs:sequence minOccurs="1" maxOccurs="1">
                     <xs:element name="row" minOccurs="1" maxOccurs="unbounded" type="AAMatrixSeqRow"
                     />
+                    <xs:element name="set" minOccurs="0" maxOccurs="unbounded" type="RowSet"/>
                 </xs:sequence>
             </xs:restriction>
         </xs:complexContent>
@@ -242,6 +235,7 @@
                 <xs:sequence minOccurs="1" maxOccurs="1">
                     <xs:element name="row" minOccurs="1" maxOccurs="unbounded" type="AAMatrixObsRow"
                     />
+                    <xs:element name="set" minOccurs="0" maxOccurs="unbounded" type="RowSet"/>
                 </xs:sequence>
             </xs:restriction>
         </xs:complexContent>

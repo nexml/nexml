@@ -4,11 +4,11 @@
     elementFormDefault="qualified">
     <xs:annotation>
         <xs:documentation>
-            This module defines the abstract superclasses for the components
+            This module defines the abstract super-classes for the components
             that go into character matrices. In nexml instance documents, the
             &lt;characters&gt; element structure forms the concrete instance of 
             the complex types defined here. The concrete structure consists of
-            zero or one &lt;format&gt; structures that define allowed states,
+            one &lt;format&gt; structure that define allowed states,
             their symbols and ambiguity mappings, and the matrix columns they
             apply to. This is then followed by a &lt;matrix&gt; element that
             contains rows that either consist of granular cells with individual
@@ -17,6 +17,7 @@
     </xs:annotation>
 
     <xs:include schemaLocation="../abstract.xsd"/>
+    <xs:include schemaLocation="../meta/sets.xsd"/>
 
     <xs:complexType name="AbstractMapping" abstract="true">
         <xs:annotation>
@@ -52,8 +53,8 @@
     <xs:complexType name="AbstractState" abstract="true">
         <xs:annotation>
             <xs:documentation> 
-                The AbstractState type is the superclass for a state definition.
-                The element encloses a required AbstractSymbol element that in restricted concrete
+                The AbstractState type is the super-class for a state definition.
+                The element has a required symbol attribute that in restricted concrete
                 subclasses must be of a sensible type such as a single IUPAC character. It may
                 enclose zero or more AbstractMapping elements to resolve ambiguities.
             </xs:documentation>
@@ -69,8 +70,8 @@
     <xs:complexType name="AbstractUncertainStateSet" abstract="true" mixed="false">
         <xs:annotation>
             <xs:documentation> 
-                The AbstractState type is the superclass for a state definition.
-                The element encloses a required AbstractSymbol element that in restricted concrete
+                The AbstractUncertainStateSet type is the super-class for an uncertain state set definition.
+                The element has a required AbstractSymbol attribute that in restricted concrete
                 subclasses must be of a sensible type such as a single IUPAC character. It may
                 enclose zero or more AbstractMapping elements to resolve ambiguities.
             </xs:documentation>
@@ -88,8 +89,8 @@
     <xs:complexType name="AbstractPolymorphicStateSet" abstract="true" mixed="false">
         <xs:annotation>
             <xs:documentation> 
-                The AbstractState type is the superclass for a state definition.
-                The element encloses a required AbstractSymbol element that in restricted concrete
+                The AbstractPolymorphicStateSet type is the super-class for a polymorphic state set definition.
+                The element has a required AbstractSymbol attribute that in restricted concrete
                 subclasses must be of a sensible type such as a single IUPAC character. It may
                 enclose zero or more AbstractMapping elements to resolve ambiguities.
             </xs:documentation>
@@ -120,6 +121,7 @@
                         minOccurs="0" maxOccurs="unbounded"/>
                     <xs:element name="uncertain_state_set" type="AbstractUncertainStateSet"
                         minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element name="set" type="StateSet" minOccurs="0" maxOccurs="unbounded"/>
                 </xs:sequence>
             </xs:extension>
         </xs:complexContent>
@@ -188,6 +190,7 @@
                         type="AbstractStates"/>
                     <xs:element name="char" minOccurs="0" maxOccurs="unbounded" type="AbstractChar"
                     />
+                    <xs:element name="set" minOccurs="0" maxOccurs="unbounded" type="CharSet"/>
                 </xs:sequence>
             </xs:extension>
         </xs:complexContent>
@@ -198,10 +201,9 @@
             <xs:documentation> 
                 The AbstractObs type is the superclass for single observations, i.e. cells
                 in a matrix. A concrete instance of AbstractObs has a "char" attribute that
-                either refers to an explicitly defined character (e.g. in categorical matrices)
-                or to a column number, and a "state" attribute that either holds a reference to 
-                an explicitly defined state, or a raw state value (e.g. a nucleotide, a continuous
-                value).  
+                refers to an explicitly defined character (e.g. in categorical matrices), and 
+                a "state" attribute that either holds a reference to an explicitly defined 
+                state, or a raw state value (a continuous value).  
             </xs:documentation>
             <xs:appinfo>Character_State_Datum</xs:appinfo>
         </xs:annotation>
@@ -218,7 +220,7 @@
             <xs:documentation> 
                 AbstractSeq is a simple type based on xs:string. Concrete subclasses
                 must restrict this type to something more sensible, such as a regular expression for
-                IUPAC single character symbols, or whitespace separated integers.
+                IUPAC single character symbols, or whitespace separated integers or doubles.
             </xs:documentation>
         </xs:annotation>
         <xs:restriction base="xs:string"/>
@@ -242,8 +244,8 @@
         <xs:annotation>
             <xs:documentation>
                 The AbstractSeqRow represents a single row in a matrix. The row
-                must refer to a previously declared taxon element by its id attribute (and must have
-                an id itself, may have a label, and may have dictionary attachments). The row
+                must refer to a previously declared otu element by its id attribute (and must have
+                an id itself, may have a label, and may have meta attachments). The row
                 contains a single seq element with raw character data.
             </xs:documentation>
         </xs:annotation>
@@ -260,15 +262,16 @@
         <xs:annotation>
             <xs:documentation> 
                 The AbstractObsRow represents a single row in a matrix. The row
-                must refer to a previously declared taxon element by its id attribute (and must have
-                an id itself, may have a label, and may have dictionary attachments). The row
-                contains multiple obs elements.
+                must refer to a previously declared otu element by its id attribute (and must have
+                an id itself, may have a label, and may have meta attachments). The row
+                contains multiple cell elements.
             </xs:documentation>
         </xs:annotation>
         <xs:complexContent mixed="false">
             <xs:extension base="TaxonLinked">
                 <xs:sequence minOccurs="1" maxOccurs="1">
                     <xs:element name="cell" minOccurs="1" maxOccurs="unbounded" type="AbstractObs"/>
+                    <xs:element name="set" minOccurs="0" maxOccurs="unbounded" type="CellSet"/>
                 </xs:sequence>
             </xs:extension>
         </xs:complexContent>
@@ -286,6 +289,7 @@
                 <xs:sequence minOccurs="1" maxOccurs="1">
                     <xs:element name="row" minOccurs="1" maxOccurs="unbounded" type="AbstractSeqRow"
                     />
+                    <xs:element name="set" minOccurs="0" maxOccurs="unbounded" type="RowSet"/>
                 </xs:sequence>
             </xs:extension>
         </xs:complexContent>
@@ -303,6 +307,7 @@
                 <xs:sequence minOccurs="1" maxOccurs="1">
                     <xs:element name="row" minOccurs="1" maxOccurs="unbounded" type="AbstractObsRow"
                     />
+                    <xs:element name="set" minOccurs="0" maxOccurs="unbounded" type="RowSet"/>
                 </xs:sequence>
             </xs:extension>
         </xs:complexContent>
@@ -315,7 +320,6 @@
                 The AbstractBlock is the superclass for blocks that contain
                 an element structure of type AbstractFormat.
             </xs:documentation>
-            <xs:appinfo>Character_State_Data_Matrix</xs:appinfo>
         </xs:annotation>
         <xs:complexContent mixed="false">
             <xs:extension base="TaxaLinked">

@@ -69,26 +69,7 @@
         <xs:complexContent mixed="false">
             <xs:extension base="Labelled">
                 <xs:sequence/>
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
-
-    <!-- elements that enclose "class" elements -->
-    <xs:complexType name="Segmented" abstract="true" mixed="false">
-        <xs:annotation>
-            <xs:documentation>
-                The Segmented complexType is for elements that contain multiple child 
-                elements of the same type, e.g. multiple cells in a row, multiple nodes
-                in a tree, etc. Segmented elements can hold one or more elements of type
-                Class, such that the segments can refer to the ID of the class they belong
-                to.
-            </xs:documentation>
-        </xs:annotation>
-        <xs:complexContent mixed="false">
-            <xs:extension base="IDTagged">
-                <xs:sequence>
-                    <xs:element name="class" type="Class" minOccurs="0" maxOccurs="unbounded"/>
-                </xs:sequence>
+                <xs:attribute name="id" type="xs:ID" use="required"/>
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
@@ -138,21 +119,4 @@
         </xs:complexContent>
     </xs:complexType>
 
-    <!-- class element -->
-    <xs:complexType name="Class" abstract="false">
-        <xs:annotation>
-            <xs:documentation>
-                Elements of the Class complexType are elements with an ID to which
-                other elements refer using the "class" attribute. The purpose of this 
-                to allow creation of sets, but rather than having a set specify its
-                members (such as character sets in nexus), in nexml the members specify
-                which class(es) they belong to. This is more idiomatic for xml, consider
-                for example the "class" attribute in (X)HTML which works the same way,
-                and is used for example for cascading style sheets.
-            </xs:documentation>
-        </xs:annotation>
-        <xs:complexContent mixed="false">
-            <xs:extension base="IDTagged"/>
-        </xs:complexContent>
-    </xs:complexType>
 </xs:schema>

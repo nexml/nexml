@@ -54,7 +54,7 @@
                 <xs:sequence minOccurs="1" maxOccurs="1">
                     <xs:element name="meta" type="Meta" minOccurs="0" maxOccurs="unbounded"/>
                 </xs:sequence>
-                <xs:attribute name="length" type="xs:float"/>
+                <xs:attribute name="length" type="xs:double"/>
             </xs:restriction>
         </xs:complexContent>
     </xs:complexType>
@@ -87,6 +87,7 @@
                     <xs:element minOccurs="1" maxOccurs="unbounded" name="node" type="NetworkNode"/>
                     <xs:element minOccurs="1" maxOccurs="unbounded" name="edge"
                         type="NetworkFloatEdge"/>
+                    <xs:element name="set" minOccurs="0" maxOccurs="unbounded" type="NodeAndRootEdgeAndEdgeSet"/>
                 </xs:sequence>
             </xs:restriction>
         </xs:complexContent>
@@ -104,6 +105,7 @@
                     <xs:element minOccurs="1" maxOccurs="unbounded" name="node" type="NetworkNode"/>
                     <xs:element minOccurs="1" maxOccurs="unbounded" name="edge"
                         type="NetworkIntEdge"/>
+                    <xs:element name="set" minOccurs="0" maxOccurs="unbounded" type="NodeAndRootEdgeAndEdgeSet"/>
                 </xs:sequence>
             </xs:restriction>
         </xs:complexContent>

@@ -3,6 +3,7 @@
     xmlns="http://www.nexml.org/2009" xmlns:xml="http://www.w3.org/XML/1998/namespace"
     elementFormDefault="qualified">
     <xs:include schemaLocation="abstractcharacters.xsd"/>
+    <xs:include schemaLocation="../meta/sets.xsd"/>
 
     <!--
     <xs:import namespace="http://www.w3.org/XML/1998/namespace"
@@ -13,8 +14,8 @@
             <a href="../abstract">abstract</a> character matrix components 
             that all character matrices must implement. The subclasses
             defined here apply to restriction site data. In a verbose notation, 
-            this data is represented as the "state" attribute of the &lt;cell&gt; 
-            element, whose value-space is limited to 0 or 1. In a compact 
+            this data is represented as the "state" attribute which references
+            an explicit state definition. In a compact 
             notation, the same data is represented as a sequence of tokens (whitespace is allowed but has no meaning).
         </xs:documentation>
     </xs:annotation>
@@ -25,24 +26,11 @@
         </xs:restriction>
     </xs:simpleType>
 
-    <!--
-        A restriction site matrix only has presence (1) or absence (0), so
-        state definitions and ambiguity mappings are omitted.
-        
-    <xs:complexType name="StandardMapping">
-        <xs:annotation>
-            <xs:documentation>A standard character ambiguity mapping.</xs:documentation>
-        </xs:annotation>
-        <xs:complexContent>
-            <xs:restriction base="AbstractMapping"/>            
-        </xs:complexContent>
-    </xs:complexType>
-    -->
     <xs:complexType name="RestrictionState">
         <xs:annotation>
             <xs:documentation> This is a concrete implementation of the state element, which requires
-                a symbol element, in this case restricted to integers, and optional mapping
-                elements to refer to other states. </xs:documentation>
+                a symbol element, in this case restricted to 0/1. 
+            </xs:documentation>
         </xs:annotation>
         <xs:complexContent>
             <xs:restriction base="AbstractState">
@@ -63,6 +51,7 @@
                 <xs:sequence minOccurs="1" maxOccurs="1">
                     <xs:element name="meta" minOccurs="0" maxOccurs="unbounded" type="Meta"/>
                     <xs:element name="state" type="RestrictionState" minOccurs="2" maxOccurs="2"/>
+                    <xs:element name="set" type="StateSet" minOccurs="0" maxOccurs="unbounded"/>
                 </xs:sequence>
             </xs:restriction>
         </xs:complexContent>
@@ -72,7 +61,7 @@
         <xs:annotation>
             <xs:documentation> 
                 A concrete implementation of the char element, 
-                which only requires a unique identifier.
+                which requires a unique identifier and a state set reference.
             </xs:documentation>
         </xs:annotation>
         <xs:complexContent>
@@ -100,6 +89,7 @@
                         maxOccurs="unbounded"/>
                     <xs:element name="char" type="RestrictionChar" minOccurs="1"
                         maxOccurs="unbounded"/>
+                    <xs:element name="set" minOccurs="0" maxOccurs="unbounded" type="CharSet"/>
                 </xs:sequence>
             </xs:restriction>
         </xs:complexContent>
@@ -165,6 +155,7 @@
                     <xs:element name="meta" minOccurs="0" maxOccurs="unbounded" type="Meta"/>
                     <xs:element name="cell" minOccurs="1" maxOccurs="unbounded"
                         type="RestrictionObs"/>
+                    <xs:element name="set" minOccurs="0" maxOccurs="unbounded" type="CellSet"/>
                 </xs:sequence>
             </xs:restriction>
         </xs:complexContent>
@@ -181,6 +172,7 @@
                 <xs:sequence minOccurs="1" maxOccurs="1">
                     <xs:element name="row" minOccurs="1" maxOccurs="unbounded"
                         type="RestrictionMatrixSeqRow"/>
+                    <xs:element name="set" minOccurs="0" maxOccurs="unbounded" type="RowSet"/>
                 </xs:sequence>
             </xs:restriction>
         </xs:complexContent>
@@ -197,6 +189,7 @@
                 <xs:sequence minOccurs="1" maxOccurs="1">
                     <xs:element name="row" minOccurs="1" maxOccurs="unbounded"
                         type="RestrictionMatrixObsRow"/>
+                    <xs:element name="set" minOccurs="0" maxOccurs="unbounded" type="RowSet"/>
                 </xs:sequence>
             </xs:restriction>
         </xs:complexContent>

@@ -3,6 +3,7 @@
     xmlns="http://www.nexml.org/2009" xmlns:sawsdl="http://www.w3.org/ns/sawsdl"
     xmlns:xml="http://www.w3.org/XML/1998/namespace" elementFormDefault="qualified">
     <xs:include schemaLocation="abstractcharacters.xsd"/>
+    <xs:include schemaLocation="../meta/sets.xsd"/>
 
     <xs:annotation>
         <xs:documentation>
@@ -49,10 +50,7 @@
     <xs:complexType name="StandardUncertainStateSet">
         <xs:annotation>
             <xs:documentation> 
-                The AbstractState type is the superclass for a state definition.
-                The element encloses a required AbstractSymbol element that in restricted concrete
-                subclasses must be of a sensible type such as a single IUPAC character. It may
-                enclose zero or more AbstractMapping elements to resolve ambiguities.
+                The StandardUncertainStateSet type is a single uncertain ambiguity mapping.
             </xs:documentation>
         </xs:annotation>
         <xs:complexContent>
@@ -69,10 +67,7 @@
     <xs:complexType name="StandardPolymorphicStateSet">
         <xs:annotation>
             <xs:documentation> 
-                The AbstractState type is the superclass for a state definition.
-                The element encloses a required AbstractSymbol element that in restricted concrete
-                subclasses must be of a sensible type such as a single IUPAC character. It may
-                enclose zero or more AbstractMapping elements to resolve ambiguities.
+                The StandardPolymorphicStateSet type is a single polymorphic ambiguity mapping.                
             </xs:documentation>
         </xs:annotation>
         <xs:complexContent>
@@ -104,6 +99,7 @@
                         minOccurs="0" maxOccurs="unbounded"/>
                     <xs:element name="uncertain_state_set" type="StandardUncertainStateSet"
                         minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element name="set" type="StateSet" minOccurs="0" maxOccurs="unbounded"/>
                 </xs:sequence>
             </xs:restriction>
         </xs:complexContent>
@@ -140,6 +136,7 @@
                         maxOccurs="unbounded"/>
                     <xs:element name="char" type="StandardChar" minOccurs="1" maxOccurs="unbounded"
                     />
+                    <xs:element name="set" minOccurs="0" maxOccurs="unbounded" type="CharSet"/>
                 </xs:sequence>
             </xs:restriction>
         </xs:complexContent>
@@ -195,6 +192,7 @@
                 <xs:sequence minOccurs="1" maxOccurs="1">
                     <xs:element name="meta" minOccurs="0" maxOccurs="unbounded" type="Meta"/>
                     <xs:element name="cell" minOccurs="1" maxOccurs="unbounded" type="StandardObs"/>
+                    <xs:element name="set" minOccurs="0" maxOccurs="unbounded" type="CellSet"/>
                 </xs:sequence>
             </xs:restriction>
         </xs:complexContent>
@@ -211,6 +209,7 @@
                 <xs:sequence minOccurs="1" maxOccurs="1">
                     <xs:element name="row" minOccurs="1" maxOccurs="unbounded"
                         type="StandardMatrixSeqRow"/>
+                    <xs:element name="set" minOccurs="0" maxOccurs="unbounded" type="RowSet"/>
                 </xs:sequence>
             </xs:restriction>
         </xs:complexContent>
@@ -227,6 +226,7 @@
                 <xs:sequence minOccurs="1" maxOccurs="1">
                     <xs:element name="row" minOccurs="1" maxOccurs="unbounded"
                         type="StandardMatrixObsRow"/>
+                    <xs:element name="set" minOccurs="0" maxOccurs="unbounded" type="RowSet"/>
                 </xs:sequence>
             </xs:restriction>
         </xs:complexContent>
