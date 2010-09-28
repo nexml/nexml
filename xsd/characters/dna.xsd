@@ -3,6 +3,7 @@
     xmlns="http://www.nexml.org/2009" xmlns:sawsdl="http://www.w3.org/ns/sawsdl"
     xmlns:xml="http://www.w3.org/XML/1998/namespace" elementFormDefault="qualified">
     <xs:include schemaLocation="abstractcharacters.xsd"/>
+    <xs:include schemaLocation="../meta/sets.xsd"/>
 
     <xs:annotation>
         <xs:documentation>
@@ -10,10 +11,10 @@
             <a href="../abstract">abstract</a> character matrix components 
             that all character matrices must implement. The subclasses
             defined here apply to DNA character data. In a verbose notation, 
-            this data is represented as the "state" attribute of the &lt;cell&gt; 
-            element, whose value-space is limited to the IUPAC single character
-            nucleotide symbols (except U). In a compact notation, the same data 
-            is represented as a sequence of tokens (whitespace is allowed but has no meaning).
+            this data is referenced by the "state" attribute of the &lt;cell&gt; 
+            element, which points to a state element in the format block. I
+            n a compact notation, the same data is represented as a sequence 
+            of tokens (whitespace is allowed but has no meaning).
         </xs:documentation>
     </xs:annotation>
 
@@ -29,10 +30,6 @@
             <xs:length value="1"/>
         </xs:restriction>
     </xs:simpleType>
-    <!--
-        
-        The following types would be used if we explicitly defined ambiguity mappings,
-        allowed states, etc. But we don't, because we use the IUPAC symbols anyway. -->
 
     <xs:complexType name="DNAMapping">
         <xs:annotation>
@@ -62,9 +59,7 @@
     <xs:complexType name="DNAUncertainStateSet">
         <xs:annotation>
             <xs:documentation> 
-                The AbstractState type is the superclass for a state definition.
-                The element encloses a required AbstractSymbol element that in restricted concrete
-                subclasses must be of a sensible type such as a single IUPAC character. It may
+                The DNAUncertainStateSet type defines an IUPAC ambiguity mapping. It may
                 enclose zero or more AbstractMapping elements to resolve ambiguities.
             </xs:documentation>
         </xs:annotation>
@@ -82,9 +77,7 @@
     <xs:complexType name="DNAPolymorphicStateSet">
         <xs:annotation>
             <xs:documentation> 
-                The AbstractState type is the superclass for a state definition.
-                The element encloses a required AbstractSymbol element that in restricted concrete
-                subclasses must be of a sensible type such as a single IUPAC character. It may
+                The DNAPolymorphicStateSet type defines an IUPAC ambiguity mapping. It may
                 enclose zero or more AbstractMapping elements to resolve ambiguities.
             </xs:documentation>
         </xs:annotation>
@@ -115,6 +108,7 @@
                         minOccurs="0" maxOccurs="unbounded"/>
                     <xs:element name="uncertain_state_set" type="DNAUncertainStateSet" minOccurs="0"
                         maxOccurs="unbounded"/>
+                    <xs:element name="set" type="StateSet" minOccurs="0" maxOccurs="unbounded"/>
                 </xs:sequence>
             </xs:restriction>
         </xs:complexContent>
@@ -124,12 +118,8 @@
         sawsdl:modelReference="http://evolutionaryontology-dev.nescent.org/cdao.owl#NucleotideResidueCharacter">
         <xs:annotation>
             <xs:documentation> 
-                A concrete implementation of the AbstractChar element. In this implementation
-                there is no reference to explicitly defined states, as we use the IUPAC standard.
-                There may be a CodonPosition ("codon") attribute, and there must be an identifier
-                ("id") that is of type xs:nonNegativeInteger to define the column number.
+                A concrete implementation of the AbstractChar element.
             </xs:documentation>
-            <xs:appinfo>Nucleotide_Character</xs:appinfo>
         </xs:annotation>
         <xs:complexContent>
             <xs:restriction base="AbstractChar">
@@ -154,6 +144,7 @@
                 <xs:sequence minOccurs="1" maxOccurs="1">
                     <xs:element name="states" type="DNAStates" minOccurs="1" maxOccurs="unbounded"/>
                     <xs:element name="char" type="DNAChar" minOccurs="1" maxOccurs="unbounded"/>
+                    <xs:element name="set" minOccurs="0" maxOccurs="unbounded" type="CharSet"/>
                 </xs:sequence>
             </xs:restriction>
         </xs:complexContent>
@@ -165,7 +156,6 @@
             <xs:documentation> 
                 This is a single cell in a matrix containing a nucleotide observation. 
             </xs:documentation>
-            <xs:appinfo>Nucleotide_State_Datum</xs:appinfo>
         </xs:annotation>
         <xs:complexContent>
             <xs:restriction base="AbstractObs">
@@ -212,6 +202,7 @@
                 <xs:sequence minOccurs="1" maxOccurs="1">
                     <xs:element name="meta" minOccurs="0" maxOccurs="unbounded" type="Meta"/>
                     <xs:element name="cell" minOccurs="1" maxOccurs="unbounded" type="DNAObs"/>
+                    <xs:element name="set" minOccurs="0" maxOccurs="unbounded" type="CellSet"/>
                 </xs:sequence>
             </xs:restriction>
         </xs:complexContent>
@@ -228,6 +219,7 @@
                 <xs:sequence minOccurs="1" maxOccurs="1">
                     <xs:element name="row" minOccurs="1" maxOccurs="unbounded"
                         type="DNAMatrixSeqRow"/>
+                    <xs:element name="set" minOccurs="0" maxOccurs="unbounded" type="RowSet"/>
                 </xs:sequence>
             </xs:restriction>
         </xs:complexContent>
@@ -244,6 +236,7 @@
                 <xs:sequence minOccurs="1" maxOccurs="1">
                     <xs:element name="row" minOccurs="1" maxOccurs="unbounded"
                         type="DNAMatrixObsRow"/>
+                    <xs:element name="set" minOccurs="0" maxOccurs="unbounded" type="RowSet"/>
                 </xs:sequence>
             </xs:restriction>
         </xs:complexContent>

@@ -11,7 +11,7 @@
             length or width measurements. In a verbose notation, this data
             is represented as the "state" attribute of the &lt;cell&gt; 
             element. In a compact notation, the same data is represented as
-            a sequence of space-separated floating point numbers.
+            a sequence of space-separated doubles.
         </xs:documentation>
     </xs:annotation>
 
@@ -29,7 +29,6 @@
                 A concrete implementation of the char element, which requires
                 only an id attribute.
             </xs:documentation>
-            <xs:appinfo>Continuous_Character</xs:appinfo>
         </xs:annotation>
         <xs:complexContent>
             <xs:restriction base="AbstractChar">
@@ -54,6 +53,7 @@
                 <xs:sequence minOccurs="1" maxOccurs="1">
                     <xs:element name="char" type="ContinuousChar" minOccurs="1"
                         maxOccurs="unbounded"/>
+                    <xs:element name="set" minOccurs="0" maxOccurs="unbounded" type="CharSet"/>
                 </xs:sequence>
             </xs:restriction>
         </xs:complexContent>
@@ -66,7 +66,6 @@
                 This is a single cell in a matrix containing a continuous
                 observation. 
             </xs:documentation>
-            <xs:appinfo>Continuous_State_Datum</xs:appinfo>
         </xs:annotation>
         <xs:complexContent>
             <xs:restriction base="AbstractObs">
@@ -83,10 +82,9 @@
         <xs:annotation>
             <xs:documentation> 
                 This is a simple type that specifies 
-                a list of xs:float characters.
+                a list of xs:double characters.
             </xs:documentation>
         </xs:annotation>
-        <!--<xs:list itemType="xs:float"/>-->
         <xs:restriction base="AbstractTokenList"/>
     </xs:simpleType>
 
@@ -118,6 +116,7 @@
                     <xs:element name="meta" minOccurs="0" maxOccurs="unbounded" type="Meta"/>
                     <xs:element name="cell" minOccurs="1" maxOccurs="unbounded" type="ContinuousObs"
                     />
+                    <xs:element name="set" minOccurs="0" maxOccurs="unbounded" type="CellSet"/>
                 </xs:sequence>
             </xs:restriction>
         </xs:complexContent>
@@ -134,6 +133,7 @@
                 <xs:sequence minOccurs="1" maxOccurs="1">
                     <xs:element name="row" minOccurs="1" maxOccurs="unbounded"
                         type="ContinuousMatrixSeqRow"/>
+                    <xs:element name="set" minOccurs="0" maxOccurs="unbounded" type="RowSet"/>
                 </xs:sequence>
             </xs:restriction>
         </xs:complexContent>
@@ -150,6 +150,7 @@
                 <xs:sequence minOccurs="1" maxOccurs="1">
                     <xs:element name="row" minOccurs="1" maxOccurs="unbounded"
                         type="ContinuousMatrixObsRow"/>
+                    <xs:element name="set" minOccurs="0" maxOccurs="unbounded" type="RowSet"/>
                 </xs:sequence>
             </xs:restriction>
         </xs:complexContent>

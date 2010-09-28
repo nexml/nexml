@@ -17,6 +17,7 @@
     </xs:annotation>
 
     <xs:include schemaLocation="../abstract.xsd"/>
+    <xs:include schemaLocation="../meta/sets.xsd"/>
 
     <xs:complexType name="AbstractNode" abstract="true"
         sawsdl:modelReference="http://evolutionaryontology-dev.nescent.org/cdao.owl#Node">
@@ -88,6 +89,7 @@
                     <xs:element name="rootedge" type="AbstractRootEdge" minOccurs="0" maxOccurs="1"/>
                     <xs:element name="edge" type="AbstractEdge" minOccurs="1" maxOccurs="unbounded"
                     />
+                    <xs:element name="set" minOccurs="0" maxOccurs="unbounded" type="NodeAndRootEdgeAndEdgeSet"/>
                 </xs:sequence>
             </xs:extension>
         </xs:complexContent>
@@ -107,6 +109,7 @@
                     <xs:element name="node" type="AbstractNode" minOccurs="1" maxOccurs="unbounded"/>
                     <xs:element name="edge" type="AbstractEdge" minOccurs="1" maxOccurs="unbounded"
                     />
+                    <xs:element name="set" minOccurs="0" maxOccurs="unbounded" type="NodeAndRootEdgeAndEdgeSet"/>
                 </xs:sequence>
             </xs:extension>
         </xs:complexContent>
@@ -128,6 +131,7 @@
                         <xs:element name="tree" type="AbstractTree" minOccurs="1"
                             maxOccurs="unbounded"/>
                     </xs:choice>
+                    <xs:element name="set" minOccurs="0" maxOccurs="unbounded" type="TreeAndNetworkSet"/>
                 </xs:sequence>
             </xs:extension>
         </xs:complexContent>
