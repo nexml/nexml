@@ -27,7 +27,7 @@
         </xs:complexContent>
     </xs:complexType>
     
-    <xs:complexType name="OTUSet" abstract="false" mixed="false">
+    <xs:complexType name="TaxonSet" abstract="false" mixed="false">
         <xs:complexContent>
             <xs:extension base="AbstractSet">
                 <xs:attribute name="otu" type="xs:IDREFS" use="required"/>
