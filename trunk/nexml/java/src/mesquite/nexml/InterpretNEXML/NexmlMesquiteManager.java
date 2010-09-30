@@ -37,8 +37,8 @@ public class NexmlMesquiteManager {
 		mPredicateHandlerMapping = new Properties();
 		mNamespaceHandlerMapping = new Properties();
 	    try {
-	    	mPredicateHandlerMapping.load(this.getClass().getResourceAsStream(Constants.PREDICATES_PROPERTIES));
-	    	mNamespaceHandlerMapping.load(this.getClass().getResourceAsStream(Constants.NAMESPACE_PROPERTIES));
+	    	mPredicateHandlerMapping.load(NexmlMesquiteManager.class.getResourceAsStream(Constants.PREDICATES_PROPERTIES));
+	    	mNamespaceHandlerMapping.load(NexmlMesquiteManager.class.getResourceAsStream(Constants.NAMESPACE_PROPERTIES));
 	    } catch (IOException e) {
 	    	e.printStackTrace();
 	    }
