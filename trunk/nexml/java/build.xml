@@ -13,8 +13,8 @@
 	<property name="xercesjar" value="xercesImpl.jar"/>
 	<property name="xercesfolder" value="xerces"/>
 	<property name="mesquitezip" value="mesquite-nexml.zip"/>
-	<property name="mesquite-properties" value="mesquite/nexml/InterpretNEXML/AnnotationHandlers/predicateHandlerMapping.properties"/>
-	<property name="mesquite-ns-properties" value="mesquite/nexml/InterpretNEXML/AnnotationHandlers/namespaceHandlerMapping.properties"/>
+	<property name="mesquite-properties" value="mesquite/nexml/InterpretNEXML/predicateHandlerMapping.properties"/>
+	<property name="mesquite-ns-properties" value="mesquite/nexml/InterpretNEXML/namespaceHandlerMapping.properties"/>
 	<property environment="env"/>
 	
 	<!-- CORE LIBRARY -->
