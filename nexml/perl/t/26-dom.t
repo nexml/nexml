@@ -82,7 +82,8 @@ foreach my $format (qw(twig libxml)) {
     ok( my $doc = $proj->get_document, "$format document from project");
 
   SKIP: {
-      skip 'env var NEXML_ROOT not set', 3 unless $ENV{'NEXML_ROOT'};
+      #skip 'env var NEXML_ROOT not set', 3 unless $ENV{'NEXML_ROOT'};
+      skip 'skipping remote NeXML validation tests', 3 if 1;
     # write to tempfile, run validation script (at ../script/nexvl.pl) on it
       my ( $fh, $fn ) = tempfile();
       ok( $fh, 'make temp file' );
