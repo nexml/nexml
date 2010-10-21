@@ -1,5 +1,5 @@
-Bio::Phylo - An object-oriented Perl module 
-for analyzing and manipulating phylogenetic trees. 
+Bio::Phylo - An object-oriented Perl toolkit 
+for analyzing and manipulating phyloinformatic data. 
 
 DESCRIPTION
 
@@ -12,7 +12,9 @@ data.
 COMPATABILITY
  
 Bio::Phylo installs without problems on most popular,
-current platforms (Win32, OSX, RedHat linux, Solaris).
+current platforms (Win32, OSX, Linux, Solaris, IRIX,
+FreeBSD, OpenBSD, NetBSD), on Perl versions >= 5.8.0
+
 For a list of automated test results visit:
 
 http://testers.cpan.org/show/Bio-Phylo.html
@@ -62,8 +64,12 @@ be notified of progress on your bug as I make changes.
  
 ACKNOWLEDGEMENTS
 
-The author would like to thank Jason Stajich for many 
-ideas borrowed from BioPerl (http://www.bioperl.org), 
+The author would like to thank the BioPerl project
+for providing the community with a terrific toolkit
+that other software, such as this, can be built on 
+(http://www.bioperl.org); Jason Caravas, Klaas Hartmann, 
+Mark A. Jensen, Chase Miller and Aki Mimoto for their 
+contributions (code and otherwise) to this project;
 and Arne Mooers from the FAB* lab (http://www.sfu.ca/~fabstar) 
 for comments and requests. 
 
