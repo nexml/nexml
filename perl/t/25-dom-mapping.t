@@ -75,7 +75,8 @@ for my $format (@formats) {
 	ok( $elt = _parse( undef, 'nex:nexml', $test, $dom), "parse XML structure as $format DOM");
 	ok( $doc->set_root($elt), "set $format document root element" );
 	SKIP : {
-	    skip 'env var NEXML_ROOT not set', 3 unless $ENV{'NEXML_ROOT'};
+	    #skip 'env var NEXML_ROOT not set', 3 unless $ENV{'NEXML_ROOT'};
+	    skip 'skipping remote NeXML validation tests', 3 if 1;
 	    my ( $fh, $fn ) = tempfile();
 	    ok( $fh, 'make temp file' );
 	    ok( print( $fh $doc->to_xml ), "write XML from $format DOM" );
@@ -172,7 +173,7 @@ sub _order {
 }
 	
 __DATA__
-<nex:nexml generator="Bio::Phylo::Project v.0.17_RC9_841" version="0.8" xmlns="http://www.nexml.org/1.0" xmlns:nex="http://www.nexml.org/1.0" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns" xmlns:xml="http://www.w3.org/XML/1998/namespace" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.nexml.org/1.0 http://www.nexml.org/1.0/nexml.xsd">
+<nex:nexml generator="Bio::Phylo::Project v.0.17_RC9_841" version="0.9" xmlns="http://www.nexml.org/2009" xmlns:nex="http://www.nexml.org/2009" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns" xmlns:xml="http://www.w3.org/XML/1998/namespace" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.nexml.org/2009 http://www.nexml.org/2009/nexml.xsd">
 <!-- this is a simple test file generated from a NEXUS file -->
 <otus id="otus1">
     <otu id="otu2" label="otuA"/>
