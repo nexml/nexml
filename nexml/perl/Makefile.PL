@@ -19,9 +19,10 @@ WriteMakefile(
     'AUTHOR'       => 'Rutger Vos',
     'PL_FILES'     => {},
     'EXE_FILES'    => [],
-    'VERSION_FROM' => 'lib/Bio/Phylo.pm',    
+    'VERSION_FROM' => 'lib/Bio/Phylo.pm',  
     'clean'        => {},    
     'dist'         => { 'COMPRESS' => 'gzip -9f', 'SUFFIX' => 'gz', },
+	'MIN_PERL_VERSION' => '5.8.0',
 );
 
 sub check_prereq {
