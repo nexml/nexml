@@ -719,8 +719,12 @@ sub _missing {
 
 sub _symbols {
     my $self = shift;
-    if ( $_[0] !~ m/^(?:SYMBOLS|=|")$/i and $_[0] =~ m/^"?(.)"?$/ ) {
-        push @{ $self->{'_symbols'} }, $1;
+    if ( $_[0] !~ m/^(?:SYMBOLS|=)$/i and $_[0] =~ m/^"?(.+)"?$/ ) {
+    	my $sym = $1;
+    	$sym =~ s/"//g;
+    	my @syms = grep { /\S+/ } split /\s+/, $sym;
+        push @{ $self->{'_symbols'} }, @syms;
+        $logger->debug("recorded character state symbols '@syms'");
     }
 }
 
@@ -757,12 +761,26 @@ sub _add_matrix_metadata {
             $self->_current->set_charlabels(
                 $self->{'_charlabels'}
             );
+            $logger->debug("adding character labels");
         }
         if ( @{ $self->{'_statelabels'} } ) {
             $self->_current->set_statelabels(
                 $self->{'_statelabels'}
             );
-        }        
+            $logger->debug("adding state labels");
+        }
+        if ( my @symbols = @{ $self->{'_symbols'} } ) {
+        	$logger->debug("updating state lookup table");
+        	my $to = $self->_current->get_type_object;
+        	my $lookup = $to->get_lookup;
+        	if ( $lookup ) {
+				for my $sym ( @symbols ) {
+					if ( not exists $lookup->{$sym} ) {
+						$lookup->{$sym} = [ $sym ];
+					}        	
+				}
+        	}
+        }
     }
     return $self;	
 }
