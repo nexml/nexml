@@ -3,7 +3,7 @@ use strict;
 use Bio::Phylo::IO ();
 use Bio::Phylo::Util::Exceptions 'throw';
 use Bio::Phylo::Factory;
-use Bio::Phylo::Util::CONSTANT 'looks_like_instance';
+use Bio::Phylo::Util::CONSTANT qw'looks_like_instance _NEXML_VERSION_';
 use Bio::Phylo::NeXML::Writable ();
 use Bio::Phylo::NeXML::Meta::XMLLiteral;
 use vars qw(@ISA $VERSION);
@@ -252,8 +252,10 @@ sub _handle_nexml {
 	my ( $project_obj, $project_id ) = $self->_obj_from_elt( $nexml_elt, 'project' );
 	push @{ $self->{'_blocks'} }, $project_obj;
 	$logger->info( $self->_pos . " Processed nexml element" );
-	if ( $nexml_elt->att('version') != 0.9 ) {
-		throw 'BadFormat' => 'Wrong version number, can only handle 0.9: ' . $nexml_elt->att('version');
+	my $version = _NEXML_VERSION_;
+	if ( $nexml_elt->att('version') !~ /^\Q$version\E$/ ) {
+		throw 'BadFormat' => "Wrong version number, can only handle ${version}: " 
+		. $nexml_elt->att('version');
 	}
 }
 
