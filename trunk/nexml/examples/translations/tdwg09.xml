@@ -319,7 +319,7 @@
     </tree>
   </trees>
   <characters id="characters36" label="'sociality&amp;life_history'" otus="otus1" xsi:type="nex:StandardCells">
-    <format id="format142">
+    <format>
       <states id="states38">
         <state id="s1" symbol="0">
     	<!--
@@ -355,142 +355,142 @@
       <char id="c1" states="states38"/>
       <char id="c2" states="states39"/>
     </format>
-    <matrix id="matrix144">
+    <matrix>
       <row id="row37" label="Tympanoctomys_barrerae" otu="otu2">
-        <cell char="c1" id="cell143" state="s1"/>
-        <cell char="c2" id="cell144" state="st1"/>
+        <cell char="c1" state="s1"/>
+        <cell char="c2" state="st1"/>
       </row>
       <row id="row39" label="Spalacopus_cyanus" otu="otu3">
-        <cell char="c1" id="cell145" state="s2"/>
-        <cell char="c2" id="cell146" state="st1"/>
+        <cell char="c1" state="s2"/>
+        <cell char="c2" state="st1"/>
       </row>
       <row id="row40" label="Octodontomys_gliroides" otu="otu4">
-        <cell char="c1" id="cell147" state="s1"/>
-        <cell char="c2" id="cell148" state="st1"/>
+        <cell char="c1" state="s1"/>
+        <cell char="c2" state="st1"/>
       </row>
       <row id="row41" label="Octodon_degus" otu="otu5">
-        <cell char="c1" id="cell149" state="s2"/>
-        <cell char="c2" id="cell150" state="st1"/>
+        <cell char="c1" state="s2"/>
+        <cell char="c2" state="st1"/>
       </row>
       <row id="row42" label="Ctenomys_tucumanus" otu="otu6">
-        <cell char="c1" id="cell151" state="s1"/>
-        <cell char="c2" id="cell152" state="st2"/>
+        <cell char="c1" state="s1"/>
+        <cell char="c2" state="st2"/>
       </row>
       <row id="row43" label="Ctenomys_tuconax" otu="otu7">
-        <cell char="c1" id="cell153" state="s1"/>
-        <cell char="c2" id="cell154" state="st2"/>
+        <cell char="c1" state="s1"/>
+        <cell char="c2" state="st2"/>
       </row>
       <row id="row44" label="Ctenomys_torquatus" otu="otu8">
-        <cell char="c1" id="cell155" state="s1"/>
-        <cell char="c2" id="cell156" state="st2"/>
+        <cell char="c1" state="s1"/>
+        <cell char="c2" state="st2"/>
       </row>
       <row id="row45" label="Ctenomys_talarum" otu="otu9">
-        <cell char="c1" id="cell157" state="s1"/>
-        <cell char="c2" id="cell158" state="st2"/>
+        <cell char="c1" state="s1"/>
+        <cell char="c2" state="st2"/>
       </row>
       <row id="row46" label="Ctenomys_steinbachi" otu="otu10">
-        <cell char="c1" id="cell159" state="s1"/>
-        <cell char="c2" id="cell160" state="st2"/>
+        <cell char="c1" state="s1"/>
+        <cell char="c2" state="st2"/>
       </row>
       <row id="row47" label="Ctenomys_sp.ITA" otu="otu11">
-        <cell char="c1" id="cell161" state="s1"/>
-        <cell char="c2" id="cell162" state="st2"/>
+        <cell char="c1" state="s1"/>
+        <cell char="c2" state="st2"/>
       </row>
       <row id="row48" label="Ctenomys_sp._MONTE" otu="otu12">
-        <cell char="c1" id="cell163" state="s1"/>
-        <cell char="c2" id="cell164" state="st2"/>
+        <cell char="c1" state="s1"/>
+        <cell char="c2" state="st2"/>
       </row>
       <row id="row49" label="Ctenomys_sp._MINUT" otu="otu13">
-        <cell char="c1" id="cell165" state="s1"/>
-        <cell char="c2" id="cell166" state="st2"/>
+        <cell char="c1" state="s1"/>
+        <cell char="c2" state="st2"/>
       </row>
       <row id="row50" label="Ctenomys_sp._LLATHU" otu="otu14">
-        <cell char="c1" id="cell167" state="s1"/>
-        <cell char="c2" id="cell168" state="st2"/>
+        <cell char="c1" state="s1"/>
+        <cell char="c2" state="st2"/>
       </row>
       <row id="row51" label="Ctenomys_rionegrensis" otu="otu15">
-        <cell char="c1" id="cell169" state="s1"/>
-        <cell char="c2" id="cell170" state="st2"/>
+        <cell char="c1" state="s1"/>
+        <cell char="c2" state="st2"/>
       </row>
       <row id="row52" label="Ctenomys_porteousi" otu="otu16">
-        <cell char="c1" id="cell171" state="s1"/>
-        <cell char="c2" id="cell172" state="st2"/>
+        <cell char="c1" state="s1"/>
+        <cell char="c2" state="st2"/>
       </row>
       <row id="row53" label="Ctenomys_pearsoni" otu="otu17">
-        <cell char="c1" id="cell173" state="s2"/>
-        <cell char="c2" id="cell174" state="st2"/>
+        <cell char="c1" state="s2"/>
+        <cell char="c2" state="st2"/>
       </row>
       <row id="row54" label="Ctenomys_opimus" otu="otu18">
-        <cell char="c1" id="cell175" state="s1"/>
-        <cell char="c2" id="cell176" state="st2"/>
+        <cell char="c1" state="s1"/>
+        <cell char="c2" state="st2"/>
       </row>
       <row id="row55" label="Ctenomys_mendocinus" otu="otu19">
-        <cell char="c1" id="cell177" state="s1"/>
-        <cell char="c2" id="cell178" state="st2"/>
+        <cell char="c1" state="s1"/>
+        <cell char="c2" state="st2"/>
       </row>
       <row id="row56" label="Ctenomys_maulinus" otu="otu20">
-        <cell char="c1" id="cell179" state="s1"/>
-        <cell char="c2" id="cell180" state="st2"/>
+        <cell char="c1" state="s1"/>
+        <cell char="c2" state="st2"/>
       </row>
       <row id="row57" label="Ctenomys_magellanicus" otu="otu21">
-        <cell char="c1" id="cell181" state="s1"/>
-        <cell char="c2" id="cell182" state="st2"/>
+        <cell char="c1" state="s1"/>
+        <cell char="c2" state="st2"/>
       </row>
       <row id="row58" label="Ctenomys_lewisi" otu="otu22">
-        <cell char="c1" id="cell183" state="s1"/>
-        <cell char="c2" id="cell184" state="st2"/>
+        <cell char="c1" state="s1"/>
+        <cell char="c2" state="st2"/>
       </row>
       <row id="row59" label="Ctenomys_sociabilis" otu="otu23">
-        <cell char="c1" id="cell185" state="s2"/>
-        <cell char="c2" id="cell186" state="st2"/>
+        <cell char="c1" state="s2"/>
+        <cell char="c2" state="st2"/>
       </row>
       <row id="row60" label="Ctenomys_latro" otu="otu24">
-        <cell char="c1" id="cell187" state="s1"/>
-        <cell char="c2" id="cell188" state="st2"/>
+        <cell char="c1" state="s1"/>
+        <cell char="c2" state="st2"/>
       </row>
       <row id="row61" label="Ctenomys_haigi" otu="otu25">
-        <cell char="c1" id="cell189" state="s1"/>
-        <cell char="c2" id="cell190" state="st2"/>
+        <cell char="c1" state="s1"/>
+        <cell char="c2" state="st2"/>
       </row>
       <row id="row62" label="Ctenomys_goodfellowi" otu="otu26">
-        <cell char="c1" id="cell191" state="s1"/>
-        <cell char="c2" id="cell192" state="st2"/>
+        <cell char="c1" state="s1"/>
+        <cell char="c2" state="st2"/>
       </row>
       <row id="row63" label="Ctenomys_fulvus" otu="otu27">
-        <cell char="c1" id="cell193" state="s1"/>
-        <cell char="c2" id="cell194" state="st2"/>
+        <cell char="c1" state="s1"/>
+        <cell char="c2" state="st2"/>
       </row>
       <row id="row64" label="Ctenomys_frater" otu="otu28">
-        <cell char="c1" id="cell195" state="s1"/>
-        <cell char="c2" id="cell196" state="st2"/>
+        <cell char="c1" state="s1"/>
+        <cell char="c2" state="st2"/>
       </row>
       <row id="row65" label="Ctenomys_flamarioni" otu="otu29">
-        <cell char="c1" id="cell197" state="s1"/>
-        <cell char="c2" id="cell198" state="st2"/>
+        <cell char="c1" state="s1"/>
+        <cell char="c2" state="st2"/>
       </row>
       <row id="row66" label="Ctenomys_coyhaiquensis" otu="otu30">
-        <cell char="c1" id="cell199" state="s1"/>
-        <cell char="c2" id="cell200" state="st2"/>
+        <cell char="c1" state="s1"/>
+        <cell char="c2" state="st2"/>
       </row>
       <row id="row67" label="Ctenomys_conoveri" otu="otu31">
-        <cell char="c1" id="cell201" state="s1"/>
-        <cell char="c2" id="cell202" state="st2"/>
+        <cell char="c1" state="s1"/>
+        <cell char="c2" state="st2"/>
       </row>
       <row id="row68" label="Ctenomys_boliviensis_ROBO" otu="otu32">
-        <cell char="c1" id="cell203" state="s1"/>
-        <cell char="c2" id="cell204" state="st2"/>
+        <cell char="c1" state="s1"/>
+        <cell char="c2" state="st2"/>
       </row>
       <row id="row69" label="Ctenomys_boliviensis" otu="otu33">
-        <cell char="c1" id="cell205" state="s1"/>
-        <cell char="c2" id="cell206" state="st2"/>
+        <cell char="c1" state="s1"/>
+        <cell char="c2" state="st2"/>
       </row>
       <row id="row70" label="Ctenomys_australis" otu="otu34">
-        <cell char="c1" id="cell207" state="s1"/>
-        <cell char="c2" id="cell208" state="st2"/>
+        <cell char="c1" state="s1"/>
+        <cell char="c2" state="st2"/>
       </row>
       <row id="row71" label="Ctenomys_argentinus" otu="otu35">
-        <cell char="c1" id="cell209" state="s1"/>
-        <cell char="c2" id="cell210" state="st2"/>
+        <cell char="c1" state="s1"/>
+        <cell char="c2" state="st2"/>
       </row>
     </matrix>
   </characters>
