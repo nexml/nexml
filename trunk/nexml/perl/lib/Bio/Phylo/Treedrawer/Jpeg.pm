@@ -58,7 +58,7 @@ Also see the manual: L<Bio::Phylo::Manual> and L<http://rutgervos.blogspot.com>.
 
 =head1 REVISION
 
- $Id: Svg.pm 1264 2010-03-08 16:15:24Z rvos $
+ $Id$
 
 =cut
 

@@ -248,7 +248,7 @@ Also see the manual: L<Bio::Phylo::Manual> and L<http://rutgervos.blogspot.com>
 
 =head1 REVISION
 
- $Id: Phylo.pm 1045 2009-05-28 22:48:16Z rvos $
+ $Id$
 
 =cut
 

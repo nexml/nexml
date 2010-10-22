@@ -151,7 +151,7 @@ Also see the manual: L<Bio::Phylo::Manual> and L<http://rutgervos.blogspot.com>.
 
 =head1 REVISION
 
- $Id: Datum.pm 1237 2010-03-02 23:27:06Z rvos $
+ $Id$
 
 =cut
 
