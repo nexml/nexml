@@ -120,6 +120,13 @@ as an element called 'meta', with RDFa compliant attributes.
                     $predicateName = 'rel';
                 }                
             }
+            elsif ( looks_like_instance $content, 'DateTime' ) {
+            	$self->set_attributes( 
+            		'content'  => $content->iso8601(), 
+            		'datatype' => 'xsd:date',
+            		%literal 
+            	);
+            }
             else {
                 $self->set_attributes( 'datatype' => 'rdf:XMLLiteral', %resource );
                 $self->insert( $fac->create_xmlliteral($content) );
