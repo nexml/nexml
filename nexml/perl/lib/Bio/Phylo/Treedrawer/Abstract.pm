@@ -6,6 +6,19 @@ use warnings;
 
 my $logger = Bio::Phylo::Util::Logger->new;
 
+=head1 NAME
+
+Bio::Phylo::Treedrawer::Abstract - Abstract graphics writer used by treedrawer, no
+serviceable parts inside
+
+=head1 DESCRIPTION
+
+This module is an abstract super class for the various graphics formats that 
+Bio::Phylo supports. There is no direct usage of this class. Consult 
+L<Bio::Phylo::Treedrawer> for documentation on how to draw trees.
+
+=cut
+
 sub _new {
     my $class = shift;
     my %args = @_;
@@ -292,6 +305,27 @@ sub _draw_branch {
         );
     }
 }
+
+=head1 SEE ALSO
+
+=over
+
+=item L<Bio::Phylo::Treedrawer>
+
+The canvas treedrawer is called by the L<Bio::Phylo::Treedrawer> object. Look
+there to learn how to create tree drawings.
+
+=item L<Bio::Phylo::Manual>
+
+Also see the manual: L<Bio::Phylo::Manual> and L<http://rutgervos.blogspot.com>.
+
+=back
+
+=head1 REVISION
+
+ $Id: Svg.pm 1290 2010-04-01 13:37:56Z rvos $
+
+=cut
 
 1;
 
