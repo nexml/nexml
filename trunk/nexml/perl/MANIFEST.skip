@@ -33,3 +33,4 @@ lib\/xs*
 lib\/util*
 README.html
 build.sh
+inheritance*
