@@ -1,4 +1,4 @@
-# $Id: $
+# $Id$
 package Bio::Phylo::NeXML::DOM::Element;
 use strict;
 use Bio::Phylo::Util::Exceptions qw(throw);

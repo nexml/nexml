@@ -1,4 +1,4 @@
-# $Id: XMLWritable.pm 1242 2010-03-03 20:37:23Z rvos $
+# $Id$
 package Bio::Phylo::NeXML::Writable;
 use strict;
 use Bio::Phylo ();
@@ -773,7 +773,7 @@ Also see the manual: L<Bio::Phylo::Manual> and L<http://rutgervos.blogspot.com>.
 
 =head1 REVISION
 
- $Id: XMLWritable.pm 1242 2010-03-03 20:37:23Z rvos $
+ $Id$
 
 =cut
 
