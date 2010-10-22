@@ -30,8 +30,7 @@ my $fac = Bio::Phylo::Factory->new;
 =head1 NAME
 
 Bio::Phylo::EvolutionaryModels - Evolutionary models for phylogenetic trees and
-methods to sample these
-Klaas Hartmann, September 2007
+methods to sample these.
 
 =head1 SYNOPSIS
 
@@ -129,12 +128,13 @@ as in the synopsis.
 
 The initial set of algorithms available in this package corresponds to those in:
 
-Sampling trees from evolutionary models
-Klaas Hartmann, Dennis Wong, Tanja Gernhard
-Systematic Biology, in press
+B<Klaas Hartmann>, B<Dennis Wong>, B<Tanja Gernhard>. 2010.
+Sampling trees from evolutionary models.
+I<Systematic Biology>. B<59>(4): 465-476
+(L<http://dx.doi.org/10.1093/sysbio/syq026>)
 
 Some comments and code refers back to this paper. 
-Further algorithms and evolutionary are encouraged
+Further algorithms and evolutionary models are encouraged
 and welcome. 
 
 To make this code as straightforward as possible to read some of the 
@@ -184,8 +184,7 @@ Available algorithms (algorithm names in the paper are given in brackets):
  memoryless_b            For memoryless pure birth models (PBMSA)
  constant_rate_bd        For birth and death models with constant rates (BDSA)
 
-
-Model
+=head3 Model
 
 If you create your own model it must accept an options hash as its input. 
 This options hash can contain any parameters you desire. Your model should
@@ -193,8 +192,7 @@ simulate a tree until it becomes extinct or the size/age limit as specified
 in the options has been reached. Respectively these options are tree_size 
 and tree_age.
 
-
-Multi-threading
+=head3 Multi-threading
 
 Multi-thread support is very simplistic. The number of threads you specify 
 are created and each is assigned the task of finding sample_size/threads 
@@ -204,7 +202,6 @@ the main routine where (if required) Tree objects are recreated from the
 strings. For most applications this overhead seems negligible in contrast
 to the sampling times.
 
-
 From a code perspective this function (sample):
 
  Checks input arguments
@@ -213,6 +210,7 @@ From a code perspective this function (sample):
  Reformats data
 
 =cut
+
 my @threads;
 
 sub sample {
