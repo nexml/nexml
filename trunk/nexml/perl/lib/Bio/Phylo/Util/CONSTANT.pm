@@ -51,7 +51,9 @@ BEGIN {
 	_NS_XSD_
 	_NS_XML_
 	_NS_TWE_
-	_NS_TWA_	
+	_NS_TWA_
+	_NS_DC_
+	_NEXML_VERSION_
     );
     %EXPORT_TAGS = ( 
         'all'         => [ @EXPORT_OK ],
@@ -107,6 +109,7 @@ BEGIN {
 		_NS_XML_
 		_NS_TWE_
 		_NS_TWA_
+		_NS_DC_
 	    )
 	]
     );
@@ -119,7 +122,7 @@ BEGIN {
 # be used in place of function calls made without & or do."
 
 sub _NS_OWL_     () { 'http://www.w3.org/2002/07/owl#' }
-sub _NS_DC_      () { 'http://purl.org/dc/elements/1.1/contributor' }
+sub _NS_DC_      () { 'http://purl.org/dc/elements/1.1/' }
 sub _NS_DCTERMS_ () { 'http://purl.org/dc/terms/' }
 sub _NS_NEXML_   () { 'http://www.nexml.org/2009' }
 sub _NS_RDF_     () { 'http://www.w3.org/1999/02/22-rdf-syntax-ns#' }
@@ -129,6 +132,7 @@ sub _NS_XSD_     () { 'http://www.w3.org/2001/XMLSchema#' }
 sub _NS_XML_     () { 'http://www.w3.org/XML/1998/namespace' }
 sub _NS_TWE_     () { 'http://tolweb.org/tree/home.pages/downloadtree.html#elements' }
 sub _NS_TWA_     () { 'http://tolweb.org/tree/home.pages/downloadtree.html#attributes' }
+sub _NEXML_VERSION_ () { '0.9' }
 
 sub _NONE_      () { 1  }
 sub _NODE_      () { 2  }
