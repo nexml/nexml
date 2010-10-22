@@ -5,12 +5,15 @@ use Bio::Phylo::Util::CONSTANT qw(
 	:objecttypes
 	looks_like_object
 	looks_like_instance
+	_NEXML_VERSION_
 );
 use Bio::Phylo::Util::Exceptions 'throw';
-#use UNIVERSAL 'isa';
+use Bio::Phylo::Factory;
 use vars '@ISA';
 use strict;
 @ISA=qw(Bio::Phylo::Listable);
+
+my $fac = Bio::Phylo::Factory->new;
 
 =head1 NAME
 
@@ -58,7 +61,7 @@ sub new {
 	my %args = (
 		'-tag'        => 'nex:nexml',
 		'-attributes' => {
-			'version'   => '0.9',
+			'version'   => _NEXML_VERSION_,
 			'generator' => "$class v.$version",			
 			'xmlns'     => _NS_NEXML_,			
 			'xsi:schemaLocation' => _NS_NEXML_ . ' ' . _NS_NEXML_ . '/nexml.xsd',
@@ -205,9 +208,26 @@ Serializes invocant to XML.
  Args    : Same arguments as can be passed to individual contained objects
 
 =cut
-	
+
+	sub _add_project_metadata {
+		my $self = shift;
+		$self->set_namespaces( 'dc' => _NS_DC_ );
+		$self->add_meta( $fac->create_meta( '-triple' => { 'dc:creator' => $ENV{'USER'} } ) );
+		eval { require DateTime };
+		if ( not $@ ) {
+			$self->add_meta( $fac->create_meta( '-triple' => { 'dc:date' => DateTime->now() } ) );		
+		}
+		else {
+			undef($@);
+		}	
+		if ( my $desc = $self->get_desc ) {
+			$self->add_meta( $fac->create_meta( '-triple' => { 'dc:description' => $desc } ) );		
+		}
+	}
+
 	sub to_xml {
 		my $self = shift;
+		$self->_add_project_metadata;		
 		my $xml = $self->get_xml_tag;
 		my @linked = ( @{ $self->get_forests }, @{ $self->get_matrices } );
 		my %taxa = map { $_->get_id => $_ } @{ $self->get_taxa }, map { $_->make_taxa } @linked;
