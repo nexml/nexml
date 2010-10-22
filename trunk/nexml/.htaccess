@@ -4,22 +4,22 @@ AddType text/plain .sh
 AddType text/plain .t
 AddHandler cgi-script .cgi
 
-<files validator>
+<Files validator>
     ForceType application/x-httpd-perl
-</files>  
-<files site>
+</Files>  
+<Files site>
     ForceType application/x-httpd-php
-</files>
+</Files>
 
 AddType application/xml xsd
 AddType application/x-httpd-imap map
 
-<IfModule mod_autoindex.c>
+#<IfModule mod_autoindex.c>
 
     # FancyIndexing is whether you want fancy directory indexing or standard
     IndexOptions FancyIndexing IconHeight=16 IconWidth=16  NameWidth=20 DescriptionWidth=30 SuppressHTMLPreamble
 
-    # plain text files
+    # plain text Files
     AddIcon /nexml/html/include/page_white_text.png LICENSE Doxyfile .txt .diz .nfo .faq .readme .me COPYING .skip makefile Makefile
     AddDescription "Software license" LICENSE COPYING
     AddDescription "Documentation generator" Doxyfile
@@ -27,7 +27,7 @@ AddType application/x-httpd-imap map
     AddDescription "Plain text file" .txt    
     AddDescription "Plain text info" .diz .nfo .faq .readme .me
     
-    # cgi related files
+    # cgi related Files
     AddIcon /nexml/html/include/script_gear.png .cgi
     AddDescription "Server-side executable" .cgi    
     AddIcon /nexml/html/include/page_white_php.png .php .php3 .php4 .phps
@@ -41,7 +41,7 @@ AddType application/x-httpd-imap map
     AddIcon /nexml/html/include/page_white_js.png .js
     AddDescription "Javascript" .js    
     
-    # XML related files
+    # XML related Files
     AddIcon /nexml/html/include/page_white_code_red.png .xsd 
     AddDescription "XML schema file" .xsd
     AddIcon /nexml/html/include/page_white_code.png .xml .html .htm .shtml .xsl
@@ -107,7 +107,7 @@ AddType application/x-httpd-imap map
     AddDescription "C code" .c 
     AddDescription "C++ code" .cpp .cxx
 
-    # files without icons
+    # Files without icons
     AddDescription "DocType Definition" .dtd
     AddDescription "Win32 compressed html help" .chm
     AddDescription "Unix man page" .man
@@ -169,6 +169,6 @@ AddType application/x-httpd-imap map
     #
     IndexIgnore  .??* *~ *# readme.html header.html HEADER README RCS CVS *,v *,t .DS_Store *.log *.cgi *.php /nexml/html/img /nexml/html/include *.css
     
-</IfModule>
+#</IfModule>
 # End of indexing directives.
 
