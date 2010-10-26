@@ -21,11 +21,11 @@ if [ -z "$NEXML_ROOT" ]; then
 fi
 
 # needed to do svn updates of the code base
-export SVN=/usr/bin/svn
+export SVN=`which svn`
 # needed to do xsl transforms to generate RSS feeds
-export XSLTPROC=/usr/bin/xsltproc
+export XSLTPROC=`which xsltproc`
 # needed to generate inheritance graphs of the schema
-export DOT=/usr/local/graphviz/bin/dot
+export DOT=`which dot`
 # used by static page generator object util::siteFactory
 export SERVER_NAME=nexml-dev.nescent.org
 export SCRIPT_URL=/nexml/html/doc/schema-1
