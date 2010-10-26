@@ -9,13 +9,17 @@
 # On the server this is the home directory of the nexml account, 
 # on a local machine this has to be set to point to the trunk 
 # folder
-export NEXML_HOME=$HOME
+if [ -z $NEXML_HOME ]; then
+	export NEXML_HOME=$HOME
+fi
+
 # this directory is for navigation *within* the code base, e.g.
 # when a test suite for a processing library wants to run tests
 # against files in the examples folder
 if [ -z $NEXML_ROOT ]; then
 	export NEXML_ROOT=$NEXML_HOME/nexml
 fi
+
 # needed to do svn updates of the code base
 export SVN=/usr/bin/svn
 # needed to do xsl transforms to generate RSS feeds
