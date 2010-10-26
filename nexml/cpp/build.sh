@@ -37,7 +37,7 @@ for file in $files; do
 	if [ ! -d $outdir ]
 		then mkdir $outdir
 	fi
-	$XSDBIN cxx-tree --namespace-map http://www.nexml.org/1.0=NeXML --generate-polymorphic --generate-ostream --output-dir $outdir $file || exit
+	$XSDBIN cxx-tree --namespace-map http://www.nexml.org/2009=NeXML --generate-polymorphic --generate-ostream --output-dir $outdir $file || exit
 done
 cp driver.cxx out
 
