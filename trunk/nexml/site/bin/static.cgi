@@ -7,6 +7,7 @@ use warnings;
 use CGI;
 use CGI::Carp 'fatalsToBrowser';
 use util;
+use util::siteFactory;
 use File::Find;
 
 my $fac = util::siteFactory->new;
