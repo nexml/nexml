@@ -64,7 +64,6 @@ sub strip {
 
 sub breadCrumbs {
     my ( $self, $url ) = @_;
-    warn Dumper(\%ENV);
     my $root;
     if ( $url =~ m|^(http://[^/]+/)| ) {
         $root = $1;
