@@ -13,7 +13,9 @@ export NEXML_HOME=$HOME
 # this directory is for navigation *within* the code base, e.g.
 # when a test suite for a processing library wants to run tests
 # against files in the examples folder
-export NEXML_ROOT=$NEXML_HOME/nexml
+if [ -z $NEXML_ROOT ]; then
+	export NEXML_ROOT=$NEXML_HOME/nexml
+fi
 # needed to do svn updates of the code base
 export SVN=/usr/bin/svn
 # needed to do xsl transforms to generate RSS feeds
@@ -25,9 +27,11 @@ export SERVER_NAME=nexml-dev.nescent.org
 export SCRIPT_URL=/nexml/html/doc/schema-1
 export DOCUMENT_ROOT=$NEXML_HOME
 # search paths for perl scripts
-export PERL5LIB=$NEXML_HOME/perllib:$NEXML_HOME/perllib/arch:$NEXML_HOME/nexml/perl/lib:$NEXML_HOME/nexml/site/lib
+export PERL5LIB=$NEXML_HOME/perllib:$NEXML_HOME/perllib/arch:$NEXML_ROOT/perl/lib:$NEXML_ROOT/site/lib
 # path to mesquite, to build mesquite io library against
-export MESQUITE_ROOT=$NEXML_HOME/Mesquite_Folder
+if [ -z $MESQUITE_ROOT ]; then
+	export MESQUITE_ROOT=$NEXML_HOME/Mesquite_Folder
+fi
 
 ###########################################################
 # START THE CRON JOB
