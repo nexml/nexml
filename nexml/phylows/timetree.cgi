@@ -104,9 +104,11 @@ sub find_tbody {
     for my $table ( $node->descendents ) {
         if ( UNIVERSAL::isa( $table, 'HTML::Element' ) ) {
             my $class = $table->attr('class');
-            if ( $table->tag eq 'table' and $class and $class eq 'collapsible' ) {           
+            if ( $table->tag eq 'table' and $class and $class eq 'collapsible' ) {
+            	warn "found tbody";
                 for my $tbody ( $table->content_list ) {
                     if ( UNIVERSAL::isa( $tbody, 'HTML::Element' ) and $tbody->tag =~ /tbody/i ) {
+                    	warn "going to process tbody";
                         process_tbody( $tbody, $dates );
                     }
                 }            
@@ -120,14 +122,17 @@ sub process_tbody {
     my ( $pub, $taxona, $taxonb, $source, $data, $genes, $time );
     for my $tr ( $tbody->content_list ) {
         if ( UNIVERSAL::isa( $tr, 'HTML::Element' ) and $tr->tag eq 'tr' ) {
+            warn "found table row";
             
             # a header row
             if ( $tr->attr('bgcolor') and $tr->attr('bgcolor') eq '#FFFFFF' ) {
+            	warn "found header row";
                 for my $a ( $tr->descendents ) {
                     if ( UNIVERSAL::isa( $a, 'HTML::Element' ) and $a->tag eq 'a' ) {
                         my $href = $a->attr('href');
                         if ( $href =~ /\Q$pubmed\E(\d+)/ ) {
                             $pub = $1;
+                            warn "pubmed ID=$pub";
                         }
                     }                
                 }            
@@ -135,8 +140,10 @@ sub process_tbody {
             
             # a content row
             elsif ( $tr->attr('class') eq 'collapsible' ) {
+            	warn "found content row";
                 for my $div ( $tr->descendents ) {
-                    if ( UNIVERSAL::isa( $div, 'HTML::Element' ) and $div->tag eq 'div' ) {
+                    if ( UNIVERSAL::isa( $div, 'HTML::Element' ) and $div->tag eq 'td' and $div->attr('colspan') == 6 ) {
+                    	warn "found td";
                         if ( $div->attr('class') eq 'mockTD' ) {
                             if ( not defined $time ) {
                                 $time = $div->as_text;

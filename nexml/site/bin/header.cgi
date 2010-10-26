@@ -7,7 +7,9 @@ use warnings;
 use CGI;
 use CGI::Carp 'fatalsToBrowser';
 use util;
+use util::siteFactory;
 
+$util::siteFactory::VARIABLE_SERVER_NAME=1;
 my $fac = util::siteFactory->new;
 
 # instantiate T::T object for site html
