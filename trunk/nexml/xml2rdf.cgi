@@ -1,6 +1,5 @@
 #!/usr/bin/perl
 use CGI::Carp 'fatalsToBrowser';
-use CGI::Carp 'fatalsToBrowser';
 BEGIN {
     use Config;
     $ENV{ $Config{'ldlibpthname'} } = '../expat/lib';
@@ -10,7 +9,6 @@ BEGIN {
     use lib $ENV{'DOCUMENT_ROOT'} . '/perllib/arch';
     unshift @INC, $ENV{'DOCUMENT_ROOT'} . '/nexml/perl/lib';
     unshift @INC, $ENV{'DOCUMENT_ROOT'} . '/nexml/site/lib';
-    unshift @INC, '/Users/rvosa/CIPRES-and-deps/cipres/build/lib/perl/lib';
 }
 use util;
 use strict;
@@ -54,6 +52,9 @@ elsif ( $q->param('file') ) {
 }
 elsif ( $q->param('string') ) {
 	$content = $q->param('string');
+}
+else {
+	$content = do { local $/; <> };
 }
 
 my ( $fh, $name ) = File::Temp::tempfile;
