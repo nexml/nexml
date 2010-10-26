@@ -28,7 +28,7 @@ export XSLTPROC=`which xsltproc`
 export DOT=`which dot`
 # used by static page generator object util::siteFactory
 export SERVER_NAME=nexml-dev.nescent.org
-export SCRIPT_URL=/nexml/html/doc/schema-1
+export STATIC_ROOT=/nexml/html
 export DOCUMENT_ROOT=$NEXML_HOME
 # search paths for perl scripts
 export PERL5LIB=$NEXML_HOME/perllib:$NEXML_HOME/perllib/arch:$NEXML_ROOT/perl/lib:$NEXML_ROOT/site/lib

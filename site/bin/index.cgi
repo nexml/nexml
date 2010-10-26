@@ -23,7 +23,7 @@ my $hostname = $ENV{'SERVER_NAME'} || 'eupoa.local';
 
 # subtree for this part of the site structure, i.e.
 # the schema documentation
-my $subtree = $ENV{'SCRIPT_URL'} || '/nexml/html/doc/schema-1';
+my $subtree = $ENV{'STATIC_ROOT'} . '/doc/schema-1';
 
 # $prefix is the path to docroot, so on server-side
 # includes we need it (hence it is part of $include),

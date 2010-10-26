@@ -24,7 +24,7 @@ my $hostname = $ENV{'SERVER_NAME'} || 'eupoa.local';
 
 # subtree for this part of the site structure, i.e.
 # the rss feeds
-my $subtree = $ENV{'SCRIPT_URL'} || '/nexml/html/index/';
+my $subtree = $ENV{'STATIC_ROOT'} . '/index/';
 
 # $prefix is the path to docroot, so on server-side
 # includes we need it (hence it is part of $include),
