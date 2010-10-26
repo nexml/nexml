@@ -23,6 +23,7 @@ use IO::Handle;
 use Scalar::Util 'blessed';
 use Template;
 use util;
+use util::siteFactory;
 use Bio::Phylo::IO 'parse';
 use Bio::Phylo::Util::Logger;
 use Bio::Phylo::Util::Exceptions 'throw';
@@ -49,7 +50,7 @@ else {
 	$logger->debug("read file '$file', copied contents to '$filename'");
 	eval { 
 		my @cmd = make_java_cmd($filename);
-		$logger->info("executing java validator '@cmd'");		
+		$logger->info("executing java validator");		
 		my $output = `@cmd &> validator.log`;
 		open my $fh, '<', 'validator.log' or die $!;
 		while(<$fh>) {
@@ -157,14 +158,14 @@ output of an object implementing L<IO::Handle>.
 sub make_java_cmd {
 	my ( $xml, $base, $xsd, $ns ) = @_;
 	$ns   = 'http://www.nexml.org/2009' if not $ns;
-	$base = File::Spec->catdir( getcwd, 'java', 'validator' ) if not $base;
+	$base = File::Spec->catdir( getcwd, 'downloads' ) if not $base;
 	$xsd  = File::Spec->catfile( getcwd, 'xsd', 'nexml.xsd' ) if not $xsd;
 	$xml  = 'infile.xml' if not $xml;	
 	die if not -r $xml;
 	my @cmd = (
 		'java',
 		'-classpath',
-		"${base}/build:${base}/jars/xercesImpl.jar",
+		"${base}/validator.jar",
 		"-Dxml=$xml",
 		"-Dxsd=$xsd",
 		"-Dns=$ns",

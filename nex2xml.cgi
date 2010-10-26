@@ -18,6 +18,7 @@ BEGIN {
     unshift @INC, '/Users/rvosa/CIPRES-and-deps/cipres/build/lib/perl/lib';
 }
 use util;
+use util::siteFactory;
 use strict;
 use warnings;
 use Template;
