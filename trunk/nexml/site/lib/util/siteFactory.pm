@@ -58,7 +58,7 @@ sub create_site_template {
 sub create_template_vars {
 	my $self = shift;
 	my %default_vars = (
-	    'currentURL'  => 'http://' . $self->hostname . $self->subtree,
+	    'currentURL'  => 'http://' . $self->hostname . ( $self->subtree ? $self->subtree : '/' ),
 	    'currentDate' => my $time = localtime,
 	    'paths'       => $self->create_path_handler,
 	    'hostName'    => $self->hostname,
