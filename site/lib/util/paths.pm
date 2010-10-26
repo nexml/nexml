@@ -69,7 +69,7 @@ sub breadCrumbs {
         $root = $1;
     }
     $url =~ s|^\Q$root\E||;
-    my @fragments = split(/\//, $url);
+    my @fragments = split(/\/+/, $url);
     my @crumbs = ( { 'name' => '~', 'url' => '/' } );
     for my $i ( 0 .. $#fragments ) {
         push @crumbs, {
