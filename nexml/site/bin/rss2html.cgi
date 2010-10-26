@@ -7,7 +7,6 @@ BEGIN {
 	use lib '../../../perllib';
 	use lib '../../../perllib/arch';	
 }
-use lib '/Users/rvosa/CIPRES-and-deps/cipres/build/lib/perl/lib';
 use strict;
 use warnings;
 use util;
@@ -24,7 +23,7 @@ use Cwd;
 my $hostname = $ENV{'SERVER_NAME'} || 'eupoa.local';
 
 # subtree for this part of the site structure, i.e.
-# the schema documentation
+# the rss feeds
 my $subtree = $ENV{'SCRIPT_URL'} || '/nexml/html/index/';
 
 # $prefix is the path to docroot, so on server-side
