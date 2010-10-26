@@ -2,12 +2,11 @@
 # $Id: index.cgi 337 2007-12-29 22:45:20Z rvos $
 use CGI::Carp 'fatalsToBrowser';
 BEGIN {
-    use lib '../perl/lib';
-    use lib '../site/lib';
+    use lib '../../perl/lib';
+    use lib '../../site/lib';
 	use lib '../../../perllib';
 	use lib '../../../perllib/arch';    
 }
-use lib '/Users/rvosa/CIPRES-and-deps/cipres/build/lib/perl/lib';
 use strict;
 use warnings;
 use xs::schema;
@@ -32,9 +31,6 @@ my $subtree = $ENV{'SCRIPT_URL'} || '/nexml/html/doc/schema-1';
 my $prefix;
 if ( $ENV{'DOCUMENT_ROOT'} ) {
     $prefix = $ENV{'DOCUMENT_ROOT'};
-}
-elsif ( -d '/Users/rvosa/Documents/workspace' ) {
-    $prefix = '/Users/rvosa/Documents/workspace';
 }
 else {
     $prefix = $ENV{'HOME'};
