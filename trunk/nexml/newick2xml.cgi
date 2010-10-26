@@ -6,7 +6,7 @@ BEGIN {
     $ENV{ $Config{'ldlibpthname'} } = '../expat/lib';
     if ( not $ENV{'DOCUMENT_ROOT'} ) {
         my $abs_path = abs_path($0);
-        $abs_path =~ s|/nexml/nex2xml.cgi$||;
+        $abs_path =~ s|/nexml/newick2xml.cgi$||;
         $ENV{'DOCUMENT_ROOT'} = $abs_path;
     }
 }
@@ -17,6 +17,7 @@ BEGIN {
     unshift @INC, $ENV{'DOCUMENT_ROOT'} . '/nexml/site/lib';
 }
 use util;
+use util::siteFactory;
 use strict;
 use warnings;
 use Template;
