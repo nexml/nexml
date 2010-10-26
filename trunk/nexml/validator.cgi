@@ -49,7 +49,7 @@ else {
 	$logger->debug("read file '$file', copied contents to '$filename'");
 	eval { 
 		my @cmd = make_java_cmd($filename);
-		$logger->info("executing java validator");		
+		$logger->info("executing java validator '@cmd'");		
 		my $output = `@cmd &> validator.log`;
 		open my $fh, '<', 'validator.log' or die $!;
 		while(<$fh>) {
@@ -150,13 +150,13 @@ output of an object implementing L<IO::Handle>.
            * the path to the xml file to validate
            * the base location from which the classpath is built, default is `pwd`/java/validator
            * the path to the root schema file, default is `pwd`/xsd/nexml.xsd
-           * the namespace to validate, default is 'http://www.nexml.org/1.0'
+           * the namespace to validate, default is 'http://www.nexml.org/2009'
 
 =cut
 
 sub make_java_cmd {
 	my ( $xml, $base, $xsd, $ns ) = @_;
-	$ns   = 'http://www.nexml.org/1.0' if not $ns;
+	$ns   = 'http://www.nexml.org/2009' if not $ns;
 	$base = File::Spec->catdir( getcwd, 'java', 'validator' ) if not $base;
 	$xsd  = File::Spec->catfile( getcwd, 'xsd', 'nexml.xsd' ) if not $xsd;
 	$xml  = 'infile.xml' if not $xml;	
