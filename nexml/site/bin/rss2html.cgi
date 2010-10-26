@@ -11,6 +11,7 @@ use lib '/Users/rvosa/CIPRES-and-deps/cipres/build/lib/perl/lib';
 use strict;
 use warnings;
 use util;
+use util::siteFactory;
 use XML::Twig;
 use LWP::UserAgent;
 use Template;

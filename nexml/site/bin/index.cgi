@@ -11,6 +11,7 @@ use strict;
 use warnings;
 use xs::schema;
 use util 'svninfo';
+use util::siteFactory;
 use Template;
 use Cwd;
 
