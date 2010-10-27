@@ -1,7 +1,10 @@
 #!/usr/bin/perl
-use lib '../../site/lib';
-use lib '../../../perllib';
-use lib '../../../perllib/arch';
+BEGIN {
+    use lib '../../../perllib';	
+    use lib '../../../perllib/arch';
+    unshift @INC, '../../perl/lib';
+    unshift @INC, '../../site/lib';
+}
 use strict;
 use warnings;
 use CGI;

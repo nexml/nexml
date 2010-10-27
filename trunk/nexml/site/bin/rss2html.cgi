@@ -2,10 +2,10 @@
 # $Id: index.cgi 225 2007-12-13 07:21:53Z rvos $
 use CGI::Carp 'fatalsToBrowser';
 BEGIN {
-    use lib '../../perl/lib';
-    use lib '../../site/lib';	
-	use lib '../../../perllib';
-	use lib '../../../perllib/arch';	
+    use lib '../../../perllib';	
+    use lib '../../../perllib/arch';
+    unshift @INC, '../../perl/lib';
+    unshift @INC, '../../site/lib';
 }
 use strict;
 use warnings;
