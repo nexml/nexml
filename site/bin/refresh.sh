@@ -80,8 +80,8 @@ done
 #########################################################
 # BUILD STATIC HTML
 # this builds the schema documentation
-perl $NEXML_ROOT/site/bin/index.cgi $NEXML_ROOT/xsd/nexml.xsd 2> /dev/null
-# create htmlified rss pages and static pages
 cd $NEXML_ROOT/site/bin
-perl rss2html.cgi
-perl static.cgi
+./index.cgi $NEXML_ROOT/xsd/nexml.xsd 2>>$NEXML_HOME/cron.log
+# create htmlified rss pages and static pages
+./rss2html.cgi 2>>$NEXML_HOME/cron.log
+./static.cgi 2>>$NEXML_HOME/cron.log
