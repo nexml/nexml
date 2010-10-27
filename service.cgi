@@ -1,9 +1,8 @@
 #!/usr/bin/perl
 BEGIN {
-    unshift @INC, $ENV{'DOCUMENT_ROOT'} . '/perllib';
-    unshift @INC, $ENV{'DOCUMENT_ROOT'} . '/nexml/perl/lib';
-    unshift @INC, $ENV{'DOCUMENT_ROOT'} . '/nexml/site/lib'; 
-    unshift @INC, 'perl/lib';   
+    use lib '../perllib';	
+    use lib '../perllib/arch';
+    unshift @INC, 'perl/lib';
     unshift @INC, 'site/lib';
 }
 use strict;
