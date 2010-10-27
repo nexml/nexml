@@ -24,8 +24,8 @@ fi
 export SVN=`which svn`
 # needed to do xsl transforms to generate RSS feeds
 export XSLTPROC=`which xsltproc`
-# needed to generate inheritance graphs of the schema
-export DOT=`which dot`
+# needed to generate inheritance and inclusion graphs of the schema
+export DOT=$NEXML_HOME/graphtools/graphviz/bin/dot
 # used by static page generator object util::siteFactory
 export SERVER_NAME=nexml-dev.nescent.org
 export STATIC_ROOT=/nexml/html
