@@ -29,13 +29,7 @@ my $subtree = $ENV{'STATIC_ROOT'} . '/doc/schema-1';
 # includes we need it (hence it is part of $include),
 # but on the client side (e.g. paths to images in an
 # html page) it needs to be stripped
-my $prefix;
-if ( $ENV{'DOCUMENT_ROOT'} ) {
-    $prefix = $ENV{'DOCUMENT_ROOT'};
-}
-else {
-    $prefix = $ENV{'HOME'};
-}
+my $prefix = $ENV{'NEXML_HOME'};
 
 # $include is used to find server side includes, e.g.
 # when we embed javascript or css directly into a page.
