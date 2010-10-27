@@ -1,15 +1,10 @@
 #!/usr/bin/perl
 # $Id$
 BEGIN {
-    use Config;
-    $ENV{ $Config{'ldlibpthname'} } = '../expat/lib';
-}
-BEGIN {
-    use lib $ENV{'DOCUMENT_ROOT'} . '/perllib';	
-    use lib $ENV{'DOCUMENT_ROOT'} . '/perllib/arch';
-    unshift @INC, $ENV{'DOCUMENT_ROOT'} . '/nexml/perl/lib';
-    unshift @INC, $ENV{'DOCUMENT_ROOT'} . '/nexml/site/lib';
-    unshift @INC, '/Users/rvosa/CIPRES-and-deps/cipres/build/lib/perl/lib';
+    use lib '../perllib';	
+    use lib '../perllib/arch';
+    unshift @INC, 'perl/lib';
+    unshift @INC, 'site/lib';
 }
 use strict;
 use warnings;
