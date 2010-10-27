@@ -6,9 +6,9 @@
             This module defines the components of networks, graphs 
             where edges have an in-degree that may exceed 1. The
             types defined in this module are concrete implementations
-            that inherit from the abstract types in the <a href="../abstract">
-                abstract trees module
-            </a>. <br/><br/> 
+            that inherit from the abstract types in the 
+            <a href="../abstracttrees">abstract trees module</a>. 
+            <br/><br/> 
             Depending on the concrete subclass, edges in networks either
             have lengths formatted as integers or lengths formatted as
             floating point numbers.
