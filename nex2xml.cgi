@@ -1,21 +1,10 @@
 #!/usr/bin/perl
 use CGI::Carp 'fatalsToBrowser';
 BEGIN {
-    use Config;
-    use Cwd 'abs_path';
-    $ENV{ $Config{'ldlibpthname'} } = '../expat/lib';
-    if ( not $ENV{'DOCUMENT_ROOT'} ) {
-        my $abs_path = abs_path($0);
-        $abs_path =~ s|/nexml/nex2xml.cgi$||;
-        $ENV{'DOCUMENT_ROOT'} = $abs_path;
-    }
-}
-BEGIN {
-    use lib $ENV{'DOCUMENT_ROOT'} . '/perllib';	
-    use lib $ENV{'DOCUMENT_ROOT'} . '/perllib/arch';
-    unshift @INC, $ENV{'DOCUMENT_ROOT'} . '/nexml/perl/lib';
-    unshift @INC, $ENV{'DOCUMENT_ROOT'} . '/nexml/site/lib';
-    unshift @INC, '/Users/rvosa/CIPRES-and-deps/cipres/build/lib/perl/lib';
+    use lib '../perllib';	
+    use lib '../perllib/arch';
+    unshift @INC, 'perl/lib';
+    unshift @INC, 'site/lib';
 }
 use util;
 use util::siteFactory;
