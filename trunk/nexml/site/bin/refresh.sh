@@ -43,6 +43,11 @@ fi
 cd $NEXML_HOME
 echo '' > cron.log
 
+#######################################################
+# CREATE TIME STAMP
+timestamp=`date`
+echo "Last updated: $timestamp" > $NEXML_ROOT/html/include/refreshDate.txt
+
 ##########################################################
 # DO AN SVN UPDATE, BUILD RSS FEED FROM LOG
 # go into nexml/ dir, do an svn update
@@ -80,8 +85,3 @@ perl $NEXML_ROOT/site/bin/index.cgi $NEXML_ROOT/xsd/nexml.xsd 2> /dev/null
 cd $NEXML_ROOT/site/bin
 perl rss2html.cgi
 perl static.cgi
-
-#######################################################
-# CREATE TIME STAMP
-cd $NEXML_HOME
-date > refresh.sh.lastrun.timestamp.txt
