@@ -54,12 +54,12 @@ my $include = $prefix . '/nexml/html/include';
 $logger->debug("include is $include");
 
 # the root file of the schema, i.e. nexml.xsd
-my $baseFile = Cwd::realpath( $ARGV[0] );
+my $baseFile = $ARGV[0];
 $logger->debug("baseFile is $baseFile");
 
 # the current file we're processing, i.e. a file being
 # included into nexml.xsd, recursively
-my $currentFile = $ARGV[1] ? Cwd::realpath( $ARGV[1] ) : $baseFile;
+my $currentFile = $ARGV[1] || $baseFile;
 $logger->debug("currentFile is $currentFile");
 
 # a function exported by util.pm, does a `svninfo` and
