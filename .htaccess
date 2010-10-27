@@ -3,6 +3,7 @@ AddType text/html .cgi
 AddType text/plain .sh
 AddType text/plain .t
 AddHandler cgi-script .cgi
+AddHandler imap-file map
 
 <Files validator>
     ForceType application/x-httpd-perl
