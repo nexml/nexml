@@ -20,7 +20,7 @@ use Bio::Phylo::Util::Logger ':levels';
 # comments in the template footer
 my $logMessages = [];
 my $logger = Bio::Phylo::Util::Logger->new;
-$logger->VERBOSE( '-level' => DEBUG );
+#$logger->VERBOSE( '-level' => DEBUG );
 $logger->set_listeners(
 	sub {
 		my ($msg) = @_;
@@ -184,6 +184,10 @@ sub rewrite_xsd {
         # first standardize path into full path
         my $realpath = Cwd::realpath( $file );
         $logger->debug("realpath is $realpath");
+	if ( $realpath =~ m|^/home/| ) {
+		$logger->debug("real path starts with /home/, should be /home2/");
+		$realpath =~ s|^/home/|/home2/|;
+	}
         
         # strip $prefix to docroot
         $realpath =~ s/^\Q$prefix\E//;
