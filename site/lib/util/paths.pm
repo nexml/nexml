@@ -54,7 +54,20 @@ sub transform {
 
 sub strip {
     my ( $self, $file ) = @_;
-    $file =~ s/^\Q$self->{'prefix'}\E//;
+
+    # this ugly workaround is because
+    # for some reason the root folder 
+    # is sometimes called /home and 
+    # sometimes /home2 on nexml-dev.nescent.org
+    my $prefix = $self->{'prefix'};
+    if ( $prefix =~ m|^/home2/| ) {
+        $file =~ s|^/home/|/home2/|;
+    }
+    elsif ( $file =~ m|^/home2/| ) {
+        $prefix =~ s|^/home/|/home2/|;
+    }
+
+    $file =~ s/^\Q$prefix\E//;
     return $file;
 }
 
