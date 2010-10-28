@@ -35,8 +35,8 @@ import net.sf.saxon.s9api.XsltTransformer;
  *
  */
 public class NeXML2CDAO {
-	private static String RDFa2RDFXML = System.getenv("NEXML_ROOT") + "/xslt/RDFa2RDFXML.xsl";
-	private static String NEXML2CDAO  = System.getenv("NEXML_ROOT") + "/xslt/nexml2cdao.xsl";
+	private static String RDFa2RDFXML = "/xslt/RDFa2RDFXML.xsl";
+	private static String NEXML2CDAO  = "/xslt/nexml2cdao.xsl";
 		
 	/**
 	 * Applies the XSL transformation file located at xsltLocation (a URL) to the
@@ -120,11 +120,18 @@ public class NeXML2CDAO {
 			System.exit(1);
 		}
 		else {
+			String NEXML_ROOT;
+			if ( args.length > 1 ) {
+				NEXML_ROOT = args[1];
+			}
+			else {
+				NEXML_ROOT = System.getenv("NEXML_ROOT");
+			}
 			File inputFile = new File(args[0]);
-			File nexml2cdaoFile = new File(NEXML2CDAO);
+			File nexml2cdaoFile = new File(NEXML_ROOT + NEXML2CDAO);
 			Document cdaoResult = transform(inputFile,nexml2cdaoFile);
 			
-			File rdfa2rdfxmlFile = new File(RDFa2RDFXML);
+			File rdfa2rdfxmlFile = new File(NEXML_ROOT + RDFa2RDFXML);
 			Document rdfaResult = transform(inputFile,rdfa2rdfxmlFile);
 			
 			Document mergedDoc = merge(rdfaResult,cdaoResult);
