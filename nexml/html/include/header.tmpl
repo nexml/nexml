@@ -4,8 +4,8 @@
     <head>
         <!-- site meta data -->  
         <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-        <meta name="description" content="Nexml is a file format for encoding phylogenetic data using xml." />
-        <meta name="keywords" content="nexml, xml, nexus, phylogenetics, phylogenies, trees, dna, rna, nucleotide, standard, continuous, amino, acid, matrix, tree, network, data" />
+        <meta name="description" content="NeXML is a file format for encoding phyloinformatic data using XML." />
+        <meta name="keywords" content="NeXML, XML, NEXUS, phyloinformatics, phylogenetics, phylogenies, trees, dna, rna, nucleotide, standard, continuous, amino, acid, matrix, tree, network, data" />
         <meta name="author" content="Rutger Vos" />
         <meta name="robots" content="index,follow" />
         <meta name="verify-v1" content="mYceuNu58e0c0TNJ/gJ2NO63bxeH1nu28sZ2rtzcLoM=" />
@@ -33,25 +33,18 @@
           title="SVN revision history - RSS 2.0"
           href="<% paths.home('nexml.rss') %>"/>        
         
-        <title><% title %></title>        
+        <title><% title %></title>  
+        <link rel="stylesheet" href="/nexml/html/include/style.css" type="text/css" />
+        <link rel="stylesheet" href="/nexml/html/include/schema.css" type="text/css" />
         <style type="text/css">
             <!--
-                <% INCLUDE 'style.css' %>        
-                <% INSERT 'schema.css' %>
                 <% FOREACH css = styleSheets %>
                     <% INCLUDE $css %>
                 <% END %>
             -->
         </style>
-        <script type="text/javascript">
-            //<![CDATA[
-                <% INSERT 'functions.js' %>
-                <% INSERT 'schema.js' %>
-            //]]>
-        </script>  
-        <script type="text/javascript" src="/nexml/javascript/phylolib.js" onload="Phylo.Initialize()"></script>
-        <script type="text/javascript" src="/nexml/javascript/tolwebajax.js"></script>
-        <script type="text/javascript" src="/nexml/javascript/phylowidget.js"></script>
+        <script type="text/javascript" src="/nexml/html/include/functions.js"></script>
+        <script type="text/javascript" src="/nexml/html/include/schema.js"></script>
         <% IF favicon %>
             <link rel="shortcut icon" href="<% favicon %>" />
         <% ELSE %>
