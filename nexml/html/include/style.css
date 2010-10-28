@@ -11,7 +11,7 @@ body {
     margin: 0;     
     padding: 30px 0;     
     font: 76% tahoma,verdana,sans-serif;     
-    background: #047 url('<% paths.strip(paths.include("bodybg.png")) %>') repeat-x fixed;     
+    background: #047 url('/nexml/html/include/bodybg.png') repeat-x fixed;     
     color: #222
 }
 
@@ -23,7 +23,7 @@ body {
     width: 720px;     
     margin: 0 auto;     
     padding: 20px 20px 0 20px;     
-    background: #fff url('<% paths.strip(paths.include("contbg.png")) %>') no-repeat;     
+    background: #fff url('/nexml/html/include/contbg.png') no-repeat;     
     color: #222
 }
 
@@ -98,7 +98,7 @@ p {
     display: block;     
     margin: 20px 0 10px 0;     
     padding: 5px 0 5px 8px;     
-    background: #eee url('<% paths.strip(paths.include("gradient2.png")) %>') repeat-x;     
+    background: #eee url('/nexml/html/include/gradient2.png') repeat-x;     
     color: #222;     
     border-top: 1px solid #ddd;     
     border-right: 1px solid #bbb;     
@@ -135,7 +135,7 @@ p {
     font-size: 1.1em;     
     font-weight: bold;     
     text-align: left;     
-    background: #eee url('<% paths.strip(paths.include("gradient1.png")) %>') repeat-x;     
+    background: #eee url('/nexml/html/include/gradient1.png') repeat-x;     
     color: #26c;     
     border-top: 1px solid #ddd;     
     border-right: 1px solid #bbb;     
@@ -144,7 +144,7 @@ p {
 }
 
 .sidelink:hover, .menuheader {    
-    background: #fff url('<% paths.strip(paths.include("gradient2.png")) %>') repeat-x;     
+    background: #fff url('/nexml/html/include/gradient2.png') repeat-x;     
     color: #222;     
     border-top: 1px solid #ddd;     
     border-right: 1px solid #888;     
@@ -156,7 +156,7 @@ p {
 #footer {    
     margin: 0 auto 20px auto;     
     width: 760px;     
-    background: #fff url('<% paths.strip(paths.include("footerbg.png")) %>') bottom left no-repeat;     
+    background: #fff url('/nexml/html/include/footerbg.png') bottom left no-repeat;     
     padding: 0 0 5px 0;     
     font-size: 0.9em;     
     color: #888;     
@@ -198,15 +198,15 @@ li.rss, li.folder {
 }
 
 li.folder {
-    list-style-image: url('<% paths.strip(paths.include("folder.png")) %>');  
+    list-style-image: url('/nexml/html/include/folder.png');  
 }
 
 li.rss {
-    list-style-image: url('<% paths.strip(paths.include("resultset_next.gif")) %>');  
+    list-style-image: url('/nexml/html/include/resultset_next.gif');  
 }
 
 li.external {    
-    list-style-image: url('<% paths.strip(paths.include("resultset_next.gif")) %>')
+    list-style-image: url('/nexml/html/include/resultset_next.gif')
 }
 
 .icon { 
