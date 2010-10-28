@@ -58,7 +58,7 @@
         <jar destfile="${validatorjar}">
             <fileset dir="${classfiles}"/>
             <fileset dir="${xercesfolder}"/>
-        	<fileset dir="${saxonfolder}"/>
+        	<fileset dir="${saxonfolder}" excludes="META-INF/SAXONICA.*" />
         	<manifest>
         		<attribute name="Main-Class" value="validator.ValidateNeXML"/>
         	</manifest>        	
