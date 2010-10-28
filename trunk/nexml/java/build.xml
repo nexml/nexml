@@ -25,6 +25,7 @@
 	    <javac srcdir="${src}" destdir="${classfiles}" debug="true" debuglevel="lines,source">
 	        <exclude name="**/mesquite/nexml/InterpretNEXML/**"/>
 	    	<exclude name="**/validator/**"/>
+	    	<exclude name="**/transformer/**"/>
 	    </javac>
 	</target>
 	
@@ -76,6 +77,7 @@
 		<echo message="Using MESQUITE_ROOT=${toString:classpath-mesquite}"/>		
 		<javac srcdir="${src}" destdir="${classfiles}" debug="true" debuglevel="lines,source">
 			<exclude name="**/validator/*"/>	
+			<exclude name="**/transformer/*"/>
 			<classpath refid="classpath-mesquite"/>
 		</javac>
 	</target>	
