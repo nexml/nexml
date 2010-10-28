@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
-    xmlns:nex="http://www.nexml.org/1.0" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:nex="http://www.nexml.org/2009" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
     xmlns:cdao="http://www.evolutionaryontology.org/cdao.owl#"
     xmlns:owl="http://www.w3.org/2002/07/owl#" xmlns:dc="http://purl.org/dc/elements/1.1/"
@@ -152,14 +152,14 @@
                             rdf:resource="http://www.evolutionaryontology.org/cdao.owl#EdgeLength"/>
                         <xsl:choose>
                             <xsl:when
-                                test="concat(namespace::*[.='http://www.nexml.org/1.0' and name(.)], ':FloatTree')">
+                                test="concat(namespace::*[.='http://www.nexml.org/2009' and name(.)], ':FloatTree')">
                                 <cdao:has_Float_Value
                                     rdf:datatype="http://www.w3.org/1999/02/22-rdf-syntax-ns#float">
                                     <xsl:value-of select="@length"/>
                                 </cdao:has_Float_Value>
                             </xsl:when>
                             <xsl:when
-                                test="concat(namespace::*[.='http://www.nexml.org/1.0' and name(.)], ':IntTree')">
+                                test="concat(namespace::*[.='http://www.nexml.org/2009' and name(.)], ':IntTree')">
                                 <cdao:has_Int_Value
                                     rdf:datatype="http://www.w3.org/1999/02/22-rdf-syntax-ns#integer">
                                     <xsl:value-of select="@length"/>
