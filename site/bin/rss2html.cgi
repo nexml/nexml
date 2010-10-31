@@ -80,7 +80,7 @@ my $vars = {
 my ( $feed_prefix, $feed_suffix ) = ( 'http://pipes.yahoo.com/pipes/pipe.run?_id=', '&_render=rss' );
 my $feed_id = {
     'wiki'    => '6d460b43b6f6ab43291486607cedf36f',
-    'mail'    => 'PLIrzi2Y3BGLOzPq8TxBKg',
+    'mail'    => '87da24b80f58d7e79d3e258b198b0590',
     'code'    => 'bKPzI8yX3BGsgnk6xAnzeQ',
     'tracker' => 'mFzHKL6X3BGhQ3_D2R2EvQ',
 };
