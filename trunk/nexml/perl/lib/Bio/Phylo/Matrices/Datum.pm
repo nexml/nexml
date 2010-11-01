@@ -871,7 +871,7 @@ Serializes datum to nexml format.
 		my $xml = $self->get_xml_tag;
 		
 		if ( not $args{'-compact'} ) {
-		    my $cell = $fac->create_xmlwritable( '-tag' => 'cell' );
+		    my $cell = $fac->create_xmlwritable( '-tag' => 'cell', '-identifiable' => 0 );
 			for my $i ( 0 .. $#char ) {
 			        my ( $c, $s );
 				if ( $missing ne $char[$i] and $gap ne $char[$i] ) {
@@ -902,8 +902,8 @@ Serializes datum to nexml format.
 						$s = $char[$i];
 					}
 				}
-			        $cell->set_attributes( 'char' => $c, 'state' => $s );
-			        $xml .= $cell->get_xml_tag(1);
+			    $cell->set_attributes( 'char' => $c, 'state' => $s );
+			    $xml .= $cell->get_xml_tag(1);
 			}
 		}
 		else {
