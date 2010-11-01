@@ -894,7 +894,7 @@ Serializes matrix to nexml format.
 		my $normalized = $self->_normalize_symbols;
 		
 		# the format block
-		my $fmt = $factory->create_xmlwritable( '-tag' => 'format' );
+		my $fmt = $factory->create_xmlwritable( '-tag' => 'format', '-identifiable' => 0 );
 		$xml .= $fmt->get_xml_tag;
 		my $to = $self->get_type_object;
 		$ids_for_states = $to->get_ids_for_states(1);
@@ -914,7 +914,7 @@ Serializes matrix to nexml format.
 		$xml .= "\n</".$fmt->get_tag.">";
 		
 		# the matrix block
-		my $mx = $factory->create_xmlwritable( '-tag' => 'matrix' );
+		my $mx = $factory->create_xmlwritable( '-tag' => 'matrix', '-identifiable' => 0 );
 		$xml .= "\n".$mx->get_xml_tag;
 		my @char_ids;
 		for ( 0 .. $self->get_nchar ) {
