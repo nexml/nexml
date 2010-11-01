@@ -336,6 +336,11 @@ div.directoryIndex {
     font-size: 120% !important;
 }
 
+table#implementations td {
+	padding-top: 1em;
+	padding-right: 1em
+}
+
 /* 
 	Original open source design by Andreas Viklund - http://andreasviklund.com 
 	Released through OSWD.org 
