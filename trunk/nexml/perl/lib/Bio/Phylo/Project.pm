@@ -212,7 +212,9 @@ Serializes invocant to XML.
 	sub _add_project_metadata {
 		my $self = shift;
 		$self->set_namespaces( 'dc' => _NS_DC_ );
-		$self->add_meta( $fac->create_meta( '-triple' => { 'dc:creator' => $ENV{'USER'} } ) );
+		if ( my $user = $ENV{'USER'} ) {
+			$self->add_meta( $fac->create_meta( '-triple' => { 'dc:creator' => $user } ) );
+		}
 		eval { require DateTime };
 		if ( not $@ ) {
 			$self->add_meta( $fac->create_meta( '-triple' => { 'dc:date' => DateTime->now() } ) );		
