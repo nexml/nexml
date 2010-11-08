@@ -1,3 +1,4 @@
+<h1>Java source code</h1>
 <p>
 	This subdirectory contains java code for NeXML processing.
 	Specifically, the directory structure is as follows:
@@ -55,24 +56,51 @@
             install the nexml libraries in your local maven repository.
         </li>        
 	</ul>
-	As of 26/6/09 the NeXML/Java project uses maven for building and dependency management. This
-	means that you can run goals such as <code>mvn test</code>, <code>mvn compile</code>, <code>
-	mvn install</code> and <code>mvn clean</code>. For more info, consult the <a href="pom.xml">pom.xml</a>.
-	In addition to using mvn to build and install the code here, you can also use the nexml maven 
-	repository at: 
-<pre>
-&lt;repository>
-   &lt;id>m2.nexml.repos&lt;/id>
-   &lt;name>NeXML Remote Repository&lt;/name>
-   &lt;url>http://nexml-dev.nescent.org/.m2/repository/&lt;/url>   
-&lt;/repository>  
-</pre>
-	From where you can download nexml as:
-<pre>
-&lt;dependency>
-   &lt;groupId>org.nexml.model&lt;/groupId>
-   &lt;artifactId>nexml&lt;/artifactId>
-   &lt;version>1.5-SNAPSHOT&lt;/version>
-&lt;/dependency>
-</pre>
 </p>
+<h1>Building and installing</h1>
+<p>
+	The java libraries use ant for building and testing. The following targets are available:
+</p>
+<ul>
+	<li class="rss">
+		<strong>validator</strong> - this builds a jar that contains <code>validator.ValidateNeXML</code>
+		which validates XML documents against the NeXML schema, <code>validator.XmlValidator</code> which validates
+		XML documents against any command-line specified XML schema and <code>transformer.NeXML2CDAO</code>, which transforms
+		a NeXML document into a CDAO document. The target also includes all prerequisites into the jar, i.e. saxon and
+		xerces, which it finds in the  <a href="jars/">jars/</a> folder. To run <code>transformer.NeXML2CDAO</code>, the
+		NEXML_ROOT environment variable needs to point at the folder which contains the xslt folder with the 
+		RDFa2RDFXML.xsl and nexml2cdao.xsl stylesheets. The jar that this target produces is also available from the
+		downloads folder of the NeXML website: http://nexml.org/nexml/downloads/
+	</li>
+	<li class="rss">
+		<strong>mesquite</strong> - this builds a zip file with classes for NeXML I/O in 
+		<a href="http://mesquiteproject.org">Mesquite</a>. The following caveats apply here:
+		<ol>
+			<li>You will need Mesquite version 2.74 or higher. This is because the NeXML I/O requires a recent version of 
+			<a href="http://svn.mesquiteproject.org:8080/repository/mesquite/trunk/Mesquite%20Project/Source/mesquite/lib/NameReference.java">NameReference.java</a>,
+			which is part of Mesquite's internal system for managing key/value annotations. (This new version has getters
+			and setters to specify namespaces for the keys, which is what NeXML's semantic annotation system needs.)</li>
+			<li>The NeXML extension uses java generics, so it requires java version 1.5 or higher. Mesquite itself
+			is designed to be compatible with java 1.4 (or higher), but for the NeXML extension to work, you will need
+			a more recent java vm.</li>
+			<li>The ant target uses the MESQUITE_ROOT environment variable to construct the part of its class path that
+			contains the mesquite classes against which the extension is compiled. This environment variable points to the
+			root folder of mesquite, which is typically a folder called Mesquite_Folder.</li>
+		</ol>
+		To install the extension, you can either use mesquite's <a href="http://mesquiteproject.org/mesquite/download/source.html#classPaths">
+		system for loading other projects</a> to point to the unzipped contents of the mesquite-nexml.zip file this target produces
+		(also available from http://nexml.org/nexml/downloads/), or, easier, use the <strong>mesquite-install</strong> target.
+	</li>
+	<li class="rss">
+		<strong>mesquite-install</strong> - this target first builds the mesquite extension, then merges it into the 
+		mesquite project specified by the MESQUITE_ROOT environment variable.
+	</li>
+	<li class="rss">
+		<strong>jar</strong> - this target builds the core nexml library (also available from http://nexml.org/nexml/downloads/).
+	</li>
+	<li class="rss">
+		<strong>test</strong> - this target runs JUnit tests on the core nexml library.  To run these, the
+		NEXML_ROOT environment variable needs to point at the folder which contains the examples folder with NeXML
+		example documents. 
+	</li>
+</ul>
