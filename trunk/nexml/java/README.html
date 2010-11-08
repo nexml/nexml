@@ -28,11 +28,15 @@
 		        <li class="folder">
 		            <a href="src/validator/">src/validator/</a>* contains a 
 		            <a href="http://xerces.apache.org/xerces-j/">Xerces-J</a>-based
-		            validator written by Terri Liebowitz of the San Diego
-		            Supercomputing Center, with modifications by Mark Holder.
-		            It is used to validate nexml instance documents against
-		            the schema (or, indeed, any xml instance document against
-		            any schema).
+		            XML validator (written by Terri Liebowitz of the San Diego
+		            Supercomputing Center, with modifications by Mark Holder) and a
+		            ValidateNeXML class that does essentially the same thing, but
+		            more tailored to NeXML specifically.
+		        </li>                
+		        <li class="folder">
+		            <a href="src/transformer/">src/transformer/</a>* contains a 
+					class that transforms NeXML documents into CDAO documents using
+					the xslt stylesheets found in $NEXML_ROOT/xslt.
 		        </li>                
             </ul>
         </li>
@@ -48,12 +52,14 @@
         <li class="folder">
             <a href="jars/">jars/</a>* contains dependencies for the code in the src/ and test/
             folders. As of 1 Sept 2010, all seemingly extraneous jars have been removed, leaving 
-            only the JUnit jar (for testing), and the Xerces jar (for the validator).
+            only the JUnit jar (for testing), the Xerces jar (for the validator), and the saxon jar
+            (for the transformer).
         </li>
         <li class="rss">
             <a href="build.sh">build.sh</a> this is a simple shell script that 
-            invokes maven, using the <a href="pom.xml">pom.xml</a> to build and 
-            install the nexml libraries in your local maven repository.
+            invokes ant, using the <a href="build.xml">build.xml</a> to build and 
+            install the NeXML/Java deliverables on the NeXML website (i.e. you probably
+            don't need to run this yourself, ever).
         </li>        
 	</ul>
 </p>
