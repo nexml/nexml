@@ -819,11 +819,11 @@ Analog to to_xml.
 				$uss->set_attributes( 'symbol' => '?' );
 				my $mbr;
 				for (@states) {
-				    $mbr = $dom->create_element( '-tag' => 'member', '-identifiable' => 0 );
+				    $mbr = $dom->create_element( '-tag' => 'member' );
 				    $mbr->set_attributes( 'state' => $id_for_state->{$_} );
 				    $uss->set_child($mbr);
 				}
-				$mbr = $dom->create_element( '-tag' => 'member', '-identifiable' => 0 );
+				$mbr = $dom->create_element( '-tag' => 'member' );
 				$mbr->set_attributes( 'state' => 's'.$special->{$gap} );
 				$uss->set_child($mbr);
 				$elt->set_child($uss);
@@ -848,7 +848,7 @@ Analog to to_xml.
 			    $elt->set_attributes( 'id' => $state_id );
 			    $elt->set_attributes( 'symbol' => $symbol );
 	            for my $map ( @mapping ) {
-					my $mbr = $dom->create_element( '-tag' => 'member', '-identifiable' => 0 );
+					my $mbr = $dom->create_element( '-tag' => 'member' );
 					$mbr->set_attributes('state' => $id_for_state->{ $map } );
 					$elt->set_child($mbr);
 	            }
