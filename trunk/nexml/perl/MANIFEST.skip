@@ -24,7 +24,7 @@ deleteme*
 script\/
 lib\/Bio\/Phylo\/PhyloWS*
 t\/27-phylows\.t
-*hyloxml*
+.hyloxml*
 Doxyfile
 lib\/Bio\/Tools\/Run\/MrBayes\.pm
 lib\/Bio\/Phylo\/BranchClust\.pm
