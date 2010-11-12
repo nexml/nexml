@@ -1,7 +1,7 @@
 # $Id$
 use strict;
 use Bio::Phylo::Util::CONSTANT 'looks_like_instance';
-use Test::More tests => 27;
+use Test::More tests => 29;
 use Bio::Phylo::Matrices::Datum;
 use Bio::Phylo::Matrices::Matrix;
 use Bio::Phylo;
@@ -129,3 +129,25 @@ ok(
     )->to_nexus,
     '27 expanded constructor'
 );
+
+my $prune_candidate = Bio::Phylo::Matrices::Matrix->new(
+	-type   => 'standard',
+	-lookup => {
+		'-' => [],
+		'1' => [ '1' ],
+		'2' => [ '2' ],
+		'3' => [ '3' ],
+		'?' => [ '1', '2', '3' ],            
+	},
+	-matrix => [
+		[ 'a' => 1, 1, 1 ],
+		[ 'b' => 2, 2, 2 ],
+		[ 'c' => 3, 3, 3 ],
+	],
+);
+
+my $pruned = $prune_candidate->prune_chars([0,1]);
+ok($pruned->get_nchar == 1,'28 pruning keeps one char');
+
+my $kept = $prune_candidate->keep_chars([2]);
+ok($pruned->get_nchar == 1,'29 keeping on char');
