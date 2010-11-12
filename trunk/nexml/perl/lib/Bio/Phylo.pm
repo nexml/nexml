@@ -654,62 +654,13 @@ Serializes object to JSON string
 
 =cut
 
-    sub to_json { return '{' . shift->_to_json . '}' }
-    
-    sub _to_json {
-        my ( $obj, $extra_attr ) = @_;
-        my $attr = {
-            'name'    => $obj->get_name,
-            'id'      => $obj->get_id,
-            'desc'    => $obj->get_desc,
-            'score'   => $obj->get_score,
-            'generic' => $obj->get_generic,    
-        };
-        if ( $extra_attr ) {
-            for my $method ( keys %{ $extra_attr } ) {
-                my $field = $extra_attr->{$method};
-                $attr->{$field} = $obj->$method;
-            }
-        }
-        $obj->_hash_to_json( $attr );
-    }
-    
-    sub _hash_to_json {
-        my ( $self, $generic ) = @_;
-        my @json;
-        for my $key ( keys %{ $generic } ) {
-            my $val = $generic->{$key};
-            if ( not ref $val ) {
-                next if not defined $val;        
-                push @json, "\"$key\":\"$val\"";
-            }
-            elsif ( looks_like_instance($val,'HASH') ) {
-                next if not %{ $val };
-                push @json, "\"$key\":{" . $self->_hash_to_json($val) . '}';
-            }
-            elsif ( looks_like_instance($val,'ARRAY') ) {
-                next if not @{ $val };
-                push @json, "\"$key\":[" . $self->_array_to_json($val) . ']';
-            }
-        }   
-        return join ',', @json;
-    }
-    
-    sub _array_to_json {
-        my ( $self, $array ) = @_;
-        my @json;
-        for my $val ( @{ $array } ) {
-            if ( not ref $val ) {
-                push @json, "\"$val\"";
-            }
-            elsif ( looks_like_instance($val,'HASH') ) {
-                push @json, $self->_hash_to_json($val);
-            }
-            elsif ( looks_like_instance($val,'ARRAY') ) {
-                push @json, $self->_array_to_json($val);
-            }
-        }   
-        return join ',', @json;
+    sub to_json { 
+		my $self = shift;
+    	eval { require XML::XML2JSON };
+    	if ( $@ ) {
+    		throw 'ExtensionError' => "Can't load XML::XML2JSON - $@";    		
+    	}
+		return XML::XML2JSON->new->convert($self->to_xml);
     }
 
 =item to_string()
