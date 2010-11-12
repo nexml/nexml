@@ -730,6 +730,71 @@ Returns matrix case sensitivity interpretation.
 
 =over
 
+=item keep_chars()
+
+Creates a cloned matrix that only keeps the characters at 
+the supplied (zero-based) indices.
+
+ Type    : Utility method
+ Title   : keep_chars
+ Usage   : my $clone = $object->keep_chars([6,3,4,1]);
+ Function: Creates spliced clone.
+ Returns : A spliced clone of the invocant.
+ Args    : Required, an array ref of integers
+ Comments: The columns are retained in the order in 
+           which they were supplied.
+
+=cut
+
+	sub keep_chars {
+		my ( $self, $indices_array_ref ) = @_;
+		my @indices = @{ $indices_array_ref };
+		my $clone = $self->clone;
+		for my $seq ( @{ $clone->get_entities } ) {
+			my @data = $seq->get_char;
+			my @keep = @data[@indices];
+			$seq->set_char(@keep);
+			my @anno = @{ $seq->get_annotations };	
+			if ( @anno ) {
+				my @re_anno = @anno[@indices];
+				$seq->set_annotations(@re_anno);
+			}			
+		}
+		my @labels = @{ $clone->get_charlabels };
+		if ( @labels ) {
+			my @re_labels = @labels[@indices];
+			$clone->set_charlabels(\@re_labels);
+		}		
+		return $clone;
+	}
+
+=item prune_chars()
+
+Creates a cloned matrix that omits the characters at 
+the supplied (zero-based) indices.
+
+ Type    : Utility method
+ Title   : prune_chars
+ Usage   : my $clone = $object->prune_chars([6,3,4,1]);
+ Function: Creates spliced clone.
+ Returns : A spliced clone of the invocant.
+ Args    : Required, an array ref of integers
+ Comments: The columns are retained in the order in 
+           which they were supplied.
+
+=cut
+
+	sub prune_chars {
+		my ( $self, $indices ) = @_;
+		my $nchar = $self->get_nchar;
+		my %indices = map { $_=>1 } @{ $indices };
+		my @keep;
+		for my $i ( 0 .. ( $nchar - 1 ) ) {
+			push @keep, $i if not exists $indices{$i};
+		}
+		return $self->keep_chars(\@keep);
+	}
+
 =item bootstrap()
 
 Creates bootstrapped clone.
@@ -757,27 +822,11 @@ Creates bootstrapped clone.
 	sub bootstrap {
 		my $self = shift;
 		my $gen = shift || sub { int(rand(shift)) };
-		my $clone = $self->clone;
-		my $nchar = $clone->get_nchar;
+		my $nchar = $self->get_nchar;
 		my @indices;
 		push @indices, $gen->($nchar) for ( 1 .. $nchar );
 		@indices = sort { $a <=> $b } @indices;
-		for my $row ( @{ $clone->get_entities } ) {
-			my @anno = @{ $row->get_annotations };	
-			my @char = @{ $row->get_entities };
-			my @resampled = @char[@indices];
-			$row->set_char(@resampled);
-			if ( @anno ) {
-				my @re_anno = @anno[@indices];
-				$row->set_annotations(@re_anno);
-			}
-		}
-		my @labels = @{ $clone->get_charlabels };
-		if ( @labels ) {
-			my @re_labels = @labels[@indices];
-			$clone->set_charlabels(\@re_labels);
-		}
-		return $clone;
+		return $self->keep_chars(\@indices);
 	}
 
 =item jackknife()
@@ -811,29 +860,13 @@ Creates jackknifed clone.
 			throw 'BadNumber' => "Jackknifing proportion must be a number between 0 and 1";
 		}
 		my $gen = $_[2] || sub { int(rand(shift)) };
-		my $clone = $self->clone;
-		my $nchar = $clone->get_nchar;
+		my $nchar = $self->get_nchar;
 		my ( %indices, @indices );
 		while ( scalar keys %indices < ( $nchar - int( $nchar * $prop ) ) ) {
 			$indices{ $gen->($nchar) } = 1;
 		}
 		@indices = sort { $a <=> $b } keys %indices;
-		for my $row ( @{ $clone->get_entities } ) {
-			my @anno = @{ $row->get_annotations };	
-			my @char = @{ $row->get_entities };
-			my @resampled = @char[@indices];
-			$row->set_char(@resampled);
-			if ( @anno ) {
-				my @re_anno = @anno[@indices];
-				$row->set_annotations(@re_anno);
-			}
-		}
-		my @labels = @{ $clone->get_charlabels };
-		if ( @labels ) {
-			my @re_labels = @labels[@indices];
-			$clone->set_charlabels(\@re_labels);
-		}
-		return $clone;
+		return $self->keep_chars(\@indices);
 	}
 
 =item clone()
@@ -865,6 +898,190 @@ Clones invocant.
 		return $self->SUPER::clone(%subs);
 	
 	} 
+
+=item insert()
+
+Insert argument in invocant.
+
+ Type    : Listable method
+ Title   : insert
+ Usage   : $matrix->insert($datum);
+ Function: Inserts $datum in $matrix.
+ Returns : Modified object
+ Args    : A datum object
+ Comments: This method re-implements the method by the same
+           name in Bio::Phylo::Listable
+
+=cut
+
+	sub insert {
+		my ( $self, $obj ) = @_;
+		my $obj_container;
+		eval { $obj_container = $obj->_container };
+		if ( $@ || $obj_container != $self->_type ) {
+			throw 'ObjectMismatch' => 'object not a datum object!';
+		}
+		$logger->info("inserting '$obj' in '$self'");
+		if ( !$self->get_type_object->is_same( $obj->get_type_object ) ) {
+			throw 'ObjectMismatch' => 'object is of wrong data type';
+		}
+		my $taxon1 = $obj->get_taxon;
+		for my $ents ( @{ $self->get_entities } ) {
+			if ( $obj->get_id == $ents->get_id ) {
+				throw 'ObjectMismatch' => 'row already inserted';
+			}
+			if ($taxon1) {
+				my $taxon2 = $ents->get_taxon;
+				if ( $taxon2 && $taxon1->get_id == $taxon2->get_id ) {
+					$logger->warn('datum linking to same taxon already existed, concatenating instead');
+					$ents->concat($obj);
+					return $self;
+				}
+			}
+		}
+		$self->SUPER::insert( $obj );
+		return $self;
+	}
+
+=item validate()
+
+Validates the object's contents.
+
+ Type    : Method
+ Title   : validate
+ Usage   : $obj->validate
+ Function: Validates the object's contents
+ Returns : True or throws Bio::Phylo::Util::Exceptions::InvalidData
+ Args    : None
+ Comments: This method implements the interface method by the same
+           name in Bio::Phylo::Matrices::TypeSafeData
+
+=cut
+
+	sub validate {
+		my $self = shift;
+		for my $row ( @{ $self->get_entities } ) {
+			$row->validate;
+		}
+	}
+
+=item compress_lookup()
+
+Removes unused states from lookup table
+
+ Type    : Method
+ Title   : validate
+ Usage   : $obj->compress_lookup
+ Function: Removes unused states from lookup table
+ Returns : $self
+ Args    : None
+
+=cut
+
+	sub compress_lookup {
+		my $self = shift;
+		my $to = $self->get_type_object;
+		my $lookup = $to->get_lookup;
+		my %seen;
+		for my $row ( @{ $self->get_entities } ) {
+			my @char = $row->get_char;
+			$seen{$_}++ for (@char);
+		}
+		for my $state ( keys %{ $lookup } ) {
+			if ( not exists $seen{$state} ) {
+				delete $lookup->{$state};
+			}
+		}
+		$to->set_lookup($lookup);
+		return $self;
+	}
+
+=item check_taxa()
+
+Validates taxa associations.
+
+ Type    : Method
+ Title   : check_taxa
+ Usage   : $obj->check_taxa
+ Function: Validates relation between matrix and taxa block 
+ Returns : Modified object
+ Args    : None
+ Comments: This method implements the interface method by the same
+           name in Bio::Phylo::Taxa::TaxaLinker
+
+=cut
+
+	sub check_taxa {
+		my $self = shift;
+
+		# is linked to taxa
+		if ( my $taxa = $self->get_taxa ) {
+			my %taxa =
+			  map { $_->get_internal_name => $_ } @{ $taxa->get_entities };
+		  ROW_CHECK: for my $row ( @{ $self->get_entities } ) {
+				if ( my $taxon = $row->get_taxon ) {
+					next ROW_CHECK if exists $taxa{ $taxon->get_name };
+				}
+				my $name = $row->get_name;
+				if ( exists $taxa{$name} ) {
+					$row->set_taxon( $taxa{$name} );
+				}
+				else {
+					my $taxon = $factory->create_taxon( -name => $name );
+					$taxa{$name} = $taxon;
+					$taxa->insert($taxon);
+					$row->set_taxon($taxon);
+				}
+			}
+		}
+
+		# not linked
+		else {
+			for my $row ( @{ $self->get_entities } ) {
+				$row->set_taxon();
+			}
+		}
+		return $self;
+	}
+
+=item make_taxa()
+
+Creates a taxa block from the objects contents if none exists yet.
+
+ Type    : Method
+ Title   : make_taxa
+ Usage   : my $taxa = $obj->make_taxa
+ Function: Creates a taxa block from the objects contents if none exists yet.
+ Returns : $taxa
+ Args    : NONE
+
+=cut
+
+	sub make_taxa {
+		my $self = shift;
+		if ( my $taxa = $self->get_taxa ) {
+			return $taxa;
+		}
+		else {
+			my %taxa;
+			my $taxa = $factory->create_taxa;
+			for my $row ( @{ $self->get_entities } ) {
+				my $name = $row->get_internal_name;
+				if ( not $taxa{$name} ) {
+					$taxa{$name} = $factory->create_taxon( '-name' => $name );
+				}
+			}
+			$taxa->insert( map { $taxa{$_} } sort { $a cmp $b } keys %taxa );
+			$self->set_taxa( $taxa );
+			return $taxa;
+		}
+	}
+
+=back
+
+=head2 SERIALIZERS
+
+=over
 
 =item to_xml()
 
@@ -1177,7 +1394,7 @@ Serializes matrix to nexus format.
 		return $string;
 	}
 
-=item  Bio::Phylo::Matrices::Matrix::to_dom
+=item to_dom()
 
 Analog to to_xml.
 
@@ -1273,185 +1490,7 @@ Analog to to_xml.
 		    push @elts, $elt;
 		}	
 		return @elts;
-    }
-
-=item insert()
-
-Insert argument in invocant.
-
- Type    : Listable method
- Title   : insert
- Usage   : $matrix->insert($datum);
- Function: Inserts $datum in $matrix.
- Returns : Modified object
- Args    : A datum object
- Comments: This method re-implements the method by the same
-           name in Bio::Phylo::Listable
-
-=cut
-
-	sub insert {
-		my ( $self, $obj ) = @_;
-		my $obj_container;
-		eval { $obj_container = $obj->_container };
-		if ( $@ || $obj_container != $self->_type ) {
-			throw 'ObjectMismatch' => 'object not a datum object!';
-		}
-		$logger->info("inserting '$obj' in '$self'");
-		if ( !$self->get_type_object->is_same( $obj->get_type_object ) ) {
-			throw 'ObjectMismatch' => 'object is of wrong data type';
-		}
-		my $taxon1 = $obj->get_taxon;
-		for my $ents ( @{ $self->get_entities } ) {
-			if ( $obj->get_id == $ents->get_id ) {
-				throw 'ObjectMismatch' => 'row already inserted';
-			}
-			if ($taxon1) {
-				my $taxon2 = $ents->get_taxon;
-				if ( $taxon2 && $taxon1->get_id == $taxon2->get_id ) {
-					$logger->warn('datum linking to same taxon already existed, concatenating instead');
-					$ents->concat($obj);
-					return $self;
-				}
-			}
-		}
-		$self->SUPER::insert( $obj );
-		return $self;
-	}
-
-=item validate()
-
-Validates the object's contents.
-
- Type    : Method
- Title   : validate
- Usage   : $obj->validate
- Function: Validates the object's contents
- Returns : True or throws Bio::Phylo::Util::Exceptions::InvalidData
- Args    : None
- Comments: This method implements the interface method by the same
-           name in Bio::Phylo::Matrices::TypeSafeData
-
-=cut
-
-	sub validate {
-		my $self = shift;
-		for my $row ( @{ $self->get_entities } ) {
-			$row->validate;
-		}
-	}
-
-=item compress_lookup()
-
-Removes unused states from lookup table
-
- Type    : Method
- Title   : validate
- Usage   : $obj->compress_lookup
- Function: Removes unused states from lookup table
- Returns : $self
- Args    : None
-
-=cut
-
-	sub compress_lookup {
-		my $self = shift;
-		my $to = $self->get_type_object;
-		my $lookup = $to->get_lookup;
-		my %seen;
-		for my $row ( @{ $self->get_entities } ) {
-			my @char = $row->get_char;
-			$seen{$_}++ for (@char);
-		}
-		for my $state ( keys %{ $lookup } ) {
-			if ( not exists $seen{$state} ) {
-				delete $lookup->{$state};
-			}
-		}
-		$to->set_lookup($lookup);
-		return $self;
-	}
-
-=item check_taxa()
-
-Validates taxa associations.
-
- Type    : Method
- Title   : check_taxa
- Usage   : $obj->check_taxa
- Function: Validates relation between matrix and taxa block 
- Returns : Modified object
- Args    : None
- Comments: This method implements the interface method by the same
-           name in Bio::Phylo::Taxa::TaxaLinker
-
-=cut
-
-	sub check_taxa {
-		my $self = shift;
-
-		# is linked to taxa
-		if ( my $taxa = $self->get_taxa ) {
-			my %taxa =
-			  map { $_->get_internal_name => $_ } @{ $taxa->get_entities };
-		  ROW_CHECK: for my $row ( @{ $self->get_entities } ) {
-				if ( my $taxon = $row->get_taxon ) {
-					next ROW_CHECK if exists $taxa{ $taxon->get_name };
-				}
-				my $name = $row->get_name;
-				if ( exists $taxa{$name} ) {
-					$row->set_taxon( $taxa{$name} );
-				}
-				else {
-					my $taxon = $factory->create_taxon( -name => $name );
-					$taxa{$name} = $taxon;
-					$taxa->insert($taxon);
-					$row->set_taxon($taxon);
-				}
-			}
-		}
-
-		# not linked
-		else {
-			for my $row ( @{ $self->get_entities } ) {
-				$row->set_taxon();
-			}
-		}
-		return $self;
-	}
-
-=item make_taxa()
-
-Creates a taxa block from the objects contents if none exists yet.
-
- Type    : Method
- Title   : make_taxa
- Usage   : my $taxa = $obj->make_taxa
- Function: Creates a taxa block from the objects contents if none exists yet.
- Returns : $taxa
- Args    : NONE
-
-=cut
-
-	sub make_taxa {
-		my $self = shift;
-		if ( my $taxa = $self->get_taxa ) {
-			return $taxa;
-		}
-		else {
-			my %taxa;
-			my $taxa = $factory->create_taxa;
-			for my $row ( @{ $self->get_entities } ) {
-				my $name = $row->get_internal_name;
-				if ( not $taxa{$name} ) {
-					$taxa{$name} = $factory->create_taxon( '-name' => $name );
-				}
-			}
-			$taxa->insert( map { $taxa{$_} } sort { $a cmp $b } keys %taxa );
-			$self->set_taxa( $taxa );
-			return $taxa;
-		}
-	}	
+    }	
 	
 	sub _type      { $CONSTANT_TYPE }
 	sub _container { $CONSTANT_CONTAINER }
