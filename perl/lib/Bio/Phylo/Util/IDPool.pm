@@ -18,7 +18,7 @@ use strict;
 
     sub _reclaim {
         my ( $class, $obj ) = @_;
-        push @reclaim, $obj->get_id;
+#        push @reclaim, $obj->get_id;
     }
 }
 1;
