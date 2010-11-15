@@ -149,9 +149,9 @@ Node constructor.
 			delete $args{'-nhx'};
 			$args{'-generic'} = $hash;
 		}
-		if ( not exists $args{'-tag'} ) {
-			$args{'-tag'} = 'node';
-		}
+# 		if ( not exists $args{'-tag'} ) {
+# 			$args{'-tag'} = __PACKAGE__->_tag;
+# 		}
 
 		# go up inheritance tree, eventually get an ID
 		my $self = $class->SUPER::new(%args);
@@ -166,20 +166,21 @@ Node constructor.
 
 	my $set_raw_parent = sub {
 		my ( $self, $parent ) = @_;
-		$parent{ $$self } = $parent; # XXX here we modify parent
-		weaken $parent{ $$self } if $parent;
+		my $id = $self->get_id;
+		$parent{ $id } = $parent; # XXX here we modify parent
+		weaken $parent{ $id } if $parent;
 	};
 
 	my $get_parent = sub {
 		my $self = shift;
-		return $parent{ $$self };
+		return $parent{ $self->get_id };
 	};
 	
 	my $get_children = sub { shift->get_entities };
 	
 	my $get_branch_length = sub {
 		my $self = shift;
-		return $branch_length{ $$self };
+		return $branch_length{ $self->get_id };
 	};
 
 	my $set_raw_child = sub {
@@ -563,7 +564,7 @@ Sets argument as invocant's branch length.
 
 	sub set_branch_length {
 		my ( $self, $bl ) = @_;
-		my $id = $$self;
+		my $id = $self->get_id;
 		if ( defined $bl && looks_like_number $bl && !ref $bl ) {
 			$branch_length{$id} = $bl;
 		}
@@ -1368,7 +1369,7 @@ Tests if invocant is descendant of argument.
 
 	sub is_descendant_of {
 		my ( $self, $ancestor ) = @_;
-		my $ancestor_id = $$ancestor;
+		my $ancestor_id = $ancestor->get_id;
 		while ($self) {
 			if ( my $parent = $self->get_parent ) {
 				$self = $parent;
@@ -1376,7 +1377,7 @@ Tests if invocant is descendant of argument.
 			else {
 				return;
 			}
-			if ( $$self == $ancestor_id ) {
+			if ( $self->get_id == $ancestor_id ) {
 				return 1;
 			}
 		}
@@ -2407,6 +2408,7 @@ Serializes subtree subtended by invocant to newick string.
 =cut
 
 	sub _type { $TYPE_CONSTANT }
+	sub _tag  { 'node' }
 
 =begin comment
 
