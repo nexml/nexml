@@ -965,7 +965,6 @@ sub _matrix {
             	'-type_object' => $self->_current->get_type_object,
             	'-name'        => $row,       
             );
-            $logger->debug(sprintf("row: %s", join '', @{ $self->{'_matrix'}->{ $row } }));
             my $char = $self->_resolve_ambig( $datum, $self->{'_matrix'}->{ $row } );
             $datum->set_char( $char );
 
