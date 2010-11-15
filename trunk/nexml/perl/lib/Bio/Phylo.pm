@@ -168,68 +168,70 @@ argument "-name" in the constructor.
         bless $self, $class;   
         
         # register for get_obj_by_id
-        $objects{$$self} = $self;
-        weaken( $objects{$$self} );
+        my $id = $self->get_id;
+        $objects{$id} = $self;
+        weaken( $objects{$id} );
 
         # processing arguments
         if ( @_ and @_ = looks_like_hash @_ ) {
-
-	    # notify user
-	    $logger->debug("going to process constructor args");
-
-	    # process all arguments
-	    ARG: while (@_) {
-		my $key   = shift @_;
-		my $value = shift @_;
+	
+			# process all arguments
+			ARG: while (@_) {
+				my $key   = shift @_;
+				my $value = shift @_;
+				
+				# this is a bioperl arg, meant to set
+				# verbosity at a per class basis. In
+				# bioperl, the $verbose argument is
+				# subsequently carried around in that
+				# class, here we delegate that to the
+				# logger, which has roughly the same 
+				# effect.
+				if ( $key eq '-verbose' ) {
+					$logger->VERBOSE( 
+						'-level' => $value,
+						'-class' => $class,
+					);
+					next ARG;
+				}
 		
-		# this is a bioperl arg, meant to set
-		# verbosity at a per class basis. In
-		# bioperl, the $verbose argument is
-		# subsequently carried around in that
-		# class, here we delegate that to the
-		# logger, which has roughly the same 
-		# effect.
-		if ( $key eq '-verbose' ) {
-			$logger->VERBOSE( 
-				'-level' => $value,
-				'-class' => $class,
-			);
-			next ARG;
-		}
-
-		# notify user
-		$logger->debug("processing arg '$key'");
-
-		# don't access data structures directly, call mutators
-		# in child classes or __PACKAGE__
-		my $mutator = $key;
-		$mutator =~ s/^-/set_/;
-
-		# backward compat fixes:
-		$mutator =~ s/^set_pos$/set_position/;
-		$mutator =~ s/^set_matrix$/set_raw/;
-		eval {
-			$self->$mutator($value);
-		};
-		if ( $@ ) {
-		    if ( blessed $@ and $@->can('rethrow') ) {
-			$@->rethrow;
-		    }
-		    elsif ( not ref($@) and $@ =~ /^Can't locate object method / ) {
-			throw 'BadArgs' => "The named argument '${key}' cannot be passed to the constructor";
-		    }
-		    else {
-			throw 'Generic' => $@;
-		    }
-		}
-	    }
+				# notify user
+				$logger->debug("processing constructor arg '${key}' => '${value}'");
+		
+				# don't access data structures directly, call mutators
+				# in child classes or __PACKAGE__
+				my $mutator = $key;
+				$mutator =~ s/^-/set_/;
+		
+				# backward compat fixes:
+				$mutator =~ s/^set_pos$/set_position/;
+				$mutator =~ s/^set_matrix$/set_raw/;
+				eval {
+					$self->$mutator($value);
+				};
+				if ( $@ ) {
+					if ( blessed $@ and $@->can('rethrow') ) {
+						$@->rethrow;
+					}
+					elsif ( not ref($@) and $@ =~ /^Can't locate object method / ) {
+						throw 'BadArgs' => "The named argument '${key}' cannot be passed to the constructor";
+					}
+					else {
+						throw 'Generic' => $@;
+					}
+				}
+			}
         }
 
         # register with mediator
 		# TODO this is irrelevant for some child classes,
 		# so should be re-factored into somewhere nearer the
-		# tips of the inheritance tree.
-        $taxamediator->register($self);
+		# tips of the inheritance tree. The hack where we
+		# skip over direct instances of Writable is so that
+		# we don't register things like <format> and <matrix> tags
+		if ( ref $self ne 'Bio::Phylo::NeXML::Writable' ) {
+        	$taxamediator->register($self);
+        }
         return $self;
     }
 
@@ -278,7 +280,7 @@ Sets invocant name.
 	        # notify user
 	        $logger->info("setting name '$name'");
 		}
-        $name{$$self} = $name;
+        $name{$self->get_id} = $name;
         return $self;
     }
 
@@ -300,7 +302,7 @@ Sets invocant description.
 
         # notify user
         $logger->info("setting description '$desc'");
-        $desc{$$self} = $desc;
+        $desc{$self->get_id} = $desc;
         return $self;
     }
 
@@ -336,7 +338,7 @@ Sets invocant score.
         }
 
         # this resets the score if $score was undefined
-        $score{$$self} = $score;
+        $score{$self->get_id} = $score;
         return $self;
     }
 
@@ -366,7 +368,7 @@ Sets generic key/value pair(s).
         my $self = shift;
 
         # retrieve id just once, don't call $self->get_id in loops, inefficient
-        my $id = $$self;
+        my $id = $self->get_id;
 
         # this initializes the hash if it didn't exist yet, or resets it if no args
         if ( !defined $generic{$id} || !@_ ) {
@@ -419,7 +421,7 @@ Gets invocant's name.
 
     sub get_name {
         my $self = shift;
-        return $name{$$self};
+        return $name{$self->get_id};
     }
 
 =item get_nexus_name()
@@ -485,7 +487,7 @@ Gets invocant description.
     sub get_desc {
         my $self = shift;
         $logger->debug("getting description");
-        return $desc{$$self};
+        return $desc{$self->get_id};
     }
 
 =item get_score()
@@ -504,7 +506,7 @@ Gets invocant's score.
     sub get_score {
         my $self = shift;
         $logger->debug("getting score");
-        return $score{$$self};
+        return $score{$self->get_id};
     }
 
 =item get_generic()
@@ -530,7 +532,7 @@ Gets generic hashref or hash value(s).
         my ( $self, $key ) = @_;
 
         # retrieve just once
-        my $id = $$self;
+        my $id = $self->get_id;
 
         # might not even have a generic hash yet, make one on-the-fly
         if ( not defined $generic{$id} ) {
@@ -568,8 +570,13 @@ Gets invocant's UID.
 =cut
 
     sub get_id {
-	my $self = shift;
-	return $$self;
+		my ($self) = @_;
+		if ( UNIVERSAL::isa( $self, 'SCALAR' ) ) {
+			return $$self;
+		}
+		else {
+			throw 'API' => "Not a SCALAR reference";
+		}
     }
 
 =item get_logger()
@@ -875,6 +882,7 @@ Invocant destructor.
 
 {
     no warnings 'recursion';
+    my %isa_for_class;
     sub DESTROY {
         my $self = shift;
 
@@ -884,16 +892,18 @@ Invocant destructor.
 			delete $objects{$id};
 		}
 
-        # notify user
-        $logger->debug("destructor called for '$self'"); # XXX
-
         # build full @ISA from child to here
-        my ( $class, $isa, $seen ) = ( ref($self), [], {} );
-        _recurse_isa( $class, $isa, $seen );
+        my $class = ref $self;
+		my $isa;
+		unless( $isa = $isa_for_class{$class} ) {
+			$isa = [];
+			my $seen = {};
+	        _recurse_isa( $class, $isa, $seen );
+	        $isa_for_class{$class} = $isa;
+        }
 
         # call *all* _cleanup methods, wouldn't work if simply SUPER::_cleanup
         # given multiple inheritance
-        $logger->debug("going to clean up '$self'"); # XXX
         {
             no strict 'refs'; 
             for my $SUPER ( @{$isa} ) {
@@ -970,7 +980,7 @@ Invocant destructor.
     # again, sometimes it's handy ;-)
     sub _get_container {
         my $self = shift;
-        return $container{ $$self };
+        return $container{ $self->get_id };
     }
 
 =begin comment
@@ -989,7 +999,7 @@ Invocant destructor.
 
     sub _set_container {
         my ( $self, $container ) = @_;
-        my $id = $$self;
+        my $id = $self->get_id;
         if ( blessed $container ) {
             if ( $container->can('can_contain') ) {
                 if ( $container->can_contain( $self ) ) {
