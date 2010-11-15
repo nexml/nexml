@@ -8,12 +8,14 @@ use Bio::Phylo::Util::CONSTANT qw(
 	_NEXML_VERSION_
 );
 use Bio::Phylo::Util::Exceptions 'throw';
+use Bio::Phylo::Util::Logger;
 use Bio::Phylo::Factory;
 use vars '@ISA';
 use strict;
 @ISA=qw(Bio::Phylo::Listable);
 
 my $fac = Bio::Phylo::Factory->new;
+my $logger = Bio::Phylo::Util::Logger->new;
 
 =head1 NAME
 
@@ -59,7 +61,7 @@ sub new {
 	my $class = shift;
 	my $version = $class->VERSION;
 	my %args = (
-		'-tag'        => 'nex:nexml',
+		'-tag'        => __PACKAGE__->_tag,
 		'-attributes' => {
 			'version'   => _NEXML_VERSION_,
 			'generator' => "$class v.$version",			
@@ -213,30 +215,46 @@ Serializes invocant to XML.
 		my $self = shift;
 		$self->set_namespaces( 'dc' => _NS_DC_ );
 		if ( my $user = $ENV{'USER'} ) {
+			$logger->debug("adding user metadata '${user}'");
 			$self->add_meta( $fac->create_meta( '-triple' => { 'dc:creator' => $user } ) );
 		}
 		eval { require DateTime };
 		if ( not $@ ) {
-			$self->add_meta( $fac->create_meta( '-triple' => { 'dc:date' => DateTime->now() } ) );		
+			my $now = DateTime->now();
+			$logger->debug("adding timestamp metadata '${now}'");
+			$self->add_meta( $fac->create_meta( '-triple' => { 'dc:date' => $now } ) );		
 		}
 		else {
 			undef($@);
 		}	
 		if ( my $desc = $self->get_desc ) {
+			$logger->debug("adding description metadata '${desc}'");
 			$self->add_meta( $fac->create_meta( '-triple' => { 'dc:description' => $desc } ) );		
 		}
 	}
 
 	sub to_xml {
 		my $self = shift;
+		
+		# creating opening tags
 		$self->_add_project_metadata;		
 		my $xml = $self->get_xml_tag;
+		$logger->debug("created opening structure ${xml}");
+		
+		# processing contents
 		my @linked = ( @{ $self->get_forests }, @{ $self->get_matrices } );
+		$logger->debug("fetched linked objects @linked");
+		
+		# writing out taxa blocks and linked objects
 		my %taxa = map { $_->get_id => $_ } @{ $self->get_taxa }, map { $_->make_taxa } @linked;
 		for ( values %taxa, @linked ) {
+			$logger->debug("writing $_ to xml");
 			$xml .= $_->to_xml(@_);
 		}
 		$xml .= '</' . $self->get_tag . '>';
+		
+		# done creating xml strings
+		$logger->debug($xml);
 		eval { require XML::Twig };
 		if ( not $@ ) {
 			my $twig = XML::Twig->new( 'pretty_print' => 'indented' );
@@ -307,6 +325,7 @@ Serializes invocant to NEXUS.
     }
 	
 	sub _type { $TYPE }
+	sub _tag  { 'nex:nexml' }
 
 =back
 
