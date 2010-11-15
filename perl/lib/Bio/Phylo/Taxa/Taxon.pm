@@ -96,16 +96,16 @@ Taxon constructor.
 
 =cut
 
-    sub new {
-        # could be child class
-        my $class = shift;
-        
-        # notify user
-        $logger->info("constructor called for '$class'");
-        
-        # go up inheritance tree, eventually get an ID
-        return $class->SUPER::new( '-tag' => 'otu', @_ );
-    }
+#     sub new {
+#         # could be child class
+#         my $class = shift;
+#         
+#         # notify user
+#         $logger->info("constructor called for '$class'");
+#         
+#         # go up inheritance tree, eventually get an ID
+#         return $class->SUPER::new( '-tag' => __PACKAGE__->_tag, @_ );
+#     }
 
 =back
 
@@ -323,6 +323,7 @@ Taxon destructor.
 =cut
 
     sub _type { $TYPE_CONSTANT }
+    sub _tag  { 'otu' }
 
 =back
 
