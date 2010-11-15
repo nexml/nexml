@@ -92,13 +92,15 @@ Stores argument in invocant's cache.
 	sub register {
 		my ( $self, $obj ) = @_;
 
-		my $id = $$obj;
+		my $id = $obj->get_id;
 		
 		# notify user
 		$logger->info("registering object $obj ($id)");
 		
 		$object[$id] = $obj;
 		weaken $object[$id];
+		
+		$logger->debug("done registering object $obj ($id)");
 		return $self;
 	}
 
@@ -122,7 +124,7 @@ Removes argument from invocant's cache.
 		# notify user
 		#$logger->info("unregistering object '$obj'"); # XXX
 
-		my $id = $$obj;
+		my $id = $obj->get_id;
 		if ( defined $id ) {
 			if ( exists $object[$id] ) {
 				
@@ -173,7 +175,7 @@ Creates link between objects.
 		my $self = shift;
 		my %opt  = @_;
 		my ( $one, $many ) = ( $opt{'-one'}, $opt{'-many'} );
-		my ( $one_id, $many_id ) = ( $$one, $$many );
+		my ( $one_id, $many_id ) = ( $one->get_id, $many->get_id );
 
 		# notify user
 		$logger->info("setting link between '$one' and '$many'");
@@ -237,7 +239,7 @@ Retrieves link between objects.
 	sub get_link {
 		my $self = shift;
 		my %opt  = @_;
-		my $id   = ${ $opt{'-source'} };
+		my $id   = $opt{'-source'}->get_id;
 
 		# have to get many objects
 		if ( defined $opt{'-type'} ) {
@@ -292,13 +294,13 @@ Removes link between objects.
 		my %opt  = @_;
 		my ( $one, $many ) = ( $opt{'-one'}, $opt{'-many'} );
 		if ($one) {
-			my $id       = $$one;
+			my $id       = $one->get_id;
 			my $relation = $relationship[$id];
 			return if not $relation;
-			delete $relation->{$$many};
+			delete $relation->{$many->get_id};
 		}
 		else {
-			my $id = $$many;
+			my $id = $many->get_id;
 		  LINK_SEARCH: for my $relation (@relationship) {
 				if ( exists $relation->{$id} ) {
 					delete $relation->{$id};
