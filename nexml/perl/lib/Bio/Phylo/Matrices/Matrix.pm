@@ -751,9 +751,7 @@ the supplied (zero-based) indices.
 		my @indices = @{ $indices_array_ref };
 		my $clone = $self->clone;
 		for my $seq ( @{ $clone->get_entities } ) {
-			my @data = $seq->get_char;
-			my @keep = @data[@indices];
-			$seq->set_char(@keep);
+			$seq->keep_entities(\@indices);
 			my @anno = @{ $seq->get_annotations };	
 			if ( @anno ) {
 				my @re_anno = @anno[@indices];
