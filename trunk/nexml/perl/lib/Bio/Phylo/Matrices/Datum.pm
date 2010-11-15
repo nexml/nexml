@@ -110,7 +110,7 @@ Datum object constructor.
 		}        
 
         # go up inheritance tree, eventually get an ID
-        my $self = $class->SUPER::new( '-tag' => 'row', @_ );
+        my $self = $class->SUPER::new( @_ );
         return $self;
     }
 
@@ -475,7 +475,7 @@ Gets invocant starting position.
 
     sub get_position {
         my $self = shift;
-        my $pos  = $position{$$self};
+        my $pos  = $position{$self->get_id};
         return defined $pos ? $pos : 1;
     }
 
@@ -580,6 +580,7 @@ Gets state at argument index.
 
     sub get_by_index {
         my ( $self, $index ) = @_;
+		$logger->debug($index);
         my $offset = $self->get_position - 1;
         return $self->get_type_object->get_missing if $offset > $index;
         my $val = $self->SUPER::get_by_index( $index - $offset );
@@ -871,9 +872,9 @@ Serializes datum to nexml format.
 		my $xml = $self->get_xml_tag;
 		
 		if ( not $args{'-compact'} ) {
-		    my $cell = $fac->create_xmlwritable( '-tag' => 'cell', '-identifiable' => 0 );
+# 		    my $cell = $fac->create_xmlwritable( '-tag' => 'cell', '-identifiable' => 0 );
 			for my $i ( 0 .. $#char ) {
-			        my ( $c, $s );
+			    my ( $c, $s );
 				if ( $missing ne $char[$i] and $gap ne $char[$i] ) {
 					if ( $char_ids and $char_ids->[$i] ) {
 						$c = $char_ids->[$i];
@@ -902,8 +903,9 @@ Serializes datum to nexml format.
 						$s = $char[$i];
 					}
 				}
-			    $cell->set_attributes( 'char' => $c, 'state' => $s );
-			    $xml .= $cell->get_xml_tag(1);
+#			    $cell->set_attributes( 'char' => $c, 'state' => $s );
+#			    $xml .= $cell->get_xml_tag(1);
+				$xml .= sprintf('<cell char="%s" state="%s"/>',$c,$s);
 			}
 		}
 		else {
@@ -1049,6 +1051,7 @@ Analog to to_xml.
     }
     sub _type      { $TYPE_CONSTANT }
     sub _container { $CONTAINER_CONSTANT }
+    sub _tag       { 'row' }
 
     sub _cleanup {
         my $self = shift;
