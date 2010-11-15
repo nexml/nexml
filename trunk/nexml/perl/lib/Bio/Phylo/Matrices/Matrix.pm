@@ -185,7 +185,7 @@ Matrix constructor.
 		}		
 
 		# go up inheritance tree, eventually get an ID
-		my $self = $class->SUPER::new( '-tag' => 'characters', @_ );
+		my $self = $class->SUPER::new( @_ );
 		return $self;
 	}
 
@@ -590,7 +590,7 @@ Retrieves character labels.
 
 =cut
 
-	sub get_charlabels { $charlabels{ ${ $_[0] } } || [] }
+	sub get_charlabels { $charlabels{ $_[0]->get_id } || [] }
 
 =item get_gapmode()
 
@@ -605,7 +605,7 @@ Returns matrix gapmode.
 
 =cut
 
-	sub get_gapmode { $gapmode{ ${ $_[0] } } }
+	sub get_gapmode { $gapmode{ $_[0]->get_id } }
 
 =item get_matchchar()
 
@@ -620,7 +620,7 @@ Returns matrix match character.
 
 =cut
 
-	sub get_matchchar { $matchchar{ ${ $_[0] } } || '.' }
+	sub get_matchchar { $matchchar{ $_[0]->get_id } || '.' }
 
 =item get_nchar()
 
@@ -678,7 +678,7 @@ Returns matrix 'polymorphism' interpretation.
 
 =cut
 
-	sub get_polymorphism { $polymorphism{ ${ $_[0] } } }
+	sub get_polymorphism { $polymorphism{ $_[0]->get_id } }
 
 =item get_raw()
 
@@ -1099,20 +1099,27 @@ Serializes matrix to nexml format.
 
 	sub to_xml {
 		my $self = shift;		
+		$logger->debug("writing $self to xml");
 		my ( %args, $ids_for_states );
 		if ( @_ ) {
 			%args = @_;
 		}
+		
+		# creating opening tag
 		my $type = $self->get_type;
 		my $verbosity = $args{'-compact'} ? 'Seqs' : 'Cells';
 		my $xsi_type = 'nex:' . ucfirst($type) . $verbosity;
 		$self->set_attributes( 'xsi:type' => $xsi_type );
-		my $xml = $self->get_xml_tag;
+		my $xml = $self->get_xml_tag;		
+		$logger->debug("created opening tag $xml");
+		
+		# normalizing symbol table
 		my $normalized = $self->_normalize_symbols;
+		$logger->debug("normalized symbols");
 		
 		# the format block
-		my $fmt = $factory->create_xmlwritable( '-tag' => 'format', '-identifiable' => 0 );
-		$xml .= $fmt->get_xml_tag;
+		$xml .= '<format>';
+		$logger->debug($xml);
 		my $to = $self->get_type_object;
 		$ids_for_states = $to->get_ids_for_states(1);
 		
@@ -1120,6 +1127,7 @@ Serializes matrix to nexml format.
 		# this calls Datatype::to_xml method
 		#  
 		$xml .= $to->to_xml($normalized,$self->get_polymorphism);
+		$logger->debug($xml);
 		
 		# write column definitions
 		if ( %{ $ids_for_states } ) {
@@ -1128,11 +1136,10 @@ Serializes matrix to nexml format.
 		else {
 			$xml .= $self->_write_char_labels();
 		}
-		$xml .= "\n</".$fmt->get_tag.">";
+		$xml .= "\n</format>";
 		
 		# the matrix block
-		my $mx = $factory->create_xmlwritable( '-tag' => 'matrix', '-identifiable' => 0 );
-		$xml .= "\n".$mx->get_xml_tag;
+		$xml .= "\n<matrix>";
 		my @char_ids;
 		for ( 0 .. $self->get_nchar ) {
 			push @char_ids, 'c' . ($_+1);
@@ -1149,7 +1156,7 @@ Serializes matrix to nexml format.
 				%args,
 			);
 		}
-		$xml .= "\n</".$mx->get_tag.">";
+		$xml .= "\n</matrix>";
 		$xml .= "\n" . sprintf( '</%s>', $self->get_tag );
 		return $xml;
 	}
@@ -1161,6 +1168,7 @@ Serializes matrix to nexml format.
 
 	sub _normalize_symbols {
 		my $self = shift;
+		$logger->debug("normalizing symbols");
 		if ( $self->get_type =~ /^standard$/i ) {
 			my $to = $self->get_type_object;
 			my $lookup = $self->get_lookup;
@@ -1185,14 +1193,14 @@ Serializes matrix to nexml format.
 		my $xml = '';
 		my $labels = $self->get_charlabels;
 		for my $i ( 1 .. $self->get_nchar ) {
-		        # new $char each time: start with no attributes...
-		        my $char = $factory->create_xmlwritable( '-tag' => 'char' );
-			my $char_id = 'c' . $i;
-			my $label   = $labels->[ $i - 1 ];
-			$char->set_attributes('id' => $char_id);
-			$char->set_attributes('label' => $label) if $label;
-			$char->set_attributes('states' => $states_id) if $states_id;
-			$xml .= "\n".$char->get_xml_tag(1);
+			$xml .= sprintf('<char id="c%s"',$i);  
+			if ( $labels->[ $i - 1 ] ) {
+				$xml .= sprintf(' label="%s"', $labels->[ $i - 1 ]);
+			}
+			if ( $states_id ) {
+				$xml .= sprintf(' states="%s"', $states_id);
+			}
+			$xml .= '/>';
 		}	
 		return $xml;	
 	}
@@ -1384,11 +1392,8 @@ Serializes matrix to nexus format.
 			}
 			$name = $datum->get_nexus_name if not $name;
 			$string .= $name . ( $sp x ( $length - length($name) ) );
-			my @characters;
-			for my $i ( 0 .. ( $nchar - 1 ) ) {
-				push @characters, $datum->get_by_index($i);
-			}
-			$string .= $self->get_type_object->join( \@characters ) . "\n";
+			my $char =  $datum->get_char;
+			$string .= $char . "\n";
 		}
 		$string .= "\t;\nEND;\n";
 		return $string;
@@ -1492,6 +1497,7 @@ Analog to to_xml.
 		return @elts;
     }	
 	
+	sub _tag       { 'characters' }
 	sub _type      { $CONSTANT_TYPE }
 	sub _container { $CONSTANT_CONTAINER }
 
