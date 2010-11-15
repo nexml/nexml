@@ -104,7 +104,7 @@ Pushes an object into its container.
 		my ( $self, @obj ) = @_;
 		if ( @obj and $self->can_contain( @obj ) ) {
 			$logger->info("inserting '@obj' in '$self'");
-			push @{ $entities{$$self} }, @obj;
+			push @{ $entities{$self->get_id} }, @obj;
 			for my $obj ( @obj ) {
 				if ( looks_like_implementor( $obj, '_set_container' ) ) {
 					$obj->_set_container( $self );
@@ -135,7 +135,7 @@ Inserts argument object in invocant container at argument index.
 		my ( $self, $obj, $index ) = @_;
 		$logger->debug("inserting '$obj' in '$self' at index $index");
 		if ( defined $obj and $self->can_contain($obj) ) {
-			$entities{$$self}->[$index] = $obj;
+			$entities{$self->get_id}->[$index] = $obj;
 			if ( looks_like_implementor( $obj, '_set_container' ) ) {
 				$obj->_set_container($self);
 			}
@@ -174,7 +174,7 @@ Deletes argument from invocant object.
 
 	sub delete {
 		my ( $self, $obj ) = @_;
-		my $id = $$self;
+		my $id = $self->get_id;
 		if ( $self->can_contain($obj) ) {
 			my $occurence_counter = 0;
 			if ( my $i = $index{$id} ) {
@@ -184,7 +184,7 @@ Deletes argument from invocant object.
 					}
 				}
 			}
-			my @modified = grep { ${ $_ } != $$obj } @{ $entities{$id} };
+			my @modified = grep { ${ $_ } != $obj->get_id } @{ $entities{$id} };
 			$entities{$id} = \@modified;
 			$index{$id} -= $occurence_counter;
 		}
@@ -211,7 +211,7 @@ Empties container object.
 
 	sub clear {
 		my $self = shift;
-		$entities{$$self} = [];
+		$entities{$self->get_id} = [];
 		$self->notify_listeners( 'clear' );
 		return $self;
 	}
@@ -297,7 +297,7 @@ Returns a reference to an array of objects contained by the listable object.
 
 	sub get_entities { 
 		my $self = shift;
-		return $entities{$$self} || [];
+		return $entities{$self->get_id} || [];
 	}
 
 =item get_index_of()
@@ -383,7 +383,7 @@ Jumps to the first element contained by the listable object.
 
 	sub first {
 		my $self = shift;
-		my $id   = $$self;
+		my $id   = $self->get_id;
 		$index{$id} = 0;
 		return $entities{$id}->[0];
 	}
@@ -404,7 +404,7 @@ Jumps to the last element contained by the listable object.
 
 	sub last {
 		my $self = shift;
-		my $id   = $$self;
+		my $id   = $self->get_id;
 		$index{$id} = $#{ $entities{$id} };
 		return $entities{$id}->[-1];
 	}
@@ -425,7 +425,7 @@ Returns the current focal element of the listable object.
 
 	sub current {
 		my $self = shift;
-		my $id   = $$self;
+		my $id   = $self->get_id;
 		if ( !defined $index{$id} ) {
 			$index{$id} = 0;
 		}
@@ -448,7 +448,7 @@ Returns the next focal element of the listable object.
 
 	sub next {
 		my $self = shift;
-		my $id   = $$self;
+		my $id   = $self->get_id;
 		if ( !defined $index{$id} ) {
 			$index{$id} = 0;
 			return $entities{$id}->[ $index{$id} ];
@@ -478,7 +478,7 @@ Returns the previous element of the listable object.
 
 	sub previous {
 		my $self = shift;
-		my $id   = $$self;
+		my $id   = $self->get_id;
 
 		# either undef or 0
 		if ( !$index{$id} ) {
@@ -548,11 +548,11 @@ Gets element defined by argument index from invocant container.
 
 	sub get_by_index {
 		my $self  = shift;
-		my $id    = $$self;
+		my $entities = $self->get_entities;
 		my @range = @_;
 		if ( scalar @range > 1 ) {
 			my @returnvalue;
-			eval { @returnvalue = @{ $entities{$id} }[@range] };
+			eval { @returnvalue = @{ $entities }[@range] };
 			if ($@) {
 				throw 'OutOfBounds' => 'index out of bounds';
 			}
@@ -560,7 +560,7 @@ Gets element defined by argument index from invocant container.
 		}
 		else {
 			my $returnvalue;
-			eval { $returnvalue = $entities{$id}->[ $range[0] ] };
+			eval { $returnvalue = $entities->[ $range[0] ] };
 			if ($@) {
 				throw 'OutOfBounds' => 'index out of bounds';
 			}
@@ -813,7 +813,7 @@ Attaches a listener (code ref) which is executed when contents change.
 
 	sub set_listener {
 		my ( $self, $listener ) = @_;
-		my $id = $$self;
+		my $id = $self->get_id;
 		if ( not $listeners{$id} ) {
 			$listeners{$id} = [];
 		}
@@ -841,7 +841,7 @@ Notifies listeners of changed contents.
 
 	sub notify_listeners {
 		my ( $self, @args ) = @_;
-		my $id = $$self;
+		my $id = $self->get_id;
 		if ( $listeners{$id} ) {
 			for my $l ( @{ $listeners{$id} } ) {
 				$l->( $self, @args );
@@ -1106,7 +1106,7 @@ Consult the documentation for L<Bio::Phylo::Set> for a code sample.
 	no warnings 'recursion';
 	sub _cleanup {
 		my $self = shift;
-		my $id = $$self;
+		my $id = $self->get_id;
 		for my $field (@fields) {
 			delete $field->{$id};
 		}
