@@ -239,8 +239,9 @@ Assigns attributes for the element.
 
 	sub set_attributes {
 		my $self = shift;
+		my $id = $self->get_id;
 		my %attrs;
-		if ( scalar @_ == 1 and looks_like_instance($_[0], 'HASH') ) {
+		if ( scalar @_ == 1 and ref $_[0] eq 'HASH' ) {
 			%attrs = %{ $_[0] };
 		}
 		elsif ( scalar @_ % 2 == 0 ) {
@@ -249,9 +250,10 @@ Assigns attributes for the element.
 		else {
 			throw 'OddHash' => 'Arguments are not even key/value pairs';	
 		}		
-		my $hash = $attributes{ $self->get_id } || {};
+		my $hash = $attributes{$id} || {};
+		my $fully_qualified_attribute_regex = qr/^(.+?):(.+)/;
 		for my $key ( keys %attrs ) {
-			if ( $key =~ m/^(.+?):(.+)$/ ) {
+			if ( $key =~ $fully_qualified_attribute_regex ) {
 				my ( $prefix, $attribute ) = ( $1, $2 );
 				if ( $prefix ne 'xmlns' and not exists $namespaces{$prefix} ) {
 					$logger->warn("Attribute '${prefix}:${attribute}' is not bound to a namespace");
@@ -259,7 +261,7 @@ Assigns attributes for the element.
 			}
 			$hash->{$key} = $attrs{$key};
 		}
-		$attributes{ $self->get_id } = $hash;
+		$attributes{$id} = $hash;
 		return $self;
 	}
 
@@ -356,6 +358,7 @@ Retrieves the metadata for the element.
 
     sub get_meta {
         my $self = shift;
+#        $logger->debug("getting meta for $self");
         my $id = $self->get_id;
         return $meta{$id} || [];
     }
@@ -375,7 +378,15 @@ Retrieves tag name for the element.
 
 	sub get_tag {
 		my $self = shift;
-		return $tag{ $self->get_id };
+		if ( my $tagstring = $tag{ $self->get_id } ) {
+			return $tagstring;
+		}
+		elsif ( looks_like_implementor $self, '_tag' ) {
+			return $self->_tag;
+		}
+		else {
+			return '';
+		}
 	}
 
 =item get_xml_tag()
@@ -438,10 +449,11 @@ Retrieves attributes for the element.
 
 =cut
 
+	my $SAFE_CHARACTERS_REGEX = qr/(?:[a-zA-Z0-9]|-|_|\.)/;
 	my $XMLEntityEncode = sub {
 		my $buf = '';
 		for my $c ( split //, shift ) {
-			if ( $c =~ /(?:[a-zA-Z0-9]|-|_|\.)/ ) {
+			if ( $c =~ $SAFE_CHARACTERS_REGEX ) {
 				$buf .= $c;
 			}
 			else {
@@ -463,7 +475,7 @@ Retrieves attributes for the element.
 			$i++;
 		}
 		if ( $inside_to_xml_recursion <= 1 ) {
-			my $tmp_namespaces = $self->get_namespaces;
+			my $tmp_namespaces = get_namespaces();
 			for my $ns ( keys %{ $tmp_namespaces } ) {
 				$attrs->{'xmlns:' . $ns} = $tmp_namespaces->{$ns};
 			}			
