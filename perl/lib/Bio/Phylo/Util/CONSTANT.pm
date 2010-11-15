@@ -203,11 +203,7 @@ sub looks_like_object($$) {
 }
 
 sub looks_like_implementor($$) {
-	my ( $object, $method ) = @_;
-	if ( blessed $object ) {
-		return $object->can($method);
-	}
-	return;
+	return UNIVERSAL::can($_[0],$_[1]);
 }
 
 sub looks_like_instance($$) {
