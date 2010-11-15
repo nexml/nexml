@@ -404,7 +404,6 @@ Gets state lookup table.
 
     sub get_lookup {
         my $self = shift;
-        $logger->debug("getting lookup table for state set $self");
         my $id = $self->get_id;
         if ( exists $lookup{$id} ) {
             return $lookup{$id};
@@ -489,12 +488,12 @@ Validates argument.
         my $self = shift;        
         my @data;
         for my $arg ( @_ ) {
-        	if ( looks_like_implementor $arg, 'get_char' ) {
-        		push @data, $arg->get_char;
-        	}
-        	elsif ( looks_like_instance $arg, 'ARRAY' ) {
+        	if ( ref $arg eq 'ARRAY' ) {
         		push @data, @{ $arg };
         	}
+        	elsif ( looks_like_implementor $arg, 'get_char' ) {
+        		push @data, $arg->get_char;
+        	}        	
         	else {
         		if ( length($arg) > 1 ) {
         			push @data, @{ $self->split( $arg ) };
@@ -506,16 +505,12 @@ Validates argument.
         }
         return 1 if not @data;
         my $lookup = $self->get_lookup;
-        my ( $missing, $gap ) = ( $self->get_missing, $self->get_gap );
+        my @symbols = ( $self->get_missing, $self->get_gap, keys %{ $lookup } );
+        my %symbols = map { $_ => 1 } grep { defined $_ } @symbols;
         CHAR_CHECK: for my $char ( @data ) {            
             next CHAR_CHECK if not defined $char;
-            my $uc = uc $char;
-            if ( exists $lookup->{$uc} || ( defined $missing && $uc eq $missing ) || ( defined $gap && $uc eq $gap ) ) {
-                next CHAR_CHECK;
-            }
-            else {
-                return 0;
-            }
+            next CHAR_CHECK if $symbols{uc $char};
+			return 0;
         }
         return 1;
     }
