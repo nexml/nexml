@@ -29,7 +29,7 @@ my $LOADED_WRAPPERS = 0;
 	my @fields = \( my ( %default, %rooted ) );
 	my $fac = Bio::Phylo::Factory->new;
 	my %default_constructor_args = (
-        '-tag'      => 'tree', 
+#        '-tag'      => __PACKAGE__->_tag, 
         '-listener' => sub {
             my ( $self, $method, @args ) = @_;                
             for my $node ( @args ) {
@@ -265,7 +265,7 @@ Sets tree to be interpreted as unrooted.
 
 	sub set_as_unrooted {
 		my $self = shift;
-		$rooted{$$self} = 1;
+		$rooted{$self->get_id} = 1;
 		return $self;
 	}
 
@@ -292,7 +292,7 @@ Sets tree to be the default tree in a forest
 				$tree->set_not_default;
 			}		
 		}
-		$default{$$self} = 1;
+		$default{$self->get_id} = 1;
 		return $self;
 	}
 
@@ -314,7 +314,7 @@ Sets tree to NOT be the default tree in a forest
 
 	sub set_not_default {
 		my $self = shift;
-		$default{$$self} = 0;
+		$default{$self->get_id} = 0;
 		return $self;
 	}
 
@@ -541,7 +541,7 @@ Test if tree is default tree.
 
 	sub is_default {
 		my $self = shift;
-		return !!$default{$$self};
+		return !!$default{$self->get_id};
 	}
 
 =item is_rooted()
@@ -565,8 +565,9 @@ Test if tree is rooted.
 
 	sub is_rooted {
 		my $self = shift;
-		if ( defined $rooted{$$self} ) {
-			return $rooted{$$self};
+		my $id = $self->get_id;
+		if ( defined $rooted{$id} ) {
+			return $rooted{$id};
 		}
 		if ( my $root = $self->get_root ) {
 			if ( my $children = $root->get_children ) {
@@ -2248,7 +2249,7 @@ Serializes invocant to newick string.
 	sub to_newick {
 		my $self   = shift;
 		my %args   = @_;
-		my $newick = unparse( -format => 'newick', -phylo => $self, %args );
+		my $newick = unparse( '-format' => 'newick', '-phylo' => $self, %args );
 		return $newick;
 	}
 
@@ -2412,6 +2413,7 @@ Serializes invocant to SVG.
 =cut
 
 	sub _type { $TYPE_CONSTANT }
+	sub _tag  { 'tree' }
 
 =back
 
