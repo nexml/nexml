@@ -8,6 +8,7 @@ use Bio::Phylo::Util::CONSTANT qw(
 	looks_like_hash 
 	looks_like_instance 
 	looks_like_implementor
+	looks_like_class
 );
 use strict;
 use vars '@ISA';
@@ -71,7 +72,7 @@ Datatype constructor.
             $type = 'Dna';
         }
         my $typeclass = __PACKAGE__ . '::' . $type;
-        my $self      = __PACKAGE__->SUPER::new( '-tag' => 'states' ); 
+        my $self      = __PACKAGE__->SUPER::new( '-tag' => __PACKAGE__->_tag ); 
         eval "require $typeclass"; 
         if ( $@ ) {
         	throw 'BadFormat' => "'$type' is not a valid datatype";
@@ -156,7 +157,7 @@ Sets state lookup table.
 
     sub set_lookup {
         my ( $self, $lookup ) = @_;
-        my $id = $$self;
+        my $id = $self->get_id;
         
         # we have a value
         if ( defined $lookup ) {
@@ -191,7 +192,7 @@ Sets missing data symbol.
 
     sub set_missing {
         my ( $self, $missing ) = @_;
-        my $id = $$self;
+        my $id = $self->get_id;
         if ( $missing ne $self->get_gap ) {
         	$missing{$id} = $missing;
         }
@@ -302,21 +303,22 @@ Gets state-to-id mapping
 =cut
     
         sub get_ids_for_states {
-	    my $self = shift;
-	    if ( my $lookup = $self->get_lookup ) {
-		my $ids_for_states = {};
-		my ( @symbols, %tmp_cats,$i ); 
-		# build a list of state symbols: what properties will this 
-		# list have? Symbols will be present in order of the 
-		# size of the state set to which they belong; within 
-		# each of these ranks, the symbols will be in lexical
-		# order.
-		push (@{ $tmp_cats{ @{ $lookup->{$_} } } ||= [] }, $_) for grep /^\d+|[a-zA-Z]/, keys %{ $lookup };
-		push (@symbols, sort { $a cmp $b } @{ $tmp_cats{$_} }) for sort { $a <=> $b } keys %tmp_cats;
-		$ids_for_states->{$_} = ($_[0] ? 's' : '').(++$i) for (@symbols);
-		return $ids_for_states;
-	    }
-	    return {};
+			my $self = shift;
+			$logger->debug("getting ids for state set $self");
+			if ( my $lookup = $self->get_lookup ) {
+				my $ids_for_states = {};
+				my ( @symbols, %tmp_cats,$i ); 
+				# build a list of state symbols: what properties will this 
+				# list have? Symbols will be present in order of the 
+				# size of the state set to which they belong; within 
+				# each of these ranks, the symbols will be in lexical
+				# order.
+				push (@{ $tmp_cats{ @{ $lookup->{$_} } } ||= [] }, $_) for grep /^\d+|[a-zA-Z]/, keys %{ $lookup };
+				push (@symbols, sort { $a cmp $b } @{ $tmp_cats{$_} }) for sort { $a <=> $b } keys %tmp_cats;
+				$ids_for_states->{$_} = ($_[0] ? 's' : '').(++$i) for (@symbols);
+				return $ids_for_states;
+			}
+			return {};
         }
 
 =item get_symbol_for_states()
@@ -402,20 +404,25 @@ Gets state lookup table.
 
     sub get_lookup {
         my $self = shift;
+        $logger->debug("getting lookup table for state set $self");
         my $id = $self->get_id;
         if ( exists $lookup{$id} ) {
             return $lookup{$id};
         }
         else {
-           my $class = ref $self;
-           my $lookup;
-           {
-                no strict 'refs'; 
-                $lookup = ${ $class . '::LOOKUP'  };
-                use strict;
+           my $class = __PACKAGE__;
+           $class .= '::' . $self->get_type;
+           $logger->debug("datatype class is $class");
+		   if ( looks_like_class $class ) {
+			   my $lookup;
+			   {
+					no strict 'refs'; 
+					$lookup = ${ $class . '::LOOKUP'  };
+					use strict;
+			   }
+			   $self->set_lookup( $lookup );
+			   return $lookup;
            }
-           $self->set_lookup( $lookup );
-           return $lookup;
         }
     }
 
@@ -434,7 +441,7 @@ Gets missing data symbol.
 
     sub get_missing {
     	my $self = shift;
-        my $missing = $missing{$$self};
+        my $missing = $missing{$self->get_id};
         return defined $missing ? $missing : '?';
     }
 
@@ -453,7 +460,7 @@ Gets gap symbol.
 
     sub get_gap {
     	my $self = shift;    	
-        my $gap = $gap{$$self};
+        my $gap = $gap{$self->get_id};
         return defined $gap ? $gap : '-';
     }
 
@@ -660,12 +667,14 @@ Writes data type definitions to xml
 =cut
 
 	sub to_xml {
-		my $self = shift;	
+		my $self = shift;
+		$logger->debug("writing $self to xml");
 		my $xml = '';
 		my $normalized   = $_[0] || {};
 		my $polymorphism = $_[1];
 		if ( my $lookup  = $self->get_lookup ) {
 			$xml .= "\n" . $self->get_xml_tag;
+			$logger->debug($xml);
 			my $id_for_state = $self->get_ids_for_states(1);
 			my @states = sort { 
                             my ($m,$n);
@@ -863,6 +872,8 @@ Analog to to_xml.
 	        }
 		return $elt;
     }
+
+	sub _tag { 'states' }
 
 =back
 
