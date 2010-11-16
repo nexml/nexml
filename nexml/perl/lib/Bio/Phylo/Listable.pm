@@ -858,22 +858,13 @@ Clones container.
 		if ( not exists $subs{'insert'} ) {
 			$subs{'insert'} = sub {
 				my ( $obj, $clone ) = @_;
+				my $clone_id = $clone->get_id;
 				for my $ent ( @{ $obj->get_entities } ) {
 					my $copy = $ent;
 					if ( looks_like_implementor( $ent, 'clone' ) ) {
 						$copy = $ent->clone;
-						$logger->debug(
-							"inserting a clone $copy of entity" .
-							" $ent in a clone $clone of object $obj"
-						);
 					}
-					else {
-						$logger->debug(
-							"inserting a raw value '$copy' in" .
-							" a clone $clone of object $obj"
-						);				
-					}
-					$clone->insert($copy);
+					push @{ $entities{$clone_id} }, $copy;
 				}
 			};	
 		}
