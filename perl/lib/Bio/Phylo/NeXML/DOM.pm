@@ -289,7 +289,7 @@ obtained from the C<Element> and C<Document> POD.
 
     sub set_format {
 	my $self = shift;
-	$format{$$self} = shift;
+	$format{$self->get_id} = shift;
 	return $self;
     }
 
@@ -312,7 +312,7 @@ obtained from the C<Element> and C<Document> POD.
 
     sub get_format {
 	my $self = shift;
-	return ucfirst(lc($format{$$self}));
+	return ucfirst(lc($format{$self->get_id}));
     }
 
 =item get_dom()
@@ -358,7 +358,7 @@ obtained from the C<Element> and C<Document> POD.
 
     sub _cleanup {
 	my $self = shift;
-	delete $format{$$self};    
+	delete $format{$self->get_id};    
     }
 
 =back
