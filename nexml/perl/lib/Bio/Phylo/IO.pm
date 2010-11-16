@@ -6,7 +6,7 @@ use Bio::Phylo::Util::Exceptions 'throw';
 use IO::File;
 use strict;
 my @parsers        = qw(Newick Nexus Table Taxlist);
-my @unparsers      = qw(Newick Pagel Svg);
+my @unparsers      = qw(Newick Pagel Svg Phylip);
 my $cached_parsers = {};
 
 BEGIN {
