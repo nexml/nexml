@@ -61,9 +61,9 @@ for more information on how to use this feature.
 
 {
     my $NONE = _NONE_;
-    sub new {
-        return shift->SUPER::new( '-tag' => 'class', @_ );
-    }
+#     sub new {
+#         return shift->SUPER::new( '-tag' => 'class', @_ );
+#     }
     
 =back
 
@@ -93,6 +93,7 @@ Tests if argument can be inserted in invocant.
     }
     sub _container { $NONE }
     sub _type { $NONE }
+    sub _tag { 'class' }
 }
 
 =back
