@@ -3,7 +3,7 @@ package Bio::Phylo;
 use strict;
 
 # we don't use 'our', for 5.005 compatibility
-use vars qw($VERSION $COMPAT $logger);
+use vars qw($VERSION $COMPAT $logger @ISA);
 
 # Because we use a roll-your-own looks_like_number from
 # Bio::Phylo::Util::CONSTANT, here we don't have to worry
@@ -18,10 +18,12 @@ use Bio::Phylo::Util::CONSTANT qw(
     looks_like_instance
 );
 use Bio::Phylo::Util::IDPool;             # creates unique object IDs
+use Bio::Phylo::Identifiable;             # for storing unique IDs inside an instance
 use Bio::Phylo::Util::Exceptions 'throw'; # defines exception classes and throws
 use Bio::Phylo::Util::Logger;             # for logging, like log4perl/log4j 
 
 BEGIN {
+	@ISA = qw(Bio::Phylo::Identifiable);
     $logger = Bio::Phylo::Util::Logger->new;
 }
 
@@ -41,17 +43,17 @@ $VERSION .= "_$rev";
         my $class = shift;
         if (@_) {
             my %opt = looks_like_hash @_;
-	    while ( my ( $key, $value ) = each %opt ) {
-		if ( $key =~ qr/^VERBOSE$/i ) {
-		    $logger->VERBOSE( '-level' => $value, -class => $class );
-		}
-		elsif ( $key =~ qr/^COMPAT$/i ) {
-		    $COMPAT = ucfirst( lc($value) );
-		}
-		else {
-		    throw 'BadArgs' => "'$key' is not a valid argument for import";
-		}
-	    }
+			while ( my ( $key, $value ) = each %opt ) {
+				if ( $key =~ qr/^VERBOSE$/i ) {
+					$logger->VERBOSE( '-level' => $value, -class => $class );
+				}
+				elsif ( $key =~ qr/^COMPAT$/i ) {
+					$COMPAT = ucfirst( lc($value) );
+				}
+				else {
+					throw 'BadArgs' => "'$key' is not a valid argument for import";
+				}
+			}
         }
         return 1;
     }
@@ -162,10 +164,7 @@ argument "-name" in the constructor.
 
         # happens only and exactly once because this
 	    # root class is visited from every constructor
-        my $self = Bio::Phylo::Util::IDPool->_initialize();
-
-        # bless in child class, not __PACKAGE__
-        bless $self, $class;   
+	    my $self = $class->SUPER::new();
         
         # register for get_obj_by_id
         my $id = $self->get_id;
@@ -554,29 +553,6 @@ Gets generic hashref or hash value(s).
             $logger->debug("retrieving generic hash");
             return $generic{$id};
         }
-    }
-
-=item get_id()
-
-Gets invocant's UID.
-
- Type    : Accessor
- Title   : get_id
- Usage   : my $id = $obj->get_id;
- Function: Returns the object's unique ID
- Returns : INT
- Args    : None
-
-=cut
-
-    sub get_id {
-		my ($self) = @_;
-		if ( UNIVERSAL::isa( $self, 'SCALAR' ) ) {
-			return $$self;
-		}
-		else {
-			throw 'API' => "Not a SCALAR reference";
-		}
     }
 
 =item get_logger()
