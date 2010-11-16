@@ -363,7 +363,7 @@ Sets argument state labels.
 		}
 
 		# it's either a valid array ref, or nothing, i.e. a reset
-		$statelabels{$$self} = $statelabels || [];
+		$statelabels{$self->get_id} = $statelabels || [];
 		return $self;		
 	}
 
@@ -398,7 +398,7 @@ Sets argument character labels.
 		}
 
 		# it's either a valid array ref, or nothing, i.e. a reset
-		$charlabels{$$self} = defined $charlabels ? $charlabels : [];
+		$charlabels{$self->get_id} = defined $charlabels ? $charlabels : [];
 		return $self;
 	}
 
@@ -417,7 +417,7 @@ Defines matrix gapmode.
 
 	sub set_gapmode {
 		my ( $self, $gapmode ) = @_;
-		$gapmode{$$self} = !!$gapmode;
+		$gapmode{$self->get_id} = !!$gapmode;
 		return $self;
 	}
 
@@ -445,7 +445,7 @@ Assigns match symbol.
 			throw 'BadArgs' => "Match character '$match' already in use as gap character";
 		}
 		else {
-			$matchchar{$$self} = $match;
+			$matchchar{$self->get_id} = $match;
 		}
 		return $self;
 	}
@@ -466,7 +466,7 @@ Defines matrix 'polymorphism' interpretation.
 
 	sub set_polymorphism {
 		my ( $self, $poly ) = @_;
-		$polymorphism{$$self} = !!$poly;
+		$polymorphism{$self->get_id} = !!$poly;
 		return $self;
 	}
 
@@ -530,7 +530,7 @@ Defines matrix case sensitivity interpretation.
 
 	sub set_respectcase {
 		my ( $self, $case_sensitivity ) = @_;
-		$case_sensitivity{$$self} = !!$case_sensitivity;
+		$case_sensitivity{$self->get_id} = !!$case_sensitivity;
 		return $self;
 	}
 
@@ -575,7 +575,7 @@ Retrieves state labels.
 
 =cut
 
-	sub get_statelabels { $statelabels{ ${ $_[0] } } || [] }
+	sub get_statelabels { $statelabels{ $_[0]->get_id } || [] }
 
 =item get_charlabels()
 
@@ -722,7 +722,7 @@ Returns matrix case sensitivity interpretation.
 
 =cut
 
-	sub get_respectcase { $case_sensitivity{ ${ $_[0] } } }
+	sub get_respectcase { $case_sensitivity{ $_[0]->get_id } }
 
 =back
 
@@ -1502,7 +1502,7 @@ Analog to to_xml.
 	sub _cleanup {
 		my $self = shift;
 		$logger->info("cleaning up '$self'");
-		my $id = $$self;
+		my $id = $self->get_id;
 		for (@inside_out_arrays) {
 			delete $_->{$id} if defined $id and exists $_->{$id};
 		}
