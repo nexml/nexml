@@ -1156,8 +1156,9 @@ Gets invocant's most recent common ancestor shared with argument.
 		my $self_anc  = $self->get_ancestors;
 		my $other_anc = $other_node->get_ancestors;
 		for my $i ( 0 .. $#{$self_anc} ) {
+			my $self_anc_id = $self_anc->[$i]->get_id;
 			for my $j ( 0 .. $#{$other_anc} ) {
-				if ( ${ $self_anc->[$i] } == ${ $other_anc->[$j] } ) {
+				if ( $self_anc_id == $other_anc->[$j]->get_id ) {
 					return $self_anc->[$i];
 				}
 			}
