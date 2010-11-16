@@ -445,7 +445,7 @@ Validates argument.
 =cut
 
     sub is_valid {
-        my $self = shift;        
+        my $self = shift;
         my @data;
         for my $arg ( @_ ) {
         	if ( ref $arg eq 'ARRAY' ) {
