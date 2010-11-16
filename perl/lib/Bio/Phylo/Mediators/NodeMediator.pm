@@ -90,7 +90,7 @@ Stores an object in mediator's cache.
 
 	sub register {
 		my ( $self, $node ) = @_;
-		my $id = $$node;
+		my $id = $node->get_id;
 		$logger->info( "registering node $node ($id)" );
 
 		# to retrieve nodes by id
@@ -134,7 +134,7 @@ Removes argument from mediator's cache.
 	# ( clean %tree_id_for_node, %ancestor_function, %node_object_for_id );
 	sub unregister {
 		my ( $self, $node ) = @_;
-		if ( $node and defined( my $id = $$node ) ) {
+		if ( $node and defined( my $id = $node->get_id ) ) {
 			$logger->debug("unregistering node $id");
 	
 			# no need to retrieve from here after this
@@ -203,7 +203,7 @@ Creates link between arguments.
 	sub set_link {
 		my $self    = shift;
 		my %args    = @_;
-		my $node_id = ${ $args{'node'} };
+		my $node_id = $args{'node'}->get_id;
 		my $tree_id = $tree_id_for_node{$node_id};		
 		my $function;
 		my $index_of_updated;
@@ -216,7 +216,7 @@ Creates link between arguments.
 				'keep'   => $args{'parent'},
 				'update' => $args{'node'}
 			);
-			my $parent_id = ${ $args{'parent'} };
+			my $parent_id = $args{'parent'}->get_id;
 			$function = $ancestor_function{ $tree_id_for_node{$parent_id} }; 
 			$id_of_updated = $node_id;
 
@@ -240,7 +240,7 @@ Creates link between arguments.
 				'keep'   => $args{'node'},
 				'update' => $args{'first_daughter'}
 			);
-			my $first_daughter_id = ${ $args{'first_daughter'} };
+			my $first_daughter_id = $args{'first_daughter'}->get_id;
 			my $seen_siblings     = 0;
 			$function = $ancestor_function{ $tree_id_for_node{$node_id} }; 
 			$id_of_updated = $first_daughter_id;
@@ -270,7 +270,7 @@ Creates link between arguments.
 				'keep'   => $args{'node'},
 				'update' => $args{'last_daughter'}
 			);
-			my $last_daughter_id = ${ $args{'last_daughter'} };
+			my $last_daughter_id = $args{'last_daughter'}->get_id;
 			$function = $ancestor_function{ $tree_id_for_node{$node_id} }; 
 			$id_of_updated = $last_daughter_id;
 
@@ -293,7 +293,7 @@ Creates link between arguments.
 				'keep'   => $args{'node'},
 				'update' => $args{'next_sister'}
 			);
-			my $next_sister_id = ${ $args{'next_sister'} };
+			my $next_sister_id = $args{'next_sister'}->get_id;
 			$function = $ancestor_function{ $tree_id_for_node{$node_id} }; 
 			$id_of_updated = $next_sister_id;
 
@@ -317,7 +317,7 @@ Creates link between arguments.
 				'keep'   => $args{'node'},
 				'update' => $args{'previous_sister'}
 			);
-			my $previous_sister_id = ${ $args{'previous_sister'} };
+			my $previous_sister_id = $args{'previous_sister'}->get_id;
 			my $seen_me            = 0;
 			$function = $ancestor_function{ $tree_id_for_node{$node_id} };
 			$id_of_updated = $previous_sister_id;
@@ -377,8 +377,8 @@ Updates tree membership.
 	sub update_tree {
 		my $self      = shift;
 		my %args      = @_;
-		my $keep_id   = ${ $args{'keep'} };
-		my $update_id = ${ $args{'update'} };
+		my $keep_id   = $args{'keep'}->get_id;
+		my $update_id = $args{'update'}->get_id;
 		$logger->debug( "updating tree" );
 
 		# not in the same tree
@@ -469,7 +469,7 @@ Retrieves relative of argument.
 
 		# get_parent
 		if ( $node = $args{'parent_of'} ) {
-			my $id       = $$node;
+			my $id       = $node->get_id;
 			my $tree_id  = $tree_id_for_node{$id};
 			my $function = $ancestor_function{$tree_id};
 			for my $tuple ( @{$function} ) {
@@ -482,7 +482,7 @@ Retrieves relative of argument.
 
 		# get_first_daughter
 		elsif ( $node = $args{'first_daughter_of'} ) {
-			my $id       = $$node;
+			my $id       = $node->get_id;
 			my $tree_id  = $tree_id_for_node{$id};
 			my $function = $ancestor_function{$tree_id};
 			for ( my $i = 0 ; $i <= $#{$function} ; $i++ ) {
@@ -495,7 +495,7 @@ Retrieves relative of argument.
 
 		# get_last_daughter
 		elsif ( $node = $args{'last_daughter_of'} ) {
-			my $id       = $$node;
+			my $id       = $node->get_id;
 			my $tree_id  = $tree_id_for_node{$id};
 			my $function = $ancestor_function{$tree_id};
 			for ( my $i = $#{$function} ; $i >= 0 ; $i-- ) {
@@ -508,7 +508,7 @@ Retrieves relative of argument.
 
 		# get_next_sister
 		elsif ( $node = $args{'next_sister_of'} ) {
-			my $id       = $$node;
+			my $id       = $node->get_id;
 			my $tree_id  = $tree_id_for_node{$id};
 			my $function = $ancestor_function{$tree_id};
 			my $parent_id;
@@ -529,7 +529,7 @@ Retrieves relative of argument.
 
 		# get_previous_sister
 		elsif ( $node = $args{'previous_sister_of'} ) {
-			my $id       = $$node;
+			my $id       = $node->get_id;
 			my $tree_id  = $tree_id_for_node{$id};
 			my $function = $ancestor_function{$tree_id};
 			my $parent_id;
