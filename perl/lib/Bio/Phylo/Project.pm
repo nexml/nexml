@@ -57,21 +57,20 @@ Project constructor.
 
 =cut
 
-sub new {
-	my $class = shift;
-	my $version = $class->VERSION;
-	my %args = (
-		'-tag'        => __PACKAGE__->_tag,
-		'-attributes' => {
-			'version'   => _NEXML_VERSION_,
-			'generator' => "$class v.$version",			
-			'xmlns'     => _NS_NEXML_,			
-			'xsi:schemaLocation' => _NS_NEXML_ . ' ' . _NS_NEXML_ . '/nexml.xsd',
-		},
-		'-identifiable' => 0,
-	);
-	return $class->SUPER::new(%args,@_);
-}
+# sub new {
+# 	my $class = shift;
+# 	my $version = $class->VERSION;
+# 	my %args = (
+# 		'-attributes' => {
+# 			'version'   => _NEXML_VERSION_,
+# 			'generator' => "$class v.$version",			
+# 			'xmlns'     => _NS_NEXML_,			
+# 			'xsi:schemaLocation' => _NS_NEXML_ . ' ' . _NS_NEXML_ . '/nexml.xsd',
+# 		},
+# 		'-identifiable' => 0,
+# 	);
+# 	return $class->SUPER::new(%args,@_);
+# }
 
 =back
 
@@ -191,6 +190,53 @@ Getter for matrix objects
 		}
 		return $doc;
     }
+
+=item get_attributes()
+
+Retrieves attributes for the element.
+
+ Type    : Accessor
+ Title   : get_attributes
+ Usage   : my %attrs = %{ $obj->get_attributes };
+ Function: Gets the xml attributes for the object;
+ Returns : A hash reference
+ Args    : None.
+ Comments: throws ObjectMismatch if no linked taxa object 
+           can be found
+
+=cut
+
+	sub get_attributes {
+		my $self     = shift;
+		my $class    = ref($self);
+		my $version  = $class->VERSION;
+		my %defaults = (
+			'version'   => _NEXML_VERSION_,
+			'generator' => "$class v.$version",			
+			'xmlns'     => _NS_NEXML_,			
+			'xsi:schemaLocation' => _NS_NEXML_ . ' ' . _NS_NEXML_ . '/nexml.xsd',
+		);
+		my %attrs = ( %defaults, %{ $self->SUPER::get_attributes } );
+		return \%attrs;
+	}
+
+=item is_identifiable()
+
+By default, all XMLWritable objects are identifiable when serialized,
+i.e. they have a unique id attribute. However, in some cases a serialized
+object may not have an id attribute (governed by the nexml schema). This
+method indicates whether that is the case.
+
+ Type    : Test
+ Title   : is_identifiable
+ Usage   : if ( $obj->is_identifiable ) { ... }
+ Function: Indicates whether IDs are generated
+ Returns : BOOLEAN
+ Args    : NONE
+
+=cut
+
+    sub is_identifiable { 0 }
 
 =back
 
