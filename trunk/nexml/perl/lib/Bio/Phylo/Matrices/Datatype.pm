@@ -62,73 +62,33 @@ Datatype constructor.
 =cut
 
     sub new {
-        my $package = shift;
-        my $type = ucfirst( lc( shift ) );
-        if ( not $type ) {
-        	throw 'BadArgs' => "No subtype specified!";
-        }
-        if ( $type eq 'Nucleotide' ) {
-            $logger->warn("'nucleotide' datatype requested, using 'dna'");
-            $type = 'Dna';
-        }
-        my $typeclass = __PACKAGE__ . '::' . $type;
-        my $self      = __PACKAGE__->SUPER::new( '-tag' => __PACKAGE__->_tag ); 
-        eval "require $typeclass"; 
-        if ( $@ ) {
-        	throw 'BadFormat' => "'$type' is not a valid datatype";
-        }
-        else {
-            return $typeclass->_new( $self, @_ );
-        }
-    }
-    
-    sub _new { 
         my $class = shift;
-        my $self  = shift;
-        my ( $lookup, $missing, $gap );
-        {
-            no strict 'refs'; 
-            $lookup  = ${ $class . '::LOOKUP'  };
-            $missing = ${ $class . '::MISSING' }; 
-            $gap     = ${ $class . '::GAP'     };
-            use strict;
+        
+        # constructor called with type string
+        if ( $class eq __PACKAGE__ ) {
+			my $type = ucfirst( lc( shift ) );
+			if ( not $type ) {
+				throw 'BadArgs' => "No subtype specified!";
+			}
+			if ( $type eq 'Nucleotide' ) {
+				$logger->warn("'nucleotide' datatype requested, using 'dna'");
+				$type = 'Dna';
+			}
+			return looks_like_class( __PACKAGE__ . '::' . $type )->SUPER::new(@_);
         }
-        bless $self, $class;
-        $self->set_lookup(  $lookup  ) if defined $lookup;
-        $self->set_missing( $missing ) if defined $missing;
-        $self->set_gap(     $gap     ) if defined $gap;
         
-		# process further args
-		while ( my @args = looks_like_hash @_ ) {
-
-			my $key   = shift @args;
-			my $value = shift @args;
-
-			# notify user
-			$logger->debug("processing arg '$key'");
-
-			# don't access data structures directly, call mutators
-			# in child classes or __PACKAGE__
-			my $mutator = $key;
-			$mutator =~ s/^-/set_/;
-
-			# backward compat fixes:
-			$mutator =~ s/^set_pos$/set_position/;
-			$mutator =~ s/^set_matrix$/set_raw/;
-			
-			# bad argument?
-			eval {
-				$self->$mutator($value);
-			};
-			if ( $@ and not ref $@ and $@ =~ m/^Can't locate object method/ ) {
-				throw 'UnknownMethod' => "Processing argument '$key' as method '$mutator' failed: $@";
-			}
-			elsif ( looks_like_instance $@, 'Bio::Phylo::Util::Exceptions' ) {
-				$@->rethrow;
-			}
-		}         
-        
-        return $self;
+        # constructor called from type subclass
+        else {
+        	my %args = looks_like_hash @_;
+			{
+				no strict 'refs'; 
+				$args{'-lookup'}  = ${ "${class}::LOOKUP"  } if ${ "${class}::LOOKUP"  };
+				$args{'-missing'} = ${ "${class}::MISSING" } if ${ "${class}::MISSING" }; 
+				$args{'-gap'}     = ${ "${class}::GAP"     } if ${ "${class}::GAP"     };
+				use strict;
+			}        	
+        	return $class->SUPER::new(%args);
+        }
     }
 
 =back
