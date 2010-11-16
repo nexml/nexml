@@ -788,7 +788,6 @@ sub _add_matrix_metadata {
 sub _add_tokens_to_row {
 	my ( $self, $tokens ) = @_;
 	my $rowname;
-	$logger->debug("adding tokens to row");
 	for my $token ( @{ $tokens } ) {
 	    $logger->debug("token: $token");
 		last if $token eq ';';
@@ -829,7 +828,6 @@ sub _add_tokens_to_row {
 			else {
 				push @{ $row }, split( //, $token );
 			}
-			$logger->debug("added states to row: $token");
 		}
 	}
 }
