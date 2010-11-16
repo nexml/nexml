@@ -191,7 +191,7 @@ Sets invocant weight.
 
     sub set_weight {
         my ( $self, $weight ) = @_;
-        my $id = $$self;
+        my $id = $self->get_id;
         $weight = 1 if not defined $weight;
         if ( looks_like_number $weight ) {
             $weight{$id} = $weight;
@@ -281,7 +281,7 @@ Set invocant starting position.
         my ( $self, $pos ) = @_;
         $pos = 1 if not defined $pos;
         if ( looks_like_number $pos && $pos >= 1 && $pos / int($pos) == 1 ) {
-            $position{$$self} = $pos;
+            $position{$self->get_id} = $pos;
             $logger->info("setting position '$pos'");
         }
         else {
@@ -319,7 +319,7 @@ Sets single annotation.
                 throw 'BadArgs' => "No character to annotate specified!";
             }
             my $i   = $opt{'-char'};
-            my $id  = $$self;
+            my $id  = $self->get_id;
             my $pos = $self->get_position;
             my $len = $self->get_length;
             if ( $i > ( $pos + $len ) || $i < $pos ) {
@@ -380,8 +380,8 @@ Sets list of annotations.
         else {
 			@anno = @_;
         }
+		my $id = $self->get_id;        
         if ( @anno ) {
-            my $id = $$self;
             my $max_index = $self->get_length - 1;
             for my $i ( 0 .. $#anno ) {
                 if ( $i > $max_index ) {
@@ -402,7 +402,7 @@ Sets list of annotations.
             }
         }
         else {
-        	$annotations{$$self} = [];
+        	$annotations{$id} = [];
         }
     }
 
@@ -427,7 +427,7 @@ Gets invocant weight.
 
     sub get_weight {
         my $self   = shift;
-        my $weight = $weight{$$self};
+        my $weight = $weight{$self->get_id};
         return defined $weight ? $weight : 1;
     }
 
@@ -499,7 +499,7 @@ Retrieves character annotation (hashref).
 
     sub get_annotation {
         my $self = shift;
-        my $id   = $$self;
+        my $id   = $self->get_id;
         if (@_) {
             my %opt = looks_like_hash @_;
             if ( not exists $opt{'-char'} ) {
@@ -538,7 +538,7 @@ Retrieves character annotations (array ref).
 
     sub get_annotations {
         my $self = shift;
-        return $annotations{$$self} || [];
+        return $annotations{$self->get_id} || [];
     }
 
 =item get_length()
@@ -1056,7 +1056,7 @@ Analog to to_xml.
     sub _cleanup {
         my $self = shift;
         $logger->info("cleaning up '$self'");
-        if ( defined( my $id = $$self ) ) {
+        if ( defined( my $id = $self->get_id ) ) {
 	        for my $field (@fields) {
 	            delete $field->{$id};
 	        }
