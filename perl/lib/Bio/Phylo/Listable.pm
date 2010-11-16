@@ -178,15 +178,16 @@ Deletes argument from container.
 		my ( $self, $obj ) = @_;
 		my $id = $self->get_id;
 		if ( $self->can_contain($obj) ) {
+			my $object_id = $obj->get_id;	
 			my $occurence_counter = 0;
 			if ( my $i = $index{$id} ) {
 				for my $j ( 0 .. $i ) {
-					if ( $entities{$id}->[$j] == $obj ) {
+					if ( $entities{$id}->[$j]->get_id == $object_id ) {
 						$occurence_counter++;
 					}
 				}
 			}
-			my @modified = grep { ${ $_ } != $obj->get_id } @{ $entities{$id} };
+			my @modified = grep { $_->get_id != $object_id } @{ $entities{$id} };
 			$entities{$id} = \@modified;
 			$index{$id} -= $occurence_counter;
 		}
