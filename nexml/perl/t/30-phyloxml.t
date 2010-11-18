@@ -1,4 +1,14 @@
-use Test::More 'no_plan';
+use Test::More;
+BEGIN {
+    eval { require XML::Twig };
+    if ( $@ ) {
+        plan 'skip_all' => 'XML::Twig not installed';
+    }
+    else {
+        plan 'tests' => 2;
+    }
+}
+
 use strict;
 use Bio::Phylo::IO qw'parse unparse';
 use Bio::Phylo::Util::Logger;
