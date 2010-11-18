@@ -1,6 +1,7 @@
 package Bio::Phylo::Util::Logger;
 use strict;
 use File::Spec;
+#use Filter::Simple;
 use Bio::Phylo::Util::CONSTANT qw'looks_like_hash looks_like_instance';
 use Bio::Phylo::Util::Exceptions 'throw';
 use Config;
@@ -153,6 +154,29 @@ CODE_TEMPLATE
 	sub WARN  () { 2 }
 	sub INFO  () { 3 }
 	sub DEBUG () { 4 }
+# source filtering to get rid of all logger calls.
+# This doesn't seem to improve performance by much
+# and the regexes might not work if there are 
+# parentheses inside the logging string so this is
+# highly experimental. Also, it requires modules
+# to "use" Bio::Phylo::Util::Logger explicitly instead
+# of calling get_logger up the inheritance tree. All
+# in all this is pretty useless and buggy at this point
+# so let's just comment this out.
+# 	FILTER {
+# 		my $debug_regex = '$logger->debug(';
+# 		my $info_regex  = '$logger->info(';		
+# 		my $warn_regex  = '$logger->warn(';		
+# 		my $error_regex = '$logger->error(';				
+# 		my $fatal_regex = '$logger->fatal(';						
+# 
+# 		s/\Q$debug_regex\E[^\)]+?\);//g unless $ENV{'BIO_PHYLO_LOGGING'};
+# 		s/\Q$info_regex\E[^\)]+?\);//g  unless $ENV{'BIO_PHYLO_LOGGING'};
+# 		s/\Q$warn_regex\E[^\)]+?\);//g  unless $ENV{'BIO_PHYLO_LOGGING'};
+# 		s/\Q$error_regex\E[^\)]+?\);//g unless $ENV{'BIO_PHYLO_LOGGING'};
+# 		s/\Q$fatal_regex\E[^\)]+?\);//g unless $ENV{'BIO_PHYLO_LOGGING'};
+# 
+# 	};
 	
 }
 
