@@ -1153,8 +1153,8 @@ Gets invocant's most recent common ancestor shared with argument.
 
 	sub get_mrca {
 		my ( $self, $other_node ) = @_;
-		my $self_anc  = $self->get_ancestors;
-		my $other_anc = $other_node->get_ancestors;
+		my $self_anc  = $self->get_ancestors || [ $self ];
+		my $other_anc = $other_node->get_ancestors || [ $other_node ];
 		for my $i ( 0 .. $#{$self_anc} ) {
 			my $self_anc_id = $self_anc->[$i]->get_id;
 			for my $j ( 0 .. $#{$other_anc} ) {
