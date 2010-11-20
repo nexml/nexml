@@ -160,7 +160,7 @@ sub _to_string {
 		$seq->set_generic('phylip_name' => $phylip_name_for_id{$id});
 	}
 	for my $id ( @ids ) {
-		$string .= $phylip_name_for_id{$id} . $seq_for_id{$id} . "\n";
+		$string .= $phylip_name_for_id{$id} . ' ' . $seq_for_id{$id} . "\n";
 	}
     return $string;
 }
