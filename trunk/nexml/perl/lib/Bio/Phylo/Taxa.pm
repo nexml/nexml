@@ -330,17 +330,27 @@ Serializes invocant to nexus format.
 =cut    
 
 	sub to_nexus {
-		my $self = shift;
-		my %args = @_;
-		my $nexus = "BEGIN TAXA;\n";
-		$nexus .=   "[! Taxa block written by " . ref($self) . " " . $self->VERSION . " on " . localtime() . " ]\n";
-		if ( $args{'-links'} ) {
-			$nexus .= "\tTITLE " . $self->get_nexus_name . ";\n";
-		} 
-		$nexus .= "\tDIMENSIONS NTAX=" . $self->get_ntax . ";\n";
-		$nexus .= "\tTAXLABELS\n";
-		$nexus .= "\t\t" . $_->get_nexus_name . "\n" for @{ $self->get_entities };
-		$nexus .= "\t;\nEND;\n";
+		my ( $self, %args ) = @_;
+		my %m = ( 
+			'header'    => $args{'-header'} && '#NEXUS',
+			'title'     => $args{'-links'}  && sprintf( 'TITLE %s;', $self->get_nexus_name ),
+			'version'   => $self->VERSION, 			
+			'ntax'      => $self->get_ntax,			
+			'class'     => ref $self, 
+			'time'      => my $time = localtime(),
+			'taxlabels' => join "\n\t\t", map { $_->get_nexus_name } @{ $self->get_entities }
+		);		
+		return <<TEMPLATE;
+$m{header}
+BEGIN TAXA;
+[! Taxa block written by $m{class} $m{version} on $m{time} ]
+	$m{title}
+        DIMENSIONS NTAX=$m{ntax};
+        TAXLABELS
+        	$m{taxlabels}
+        ;
+END;
+TEMPLATE
 	}
 
 =begin comment
