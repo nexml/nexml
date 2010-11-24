@@ -9,6 +9,7 @@ BEGIN {
 use strict;
 use warnings;
 use util;
+use util::siteFactory;
 use Bio::Phylo::Util::Logger;
 use Template;
 use File::Temp;
