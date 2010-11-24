@@ -259,7 +259,7 @@ Sets invocant name.
         my ( $self, $name ) = @_;
 		if ( $name ) {
 	        # strip spaces
-	        $name =~ s/^\s*(.*?)\s*$/$1/;
+#	        $name =~ s/^\s*(.*?)\s*$/$1/;
 	
 	        # check for bad characters
 	        if ( $name =~ m/(?:;|,|:|\(|\)|&|<|>\s)/ ) {
@@ -425,7 +425,21 @@ Gets invocant's name.
 
 =item get_nexus_name()
 
-Gets invocant's name, modified to be safely used in nexus files
+Gets invocant's name, modified to be safely used in nexus files. This means that:
+
+=item * 
+
+names with spaces in them that aren't 'single quoted' have their spaces replaced
+with underscores
+
+=item * 
+
+names with any of the following characters in them are single quoted: 
+ -^*(){}[]+=;:"\<>/,
+
+=item * 
+
+names with single quotes inside them (i.e. not around them) are "double quoted"
 
  Type    : Accessor
  Title   : get_nexus_name
@@ -439,7 +453,15 @@ Gets invocant's name, modified to be safely used in nexus files
     sub get_nexus_name {
         my $self = shift;
         my $name = $self->get_internal_name;
-        $name =~ s/\s+/_/g;
+        if ( $name =~ /\s/ && $name !~ /^'.+'$/ ) {
+        	$name =~ s/\s/_/g;
+        }        
+        if ( $name =~ /(?:\-|\^|\*|\(|\)|{|}|\[|\]|\+|=|;|:|"|\\|<|>|\/|,)/ && $name !~ /^'.+'$/ ) {
+        	$name = "'${name}'";
+        }
+        if ( $name =~ /'/ && $name !~ /^".+"$/ && $name !~ /^'.+'$/ ) {
+        	$name = "\"${name}\"";
+        }
         return $name;    
     }
 
