@@ -1,12 +1,11 @@
 package Bio::Phylo::Parsers::Tolweb;
 use strict;
 use warnings;
-use Bio::Phylo::IO ();
+use Bio::Phylo::Parsers::Abstract;
 use Bio::Phylo::Util::Exceptions 'throw';
 use Bio::Phylo::Util::CONSTANT qw'looks_like_instance :namespaces';
-use Bio::Phylo::Factory;
-use vars qw(@ISA $VERSION);
-@ISA = qw(Bio::Phylo::IO);
+use vars qw(@ISA);
+@ISA = qw(Bio::Phylo::Parsers::Abstract);
 
 eval { require XML::Twig };
 if ( $@ ) {
@@ -54,30 +53,17 @@ L<http://tolweb.org/tree/home.pages/downloadtree.html>
 
 =cut
 
-# The factory object, to instantiate Bio::Phylo objects
-my $factory = Bio::Phylo::Factory->new;
-
-# We re-use the core Bio::Phylo version number.
-$VERSION = $Bio::Phylo::VERSION;
-
-# I factored the logging methods in Bio::Phylo (debug, info,
-# warning, error, fatal) out of the inheritance tree and put
-# them in a separate logging object.
-my $logger = Bio::Phylo::Util::Logger->new;
-
 # this is the constructor that gets called by Bio::Phylo::IO,
 # here we create the object instance that will process the file/string
-sub _new {
-	my $class = shift;
-	$logger->debug("instantiating $class");
+sub _init {
+	my $self = shift;
+	$self->_logger->debug("initializing $self");
 
 	# this is the actual parser object, which needs to hold a reference
 	# to the XML::Twig object and to the tree
-	my $self = bless { 
-		'_tree'      => undef,
-		'_node_of'   => {},
-		'_parent_of' => {}, 
-	}, $class;
+	$self->{'_tree'}      = undef;
+	$self->{'_node_of'}   = {};
+	$self->{'_parent_of'} = {};
 
 	# here we put the two together, i.e. create the actual XML::Twig object
 	# with its handlers, and create a reference to it in the parser object
@@ -89,36 +75,15 @@ sub _new {
 	return $self;
 }
 
-# the official interface for Bio::Phylo::IO parser subclasses requires a
-# _from_handle method (to process data on a file handle) and a _from_string
-# method, for data in a string variable. Since XML::Twig can parse both
-# from handle and string with the same XML::Twig->parse method call, we can
-# suffice with aliases that point to the same method _from_both
-*_from_handle = \&_from_both;
-*_from_string = \&_from_both;
-*_from_url    = \&_from_both;
 
-# this method will be called by Bio::Phylo::IO, indirectly, through
-# _from_handle if the parse function is called with the -file => $filename
-# argument, or through _from_string if called with the -string => $string
-# argument
-sub _from_both {
+sub _parse {
 	my $self = shift;
-	$logger->debug("going to parse xml");
-	my %opt = @_;
+	$self->_init;
+	$self->_logger->debug("going to parse xml");
 
-	$self->{'_tree'} = $factory->create_tree;
-	$self->{'_tree'}->insert( $factory->create_node );
-	
-	# XML::Twig doesn't care if we parse from a handle or a string
-	my $xml = $opt{'-handle'} || $opt{'-string'};
-	if ( $xml ) {
-		$self->{'_twig'}->parse($xml);
-	}
-	elsif ( $opt{'-url'} ) {
-		$self->{'_twig'}->parseurl($opt{'-url'});
-	}
-	$logger->debug("done parsing xml");
+	$self->{'_tree'} = $self->_factory->create_tree->insert( $self->_factory->create_node );
+	$self->{'_twig'}->parse( $self->_string );
+	$self->_logger->debug("done parsing xml");
 
     # now we build the tree structure	
     my $root;
@@ -134,54 +99,28 @@ sub _from_both {
 	}
 	$root->set_parent( $self->{'_tree'}->get_root );
 	$self->{'_tree'}->get_root->add_meta(
-	    $factory->create_meta(
-	        '-triple' => {
-	            'tba:id' => $root->get_generic('ANCESTORWITHPAGE')
-	        }
+	    $self->_factory->create_meta(
+	        '-triple' => { 'tba:id' => $root->get_generic('ANCESTORWITHPAGE') }
 	    )
 	);
-	$logger->debug("done building tree");
+	$self->_logger->debug("done building tree");
 
 	# we're done, now grab the tree from its field
-	my $tree = $self->{'_tree'};
-
-	# reset everything in its initial state: Bio::Phylo::IO caches parsers
-	$self->{'_tree'}      = undef;
-	$self->{'_node_of'}   = {};
-	$self->{'_parent_of'} = {}; 	
-
-	if ( $opt{'-project'} ) {
-		my $forest = $factory->create_forest;
-		$forest->insert($tree);
-		my $taxa = $forest->make_taxa;
-		$opt{'-project'}->insert($taxa,$forest);
-		return $opt{'-project'};
-	}
-	elsif ( $opt{'-as_project'} ) {
-		my $forest = $factory->create_forest;
-		$forest->insert($tree);
-		$logger->debug($forest->to_newick);
-		my $taxa = $forest->make_taxa;
-		my $proj = $factory->create_project;
-		$proj->insert($taxa,$forest);
-		return $proj;
-	}
-	else {
-		return $tree;
-	}
+	my $tree = $self->{'_tree'};	
+	return $self->_factory->create_forest->insert($tree);
 }
 
 sub _handle_node {
 	my ( $self, $twig, $node_elt ) = @_;
-	$logger->debug("handling node $node_elt");
-	my $node_obj = $factory->create_node;	
+	$self->_logger->debug("handling node $node_elt");
+	my $node_obj = $self->_factory->create_node;	
 	my $id = $node_elt->att('ID');
 	$node_obj->set_generic( 'id' => $id );
 	$self->{'_node_of'}->{$id} = $node_obj;
 	
 	if ( my $parent = $node_elt->parent->parent ) {
 		$self->{'_parent_of'}->{$id} = $parent->att('ID');
-		$logger->debug("found parent node");
+		$self->_logger->debug("found parent node");
 	}
 	$self->{'_tree'}->insert($node_obj);
 	for my $child_elt ( $node_elt->children ) {		
@@ -194,26 +133,30 @@ sub _handle_node {
 			}			
 		}
 		elsif ( $child_elt->tag eq 'DESCRIPTION' ) {
-		    $node_obj->set_namespaces( 'dc' => _NS_DC_ );
-		    $node_obj->add_meta(
-		        $factory->create_meta( '-triple' => { 'dc:description' => $child_elt->text } )
-		    );
+		    if (my $desc = $child_elt->text) {
+				$node_obj->set_namespaces( 'dc' => _NS_DC_ );
+				$node_obj->add_meta(
+					$self->_factory->create_meta( '-triple' => { 'dc:description' => $desc } )
+				);
+		    }
 		}
 		elsif ( my $text = $child_elt->text ) {
 		    $node_obj->set_namespaces( 'tbe' => _NS_TWE_ );
 		    $node_obj->add_meta(
-		        $factory->create_meta( '-triple' => { 'tbe:' . lc($child_elt->tag) => $text } )    
+		        $self->_factory->create_meta( '-triple' => { 'tbe:' . lc($child_elt->tag) => $text } )    
 		    );
 		}		
 	}
 	for my $att_name ( $node_elt->att_names ) {
 	    $node_obj->set_namespaces( 'tba' => _NS_TWA_ );
-	    if ( $att_name eq 'ancestorwithpage' ) {
-	        $node_obj->set_generic( 'ancestorwithpage' => $node_elt->att($att_name) );
+	    if ( $att_name eq 'ANCESTORWITHPAGE' ) {
+	        $node_obj->set_generic( 'ANCESTORWITHPAGE' => $node_elt->att($att_name) );
 	    }
-        $node_obj->add_meta(
-            $factory->create_meta( '-triple' => { 'tba:' . lc($att_name) => $node_elt->att($att_name) } )		    
-        );
+	    if ( defined $node_elt->att($att_name) ) {
+			$node_obj->add_meta(
+				$self->_factory->create_meta( '-triple' => { 'tba:' . lc($att_name) => $node_elt->att($att_name) } )		    
+			);
+        }
  	}
 	$twig->purge;
 }

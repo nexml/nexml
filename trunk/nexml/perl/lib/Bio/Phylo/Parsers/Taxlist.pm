@@ -1,12 +1,9 @@
 # $Id$
 package Bio::Phylo::Parsers::Taxlist;
 use strict;
-use Bio::Phylo::Factory;
-use Bio::Phylo::IO ();
+use Bio::Phylo::Parsers::Abstract;
 use vars qw(@ISA);
-@ISA=qw(Bio::Phylo::IO);
-
-my $fac = Bio::Phylo::Factory->new;
+@ISA=qw(Bio::Phylo::Parsers::Abstract);
 
 =head1 NAME
 
@@ -22,78 +19,19 @@ Bio::Phylo::IO->parse call:
 
  -fieldsep => '\n',
 
-=begin comment
-
- Type    : Constructor
- Title   : new
- Usage   : my $taxlist = Bio::Phylo::Parsers::Taxlist->new;
- Function: Initializes a Bio::Phylo::Parsers::Taxlist object.
- Returns : A Bio::Phylo::Parsers::Taxlist object.
- Args    : none.
-
-=end comment
-
 =cut
 
-sub _new {
-    my $class = $_[0];
-    my $self  = {};
-    bless $self, $class;
-    return $self;
-}
-
-=begin comment
-
- Type    : parser
- Title   : from_handle(%options)
- Usage   : $taxlist->from_handle(%options);
- Function: Reads taxon names from file, populates taxa object
- Returns : A Bio::Phylo::Taxa object.
- Args    : -handle => (\*FH), -file => (filename)
- Comments:
-
-=end comment
-
-=cut
-
-*_from_handle = \&_from_both;
-*_from_string = \&_from_both;
-
-sub _from_both {
-    my $self = shift;
-    my %opts = @_;
-    if ( !$opts{'-fieldsep'} ) {
-        $opts{'-fieldsep'} = "\n";
-    }
-    my $taxa = $fac->create_taxa;
-    if ( $opts{'-handle'} ) {
-        while ( readline $opts{'-handle'} ) {
-            chomp;
-            if ($_) {
-                $taxa->insert( $fac->create_taxon( -name => $_ ) );
-            }
-        }
-    }
-    elsif ( $opts{'-string'} ) {
-        foreach ( split /$opts{'-fieldsep'}/, $opts{'-string'} ) {
-            chomp;
-            if ($_) {
-                $taxa->insert( $fac->create_taxon( -name => $_ ) );
-            }
-        }
-    }
-    if ( $opts{'-project'} ) {
-    	$opts{'-project'}->insert($taxa);
-    	return $opts{'-project'};    	
-    }
-    elsif ( $opts{'-as_project'} ) {
-    	my $proj = $fac->create_project;
-    	$proj->insert($taxa);
-    	return $proj;
-    }
-    else {
-    	return $taxa;
-    }
+sub _parse {
+	my $self = shift;
+	my $fh   = $self->_handle;
+	my $fac  = $self->_factory;
+	my $taxa = $fac->create_taxa;
+	local $/ = $self->_args->{'-fieldsep'} || "\n";
+	while(<$fh>) {
+		chomp;
+		$taxa->insert( $fac->create_taxon( '-name' => $_ ) );
+	}
+	return $taxa;
 }
 
 # podinherit_insert_token

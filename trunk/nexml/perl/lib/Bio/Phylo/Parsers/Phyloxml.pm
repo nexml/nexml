@@ -1,12 +1,12 @@
 package Bio::Phylo::Parsers::Phyloxml;
 use strict;
-use Bio::Phylo::IO ();
+use Bio::Phylo::Parsers::Abstract;
 use Bio::Phylo::Util::Exceptions 'throw';
 use Bio::Phylo::Factory;
 use Bio::Phylo::Util::CONSTANT qw'looks_like_instance';
 use Bio::Phylo::NeXML::Writable;
-use vars qw(@ISA $VERSION);
-@ISA = qw(Bio::Phylo::IO);
+use vars qw(@ISA);
+@ISA = qw(Bio::Phylo::Parsers::Abstract);
 
 eval { require XML::Twig };
 if ( $@ ) {
@@ -54,18 +54,15 @@ For more information about the phyloxml data standard, visit L<http://www.phylox
 =cut
 
 # The factory object, to instantiate Bio::Phylo objects
-my $factory = Bio::Phylo::Factory->new;
+#my $factory = Bio::Phylo::Factory->new;
 
 # For semantic annotations
 Bio::Phylo::NeXML::Writable->set_namespaces( 'px' => 'http://www.phyloxml.org/1.10/terms#' );
 
-# We re-use the core Bio::Phylo version number.
-$VERSION = $Bio::Phylo::VERSION;
-
 # I factored the logging methods in Bio::Phylo (debug, info,
 # warning, error, fatal) out of the inheritance tree and put
 # them in a separate logging object.
-my $logger = Bio::Phylo::Util::Logger->new;
+# my $logger = Bio::Phylo::Util::Logger->new;
 
 # helper method to add parser reading position to log messages
 sub _pos {
@@ -86,7 +83,7 @@ sub _obj_from_elt {
 	# factory object handles instantiation (and class loading)
 	# see Bio::Phylo::Factory
 	my $method = "create_$class";
-	my $obj = $factory->$method( %args );
+	my $obj = $self->_factory->$method( %args );
 	
 	# description
 	if ( my ( $desc_elt ) = $elt->children('description') ) {
@@ -96,7 +93,7 @@ sub _obj_from_elt {
 	# id_source
 	if ( my $id_source = $elt->att('id_source') ) {
 		$obj->add_meta(
-			$factory->create_meta(
+			$self->_factory->create_meta(
 				'-triple' => { 'px:id_source' => $id_source }
 			)
 		);
@@ -108,24 +105,24 @@ sub _obj_from_elt {
 	if ( defined $name_elt ) {
 		my $id = $name_elt->text;
 		$obj->set_name( $id );
-		$logger->debug( $self->_pos . " processed <$tag id=\"$id\"/>" );
+		$self->_logger->debug( $self->_pos . " processed <$tag id=\"$id\"/>" );
 	}
 	else {
-		$logger->debug( $self->_pos . " processed <$tag/>" );
+		$self->_logger->debug( $self->_pos . " processed <$tag/>" );
 	}
 	return $obj;
 }
 
-# this is the constructor that gets called by Bio::Phylo::IO,
 # here we create the object instance that will process the file/string
-sub _new {
-	my $class = shift;
-	$logger->debug("instantiating $class");
+sub _init {
+	my $self = shift;
 
 	# this is the actual parser object, which needs to hold a reference
 	# to the XML::Twig object, to a hash of processed blocks (for fast lookup by id)
-	# and an array of ids (to preserve processing order)
-	my $self = _init( bless {}, $class );
+	# and an array of ids (to preserve processing order)	
+	$self->{'_taxon_in_taxa'} = {};	
+	$self->{'_proj'}          = $self->_factory->create_project;
+	$self->{'_blocks'}        = [ $self->{'_proj'} ];	
 
 	# here we put the two together, i.e. create the actual XML::Twig object
 	# with its handlers, and create a reference to it in the parser object
@@ -160,9 +157,9 @@ sub _handle_phylogeny {
 	my ( $twig, $phylogeny_elt, $self ) = @_;
 	my $forest;
 	my $tree = _obj_from_elt( $self, $phylogeny_elt, 'tree' );
-	unless ( $forest = $self->_proj->get_forests->[0] ) {
-		$forest = $factory->create_forest;
-		$self->_proj->insert( $forest );
+	unless ( $forest = $self->_project->get_forests->[0] ) {
+		$forest = $self->_factory->create_forest;
+		$self->_project->insert( $forest );
 	}
 	$forest->insert( $tree );
 	$tree->set_as_unrooted( $phylogeny_elt->att('rooted') ne 'true' );
@@ -181,7 +178,7 @@ sub _process_clade {
 	$self->_process_branch_length( $clade_elt, $node );
 	
 	# support values, e.g. bootstrap, posterior
-	_handle_confidence( $_, $node ) for $clade_elt->children('confidence');
+	$self->_handle_confidence( $_, $node ) for $clade_elt->children('confidence');
 	
 	# taxonomy, e.g. identifiers, GUIDs, ranks, names
 	$self->_process_taxonomy( $_, $node ) for $clade_elt->children('taxonomy');
@@ -199,8 +196,8 @@ sub _process_sequence {
 	my ( $taxon, $taxa ) = $self->_fetch_taxon_and_taxa( $node );
 	my $matrix;
 	unless ( $matrix = $self->get_matrices->[0] ) {
-		$matrix = $factory->create_matrix( '-taxa' => $taxa );
-		$self->_proj->insert( $matrix );
+		$matrix = $self->_factory->create_matrix( '-taxa' => $taxa );
+		$self->_project->insert( $matrix );
 	}
 	my $datum = $self->_obj_from_elt( $seq_elt, 'datum', '-taxon' => $taxon );
 	$matrix->insert( $datum );	
@@ -218,14 +215,15 @@ sub _process_branch_length {
 
 sub _fetch_taxon_and_taxa {
 	my ( $self, $node ) = @_;
+	
 	# fetch or instantiate taxon object
 	my ( $taxon, $taxa );
 	unless( $taxon = $node->get_taxon ) {
-		unless ( $taxa = $self->_proj->get_taxa->[0] ) {
-			$self->_proj->insert( $taxa = $factory->create_taxa );
-			$self->_proj->get_forests->[0]->set_taxa( $taxa );
+		unless ( $taxa = $self->_project->get_taxa->[0] ) {
+			$self->_project->insert( $taxa = $self->_factory->create_taxa );
+			$self->_project->get_forests->[0]->set_taxa( $taxa );
 		}
-		$taxon = $factory->create_taxon;
+		$taxon = $self->_factory->create_taxon;
 		$taxa->insert($taxon);
 		$node->set_taxon($taxon);
 	}	
@@ -247,9 +245,9 @@ sub _process_taxonomy_annotations {
 	my ( $text, $tag ) = ( $elt->text, $elt->tag );
 	if ( my $provider = $elt->att('provider') ) {
 		$taxon->add_meta(
-			$factory->create_meta( 
+			$self->_factory->create_meta( 
 				'-triple' => { 
-					"px:${tag}" => $factory->create_meta(
+					"px:${tag}" => $self->_factory->create_meta(
 						'-triple' => { "px:${provider}" => $elt->text }
 					)
 				}
@@ -258,7 +256,7 @@ sub _process_taxonomy_annotations {
 	}
 	else {
 		$taxon->add_meta( 
-			$factory->create_meta( 
+			$self->_factory->create_meta( 
 				'-triple' => { 
 					"px:${tag}" => $text 
 				} 
@@ -268,11 +266,11 @@ sub _process_taxonomy_annotations {
 }
 
 sub _handle_confidence {
-	my ( $confidence_elt, $node ) = @_;
+	my ( $self, $confidence_elt, $node ) = @_;
 	$node->add_meta(
-		$factory->create_meta( 
+		$self->_factory->create_meta( 
 			'-triple' => { 
-				'px:confidence' => $factory->create_meta(
+				'px:confidence' => $self->_factory->create_meta(
 					'-triple' => { 
 						'px:' . $confidence_elt->att('type') => $confidence_elt->text 
 					}
@@ -286,7 +284,7 @@ sub _process_events {
 	my ( $self, $events_elt, $node ) = @_;
 	my @events;
 	for ( $events_elt->children ) {
-		push @events, $factory->create_meta( 
+		push @events, $self->_factory->create_meta( 
 			'-triple' => { 
 				'px:' . $_->tag => $_->text 
 			} 
@@ -294,7 +292,7 @@ sub _process_events {
 	}
 	
 	$node->add_meta(
-		$factory->create_meta( 
+		$self->_factory->create_meta( 
 			'-triple' => { 
 				'px:events' => \@events 
 			} 
@@ -302,43 +300,18 @@ sub _process_events {
 	);
 }
 
-# initialize/reset parser object, called
-# by the constructor (_new), and at the
-# end of each parser call
-sub _init {
-	my $hash = shift;
-	$hash->{'_project'}       = $factory->create_project;	
-	$hash->{'_blocks'}        = [ $hash->{'_project'} ];
-	$hash->{'_taxon_in_taxa'} = {};
-	return $hash;
-}
-
-sub _proj { shift->{'_project'} }
-
-# the official interface for Bio::Phylo::IO parser subclasses requires a
-# _from_handle method (to process data on a file handle) and a _from_string
-# method, for data in a string variable. Since XML::Twig can parse both
-# from handle and string with the same XML::Twig->parse method call, we can
-# suffice with aliases that point to the same method _from_both
-*_from_handle = \&_from_both;
-*_from_string = \&_from_both;
-
 # this method will be called by Bio::Phylo::IO, indirectly, through
 # _from_handle if the parse function is called with the -file => $filename
 # argument, or through _from_string if called with the -string => $string
 # argument
-sub _from_both {
+sub _parse {
 	my $self = shift;
-	$logger->debug("going to parse xml");
+	$self->_logger->debug("going to parse xml");
+	$self->_init;
 	my %opt = @_;
 
 	# XML::Twig doesn't care if we parse from a handle or a string
-	if ( my $xml = $opt{'-handle'} || $opt{'-string'} ) {
-		$self->{'_twig'}->parse($xml);
-	}
-	elsif ( my $url = $opt{'-url'} ) {
-		$self->{'_twig'}->parseurl($url);
-	}
+	$self->{'_twig'}->parse( $self->_string );
 
 	# we're done, now order the blocks
 	my $ordered_blocks = $self->{'_blocks'};
@@ -346,37 +319,11 @@ sub _from_both {
 	# prepare the requested return...
 	my $temp_project = shift( @{ $ordered_blocks } );
 	
-	# ...which is either a provided project object...
-	if ( $opt{'-project'} ) {
-		$opt{'-project'}->set_generic( $temp_project->get_generic );
-		$opt{'-project'}->insert( 
-			@{ $temp_project->get_taxa }, 
+	return 	@{ $temp_project->get_taxa }, 
 			@{ $temp_project->get_forests },
-			@{ $temp_project->get_matrices } 			
-		);
-		# reset everything in its initial state: Bio::Phylo::IO caches parsers
-		$self->_init;
-		return $opt{'-project'};
-	}
-	
-	# ... a newly created one...
-	elsif ( $opt{'-as_project'} ) {
-		$temp_project->insert( @{ $ordered_blocks } ) if scalar(@{ $ordered_blocks });
-		# reset everything in its initial state: Bio::Phylo::IO caches parsers
-		$self->_init;
-		return $temp_project;
-	}
-	
-	# ... or (default) a list of data objects...
-	else {
-		# reset everything in its initial state: Bio::Phylo::IO caches parsers
-		$self->_init;		
-		return [
-			@{ $temp_project->get_taxa }, 
-			@{ $temp_project->get_forests },
-			@{ $temp_project->get_matrices } 		
-		];
-	}
+			@{ $temp_project->get_matrices };
 }
+
+sub DESTROY { 1 };
 
 1;

@@ -1,13 +1,13 @@
 package Bio::Phylo::Parsers::Nexml;
 use strict;
-use Bio::Phylo::IO ();
+use Bio::Phylo::Parsers::Abstract;
 use Bio::Phylo::Util::Exceptions 'throw';
 use Bio::Phylo::Factory;
 use Bio::Phylo::Util::CONSTANT qw'looks_like_instance _NEXML_VERSION_';
 use Bio::Phylo::NeXML::Writable ();
 use Bio::Phylo::NeXML::Meta::XMLLiteral;
-use vars qw(@ISA $VERSION);
-@ISA = qw(Bio::Phylo::IO);
+use vars qw(@ISA);
+@ISA = qw(Bio::Phylo::Parsers::Abstract);
 
 eval { require XML::Twig };
 if ( $@ ) {
@@ -53,17 +53,6 @@ For more information about the nexml data standard, visit L<http://www.nexml.org
  $Id$
 
 =cut
-
-# The factory object, to instantiate Bio::Phylo objects
-my $factory = Bio::Phylo::Factory->new;
-
-# We re-use the core Bio::Phylo version number.
-$VERSION = $Bio::Phylo::VERSION;
-
-# I factored the logging methods in Bio::Phylo (debug, info,
-# warning, error, fatal) out of the inheritance tree and put
-# them in a separate logging object.
-my $logger = Bio::Phylo::Util::Logger->new;
 
 # helper method to add parser reading position to log messages
 sub _pos {
@@ -114,11 +103,11 @@ sub _obj_from_elt {
 	# factory object handles instantiation (and class loading)
 	# see Bio::Phylo::Factory
 	my $method = "create_$class";
-	my $obj = $factory->$method( %args );
+	my $obj = $self->_factory->$method( %args );
 
 	# <dict/> elements are deprecated
 	for my $dict_elt ( $elt->children('dict') ) {
-		$logger->warn( $self->_pos . " dict elements are deprecated!");
+		$self->_logger->warn( $self->_pos . " dict elements are deprecated!");
 	}
 	for my $meta_elt ( $elt->children('meta') ) {
 	    my $meta = $self->_process_meta($meta_elt);
@@ -128,25 +117,24 @@ sub _obj_from_elt {
 	my $id = $elt->att('id');
 	my $tag = $elt->tag;
 	if ( defined $id ) {
-		$logger->debug( $self->_pos . " processed <$tag id=\"$id\"/>" );
+		$self->_logger->debug( $self->_pos . " processed <$tag id=\"$id\"/>" );
 	}
 	else {
-		$logger->debug( $self->_pos . " processed <$tag/>" );
+		$self->_logger->debug( $self->_pos . " processed <$tag/>" );
 	}
 	return ( $obj, $id );
 }
 
 # this is the constructor that gets called by Bio::Phylo::IO,
 # here we create the object instance that will process the file/string
-sub _new {
-	my $class = shift;
-	$logger->debug("instantiating $class");
+sub _init {
+	my $self = shift;
+	$self->_logger->debug("initializing $self");
 
-	# this is the actual parser object, which needs to hold a reference
-	# to the XML::Twig object, to a hash of processed blocks (for fast lookup by id)
-	# and an array of ids (to preserve processing order)
-	my $self = _init( bless {}, $class );
-
+	$self->{'_blocks'}        = [];
+	$self->{'_taxa'}          = {};
+	$self->{'_taxon_in_taxa'} = {};
+	
 	# here we put the two together, i.e. create the actual XML::Twig object
 	# with its handlers, and create a reference to it in the parser object
 	$self->{'_twig'} = XML::Twig->new( 
@@ -179,41 +167,14 @@ sub _new {
 	return $self;
 }
 
-# initialize/reset parser object, called
-# by the constructor (_new), and at the
-# end of each parser call
-sub _init {
-	my $hash = shift;
-	$hash->{'_blocks'}        = [];
-	$hash->{'_taxa'}          = {};
-	$hash->{'_taxon_in_taxa'} = {};
-	return $hash;
-}
-
-# the official interface for Bio::Phylo::IO parser subclasses requires a
-# _from_handle method (to process data on a file handle) and a _from_string
-# method, for data in a string variable. Since XML::Twig can parse both
-# from handle and string with the same XML::Twig->parse method call, we can
-# suffice with aliases that point to the same method _from_both
-*_from_handle = \&_from_both;
-*_from_string = \&_from_both;
-
-# this method will be called by Bio::Phylo::IO, indirectly, through
-# _from_handle if the parse function is called with the -file => $filename
-# argument, or through _from_string if called with the -string => $string
-# argument
-sub _from_both {
+# called by Bio::Phylo::Parsers::Abstract
+sub _parse {
 	my $self = shift;
-	$logger->debug("going to parse xml");
+	$self->_init;
+	$self->_logger->debug("going to parse xml");
 	my %opt = @_;
 
-	# XML::Twig doesn't care if we parse from a handle or a string
-	if ( my $xml = $opt{'-handle'} || $opt{'-string'} ) {
-		$self->{'_twig'}->parse($xml);
-	}
-	elsif ( my $url = $opt{'-url'} ) {
-		$self->{'_twig'}->parseurl($url);
-	}
+	$self->{'_twig'}->parse($self->_string);
 
 	# we're done, now order the blocks
 	my $ordered_blocks = $self->{'_blocks'};
@@ -221,29 +182,7 @@ sub _from_both {
 	# prepare the requested return...
 	my $temp_project = pop( @{ $ordered_blocks } ); # nexml root tag is processed last!
 	
-	# ...which is either a provided project object...
-	if ( $opt{'-project'} ) {
-		$opt{'-project'}->set_generic( $temp_project->get_generic );
-		$opt{'-project'}->insert( @{ $ordered_blocks } );
-		# reset everything in its initial state: Bio::Phylo::IO caches parsers
-		$self->_init;
-		return $opt{'-project'};
-	}
-	
-	# ... a newly created one...
-	elsif ( $opt{'-as_project'} ) {
-		$temp_project->insert( @{ $ordered_blocks } ) if scalar(@{ $ordered_blocks });
-		# reset everything in its initial state: Bio::Phylo::IO caches parsers
-		$self->_init;
-		return $temp_project;
-	}
-	
-	# ... or (default) a list of data objects...
-	else {
-		# reset everything in its initial state: Bio::Phylo::IO caches parsers
-		$self->_init;		
-		return $ordered_blocks;
-	}
+	return @{ $ordered_blocks };
 }
 
 # element handler
@@ -251,7 +190,7 @@ sub _handle_nexml {
 	my ( $twig, $nexml_elt, $self ) = @_;
 	my ( $project_obj, $project_id ) = $self->_obj_from_elt( $nexml_elt, 'project' );
 	push @{ $self->{'_blocks'} }, $project_obj;
-	$logger->info( $self->_pos . " Processed nexml element" );
+	$self->_logger->info( $self->_pos . " Processed nexml element" );
 	my $version = _NEXML_VERSION_;
 	if ( $nexml_elt->att('version') !~ /^\Q$version\E$/ ) {
 		throw 'BadFormat' => "Wrong version number, can only handle ${version}: " 
@@ -284,7 +223,7 @@ sub _handle_otus {
 		$self->{'_taxon_in_taxa'}->{$taxa_id}->{$taxon_id} = $taxon_obj;		
 	}
 	
-	$logger->info( $self->_pos . " Processed block id: $taxa_id" );
+	$self->_logger->info( $self->_pos . " Processed block id: $taxa_id" );
 }
 
 # again, nice 'n' generic: we provide an element, which must have an
@@ -314,7 +253,7 @@ sub _set_otu_for_obj {
 	
 	# notify user
 	else {
-		$logger->info( $self->_pos . " no taxon idref" );
+		$self->_logger->info( $self->_pos . " no taxon idref" );
 	}
 }
 
@@ -351,7 +290,7 @@ sub _set_otus_for_obj {
 
 sub _handle_chars {
 	my ( $twig, $characters_elt, $self ) = @_;
-	$logger->debug( $self->_pos . " going to parse characters element" );
+	$self->_logger->debug( $self->_pos . " going to parse characters element" );
 
 	# create matrix object, send extra constructor args
 	my $type = $characters_elt->att('xsi:type');
@@ -402,7 +341,7 @@ sub _handle_chars {
 				}
 			}
 		}
-		$logger->debug( $self->_pos . " set char: '@chars'" );
+		$self->_logger->debug( $self->_pos . " set char: '@chars'" );
 		$row_obj->set_char( \@chars );
 		$self->_set_otu_for_obj( $row_elt, $row_obj, $taxa_idref );
 		$matrix_obj->insert($row_obj);
@@ -602,7 +541,7 @@ sub _handle_forest {
 
 		# TODO fixme
 		else {
-			$logger->warn( $self->_pos . " Can't process networks yet" );
+			$self->_logger->warn( $self->_pos . " Can't process networks yet" );
 		}
 
 	}
@@ -723,7 +662,7 @@ sub _process_meta {
     if ( $meta_elt->att('href') && $meta_elt->att('href') !~ m|http://|i ) {
         $object = $self->_get_base_uri($meta_elt) . $object;
     }
-    my $meta = $factory->create_meta( '-triple' => { $predicate => $object } );
+    my $meta = $self->_factory->create_meta( '-triple' => { $predicate => $object } );
     for my $child_meta_elt ( $meta_elt->children() ) {
 		if ( $child_meta_elt->gi eq 'meta' ) {
 			$meta->add_meta( $self->_process_meta( $child_meta_elt ) );
