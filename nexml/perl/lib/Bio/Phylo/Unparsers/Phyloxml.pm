@@ -1,4 +1,4 @@
-# $Id: Mrp.pm 1235 2010-03-02 16:11:07Z rvos $
+# $Id$
 package Bio::Phylo::Unparsers::Phyloxml;
 use strict;
 use Bio::Phylo::IO ();
@@ -234,7 +234,7 @@ To learn more about the PhyloXML standard, visit L<http://www.phyloxml.org>
 
 =head1 REVISION
 
- $Id: Mrp.pm 1235 2010-03-02 16:11:07Z rvos $
+ $Id$
 
 =cut
 
