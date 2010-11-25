@@ -42,18 +42,18 @@ $VERSION .= "_$rev";
     sub import {
         my $class = shift;
         if (@_) {
-            my %opt = looks_like_hash @_;
-			while ( my ( $key, $value ) = each %opt ) {
-				if ( $key =~ qr/^VERBOSE$/i ) {
-					$logger->VERBOSE( '-level' => $value, -class => $class );
-				}
-				elsif ( $key =~ qr/^COMPAT$/i ) {
-					$COMPAT = ucfirst( lc($value) );
-				}
-				else {
-					throw 'BadArgs' => "'$key' is not a valid argument for import";
-				}
+		my %opt = looks_like_hash @_;
+		while ( my ( $key, $value ) = each %opt ) {
+			if ( $key =~ qr/^VERBOSE$/i ) {
+				$logger->VERBOSE( '-level' => $value, -class => $class );
 			}
+			elsif ( $key =~ qr/^COMPAT$/i ) {
+				$COMPAT = ucfirst( lc($value) );
+			}
+			else {
+				throw 'BadArgs' => "'$key' is not a valid argument for import";
+			}
+		}
         }
         return 1;
     }
@@ -174,61 +174,61 @@ argument "-name" in the constructor.
         # processing arguments
         if ( @_ and @_ = looks_like_hash @_ ) {
 	
-			# process all arguments
-			ARG: while (@_) {
-				my $key   = shift @_;
-				my $value = shift @_;
-				
-				# this is a bioperl arg, meant to set
-				# verbosity at a per class basis. In
-				# bioperl, the $verbose argument is
-				# subsequently carried around in that
-				# class, here we delegate that to the
-				# logger, which has roughly the same 
-				# effect.
-				if ( $key eq '-verbose' ) {
-					$logger->VERBOSE( 
-						'-level' => $value,
-						'-class' => $class,
-					);
-					next ARG;
+		# process all arguments
+		ARG: while (@_) {
+			my $key   = shift @_;
+			my $value = shift @_;
+			
+			# this is a bioperl arg, meant to set
+			# verbosity at a per class basis. In
+			# bioperl, the $verbose argument is
+			# subsequently carried around in that
+			# class, here we delegate that to the
+			# logger, which has roughly the same 
+			# effect.
+			if ( $key eq '-verbose' ) {
+				$logger->VERBOSE( 
+					'-level' => $value,
+					'-class' => $class,
+				);
+				next ARG;
+			}
+	
+			# notify user
+			$logger->debug("processing constructor arg '${key}' => '${value}'");
+	
+			# don't access data structures directly, call mutators
+			# in child classes or __PACKAGE__
+			my $mutator = $key;
+			$mutator =~ s/^-/set_/;
+	
+			# backward compat fixes:
+			$mutator =~ s/^set_pos$/set_position/;
+			$mutator =~ s/^set_matrix$/set_raw/;
+			eval {
+				$self->$mutator($value);
+			};
+			if ( $@ ) {
+				if ( blessed $@ and $@->can('rethrow') ) {
+					$@->rethrow;
 				}
-		
-				# notify user
-				$logger->debug("processing constructor arg '${key}' => '${value}'");
-		
-				# don't access data structures directly, call mutators
-				# in child classes or __PACKAGE__
-				my $mutator = $key;
-				$mutator =~ s/^-/set_/;
-		
-				# backward compat fixes:
-				$mutator =~ s/^set_pos$/set_position/;
-				$mutator =~ s/^set_matrix$/set_raw/;
-				eval {
-					$self->$mutator($value);
-				};
-				if ( $@ ) {
-					if ( blessed $@ and $@->can('rethrow') ) {
-						$@->rethrow;
-					}
-					elsif ( not ref($@) and $@ =~ /^Can't locate object method / ) {
-						throw 'BadArgs' => "The named argument '${key}' cannot be passed to the constructor";
-					}
-					else {
-						throw 'Generic' => $@;
-					}
+				elsif ( not ref($@) and $@ =~ /^Can't locate object method / ) {
+					throw 'BadArgs' => "The named argument '${key}' cannot be passed to the constructor";
+				}
+				else {
+					throw 'Generic' => $@;
 				}
 			}
+		}
         }
 
         # register with mediator
-		# TODO this is irrelevant for some child classes,
-		# so should be re-factored into somewhere nearer the
-		# tips of the inheritance tree. The hack where we
-		# skip over direct instances of Writable is so that
-		# we don't register things like <format> and <matrix> tags
-		if ( ref $self ne 'Bio::Phylo::NeXML::Writable' ) {
+	# TODO this is irrelevant for some child classes,
+	# so should be re-factored into somewhere nearer the
+	# tips of the inheritance tree. The hack where we
+	# skip over direct instances of Writable is so that
+	# we don't register things like <format> and <matrix> tags
+	if ( ref $self ne 'Bio::Phylo::NeXML::Writable' ) {
         	$taxamediator->register($self);
         }
         return $self;
@@ -257,28 +257,17 @@ Sets invocant name.
 
     sub set_name {
         my ( $self, $name ) = @_;
-		if ( $name ) {
-	        # strip spaces
-#	        $name =~ s/^\s*(.*?)\s*$/$1/;
+	if ( $name ) {
 	
 	        # check for bad characters
 	        if ( $name =~ m/(?:;|,|:|\(|\)|&|<|>\s)/ ) {
 	        	$logger->info("the name '$name' might be invalid for some data formats");
 	
-#	            # had bad characters, but in quotes
-#	            if ( $name =~ m/^(['"])/ && $name =~ m/$1$/ ) {
-#	                $logger->info("$name had bad characters, but was quoted");
-#	            }
-#	
-#	            # had unquoted bad characters
-#	            else {
-#	            	throw 'BadString' => "$self '$name' has unquoted bad characters";
-#	            }
 	        }
 	
 	        # notify user
 	        $logger->info("setting name '$name'");
-		}
+	}
         $name{$self->get_id} = $name;
         return $self;
     }
@@ -660,12 +649,12 @@ Serializes object to JSON string
 =cut
 
     sub to_json { 
-		my $self = shift;
+	my $self = shift;
     	eval { require XML::XML2JSON };
     	if ( $@ ) {
     		throw 'ExtensionError' => "Can't load XML::XML2JSON - $@";    		
     	}
-		return XML::XML2JSON->new->convert($self->to_xml);
+	return XML::XML2JSON->new->convert($self->to_xml);
     }
 
 =item to_string()
@@ -719,71 +708,71 @@ Clones invocant.
     # classes because of the asymmetry between set_forest/get_forests,
     # set_node/get_nodes etc.
     sub clone {
-		my ( $self, %subs ) = @_;
+	my ( $self, %subs ) = @_;
 
-		# may not work yet! warn user
-		$logger->info("cloning is experimental, use with caution");
+	# may not work yet! warn user
+	$logger->info("cloning is experimental, use with caution");
 
-		# get inheritance tree
-		my ( $class, $isa, $seen ) = ( ref($self), [], {} );
-		_recurse_isa( $class, $isa, $seen );
+	# get inheritance tree
+	my ( $class, $isa, $seen ) = ( ref($self), [], {} );
+	_recurse_isa( $class, $isa, $seen );
 
-		# walk symbol table, get symmetrical set_foo/get_foo pairs
-		my %methods;
-		for my $package ( $class, @{$isa} ) {
-	    	my %symtable;
-		    eval "\%symtable = \%${package}::"; 
-		  SETTER: for my $setter ( keys %symtable ) {
-				next SETTER if $setter !~ m/^set_/;
-				my $getter = $setter;
-				$getter =~ s/^s/g/;
-				next SETTER if not exists $symtable{$getter};
+	# walk symbol table, get symmetrical set_foo/get_foo pairs
+	my %methods;
+	for my $package ( $class, @{$isa} ) {
+		my %symtable;
+		eval "\%symtable = \%${package}::"; 
+		SETTER: for my $setter ( keys %symtable ) {
+			next SETTER if $setter !~ m/^set_/;
+			my $getter = $setter;
+			$getter =~ s/^s/g/;
+			next SETTER if not exists $symtable{$getter};
 
-				# have a symmetrical set_foo/get_foo pair, check
-				# if they're code (not variables, for example)
-				my $get_ref = $class->can($getter);
-				my $set_ref = $class->can($setter);
-				if ( looks_like_instance( $get_ref, 'CODE' ) and looks_like_instance( $set_ref, 'CODE' ) ) {
-				    $methods{$getter} = $setter;
+			# have a symmetrical set_foo/get_foo pair, check
+			# if they're code (not variables, for example)
+			my $get_ref = $class->can($getter);
+			my $set_ref = $class->can($setter);
+			if ( looks_like_instance( $get_ref, 'CODE' ) and looks_like_instance( $set_ref, 'CODE' ) ) {
+				$methods{$getter} = $setter;
+			}
+		}
+	}
+
+	# instantiate the clone
+	my @new;
+	if ( $subs{'new'} ) {
+		@new = @{ $subs{'new'} };
+		delete $subs{'new'};			
+	}
+	my $clone = $class->new(@new);
+	
+	# populate the clone		
+	for my $getter ( keys %methods ) {	    	
+		my $setter = $methods{$getter};
+		if ( exists $subs{$setter} ) {
+			$logger->info("method $setter for $clone overridden");
+			if ( looks_like_instance( $subs{$setter}, 'CODE' ) ) {
+				$subs{$setter}->( $self, $clone );
+			}
+			delete $subs{$setter};
+		}
+		else {
+			eval {
+				$logger->info("copying $getter => $setter");
+				my $value = $self->$getter;
+				if ( defined $value ) {
+					$clone->$setter($value);
 				}
-	    	}
+			};
+			if ($@) {
+				$logger->warn("failed copy of $getter => $setter: \n$@");
+			}
 		}
+	}
 
-		# instantiate the clone
-		my @new;
-		if ( $subs{'new'} ) {
-			@new = @{ $subs{'new'} };
-			delete $subs{'new'};			
-		}
-		my $clone = $class->new(@new);
-		
-		# populate the clone		
-		for my $getter ( keys %methods ) {	    	
-	    	my $setter = $methods{$getter};
-	    	if ( exists $subs{$setter} ) {
-	    		$logger->info("method $setter for $clone overridden");
-	    		if ( looks_like_instance( $subs{$setter}, 'CODE' ) ) {
-	    			$subs{$setter}->( $self, $clone );
-	    		}
-	    		delete $subs{$setter};
-	    	}
-	    	else {
-				eval {
-					$logger->info("copying $getter => $setter");
-					my $value = $self->$getter;
-					if ( defined $value ) {
-						$clone->$setter($value);
-					}
-				};
-				if ($@) {
-					$logger->warn("failed copy of $getter => $setter: \n$@");
-				}
-	    	}
-		}
-
-		# execute additional code refs
-		$_->( $self, $clone ) for ( grep { looks_like_instance( $_, 'CODE' ) } values %subs );
-		return $clone;
+	# execute additional code refs
+	$_->( $self, $clone ) for ( grep { looks_like_instance( $_, 'CODE' ) } values %subs );
+	return $clone;
     }
 
 =item VERBOSE()
@@ -884,18 +873,18 @@ Invocant destructor.
     sub DESTROY {
         my $self = shift;
 
-		# delete from get_obj_by_id
-		my $id;
-		if ( defined( $id = $self->get_id ) ) {
-			delete $objects{$id};
-		}
+	# delete from get_obj_by_id
+	my $id;
+	if ( defined( $id = $self->get_id ) ) {
+		delete $objects{$id};
+	}
 
         # build full @ISA from child to here
         my $class = ref $self;
-		my $isa;
-		unless( $isa = $isa_for_class{$class} ) {
-			$isa = [];
-			my $seen = {};
+	my $isa;
+	unless( $isa = $isa_for_class{$class} ) {
+		$isa = [];
+		my $seen = {};
 	        _recurse_isa( $class, $isa, $seen );
 	        $isa_for_class{$class} = $isa;
         }
