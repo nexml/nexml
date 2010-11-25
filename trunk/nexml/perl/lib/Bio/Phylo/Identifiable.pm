@@ -82,7 +82,7 @@ Also see the manual: L<Bio::Phylo::Manual> and L<http://rutgervos.blogspot.com>
 
 =head1 REVISION
 
- $Id: Phylo.pm 1490 2010-11-15 15:20:40Z rvos $
+ $Id$
 
 =cut
 

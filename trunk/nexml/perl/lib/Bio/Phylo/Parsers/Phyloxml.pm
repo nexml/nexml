@@ -49,7 +49,7 @@ For more information about the phyloxml data standard, visit L<http://www.phylox
 
 =head1 REVISION
 
- $Id: Nexml.pm 1396 2010-10-22 14:40:36Z rvos $
+ $Id$
 
 =cut
 
