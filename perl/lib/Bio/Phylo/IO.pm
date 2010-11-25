@@ -5,9 +5,6 @@ use Bio::Phylo::Util::CONSTANT qw(looks_like_class looks_like_hash);
 use Bio::Phylo::Util::Exceptions 'throw';
 use IO::File;
 use strict;
-my @parsers        = qw(Newick Nexus Table Taxlist);
-my @unparsers      = qw(Newick Pagel Svg Phylip);
-my $cached_parsers = {};
 
 BEGIN {
 	use Exporter ();
@@ -163,9 +160,7 @@ Parses a file or string.
 =cut
 
 sub parse {
-	if ( $_[0] and $_[0] eq __PACKAGE__ or ref $_[0] eq __PACKAGE__ ) {
-		shift;
-	}
+	shift if $_[0] and $_[0] eq __PACKAGE__ or ref $_[0] eq __PACKAGE__;
 	my %opts;
 	if ( @ARGV and not scalar @ARGV % 2 ) {
 		my $i = 0;
@@ -176,52 +171,15 @@ sub parse {
 			$i += 2;
 		}
 	}
-	if ( !@_ || scalar @_ % 2 ) {
-		throw 'OddHash' => 'Odd number of elements in hash assignment';
-	}
+	throw 'OddHash' => 'Odd number of elements in hash assignment' unless @_;
 	%opts = looks_like_hash @_;
-	if ( !$opts{'-format'} ) {
-		throw 'BadArgs' => 'no format specified';
-	}
-	if ( !grep ucfirst( $opts{'-format'} ), @parsers ) {
-		throw 'BadFormat' => 'no parser available for specified format.';
-	}
+	throw 'BadArgs' => 'no format specified' unless $opts{'-format'};
 	if ( not ( $opts{'-file'} or $opts{'-string'} or $opts{'-handle'} or $opts{'-url'} ) ) {
 		throw 'BadArgs' => 'no parseable data source specified.';
 	}
 	my $lib = 'Bio::Phylo::Parsers::' . ucfirst($opts{'-format'});
-    my $parser;
-    if ( exists $cached_parsers->{$lib} ) {
-        $parser = $cached_parsers->{$lib};
-    }
-    else {
-        $parser = looks_like_class( $lib )->_new;
-        $cached_parsers->{$lib} = $parser;
-    }
-    if ( ( $opts{-file} or $opts{-handle} ) and $parser->can('_from_handle') ) {
-		if ( not $opts{'-handle'} ) {
-        	my $fh = IO::File->new;
-        	$fh->open( $opts{-file}, 'r' ) or throw 'FileError' => $!;
-        	$opts{-handle} = $fh;
-		}
-        return $parser->_from_handle(%opts);
-    }
-    elsif ( $opts{'-string'} ) {
-        if ( $parser->can('_from_string') ) {
-        	return $parser->_from_string(%opts);
-        }
-        else {
-        	throw 'BadArgs' => "$opts{-format} parser can't handle strings";
-        }
-    }
-    elsif ( $opts{'-url'} ) {
-        if ( $parser->can('_from_url') ) {
-        	return $parser->_from_url(%opts);
-        }
-        else {
-        	throw 'BadArgs' => "$opts{-format} parser can't handle URLs";
-        }    	
-    }
+    my $parser = looks_like_class( $lib )->_new(@_);
+    return $parser->_from_handle;
 }
 
 =item unparse()
