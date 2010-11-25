@@ -159,7 +159,6 @@ sub make_taxa {
 
 sub _cleanup { 
     my $self = shift;
-    $logger->debug("cleaning up '$self'"); 
 }
 
 =back
