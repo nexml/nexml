@@ -332,8 +332,8 @@ Serializes invocant to nexus format.
 	sub to_nexus {
 		my ( $self, %args ) = @_;
 		my %m = ( 
-			'header'    => $args{'-header'} && '#NEXUS',
-			'title'     => $args{'-links'}  && sprintf( 'TITLE %s;', $self->get_nexus_name ),
+			'header'    => ( $args{'-header'} && '#NEXUS' ) || '',
+			'title'     => ( $args{'-links'}  && sprintf 'TITLE %s;', $self->get_nexus_name ) || '',
 			'version'   => $self->VERSION, 			
 			'ntax'      => $self->get_ntax,			
 			'class'     => ref $self, 
