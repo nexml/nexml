@@ -1,24 +1,37 @@
 # $Id$
 use strict;
-#use warnings;
-use Test::More tests => 2;
+use Test::More 'no_plan';
 use Bio::Phylo::Parsers::Table;
 use Bio::Phylo::IO qw(parse unparse);
 Bio::Phylo->VERBOSE( -level => 0 );
 
-ok( 
-    my $table = Bio::Phylo::Parsers::Table->_new, 
-    '1 init' 
+my $string = do { local $/; <DATA> };
+my $matrix;
+ok(
+    $matrix = parse(
+        '-format'    => 'table',
+        '-type'      => 'standard',
+        '-string'    => $string,
+    )->[0],
+    '2 parse table'
 );
 
-my $string = do { local $/; <DATA> };
+ok( $matrix->get_type =~ /^standard$/i );
+
+ok( $matrix->get_ntax == 10 );
+
+ok( $matrix->get_nchar == 3 );
+
+my $string1 = 'taxon_1,1,1,2|taxon_2,2,1,2|taxon_3,2,2,2|taxon_4,1,2,1';
+
 ok(
-    parse(
-        -format    => 'table',
-        -type      => 'standard',
-        -separator => '\t',
-        -string    => $string,
-    ),
+    $matrix = parse(
+        '-format'    => 'table',
+        '-type'      => 'standard',
+        '-fieldsep'  => ',',
+        '-linesep'   => '|',
+        '-string'    => $string1,
+    )->[0],
     '2 parse table'
 );
 

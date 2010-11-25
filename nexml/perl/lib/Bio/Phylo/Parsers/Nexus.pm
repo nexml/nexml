@@ -5,18 +5,13 @@ use Bio::Phylo::Factory;
 use Bio::Phylo::IO qw(parse);
 use Bio::Phylo::Util::CONSTANT qw(:objecttypes looks_like_instance);
 use Bio::Phylo::Util::Exceptions qw(throw);
+use Bio::Phylo::Parsers::Abstract;
 use vars qw(@ISA);
 
 # TODO: handle mixed? distances, splits, bipartitions
 
 # classic @ISA manipulation, not using 'base'
-@ISA = qw(Bio::Phylo::IO);
-
-# create logger
-my $logger = Bio::Phylo->get_logger;
-
-# create factory
-my $factory = Bio::Phylo::Factory->new;
+@ISA = qw(Bio::Phylo::Parsers::Abstract);
 
 my $TAXA = _TAXA_;
 
@@ -120,12 +115,9 @@ and matrices objects. Nexus comments are stripped, private nexus blocks (and the
 
 =cut
 
-sub _new {
-    my $class = shift;    
+sub _process_defaults {
+    my $self = shift;    
     
-    # initialize object, note we have to 
-    # force data type references to be empty
-    my $self = {};
     for my $key ( keys %defaults ) {
     	if ( looks_like_instance( $defaults{$key}, 'ARRAY' ) ) {
     		$self->{$key} = [];
@@ -138,10 +130,6 @@ sub _new {
     	}
     }
     
-    if ( ref $class ) {
-        %$class = %$self;
-    }
-    bless $self, __PACKAGE__;
     return $self;
 }
 
@@ -158,18 +146,16 @@ sub _new {
 
 =cut
 
-# trickery to get it to parse strings as well
-*_from_string = \&_from_handle;
-
-sub _from_handle {
+sub _parse {
     my $self = shift;
-    $logger->info( "going to parse nexus data" );
+    $self->_process_defaults;
+    $self->_logger->info( "going to parse nexus data" );
     $self->{'_lines' } = $self->_stringify( @_ );
     $self->{'_tokens'} = $self->_tokenize( $self->{'_lines'} );
 
     # iterate over tokens, dispatch methods from %{ $self } table
     # This is the meat of the parsing, from here everything else is called.
-    $logger->info( "tokenized and split data, going to parse blocks" );
+    $self->_logger->info( "tokenized and split data, going to parse blocks" );
     my $i = 0;
     my $private_block;
     my $token_queue = [ undef, undef, undef ];
@@ -214,7 +200,7 @@ sub _from_handle {
                 # jump over private block content
                 if ( $private_block and $token_queue->[-2] eq 'end' and $token_queue->[-1] eq ';' ) {
                     $private_block = 0;
-                    $logger->info( "Skipped private $private_block block" );
+                    $self->_logger->info( "Skipped private $private_block block" );
                     next RAW_TOKEN;
                 }
                 else {
@@ -238,19 +224,15 @@ sub _from_handle {
 # file handle or string;
 sub _stringify {
     my $self = shift;
-    $logger->info( "going to split nexus data on lines" );
+    $self->_logger->info( "going to split nexus data on lines" );
     my %opts = @_;
     my @lines;
-    if ( $opts{'-string'} ) {
-        @lines = split /\n|\r|\r\n/, $opts{'-string'};
-        $logger->info( "nexus data was a string, split on line breaks" );
-    }
-    elsif ( $opts{'-handle'} ) {
-        while ( my $line = readline( $opts{'-handle'} ) ) {
-            push @lines, grep { /\S/ } split( /\n|\r|\r\n/, $line );
-            $logger->debug( "read line: $line" );
-        }
-    }
+    my $handle = $self->_handle;
+	while(<$handle>) {
+		my $line = $_;
+		push @lines, grep { /\S/ } split( /\n|\r|\r\n/, $line );
+		$self->_logger->debug( "read line: $line" );
+	}
     return \@lines;
 }
 
@@ -309,7 +291,7 @@ sub _stringify {
 
 sub _tokenize {
     my ( $self, $lines ) = @_;
-    $logger->info( "going to split lines on tokens" );
+    $self->_logger->info( "going to split lines on tokens" );
     my ( $extract, $INSIDE_QUOTE, $continue ) = ( '', 0, 0 );
     my ( @tokens, @split );
         
@@ -350,7 +332,7 @@ sub _tokenize {
                 }
                 my $logline = join( ' ', @{ $tokens[-1] } );
                 chomp( $logline );
-                $logger->debug( "Tokenized line $LineCount: $logline" );
+                $self->_logger->debug( "Tokenized line $LineCount: $logline" );
                 next LINE;
             }
 
@@ -365,7 +347,7 @@ sub _tokenize {
                 $INSIDE_QUOTE++;
                 $continue = 1;
                 $QuoteContext = substr($quoted,0,1);
-                $logger->debug( "Line $LineCount contains $QuoteContext" );
+                $self->_logger->debug( "Line $LineCount contains $QuoteContext" );
                 $QuoteStartLine = $LineCount;
                 $CONTEXT_QB_AT_START = qr/^(\Q$QuoteContext\E)(.*)$/;
                 my $context_closer = $CLOSE_CHAR{$QuoteContext};
@@ -377,7 +359,7 @@ sub _tokenize {
             # is an extension of a quoted/bracketed fragment starting
             # on a previous line
             elsif ( $line !~ $CONTEXT_CLOSER && $INSIDE_QUOTE ) {
-                $logger->debug( "Line $LineCount extends quote or comment" );
+                $self->_logger->debug( "Line $LineCount extends quote or comment" );
                 $extract .= $line;
                 next LINE;
             }
@@ -385,7 +367,7 @@ sub _tokenize {
                 my ( $q, $remainder ) = ( $1, $1 . $2 );              
                 if ( $q eq '"' || $q eq "'" ) {
                     if ( $remainder =~ m/^($q[^$q]*?$q)(.*)$/ ) {
-                        $logger->debug( "Line $LineCount closes $INVERSE_CLOSE_CHAR{$q} with $q" );
+                        $self->_logger->debug( "Line $LineCount closes $INVERSE_CLOSE_CHAR{$q} with $q" );
                         push @{ $tokens[-1] }, ( $1 );
                         $line = $2;
                         $INSIDE_QUOTE--;
@@ -403,7 +385,7 @@ sub _tokenize {
                         if ( $i and ! $INSIDE_QUOTE ) {
                             push @{ $tokens[-1] }, substr($line,0,$i);
                             my $logqc = substr($line,($i-1),1);
-                            $logger->debug( "Line $LineCount closes $INVERSE_CLOSE_CHAR{$logqc} with $logqc" );
+                            $self->_logger->debug( "Line $LineCount closes $INVERSE_CLOSE_CHAR{$logqc} with $logqc" );
                             $line = substr($line,$i);														                            
                             next TOKEN;
                         }
@@ -416,7 +398,7 @@ sub _tokenize {
             }
             elsif ( $line =~ $CONTEXT_CLOSER && $INSIDE_QUOTE ) {
                 my ( $start, $q, $remainder ) = ( $1, $2, $3 );
-                $logger->debug( "Line $LineCount closes $INVERSE_CLOSE_CHAR{$q} with $q" );
+                $self->_logger->debug( "Line $LineCount closes $INVERSE_CLOSE_CHAR{$q} with $q" );
                 $start = $extract . $start if $continue;
                 if ( $q eq '"' or $q eq "'" ) {
                     push @{ $tokens[-1] }, $start;
@@ -462,7 +444,7 @@ sub _tokenize {
 
     # final split: non-quoted/bracketed fragments are split on whitespace,
     # others are preserved verbatim
-    $logger->info( "going to split non-quoted/commented fragments on whitespace" );
+    $self->_logger->info( "going to split non-quoted/commented fragments on whitespace" );
     foreach my $line (@tokens) {
         my @line;
         foreach my $word (@$line) {
@@ -510,26 +492,7 @@ sub _post_process {
     	}
     }   
     
-    # prepare return value:
-    my %args = @_;
-    
-    #... could be a provided project object...
-    if ( $args{'-project'} ) {
-    	$args{'-project'}->insert( @{ $blocks } );
-    	return $args{'-project'};
-    } 
-    
-    # ... or one we create de novo...
-    elsif ( $args{'-as_project'} ) {
-    	my $proj = $factory->create_project;
-    	$proj->insert( @{ $blocks } );
-    	return $proj;
-    }
-    
-    # ... or a flat list of data objects...
-    else {
-    	return $blocks;
-    }
+	return @{ $blocks };
 }
 
 =begin comment
@@ -544,7 +507,7 @@ their respective tokens are encountered.
 sub _nexus {
     my $self = shift;
     if ( uc( $_[0] ) eq '#NEXUS' ) {
-    	$logger->info( "found nexus token" );
+    	$self->_logger->info( "found nexus token" );
     }
 }
 
@@ -556,9 +519,9 @@ sub _begin {
 sub _taxa {
     my $self = shift;
     if ( $self->{'_begin'} ) {
-        my $taxa = $factory->create_taxa;
+        my $taxa = $self->_factory->create_taxa;
         push @{ $self->{'_context'} }, $taxa;
-        $logger->info( "starting taxa block" );
+        $self->_logger->info( "starting taxa block" );
         $self->{'_begin'} = 0;
     }
     else {
@@ -569,9 +532,9 @@ sub _taxa {
 sub _interleave {
 	my $self = shift;
 	my $token = shift;
-	$logger->info( "perhaps we'll need to parse interleaved" );
+	$self->_logger->info( "perhaps we'll need to parse interleaved" );
 	if ( defined $token and uc($token) eq 'NO' ) {
-		$logger->info( "no, we don't need to parse interleaved" );
+		$self->_logger->info( "no, we don't need to parse interleaved" );
 	}
 }
 
@@ -582,7 +545,7 @@ sub _title {
         my $title = $token;
         if ( not $self->_current->get_name ) {
             $self->_current->set_name($title);
-            $logger->info( "block has title '$title'" );
+            $self->_logger->info( "block has title '$title'" );
         }
     }
 }
@@ -599,7 +562,7 @@ sub _link {
                     last;
                 }
             }
-            $logger->info( "block links to taxa block with title '$link'" );
+            $self->_logger->info( "block links to taxa block with title '$link'" );
         }
     }
 }
@@ -613,7 +576,7 @@ sub _ntax {
     if ( defined $_[0] and $_[0] =~ m/^\d+$/ ) {
         $self->{'_ntax'} = shift;
         my $ntax = $self->{'_ntax'};
-        $logger->info( "number of taxa: $ntax" );
+        $self->_logger->info( "number of taxa: $ntax" );
     }
 }
 
@@ -621,7 +584,7 @@ sub _taxlabels {
     my $self = shift;
     if ( defined $_[0] and uc( $_[0] ) ne 'TAXLABELS' ) {
         my $taxon = shift;
-        $logger->debug( "taxon: $taxon" );
+        $self->_logger->debug( "taxon: $taxon" );
         push @{ $self->{'_taxlabels'} }, $taxon;
     }
     elsif ( defined $_[0] and uc( $_[0] ) eq 'TAXLABELS' ) {
@@ -629,7 +592,7 @@ sub _taxlabels {
             'nexus_comments' => $self->{'_comments'}
         );
         $self->{'_comments'} = [];
-        $logger->info( "starting taxlabels" );
+        $self->_logger->info( "starting taxlabels" );
     }
 }
 
@@ -637,7 +600,7 @@ sub _blockid {
     my $self = shift;
     if ( defined $_[0] and uc( $_[0] ) ne 'BLOCKID' ) {
         my $blockid = shift;
-        $logger->debug( "blockid: $blockid" );
+        $self->_logger->debug( "blockid: $blockid" );
         $self->_current->set_generic( 'blockid' => $blockid );
     }
 }
@@ -646,8 +609,8 @@ sub _data {
     my $self = shift;
     if ( $self->{'_begin'} ) {
         $self->{'_begin'} = 0;
-        push @{ $self->{'_context'} }, $factory->create_matrix;
-        $logger->info( "starting data block" );
+        push @{ $self->{'_context'} }, $self->_factory->create_matrix;
+        $self->_logger->info( "starting data block" );
     }
 }
 
@@ -655,8 +618,8 @@ sub _characters {
     my $self = shift;
     if ( $self->{'_begin'} ) {
         $self->{'_begin'} = 0;
-        push @{ $self->{'_context'} }, $factory->create_matrix;
-        $logger->info( "starting characters block" );
+        push @{ $self->{'_context'} }, $self->_factory->create_matrix;
+        $self->_logger->info( "starting characters block" );
     }
 }
 
@@ -665,7 +628,7 @@ sub _nchar {
     if ( defined $_[0] and $_[0] =~ m/^\d+$/ ) {
         $self->{'_nchar'} = shift;
         my $nchar = $self->{'_nchar'};
-        $logger->info( "number of characters: $nchar" );
+        $self->_logger->info( "number of characters: $nchar" );
     }
 }
 
@@ -678,7 +641,7 @@ sub _datatype {
     if ( defined $_[0] and $_[0] !~ m/^(?:DATATYPE|=)/i ) {
         my $datatype = shift;
         $self->_current->set_type($datatype);
-        $logger->info( "datatype: $datatype" );
+        $self->_logger->info( "datatype: $datatype" );
     }
 }
 
@@ -687,7 +650,7 @@ sub _matchchar {
     if ( defined $_[0] and $_[0] !~ m/^(?:MATCHCHAR|=)/i ) {
         my $matchchar = shift;
         $self->_current->set_matchchar($matchchar);
-        $logger->info( "matchchar: $matchchar" );
+        $self->_logger->info( "matchchar: $matchchar" );
     }
 }
 
@@ -701,7 +664,7 @@ sub _gap {
         $self->{'_gap'} = shift;
         my $gap = $self->{'_gap'};
         $self->_current->set_gap( $gap );
-        $logger->info( "gap character: $gap" );
+        $self->_logger->info( "gap character: $gap" );
         undef $self->{'_gap'};
     }
 }
@@ -712,7 +675,7 @@ sub _missing {
         $self->{'_missing'} = shift;
         my $missing = $self->{'_missing'};
         $self->_current->set_missing( $missing );
-        $logger->info( "missing character: $missing" );
+        $self->_logger->info( "missing character: $missing" );
         undef $self->{'_missing'};
     }
 }
@@ -724,7 +687,7 @@ sub _symbols {
     	$sym =~ s/"//g;
     	my @syms = grep { /\S+/ } split /\s+/, $sym;
         push @{ $self->{'_symbols'} }, @syms;
-        $logger->debug("recorded character state symbols '@syms'");
+        $self->_logger->debug("recorded character state symbols '@syms'");
     }
 }
 
@@ -754,23 +717,23 @@ sub _statelabels {
 # for data type, character labels, state labels
 sub _add_matrix_metadata {
 	my $self = shift;
-	$logger->info("adding matrix metadata");
+	$self->_logger->info("adding matrix metadata");
     if ( not defined $self->{'_matrixtype'} ) {
         $self->{'_matrixtype'} = $self->_current->get_type;
         if ( @{ $self->{'_charlabels'} } ) {
             $self->_current->set_charlabels(
                 $self->{'_charlabels'}
             );
-            $logger->debug("adding character labels");
+            $self->_logger->debug("adding character labels");
         }
         if ( @{ $self->{'_statelabels'} } ) {
             $self->_current->set_statelabels(
                 $self->{'_statelabels'}
             );
-            $logger->debug("adding state labels");
+            $self->_logger->debug("adding state labels");
         }
         if ( my @symbols = @{ $self->{'_symbols'} } ) {
-        	$logger->debug("updating state lookup table");
+        	$self->_logger->debug("updating state lookup table");
         	my $to = $self->_current->get_type_object;
         	my $lookup = $to->get_lookup;
         	if ( $lookup ) {
@@ -789,7 +752,7 @@ sub _add_tokens_to_row {
 	my ( $self, $tokens ) = @_;
 	my $rowname;
 	for my $token ( @{ $tokens } ) {
-	    $logger->debug("token: $token");
+	    $self->_logger->debug("token: $token");
 		last if $token eq ';';
 		
 		# mesquite sometimes writes multiline (but not interleaved)
@@ -853,7 +816,7 @@ sub _set_taxon {
 	
 	# second case: no taxon by $obj's name exists yet
 	else {
-		my $taxon = $factory->create_taxon( '-name' => $obj->get_name );
+		my $taxon = $self->_factory->create_taxon( '-name' => $obj->get_name );
 		$taxa->insert($taxon);
 		$obj->set_taxon($taxon);
 		return $self;
@@ -937,7 +900,7 @@ sub _matrix {
     # in them.
     if ( not looks_like_instance($token, 'ARRAY') and uc($token) eq 'MATRIX' ) {
         $self->{'_linemode'} = 1;
-        $logger->info( "starting matrix" );
+        $self->_logger->info( "starting matrix" );
         return;
     }
     
@@ -945,7 +908,7 @@ sub _matrix {
     # else to do 
     elsif ( looks_like_instance($token, 'ARRAY') and not grep { /^;$/ } @{ $token } ) {
 		$self->_add_tokens_to_row($token);
-		$logger->info( "adding tokens to row" );
+		$self->_logger->info( "adding tokens to row" );
 		return;
     }
     
@@ -959,7 +922,7 @@ sub _matrix {
         for my $row ( @{ $self->{'_matrixrowlabels'} } ) {
         	            
             # create new datum
-            my $datum = $factory->create_datum(
+            my $datum = $self->_factory->create_datum(
             	'-type_object' => $self->_current->get_type_object,
             	'-name'        => $row,       
             );
@@ -972,7 +935,7 @@ sub _matrix {
             # link to taxon
             $self->_resolve_taxon( $datum );
             my ( $length, $seq ) = ( $datum->get_length, $datum->get_char );
-            $logger->info("parsed $length characters for ${row}: $seq");
+            $self->_logger->info("parsed $length characters for ${row}: $seq");
         }        
 
         # Let's avoid these!
@@ -1010,8 +973,8 @@ sub _trees {
         $self->{'_begin'}     = 0;
         $self->{'_trees'}     = '';
         $self->{'_treenames'} = [];
-        push @{ $self->{'_context'} }, $factory->create_forest;
-        $logger->info( "starting trees block" );
+        push @{ $self->{'_context'} }, $self->_factory->create_forest;
+        $self->_logger->info( "starting trees block" );
     }
 }
 
@@ -1019,7 +982,7 @@ sub _translate {
     my $self = shift;
     my $i = $self->{'_i'}; 
     if ( $i && $i == 1 ) { # actually, $i can be 0 according to BayesPhylogenies translation table
-        $logger->info( "starting translation table" );
+        $self->_logger->info( "starting translation table" );
     }
     if ( ! defined($i) && $_[0] =~ m/^\d+$/ ) {
         $self->{'_i'} = shift;
@@ -1030,7 +993,7 @@ sub _translate {
 	    	&& ! defined $self->{'_translate'}->[$i] 
     		&& $_[0] ne ';' ) {
         $self->{'_translate'}->[$i] = $_[0];
-        $logger->debug( "Translation: $i => $_[0]" );
+        $self->_logger->debug( "Translation: $i => $_[0]" );
         $self->{'_i'} = undef;
     }
 }
@@ -1060,7 +1023,7 @@ sub _tree {
             $translated =~ s/(\(|,)$i(,|\)|:)/$1$translate->[$i]$2/;
         }
         my ( $logtreename, $logtree ) = ( $self->{'_treename'}, $self->{'_tree'} );
-        $logger->info( "tree: $logtreename string: $logtree" );
+        $self->_logger->info( "tree: $logtreename string: $logtree" );
         $self->{'_trees'} .= $translated . ';';
         push @{ $self->{'_treenames'} }, $self->{'_treename'};
         
@@ -1118,7 +1081,7 @@ sub _semicolon {
     }
     elsif ( uc $self->{'_previous'} eq 'TAXLABELS' ) {
         foreach my $name ( @{ $self->{'_taxlabels'} } ) {
-            my $taxon = $factory->create_taxon( '-name' => $name );
+            my $taxon = $self->_factory->create_taxon( '-name' => $name );
             $self->_current->insert($taxon);
         }
         if ( $self->_current->get_ntax != $self->{'_ntax'} ) {
@@ -1137,19 +1100,19 @@ sub _semicolon {
     }
     elsif ( uc $self->{'_previous'} eq 'SYMBOLS' ) {
 		my $logsymbols = join( ' ', @{ $self->{'_symbols'} } );
-		$logger->info( "symbols: $logsymbols" );
+		$self->_logger->info( "symbols: $logsymbols" );
         $self->{'_symbols'} = [];
     }
     elsif ( uc $self->{'_previous'} eq 'CHARLABELS' ) {
         if ( @{ $self->{'_charlabels'} } ) {
             my $logcharlabels = join( ' ', @{ $self->{'_charlabels'} } );
-            $logger->info( "charlabels: $logcharlabels" );
+            $self->_logger->info( "charlabels: $logcharlabels" );
         }
     }
     elsif ( uc $self->{'_previous'} eq 'STATELABELS' ) {
         if ( @{ $self->{'_statelabels'} } ) {
             my $logstatelabels = join( ' ', @{ $self->{'_statelabels'} } );
-            $logger->info( "statelabels: $logstatelabels" );
+            $self->_logger->info( "statelabels: $logstatelabels" );
         }
     }
 }
