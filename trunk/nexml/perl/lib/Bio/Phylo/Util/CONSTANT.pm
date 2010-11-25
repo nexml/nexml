@@ -222,14 +222,11 @@ sub looks_like_instance($$) {
 }
 
 sub looks_like_hash(@) {
-	my @array = @_;
-	my %hash;
-	eval { %hash = @array };
-	if ( $@ ) {
-		throw 'OddHash' => $@;
+	if ( scalar(@_) % 2 ) {
+		throw 'OddHash' => 'Odd number of elements in hash assignment';
 	}
 	else {
-		return @array;
+		return @_;
 	}
 }
 
