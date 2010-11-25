@@ -1,4 +1,4 @@
-# $Id: Taxlist.pm 1235 2010-03-02 16:11:07Z rvos $
+# $Id$
 package Bio::Phylo::Parsers::Phylip;
 use strict;
 use Bio::Phylo::Util::Exceptions 'throw';
@@ -74,7 +74,7 @@ Also see the manual: L<Bio::Phylo::Manual> and L<http://rutgervos.blogspot.com>.
 
 =head1 REVISION
 
- $Id: Taxlist.pm 1235 2010-03-02 16:11:07Z rvos $
+ $Id$
 
 =cut
 

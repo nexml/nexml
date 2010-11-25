@@ -175,7 +175,7 @@ Also see the manual: L<Bio::Phylo::Manual> and L<http://rutgervos.blogspot.com>.
 
 =head1 REVISION
 
- $Id: Taxlist.pm 1524 2010-11-25 19:24:12Z rvos $
+ $Id$
 
 =cut
 
