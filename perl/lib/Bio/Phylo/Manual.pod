@@ -2,30 +2,40 @@
 
 Bio::Phylo::Manual - High-level user guide
 
-=head1 DESCRIPTION
+=head1 INTRODUCTION
 
 This is the manual for Bio::Phylo. Bio::Phylo is a perl5 package for
-phylogenetic analysis. For installation instructions, read the README
-file in the root directory of the distribution. The stable URL for the
+phylogenetic analysis. The stable URL for the
 most recent distribution is L<http://search.cpan.org/dist/Bio-Phylo/>.
 
-More documentation can be found as embedded L<perldoc> in the classes
-of this release. Note that Bio::Phylo uses inheritance to a great extent,
+This manual is intended for readers who know how to program 
+in perl and understand commonly-encountered concepts in phylogenetics. 
+What is offered in this document is an overview of Bio::Phylo's
+functionality, not a tutorial or a reference of all functions.
+
+For exhaustive API documentation, consult the embedded L<perlpod> in
+the classes of this release, for example by issuing C<perldoc Bio::Phylo::IO>
+(or some other class name) in a terminal window.
+
+Note that Bio::Phylo uses inheritance to a great extent,
 such that any one object may inherit additional methods from a number
 of superclasses. In such cases, this will be noted in the "SEE ALSO"
-section of that class's documentation. The Bio::Phylo documentation
+section at the bottom of that class's documentation. The Bio::Phylo documentation
 system rewards the methodical reader who follows these document links.
+
+For installation instructions, read the README file in the root directory 
+of the distribution. 
 
 =head1 INSTANT GRATIFICATION
 
 The following sections will demonstrate some of the basic functionality,
 with immediate, useful results.
 
-=head2 ONE-LINERS
+=head2 One-liners
 
-One-liners are commands run immediately from the command line, using
-the C<-e '...command...'> switch, invoking the interpreter directly.
-Often, you'll include the C<-MFoo::Bar> switch to include
+One-liners are perl statements that are executed directly on the command
+line, using the C<-e '...statements...'> argument.
+Often, you'll include the C<-MFoo::Bar> switch to include module
 C<Foo::Bar> at runtime. (See L<perlrun> for more info on executing
 the interpreter.) B<NOTE FOR WINDOWS USERS>: in the following examples,
 switch the quotes around, i.e. use double quotes where single quotes are
@@ -39,17 +49,71 @@ used and vice versa.
 
 No concept is valid in Perl if it cannot be expressed in a one-liner.
 For the Bio::Phylo package, some operations can be performed using
-a single expression from the command line. This is a rather long
-one-liner, but it serves to demonstrate.
+a single expression from the command line. Here are some examples.
 
-=item Solution
+=item Solution 1: downloading and converting Tree of Life data
+
+ perl -MBio::Phylo::IO=parse -e 'print parse->to_nexus' format tolweb as_project 1 url $URL
+
+=item Discussion
+
+Assuming that the environment variable $URL has been set to point to 
+a node in the XML web service of the Tree of Life (L<http://tolweb.org>),
+this command will download the output, parse it, and print the parsed output
+as nexus. As an example, using this url:
+
+ http://tolweb.org/onlinecontributors/app?service=external&page=xml/TreeStructureService&node_id=133799
+
+Something like the following output would be produced:
+
+ #NEXUS
+ BEGIN TAXA;
+ [! Taxa block written by Bio::Phylo::Taxa 0.31_1520 on Thu Nov 25 20:49:54 2010 ]	
+         DIMENSIONS NTAX=3;
+         TAXLABELS
+ 			'Bembidion alaskense'
+ 			'Bembidion argenteolum'
+ 			'Bembidion semenovi'
+		 ;
+ END;
+ BEGIN TREES;
+ [! Trees block written by Bio::Phylo::Forest 0.31_1520 on Thu Nov 25 20:49:54 2010 ]
+ 	TRANSLATE
+ 		1 'Bembidion alaskense',
+ 		2 'Bembidion argenteolum',
+ 		3 'Bembidion semenovi';
+ 	TREE Tree2 = [&R] (((2,3),1));
+ END;
+
+So what is happening here? Firstly, we provide the C<-MBio::Phylo::IO> switch,
+to which we add C<=parse>, which means we import the C<parse> function from
+L<Bio::Phylo::IO>. This function is supplied with named arguments, which can
+also be provided on the command line, i.e. as part of the C<@ARGV> array.
+
+Secondly, we use the C<-e> 'print parse->to_nexus' switch. Here we till perl
+to execute the parse function, transform its return value to nexus, and print
+that to STDOUT.
+
+Following that, we provide the named command line arguments. C<format tolweb>
+specifies that the input for the parse function is in the Tree of Life XML
+format. C<as_project 1> specifies that the parse function should return its
+contents as a newly created L<Bio::Phylo::Project> object. C<url $URL> 
+specifies the data source to parse; in this case the data source lives at 
+$URL. Other possible options for a data source are C<file> with a file name, 
+C<string> with a string of phylogenetic data in some recognized format, or 
+C<handle> with an open file handle.
+
+(This example requires the otherwise optional modules L<LWP::UserAgent>
+and L<XML::Twig> to be installed on your system.)
+
+=item Solution 2: calculating tree balance
 
  perl -MBio::Phylo::IO=parse -e 'print \
  parse(-format=>"newick",-string=>"((A,B),C);")->first->calc_imbalance'
 
 =item Discussion
 
-The C<-MModule> switch includes a module the way you would use
+The C<-MModule> switch is the equivalent of using 
 C<use Module;> in a script. Here we use the L<Bio::Phylo::IO> module, which
 is Bio::Phylo's entry point into file parsing and file writing.
 
@@ -58,12 +122,13 @@ string, C<((A,B),C);>, of format C<newick>. The parser returns a
 L<Bio::Phylo::Forest> object (i.e. a set of trees, in this case a set of 
 one). From this set we retrieve the first (and only) tree, and calculate 
 Colless' imbalance, which returns a number, which we print to standard out. 
+
 This would print "1", because the tree is a ladder, and therefore completely
 unbalanced. Note how this example uses the standard interface for 
-L<Bio::Phylo::IO>. As a new feature (onwards from v.0.17), the arguments to
-the C<parse> function can also be supplied in C<@ARGV> (useful for calls 
-from shell scripts or other processes that launch shell commands) and so 
-the example can be rewritten (both options are valid usage, of course) as:
+L<Bio::Phylo::IO> as you would normally use it in code you write in a script
+or a module. As the arguments to the C<parse> function can also be supplied in 
+C<@ARGV> (useful for one-liners or other processes that launch 
+shell commands) the example can be rewritten as:
 
  perl -MBio::Phylo::IO=parse -e 'print parse()->first->calc_imbalance' \
  format newick string "((A,B),C);"
@@ -85,7 +150,7 @@ You want a one-liner to iterate over a set of trees:
 
 =item Discussion
 
-The C<-n> switch wraps a C<while(<>) { ... }> around the
+The C<-n> switch wraps a "while(<>) { ... }" around the
 program, so the trees from F<file> (that is, if they are one newick
 tree description per line) are copied into C<$_> one tree at a
 time. The C<-l> switch appends a line break to the printed output.
@@ -105,14 +170,16 @@ You don't want a number printed to C<STDOUT>, you want a tree:
 
 If you try to print a tree object, what's written is something like
 C<Bio::Phylo::Forest::Tree=SCALAR(0x1a337dc)> (that is, the 
-memory address that the object references). This is probably not 
-what you want, so the tree object has a C<$tree->to_newick> 
-method that stringifies the object to a newick string. Likewise, matrices
-can write a simple nexus C<data> block using C<$matrix->to_nexus>.
+memory address of the object reference). This is probably not 
+what you want, so the tree object has a C<to_newick> 
+method that stringifies the tree to a newick string. Likewise, matrices,
+taxa and tree blocks can write a NEXUS block using C<to_nexus>,
+and all of them can also be written to NeXML (L<http://www.nexml.org>) using
+C<to_xml> and to a JSON mapping thereof using C<to_json>.
 
 =back
 
-=head2 INPUT AND OUTPUT
+=head2 Input and output
 
 The L<Bio::Phylo::IO> module is the unified front end for parsing and
 unparsing phylogenetic data objects. It is a non-OO module that optionally
@@ -222,19 +289,49 @@ L<Bio::Phylo::Taxa> object. Note that the same result can be obtained by buildin
 the taxa object from scratch (a more feasible proposition than building trees
 or matrices from scratch):
 
- use Bio::Phylo::Taxa;
- use Bio::Phylo::Taxa::Taxon;
+ use Bio::Phylo::Factory; 
+ 
+ # first instantiate the factory...
+ my $factory = Bio::Phylo::Factory->new;
+ 
+ # ...then use it to create other objects, such as taxa blocks
+ my $taxa = $factory->create_taxa( -name => 'MyTaxa' );
+ 
+ # or taxa, (with names A, B, C and D), and add them to the taxa block
+ $taxa->insert( $factory->create_taxon( -name => $_ ) ) for qw(A B C D);
+ 
+ # and write out as a nexus block
+ print $taxa->to_nexus( -header => 1, -links => 1 );
 
- my $taxa = Bio::Phylo::Taxa->new;
- for ( 'A', 'B', 'C', 'D' ) {
-     $taxa->insert( Bio::Phylo::Taxa::Taxon->new( -name => $_ ) );
- }
+This example uses the L<Bio::Phylo::Factory>, which is an object that can
+create other objects. Here we have it create a L<Bio::Phylo::Taxa> block,
+which we populate with four L<Bio::Phylo::Taxa::Taxon> objects. We then
+write out the taxa block as nexus, complete with the #NEXUS header (this
+is optional so that we can combine multiple blocks in the same file), and
+a title, using the C<-links> switch. The latter is a facility that only 
+seems to be used by Mesquite (L<http://mesquiteproject.org>) and Bio::Phylo.
+It adds a "title" to the taxa block in the nexus output, and other blocks
+(character state matrices and tree blocks) refer to this using a "links"
+statement.  This is useful if you want to have multiple taxa blocks in the
+same file and you want to distinguish them. Putting this all together, the
+output is thus:
 
- print ref $taxa, "\n"; # prints 'Bio::Phylo::Taxa';
+ #NEXUS
+ BEGIN TAXA;
+ [! Taxa block written by Bio::Phylo::Taxa 0.31_1520 on Thu Nov 25 21:31:58 2010 ]
+ 	TITLE MyTaxa;
+         DIMENSIONS NTAX=4;
+         TAXLABELS
+ 			A
+ 			B
+ 			C
+ 			D
+         ;
+ END;
 
 =back
 
-=head2 ITERATING
+=head2 Iterating
 
 The L<Bio::Phylo::Listable> module is the superclass of all container objects.
 Container objects are objects that contain a set of objects of the same type.
@@ -350,7 +447,7 @@ lists by reference (see L<perlref>).
 
 =back
 
-=head2 SIMULATING TREES
+=head2 Simulating trees
 
 The L<Bio::Phylo::Generator> module simulates trees under various
 models of clade growth.
@@ -373,14 +470,14 @@ Here's how to generate a forest of ten trees with ten tips:
 =item B<Expected versus randomly drawn waiting times.>
 
 The generator object simulates trees under the Yule or the Hey model,
-returning. The C<->gen_rand_pure_birth> method call returns branch lengths
-drawn from the appropriate distribution, while C<->gen_exp_pure_birth>
+returning. The C<gen_rand_pure_birth> method call returns branch lengths
+drawn from the appropriate distribution, while C<gen_exp_pure_birth>
 returns the expected waiting times (e.g. 1/n where n=number of lineages for
 the Yule model).
 
 =back
 
-=head2 FILTERING
+=head2 Filtering
 
 =over
 
@@ -414,9 +511,9 @@ Hapalemur.
 
 =back
 
-=head2 DRAWING TREES
+=head2 Drawing trees
 
-You can create SVG drawings of tree objects using the
+You can create visualize tree objects using the
 L<Bio::Phylo::Treedrawer> module:
 
   use Bio::Phylo::Treedrawers;
@@ -442,15 +539,15 @@ L<Bio::Phylo::Treedrawer> module:
 
 Read the L<Bio::Phylo::Treedrawer> perldoc for more info.
 
-=head2 TIPS AND TRICKS
+=head2 Tips and tricks
 
 =over
 
 =item B<Generic metadata>
 
 You can append generic key/value pairs to any object, by calling
-C<$obj->set_generic( 'key' => 'value');>. Subsequently calling
-C<$obj->get_generic('key');> returns 'value'. This is a very useful
+$obj->set_generic( 'key' => 'value');. Subsequently calling
+$obj->get_generic('key'); returns 'value'. This is a very useful
 feature in many situations where you may want to attach, for example,
 results from analyses by outside programs (e.g. likelihood scores)
 to the tree objects they refer to. Likewise, multiple numbers (e.g.
@@ -935,13 +1032,13 @@ versions of Bio::Phylo.
 
 =item More DNA sequence methods
 
-Such as C<$seq->complement;>. This would imply larger constant translation 
+Such as $seq->complement;. This would imply larger constant translation 
 tables, including various tables for mtDNA and so on. Will probably be 
 implemented, must likely using BioPerl tools.
 
 =item Databases
 
-Implement access to TreeBase, Pandit, TolWeb and other databases. This could
+Implement access to TreeBASE, TolWeb and other databases. This could
 probably be done most elegantly by expanding the mediator system
 (Bio::Phylo::Mediators::* classes).
 
@@ -950,11 +1047,10 @@ probably be done most elegantly by expanding the mediator system
 Test coverage is reasonable, but some of the newer features need to be exercised
 more.
 
-=item Interoperability with BioPerl and CIPRES
+=item Interoperability with BioPerl
 
 The eventual aim of the Bio::Phylo project is to glue together the phylogenetics 
-aspects of BioPerl (L<http://www.bioperl.org>), L<Bio::NEXUS> and the CIPRES
-project (L<http://www.phylo.org>).
+aspects of BioPerl (L<http://www.bioperl.org>), L<Bio::NEXUS>.
 
 =back
 
@@ -983,22 +1079,15 @@ Rutger Vos, Aki Mimoto, Klaas Hartmann, Jason Caravas
 
 =over
 
-=item email: C<< rvos@interchange.ubc.ca >>
+=item email: C<< rutgeraldo@gmail.com >>
 
 =item web page: L<http://rutgervos.blogspot.com/>
 
 =back
 
-=head1 ACKNOWLEDGEMENTS
-
-We would like to thank Jason Stajich for many ideas borrowed
-from BioPerl L<http://www.bioperl.org>, and CIPRES
-L<http://www.phylo.org> and FAB* L<http://www.sfu.ca/~fabstar>
-for comments and requests.
-
 =head1 COPYRIGHT & LICENSE
 
-Copyright 2005-2009 Rutger A. Vos, All Rights Reserved. This program is free
+Copyright 2005-2010 Rutger A. Vos, All Rights Reserved. This program is free
 software; you can redistribute it and/or modify it under the same terms as Perl
 itself.
 
