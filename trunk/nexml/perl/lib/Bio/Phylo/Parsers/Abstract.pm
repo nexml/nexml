@@ -8,6 +8,17 @@ use English;
 use vars '@ISA';
 @ISA=qw(Bio::Phylo::IO);
 
+=head1 NAME
+
+Bio::Phylo::Parsers::Abstract - Superclass for parsers used by Bio::Phylo::IO
+
+=head1 DESCRIPTION
+
+This package is subclassed by all other packages within Bio::Phylo::Parsers::.*.
+There is no direct usage.
+
+=cut
+
 my $factory = Bio::Phylo::Factory->new;
 my $logger = Bio::Phylo::Util::Logger->new;
 
@@ -144,3 +155,28 @@ sub _handle { shift->{'_handle'} }
 sub _factory { shift->{'_fac'} }
 
 sub _args { shift->{'_args'} }
+
+# podinherit_insert_token
+
+=head1 SEE ALSO
+
+=over
+
+=item L<Bio::Phylo::IO>
+
+The parsers are called by the L<Bio::Phylo::IO> object.
+Look there for examples.
+
+=item L<Bio::Phylo::Manual>
+
+Also see the manual: L<Bio::Phylo::Manual> and L<http://rutgervos.blogspot.com>.
+
+=back
+
+=head1 REVISION
+
+ $Id: Taxlist.pm 1524 2010-11-25 19:24:12Z rvos $
+
+=cut
+
+1;
