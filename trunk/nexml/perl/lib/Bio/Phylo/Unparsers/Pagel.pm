@@ -2,10 +2,10 @@
 package Bio::Phylo::Unparsers::Pagel;
 use strict;
 use Bio::Phylo::Forest::Tree ();
-use Bio::Phylo::IO ();
+use Bio::Phylo::Unparsers::Abstract;
 use vars qw(@ISA);
 
-@ISA=qw(Bio::Phylo::IO);
+@ISA=qw(Bio::Phylo::Unparsers::Abstract);
 
 =head1 NAME
 
@@ -49,40 +49,6 @@ formatted to %f floats (i.e. integers, decimal point, integers).
 
 The pagel module is called by the L<Bio::Phylo::IO> object, so
 look there to learn about parsing and serializing in general.
-
-=begin comment
-
- Type    : Constructor
- Title   : new
- Usage   : my $pagel = new Bio::Phylo::Unparsers::Pagel;
- Function: Initializes a Bio::Phylo::Unparsers::Pagel object.
- Alias   :
- Returns : A Bio::Phylo::Unparsers::Pagel object.
- Args    : none.
-
-=end comment
-
-=cut
-
-sub _new {
-    my $class = shift;
-    my $self  = {};
-    if (@_) {
-        my %opts = @_;
-        foreach my $key ( keys %opts ) {
-            my $localkey = uc $key;
-            $localkey =~ s/-//;
-            unless ( ref $opts{$key} ) {
-                $self->{$localkey} = uc $opts{$key};
-            }
-            else {
-                $self->{$localkey} = $opts{$key};
-            }
-        }
-    }
-    bless $self, $class;
-    return $self;
-}
 
 =begin comment
 

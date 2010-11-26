@@ -1,11 +1,11 @@
 package Bio::Phylo::Unparsers::Phylip;
 use strict;
-use Bio::Phylo::IO ();
+use Bio::Phylo::Unparsers::Abstract;
 use Bio::Phylo::Util::Exceptions 'throw';
 use Bio::Phylo::Util::CONSTANT qw(:objecttypes looks_like_object);
 use vars qw(@ISA);
 
-@ISA=qw(Bio::Phylo::IO);
+@ISA=qw(Bio::Phylo::Unparsers::Abstract);
 
 =head1 NAME
 
@@ -54,40 +54,6 @@ to the 'phylip_name' slot of set_generic. Example:
 
 The phylip module is called by the L<Bio::Phylo::IO> object, so
 look there to learn about parsing and serializing in general.
-
-=begin comment
-
- Type    : Constructor
- Title   : new
- Usage   : my $phylip = Bio::Phylo::Unparsers::Phylip->_new;
- Function: Initializes a Bio::Phylo::Unparsers::Phylip object.
- Alias   :
- Returns : A Bio::Phylo::Unparsers::Phylip object.
- Args    : none.
-
-=end comment
-
-=cut
-
-sub _new {
-    my $class = shift;
-    my $self  = {};
-    if (@_) {
-        my %opts = @_;
-        foreach my $key ( keys %opts ) {
-            my $localkey = uc $key;
-            $localkey =~ s/-//;
-            unless ( ref $opts{$key} ) {
-                $self->{$localkey} = uc $opts{$key};
-            }
-            else {
-                $self->{$localkey} = $opts{$key};
-            }
-        }
-    }
-    bless $self, $class;
-    return $self;
-}
 
 =begin comment
 
