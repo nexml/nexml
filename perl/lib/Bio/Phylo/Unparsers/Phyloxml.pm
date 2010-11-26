@@ -1,15 +1,16 @@
 # $Id$
 package Bio::Phylo::Unparsers::Phyloxml;
 use strict;
-use Bio::Phylo::IO ();
-use XML::Twig;
+use Bio::Phylo::Unparsers::Abstract;
 use Bio::Phylo::Util::Exceptions 'throw';
 use Bio::Phylo::Util::CONSTANT qw':objecttypes looks_like_object';
-use Bio::Phylo::Util::Logger ':levels';
 use vars qw(@ISA);
-@ISA=qw(Bio::Phylo::IO);
+@ISA=qw(Bio::Phylo::Unparsers::Abstract);
 
-my $logger = Bio::Phylo::Util::Logger->new;
+eval { require XML::Twig };
+if ( $@ ) {
+    throw 'ExtensionError' => "Error loading the XML::Twig extension: $@";
+}
 
 my $phyloxml_ns = 'http://www.phyloxml.org/1.10/terms#';
 
@@ -36,39 +37,6 @@ directly.
 
 =begin comment
 
- Type    : Constructor
- Title   : _new
- Usage   : my $mrp = Bio::Phylo::Unparsers::Phyloxml->_new;
- Function: Initializes a Bio::Phylo::Unparsers::Phyloxml object.
- Returns : A Bio::Phylo::Unparsers::Phyloxml object.
- Args    : none.
-
-=end comment
-
-=cut
-
-sub _new {
-    my $class = shift;
-    my $self  = {};
-    if (@_) {
-        my %opts = @_;
-        foreach my $key ( keys %opts ) {
-            my $localkey = uc $key;
-            $localkey =~ s/-//;
-            unless ( ref $opts{$key} ) {
-                $self->{$localkey} = uc $opts{$key};
-            }
-            else {
-                $self->{$localkey} = $opts{$key};
-            }
-        }
-    }
-    bless $self, $class;
-    return $self;
-}
-
-=begin comment
-
  Type    : Wrapper
  Title   : _to_string
  Usage   : my $mrp_string = $mrp->_to_string;
@@ -85,21 +53,21 @@ sub _new {
 sub _to_string {
     my $self = shift;
     my $proj = $self->{'PHYLO'};
-    $logger->debug("serializing object $proj");
+    $self->_logger->debug("serializing object $proj");
     
     my @trees;
     if ( looks_like_object $proj, _PROJECT_ ) {
-    	$logger->debug("object is a project");
+    	$self->_logger->debug("object is a project");
     	for my $forest ( @{ $proj->get_forests } ) {
     		push @trees, @{ $forest->get_entities };
     	}
     }
     elsif ( looks_like_object $proj, _FOREST_ ) {
-    	$logger->debug("object is a forest");
+    	$self->_logger->debug("object is a forest");
     	push @trees, @{ $proj->get_entities };
     }
     elsif ( looks_like_object $proj, _TREE_ ) {
-    	$logger->debug("object is a tree");
+    	$self->_logger->debug("object is a tree");
     	push @trees, $proj;
     }
     my $xml = $phyloxml_header;
@@ -176,7 +144,7 @@ sub _meta_to_xml {
 					my $obj = $obj->get_object;
 					$inner_predicate =~ s/^.+://;				
 					$xml = "<${predicate} ${att}=\"${inner_predicate}\">${obj}";
-					$logger->debug($xml);
+					$self->_logger->debug($xml);
 				}
 				else {					
 					$xml .= $self->_meta_to_xml( $obj );					
@@ -190,7 +158,7 @@ sub _meta_to_xml {
 				}
 			}
 			else {
-				$logger->debug("meta object is $obj");
+				$self->_logger->debug("meta object is $obj");
 				$xml .= $obj;
 			}
 			$xml .= "</${predicate}>";
