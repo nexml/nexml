@@ -254,19 +254,33 @@ sub DESTROY {
 
 =item L<Bio::Phylo::Parsers::Newick>
 
+=item L<Bio::Phylo::Parsers::Nexml>
+
 =item L<Bio::Phylo::Parsers::Nexus>
+
+=item L<Bio::Phylo::Parsers::Phylip>
+
+=item L<Bio::Phylo::Parsers::Phyloxml>
 
 =item L<Bio::Phylo::Parsers::Table>
 
 =item L<Bio::Phylo::Parsers::Taxlist>
 
+=item L<Bio::Phylo::Parsers::Tolweb>
+
 =item L<Bio::Phylo::Unparsers::Mrp>
 
 =item L<Bio::Phylo::Unparsers::Newick>
 
+=item L<Bio::Phylo::Unparsers::Nexml>
+
 =item L<Bio::Phylo::Unparsers::Nexus>
 
 =item L<Bio::Phylo::Unparsers::Pagel>
+
+=item L<Bio::Phylo::Unparsers::Phylip>
+
+=item L<Bio::Phylo::Unparsers::Phyloxml>
 
 =item L<Bio::Phylo::Manual>
 
