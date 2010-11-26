@@ -2,13 +2,11 @@
 # Subversion: $Rev: 190 $
 package Bio::Phylo::Unparsers::Nexml;
 use strict;
-use Bio::Phylo::IO ();
+use Bio::Phylo::Unparsers::Abstract;
 use Bio::Phylo::Util::CONSTANT qw(:objecttypes looks_like_object);
 use Bio::Phylo::Util::Exceptions 'throw';
-use vars qw(@ISA $VERSION);
-@ISA = qw(Bio::Phylo::IO);
-
-use Bio::Phylo (); my $VERSION = $Bio::Phylo::VERSION;
+use vars qw(@ISA);
+@ISA = qw(Bio::Phylo::Unparsers::Abstract);
 
 eval { require XML::Twig };
 if ( $@ ) {
@@ -23,39 +21,6 @@ Bio::Phylo::Unparsers::Nexml - Serializer used by Bio::Phylo::IO, no serviceable
 
 This module serializes Taxa objects, Forest objects and Matrix objects
 to NeXML.
-
-=begin comment
-
- Type    : Constructor
- Title   : _new
- Usage   : my $nex = Bio::Phylo::Unparsers::Nexus->_new;
- Function: Initializes a Bio::Phylo::Unparsers::Nexus object.
- Returns : A Bio::Phylo::Unparsers::Nexus object.
- Args    : none.
-
-=end comment
-
-=cut
-
-sub _new {
-	my $class = shift;
-	my $self  = {};
-	if (@_) {
-		my %opts = @_;
-		for my $key ( keys %opts ) {
-			my $localkey = uc $key;
-			$localkey =~ s/-//;
-			unless ( ref $opts{$key} ) {
-				$self->{$localkey} = uc $opts{$key};
-			}
-			else {
-				$self->{$localkey} = $opts{$key};
-			}
-		}
-	}
-	bless $self, $class;
-	return $self;
-}
 
 =begin comment
 
@@ -109,11 +74,11 @@ sub _to_string {
 	my $nexml_root = XML::Twig::Elt->new(
 		'nex:nexml',
 		{
-			'xmlns:nex'          => 'http://www.nexml.org/1.0',
+			'xmlns:nex'          => 'http://www.nexml.org/2009',
 			'version'            => '1.0',
-			'generator'          => __PACKAGE__ . ' v.' . $VERSION,
+			'generator'          => __PACKAGE__ . ' v.' . $Bio::Phylo::VERSION,
 			'xmlns:xsi'          => 'http://www.w3.org/2001/XMLSchema-instance',
-			'xsi:schemaLocation' => 'http://www.nexml.org/1.0 http://www.nexml.org/1.0/nexml.xsd',
+			'xsi:schemaLocation' => 'http://www.nexml.org/2009 http://www.nexml.org/1.0/nexml.xsd',
 		}
 	);
 	eval {

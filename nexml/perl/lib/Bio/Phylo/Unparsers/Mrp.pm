@@ -1,9 +1,9 @@
 # $Id$
 package Bio::Phylo::Unparsers::Mrp;
 use strict;
-use Bio::Phylo::IO ();
+use Bio::Phylo::Unparsers::Abstract;
 use vars qw(@ISA);
-@ISA=qw(Bio::Phylo::IO);
+@ISA=qw(Bio::Phylo::Unparsers::Abstract);
 
 =head1 NAME
 
@@ -14,39 +14,6 @@ Bio::Phylo::Unparsers::Mrp - Serializer used by Bio::Phylo::IO, no serviceable p
 This module turns a L<Bio::Phylo::Forest> object into an MRP nexus
 formatted matrix. It is called by the L<Bio::Phylo::IO> facade, don't call it
 directly.
-
-=begin comment
-
- Type    : Constructor
- Title   : _new
- Usage   : my $mrp = Bio::Phylo::Unparsers::Mrp->_new;
- Function: Initializes a Bio::Phylo::Unparsers::Mrp object.
- Returns : A Bio::Phylo::Unparsers::Mrp object.
- Args    : none.
-
-=end comment
-
-=cut
-
-sub _new {
-    my $class = shift;
-    my $self  = {};
-    if (@_) {
-        my %opts = @_;
-        foreach my $key ( keys %opts ) {
-            my $localkey = uc $key;
-            $localkey =~ s/-//;
-            unless ( ref $opts{$key} ) {
-                $self->{$localkey} = uc $opts{$key};
-            }
-            else {
-                $self->{$localkey} = $opts{$key};
-            }
-        }
-    }
-    bless $self, $class;
-    return $self;
-}
 
 =begin comment
 
