@@ -160,26 +160,42 @@ Parses a file or string.
 =cut
 
 sub parse {
+	# first argument could be the package name or an object reference
+	# if called as Bio::Phylo::IO->parse or as $io->parse, respectively
 	shift if $_[0] and $_[0] eq __PACKAGE__ or ref $_[0] eq __PACKAGE__;
-	my %opts;
-	if ( @ARGV and not scalar @ARGV % 2 ) {
+	
+	# arguments were provided on the command line, in @ARGV
+	if ( @ARGV ) {
 		my $i = 0;
-		while ( $i < scalar @ARGV ) {
+		while ( $i < @ARGV ) {
 			my ( $key, $value ) = ( $ARGV[$i], $ARGV[ $i + 1 ] );
+			
+			# shell words have no -dash prefix, so we
+			# add it here
 			$key = "-$key" if $key !~ /^-/;
+			
+			# we put @ARGV key/value pairs at the
+			# front of the @_ array
 			unshift @_, $key, $value;
 			$i += 2;
 		}
 	}
-	throw 'OddHash' => 'Odd number of elements in hash assignment' unless @_;
-	%opts = looks_like_hash @_;
-	throw 'BadArgs' => 'no format specified' unless $opts{'-format'};
-	if ( not ( $opts{'-file'} or $opts{'-string'} or $opts{'-handle'} or $opts{'-url'} ) ) {
-		throw 'BadArgs' => 'no parseable data source specified.';
-	}
-	my $lib = 'Bio::Phylo::Parsers::' . ucfirst($opts{'-format'});
-    my $parser = looks_like_class( $lib )->_new(@_);
-    return $parser->_from_handle;
+	
+	# turn merged @ARGV and @_ arguments into a hash
+	my %opts = looks_like_hash @_;
+	
+	# there must be at least one of these args as a data source
+	my @sources = qw(-file -string -handle -url);
+	my ($source) = grep { defined $_ } @opts{@sources};
+	
+	# check provided arguments
+	throw 'OddHash' => 'Odd number of elements in hash assignment' if ! @_;
+	throw 'BadArgs' => 'No format specified' unless $opts{'-format'};
+	throw 'BadArgs' => 'No parseable data source specified' unless $source;
+
+	# instantiate parser subclass and process data
+	my $lib = 'Bio::Phylo::Parsers::' . ucfirst $opts{'-format'};
+	return looks_like_class( $lib )->_new(@_)->_process;
 }
 
 =item unparse()
