@@ -25,16 +25,16 @@ my $logger = Bio::Phylo::Util::Logger->new;
 # argument is a file name, which we open
 sub _open_file {
 	my $file_name = shift;
-	open my $fh, '<', $file_name or throw 'FileError' => $OS_ERROR;
-	return $fh;
+	open my $handle, '<', $file_name or throw 'FileError' => $OS_ERROR;
+	return $handle;
 }
 
 # argument is a string, which, at perl version >5.8, 
-# we can tried as a handle by opening it as a reference
+# we can treat as a handle by opening it by reference
 sub _open_string {
 	my $string_value = shift;
-	open my $fh, '<', \$string_value or throw 'FileError' => $OS_ERROR;
-	return $fh;
+	open my $handle, '<', \$string_value or throw 'FileError' => $OS_ERROR;
+	return $handle;
 }
 
 # argument is a url, 
@@ -42,7 +42,9 @@ sub _open_url {
 	my $url = shift;
 	my $handle;
 	
-	# we need to use LWP::UserAgent to fetch the resource
+	# we need to use LWP::UserAgent to fetch the resource, but
+	# we don't "use" it at the top of the module because that
+	# would make it a required dependency
 	eval { require LWP::UserAgent };
 	if ( $EVAL_ERROR ) {
 		throw 'ExtensionError' => 
@@ -50,10 +52,16 @@ sub _open_url {
 			"However, there was an error when I\ntried that:\n" .
 			$EVAL_ERROR
 	}
+	
+	# apparently it's installed, so let's instantiate a client
 	my $ua = LWP::UserAgent->new;
 	$ua->timeout(10);
 	$ua->env_proxy;
+	
+	# fetch the resource, get an HTTP::Response object
 	my $response = $ua->get($url);
+	
+	# i.e. 200
 	if ($response->is_success) {
 	
 		# content is a string, so we create a handle in the same way
@@ -66,6 +74,8 @@ sub _open_url {
 	return $handle;
 }
 
+# deal with all possible data sources, return
+# a handle to whatever it is or throw an exception
 sub _open_handle {
 	my %args = @_;
 	if ( $args{'-handle'} ) {
@@ -85,6 +95,9 @@ sub _open_handle {
 	}
 }
 
+# open a Bio::Phylo::Project if asked (if the -as_project flag
+# was provided.) If the user has supplied one (the -project flag)
+# simply return that or undefined otherwise.
 sub _open_project {
 	my ( $fac, %args ) = @_;
 	if ( $args{'-project'} ) {
@@ -98,23 +111,37 @@ sub _open_project {
 	}
 }
 
+# this constructor is called by the Bio::Phylo::IO::parse
+# subroutine
 sub _new {
 	my $class = shift;
 	my %args = looks_like_hash @_;
-	my $fac  = $args{'-factory'} || $factory;
+	
+	# factory is either user supplied or a private static
+	my $fac = $args{'-factory'} || $factory;
+	
+	# values of these object fields will be accessed
+	# by child classes through the appropriate protected
+	# getters
 	return bless {
 		'_fac'    => $fac,
 		'_handle' => _open_handle( %args ),
 		'_proj'   => _open_project( $fac, %args ),
-		'_args'   => \%args,
+		'_args'   => \%args, # for child-specific arguments
 	}, $class;
 }
 
+# child classes can override this to specify
+# that their return value is a single scalar
+# (e.g. a tree block, as is the case for newick),
+# instead of an array of blocks
 sub _return_is_scalar { 0 }
 
-
-sub _from_handle {
-	my $self = shift;
+# this is called by Bio::Phylo::IO::parse, and
+# in turn it calls the _parse method of whatever
+# the concrete child instance is.
+sub _process {
+	my $self = shift;	
 	if ( $self->_return_is_scalar ) {
 		my $result = $self->_parse;
 		if ( $self->_project ) {
@@ -135,12 +162,9 @@ sub _from_handle {
 	}
 }
 
-sub _from_string {
-	return _from_handle(@_);
-}
-
-sub _project { shift->{'_proj'} }
-
+# once this is called, the handle will have read to
+# the end of the stream, so it needs to be rewound
+# if we want to read from the top
 sub _string {
 	my $self = shift;
 	my $handle = $self->_handle;
@@ -149,6 +173,8 @@ sub _string {
 }
 
 sub _logger { $logger }
+
+sub _project { shift->{'_proj'} }
 
 sub _handle { shift->{'_handle'} }
 
