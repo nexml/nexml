@@ -2025,6 +2025,54 @@ Converts negative branch lengths to zero.
 		return $tree;
 	}
 
+=item ladderize()
+
+Sorts nodes in ascending (or descending) order of number of children.
+
+ Type    : Tree manipulator
+ Title   : ladderize
+ Usage   : $tree->ladderize(1);
+ Function: Sorts nodes
+ Returns : The modified invocant.
+ Args    : Optional, a true value to reverse the sort order
+
+=cut
+
+	sub ladderize {
+		my ( $self, $right ) = @_;
+		my %child_count;
+		$self->visit_depth_first(
+			'-post' => sub {
+				my $node = shift;
+				my $id = $node->get_id;
+				my @children = @{ $node->get_children };
+				my $count = 1;
+				for my $child ( @children ) {
+					$count += $child_count{$child->get_id};
+				}
+				$child_count{$id} = $count;
+				my @sorted;
+				if ( $right ) {
+					@sorted = map { $_->[0] }
+						sort { $b->[1] <=> $a->[1] }
+						map { [ $_, $child_count{$_->get_id} ] }
+						@children;
+				}
+				else {
+					@sorted = map { $_->[0] }
+						sort { $a->[1] <=> $b->[1] }
+						map { [ $_, $child_count{$_->get_id} ] }
+						@children;					
+				}
+				for my $i ( 0 .. $#sorted ) {
+					$node->insert_at_index($sorted[$i],$i);
+				}
+			}				
+			
+		);
+		return $self;
+	}
+
 =item exponentiate()
 
 Raises branch lengths to argument.
