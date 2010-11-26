@@ -1,7 +1,7 @@
 # $Id$
 use strict;
 use Bio::Phylo::Util::CONSTANT 'looks_like_instance';
-use Test::More tests => 48;
+use Test::More 'no_plan';
 use Bio::Phylo::IO qw(parse unparse);
 use Bio::Phylo::Forest::Node;
 use Bio::Phylo::Forest::Tree;
@@ -145,6 +145,12 @@ $cyclical->insert($node1);
 $cyclical->insert($node2);
 ok( $cyclical->get_root, '47 no root in cycle' );
 ok( $tree->DESTROY, '48 destroy' );
+
+my $left  = '((((A,B),C),D),E);';
+my $right = '(E,(D,(C,(A,B))));';
+my $ladder = parse( '-format' => 'newick', '-string' => $left )->first;
+ok( $ladder->ladderize->to_newick eq $right, '49 ladderize' );
+
 __DATA__
 ((H:1,I:1):1,(G:1,(F:0.01,(E:0.3,(D:2,(C:0.1,(A:1,B:1)cherry:1):1):1):1):1):1):0;
 (H:1,(G:1,(F:1,((C:1,(A:1,B:1):1):1,(D:1,E:1):1):1):1):1):0;
