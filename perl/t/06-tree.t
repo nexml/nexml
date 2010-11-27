@@ -154,9 +154,13 @@ ok( $ladder->ladderize->to_newick eq $right, '49 ladderize' );
 {
     my $n1 = '((C:0,(B:0,A:0):7):3,D:0):0;';
     my $n2 = '(((A:0,B:0):4,C:0):6,D:0):0;';
+    my $n3 = '((A,B,C),D);';
     my $t1 = parse( '-format' => 'newick', '-string' => $n1 )->first;
     my $t2 = parse( '-format' => 'newick', '-string' => $n2 )->first;
+    my $t3 = parse( '-format' => 'newick', '-string' => $n3 )->first;
     ok( $t1->calc_branch_length_score( $t2 ) == 18, "50 branch length score" );
+    ok( $t1->calc_symdiff( $t2 ) == 0, "51 calc symdiff" );
+    ok( $t1->calc_symdiff( $t3 ) == 1, "52 calc symdiff" );
 }
 
 __DATA__

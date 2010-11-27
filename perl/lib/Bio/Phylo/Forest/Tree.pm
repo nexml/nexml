@@ -860,7 +860,7 @@ Calculates the squared Euclidean branch length distance between two trees.
 		my $tuples = $self->_calc_branch_diffs($other);
 		my $sum = 0;
 		for my $tuple ( @{ $tuples } ) {
-			my $diff = $tuple->[0] - $tuple->[1];
+			my $diff = ( $tuple->[0] || 0 ) - ( $tuple->[1] || 0 );
 			$sum += $diff ** 2;
 		}
 		return $sum;
@@ -868,18 +868,19 @@ Calculates the squared Euclidean branch length distance between two trees.
 
 =begin comment
 
-Returns an array of tuples, with the first element of each tuple representing
-the length of the branch subtending a particular split on the invocant, and
-the second element the length of the same branch on argument. If a
+Returns an array of triples, with the first element of each triple representing
+the length of the branch subtending a particular split on the invocant, 
+the second element the length of the same branch on argument, and the third
+element a boolean to indicate whether the split was present in both trees. If a
 particular split is found on one tree but not in the other, a value of zero
 is used for the missing split.
 
  Type    : Calculation
  Title   : calc_branch_diffs
- Usage   : my $tuples = 
+ Usage   : my $triples = 
            $tree1->calc_branch_diffs($tree2);
  Function: Creates two-dimensional array of equivalent branch lengths
- Returns : Two-dimensional array (tuples)
+ Returns : Two-dimensional array (triples)
  Args    : NONE
 
 =end comment
@@ -927,7 +928,7 @@ is used for the missing split.
 					$hash = join ',', sort { $a cmp $b } split /,/, $unsorted;
 					
 					# coerce to a numeric type
-					$length_for_split{$hash} = 0 + $node->get_branch_length;
+					$length_for_split{$hash} = $node->get_branch_length;
                                 }
                                 else {
 					# this is how we ensure that every
@@ -953,15 +954,28 @@ is used for the missing split.
 		# first visit the splits in $self, which will identify
 		# those it shares with $other and those missing in $other
 		for my $split ( keys %lengths_self ) {
-			my @tuple = ( $lengths_self{$split} );
-			push @tuple, $lengths_other{$split} || 0;
-			push @tuples, \@tuple;
+			my $tuple;
+			if ( exists $lengths_other{$split} ) {
+				$tuple = [
+					$lengths_self{$split},
+					$lengths_other{$split} || 0,
+					1
+				];
+			}
+			else {
+				$tuple = [
+					$lengths_self{$split},
+					0,
+					0
+				];
+			}
+			push @tuples, $tuple;
 		}
 		
 		# then check if there are splits in $other but not in $self
 		for my $split ( keys %lengths_other ) {
 			if ( not exists $lengths_self{$split} ) {
-				push @tuples, [ 0, $lengths_other{$split} ];
+				push @tuples, [ 0, $lengths_other{$split}, 1 ];
 			}
 		}
 		return \@tuples;
@@ -1564,28 +1578,10 @@ Calculates the symmetric difference metric between invocant and argument.
 
 	sub calc_symdiff {
 		my ( $tree, $other_tree ) = @_;
-		my ( $symdiff, @clades1, @clades2 ) = (0);
-		foreach my $node ( @{ $tree->get_internals } ) {
-			my $tips = join ' ',
-			  sort { $a cmp $b } map { $_->get_name } @{ $node->get_terminals };
-			push @clades1, $tips;
-		}
-		foreach my $node ( @{ $other_tree->get_internals } ) {
-			my $tips = join ' ',
-			  sort { $a cmp $b } map { $_->get_name } @{ $node->get_terminals };
-			push @clades2, $tips;
-		}
-	  OUTER: foreach my $outer (sort { $a cmp $b } @clades1) {
-			foreach my $inner (@clades2) {
-				next OUTER if $outer eq $inner;
-			}
-			$symdiff++;
-		}
-	  OUTER: foreach my $outer (sort { $a cmp $b } @clades2) {
-			foreach my $inner (@clades1) {
-				next OUTER if $outer eq $inner;
-			}
-			$symdiff++;
+		my $tuples = $tree->_calc_branch_diffs( $other_tree );
+		my $symdiff = 0;
+		for my $tuple ( @{ $tuples } ) {
+			$symdiff++ unless $tuple->[2];
 		}
 		return $symdiff;
 	}
