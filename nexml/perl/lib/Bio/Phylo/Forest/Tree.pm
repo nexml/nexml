@@ -794,6 +794,179 @@ Tests if tree is a cladogram (i.e. no branch lengths)
 
 =over
 
+=item calc_branch_length_distance()
+
+Calculates the Euclidean branch length distance between two trees.
+
+ Type    : Calculation
+ Title   : calc_branch_length_distance
+ Usage   : my $distance = 
+           $tree1->calc_branch_length_distance($tree2);
+ Function: Calculates the Euclidean branch length distance between two trees
+ Returns : SCALAR, number
+ Args    : NONE
+
+=cut
+
+#=item calc_robinson_foulds_distance()
+#
+#Calculates the Robinson and Foulds distance between two trees.
+#
+# Type    : Calculation
+# Title   : calc_robinson_foulds_distance
+# Usage   : my $distance = 
+#           $tree1->calc_robinson_foulds_distance($tree2);
+# Function: Calculates the Robinson and Foulds distance between two trees
+# Returns : SCALAR, number
+# Args    : NONE
+#
+#=cut
+#
+#	sub calc_robinson_foulds_distance {
+#		my ( $self, $other ) = @_;
+#		my $tuples = $self->_calc_branch_diffs($other);
+#		my $sum = 0;
+#		for my $tuple ( @{ $tuples } ) {
+#			my $diff = $tuple->[0] - $tuple->[1];
+#			$sum += abs $diff;
+#		}
+#		return $sum;		
+#	}
+
+
+	sub calc_branch_length_distance {
+		my ( $self, $other ) = @_;
+		my $squared = $self->calc_branch_length_score( $other );
+		return sqrt($squared);
+	}
+
+=item calc_branch_length_score()
+
+Calculates the squared Euclidean branch length distance between two trees.
+
+ Type    : Calculation
+ Title   : calc_branch_length_score
+ Usage   : my $score = 
+           $tree1->calc_branch_length_score($tree2);
+ Function: Calculates the squared Euclidean branch
+           length distance between two trees
+ Returns : SCALAR, number
+ Args    : NONE
+
+=cut
+
+	sub calc_branch_length_score {
+		my ( $self, $other ) = @_;
+		my $tuples = $self->_calc_branch_diffs($other);
+		my $sum = 0;
+		for my $tuple ( @{ $tuples } ) {
+			my $diff = $tuple->[0] - $tuple->[1];
+			$sum += $diff ** 2;
+		}
+		return $sum;
+	}
+
+=begin comment
+
+Returns an array of tuples, with the first element of each tuple representing
+the length of the branch subtending a particular split on the invocant, and
+the second element the length of the same branch on argument. If a
+particular split is found on one tree but not in the other, a value of zero
+is used for the missing split.
+
+ Type    : Calculation
+ Title   : calc_branch_diffs
+ Usage   : my $tuples = 
+           $tree1->calc_branch_diffs($tree2);
+ Function: Creates two-dimensional array of equivalent branch lengths
+ Returns : Two-dimensional array (tuples)
+ Args    : NONE
+
+=end comment
+
+=cut
+
+        sub _calc_branch_diffs {
+                my ( $self, $other ) = @_;
+		
+		# we create an anonymous subroutine which
+		# we will apply to $self and $other
+                my $length_for_split_creator = sub {
+			
+			# so this will be $self and $other
+                        my $tree = shift;
+			
+			# keys will be hashed, comma-separated tip names,
+			# values will be branch lengths
+                        my %length_for_split;
+			
+			# this will assemble the comma-separated,
+			# hashed tip names
+                        my %hash_for_node;
+			
+			# post-order traversal, so tips are processed first
+                        $tree->visit_depth_first( '-post' => sub {
+                                my $node = shift;
+                                my $id = $node->get_id;
+                                my @children = @{ $node->get_children };
+                                my $hash;
+				
+				# we only enter into this case AFTER tips
+				# have been processed, so %hash_for_node
+				# values will be assigned for all children
+                                if ( @children ) {
+					
+					# these will be growing lists from
+					# tips to root
+                                        my $unsorted = join ',', map { $hash_for_node{$_->get_id} } @children;
+					
+					# we need to split, sort and join
+					# so that splits where the subtended,
+					# higher topology is different still
+					# yield the same concatenated hash
+					$hash = join ',', sort { $a cmp $b } split /,/, $unsorted;
+					
+					# coerce to a numeric type
+					$length_for_split{$hash} = 0 + $node->get_branch_length;
+                                }
+                                else {
+					# this is how we ensure that every
+					# tip name is a single, unique line.
+					# Digest::MD5 was in CORE since 5.7
+					require Digest::MD5;
+                                        $hash = Digest::MD5::md5($node->get_name);
+                                }
+				
+				# store for the next recursion
+                                $hash_for_node{$id} = $hash;
+			} );
+			
+			# this is the return value for the anonymous sub			
+                        return %length_for_split;
+                };
+		
+		# here we execute the anonymous sub. twice.
+                my %lengths_self = $length_for_split_creator->($self);
+                my %lengths_other = $length_for_split_creator->($other);
+		my @tuples;
+		
+		# first visit the splits in $self, which will identify
+		# those it shares with $other and those missing in $other
+		for my $split ( keys %lengths_self ) {
+			my @tuple = ( $lengths_self{$split} );
+			push @tuple, $lengths_other{$split} || 0;
+			push @tuples, \@tuple;
+		}
+		
+		# then check if there are splits in $other but not in $self
+		for my $split ( keys %lengths_other ) {
+			if ( not exists $lengths_self{$split} ) {
+				push @tuples, [ 0, $lengths_other{$split} ];
+			}
+		}
+		return \@tuples;
+        }
+
 =item calc_tree_length()
 
 Calculates the sum of all branch lengths.
@@ -1402,13 +1575,13 @@ Calculates the symmetric difference metric between invocant and argument.
 			  sort { $a cmp $b } map { $_->get_name } @{ $node->get_terminals };
 			push @clades2, $tips;
 		}
-	  OUTER: foreach my $outer (@clades1) {
+	  OUTER: foreach my $outer (sort { $a cmp $b } @clades1) {
 			foreach my $inner (@clades2) {
 				next OUTER if $outer eq $inner;
 			}
 			$symdiff++;
 		}
-	  OUTER: foreach my $outer (@clades2) {
+	  OUTER: foreach my $outer (sort { $a cmp $b } @clades2) {
 			foreach my $inner (@clades1) {
 				next OUTER if $outer eq $inner;
 			}
