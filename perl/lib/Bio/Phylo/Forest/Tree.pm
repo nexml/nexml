@@ -324,6 +324,47 @@ Sets tree to NOT be the default tree in a forest
 
 =over
 
+=item get_midpoint()
+
+Gets node that divides tree into two distance-balanced partitions.
+
+ Type    : Query
+ Title   : get_midpoint
+ Usage   : my $midpoint = $tree->get_midpoint;
+ Function: Gets node nearest to the middle of the longest path
+ Returns : A Bio::Phylo::Forest::Node object.
+ Args    : NONE
+ Comments: This algorithm was ported from ETE
+
+=cut
+
+	sub get_midpoint {
+		my $self = shift;
+		my $root = $self->get_root;
+		my $nA = $self->get_tallest_tip;
+		my $nB = $nA->get_farthest_node;
+		my $A2B_dist = $nA->calc_path_to_root + $nB->calc_path_to_root;
+		my $outgroup = $nA;
+		my $middist = $A2B_dist / 2;
+		my $cdist = 0;
+		my $current = $nA;
+		while ( $current ) {
+			if ( $cdist > $middist ) {
+				last;
+			}
+			else {
+				if ( my $parent = $current->get_parent ) {
+					$cdist += $current->get_branch_length;
+					$current = $parent;
+				}
+				else {
+					last;
+				}
+			}			
+		}
+		return $current;
+	}
+
 =item get_terminals()
 
 Get terminal nodes.

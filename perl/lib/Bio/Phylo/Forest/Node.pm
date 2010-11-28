@@ -951,6 +951,62 @@ Gets invocant's ancestors.
 		}
 	}
 
+=item get_root()
+
+Gets root relative to the invocant, i.e. by walking up the path of ancestors
+
+ Type    : Query
+ Title   : get_root
+ Usage   : my $root = $node->get_root;
+ Function: Gets root relative to the invocant
+ Returns : Bio::Phylo::Forest::Node           
+ Args    : NONE
+
+=cut
+
+	sub get_root {
+		my $self = shift;
+		if ( my $anc = $self->get_ancestors ) {
+			return $anc->[-1];
+		}
+		else {
+			return $self;
+		}
+	}
+
+=item get_farthest_node()
+
+Gets node farthest away from the invocant. By default this is nodal distance,
+but when supplied an optional true argument it is based on patristic distance
+instead.
+
+ Type    : Query
+ Title   : get_farthest_node
+ Usage   : my $farthest = $node->get_farthest_node;
+ Function: Gets node farthest away from the invocant.
+ Returns : Bio::Phylo::Forest::Node           
+ Args    : Optional, TRUE value to use patristic instead of nodal distance
+
+=cut
+
+	sub get_farthest_node {
+		my ( $self, $patristic ) = @_;
+		my $criterion = $patristic ? 'patristic' : 'nodal';
+		my $method = sprintf 'calc_%s_distance', $criterion;
+		my $root = $self->get_root;
+		if ( my $terminals = $root->get_terminals ) {
+			my ( $furthest_distance, $furthest_node ) = ( 0 );
+			for my $tip ( @{ $terminals } ) {
+				my $distance = $self->$method($tip);
+				if ( $distance > $furthest_distance ) {
+					$furthest_distance = $distance;
+					$furthest_node = $tip;
+				}
+			}
+			return $furthest_node;
+		}
+	}
+
 =item get_sisters()
 
 Gets invocant's sisters.
