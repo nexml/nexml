@@ -163,6 +163,19 @@ ok( $ladder->ladderize->to_newick eq $right, '49 ladderize' );
     ok( $t1->calc_symdiff( $t3 ) == 1, "52 calc symdiff" );
 }
 
+{
+    my $newick = '(((a:100,b:1)n1:1,c:1)n2:1,((((d:1,e:1)n3:1,f:1)n4:1,g:1)n5:1,h:1)n6:1)n7:0;';
+    my $tree = parse( '-format' => 'newick', '-string' => $newick )->first;
+    my $focal = $tree->get_by_name('b');
+    my $farthest_nodal = $focal->get_farthest_node;
+    my $fn_name = $farthest_nodal->get_name;
+    ok( ( $fn_name eq 'd' or $fn_name eq 'e' ), "53 farthest by nodal" );
+    my $farthest_patristic = $focal->get_farthest_node(1);
+    my $fp_name = $farthest_patristic->get_name;
+    ok( $fp_name eq 'a', "54 farthest by patristic");
+    ok( $tree->get_midpoint->get_name eq 'n1', "55 gets midpoint node");
+}
+
 __DATA__
 ((H:1,I:1):1,(G:1,(F:0.01,(E:0.3,(D:2,(C:0.1,(A:1,B:1)cherry:1):1):1):1):1):1):0;
 (H:1,(G:1,(F:1,((C:1,(A:1,B:1):1):1,(D:1,E:1):1):1):1):1):0;
