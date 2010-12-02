@@ -705,6 +705,11 @@ Calculates occurrences of states.
 
 	sub calc_state_counts {
 		my $self = shift;
+		# maybe there should be an option to bin continuous values
+		# in X categories, and return the frequencies of those?
+		if ( $self->get_type =~ /^continuous$/i ) {
+			throw 'BadArgs' => 'Matrix holds continuous values';
+		}		
 		my %counts;
 		if ( @_ ) {
 			my %focus = map { $_ => 1 } @_;
@@ -732,6 +737,47 @@ Calculates occurrences of states.
 			}		
 		}
 		return \%counts;
+	}
+
+=item calc_state_frequencies()
+
+Calculates the frequencies of the states observed in the matrix.
+
+ Type    : Calculation
+ Title   : calc_state_frequencies
+ Usage   : my %freq = %{ $object->calc_state_frequencies() };
+ Function: Calculates state frequencies
+ Returns : A hash, keys are state symbols, values are frequencies
+ Args    : Optional:
+           # if true, counts missing (usually the '?' symbol) as a state
+	   # in the final tallies. Otherwise, missing states are ignored
+           -missing => 1
+           # if true, counts gaps (usually the '-' symbol) as a state
+	   # in the final tallies. Otherwise, gap states are ignored
+	   -gap => 1
+ Comments: Throws exception if matrix holds continuous values
+
+=cut
+
+	sub calc_state_frequencies {
+		my $self = shift;
+		my $counts = $self->calc_state_counts;
+		my %args = looks_like_hash @_;
+		for my $arg ( qw(missing gap) ) {
+			if ( not exists $args{"-${arg}"} ) {
+				my $method = "get_${arg}";
+				my $symbol = $self->$method;
+				delete $counts->{$symbol};
+			}
+		}
+		my $total = 0;
+		$total += $_ for values %{ $counts };
+		if ( $total > 0 ) {
+			for my $state ( keys %{ $counts } ) {
+				$counts->{$state} /= $total;
+			}
+		}
+		return $counts;
 	}
 
 =back
