@@ -726,6 +726,62 @@ Returns matrix case sensitivity interpretation.
 
 =back
 
+=head2 CALCULATIONS
+
+=over
+
+=item calc_state_frequencies()
+
+Calculates the frequencies of the states observed in the matrix.
+
+ Type    : Calculation
+ Title   : calc_state_frequencies
+ Usage   : my %freq = %{ $object->calc_state_frequencies() };
+ Function: Calculates state frequencies
+ Returns : A hash, keys are state symbols, values are frequencies
+ Args    : Optional, a true value to return absolute counts instead
+ Comments: Throws exception if matrix holds continuous values
+
+=cut
+
+	sub calc_state_frequencies {
+		my $self = shift;
+		
+		# maybe there should be an option to bin continuous values
+		# in X categories, and return the frequencies of those?
+		if ( $self->get_type =~ /^continuous$/i ) {
+			throw 'BadArgs' => 'Matrix holds continuous values';
+		}
+		
+		# standard %seen hash population
+		my %seen;
+		for my $row ( @{ $self->get_entities } ) {
+			my @char = $row->get_char;
+			$seen{$_}++ for @char;
+		}
+		
+		# at this point we have absolute counts, which we
+		# return if the optional argument was provided
+		if ( $_[0] ) {
+			return \%seen;
+		}
+		
+		# if we want frequencies instead, we compute the total...
+		my @values = values %seen;
+		my $total = 0;
+		$total += $_ for @values;
+		
+		# ...and divide by the total, avoiding divide-by-zero
+		if ( $total > 0 ) {
+			for my $key ( keys %seen ) {
+				$seen{$key} /= $total;
+			}
+		}
+		return \%seen;
+	}
+
+=back
+
 =head2 METHODS
 
 =over
