@@ -1,7 +1,7 @@
 # $Id$
 use strict;
 use Bio::Phylo::Util::CONSTANT 'looks_like_instance';
-use Test::More tests => 29;
+use Test::More 'no_plan';
 use Bio::Phylo::Matrices::Datum;
 use Bio::Phylo::Matrices::Matrix;
 use Bio::Phylo;
@@ -151,3 +151,21 @@ ok($pruned->get_nchar == 1,'28 pruning keeps one char');
 
 my $kept = $prune_candidate->keep_chars([2]);
 ok($pruned->get_nchar == 1,'29 keeping on char');
+
+{
+    my $dna = Bio::Phylo::Matrices::Matrix->new(
+        -type   => 'dna',
+        -matrix => [
+            [ 'a' => qw(A C G T) ],
+            [ 'b' => qw(A C G T) ],
+            [ 'c' => qw(A C G T) ],
+        ],
+    );
+    like( $dna->get_type, qr/dna/i, '30 created dna matrix' );
+    is( $dna->get_nchar, 4, '31 dna matrix has 4 columns');
+    is( $dna->get_ntax, 3, '32 dna matrix has 3 rows');
+    my $freq = $dna->calc_state_frequencies;
+    is( $freq->{$_}, 0.25, "33 state frequency for $_" ) for qw(A C G T);
+    my $abs = $dna->calc_state_frequencies(1);
+    is( $abs->{$_}, 3, "34 state count for $_" ) for qw(A C G T);
+}
