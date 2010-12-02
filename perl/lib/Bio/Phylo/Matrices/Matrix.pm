@@ -730,6 +730,32 @@ Returns matrix case sensitivity interpretation.
 
 =over
 
+=item calc_state_counts()
+
+Calculates occurrences of states.
+
+ Type    : Calculation
+ Title   : calc_state_counts
+ Usage   : my %counts = %{ $matrix->calc_state_counts };
+ Function: Calculates occurrences of states.
+ Returns : Hashref: keys are states, values are counts
+ Args    : Optional - one or more states to focus on
+
+=cut
+
+	sub calc_state_counts {
+		my $self = shift;
+		my %totals;
+		for my $row ( @{ $self->get_entities } ) {
+			my $counts = $row->calc_state_counts(@_);
+			for my $state ( keys %{ $counts } ) {
+				$totals{$state} += $counts->{$state};
+			}
+		}
+		return \%totals;
+	}
+
+
 =item calc_state_frequencies()
 
 Calculates the frequencies of the states observed in the matrix.
@@ -739,45 +765,34 @@ Calculates the frequencies of the states observed in the matrix.
  Usage   : my %freq = %{ $object->calc_state_frequencies() };
  Function: Calculates state frequencies
  Returns : A hash, keys are state symbols, values are frequencies
- Args    : Optional, a true value to return absolute counts instead
+ Args    : Optional:
+           # if true, counts missing (usually the '?' symbol) as a state
+	   # in the final tallies. Otherwise, missing states are ignored
+           -missing => 1
+           # if true, counts gaps (usually the '-' symbol) as a state
+	   # in the final tallies. Otherwise, gap states are ignored
+	   -gap => 1
  Comments: Throws exception if matrix holds continuous values
 
 =cut
 
 	sub calc_state_frequencies {
-		my $self = shift;
-		
-		# maybe there should be an option to bin continuous values
-		# in X categories, and return the frequencies of those?
-		if ( $self->get_type =~ /^continuous$/i ) {
-			throw 'BadArgs' => 'Matrix holds continuous values';
-		}
-		
-		# standard %seen hash population
-		my %seen;
+		my $self = shift;		
+		my %result;
 		for my $row ( @{ $self->get_entities } ) {
-			my @char = $row->get_char;
-			$seen{$_}++ for @char;
-		}
-		
-		# at this point we have absolute counts, which we
-		# return if the optional argument was provided
-		if ( $_[0] ) {
-			return \%seen;
-		}
-		
-		# if we want frequencies instead, we compute the total...
-		my @values = values %seen;
-		my $total = 0;
-		$total += $_ for @values;
-		
-		# ...and divide by the total, avoiding divide-by-zero
-		if ( $total > 0 ) {
-			for my $key ( keys %seen ) {
-				$seen{$key} /= $total;
+			my $freqs = $row->calc_state_frequencies(@_);
+			for my $state ( keys %{ $freqs } ) {
+				$result{$state} += $freqs->{$state};
 			}
 		}
-		return \%seen;
+		my $total = 0;
+		$total += $_ for values %result;
+		if ( $total > 0 ) {
+			for my $state ( keys %result ) {
+				$result{$state} /= $total;
+			}
+		}
+		return \%result;
 	}
 
 =back

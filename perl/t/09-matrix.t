@@ -166,6 +166,6 @@ ok($pruned->get_nchar == 1,'29 keeping on char');
     is( $dna->get_ntax, 3, '32 dna matrix has 3 rows');
     my $freq = $dna->calc_state_frequencies;
     is( $freq->{$_}, 0.25, "33 state frequency for $_" ) for qw(A C G T);
-    my $abs = $dna->calc_state_frequencies(1);
+    my $abs = $dna->calc_state_counts;
     is( $abs->{$_}, 3, "34 state count for $_" ) for qw(A C G T);
 }
