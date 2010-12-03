@@ -639,11 +639,10 @@ Calculates number of characters.
 	sub get_nchar {
 		my $self  = shift;
 		my $nchar = 0;
-#		my $i     = 1;
 		for my $row ( @{ $self->get_entities } ) {
-			my $rowlength = scalar( @{ $row->get_entities } ) + $row->get_position - 1;
-# 			$logger->debug(
-# 				sprintf( "counted %s chars in row %s", $rowlength, $i++ ) );
+			my $offset = $row->get_position - 1;
+			my $rowlength = scalar @{ $row->get_entities };
+			$rowlength += $offset;
 			$nchar = $rowlength if $rowlength > $nchar;
 		}
 		return $nchar;
@@ -729,6 +728,51 @@ Returns matrix case sensitivity interpretation.
 =head2 CALCULATIONS
 
 =over
+
+=item calc_prop_invar()
+
+Calculates proportion of invariant sites.
+
+ Type    : Calculation
+ Title   : calc_prop_invar
+ Usage   : my $pinvar = $matrix->calc_prop_invar;
+ Function: Calculates proportion of invariant sites.
+ Returns : Scalar: a number
+ Args    : Optional:
+           # if true, counts missing (usually the '?' symbol) as a state
+	   # in the final tallies. Otherwise, missing states are ignored
+           -missing => 1
+           # if true, counts gaps (usually the '-' symbol) as a state
+	   # in the final tallies. Otherwise, gap states are ignored
+	   -gap => 1
+
+=cut
+
+	sub calc_prop_invar {
+		my $self  = shift;
+		my $raw   = $self->get_raw;
+		my $ntax  = $self->get_ntax;
+		my $nchar = $self->get_nchar || 1;
+		my %args  = looks_like_hash @_;
+		my @symbols_to_ignore;
+		for my $sym ( qw(missing gap) ) {
+			if ( not exists $args{"-${sym}"} ) {
+				my $method = "get_${sym}";
+				push @symbols_to_ignore, $self->$method;
+			}
+		}
+		my $invar_count;
+		for my $i ( 1 .. $nchar ) {
+			my %seen;
+			for my $j ( 0 .. ($ntax-1) ) {
+				$seen{$raw->[$j]->[$i]}++;
+			}
+			delete @seen{@symbols_to_ignore};
+			my @symbols_in_column = keys %seen;
+			$invar_count++ if scalar(@symbols_in_column) <= 1;
+		}
+		return $invar_count / $nchar;
+	}
 
 =item calc_state_counts()
 
@@ -1484,7 +1528,7 @@ Analog to to_xml.
 
 =cut
 
-    sub to_dom {	
+	sub to_dom {	
 		my $self = shift;
 		my $dom = $_[0];
 		my @args = @_;
@@ -1547,10 +1591,10 @@ Analog to to_xml.
 		}
 		$elt->set_child($mx_elt);
 		return $elt;
-    }
+	}
 
-    # returns an array of elements
-    sub _package_char_labels {
+	# returns an array of elements
+	sub _package_char_labels {
 		my ( $self, $dom, $states_id ) = @_;
 		my @elts;
 		my $labels = $self->get_charlabels;
@@ -1564,7 +1608,7 @@ Analog to to_xml.
 		    push @elts, $elt;
 		}	
 		return @elts;
-    }	
+	}	
 	
 	sub _tag       { 'characters' }
 	sub _type      { $CONSTANT_TYPE }

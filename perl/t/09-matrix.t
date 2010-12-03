@@ -157,7 +157,7 @@ ok($pruned->get_nchar == 1,'29 keeping on char');
         -type   => 'dna',
         -matrix => [
             [ 'a' => qw(A C G T) ],
-            [ 'b' => qw(A C G T) ],
+            [ 'b' => qw(A G C T) ],
             [ 'c' => qw(A C G T) ],
         ],
     );
@@ -168,4 +168,5 @@ ok($pruned->get_nchar == 1,'29 keeping on char');
     is( $freq->{$_}, 0.25, "33 state frequency for $_" ) for qw(A C G T);
     my $abs = $dna->calc_state_counts;
     is( $abs->{$_}, 3, "34 state count for $_" ) for qw(A C G T);
+    is( $dna->calc_prop_invar, 0.5, "35 half of the sites invariant");
 }
