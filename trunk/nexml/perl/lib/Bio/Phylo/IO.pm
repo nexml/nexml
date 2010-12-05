@@ -252,6 +252,8 @@ sub DESTROY {
 
 =over
 
+=item L<Bio::Phylo::Parsers::Fasta>
+
 =item L<Bio::Phylo::Parsers::Newick>
 
 =item L<Bio::Phylo::Parsers::Nexml>
