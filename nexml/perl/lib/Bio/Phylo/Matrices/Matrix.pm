@@ -839,6 +839,67 @@ Calculates the frequencies of the states observed in the matrix.
 		return \%result;
 	}
 
+=item calc_distinct_site_patterns()
+
+Identifies the distinct distributions of states for all characters and
+counts their occurrences. Returns an array-of-arrays, where the first cell
+of each inner array holds the occurrence count, the second cell holds the
+pattern, i.e. an array of states. For example, for a matrix like this:
+
+ taxon1 GTGTGTGTGTGTGTGTGTGTGTG
+ taxon2 AGAGAGAGAGAGAGAGAGAGAGA
+ taxon3 TCTCTCTCTCTCTCTCTCTCTCT
+ taxon4 TCTCTCTCTCTCTCTCTCTCTCT
+ taxon5 AAAAAAAAAAAAAAAAAAAAAAA
+ taxon6 CGCGCGCGCGCGCGCGCGCGCGC
+ taxon7 AAAAAAAAAAAAAAAAAAAAAAA
+
+The following data structure will be returned:
+
+ [
+	[ 12, [ 'G', 'A', 'T', 'T', 'A', 'C', 'A' ] ],
+	[ 11, [ 'T', 'G', 'C', 'C', 'A', 'G', 'A' ] ]
+ ]
+
+The patterns are sorted from most to least frequently occurring, the states
+for each pattern are in the order of the rows in the matrix. (In other words,
+the original matrix can more or less be reconstructed by inverting the patterns,
+and multiplying them by their occurrence, although the order of the columns
+will be lost.)
+
+ Type    : Calculation
+ Title   : calc_distinct_site_patterns
+ Usage   : my $patterns = $object->calc_distinct_site_patterns;
+ Function: Calculates distinct site patterns.
+ Returns : A multidimensional array, see above.
+ Args    : NONE
+ Comments:
+
+=cut
+	
+	sub calc_distinct_site_patterns {
+		my $self  = shift;
+		my $raw   = $self->get_raw;
+		my $nchar = $self->get_nchar;
+		my $ntax  = $self->get_ntax;
+		my %pattern;
+		for my $i ( 1 .. $nchar ) {
+			my @column;
+			for my $j ( 0 .. ( $ntax - 1 ) ) {
+				push @column, $raw->[$j]->[$i];
+			}
+			my $col_pattern = join ' ', @column;
+			$pattern{$col_pattern}++;
+		}
+		my @pattern_array;
+		for my $key ( keys %pattern ) {
+			my @column = split / /, $key;
+			push @pattern_array, [ $pattern{$key}, \@column ];
+		}
+		my @sorted = sort { $b->[0] <=> $a->[1] } @pattern_array;
+		\@sorted;
+	}
+
 =back
 
 =head2 METHODS
