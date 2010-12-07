@@ -170,3 +170,23 @@ ok($pruned->get_nchar == 1,'29 keeping on char');
     is( $abs->{$_}, 3, "34 state count for $_" ) for qw(A C G T);
     is( $dna->calc_prop_invar, 0.5, "35 half of the sites invariant");
 }
+
+{
+    my $matrix = Bio::Phylo::Matrices::Matrix->new(
+        '-type' => 'dna',
+        '-matrix' => [
+            [ qw'taxon1 G T G T G T G T G T G T G T G T G T G T G T G' ],
+            [ qw'taxon2 A G A G A G A G A G A G A G A G A G A G A G A' ],
+            [ qw'taxon3 T C T C T C T C T C T C T C T C T C T C T C T' ],
+            [ qw'taxon4 T C T C T C T C T C T C T C T C T C T C T C T' ],
+            [ qw'taxon5 A A A A A A A A A A A A A A A A A A A A A A A' ],
+            [ qw'taxon6 C G C G C G C G C G C G C G C G C G C G C G C' ],
+            [ qw'taxon7 A A A A A A A A A A A A A A A A A A A A A A A' ],
+        ]
+    );
+    my $expected = [
+	[ 12, [ 'G', 'A', 'T', 'T', 'A', 'C', 'A' ] ],
+	[ 11, [ 'T', 'G', 'C', 'C', 'A', 'G', 'A' ] ],
+    ];
+    is_deeply( $matrix->calc_distinct_site_patterns, $expected, "36 site patterns" );
+}
