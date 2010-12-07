@@ -3,7 +3,14 @@ package Bio::Phylo::Forest;
 use strict;
 use Bio::Phylo::Listable ();
 use Bio::Phylo::Taxa::TaxaLinker;
-use Bio::Phylo::Util::CONSTANT qw(_NONE_ _FOREST_ _PROJECT_ looks_like_hash);
+use Bio::Phylo::Util::CONSTANT qw(
+	_NONE_
+	_FOREST_
+	_PROJECT_
+	_NODE_
+	looks_like_hash
+	looks_like_object
+);
 use Bio::Phylo::Util::Exceptions 'throw';
 use Bio::Phylo::Factory;
 use vars qw(@ISA);
@@ -81,6 +88,40 @@ Forest constructor.
 # 
 # 		return $self;
 # 	}
+
+=back
+
+=head1 CALCULATIONS
+
+=over
+
+=item calc_split_frequency()
+
+Calculates frequency of provided split
+
+ Type    : Calculation
+ Title   : calc_split_frequency
+ Usage   : my $freq = $trees->calc_split_frequency([$node1,$node2]);
+ Function: Calculates split frequency
+ Returns : Scalar, a number
+ Args    : An array of taxon objects, or a taxa object
+ Comment :
+
+=cut
+
+	sub calc_split_frequency {
+		my ( $self, $arg ) = @_;
+		my @trees  = @{ $self->get_entities };
+		my $ntrees = scalar @trees;
+		if ( $ntrees ) {
+			my $count = 0;
+			for my $tree ( @trees ) {
+				$count++ if $tree->is_clade($arg);			
+			}
+			return $count / $ntrees;
+		}
+		return 0;
+	}
 
 =back
 
