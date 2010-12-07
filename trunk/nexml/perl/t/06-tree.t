@@ -176,6 +176,14 @@ ok( $ladder->ladderize->to_newick eq $right, '49 ladderize' );
     ok( $tree->get_midpoint->get_name eq 'n1', "55 gets midpoint node");
 }
 
+{
+    my $newick = '((a:1,b:1)n1:1,c:2)n2:0;';
+    my $tree = parse( '-format' => 'newick', '-string' => $newick )->first;
+    $tree->calc_node_ages;
+    is( $tree->get_by_name('n1')->get_generic('age'), 1, "56 calc node age" );
+    is( $tree->get_by_name('n2')->get_generic('age'), 2, "57 calc node age" );    
+}
+
 __DATA__
 ((H:1,I:1):1,(G:1,(F:0.01,(E:0.3,(D:2,(C:0.1,(A:1,B:1)cherry:1):1):1):1):1):1):0;
 (H:1,(G:1,(F:1,((C:1,(A:1,B:1):1):1,(D:1,E:1):1):1):1):1):0;
