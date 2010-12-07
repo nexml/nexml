@@ -5,7 +5,16 @@ use Bio::Phylo::Listable ();
 use Bio::Phylo::Forest::Node ();
 use Bio::Phylo::IO qw(unparse);
 use Bio::Phylo::Util::Exceptions 'throw';
-use Bio::Phylo::Util::CONSTANT qw(_TREE_ _FOREST_ _DOMCREATOR_ looks_like_number looks_like_hash looks_like_object);
+use Bio::Phylo::Util::CONSTANT qw(
+	_TREE_
+	_FOREST_
+	_DOMCREATOR_
+	_TAXA_
+	_TAXON_
+	looks_like_number
+	looks_like_hash
+	looks_like_object
+);
 use Bio::Phylo::Factory;
 use Scalar::Util qw(blessed);
 use vars qw(@ISA);
@@ -515,6 +524,40 @@ Retrieves the node furthest from the root.
 		return $tallest;
 	}
 
+=item get_nodes_for_taxa()
+
+Gets node objects for the supplied taxon objects
+
+ Type    : Query
+ Title   : get_nodes_for_taxa
+ Usage   : my @nodes = @{ $tree->get_nodes_for_taxa(\@taxa) };
+ Function: Gets node objects for the supplied taxon objects
+ Returns : array ref of Bio::Phylo::Forest::Node objects
+ Args    : A reference to an array of Bio::Phylo::Taxa::Taxon objects
+           or a Bio::Phylo::Taxa object
+
+=cut
+
+	sub get_nodes_for_taxa {
+		my ( $self, $taxa ) = @_;
+		my ( $is_taxa, $taxa_objs );
+		eval { $is_taxa = looks_like_object $taxa, _TAXA_ };
+		if ( $is_taxa and not $@ ) {
+			$taxa_objs = $taxa->get_entities;
+		}
+		else {
+			$taxa_objs = $taxa;
+		}
+		my %ids = map { $_->get_id => 1 } @{ $taxa_objs };
+		my @nodes;
+		for my $node ( @{ $self->get_entities } ) {
+			if ( my $taxon = $node->get_taxon ) {
+				push @nodes, $node if $ids{$taxon->get_id};
+			}
+		}
+		return \@nodes;
+	}
+
 =item get_mrca()
 
 Get most recent common ancestor of argument nodes.
@@ -788,14 +831,32 @@ Tests if argument (node array ref) forms a clade.
  Function: Tests whether the set of 
            \@tips forms a clade
  Returns : BOOLEAN
- Args    : A reference to an array of 
-           Bio::Phylo::Forest::Node objects.
+ Args    : A reference to an array of Bio::Phylo::Forest::Node objects, or a
+           reference to an array of Bio::Phylo::Taxa::Taxon objects, or a
+	   Bio::Phylo::Taxa object
  Comments:
 
 =cut
 
 	sub is_clade {
-		my ( $tree, $tips ) = @_;
+		my ( $tree, $arg ) = @_;
+		my ( $is_taxa, $is_node_array, $tips );
+		
+		# check if arg is a Taxa object
+		eval { $is_taxa = looks_like_object $arg, _TAXA_ };
+		if ( $is_taxa and not $@ ) {
+			$tips = $tree->get_nodes_for_taxa($arg);
+		}
+		
+		# check if arg is an array of Taxon object
+		eval { $is_node_array = looks_like_object $arg->[0], _TAXON_ };
+		if ( $is_node_array and not $@ ) {
+			$tips = $tree->get_nodes_for_taxa($arg);
+		}
+		else {
+			$tips = $arg; # arg is an array of Node objects
+		}
+		
 		my $mrca;
 		for my $i ( 1 .. $#{$tips} ) {
 			$mrca ? $mrca = $mrca->get_mrca( $tips->[$i] ) : $mrca =
@@ -1560,6 +1621,41 @@ Calculates branching times.
 			@branching_times = sort { $a->[1] <=> $b->[1] } @temp;
 		}
 		return \@branching_times;
+	}
+
+=item calc_node_ages()
+
+Calculates node ages.
+
+ Type    : Calculation
+ Title   : calc_node_ages
+ Usage   : $tree->calc_node_ages;
+ Function: Calculates the age of all the nodes in the tree (i.e. the distance
+           from the tips) and assigns these to the 'age' slot, such that,
+	   after calling this method, the age of any one node can be retrieved
+	   by calling $node->get_generic('age');
+ Returns : The invocant
+ Args    : NONE
+ Comments: This method computes, in a sense, the opposite of
+           calc_branching_times: here, we compute the distance from the tips
+	   (i.e. how long ago the split occurred), whereas calc_branching_times
+	   calculates the distance from the root (i.e. the waiting time).
+
+=cut
+
+	sub calc_node_ages {
+		my $self = shift;
+		$self->visit_depth_first(
+			'-post' => sub {
+				my $node = shift;
+				my $age = 0;
+				if ( my $child = $node->get_child(0) ) {
+					$age = $child->get_generic('age') + $child->get_branch_length;
+				}
+				$node->set_generic( 'age' => $age );
+			}
+		);
+		return $self;
 	}
 
 =item calc_ltt()
