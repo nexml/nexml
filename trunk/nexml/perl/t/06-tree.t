@@ -188,7 +188,15 @@ ok( $ladder->ladderize->to_newick eq $right, '49 ladderize' );
 {
     my $newick = '((a:1,b:1)n1:1,(c:2,d:2))n2:0;';
     my $tree = parse( '-format' => 'newick', '-string' => $newick )->first;
-    is( $tree->calc_number_of_cherries, 2, "57 calc number of cherries" );
+    is( $tree->calc_number_of_cherries, 2, "58 calc number of cherries" );
+}
+
+{
+    my $newick = '((a:1,b:1)n1:1,(c:2,d:2)n2:1)n3:0;';
+    my $tree = parse( '-format' => 'newick', '-string' => $newick )->first;
+    $tree->chronompl;
+    is ( $tree->get_by_name('n1')->get_branch_length, 1.5, '59 chronompl' );
+    is ( $tree->get_by_name('n2')->get_branch_length, 0.5, '60 chronompl' );
 }
 __DATA__
 ((H:1,I:1):1,(G:1,(F:0.01,(E:0.3,(D:2,(C:0.1,(A:1,B:1)cherry:1):1):1):1):1):1):0;
