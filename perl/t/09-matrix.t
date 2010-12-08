@@ -190,3 +190,14 @@ ok($pruned->get_nchar == 1,'29 keeping on char');
     ];
     is_deeply( $matrix->calc_distinct_site_patterns, $expected, "36 site patterns" );
 }
+
+{
+    my $matrix = Bio::Phylo::Matrices::Matrix->new(
+        '-type' => 'dna',
+        '-matrix' => [
+            [ qw'taxon1 A C G T C G' ],
+            [ qw'taxon2 A C G T C G' ],
+        ]
+    );
+    is( $matrix->calc_gc_content, 2/3, '37 calc G+C content');
+}
