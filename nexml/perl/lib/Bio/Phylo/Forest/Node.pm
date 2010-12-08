@@ -1347,6 +1347,30 @@ Tests if invocant is an internal node.
 	sub is_internal {
 		return !!shift->get_first_daughter;
 	}
+
+=item is_preterminal()
+
+Tests if all direct descendents are terminal
+
+ Type    : Test
+ Title   : is_preterminal
+ Usage   : if ( $node->is_preterminal ) {
+              # do something
+           }
+ Function: Returns true if all direct descendents are terminal
+ Returns : BOOLEAN
+ Args    : NONE
+
+=cut
+
+	sub is_preterminal {
+		my $self = shift;
+		my $children = $self->get_children;
+		for my $child ( @{ $children } ) {
+			return 0 if $child->is_internal;
+		}
+		return !! scalar @{ $children };
+	}
 	
 =item is_first()
 
