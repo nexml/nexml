@@ -900,6 +900,42 @@ will be lost.)
 		\@sorted;
 	}
 
+=item calc_gc_content()
+
+Calculates the G+C content as a fraction on the total
+
+ Type    : Calculation
+ Title   : calc_gc_content
+ Usage   : my $fraction = $obj->calc_gc_content;
+ Function: Calculates G+C content
+ Returns : A number between 0 and 1 (inclusive)
+ Args    : Optional:
+           # if true, counts missing (usually the '?' symbol) as a state
+	   # in the final tallies. Otherwise, missing states are ignored
+           -missing => 1
+           # if true, counts gaps (usually the '-' symbol) as a state
+	   # in the final tallies. Otherwise, gap states are ignored
+	   -gap => 1
+ Comments: Throws 'BadArgs' exception if matrix holds anything other than DNA
+           or RNA. The calculation also takes the IUPAC symbol S (which is C|G)
+	   into account, but no other symbols (such as V, for A|C|G);
+
+=cut
+
+	sub calc_gc_content {
+		my $self = shift;
+		my $type = $self->get_type;
+		if ( $type !~ /^(?:d|r)na/i ) {
+			throw 'BadArgs' => "Matrix doesn't contain nucleotides";
+		}
+		my $freq = $self->calc_state_frequencies;
+		my $total = 0;
+		for ( qw(c C g G s S) ) {
+			$total += $freq->{$_};
+		}
+		return $total;
+	}
+
 =back
 
 =head2 METHODS
