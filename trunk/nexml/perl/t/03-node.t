@@ -1,7 +1,7 @@
 # $Id$
 use strict;
 use Bio::Phylo::Util::CONSTANT 'looks_like_instance';
-use Test::More tests => 73;
+use Test::More 'no_plan';
 use Bio::Phylo::IO qw(parse unparse);
 use Bio::Phylo::Forest::Node;
 use Bio::Phylo::Taxa::Taxon;
@@ -120,7 +120,18 @@ my $H = shift @{ $trees[3]->get_by_regular_expression(
 	'-match' => qr/^H$/
 ) };
 $H->set_root_below;
-ok( $trees[3]->get_root->get_name eq 'root', '73 reroot tree')
+ok( $trees[3]->get_root->get_name eq 'root', '73 reroot tree');
+
+{
+    my $newick = '((a,b)n1,c)n2;';
+    my $tree = parse( '-format' => 'newick', '-string' => $newick )->first;
+    for my $name ( qw(a b c n2) ) {
+	my $node = $tree->get_by_name($name);
+	ok( ! $node->is_preterminal, '74 is preterminal' );
+    }
+    my $preterminal = $tree->get_by_name('n1');
+    ok( $preterminal->is_preterminal, '75 is preterminal' );
+}
 __DATA__
 (H:1,(G:1,(F:1,(E:1,(D:1,(C:1,(A:1,B:1):1):1):1):1):1):1):0;
 (H:1,(G:1,(F:1,((C:1,(A:1,B:1):1):1,(D:1,E:1):1):1):1):1):0;
