@@ -1200,6 +1200,45 @@ Calculates the number of internal nodes.
 		return $numint;
 	}
 
+=item calc_number_of_cherries()
+
+Calculates the number of cherries, i.e. the number of nodes that subtend
+exactly two tips. See for applications of this metric:
+L<http://dx.doi.org/10.1016/S0025-5564(99)00060-7>
+
+ Type    : Calculation
+ Title   : calc_number_of_cherries
+ Usage   : my $number_of_cherries = 
+           $tree->calc_number_of_cherries;
+ Function: Calculates the number of cherries
+ Returns : INT
+ Args    : NONE
+
+=cut
+
+	sub calc_number_of_cherries {
+		my $self = shift;
+		my %cherry;
+		for my $tip ( @{ $self->get_terminals } ) {
+			if ( my $parent = $tip->get_parent ) {
+				my $children = $parent->get_children;
+				if ( scalar @{ $children } == 2 ) {
+					my $tip_count = 0;
+					for my $child ( @{ $children } ) {
+						if ( $child->is_terminal ) {
+							$tip_count++;
+						}
+					}
+					if ( $tip_count == 2 ) {
+						$cherry{ $parent->get_id }++;
+					}
+				}
+			}
+		}
+		my @cherry_ids = keys %cherry;
+		return scalar @cherry_ids;
+	}
+
 =item calc_total_paths()
 
 Calculates the sum of all root-to-tip path lengths.
