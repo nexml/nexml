@@ -2104,6 +2104,59 @@ Visits nodes in a level order traversal.
 
 =over
 
+=item chronompl()
+
+Modifies branch lengths using the mean path lengths method of
+Britton et al. (2002). For more about this method, see:
+L<http://dx.doi.org/10.1016/S1055-7903(02)00268-3>
+
+ Type    : Tree manipulator
+ Title   : chronompl
+ Usage   : $tree->chronompl;
+ Function: Makes tree ultrametric using MPL method
+ Returns : The modified, now ultrametric invocant.
+ Args    : NONE
+ Comments: 
+
+=cut
+
+	sub chronompl {
+		my $self = shift;
+		$self->visit_depth_first(
+			'-post' => sub {
+				my $node = shift;
+				my %paths;
+				my $children = $node->get_children;
+				for my $child ( @{ $children } ) {
+					my $cp = $child->get_generic('paths');
+					my $bl = $child->get_branch_length;
+					for my $id ( keys %{ $cp  } ) {
+						$paths{$id} = $cp->{$id} + $bl;
+					}
+				}
+				if ( not scalar @{ $children } ) {
+					$paths{$node->get_id} = 0;
+				}
+				$node->set_generic('paths' => \%paths);
+				my $total = 0;
+				$total += $_ for values %paths;
+				my $mean = $total / scalar keys %paths;
+				$node->set_generic('meanpaths' => $mean);
+			}
+		);
+		for my $node ( @{ $self->get_entities } ) {
+			if ( my $parent = $node->get_parent ) {
+				my $mp = $node->get_generic('meanpaths');
+				my $pmp = $parent->get_generic('meanpaths');
+				$node->set_branch_length( $pmp - $mp );
+			}
+			else {
+				$node->set_branch_length(0);
+			}
+		}
+		return $self;
+	}
+
 =item ultrametricize()
 
 Sets all root-to-tip path lengths equal.
