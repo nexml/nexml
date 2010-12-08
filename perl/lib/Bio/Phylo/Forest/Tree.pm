@@ -2141,21 +2141,96 @@ L<http://dx.doi.org/10.1016/S1055-7903(02)00268-3>
 				my $total = 0;
 				$total += $_ for values %paths;
 				my $mean = $total / scalar keys %paths;
-				$node->set_generic('meanpaths' => $mean);
+				$node->set_generic('age' => $mean);
 			}
 		);
+		return $self->agetobl;
+	}
+
+=item grafenbl()
+
+Computes and assigns branch lengths using Grafen's method, which makes
+node ages proportional to clade size. For more about this method, see:
+L<http://dx.doi.org/10.1098/rstb.1989.0106>
+
+ Type    : Tree manipulator
+ Title   : grafenbl
+ Usage   : $tree->grafenbl;
+ Function: Assigns branch lengths using Grafen's method
+ Returns : The modified, now ultrametric invocant.
+ Args    : Optional, a power ('rho') to which all node ages are raised
+ Comments: 
+
+=cut
+
+	sub grafenbl {
+		my ( $self, $rho ) = @_;
+		my $total = 0;
+		$self->visit_depth_first(
+			'-post' => sub {
+				my $node = shift;
+				if ( $node->is_terminal ) {
+					$node->set_generic( 'adjntips' => 0 );
+					$node->set_generic( 'ntips' => 1 );
+				}
+				else {
+					my $children = $node->get_children;
+					my $ntips = 0;
+					for my $child ( @{ $children } ) {
+						$ntips += $child->get_generic('ntips');
+					}
+					$node->set_generic( 'ntips' => $ntips );
+					$node->set_generic( 'adjntips' => $ntips - 1 );
+					$total = $ntips if $node->is_root;					
+				}
+			}
+		);
+		$self->visit(
+			sub {
+				my $node = shift;
+				if ( $total ) {
+					my $age = $node->get_generic('adjntips') / $total;
+					if ( $rho ) {
+						$age = $age ** $rho;
+					}
+					$node->set_generic( 'age' => $age );
+				}
+			}
+		);
+		return $self->agetobl;
+	}
+
+=item agetobl()
+
+Converts node ages to branch lengths
+
+ Type    : Tree manipulator
+ Title   : agetobl
+ Usage   : $tree->agetobl;
+ Function: Converts node ages to branch lengths
+ Returns : The modified invocant.
+ Args    : NONE
+ Comments: This method uses ages as assigned to the generic 'age' slot
+           on the nodes in the trees. I.e. for each node in the tree,
+	   $node->get_generic('age') must return a number
+
+=cut
+
+	sub agetobl {
+		my $self = shift;
 		for my $node ( @{ $self->get_entities } ) {
 			if ( my $parent = $node->get_parent ) {
-				my $mp = $node->get_generic('meanpaths');
-				my $pmp = $parent->get_generic('meanpaths');
+				my $mp = $node->get_generic('age');
+				my $pmp = $parent->get_generic('age');
 				$node->set_branch_length( $pmp - $mp );
 			}
 			else {
 				$node->set_branch_length(0);
 			}
 		}
-		return $self;
+		return $self;		
 	}
+
 
 =item ultrametricize()
 
