@@ -1221,15 +1221,9 @@ L<http://dx.doi.org/10.1016/S0025-5564(99)00060-7>
 		my %cherry;
 		for my $tip ( @{ $self->get_terminals } ) {
 			if ( my $parent = $tip->get_parent ) {
-				my $children = $parent->get_children;
-				if ( scalar @{ $children } == 2 ) {
-					my $tip_count = 0;
-					for my $child ( @{ $children } ) {
-						if ( $child->is_terminal ) {
-							$tip_count++;
-						}
-					}
-					if ( $tip_count == 2 ) {
+				if ( $parent->is_preterminal ) {
+					my $children = $parent->get_children;
+					if ( scalar @{ $children } == 2 ) {
 						$cherry{ $parent->get_id }++;
 					}
 				}
