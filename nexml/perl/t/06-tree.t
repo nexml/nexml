@@ -198,6 +198,12 @@ ok( $ladder->ladderize->to_newick eq $right, '49 ladderize' );
     is ( $tree->get_by_name('n1')->get_branch_length, 1.5, '59 chronompl' );
     is ( $tree->get_by_name('n2')->get_branch_length, 0.5, '60 chronompl' );
 }
+
+{
+    my $newick = '((((A,B),C),(D,F)),E);';
+    my $tree = parse( '-format' => 'newick', '-string' => $newick )->first;
+    ok( $tree->is_ultrametric, '61 grafen branch lengths' );
+}
 __DATA__
 ((H:1,I:1):1,(G:1,(F:0.01,(E:0.3,(D:2,(C:0.1,(A:1,B:1)cherry:1):1):1):1):1):1):0;
 (H:1,(G:1,(F:1,((C:1,(A:1,B:1):1):1,(D:1,E:1):1):1):1):1):0;
