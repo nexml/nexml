@@ -931,7 +931,7 @@ Calculates the G+C content as a fraction on the total
 		my $freq = $self->calc_state_frequencies;
 		my $total = 0;
 		for ( qw(c C g G s S) ) {
-			$total += $freq->{$_};
+			$total += $freq->{$_} if exists $freq->{$_};
 		}
 		return $total;
 	}
