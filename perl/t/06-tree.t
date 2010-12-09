@@ -204,6 +204,15 @@ ok( $ladder->ladderize->to_newick eq $right, '49 ladderize' );
     my $tree = parse( '-format' => 'newick', '-string' => $newick )->first;
     ok( $tree->is_ultrametric, '61 grafen branch lengths' );
 }
+
+{
+    my $newick = '((((((A:6,B:6):5,C:11):4,D:15):3,E:18):2,F:20):1,G:21):0;';
+    my $tree = parse( '-format' => 'newick', '-string' => $newick )->first;
+    my $bt = $tree->calc_waiting_times;
+    for my $i ( 0 .. $#{ $bt } ) {
+        is( $bt->[$i]->[1], $i, '62 waiting times' );
+    }
+}
 __DATA__
 ((H:1,I:1):1,(G:1,(F:0.01,(E:0.3,(D:2,(C:0.1,(A:1,B:1)cherry:1):1):1):1):1):1):0;
 (H:1,(G:1,(F:1,((C:1,(A:1,B:1):1):1,(D:1,E:1):1):1):1):1):0;
