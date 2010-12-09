@@ -37,8 +37,7 @@ Bio::Phylo::Generator - Generator of tree topologies
 
 =head1 DESCRIPTION
 
-The generator module is used to simulate trees under the Yule, Hey, or
-equiprobable model.
+The generator module is used to simulate trees under various models.
 
 =head1 METHODS
 
@@ -104,93 +103,96 @@ object populated with Yule/Hey trees.
 
 =cut
 
+	sub _yule_rand_bl {
+		my $i = shift;
+		return random_exponential( 1, 1 / ( $i + 1 ) );
+	}
+	sub _hey_rand_bl {
+		my $i = shift;
+		random_exponential( 1, ( 1 / ( $i * ( $i + 1 ) ) ) );
+	}
+	
+	sub _make_split {
+		my ( $i, $parent, $length, $fac ) = @_;
+		my @tips;
+		for ( 1 .. 2 ) {
+			my $node = $fac->create_node( '-name' => "node.$i.$_" );
+			$node->set_branch_length($length);
+			$node->set_parent($parent);
+			push @tips, $node;
+		}
+		return @tips;
+	}
+	
 	sub gen_rand_pure_birth {
 		my $random  = shift;
 		my %options = looks_like_hash @_;
-		my $fac = $options{'-factory'} || $factory;
-		my ( $yule, $hey );
-		if ( $options{'-model'} =~ m/yule/i ) {
-			$yule = 1;
+		my $model = $options{'-model'};
+		if ( $model =~ m/yule/i ) {
+			return $random->_gen_pure_birth(
+				'-blgen' => \&_yule_rand_bl,
+				@_,
+			);
 		}
-		elsif ( $options{'-model'} =~ m/hey/i ) {
-			$hey = 1;
+		elsif ( $model =~ m/hey/i ) {
+			return $random->_gen_pure_birth(
+				'-blgen' => \&_hey_rand_bl,
+				@_,
+			);			
 		}
 		else {
-			throw 'BadFormat' => "model \"$options{'-model'}\" not implemented";
-		}
+			throw 'BadFormat' => "model '$model' not implemented";
+		}		
+	}
+
+	sub _gen_pure_birth {
+		my $random  = shift;
+		my %options = looks_like_hash @_;
+		my $fac = $options{'-factory'} || $factory;
+		my $blgen = $options{'-blgen'};
+
 		my $forest = $fac->create_forest;
-		for ( 0 .. $options{'-trees'} ) {
-
-			# instantiate new tree object
-			my $tree = $fac->create_tree;
-
-			# $i = a counter, $bl = branch length
-			my ( $i, $bl ) = 1;
-
-			# generate branch length
-			if ($yule) {
-				$bl = random_exponential( 1, 1 / ( $i + 1 ) );
-			}
-			elsif ($hey) {
-				$bl = random_exponential( 1, ( 1 / ( $i * ( $i + 1 ) ) ) );
-			}
+		for ( 0 .. ( $options{'-trees'} - 1 ) ) {
 
 			# instantiate root node
 			my $root = $fac->create_node( '-name' => 'root' );
 			$root->set_branch_length(0);
-			$tree->insert($root);
+			my %nodes = ( $root->get_id => $root );
 
-			for ( 1 .. 2 ) {
-				my $node = $fac->create_node( '-name' => "node.$i.$_" );
-				$node->set_branch_length($bl);
-				$tree->insert($node);
-				$node->set_parent($root);
-			}
-
-			# there are now two tips from which the tree
-			# can grow, we store these in the tip array,
-			# from which we well randomly draw a tip
-			# for the next split.
-			my @tips;
-			push @tips, @{ $root->get_children };
+			# make the first split, insert new tips in @tips, from
+			# which we will draw (without replacement) a new tip
+			# to split until we've reached target number
+			push my @tips, _make_split(1,$root,$blgen->(1),$fac);
 
 			# start growing the tree
 			for my $i ( 2 .. ( $options{'-tips'} - 1 ) ) {
 
+				# draw a random index in @tips
+				my $random_tip = int rand scalar @tips;
+
+				# obtain candidate parent of current split
+				my $parent = splice @tips, $random_tip, 1; 
+
 				# generate branch length
-				if ($yule) {
-					$bl = random_exponential( 1, 1 / ( $i + 1 ) );
+				my $bl = $blgen->($i);
+
+				# stretch all remaining tips to the present
+				for my $tip (@tips) {
+					my $oldbl = $tip->get_branch_length;
+					$tip->set_branch_length($oldbl + $bl);
+					$nodes{$tip->get_id} = $tip;
 				}
-				elsif ($hey) {
-					$bl = random_exponential( 1, ( 1 / ( $i * ( $i + 1 ) ) ) );
-				}
-
-				# draw a random integer between 0 and
-				# the tip array length
-				my $j = int rand scalar @tips;
-
-				# dereference to obtain parent of current split
-				my $parent = $tips[$j];
-
-				for ( 1 .. 2 ) {
-					my $node = $fac->create_node( '-name' => "node.$i.$_" );
-					$node->set_branch_length($bl);
-					$tree->insert($node);
-					$node->set_parent($parent);
-				}
-
-				# remove parent from tips array
-				splice @tips, $j, 1;
-
-				# stretch all tips to the present
-				foreach (@tips) {
-					my $oldbl = $_->get_branch_length;
-					$_->set_branch_length( $oldbl + $bl );
-				}
-
+				
 				# add new nodes to tips array
-				push @tips, @{ $parent->get_children };
+				push @tips, _make_split($i,$parent,$bl,$fac);				
 			}
+			my $tree = $fac->create_tree;
+			$tree->insert(
+				map  { $_->[0] }
+				sort { $a->[1] <=> $b->[1] }
+				map  { [ $_, $_->get_id ] }
+				values %nodes
+			);
 			$forest->insert($tree);
 		}
 		return $forest;
@@ -223,99 +225,36 @@ not sampled from a distribution).
 
 =cut
 
+	sub _yule_exp_bl {
+		my $i = shift;
+		return 1 / ( $i + 1 );
+	}
+	
+	sub _hey_exp_bl {
+		my $i = shift;
+		return 1 / ( $i * ( $i + 1 ) );
+	}
+	
 	sub gen_exp_pure_birth {
 		my $random  = shift;
-		my %options = looks_like_hash @_;
-		my $fac = $options{'-factory'} || $factory;
-		my ( $yule, $hey );
+		my %options = looks_like_hash @_;	
 		if ( $options{'-model'} =~ m/yule/i ) {
-			$yule = 1;
+			return $random->_gen_pure_birth(
+				'-blgen' => \&_yule_exp_bl,
+				@_,
+			);
 		}
 		elsif ( $options{'-model'} =~ m/hey/i ) {
-			$hey = 1;
+			return $random->_gen_pure_birth(
+				'-blgen' => \&_hey_exp_bl,
+				@_,
+			);			
 		}
 		else {
 			throw 'BadFormat' => "model \"$options{'-model'}\" not implemented";
-		}
-		my $forest = $fac->create_forest;
-		for ( 0 .. $options{'-trees'} ) {
+		}		
+	}	
 
-			# instantiate new tree object
-			my $tree = $fac->create_tree;
-
-			# $i = a counter, $bl = branch length
-			my ( $i, $bl ) = 1;
-
-			# generate branch length
-			if ($yule) {
-				$bl = 1 / ( $i + 1 );
-			}
-			elsif ($hey) {
-				$bl = 1 / ( $i * ( $i + 1 ) );
-			}
-
-			# instantiate root node
-			my $root = $fac->create_node( '-name' => 'root' );
-			$root->set_branch_length(0);
-			$tree->insert($root);
-
-			# instantiate children
-			for ( 1 .. 2 ) {
-				my $node = $fac->create_node( '-name' => "node.$i.$_" );
-				$node->set_branch_length($bl);
-				$tree->insert($node);
-				$node->set_parent($root);
-			}
-
-			# there are now two tips from which the tree
-			# can grow, we store these in the tip array,
-			# from which we well randomly draw a tip
-			# for the next split.
-			my @tips;
-			push @tips, @{ $root->get_children };
-
-			# start growing the tree
-			for my $i ( 2 .. ( $options{'-tips'} - 1 ) ) {
-
-				# generate branch length
-				if ($yule) {
-					$bl = 1 / ( $i + 1 );
-				}
-				elsif ($hey) {
-					$bl = 1 / ( $i * ( $i + 1 ) );
-				}
-
-				# draw a random integer between 0 and
-				# the tip array length
-				my $j = int rand scalar @tips;
-
-				# dereference to obtain parent of current split
-				my $parent = $tips[$j];
-
-				# instantiate children
-				for ( 1 .. 2 ) {
-					my $node = $fac->create_node( '-name' => "node.$i.$_" );
-					$node->set_branch_length($bl);
-					$tree->insert($node);
-					$node->set_parent($parent);
-				}
-
-				# remove parent from tips array
-				splice @tips, $j, 1;
-
-				# stretch all tips to the present
-				foreach (@tips) {
-					my $oldbl = $_->get_branch_length;
-					$_->set_branch_length( $oldbl + $bl );
-				}
-
-				# add new nodes to tips array
-				push @tips, @{ $parent->get_children };
-			}
-			$forest->insert($tree);
-		}
-		return $forest;
-	}
 
 =item gen_equiprobable()
 
@@ -324,56 +263,126 @@ such that all shapes are equally probable.
 
  Type    : Generator
  Title   : gen_equiprobable
- Usage   : my $trees = $gen->gen_equiprobable( 
-               '-tips'  => 10, 
-               '-trees' => 5,
-           );
+ Usage   : my $trees = $gen->gen_equiprobable( '-tips' => 10 );
  Function: Generates an equiprobable tree 
            shape, with branch lengths = 1;
  Returns : A Bio::Phylo::Forest object.
  Args    : -tips  => number of terminal nodes,
-           -trees => number of trees to generate,
+           Optional: -trees => number of trees to generate (default: 1),
 	   Optional: -factory => a Bio::Phylo::Factory object
 
 =cut
+	
+	sub _fetch_equiprobable {
+		my @tips = @_;
+		my $tip_index = int rand scalar @tips;
+		my $tip = splice @tips, $tip_index, 1;
+		return $tip, @tips;
+	}	
+	
+	sub _fetch_balanced {
+		return @_;
+	}
+	
+	sub _fetch_ladder {
+		my $tip = pop;
+		return $tip, @_;
+	}
 
-	sub gen_equiprobable {
+	sub _gen_simple {
 		my $random  = shift;
 		my %options = looks_like_hash @_;
-		my $fac = $options{'-factory'} || $factory;
-		my $forest  = $fac->create_forest( '-name' => 'Equiprobable' );
-		for ( 0 .. $options{'-trees'} ) {
-			my $tree = $fac->create_tree( '-name' => 'Tree' . $_ );
-			for my $i ( 1 .. ( $options{'-tips'} + ( $options{'-tips'} - 1 ) ) )
-			{
-				my $node = $fac->create_node(
-					'-name'          => 'Node' . $i,
+		my $fetcher = $options{'-fetcher'};
+		my $factory = $options{'-factory'} || $factory;
+		my $ntrees  = $options{'-trees'} || 1;
+		my $name    = $options{'-name'};
+		my $forest  = $factory->create_forest( '-name' => $name );
+		for my $i ( 1 .. $ntrees ) {
+			my $tree = $factory->create_tree( '-name' => "Tree$i" );
+			my ( @tips, @nodes );
+			
+			# each iteration, we will remove two "tips" from this
+			# and add their newly created parent to it
+			push @tips, $factory->create_node(
+				'-name' => "Tip$i",
+				'-branch_length' => 1,
+			) for ( 1 .. $options{'-tips'} );			
+			
+			# this stays above 0 because the root ends up in it
+			while( @tips > 1 ) {
+				my $parent = $factory->create_node(
+					'-name' => "Node$i",
 					'-branch_length' => 1,
 				);
-				$tree->insert($node);
-			}
-			my $nodes   = $tree->get_entities;
-			my $parents = $nodes;
-			for my $node ( @{$nodes} ) {
-			  CHOOSEPARENT: while ( @{$parents} ) {
-					my $j      = int rand scalar @{$parents};
-					my $parent = $parents->[$j];
-					if ( $parent != $node && !$node->is_ancestor_of($parent) ) {
-						if ( $parent->is_terminal ) {
-							$node->set_parent($parent);
-							last CHOOSEPARENT;
-						}
-						elsif ( scalar @{ $parent->get_children } == 1 ) {
-							$node->set_parent($parent);
-							splice( @{$parents}, $j, 1 );
-							last CHOOSEPARENT;
-						}
-					}
+				$tree->insert($parent);
+				for ( 1 .. 2 ) {
+					my $tip;
+					( $tip, @tips ) = $fetcher->(@tips);
+					$tree->insert($tip->set_parent($parent));
 				}
+				
+				# the parent becomes a new candidate tip
+				push @tips, $parent;
 			}
 			$forest->insert($tree);
 		}
 		return $forest;
+	}	
+	
+	sub gen_equiprobable {
+		return _gen_simple(
+			@_,
+			'-fetcher' => \&_fetch_equiprobable,
+			'-name'    => 'Equiprobable',
+		);
+	}			
+
+=item gen_balanced()
+
+This method creates the most balanced topology possible given the number of tips
+
+ Type    : Generator
+ Title   : gen_balanced
+ Usage   : my $trees = $gen->gen_balanced( '-tips'  => 10 );
+ Function: Generates the most balanced topology
+           possible, with branch lengths = 1;
+ Returns : A Bio::Phylo::Forest object.
+ Args    : -tips  => number of terminal nodes,
+           Optional: -trees => number of trees to generate (default: 1),
+	   Optional: -factory => a Bio::Phylo::Factory object
+
+=cut
+
+	sub gen_balanced {
+		return _gen_simple(
+			@_,
+			'-fetcher' => \&_fetch_balanced,
+			'-name'    => 'Balanced',
+		);
+	}
+
+=item gen_ladder()
+
+This method creates a ladder tree for the number of tips
+
+ Type    : Generator
+ Title   : gen_ladder
+ Usage   : my $trees = $gen->gen_ladder( '-tips'  => 10 );
+ Function: Generates the least balanced topology
+           (a ladder), with branch lengths = 1;
+ Returns : A Bio::Phylo::Forest object.
+ Args    : -tips  => number of terminal nodes,
+           Optional: -trees => number of trees to generate (default: 1),
+	   Optional: -factory => a Bio::Phylo::Factory object
+
+=cut
+
+	sub gen_ladder {
+		return _gen_simple(
+			@_,
+			'-fetcher' => \&_fetch_ladder,
+			'-name'    => 'Ladder',
+		);
 	}
 
 =back
