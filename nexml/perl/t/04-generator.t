@@ -3,48 +3,85 @@ use Test::More;
 BEGIN {
     eval { require Math::Random };
     if ( $@ ) {
-         plan 'skip_all' => 'Math::Random not installed';
+        plan 'skip_all' => 'Math::Random not installed';
     }
     else {
-        plan 'tests' => 2;
+    	Test::More->import('no_plan');
     }
 }
 use strict;
 use Bio::Phylo;
 require Bio::Phylo::Generator;
 
-ok( my $gen = new Bio::Phylo::Generator, '1 init' );
+ok( my $gen = Bio::Phylo::Generator->new, 'init' );
+my %args = ( '-tips' => 20, '-trees' => 1);
 
-ok( $gen->gen_rand_pure_birth(
-    -model => 'yule',
-    -tips => 10,
-    -trees => 10 ),
-'2 gen yule' );
+{
+    my $forest = $gen->gen_rand_pure_birth( '-model' => 'yule', %args );
+    basic_tree_stats($forest,@args{qw(-trees -tips)},'random pure birth yule');
+}
 
-# ok( $gen->gen_rand_pure_birth(
-#     -model => 'hey',
-#     -tips => 10,
-#     -trees => 10 ),
-# '3 gen hey' );
-# 
-# ok( $gen->gen_exp_pure_birth(
-#     -model => 'yule',
-#     -tips => 10,
-#     -trees => 10 ),
-# '4 gen yule' );
-# 
-# ok( $gen->gen_exp_pure_birth(
-#     -model => 'hey',
-#     -tips => 10,
-#     -trees => 10 ),
-# '5 gen hey' );
-# 
-# eval { $gen->gen_exp_pure_birth( -model => 'dummy', -tips => 10, -trees => 10 ); };
-# ok( UNIVERSAL::isa( $@, 'Bio::Phylo::Util::Exceptions::BadFormat' ), '6 ! gen' );
-# 
-# eval { $gen->gen_rand_pure_birth( -model => 'dummy', -tips => 10, -trees => 10 ); };
-# ok( UNIVERSAL::isa( $@, 'Bio::Phylo::Util::Exceptions::BadFormat' ), '7 ! gen' );
-# 
-# ok( my $trees = $gen->gen_equiprobable( -tips => 32, -trees => 5 ),  '8 gen tree' );
-# 
-# ok( $gen->DESTROY,                                                   '9 destroy' );
+{
+    my $forest = $gen->gen_rand_pure_birth( '-model' => 'hey', %args );
+    basic_tree_stats($forest,@args{qw(-trees -tips)},'random pure birth hey');
+}
+
+{
+    my $forest = $gen->gen_exp_pure_birth( '-model' => 'yule', %args );
+    basic_tree_stats($forest,@args{qw(-trees -tips)},'expected pure birth yule');
+    for my $tree ( @{ $forest->get_entities } ) {
+        my $times = $tree->calc_waiting_times;
+        for my $i ( 0 .. $#{ $times } ) {
+            my $bt = $times->[$i]->[1];
+            my $exp = $i ? 1 / ( $i + 1 ) : 0;
+            is( sprintf("%.2f", $bt), sprintf("%.2f",$exp), 'expected yule waiting time');
+        }
+    }
+}
+
+{
+    my $forest = $gen->gen_exp_pure_birth( '-model' => 'hey', %args );
+    for my $tree ( @{ $forest->get_entities } ) {
+        my $times = $tree->calc_waiting_times;
+        for my $i ( 0 .. $#{ $times } ) {
+            my $bt = $times->[$i]->[1];
+            my $exp = $i ? 1 / ( $i * ( $i + 1 ) ) : 0;
+            is( sprintf("%.2f", $bt), sprintf("%.2f",$exp), 'expected hey waiting time');
+        }
+    }
+    basic_tree_stats($forest,@args{qw(-trees -tips)},'expected pure birth hey');   
+}
+
+{
+    my $forest = $gen->gen_equiprobable( %args );
+    basic_tree_stats($forest,@args{qw(-trees -tips)},'equiprobable');
+}
+
+{
+    my $forest = $gen->gen_balanced( '-trees' => 1, '-tips' => 16 );
+    is( $forest->first->calc_imbalance, 0, 'balanced topology');
+    basic_tree_stats($forest,1,16,'balanced');
+}
+
+{
+    my $forest = $gen->gen_ladder( '-trees' => 1, '-tips' => 16 );
+    is( $forest->first->calc_imbalance, 1, 'ladder topology');
+    basic_tree_stats($forest,1,16,'ladder');
+}
+
+eval { $gen->gen_exp_pure_birth( -model => 'dummy' ); };
+isa_ok( $@, 'Bio::Phylo::Util::Exceptions::BadFormat', 'exception' );
+ 
+eval { $gen->gen_rand_pure_birth( -model => 'dummy' ); };
+isa_ok( $@, 'Bio::Phylo::Util::Exceptions::BadFormat', 'exception' );
+ 
+
+sub basic_tree_stats {
+    my ( $forest, $ntrees, $ntips, $msg ) = @_;
+    my @trees = @{ $forest->get_entities };
+    is( scalar @trees, $ntrees, "$msg (tree count)" );
+    for my $tree ( @trees ) {
+        my $tips = $tree->get_terminals;
+        is ( scalar @{ $tips }, $ntips, "$msg (tip count)" );
+    }
+}
