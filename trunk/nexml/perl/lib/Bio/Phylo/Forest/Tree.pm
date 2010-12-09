@@ -1619,7 +1619,7 @@ Calculates tree resolution.
 
 =item calc_branching_times()
 
-Calculates branching times.
+Calculates cumulative branching times.
 
  Type    : Calculation
  Title   : calc_branching_times
@@ -1646,14 +1646,58 @@ Calculates branching times.
 			throw 'ObjectMismatch' => 'tree isn\'t ultrametric, results would be meaningless';
 		}
 		else {
-			my ( $i, @temp ) = 0;
-			foreach ( @{ $self->get_internals } ) {
-				$temp[$i] = [ $_, $_->calc_path_to_root ];
-				$i++;
-			}
+			my @temp;
+			my $seen_tip = 0;
+			$self->visit_depth_first(
+				'-pre' => sub {
+					my $node = shift;
+					if ( not $seen_tip or $node->is_internal ) {
+						my $bt = $node->get_branch_length;
+						if ( my $parent = $node->get_parent ) {
+							$bt += $parent->get_generic('bt');						
+						}
+						$node->set_generic( 'bt' => $bt );
+						push @temp, [ $node, $bt ];
+						if ( $node->is_terminal ) {
+							$seen_tip++;
+						}
+					}
+				}
+			);
 			@branching_times = sort { $a->[1] <=> $b->[1] } @temp;
 		}
 		return \@branching_times;
+	}
+
+=item calc_waiting_times()
+
+Calculates intervals between splits.
+
+ Type    : Calculation
+ Title   : calc_waiting_times
+ Usage   : my $waitings = 
+           $tree->calc_waiting_times;
+ Function: Returns a two-dimensional array. 
+           The first dimension consists of 
+           the "records", so that in the 
+           second dimension $AoA[$first][0] 
+           contains the internal node references, 
+           and $AoA[$first][1] the waiting 
+           time of the internal node. The 
+           records are orderered from root to 
+           tips by time from the origin.
+ Returns : SCALAR[][] or FALSE
+ Args    : NONE
+
+=cut
+	
+	sub calc_waiting_times {
+		my $self = shift;
+		my $times = $self->calc_branching_times;
+		for ( my $i = $#{ $times }; $i > 0; $i-- ) {
+			$times->[$i]->[1] -= $times->[$i-1]->[1];
+		}
+		return $times;
 	}
 
 =item calc_node_ages()
@@ -1672,7 +1716,7 @@ Calculates node ages.
  Comments: This method computes, in a sense, the opposite of
            calc_branching_times: here, we compute the distance from the tips
 	   (i.e. how long ago the split occurred), whereas calc_branching_times
-	   calculates the distance from the root (i.e. the waiting time).
+	   calculates the distance from the root.
 
 =cut
 
