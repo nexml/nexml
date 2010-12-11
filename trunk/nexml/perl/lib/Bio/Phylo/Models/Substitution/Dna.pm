@@ -69,6 +69,7 @@ sub get_pi {
 	}
 }
 
+# use median for gamma-modeled rate categories
 sub get_median { shift->{'_median'} }
 
 sub set_rate {
