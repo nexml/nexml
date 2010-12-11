@@ -10,7 +10,7 @@ eval { require Math::Random };
 if ( $@ ) {
 	throw 'ExtensionError' => "Error loading the Math::Random extension: $@";
 }
-Math::Random->import('random_exponential');
+Math::Random->import(qw'random_exponential random_uniform');
 
 {
 
@@ -96,9 +96,9 @@ object populated with Yule/Hey trees.
            clade growth, for a user defined
            number of tips.
  Returns : A Bio::Phylo::Forest object.
- Args    : -tips  => number of terminal nodes,
+ Args    : -tips  => number of terminal nodes (default: 10),
            -model => either 'yule' or 'hey',
-           -trees => number of trees to generate
+           -trees => number of trees to generate (default: 10)
 	   Optional: -factory => a Bio::Phylo::Factory object
 
 =cut
@@ -113,12 +113,13 @@ object populated with Yule/Hey trees.
 	}
 	
 	sub _make_split {
-		my ( $i, $parent, $length, $fac ) = @_;
+		my ( $parent, $length, $fac, $nodes ) = @_;
 		my @tips;
 		for ( 1 .. 2 ) {
-			my $node = $fac->create_node( '-name' => "node.$i.$_" );
+			my $node = $fac->create_node;
 			$node->set_branch_length($length);
 			$node->set_parent($parent);
+			$nodes->{$node->get_id} = $node;
 			push @tips, $node;
 		}
 		return @tips;
@@ -146,56 +147,102 @@ object populated with Yule/Hey trees.
 	}
 
 	sub _gen_pure_birth {
-		my $random  = shift;
-		my %options = looks_like_hash @_;
-		my $fac = $options{'-factory'} || $factory;
-		my $blgen = $options{'-blgen'};
+		my $random   = shift;
+		my %options  = looks_like_hash @_;
+		my $factory  = $options{'-factory'} || $factory;
+		my $blgen    = $options{'-blgen'};
+		my $killrate = $options{'-killrate'} || 0;
+		my $ntips    = $options{'-tips'}     || 10;
+		my $ntrees   = $options{'-trees'}    || 10;
 
-		my $forest = $fac->create_forest;
-		for ( 0 .. ( $options{'-trees'} - 1 ) ) {
+		my $forest = $factory->create_forest;
+		for ( 0 .. ( $ntrees - 1 ) ) {
 
 			# instantiate root node
-			my $root = $fac->create_node( '-name' => 'root' );
+			my $root = $factory->create_node;
 			$root->set_branch_length(0);
 			my %nodes = ( $root->get_id => $root );
 
 			# make the first split, insert new tips in @tips, from
 			# which we will draw (without replacement) a new tip
 			# to split until we've reached target number
-			push my @tips, _make_split(1,$root,$blgen->(1),$fac);
+			push my @tips, _make_split($root,$blgen->(1),$factory,\%nodes);
 
 			# start growing the tree
-			for my $i ( 2 .. ( $options{'-tips'} - 1 ) ) {
-
-				# draw a random index in @tips
-				my $random_tip = int rand scalar @tips;
+			my $i = 2;
+			my @extinct;
+			while ( 1 ) {
+				if ( rand(1) < $killrate ) {
+					my $extinct_index = int rand scalar @tips;
+					my $extinct = splice @tips, $extinct_index, 1;
+					push @extinct, $extinct;
+					delete $nodes{$extinct->get_id};
+				}				
 
 				# obtain candidate parent of current split
-				my $parent = splice @tips, $random_tip, 1; 
+				my $parent;
+				( $parent, @tips ) = _fetch_equiprobable(@tips);
 
 				# generate branch length
-				my $bl = $blgen->($i);
+				my $bl = $blgen->($i++);
 
 				# stretch all remaining tips to the present
 				for my $tip (@tips) {
 					my $oldbl = $tip->get_branch_length;
 					$tip->set_branch_length($oldbl + $bl);
-					$nodes{$tip->get_id} = $tip;
 				}
 				
 				# add new nodes to tips array
-				push @tips, _make_split($i,$parent,$bl,$fac);				
+				push @tips, _make_split($parent,$bl,$factory,\%nodes);
+				last if scalar @tips >= $ntips;
 			}
-			my $tree = $fac->create_tree;
+			my $tree = $factory->create_tree;
 			$tree->insert(
 				map  { $_->[0] }
 				sort { $a->[1] <=> $b->[1] }
 				map  { [ $_, $_->get_id ] }
 				values %nodes
 			);
+			$tree->prune_tips(\@extinct);
+			$tree->_analyze;
 			$forest->insert($tree);
 		}
 		return $forest;
+	}
+
+=item gen_rand_birth_death()
+
+This method generates a Bio::Phylo::Forest 
+object populated under a birth/death model
+
+ Type    : Generator
+ Title   : gen_rand_birth_death
+ Usage   : my $trees = $gen->gen_rand_birth_death(
+               '-tips'     => 10, 
+               '-killrate' => 0.2,
+               '-trees'    => 10,
+           );
+ Function: Generates trees where any growing lineage is equally
+           likely to split at any one time, and is equally likely
+	   to go extinct at '-killrate'
+ Returns : A Bio::Phylo::Forest object.
+ Args    : -tips  => number of terminal nodes (default: 10),
+           -killrate => extinction over speciation rate (default: 0.2)
+           -trees => number of trees to generate (default: 10)
+	   Optional: -factory => a Bio::Phylo::Factory object
+ Comments: Past extinction events are retained as unbranched internal
+           nodes in the produced trees.
+
+=cut
+
+	sub gen_rand_birth_death {
+		my $random  = shift;
+		my %options = looks_like_hash @_;
+		return $random->_gen_pure_birth(
+			'-blgen'    => \&_yule_rand_bl,
+			'-killrate' => $options{'-killrate'} || 0.2,
+			@_,
+		);		
 	}
 
 =item gen_exp_pure_birth()
@@ -218,9 +265,9 @@ not sampled from a distribution).
            defined model of clade growth, 
            for a user defined number of tips.
  Returns : A Bio::Phylo::Forest object.
- Args    : -tips  => number of terminal nodes,
+ Args    : -tips  => number of terminal nodes (default: 10),
            -model => either 'yule' or 'hey'
-           -trees => number of trees to generate
+           -trees => number of trees to generate (default: 10)
 	   Optional: -factory => a Bio::Phylo::Factory object
 
 =cut
@@ -237,23 +284,99 @@ not sampled from a distribution).
 	
 	sub gen_exp_pure_birth {
 		my $random  = shift;
-		my %options = looks_like_hash @_;	
-		if ( $options{'-model'} =~ m/yule/i ) {
+		my %options = looks_like_hash @_;
+		my $model = $options{'-model'};
+		if ( $model =~ m/yule/i ) {
 			return $random->_gen_pure_birth(
 				'-blgen' => \&_yule_exp_bl,
 				@_,
 			);
 		}
-		elsif ( $options{'-model'} =~ m/hey/i ) {
+		elsif ( $model =~ m/hey/i ) {
 			return $random->_gen_pure_birth(
 				'-blgen' => \&_hey_exp_bl,
 				@_,
 			);			
 		}
 		else {
-			throw 'BadFormat' => "model \"$options{'-model'}\" not implemented";
+			throw 'BadFormat' => "model '$model' not implemented";
 		}		
-	}	
+	}
+
+=item gen_coalescent()
+
+This method generates coalescent trees for a given effective population size
+(popsize) and number of alleles (tips) such that the probability of coalescence
+in the previous generation for any pair of alleles is 1 / ( 2 * popsize ).
+
+ Type    : Generator
+ Title   : gen_coalescent
+ Usage   : my $trees = $gen->gen_coalescent(
+               '-tips'    => 10, 
+               '-popsize' => 100,
+               '-trees'   => 10,
+           );
+ Function: Generates coalescent trees.
+ Returns : A Bio::Phylo::Forest object.
+ Args    : -tips    => number of terminal nodes (default: 10)
+           -popsize => effective population size (default: 100)
+           -trees   => number of trees to generate (default: 10)
+	   Optional: -factory => a Bio::Phylo::Factory object
+
+=cut
+	
+	sub gen_coalescent {
+		my $self    = shift;
+		my %args    = looks_like_hash @_;
+		my $popsize = $args{'-popsize'} || 100;
+		my $ntips   = $args{'-tips'}    || 10;
+		my $ntrees  = $args{'-trees'}   || 10;
+		my $factory = $args{'-factory'} || $factory;
+		my $forest  = $factory->create_forest;
+		my $cutoff  = 1 / ( 2 * $popsize );		
+		for my $i ( 1 .. $ntrees ) {
+			my $ngen = 1;
+			my ( @tips, @nodes );
+			push @tips, $factory->create_node() for 1 .. $ntips;
+			
+			# starting from a pool of all tips, we iterate over all
+			# possible pairs, and for each pair we test to see if
+			# the coalesce at generation $ngen, at probability
+			# 1/2N. When they do, we create a parent for the pair,
+			# take the pair out of the pool and put the parent in it
+			while ( scalar @tips > 1 ) {
+				my $poolsize = $#tips;
+				my $j = 0;
+				while ( $j < $poolsize ) {
+					my $k = $j + 1;
+					while ( $k <= $poolsize ) {
+						my $rand = random_uniform();
+						if ( $rand <= $cutoff ) {
+							my $tip2 = splice @tips, $k, 1;
+							my $tip1 = splice @tips, $j, 1;
+							my $parent = $factory->create_node(
+								'-generic' => { 'age' => $ngen }
+							);
+							unshift @nodes,
+								$tip1->set_parent($parent),
+								$tip2->set_parent($parent);
+							push @tips, $parent;
+							$poolsize--;
+						}
+						$k++;
+						
+					}
+					$j++;
+				}
+				$ngen++;
+			}
+			push @nodes, shift @tips;
+			my $tree = $factory->create_tree()->insert(@nodes);
+			$tree->agetobl;
+			$forest->insert($tree);			
+		}
+		return $forest;
+	}
 
 
 =item gen_equiprobable()
@@ -267,7 +390,7 @@ such that all shapes are equally probable.
  Function: Generates an equiprobable tree 
            shape, with branch lengths = 1;
  Returns : A Bio::Phylo::Forest object.
- Args    : -tips  => number of terminal nodes,
+ Args    : Optional: -tips  => number of terminal nodes (default: 10),
            Optional: -trees => number of trees to generate (default: 1),
 	   Optional: -factory => a Bio::Phylo::Factory object
 
@@ -294,24 +417,22 @@ such that all shapes are equally probable.
 		my %options = looks_like_hash @_;
 		my $fetcher = $options{'-fetcher'};
 		my $factory = $options{'-factory'} || $factory;
-		my $ntrees  = $options{'-trees'} || 1;
-		my $name    = $options{'-name'};
-		my $forest  = $factory->create_forest( '-name' => $name );
+		my $ntrees  = $options{'-trees'}   || 1;
+		my $ntips   = $options{'-tips'}    || 10;
+		my $forest  = $factory->create_forest;
 		for my $i ( 1 .. $ntrees ) {
-			my $tree = $factory->create_tree( '-name' => "Tree$i" );
+			my $tree = $factory->create_tree;
 			my ( @tips, @nodes );
 			
 			# each iteration, we will remove two "tips" from this
 			# and add their newly created parent to it
 			push @tips, $factory->create_node(
-				'-name' => "Tip$i",
 				'-branch_length' => 1,
-			) for ( 1 .. $options{'-tips'} );			
+			) for ( 1 .. $ntips );			
 			
 			# this stays above 0 because the root ends up in it
 			while( @tips > 1 ) {
 				my $parent = $factory->create_node(
-					'-name' => "Node$i",
 					'-branch_length' => 1,
 				);
 				$tree->insert($parent);
@@ -330,11 +451,7 @@ such that all shapes are equally probable.
 	}	
 	
 	sub gen_equiprobable {
-		return _gen_simple(
-			@_,
-			'-fetcher' => \&_fetch_equiprobable,
-			'-name'    => 'Equiprobable',
-		);
+		return _gen_simple( @_, '-fetcher' => \&_fetch_equiprobable );
 	}			
 
 =item gen_balanced()
@@ -347,18 +464,14 @@ This method creates the most balanced topology possible given the number of tips
  Function: Generates the most balanced topology
            possible, with branch lengths = 1;
  Returns : A Bio::Phylo::Forest object.
- Args    : -tips  => number of terminal nodes,
+ Args    : Optional: -tips  => number of terminal nodes (default: 10),
            Optional: -trees => number of trees to generate (default: 1),
 	   Optional: -factory => a Bio::Phylo::Factory object
 
 =cut
 
 	sub gen_balanced {
-		return _gen_simple(
-			@_,
-			'-fetcher' => \&_fetch_balanced,
-			'-name'    => 'Balanced',
-		);
+		return _gen_simple( @_, '-fetcher' => \&_fetch_balanced );
 	}
 
 =item gen_ladder()
@@ -371,18 +484,14 @@ This method creates a ladder tree for the number of tips
  Function: Generates the least balanced topology
            (a ladder), with branch lengths = 1;
  Returns : A Bio::Phylo::Forest object.
- Args    : -tips  => number of terminal nodes,
+ Args    : Optional: -tips  => number of terminal nodes (default: 10),
            Optional: -trees => number of trees to generate (default: 1),
 	   Optional: -factory => a Bio::Phylo::Factory object
 
 =cut
 
 	sub gen_ladder {
-		return _gen_simple(
-			@_,
-			'-fetcher' => \&_fetch_ladder,
-			'-name'    => 'Ladder',
-		);
+		return _gen_simple( @_, '-fetcher' => \&_fetch_ladder );
 	}
 
 =back
