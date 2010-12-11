@@ -14,7 +14,7 @@ use Bio::Phylo;
 require Bio::Phylo::Generator;
 
 ok( my $gen = Bio::Phylo::Generator->new, 'init' );
-my %args = ( '-tips' => 20, '-trees' => 1);
+my %args = ( '-tips' => 20, '-trees' => 1 );
 
 {
     my $forest = $gen->gen_rand_pure_birth( '-model' => 'yule', %args );
@@ -24,6 +24,11 @@ my %args = ( '-tips' => 20, '-trees' => 1);
 {
     my $forest = $gen->gen_rand_pure_birth( '-model' => 'hey', %args );
     basic_tree_stats($forest,@args{qw(-trees -tips)},'random pure birth hey');
+}
+
+{
+    my $forest = $gen->gen_rand_birth_death( '-killrate' => 0.2, %args );
+    basic_tree_stats($forest,@args{qw(-trees -tips)},'random birth death');
 }
 
 {
@@ -41,6 +46,7 @@ my %args = ( '-tips' => 20, '-trees' => 1);
 
 {
     my $forest = $gen->gen_exp_pure_birth( '-model' => 'hey', %args );
+    basic_tree_stats($forest,@args{qw(-trees -tips)},'expected pure birth hey');       
     for my $tree ( @{ $forest->get_entities } ) {
         my $times = $tree->calc_waiting_times;
         for my $i ( 0 .. $#{ $times } ) {
@@ -49,7 +55,11 @@ my %args = ( '-tips' => 20, '-trees' => 1);
             is( sprintf("%.2f", $bt), sprintf("%.2f",$exp), 'expected hey waiting time');
         }
     }
-    basic_tree_stats($forest,@args{qw(-trees -tips)},'expected pure birth hey');   
+}
+
+{
+    my $forest = $gen->gen_coalescent( %args );
+    basic_tree_stats($forest,@args{qw(-trees -tips)},'coalescent');       
 }
 
 {
