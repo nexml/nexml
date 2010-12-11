@@ -2264,7 +2264,7 @@ Converts node ages to branch lengths
 		my $self = shift;
 		for my $node ( @{ $self->get_entities } ) {
 			if ( my $parent = $node->get_parent ) {
-				my $mp = $node->get_generic('age');
+				my $mp = $node->get_generic('age') || 0;
 				my $pmp = $parent->get_generic('age');
 				$node->set_branch_length( $pmp - $mp );
 			}
