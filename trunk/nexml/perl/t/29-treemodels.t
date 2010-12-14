@@ -35,6 +35,7 @@ Bio::Phylo::EvolutionaryModels->import('sample');
     ok(looks_like_object($tree,_TREE_), "object is a tree");
     my $tipcount = scalar @{ $tree->get_terminals };
     is(10,$tipcount, "crb tree has ${tipcount}==10 tips");
+    ok($tree->is_ultrametric(0.01), 'crb tree is ultrametric');
 }
 
 # Example B
@@ -56,11 +57,14 @@ Bio::Phylo::EvolutionaryModels->import('sample');
     };
     is( scalar @{ $sample }, 5, "b sample has 5 trees" );
     SKIP : {
-	skip "trees have 11 tips instead of 10", scalar @{ $sample };
+	skip "b trees have 11 tips instead of 10", scalar @{ $sample };
 	for my $t ( @{ $sample } ) {
 	    is( scalar @{ $t->get_terminals }, 10, "b tree has 10 tips" ); 
 	}
     };
+    for my $t ( @{ $sample } ) {
+	ok( $t->is_ultrametric(0.01), "b tree is ultrametric" );
+    }
 }
 
 # Example C
@@ -83,14 +87,20 @@ Bio::Phylo::EvolutionaryModels->import('sample');
         ok( looks_like_object($sample,_FOREST_), "bd sample is a forest" ); 
     };
     SKIP : {
-	skip "off-by-one error, number of trees is 6";
+	skip "off-by-one error, number of bd trees is 6";
 	is( scalar @{ $sample }, 5, "bd sample has 5 trees" );
     };
     SKIP : {
-	skip "trees have too many tips", scalar @{ $sample };
+	skip "bd trees have too many tips", scalar @{ $sample };
 	for my $t ( @{ $sample } ) {
 	    my $count = scalar @{ $t->get_terminals };
 	    is( $count, 10, "bd tree has ${count}==10 tips" );
+	}
+    };
+    SKIP : {
+	skip "bd trees aren't ultrametric", scalar @{ $sample };
+	for my $t ( @{ $sample } ) {
+	    ok( $t->is_ultrametric, "bd tree is ultrametric");
 	}
     };
 }
@@ -127,11 +137,17 @@ Bio::Phylo::EvolutionaryModels->import('sample');
     };
     is( scalar @{ $sample }, 5 );
     SKIP : {
-	skip "trees have too many tips", scalar @{ $sample };
+	skip "isb trees have too many tips", scalar @{ $sample };
         for my $t ( @{ $sample } ) {
             my $count = scalar @{ $t->get_terminals };
             is( $count, 10, "isb tree has ${count}==10 tips" );
         }
+    };
+    SKIP : {
+	skip "isb trees aren't ultrametric", scalar @{ $sample };
+	for my $t ( @{ $sample } ) {
+	    ok( $t->is_ultrametric, "isb tree is ultrametric" );
+	}
     };
 }
 
@@ -164,7 +180,10 @@ Bio::Phylo::EvolutionaryModels->import('sample');
     is( scalar @{ $sample }, 5, "mb sample has 5 trees" );
     for my $t ( @{ $sample } ) {
         is( scalar @{ $t->get_terminals }, 10, "mb tree has 10 tips" );
-    }    
+    }
+    for my $t ( @{ $sample } ) {
+	ok( $t->is_ultrametric(0.01), "mb tree is ultrametric" );
+    }
 }
 
 # Example F
@@ -184,5 +203,8 @@ Bio::Phylo::EvolutionaryModels->import('sample');
     is( scalar @{ $sample }, 5, "crb sample has 5 trees" );
     for my $t ( @{ $sample } ) {
         is( scalar @{ $t->get_terminals }, 10, "crb tree has 10 tips" );
+    }
+    for my $t ( @{ $sample } ) {
+	ok( $t->is_ultrametric(0.01), 'crb tree is ultrametric' );
     }
 }
