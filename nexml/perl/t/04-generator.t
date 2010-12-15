@@ -39,7 +39,10 @@ my %args = ( '-tips' => 20, '-trees' => 1 );
         for my $i ( 0 .. $#{ $times } ) {
             my $bt = $times->[$i]->[1];
             my $exp = $i ? 1 / ( $i + 1 ) : 0;
-            is( sprintf("%.2f", $bt), sprintf("%.2f",$exp), 'expected yule waiting time');
+	    if ( $exp ) {
+		my $deviation = abs($bt-$exp)/$exp;
+		ok( $deviation < 0.01, 'expected yule waiting time');
+	    }
         }
     }
 }
