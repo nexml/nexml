@@ -1,5 +1,6 @@
 package Bio::Phylo::EvolutionaryModels;
 use Bio::Phylo::Forest::Tree;
+use Bio::Phylo::Forest;
 use Math::CDF qw[qnorm qbeta];
 use strict;
 use List::Util qw[min max];
@@ -305,6 +306,14 @@ sub sample {
                 $output[0]->[$index] = $output[0]->[$index]->to_newick('-nodelabels' => 1); 
             }
         }
+        elsif (defined $options{output_format} && $options{output_format} eq 'forest') {
+            # save as a forest
+            my $forest = Bio::Phylo::Forest->new;
+            for (my $index = 0; $index < scalar @{$output[0]}; $index++) {
+                $forest->insert($output[0]->[$index]);
+            }
+            $output[0] = $forest;
+        }
     }
 
     return @output;
@@ -381,7 +390,7 @@ sub sample_b {
     while (scalar @sample < $options{sample_size}) {
         #Generate a candidate model run
         my $candidate = &$model(%{$options{model_options}},
-                                tree_size => $options{tree_size}+1);    
+                                tree_size => $options{tree_size});    
         #Check that the tree has no extinctions
         unless ($candidate->is_ultrametric(1e-6)) {
             Bio::Phylo::Util::Exceptions::BadFormat->throw(
