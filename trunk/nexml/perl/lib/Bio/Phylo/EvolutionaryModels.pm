@@ -485,7 +485,9 @@ sub sample_bd {
                 push(@prob, $total_duration);
             }
         }
+        no warnings 'uninitialized'; # FIXME
         next if $total_duration == 0;
+        use warnings;
         for (my $index = 0; $index < scalar @prob; $index++) { $prob[$index] /= $total_duration; }
     
         #The expected number of samples we want 
@@ -591,7 +593,14 @@ sub sample_incomplete_sampling_bd {
     #this allows comparable sampling rates to be used here and in sample_bd
     my $total_sp = 0;
     foreach (@{$sampling_probability}) { $total_sp += $_; }
-    foreach (my $index = 1..scalar @{$sampling_probability}) { $sampling_probability->[$index-1] /= $total_sp; }  
+    
+    no warnings; # FIXME
+    foreach (my $index = 1..scalar @{$sampling_probability}) {
+        no warnings; # FIXME
+        $sampling_probability->[$index-1] /= $total_sp;
+        use warnings;
+    }
+    use warnings;
     
     #While we have insufficient samples
     while (scalar @sample < $options{sample_size}) {
@@ -605,6 +614,7 @@ sub sample_incomplete_sampling_bd {
 		my @size_stats;
 
         for (my $index = 0; $index < scalar @{$time} - 1; $index++) {
+            no warnings 'uninitialized'; # FIXME
             if ( $count->[$index] >= $options{tree_size} ) {
 				$size_stats[$count->[$index]-$options{tree_size}] += $time->[$index]*$sampling_probability->[$count->[$index]-$options{tree_size}];
 			}
@@ -621,6 +631,7 @@ sub sample_incomplete_sampling_bd {
             if ( $count->[$index] >= $options{tree_size} ) {
                 push(@duration, $time->[$index+1] - $time->[$index]);
                 push(@start, $time->[$index]);
+                no warnings 'uninitialized'; # FIXME
                 $total_prob += $duration[-1]*$sampling_probability->[$count->[$index]-$options{tree_size}];
                 push(@prob, $total_prob);
             }
