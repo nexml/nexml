@@ -224,6 +224,31 @@ xml element structure called <node/>
 		}
 	}
 
+=item set_name()
+
+Sets invocant name.
+
+ Type    : Mutator
+ Title   : set_name
+ Usage   : $obj->set_name($name);
+ Function: Assigns an object's name.
+ Returns : Modified object.
+ Args    : Argument must be a string. Ensure that this string is safe to use for
+           whatever output format you want to use (this differs between xml and
+           nexus, for example).
+
+=cut
+
+	sub set_name {
+		my ( $self, $name ) = @_;
+		if ( defined $name ) {
+			return $self->set_attributes( 'label' => $name );
+		}
+		else {
+			return $self;
+		}
+	}
+
 =item set_attributes()
 
 Assigns attributes for the element.
@@ -387,6 +412,34 @@ Retrieves tag name for the element.
 		else {
 			return '';
 		}
+	}
+
+=item get_name()
+
+Gets invocant's name.
+
+ Type    : Accessor
+ Title   : get_name
+ Usage   : my $name = $obj->get_name;
+ Function: Returns the object's name.
+ Returns : A string
+ Args    : None
+
+=cut
+	
+	sub get_name {
+		my $self = shift;
+		my $id = $self->get_id;
+		if ( ! $attributes{$id} ) {			
+			$attributes{$id} = {};
+		}
+		if ( defined $attributes{$id}->{'label'} ) {
+			return $attributes{$id}->{'label'};		
+		}
+		else {
+			return '';
+		}
+		
 	}
 
 =item get_xml_tag()
@@ -764,6 +817,29 @@ Serializes invocant to XML.
 			throw 'BadArgs' => 'DOM factory object not provided';
 		}
 	}
+
+=item to_json()
+
+Serializes object to JSON string
+
+ Type    : Serializer
+ Title   : to_json()
+ Usage   : print $obj->to_json();
+ Function: Serializes object to JSON string
+ Returns : String 
+ Args    : None
+ Comments:
+
+=cut
+
+    sub to_json { 
+	my $self = shift;
+    	eval { require XML::XML2JSON };
+    	if ( $@ ) {
+    		throw 'ExtensionError' => "Can't load XML::XML2JSON - $@";    		
+    	}
+	return XML::XML2JSON->new->convert($self->to_xml);
+    }
 
 	sub _cleanup { 
 		my $self = shift;

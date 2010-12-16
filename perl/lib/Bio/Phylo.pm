@@ -69,8 +69,7 @@ $VERSION .= "_$rev";
     # them anonymously during destruction cleanup. Other classes do something 
     # like this as well.
     my @fields = \( 
-	    my ( 
-	    	%name, 
+	    my (
 	    	%desc, 
 	    	%score, 
 	    	%generic, 
@@ -240,38 +239,6 @@ argument "-name" in the constructor.
 
 =over
 
-=item set_name()
-
-Sets invocant name.
-
- Type    : Mutator
- Title   : set_name
- Usage   : $obj->set_name($name);
- Function: Assigns an object's name.
- Returns : Modified object.
- Args    : Argument must be a string. Ensure that this string is safe to use for
-           whatever output format you want to use (this differs between xml and
-           nexus, for example).
-
-=cut
-
-    sub set_name {
-        my ( $self, $name ) = @_;
-	if ( $name ) {
-	
-	        # check for bad characters
-	        if ( $name =~ m/(?:;|,|:|\(|\)|&|<|>\s)/ ) {
-	        	$logger->info("the name '$name' might be invalid for some data formats");
-	
-	        }
-	
-	        # notify user
-	        $logger->info("setting name '$name'");
-	}
-        $name{$self->get_id} = $name;
-        return $self;
-    }
-
 =item set_desc()
 
 Sets invocant description.
@@ -393,24 +360,6 @@ Sets generic key/value pair(s).
 =head2 ACCESSORS
 
 =over
-
-=item get_name()
-
-Gets invocant's name.
-
- Type    : Accessor
- Title   : get_name
- Usage   : my $name = $obj->get_name;
- Function: Returns the object's name.
- Returns : A string
- Args    : None
-
-=cut
-
-    sub get_name {
-        my $self = shift;
-        return $name{$self->get_id};
-    }
 
 =item get_nexus_name()
 
@@ -632,29 +581,6 @@ Attempts to fetch an in-memory object by its UID
     sub get_obj_by_id {
 	my ( $class, $id ) = @_;
 	return $objects{$id};
-    }
-
-=item to_json()
-
-Serializes object to JSON string
-
- Type    : Serializer
- Title   : to_json()
- Usage   : print $obj->to_json();
- Function: Serializes object to JSON string
- Returns : String 
- Args    : None
- Comments:
-
-=cut
-
-    sub to_json { 
-	my $self = shift;
-    	eval { require XML::XML2JSON };
-    	if ( $@ ) {
-    		throw 'ExtensionError' => "Can't load XML::XML2JSON - $@";    		
-    	}
-	return XML::XML2JSON->new->convert($self->to_xml);
     }
 
 =item to_string()
