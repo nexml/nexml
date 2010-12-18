@@ -266,8 +266,8 @@ sub sample {
     my @output;
     #Run the algorithm, different method for multiple threads
     if ($options{threads} > 1) {
-        use threads;
-                use threads::shared;
+        require threads;
+        require threads::shared;
         @output = ([],[]);
                 $SIG{'KILL'} = sub { foreach (@threads) { $_->kill('KILL')->detach(); }; threads->exit(); };
         #Start the threads
