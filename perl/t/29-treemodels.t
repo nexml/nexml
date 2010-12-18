@@ -51,10 +51,7 @@ Bio::Phylo::EvolutionaryModels->import('sample');
         'model_options'     => { 'birth_rate' => .5 }
     );
     
-    eval {
-         # I'd like to make the sample a forest object
-        ok( looks_like_object($sample,_FOREST_), "b sample is a forest" );
-    };
+    ok( looks_like_instance($sample,'ARRAY'), "b sample is an array" );
     is( scalar @{ $sample }, 5, "b sample has 5 trees" );
     for my $t ( @{ $sample } ) {
         is( scalar @{ $t->get_terminals }, 10, "b tree has 10 tips" ); 
