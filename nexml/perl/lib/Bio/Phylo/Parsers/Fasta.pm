@@ -67,6 +67,9 @@ sub _parse {
             $seq .= $line;
         }
     }
+    # within the loop, insertions are triggered by encountering the next definition line,
+    # hence, the last $datum needs to be inserted explicitly when we leave the loop
+    $matrix->insert( $datum->set_char($seq) );
     return $matrix;
 	
 }
