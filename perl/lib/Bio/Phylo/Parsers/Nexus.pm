@@ -1039,7 +1039,7 @@ sub _end {
     $self->{'_translate'} = [];
     if ( uc $self->{'_previous'} eq ';' and $self->{'_trees'} ) {
         my $forest = $self->_current;
-        my $trees = parse( '-format' => 'newick', '-string' => $self->{'_trees'} );
+        my $trees = parse( '-format' => 'newick', '-string' => $self->{'_trees'}, '-as_project' => 0 );
         for my $tree ( @{ $trees->get_entities } ) {
         	$forest->insert($tree);
         }
