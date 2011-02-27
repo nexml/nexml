@@ -77,6 +77,15 @@ SEE ALSO
 
 Read the manual: perldoc Bio::Phylo::Manual
 
+CITATION
+
+If you use Bio::Phylo in published research, please cite it:
+
+Rutger A Vos, Jason Caravas, Klaas Hartmann, Mark A Jensen
+and Chase Miller, 2011. Bio::Phylo - phyloinformatic analysis using Perl.
+BMC Bioinformatics 12:63.
+doi:10.1186/1471-2105-12-63
+
 COPYRIGHT & LICENSE
 
 Copyright 2005-2010 Rutger Vos, All Rights Reserved. 

@@ -203,6 +203,7 @@ From a code perspective this function (sample):
  Reformats data
 
 =cut
+
 my @threads;
 
 sub sample {
@@ -551,6 +552,7 @@ sampling_probability
          a vector as discussed in the paper.
 
 =cut
+
 sub sample_incomplete_sampling_bd {
     my %options = @_;
 #    %options = (%options, %{$options{algorithm_options}});    
