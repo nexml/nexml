@@ -35,7 +35,7 @@ require Bio::Phylo::Mediators::TaxaMediator;
 # Include the revision number from subversion in $VERSION
 my $rev = '$Id$';
 $rev =~ s/^[^\d]+(\d+)\b.*$/$1/;
-$VERSION = "0.34";
+$VERSION = "0.35";
 $VERSION .= "_$rev";
 {
     my $taxamediator = 'Bio::Phylo::Mediators::TaxaMediator';
@@ -746,14 +746,12 @@ Returns suggested citation.
 
 =cut
 
-    # TODO one day this will actually point to something
     sub CITATION {
-        my $self    = shift;
-        my $name    = __PACKAGE__;
-        my $version = __PACKAGE__->VERSION;
-        my $string  = qq{Rutger A. Vos, 2005-2010. $name: };
-        $string .= qq{Phylogenetic analysis using Perl, version $version};
-        return $string;
+	return <<'CITATION';
+Rutger A Vos, Jason Caravas, Klaas Hartmann, Mark A Jensen and Chase Miller, 2011.
+Bio::Phylo - phyloinformatic analysis using Perl. BMC Bioinformatics 12:63.
+doi:10.1186/1471-2105-12-63
+CITATION
     }
 
 =item VERSION()
@@ -943,6 +941,15 @@ Invocant destructor.
 =head1 SEE ALSO
 
 Also see the manual: L<Bio::Phylo::Manual> and L<http://rutgervos.blogspot.com>
+
+=head1 CITATION
+
+If you use Bio::Phylo in published research, please cite it:
+
+B<Rutger A Vos>, B<Jason Caravas>, B<Klaas Hartmann>, B<Mark A Jensen>
+and B<Chase Miller>, 2011. Bio::Phylo - phyloinformatic analysis using Perl.
+I<BMC Bioinformatics> B<12>:63.
+L<http://dx.doi.org/10.1186/1471-2105-12-63>
 
 =head1 REVISION
 
