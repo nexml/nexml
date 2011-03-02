@@ -23,18 +23,26 @@ my $template = $fac->create_plain_template(
 	]
 );
 
-# if cwd is under svn,
+# if cwd is under svn, and doesn't hold only a README.html
 my $svnPath;
 my $SVN = $ENV{'SVN'} || 'svn';
 my $svnStat = `$SVN stat`;
-if ( $svnStat !~ /is not a working copy/ ) {
+opendir my $dh, $fac->prefix . $fac->subtree or die $!;
+my @files = grep { $_ !~ /^\./ } readdir($dh);
+my $dirIsReadmeOnly = ( @files == 1 && $files[0] eq 'README.html' );
+if ( $svnStat !~ /is not a working copy/ && ! $dirIsReadmeOnly ) {
     $svnPath = 'https://nexml.svn.sourceforge.net/svnroot/nexml/trunk' . $fac->subtree;
 }
+
+# make title
+my $subtree = $fac->subtree;
+$subtree =~ s|.+/([^/]+)/|$1|;
+my $title = ucfirst $subtree;
 
 # variables to be interpolated in templates
 my $vars = $fac->create_template_vars(
     'title'       => 'nexml - index of ' . $fac->subtree,
-    'mainHeading' => 'Directory listing',
+    'mainHeading' => $title,
     'svnPath'     => $svnPath,
     'svnStat'     => $svnStat,
 );
@@ -47,4 +55,9 @@ if ( -e $fac->prefix . $fac->subtree . 'README.html' ) {
 my $cgi = CGI->new;
 print $cgi->header;
 $template->process( 'header.tmpl', $vars ) || die $template->error();
-print '<div class="directoryIndex">';
+if ( $dirIsReadmeOnly ) {
+	print '<div style="display:none">';
+}
+else {
+	print '<div class="directoryIndex">';
+}
