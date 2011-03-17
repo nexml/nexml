@@ -10,3 +10,4 @@ mv validator.jar ../downloads
 ant mesquite
 mv mesquite-nexml.zip ../downloads
 ant clean
+mvn install:install-file -Dfile=../downloads/nexml.jar -DgroupId=org.nexml.model -DartifactId=nexml -Dversion=1.5-SNAPSHOT -Dpackaging=jar
