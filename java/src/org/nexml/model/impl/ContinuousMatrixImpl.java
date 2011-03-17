@@ -99,7 +99,7 @@ class ContinuousMatrixImpl extends MatrixImpl<Double> implements ContinuousMatri
      * @author rvosa
      */
 	protected ContinuousMatrixImpl(Document document) {
-		super(document);
+		super(document,"Continuous");
 	}
 
 	/**
