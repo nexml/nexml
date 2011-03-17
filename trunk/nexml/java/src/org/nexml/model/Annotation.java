@@ -20,8 +20,8 @@ import org.w3c.dom.Node;
 
 /**
  * <otu>
- * <meta property="dc:name">Homer</meta>
- * <meta rel="dc:creator" href="http://www.example.com/Homer"/>
+ * <meta href="study/TB2:S20" id="meta2914" rel="rdfs:isDefinedBy" xsi:type="nex:ResourceMeta"/>
+ * <meta content="4620" datatype="xsd:integer" id="meta2916" property="tb:identifier.taxonVariant.tb1" xsi:type="nex:LiteralMeta"/>
  * </otu>
  * @param <T>
  */
@@ -100,7 +100,7 @@ public interface Annotation extends Annotatable {
 	public void setValue(java.lang.Character value);
 	
 	public boolean isValueMapped(Class<?> valueClass);
-	public String getXsdType();
+	public QName getXsdType();
 	public URI getPredicateNamespace();
 
 }
