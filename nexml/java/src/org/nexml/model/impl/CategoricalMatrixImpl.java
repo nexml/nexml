@@ -32,7 +32,7 @@ class CategoricalMatrixImpl extends
      * @author rvosa
      */	
 	protected CategoricalMatrixImpl(Document document) {
-		super(document);
+		super(document,"Standard");
 	}
 	
     /**
