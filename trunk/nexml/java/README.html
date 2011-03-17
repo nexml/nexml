@@ -108,6 +108,22 @@
 	</li>
 	<li class="rss">
 		<strong>jar</strong> - this target builds the core nexml library (also available from http://nexml.org/nexml/downloads/).
+		This jar can also be installed from the maven repository on the nexml web server, i.e. in your pom.xml do something like this:
+		<pre>
+		&lt;repository>
+			&lt;id>m2.nexml.repos&lt;/id>
+			&lt;name>NeXML Remote Repository&lt;/name>
+			&lt;url>http://nexml-dev.nescent.org/.m2/repository&lt;/url>
+		&lt;/repository>		
+		
+		&lt;!-- .... and further down.... --->
+		
+		&lt;dependency>
+			&lt;groupId>org.nexml.model</groupId>
+			&lt;artifactId>nexml</artifactId>
+			&lt;version>1.5-SNAPSHOT</version>
+		&lt;/dependency>
+		</pre>
 	</li>
 	<li class="rss">
 		<strong>test</strong> - this target runs JUnit tests on the core nexml library.  To run these, the
