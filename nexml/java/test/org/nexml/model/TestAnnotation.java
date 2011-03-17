@@ -101,6 +101,7 @@ public class TestAnnotation {
 	    otu.addAnnotationValue("cdao:hasString", ns, "foo");
 	    otu.addAnnotationValue("cdao:hasDuration", ns, dtf.newDuration(1));
 	    otu.addAnnotationValue("cdao:hasQName", ns, new QName("foo"));
+	    otu.addAnnotationValue("cdao:hasURL",ns, URI.create("http://www.example.org"));
 	    
 	    runEqualsTests(otu); 
 	    
@@ -179,7 +180,7 @@ public class TestAnnotation {
 			e.printStackTrace();
 		};
 		List<OTUs> otus1 = document.getOTUsList();
-		//System.out.println(document.getXmlString());
+		System.out.println(document.getXmlString());
 		runEqualsTests(otus1.get(0).getAllOTUs().get(0));		
 	}
 	
