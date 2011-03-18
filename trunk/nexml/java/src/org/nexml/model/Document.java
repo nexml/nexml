@@ -1,6 +1,5 @@
 package org.nexml.model;
 
-import java.net.URI;
 import java.util.List;
 
 public interface Document extends Annotatable {
@@ -83,12 +82,5 @@ public interface Document extends Annotatable {
 	 * Returns a NeXML serialization of the document.
 	 */
 	String getXmlString();
-	
-	/**
-	 * 
-	 * @param baseURI
-	 */
-	void setBaseURI(URI baseURI);
-	URI getBaseURI();
 
 }
