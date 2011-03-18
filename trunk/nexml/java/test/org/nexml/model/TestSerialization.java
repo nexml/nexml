@@ -110,7 +110,7 @@ public class TestSerialization {
 		    "http://www.w3.org/2001/XMLSchema");
 		factory.setAttribute(
 		    "http://java.sun.com/xml/jaxp/properties/schemaSource",
-		    "http://nexml-dev.nescent.org/1.0/nexml.xsd");
+		    "http://nexml-dev.nescent.org/2009/nexml.xsd");
 		DocumentBuilder builder = null;
 		
 		/**
