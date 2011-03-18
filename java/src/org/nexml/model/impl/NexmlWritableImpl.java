@@ -193,6 +193,14 @@ abstract class NexmlWritableImpl implements NexmlWritable {
 		return getElement().getAttribute("id");
 	}
 	
+	/*
+	 * (non-Javadoc)
+	 * @see org.nexml.model.NexmlWritable#setId(java.lang.String)
+	 */
+	public void setId(String id) {
+		getElement().setAttribute("id", id);
+	}
+	
 	/**
 	 * This method returns the NeXML element name that the
 	 * {@code NexmlWritable} object is equivalent to.
