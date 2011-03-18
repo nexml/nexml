@@ -132,6 +132,16 @@ ok( $trees[3]->get_root->get_name eq 'root', '73 reroot tree');
     my $preterminal = $tree->get_by_name('n1');
     ok( $preterminal->is_preterminal, '75 is preterminal' );
 }
+
+{
+    my $newick = '(H:1,(G:1,(F:1,(E:1,(D:1,(C:1,(A:1,B:1):1):1):1)sub:1):1):1):0;';
+    my $tree = parse( '-format' => 'newick', '-string' => $newick )->first;
+    my $node = $tree->get_by_name('sub');
+    my $subtree1 = $node->get_subtree;
+    my $subnewick = $node->to_newick;
+    my $subtree2 = parse( '-format' => 'newick', '-string' => $subnewick )->first;
+    ok( $subtree1->calc_symdiff($subtree2) == 0, '76 clone subtree' );
+}
 __DATA__
 (H:1,(G:1,(F:1,(E:1,(D:1,(C:1,(A:1,B:1):1):1):1):1):1):1):0;
 (H:1,(G:1,(F:1,((C:1,(A:1,B:1):1):1,(D:1,E:1):1):1):1):1):0;
