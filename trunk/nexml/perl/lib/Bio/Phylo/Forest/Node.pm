@@ -1302,6 +1302,47 @@ Returns the tree invocant belongs to
         return $tree{$id};
     }
 
+=item get_subtree()
+
+Returns the tree subtended by the invocant
+
+ Type    : Query
+ Title   : get_subtree
+ Usage   : my $tree = $node->get_subtree;
+ Function: Returns the tree subtended by the invocant
+ Returns : Bio::Phylo::Forest::Tree
+ Args    : NONE
+
+=cut
+
+    sub get_subtree {
+	my $self = shift;
+	my $tree = $fac->create_tree;
+	$self->visit_depth_first(
+		'-pre' => sub {
+			my $node = shift;
+			my $clone = $node->clone;
+			$node->set_generic( 'clone' => $clone );
+			$tree->insert( $clone );
+			if ( my $parent = $node->get_parent ) {
+				if ( my $pclone = $node->get_generic('clone') ) {
+					$clone->set_parent( $pclone );
+				}
+				else {
+					$clone->set_parent;
+				}
+			}			
+			
+		},
+		'-post' => sub {
+			my $node = shift;
+			my $gen = $node->get_generic;
+			delete $gen->{'clone'};
+		}
+	);
+	return $tree->_analyze;
+    }
+
 =back
 
 =head2 TESTS
