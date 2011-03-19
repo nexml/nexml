@@ -213,6 +213,35 @@ ok( $ladder->ladderize->to_newick eq $right, '49 ladderize' );
         is( $bt->[$i]->[1], $i, '62 waiting times' );
     }
 }
+
+{
+    my $newick = '(a,b,c,d,e,f);';
+    my $tree = parse( '-format' => 'newick', '-string' => $newick )->first;
+    $tree->sort_tips( [ qw(a c b f d e) ] );
+    ok( $tree->to_newick eq '(a,c,b,f,d,e);', '63 star sort' );
+}
+
+{
+    my $newick = '(a,b,(c,d),e,f);';
+    my $tree = parse( '-format' => 'newick', '-string' => $newick )->first;
+    $tree->sort_tips( [ qw(a b d c e f) ] );
+    ok( $tree->to_newick eq '(a,b,(d,c),e,f);', '64 tip sort' );
+}
+
+{
+    my $newick = '(a,b,((c,d),e),f);';
+    my $tree = parse( '-format' => 'newick', '-string' => $newick )->first;
+    $tree->sort_tips( [ qw(a b e d c f) ] );
+    ok( $tree->to_newick eq '(a,b,(e,(d,c)),f);', '65 simple ladder sort' );
+}
+
+{
+    my $newick = '((a,b),((c,d),e),f);';
+    my $tree = parse( '-format' => 'newick', '-string' => $newick )->first;
+    $tree->sort_tips( [ qw(a e d c b f) ] );
+    ok( $tree->to_newick eq '((e,(d,c)),(a,b),f);', '66 conflict sort' );
+}
+
 __DATA__
 ((H:1,I:1):1,(G:1,(F:0.01,(E:0.3,(D:2,(C:0.1,(A:1,B:1)cherry:1):1):1):1):1):1):0;
 (H:1,(G:1,(F:1,((C:1,(A:1,B:1):1):1,(D:1,E:1):1):1):1):1):0;
