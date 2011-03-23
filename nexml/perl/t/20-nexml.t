@@ -13,6 +13,9 @@ use Bio::Phylo::IO qw'parse unparse';
 use Bio::Phylo::Util::Logger;
 use XML::Twig;
 use Data::Dumper;
+use Bio::Phylo::Factory;
+
+my $fac = Bio::Phylo::Factory->new;
 
 my $XML_PATH = $ENV{'NEXML_ROOT'} . '/examples' || '../examples'; # TODO fixme
 
@@ -54,13 +57,6 @@ for my $tree ( @{ $forest->get_entities } ) {
 
 	for my $node ( @{ $tree->get_entities } ) {
 		my $id = $node->get_name;
-# XXX no more dictionaries, moving to meta attachments		
-#		if ( $id eq 'n4' ) {
-#			my $dict  = $node->get_dictionaries->[0];
-#			my $value = $dict->first;
-#			ok( $value->get_tag eq 'boolean', "dict value type is boolean" );
-#			ok( $value->get_value, "dict boolean value is true" );
-#		}
 		if ( $node->is_internal ) {
 			ok( exists $internals{$id}, "$id is an internal node" );
 		}
@@ -148,4 +144,52 @@ for my $block (@$blocks) {
 		}
 	}
 	ok( unparse( '-format' => 'nexml', '-phylo' => $block ), "serialized $block" );
+}
+
+{
+    my $matrix = Bio::Phylo::Matrices::Matrix->new(
+        '-type' => 'dna',
+        '-matrix' => [
+            [ qw'taxon1 A C G T C G' ],
+            [ qw'taxon2 A C G T C G' ],
+        ],
+        '-charlabels' => [ qw'c1 c2 c3 c4 c5 c6' ]
+    );
+    
+    # testing character annotations
+    my $char = $matrix->get_characters->get_entities->[0];
+    $char->add_meta(
+	$fac->create_meta(
+	    '-namespaces' => { 'dcterms' => 'http://purl.org/dc/elements/1.1/' },
+            '-triple'     => { 'dcterms:description' => 'this is a character annotation' }
+	)
+    );
+    my ( $meta ) = @{ $char->get_meta };
+    ok( $meta->get_object eq 'this is a character annotation' );
+    ok( $meta->get_predicate eq 'dcterms:description' );
+    
+    # testing annotation for unambiguous state
+    my $to = $matrix->get_type_object;
+    $to->add_meta_for_state(
+	$fac->create_meta(
+	    '-namespaces' => { 'dc' => 'http://purl.org/dc/terms/description' },
+	    '-triple'     => { 'dc:description' => 'this is an unambiguous state' }
+	),
+	'A'
+    );
+    my ( $umeta ) = @{ $to->get_meta_for_state('A') };
+    ok( $umeta->get_object eq 'this is an unambiguous state' );
+    ok( $umeta->get_predicate eq 'dc:description' );
+    
+    # testing annotation for ambiguous state
+    $matrix->get_type_object->add_meta_for_state(
+	$fac->create_meta(
+	    '-namespaces' => { 'dc' => 'http://purl.org/dc/terms/description' },
+	    '-triple'     => { 'dc:description' => 'this is an ambiguous state' }
+	),
+	'X'
+    );
+    my ( $ameta ) = @{ $to->get_meta_for_state('X') };
+    ok( $ameta->get_object eq 'this is an ambiguous state' );
+    ok( $ameta->get_predicate eq 'dc:description' );
 }

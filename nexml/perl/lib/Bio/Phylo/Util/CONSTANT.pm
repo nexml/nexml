@@ -35,6 +35,8 @@ BEGIN {
         _HTTP_SC_SEE_ALSO_
 	_DOCUMENT_
 	_ELEMENT_
+	_CHARACTERS_
+	_CHARACTER_	
       	looks_like_number
       	looks_like_object
 	looks_like_hash
@@ -84,6 +86,8 @@ BEGIN {
                 _HTTP_SC_SEE_ALSO_
 		_DOCUMENT_
 		_ELEMENT_
+		_CHARACTERS_
+		_CHARACTER_
             )
         ],
         'functions' => [
@@ -162,6 +166,8 @@ sub _RESOURCE_     () { 21 }
 
 sub _DOCUMENT_     () { 22 }
 sub _ELEMENT_      () { 23 }
+sub _CHARACTERS_   () { 24 }
+sub _CHARACTER_    () { 25 }
 
 # for PhyloWS
 sub _HTTP_SC_SEE_ALSO_ () { '303 See Other' }
