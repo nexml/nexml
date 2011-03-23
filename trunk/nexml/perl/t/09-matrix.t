@@ -201,3 +201,20 @@ ok($pruned->get_nchar == 1,'29 keeping on char');
     );
     is( $matrix->calc_gc_content, 2/3, '37 calc G+C content');
 }
+
+{
+    my $matrix = Bio::Phylo::Matrices::Matrix->new(
+        '-type' => 'dna',
+        '-matrix' => [
+            [ qw'taxon1 A C G T C G' ],
+            [ qw'taxon2 A C G T C G' ],
+        ],
+        '-charlabels' => [ qw'c1 c2 c3 c4 c5 c6' ]
+    );
+    my $char  = $matrix->get_characters;
+    my @chars = @{ $char->get_entities };
+    is( scalar @chars, 6, '38 characters created' );
+    for my $c ( @chars ) {
+        isa_ok( $c, 'Bio::Phylo::Matrices::Character', '39 characters right type' );    
+    }    
+}

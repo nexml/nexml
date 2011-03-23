@@ -29,7 +29,7 @@ else {
 my $LOADED_WRAPPERS = 0;
 
 {
-	my $fac                = Bio::Phylo::Factory->new;
+    my $fac                = Bio::Phylo::Factory->new;
     my $logger             = __PACKAGE__->get_logger;
     my $TYPE_CONSTANT      = _DATUM_;
     my $CONTAINER_CONSTANT = _MATRIX_;
@@ -110,7 +110,25 @@ Datum object constructor.
 		}        
 
         # go up inheritance tree, eventually get an ID
-        my $self = $class->SUPER::new( @_ );
+        my $self = $class->SUPER::new(
+		@_,
+		'-listener' => sub {
+			my $self = shift;
+			if ( my $matrix = $self->get_matrix ) {
+				my $nchar = $matrix->get_nchar;
+				my $characters = $matrix->get_characters;
+				my @chars = @{ $characters->get_entities };
+				my @defined = grep { defined $_ } @chars;
+				if ( scalar @defined != $nchar ) {
+					for my $i ( 0 .. ( $nchar - 1 ) ) {
+						if ( not $chars[$i] ) {
+							$characters->insert_at_index( $fac->create_character, $i );
+						}
+					}
+				}
+			}
+		}		
+	);
         return $self;
     }
 
@@ -411,6 +429,21 @@ Sets list of annotations.
 =head2 ACCESSORS
 
 =over
+
+=item get_matrix()
+
+Gets the matrix (if any) this datum belongs to
+
+ Type    : Accessor
+ Title   : get_matrix
+ Usage   : my $matrix = $datum->get_matrix;
+ Function: Retrieves the matrix the datum belongs to
+ Returns : Bio::Phylo::Matrices::Matrix
+ Args    : NONE
+
+=cut
+
+	sub get_matrix { shift->_get_container }
 
 =item get_weight()
 
@@ -918,7 +951,6 @@ Serializes datum to nexml format.
 		my $xml = $self->get_xml_tag;
 		
 		if ( not $args{'-compact'} ) {
-# 		    my $cell = $fac->create_xmlwritable( '-tag' => 'cell', '-identifiable' => 0 );
 			for my $i ( 0 .. $#char ) {
 			    my ( $c, $s );
 				if ( $missing ne $char[$i] and $gap ne $char[$i] ) {

@@ -10,6 +10,7 @@ use Bio::Phylo::Util::CONSTANT qw(
 	looks_like_hash 
 	looks_like_instance 
 	looks_like_number
+	looks_like_object
 );
 use Bio::Phylo::Util::Exceptions qw(throw);
 use Bio::Phylo::NeXML::Writable ();
@@ -44,6 +45,7 @@ my $LOADED_WRAPPERS = 0;
 			%matchchar,
 			%polymorphism,
 			%case_sensitivity,
+			%characters,
 		)
 	);
 
@@ -185,7 +187,25 @@ Matrix constructor.
 		}		
 
 		# go up inheritance tree, eventually get an ID
-		my $self = $class->SUPER::new( @_ );
+		my $self = $class->SUPER::new(
+			'-characters' => $factory->create_characters,
+			'-listener'   => sub {
+				my $self = shift;
+				my $nchar = $self->get_nchar;
+				my $characters = $self->get_characters;
+				my @chars = @{ $characters->get_entities };
+				my @defined = grep { defined $_ } @chars;
+				if ( scalar @defined != $nchar ) {
+					for my $i ( 0 .. ( $nchar - 1 ) ) {
+						if ( not $chars[$i] ) {
+							$characters->insert_at_index( $factory->create_character, $i );
+						}
+					}
+				}				
+			},
+			@_
+		);
+		
 		return $self;
 	}
 
@@ -367,6 +387,28 @@ Sets argument state labels.
 		return $self;		
 	}
 
+=item set_characters()
+
+Sets the character set manager object Bio::Phylo::Matrices::Characters.
+Normally you never have to use this.
+
+ Type    : Mutator
+ Title   : set_characters
+ Usage   : $matrix->set_characters( $characters );
+ Function: Assigns Bio::Phylo::Matrices::Characters object
+ Returns : $self
+ Args    : Bio::Phylo::Matrices::Characters
+
+=cut
+
+	sub set_characters {
+		my ( $self, $characters ) = @_;
+		if ( looks_like_object $characters, _CHARACTERS_ ) {
+			$characters{ $self->get_id } = $characters;
+		}
+		return $self;
+	}
+
 =item set_charlabels()
 
 Sets argument character labels.
@@ -398,7 +440,10 @@ Sets argument character labels.
 		}
 
 		# it's either a valid array ref, or nothing, i.e. a reset
-		$charlabels{$self->get_id} = defined $charlabels ? $charlabels : [];
+		my @characters = @{ $self->get_characters->get_entities };
+		for my $i ( 0 .. $#{ $charlabels } ) {
+			$characters[$i]->set_name( $charlabels->[$i] );
+		}
 		return $self;
 	}
 
@@ -562,6 +607,24 @@ Retrieves hash ref for missing, gap and matchchar symbols
 		};
 	}
 
+=item get_characters()
+
+Retrieves characters object.
+
+ Type    : Accessor
+ Title   : get_characters
+ Usage   : my $characters = $matrix->get_characters
+ Function: Retrieves characters object.
+ Returns : Bio::Phylo::Matrices::Characters
+ Args    : None.
+
+=cut
+
+	sub get_characters {
+		my $self = shift;
+		return $characters{ $self->get_id };
+	}
+
 =item get_statelabels()
 
 Retrieves state labels.
@@ -590,7 +653,11 @@ Retrieves character labels.
 
 =cut
 
-	sub get_charlabels { $charlabels{ $_[0]->get_id } || [] }
+	sub get_charlabels {
+		my $self = shift;
+		my @labels = map { $_->get_name } @{ $self->get_characters->get_entities };
+		return \@labels;
+	}
 
 =item get_gapmode()
 
@@ -1339,21 +1406,12 @@ Serializes matrix to nexml format.
 		$xml .= $to->to_xml($normalized,$self->get_polymorphism);
 		$logger->debug($xml);
 		
-		# write column definitions
-		if ( %{ $ids_for_states } ) {
-			$xml .= $self->_write_char_labels( $to->get_xml_id );
-		}
-		else {
-			$xml .= $self->_write_char_labels();
-		}
+		$xml .= $self->get_characters->to_xml;
 		$xml .= "\n</format>";
 		
 		# the matrix block
 		$xml .= "\n<matrix>";
-		my @char_ids;
-		for ( 0 .. $self->get_nchar ) {
-			push @char_ids, 'c' . ($_+1);
-		}
+		my @char_ids = map { $_->get_xml_id } @{ $self->get_characters->get_entities };
 		
 		# write rows
 		my $special = $self->get_type_object->get_ids_for_special_symbols(1);
@@ -1396,23 +1454,6 @@ Serializes matrix to nexml format.
 		else {
 			return {};
 		}
-	}
-	
-	sub _write_char_labels {
-		my ( $self, $states_id ) = @_;
-		my $xml = '';
-		my $labels = $self->get_charlabels;
-		for my $i ( 1 .. $self->get_nchar ) {
-			$xml .= sprintf('<char id="c%s"',$i);  
-			if ( $labels->[ $i - 1 ] ) {
-				$xml .= sprintf(' label="%s"', $labels->[ $i - 1 ]);
-			}
-			if ( $states_id ) {
-				$xml .= sprintf(' states="%s"', $states_id);
-			}
-			$xml .= '/>';
-		}	
-		return $xml;	
 	}
 
 =item to_nexus()

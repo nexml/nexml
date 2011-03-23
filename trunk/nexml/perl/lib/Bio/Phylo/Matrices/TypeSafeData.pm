@@ -65,7 +65,17 @@ TypeSafeData constructor.
         if ( not $args{'-type'} and not $args{'-type_object'} ) {
         	$logger->info("No data type provided, will use 'standard'");
         	unshift @_, '-type', 'standard';
-        } 
+        }
+	
+	if ( $args{'-characters'} ) {
+	    if ( $args{'-type'} ) {
+		$args{'-characters'}->set_type( $args{'-type'} );
+	    }
+	    elsif ( $args{'-type_object'} ) {
+		$args{'-characters'}->set_type_object( $args{'-type_object'} );
+	    }
+	}
+	
         # notify user
         $logger->debug("constructor called for '$class'");
 
