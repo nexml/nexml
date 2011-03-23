@@ -212,7 +212,7 @@ argument "-name" in the constructor.
 					$@->rethrow;
 				}
 				elsif ( not ref($@) and $@ =~ /^Can't locate object method / ) {
-					throw 'BadArgs' => "The named argument '${key}' cannot be passed to the constructor";
+					throw 'BadArgs' => "The named argument '${key}' cannot be passed to the constructor of ${class}";
 				}
 				else {
 					throw 'Generic' => $@;

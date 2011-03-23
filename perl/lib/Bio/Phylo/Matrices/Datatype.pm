@@ -16,9 +16,9 @@ use vars '@ISA';
 
 {
     
- 	my $logger = __PACKAGE__->get_logger;
+    my $logger = __PACKAGE__->get_logger;
     my $fac    = Bio::Phylo::Factory->new();
-    my @fields = \( my ( %lookup, %missing, %gap ) );
+    my @fields = \( my ( %lookup, %missing, %gap, %meta ) );
 
 =head1 NAME
 
@@ -66,15 +66,15 @@ Datatype constructor.
         
         # constructor called with type string
         if ( $class eq __PACKAGE__ ) {
-			my $type = ucfirst( lc( shift ) );
-			if ( not $type ) {
-				throw 'BadArgs' => "No subtype specified!";
-			}
-			if ( $type eq 'Nucleotide' ) {
-				$logger->warn("'nucleotide' datatype requested, using 'dna'");
-				$type = 'Dna';
-			}
-			return looks_like_class( __PACKAGE__ . '::' . $type )->SUPER::new(@_);
+		my $type = ucfirst( lc( shift ) );
+		if ( not $type ) {
+			throw 'BadArgs' => "No subtype specified!";
+		}
+		if ( $type eq 'Nucleotide' ) {
+			$logger->warn("'nucleotide' datatype requested, using 'dna'");
+			$type = 'Dna';
+		}
+		return looks_like_class( __PACKAGE__ . '::' . $type )->SUPER::new(@_);
         }
         
         # constructor called from type subclass
@@ -187,6 +187,70 @@ Sets gap symbol.
         return $self;
     }
 
+=item add_meta_for_state()
+
+Adds a metadata annotation for a state symbol
+
+ Type    : Mutator
+ Title   : add_meta_for_state
+ Usage   : $obj->add_meta_for_state($meta,$state);
+ Function: Adds a metadata annotation for a state symbol
+ Returns : Modified object.
+ Args    : A Bio::Phylo::NeXML::Meta object and a state symbol
+
+=cut
+    
+    sub add_meta_for_state {
+	my ( $self, $meta, $state ) = @_;
+	if ( my $lookup = $self->get_lookup ) {
+		if ( exists $lookup->{$state} ) {
+			my $id = $self->get_id;
+			$meta{$id} = {} if not $meta{$id};
+			$meta{$id}->{$state} = [] if not $meta{$id}->{$state};
+			push @{ $meta{$id}->{$state} }, $meta;
+		}
+		else {
+			$logger->warn("State '$state' is unknown, can't add annotation");
+		}
+	}
+	else {
+		$logger->warn("This data type has no categorical states to annotate");
+	}
+	return $self;
+    }
+
+=item remove_meta_for_state()
+
+Removes a metadata annotation for a state symbol
+
+ Type    : Mutator
+ Title   : remove_meta_for_state
+ Usage   : $obj->remove_meta_for_state($meta,$state);
+ Function: Removes a metadata annotation for a state symbol
+ Returns : Modified object.
+ Args    : A Bio::Phylo::NeXML::Meta object and a state symbol
+
+=cut
+    
+    sub remove_meta_for_state {
+	my ( $self, $meta, $state ) = @_;
+	my $id = $self->get_id;
+	if ( $meta{$id} && $meta{$id}->{$state} ) {
+		my $meta_array = $meta{$id}->{$state};
+		my $meta_id = $meta->get_id;
+            DICT: for my $i ( 0 .. $#{ $meta_array } ) {
+                if ( $meta_array->[$i]->get_id == $meta_id ) {
+                    splice @{ $meta_array }, $i, 1;
+                    last DICT;
+                }
+            }
+	}
+	else {
+		$logger->warn("There are no annotations to remove for state '$state'");
+	}
+	return $self;
+    }
+
 =back
 
 =head2 ACCESSORS
@@ -263,22 +327,22 @@ Gets state-to-id mapping
 =cut
     
         sub get_ids_for_states {
-			my $self = shift;
-			$logger->debug("getting ids for state set $self");
-			if ( my $lookup = $self->get_lookup ) {
-				my $ids_for_states = {};
-				my ( @symbols, %tmp_cats,$i ); 
-				# build a list of state symbols: what properties will this 
-				# list have? Symbols will be present in order of the 
-				# size of the state set to which they belong; within 
-				# each of these ranks, the symbols will be in lexical
-				# order.
-				push (@{ $tmp_cats{ @{ $lookup->{$_} } } ||= [] }, $_) for grep /^\d+|[a-zA-Z]/, keys %{ $lookup };
-				push (@symbols, sort { $a cmp $b } @{ $tmp_cats{$_} }) for sort { $a <=> $b } keys %tmp_cats;
-				$ids_for_states->{$_} = ($_[0] ? 's' : '').(++$i) for (@symbols);
-				return $ids_for_states;
-			}
-			return {};
+		my $self = shift;
+		$logger->debug("getting ids for state set $self");
+		if ( my $lookup = $self->get_lookup ) {
+			my $ids_for_states = {};
+			my ( @symbols, %tmp_cats,$i ); 
+			# build a list of state symbols: what properties will this 
+			# list have? Symbols will be present in order of the 
+			# size of the state set to which they belong; within 
+			# each of these ranks, the symbols will be in lexical
+			# order.
+			push (@{ $tmp_cats{ @{ $lookup->{$_} } } ||= [] }, $_) for grep /^\d+|[a-zA-Z]/, keys %{ $lookup };
+			push (@symbols, sort { $a cmp $b } @{ $tmp_cats{$_} }) for sort { $a <=> $b } keys %tmp_cats;
+			$ids_for_states->{$_} = ($_[0] ? 's' : '').(++$i) for (@symbols);
+			return $ids_for_states;
+		}
+		return {};
         }
 
 =item get_symbol_for_states()
@@ -369,19 +433,19 @@ Gets state lookup table.
             return $lookup{$id};
         }
         else {
-           my $class = __PACKAGE__;
-           $class .= '::' . $self->get_type;
-           $logger->debug("datatype class is $class");
-		   if ( looks_like_class $class ) {
-			   my $lookup;
-			   {
-					no strict 'refs'; 
-					$lookup = ${ $class . '::LOOKUP'  };
-					use strict;
-			   }
-			   $self->set_lookup( $lookup );
-			   return $lookup;
-           }
+		my $class = __PACKAGE__;
+		$class .= '::' . $self->get_type;
+		$logger->debug("datatype class is $class");
+		if ( looks_like_class $class ) {
+			my $lookup;
+			{
+				no strict 'refs'; 
+				$lookup = ${ $class . '::LOOKUP'  };
+				use strict;
+			}
+			$self->set_lookup( $lookup );
+			return $lookup;
+		}
         }
     }
 
@@ -422,6 +486,29 @@ Gets gap symbol.
         my $gap = $gap{$self->get_id};
         return defined $gap ? $gap : '-';
     }
+
+=item get_meta_for_state()
+
+Gets metadata annotations (if any) for the provided state symbol
+
+ Type    : Accessor
+ Title   : get_meta_for_state
+ Usage   : my $meta = @{ $obj->get_meta_for_state };
+ Function: Gets metadata annotations for a state symbol
+ Returns : An array reference of Bio::Phylo::NeXML::Meta objects
+ Args    : A state symbol
+
+=cut
+
+    sub get_meta_for_state {
+	my ( $self, $state ) = @_;
+	my $id = $self->get_id;
+	if ( $meta{$id} && $meta{$id}->{$state} ) {
+		return $meta{$id}->{$state};
+	}
+	return [];
+    }
+
 
 =back
 
@@ -676,39 +763,34 @@ Writes data type definitions to xml
 	}
 	
 	sub _state_to_xml {
-	    my ( $self, $state, $id_for_state, $lookup, $normalized, $polymorphism ) = @_;
-	    my $state_id = $id_for_state->{ $state };
-	    my @mapping = @{ $lookup->{$state} };
-	    my $symbol = exists $normalized->{$state} ? $normalized->{$state} : $state;
-	    my $xml = '';
-	    
-	    # has ambiguity mappings
-	    if ( scalar @mapping > 1 ) {
-		my $elt = $fac->create_xmlwritable( '-tag' =>
-		    $polymorphism ? 'polymorphic_state_set' : 'uncertain_state_set'
-		);
-		my $mbr = $fac->create_xmlwritable( '-tag' => 'member', '-identifiable' => 0 );
-		$elt->set_attributes( 'id' => $state_id, 'symbol' => $symbol );
-		$xml .= "\n".$elt->get_xml_tag();
-		for ( @mapping ) {
-		    $mbr->set_attributes('state'=>$id_for_state->{$_});
-		    $xml .= "\n".$mbr->get_xml_tag(1);
-		}
-		$xml .= "\n</".$elt->get_tag.">";
-	    }
-	    
-	    # no ambiguity
-	    else {
+		my ( $self, $state, $id_for_state, $lookup, $normalized, $polymorphism ) = @_;	    
+		my $state_id = $id_for_state->{ $state };
+		my @mapping = @{ $lookup->{$state} };
+		my $symbol = exists $normalized->{$state} ? $normalized->{$state} : $state;
+		my $xml = '';
+		my $unambiguous = scalar @mapping <= 1;
+		my $tag = $unambiguous ? 'state' : $polymorphism ? 'polymorphic_state_set' : 'uncertain_state_set';
 		my $elt = $fac->create_xmlwritable(
-			    '-tag' => 'state',
-			    '-attributes' => {
-				    'id'     => $state_id,
-				    'symbol' => $symbol
-			    }
-		    );
-		$xml .= "\n" . $elt->get_xml_tag(1);
-	    }
-        return $xml;
+			'-tag'        => $tag,
+			'-xml_id'     => $state_id,
+			'-attributes' => { 'symbol' => $symbol }
+		);		
+		$elt->add_meta($_) for @{ $self->get_meta_for_state($state) };
+		if ( $unambiguous ) {
+			$xml .= "\n" . $elt->get_xml_tag(1);
+		}
+		else {
+			$xml .= "\n" . $elt->get_xml_tag();
+			for ( @mapping ) {
+			    $xml .= $fac->create_xmlwritable(
+				'-tag'          => 'member',
+				'-identifiable' => 0,
+				'-attributes'   => { 'state' => $id_for_state->{$_} }
+			    )->get_xml_tag(1)
+			}
+			$xml .= "\n</".$elt->get_tag.">";			
+		}
+		return $xml;
 	}
 
 =item to_dom()
