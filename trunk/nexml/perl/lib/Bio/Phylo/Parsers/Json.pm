@@ -1,4 +1,4 @@
-# $Id: Table.pm 1593 2011-02-27 15:26:04Z rvos $
+# $Id$
 package Bio::Phylo::Parsers::Json;
 use strict;
 use Bio::Phylo::IO 'parse';
@@ -62,7 +62,7 @@ L<http://dx.doi.org/10.1186/1471-2105-12-63>
 
 =head1 REVISION
 
- $Id: Table.pm 1593 2011-02-27 15:26:04Z rvos $
+ $Id$
 
 =cut
 
