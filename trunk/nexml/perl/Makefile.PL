@@ -12,6 +12,7 @@ check_prereq( qw(
     Math::CDF
     List::Util
     SWF::Builder
+    XML::XML2JSON
 ) );
 
 WriteMakefile(
