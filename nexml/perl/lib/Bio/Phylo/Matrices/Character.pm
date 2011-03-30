@@ -87,7 +87,7 @@ L<http://dx.doi.org/10.1186/1471-2105-12-63>
 
 =head1 REVISION
 
- $Id: Matrix.pm 1622 2011-03-23 15:02:21Z rvos $
+ $Id$
 
 =cut
 
