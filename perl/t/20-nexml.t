@@ -1,7 +1,11 @@
 use Test::More;
 BEGIN {
+    eval { require XML::Twig };
     if ( not $ENV{'NEXML_ROOT'} ) {
         plan 'skip_all' => 'env var NEXML_ROOT not set';
+    }
+    elsif ( $@ ) {
+	plan 'skip_all' => 'XML::Twig not installed';
     }
     else {
     	Test::More->import('no_plan');
@@ -11,7 +15,6 @@ use strict;
 use warnings;
 use Bio::Phylo::IO qw'parse unparse';
 use Bio::Phylo::Util::Logger;
-use XML::Twig;
 use Data::Dumper;
 use Bio::Phylo::Factory;
 
