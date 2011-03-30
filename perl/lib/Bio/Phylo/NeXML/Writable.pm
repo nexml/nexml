@@ -798,6 +798,7 @@ Serializes invocant to XML.
  Args    : DOM factory object
  Note    : This is the generic function. It is redefined in the 
            classes below.
+
 =cut
 
 	sub to_dom {
