@@ -201,7 +201,11 @@ Matrix constructor.
 							$characters->insert_at_index( $factory->create_character, $i );
 						}
 					}
-				}				
+				}
+				@chars = @{ $characters->get_entities };
+				if ( scalar(@chars) > $nchar ) {
+					$characters->prune_entities([$nchar .. $#chars]);
+				}
 			},
 			@_
 		);
@@ -1220,7 +1224,7 @@ Insert argument in invocant.
 		return $self;
 	}
 
-=item validate()
+=begin comment
 
 Validates the object's contents.
 
@@ -1233,13 +1237,12 @@ Validates the object's contents.
  Comments: This method implements the interface method by the same
            name in Bio::Phylo::Matrices::TypeSafeData
 
+=end comment
+
 =cut
 
-	sub validate {
-		my $self = shift;
-		for my $row ( @{ $self->get_entities } ) {
-			$row->validate;
-		}
+	sub _validate {
+		shift->visit( sub { shift->validate } );
 	}
 
 =item compress_lookup()
