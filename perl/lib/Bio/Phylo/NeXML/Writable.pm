@@ -12,6 +12,7 @@ use Bio::Phylo::Util::CONSTANT qw(
 	looks_like_hash
 	looks_like_instance
 	looks_like_implementor
+	looks_like_class
 	:namespaces
 );
 use vars '@ISA';
@@ -833,12 +834,7 @@ Serializes object to JSON string
 =cut
 
     sub to_json { 
-	my $self = shift;
-    	eval { require XML::XML2JSON };
-    	if ( $@ ) {
-    		throw 'ExtensionError' => "Can't load XML::XML2JSON - $@";    		
-    	}
-	return XML::XML2JSON->new->convert($self->to_xml);
+	looks_like_class('XML::XML2JSON')->new->convert(shift->to_xml);
     }
 
 	sub _cleanup { 
