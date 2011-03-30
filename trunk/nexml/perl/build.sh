@@ -7,7 +7,7 @@ if [ "$PODINHERIT" == "" ]; then
     echo "Not appending recursive pod because PODINHERIT env var not set"
 fi
 if [ "$PODINHERIT" != "" ]; then
-    ./podinherit -dir lib -append -verbose
+    ./podinherit -dir lib -append -verbose -force
 fi
 perl Makefile.PL > /dev/null
 make manifest &> /dev/null
@@ -17,6 +17,6 @@ if [ -d "$DOWNLOADS" ]; then
     mv Bio-Phylo*.tar.gz ../downloads
 fi
 if [ "$PODINHERIT" != "" ]; then
-    ./podinherit -dir lib -strip -verbose
+    ./podinherit -dir lib -strip -verbose -force
 fi
 rm Makefile.old MANIFEST.bak MANIFEST META.yml
