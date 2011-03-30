@@ -873,7 +873,7 @@ Appends argument to invocant.
         $self->set_char( \@newchars );
     }
 
-=item validate()
+=begin comment
 
 Validates invocant data contents.
 
@@ -884,9 +884,11 @@ Validates invocant data contents.
  Returns : True or throws Bio::Phylo::Util::Exceptions::InvalidData
  Args    : NONE
 
+=end comment
+
 =cut
 
-    sub validate {
+    sub _validate {
         my $self = shift;
         if ( !$self->get_type_object->is_valid($self) ) {
             throw 'InvalidData' => 'Invalid data!';
