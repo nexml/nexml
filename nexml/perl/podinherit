@@ -291,13 +291,18 @@ sub get_pod {
 	msg( "getting pod for method $method in class $class" );
 	
 	my $path = find_file( $class );
-	msg( "going to parse pod from file $path" );
-	
-	# use the Pod::Parser subclass (see below)
-	my $parser = ItemParser->new;
-	$parser->method_to_find( $method );
-	$parser->parse_from_file( $path );
-	my $pod = $parser->get_pod_for_method;
+	my $pod;
+	if ( $path ) {	
+		msg( "going to parse pod from file $path" );
+		
+		# use the Pod::Parser subclass (see below)
+		my $parser = ItemParser->new;
+		$parser->method_to_find( $method );
+		$parser->parse_from_file( $path );
+		$pod = $parser->get_pod_for_method;
+	}
+	$pod = "=item $method()\n\n" if not $pod;
+	msg( $pod );
 	return $pod;
 }
 
