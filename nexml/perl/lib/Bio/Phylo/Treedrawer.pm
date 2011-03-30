@@ -903,8 +903,6 @@ Creates tree drawing. Requires L<SVG>;
            object into a drawing.
  Returns : SCALAR
  Args    :
- Notes   : This will only work if you have the SVG module
-           from CPAN installed on your system.
 
 =cut
 
