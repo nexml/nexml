@@ -26,7 +26,6 @@ lib\/Bio\/Phylo\/PhyloWS*
 lib\/Bio\/Phylo\/Models*
 t\/27-phylows\.t
 t\/33-models\.t
-.hyloxml*
 _Inline*
 Doxyfile
 lib\/Bio\/Tools\/Run\/MrBayes\.pm
@@ -38,3 +37,6 @@ lib\/util*
 README.html
 build.sh
 inheritance*
+podinherit*
+TODO\.txt
+experimental*
