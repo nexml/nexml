@@ -396,13 +396,17 @@ Validates the object's contents
  Function: Validates the object's contents
  Returns : True or throws Bio::Phylo::Util::Exceptions::InvalidData
  Args    : None
- Comments: This is an interface method, i.e. this class doesn't
+ Comments: This is an abstract method, i.e. this class doesn't
            implement the method, child classes have to
 
 =cut
 
     sub validate {
-    	throw 'NotImplemented' => 'Not implemented!';
+    	shift->_validate;
+    }
+    
+    sub _validate {
+	throw 'NotImplemented' => 'Not implemented!';
     }
     
     sub _cleanup {
