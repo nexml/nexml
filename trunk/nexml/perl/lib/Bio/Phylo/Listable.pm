@@ -226,7 +226,7 @@ Prunes the container's contents specified by an array reference of indices.
 
  Type    : Mutator
  Title   : prune_entities
- Usage   : $list->keep_entities([9,7,7,6]);
+ Usage   : $list->prune_entities([9,7,7,6]);
  Function: Prunes a subset of contents
  Returns : A Bio::Phylo::Listable object.
  Args    : An array reference of indices
