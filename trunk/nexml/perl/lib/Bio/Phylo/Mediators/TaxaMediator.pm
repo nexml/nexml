@@ -26,8 +26,7 @@ Bio::Phylo::Mediators::TaxaMediator - Mediator for links between taxa and other 
 This module manages links between taxon objects and other objects linked to 
 them. It is an implementation of the Mediator design pattern (e.g. see 
 L<http://www.atug.com/andypatterns/RM.htm>,
-L<http://home.earthlink.net/~huston2/dp/mediator.html>,
-L<http://sern.ucalgary.ca/courses/SENG/443/W02/assignments/Mediator/>).
+L<http://home.earthlink.net/~huston2/dp/mediator.html>).
 
 Methods defined in this module are meant only for internal usage by Bio::Phylo.
 
