@@ -143,7 +143,7 @@ sub _to_string {
                 $string = $n->get_name . ':' . $n->get_branch_length . ';';
             }
             else {
-                $string = $n->get_name ? $n->get_name . ';' : ';';
+                $string = defined $n->get_name ? $n->get_name . ';' : ';';
             }
         }
         elsif ( !$n->get_previous_sister ) {
