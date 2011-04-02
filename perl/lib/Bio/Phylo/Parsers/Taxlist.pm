@@ -1,9 +1,7 @@
 # $Id$
 package Bio::Phylo::Parsers::Taxlist;
 use strict;
-use Bio::Phylo::Parsers::Abstract;
-use vars qw(@ISA);
-@ISA=qw(Bio::Phylo::Parsers::Abstract);
+use base 'Bio::Phylo::Parsers::Abstract';
 
 =head1 NAME
 

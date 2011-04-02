@@ -1,19 +1,13 @@
 # $Id$
 package Bio::Phylo::IO;
-use Bio::Phylo ();
-use Bio::Phylo::Util::CONSTANT qw(looks_like_class looks_like_hash);
+use strict;
+use base 'Exporter';
+use Bio::Phylo;
+use Bio::Phylo::Util::CONSTANT '/looks_like/';
 use Bio::Phylo::Util::Exceptions 'throw';
 use IO::File;
-use strict;
 
-BEGIN {
-	use Exporter ();
-	use vars qw(@ISA @EXPORT_OK);
-
-	# classic subroutine exporting
-	@ISA       = qw(Exporter);
-	@EXPORT_OK = qw(&parse &unparse);
-}
+our @EXPORT_OK = qw'parse unparse';
 
 =head1 NAME
 

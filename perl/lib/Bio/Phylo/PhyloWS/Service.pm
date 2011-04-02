@@ -1,24 +1,12 @@
 package Bio::Phylo::PhyloWS::Service;
 use strict;
+use base 'Bio::Phylo::PhyloWS';
 use Bio::Phylo::Factory;
-use Bio::Phylo::PhyloWS ();
 use Bio::Phylo::IO 'unparse';
-use Bio::Phylo::Util::CONSTANT qw(looks_like_hash _HTTP_SC_SEE_ALSO_);
+use Bio::Phylo::Util::CONSTANT qw'looks_like_hash _HTTP_SC_SEE_ALSO_';
 use Bio::Phylo::Util::Exceptions 'throw';
+use Bio::Phylo::Util::Dependency 'URI::Escape';
 
-use vars '@ISA';
-@ISA=qw(Bio::Phylo::PhyloWS);
-
-my @dependencies = qw(URI::Escape);
-for my $class ( @dependencies ) {
-    my $path = $class;
-    $path =~ s|::|/|g;
-    $path .= '.pm';
-    eval { require $path };
-    if ( $@ ) {
-        throw 'ExtensionError' => "Error loading the $class extension: $@";
-    }
-}
 
 {
     my $fac = Bio::Phylo::Factory->new;

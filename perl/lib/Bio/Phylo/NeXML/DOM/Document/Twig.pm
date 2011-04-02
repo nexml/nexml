@@ -23,18 +23,11 @@ Mark A. Jensen ( maj -at- fortinbras -dot- us )
 
 package Bio::Phylo::NeXML::DOM::Document::Twig;
 use strict;
+use Bio::Phylo::Util::Exceptions 'throw';
+use Bio::Phylo::Util::Dependency 'XML::Twig';
 use Bio::Phylo::NeXML::DOM::Document;
-use Bio::Phylo::Util::Exceptions qw(throw);
-use Bio::Phylo::Util::CONSTANT qw(looks_like_instance);
-use vars qw(@ISA);
-
-BEGIN {
-    eval { require XML::Twig };
-    if ( $@ ) {
-	throw 'ExtensionError' => "Failed to load XML::Twig: $@";
-    }
-    @ISA = qw( Bio::Phylo::NeXML::DOM::Document XML::Twig );
-}
+use Bio::Phylo::Util::CONSTANT 'looks_like_instance';
+use base qw'Bio::Phylo::NeXML::DOM::Document XML::Twig';
 
 =head2 Constructor
 

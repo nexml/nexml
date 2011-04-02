@@ -1,8 +1,8 @@
 # $Id$
 package Bio::Phylo::NeXML::DOM::Document;
 use strict;
-use Bio::Phylo::Util::Exceptions qw(throw);
-use Bio::Phylo::Util::CONSTANT qw(_DOCUMENT_ looks_like_hash looks_like_class);
+use Bio::Phylo::Util::Exceptions 'throw';
+use Bio::Phylo::Util::CONSTANT qw'_DOCUMENT_ /looks_like/';
 
 =head1 NAME
 

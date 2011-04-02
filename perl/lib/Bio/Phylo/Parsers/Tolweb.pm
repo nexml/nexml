@@ -1,16 +1,9 @@
 package Bio::Phylo::Parsers::Tolweb;
 use strict;
-use warnings;
-use Bio::Phylo::Parsers::Abstract;
+use base 'Bio::Phylo::Parsers::Abstract';
 use Bio::Phylo::Util::Exceptions 'throw';
 use Bio::Phylo::Util::CONSTANT qw'looks_like_instance :namespaces';
-use vars qw(@ISA);
-@ISA = qw(Bio::Phylo::Parsers::Abstract);
-
-eval { require XML::Twig };
-if ( $@ ) {
-	throw 'ExtensionError' => "Error loading the XML::Twig extension: $@";
-}
+use Bio::Phylo::Util::Dependency 'XML::Twig';
 
 =head1 NAME
 

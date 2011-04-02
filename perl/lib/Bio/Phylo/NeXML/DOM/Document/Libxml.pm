@@ -23,21 +23,11 @@ Mark A. Jensen ( maj -at- fortinbras -dot- us )
 
 package Bio::Phylo::NeXML::DOM::Document::Libxml;
 use strict;
-use Bio::Phylo::NeXML::DOM::Document ();
-use Bio::Phylo::Util::CONSTANT qw(looks_like_instance);
+use Bio::Phylo::Util::Exceptions 'throw';
+use Bio::Phylo::Util::Dependency 'XML::LibXML';
+use Bio::Phylo::Util::CONSTANT 'looks_like_instance';
 use Bio::Phylo::NeXML::DOM::Element::Libxml (); # for blessing 
-use Bio::Phylo::Util::Exceptions qw(throw);
-use vars qw(@ISA);
-
-BEGIN {
-    # XML::LibXML::Document is a package within the same file as XML::LibXML,
-    # no need to require-test it separately
-    eval { require XML::LibXML };
-    if ($@) {		
-	throw 'ExtensionError' => "Failed to load XML::LibXML::Document: $@";
-    }
-    @ISA = qw( Bio::Phylo::NeXML::DOM::Document XML::LibXML::Document );
-}
+use base qw'Bio::Phylo::NeXML::DOM::Document XML::LibXML::Document';
 
 
 =head2 Constructor

@@ -1,15 +1,12 @@
 # $Id$
 package Bio::Phylo::Listable;
 use strict;
-use vars qw(@ISA);
-use Scalar::Util qw(blessed weaken);
+use base 'Bio::Phylo::NeXML::Writable';
+use Scalar::Util qw'blessed weaken';
 use Bio::Phylo::Util::Exceptions 'throw';
-use Bio::Phylo::NeXML::Writable ();
-use Bio::Phylo::Util::CONSTANT qw(:all);
-use Bio::Phylo::Factory ();
+use Bio::Phylo::Util::CONSTANT qw':all';
+use Bio::Phylo::Factory;
 
-# classic @ISA manipulation, not using 'base'
-@ISA = qw(Bio::Phylo::NeXML::Writable);
 {
 
 	my $logger = __PACKAGE__->get_logger;

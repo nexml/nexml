@@ -1,19 +1,13 @@
 #$Id$
 package Bio::Phylo::NeXML::DOM::Element::Twig;
 use strict;
-use Bio::Phylo::Util::CONSTANT qw(looks_like_instance looks_like_hash);
-use Bio::Phylo::NeXML::DOM::Element ();
-use Bio::Phylo::Util::Exceptions qw(throw);
-use vars qw(@ISA %extant_ids);
+use Bio::Phylo::Util::Exceptions 'throw';
+use Bio::Phylo::Util::Dependency 'XML::Twig';
+use base qw'Bio::Phylo::NeXML::DOM::Element XML::Twig::Elt';
+use Bio::Phylo::Util::CONSTANT '/looks_like/';
 use Scalar::Util 'blessed';
 
-BEGIN {
-    eval { require XML::Twig };
-    if ($@) {
-	throw 'ExtensionError' => "Failed to load XML::Twig: $@";
-    }
-    @ISA = qw( Bio::Phylo::NeXML::DOM::Element XML::Twig::Elt );
-}
+our %extant_ids;
 
 =head1 NAME
 

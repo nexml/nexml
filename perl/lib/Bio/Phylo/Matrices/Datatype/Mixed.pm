@@ -1,11 +1,9 @@
 # $Id$
 package Bio::Phylo::Matrices::Datatype::Mixed;
 use strict;
-use Bio::Phylo::Util::CONSTANT qw(looks_like_instance looks_like_implementor);
-use Bio::Phylo::Matrices::Datatype ();
+use base 'Bio::Phylo::Matrices::Datatype';
+use Bio::Phylo::Util::CONSTANT '/looks_like/';
 use Bio::Phylo::Util::Exceptions 'throw';
-use vars '@ISA';
-@ISA = qw(Bio::Phylo::Matrices::Datatype);
 
 {
 

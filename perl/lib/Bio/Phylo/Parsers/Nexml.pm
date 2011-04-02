@@ -1,18 +1,12 @@
 package Bio::Phylo::Parsers::Nexml;
 use strict;
-use Bio::Phylo::Parsers::Abstract;
+use base 'Bio::Phylo::Parsers::Abstract';
 use Bio::Phylo::Util::Exceptions 'throw';
-use Bio::Phylo::Factory;
 use Bio::Phylo::Util::CONSTANT qw'looks_like_instance _NEXML_VERSION_';
-use Bio::Phylo::NeXML::Writable ();
+use Bio::Phylo::Util::Dependency 'XML::Twig';
+use Bio::Phylo::Factory;
+use Bio::Phylo::NeXML::Writable;
 use Bio::Phylo::NeXML::Meta::XMLLiteral;
-use vars qw(@ISA);
-@ISA = qw(Bio::Phylo::Parsers::Abstract);
-
-eval { require XML::Twig };
-if ( $@ ) {
-	throw 'ExtensionError' => "Error loading the XML::Twig extension: $@";
-}
 
 =head1 NAME
 

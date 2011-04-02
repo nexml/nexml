@@ -23,19 +23,12 @@ Mark A. Jensen ( maj -at- fortinbras -dot- us )
 
 package Bio::Phylo::NeXML::DOM::Element::Libxml;
 use strict;
-use Bio::Phylo::NeXML::DOM::Element ();
-use Bio::Phylo::Util::Exceptions qw(throw);
-use Bio::Phylo::Util::CONSTANT qw(looks_like_instance looks_like_hash);
-use vars qw(@ISA);
+use Bio::Phylo::Util::Exceptions 'throw';
+use Bio::Phylo::Util::CONSTANT '/looks_like/';
+use Bio::Phylo::Util::Dependency 'XML::LibXML';
+use base qw'Bio::Phylo::NeXML::DOM::Element XML::LibXML::Element';
 
-BEGIN {
-    eval { require XML::LibXML; XML::LibXML->import(':libxml') };
-    if ($@) {
-	throw 'ExtensionError' => "Failed to load XML::LibXML: $@";
-    }
-    @ISA = qw( Bio::Phylo::NeXML::DOM::Element XML::LibXML::Element );
-}
-
+XML::LibXML->import(':libxml');
 
 =head2 Constructor
 
@@ -279,7 +272,7 @@ sub get_text {
     my ($self, @args) = @_;
     my $text;
     for ($self->childNodes) {
-	$text .= $_->nodeValue if $_->nodeType == XML_TEXT_NODE;
+	$text .= $_->nodeValue if $_->nodeType == XML::LibXML::XML_TEXT_NODE;
     }
     return $text;
 }
@@ -300,7 +293,7 @@ sub get_text {
 sub clear_text {
     my ($self, @args) = @_;
     my @res = map { 
-	$_->nodeType == XML_TEXT_NODE ? $self->removeChild($_) : ()
+	$_->nodeType == XML::LibXML::XML_TEXT_NODE ? $self->removeChild($_) : ()
     } $self->childNodes;
     return !! scalar(@res);
 }

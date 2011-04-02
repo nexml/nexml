@@ -1,10 +1,9 @@
 package Bio::Phylo::Forest::DrawTree;
 use strict;
-use Bio::Phylo::Forest::Tree ();
-use Bio::Phylo::Forest::DrawNode ();
-use Bio::Phylo::Util::CONSTANT qw(looks_like_hash);
-use vars '@ISA';
-@ISA=qw(Bio::Phylo::Forest::Tree);
+use base 'Bio::Phylo::Forest::Tree';
+use Bio::Phylo::Forest::DrawNode;
+use Bio::Phylo::Util::CONSTANT 'looks_like_hash';
+
 {
 	# @fields array necessary for object destruction
 	my @fields = \( 

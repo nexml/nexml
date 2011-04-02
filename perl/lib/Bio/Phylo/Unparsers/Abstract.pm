@@ -1,9 +1,7 @@
 package Bio::Phylo::Unparsers::Abstract;
 use strict;
-use Bio::Phylo::IO ();
+use base 'Bio::Phylo::IO';
 use Bio::Phylo::Util::Logger;
-use vars qw(@ISA);
-@ISA=qw(Bio::Phylo::IO);
 
 my $logger = Bio::Phylo::Util::Logger->new;
 

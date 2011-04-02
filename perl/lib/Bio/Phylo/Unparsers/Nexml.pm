@@ -2,16 +2,10 @@
 # Subversion: $Rev: 190 $
 package Bio::Phylo::Unparsers::Nexml;
 use strict;
-use Bio::Phylo::Unparsers::Abstract;
-use Bio::Phylo::Util::CONSTANT qw(:objecttypes looks_like_object);
+use base 'Bio::Phylo::Unparsers::Abstract';
+use Bio::Phylo::Util::CONSTANT qw':objecttypes looks_like_object';
 use Bio::Phylo::Util::Exceptions 'throw';
-use vars qw(@ISA);
-@ISA = qw(Bio::Phylo::Unparsers::Abstract);
-
-eval { require XML::Twig };
-if ( $@ ) {
-	throw 'ExtensionError' => "Error loading the XML::Twig extension: $@";
-}
+use Bio::Phylo::Util::Dependency 'XML::Twig';
 
 =head1 NAME
 

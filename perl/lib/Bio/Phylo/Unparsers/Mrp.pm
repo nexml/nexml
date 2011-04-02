@@ -1,9 +1,7 @@
 # $Id$
 package Bio::Phylo::Unparsers::Mrp;
 use strict;
-use Bio::Phylo::Unparsers::Abstract;
-use vars qw(@ISA);
-@ISA=qw(Bio::Phylo::Unparsers::Abstract);
+use base 'Bio::Phylo::Unparsers::Abstract';
 
 =head1 NAME
 

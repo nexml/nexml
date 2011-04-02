@@ -1,12 +1,8 @@
 # $Id$
 package Bio::Phylo::Parsers::Fasta;
 use strict;
+use base 'Bio::Phylo::Parsers::Abstract';
 use Bio::Phylo::Util::Exceptions 'throw';
-use Bio::Phylo::Parsers::Abstract;
-use vars qw(@ISA);
-
-# classic @ISA manipulation, not using 'base'
-@ISA = qw(Bio::Phylo::Parsers::Abstract);
 
 =head1 NAME
 

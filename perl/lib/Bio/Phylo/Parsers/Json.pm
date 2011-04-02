@@ -1,18 +1,10 @@
 # $Id$
 package Bio::Phylo::Parsers::Json;
 use strict;
+use base 'Bio::Phylo::Parsers::Abstract';
 use Bio::Phylo::IO 'parse';
-use Bio::Phylo::Parsers::Abstract;
 use Bio::Phylo::Util::Exceptions 'throw';
-use vars qw(@ISA);
-
-# classic @ISA manipulation, not using 'base'
-@ISA = qw(Bio::Phylo::Parsers::Abstract);
-
-eval { require XML::XML2JSON };
-if ( $@ ) {
-    throw 'ExtensionError' => "Error loading the XML::XML2JSON extension: $@";
-}
+use Bio::Phylo::Util::Dependency 'XML::XML2JSON';
 
 =head1 NAME
 

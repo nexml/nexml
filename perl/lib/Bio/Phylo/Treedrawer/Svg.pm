@@ -1,27 +1,19 @@
 # $Id$
 package Bio::Phylo::Treedrawer::Svg;
 use strict;
+use base 'Bio::Phylo::Treedrawer::Abstract';
 use Bio::Phylo::Util::CONSTANT 'looks_like_hash';
 use Bio::Phylo::Util::Exceptions 'throw';
+use Bio::Phylo::Util::Dependency 'SVG';
 use Bio::Phylo::Util::Logger;
-use Bio::Phylo::Treedrawer::Abstract;
-use vars '@ISA';
-@ISA=qw(Bio::Phylo::Treedrawer::Abstract);
 
-my $logger = Bio::Phylo::Util::Logger->new;
-
-eval { require SVG };
-if ( $@ ) {
-	throw 'ExtensionError' => "Error loading the SVG extension: $@";
-}
 SVG->import(
     '-nocredits' => 1,
     '-inline'    => 1,
     '-indent'    => '    ',
 );
-
+my $logger = Bio::Phylo::Util::Logger->new;
 my $PI = '3.14159265358979323846';
-
 my %colors;
 
 =head1 NAME

@@ -1,11 +1,10 @@
 # $Id$
 package Bio::Phylo::Taxa;
 use strict;
-use Bio::Phylo::Listable ();
-use Bio::Phylo::Util::CONSTANT qw(_NONE_ _TAXA_ _FOREST_ _MATRIX_ _PROJECT_ looks_like_object);
+use base 'Bio::Phylo::Listable';
+use Bio::Phylo::Util::CONSTANT qw':objecttypes looks_like_object';
 use Bio::Phylo::Mediators::TaxaMediator;
 use Bio::Phylo::Factory;
-use vars qw(@ISA);
 
 =begin comment
 
@@ -15,8 +14,6 @@ This class has no internal state, no cleanup is necessary.
 
 =cut
 
-# classic @ISA manipulation, not using 'base'
-@ISA = qw(Bio::Phylo::Listable);
 {
 
 	my $logger    = __PACKAGE__->get_logger;
