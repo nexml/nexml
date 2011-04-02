@@ -1,11 +1,8 @@
 package Bio::Phylo::Unparsers::Phylip;
 use strict;
-use Bio::Phylo::Unparsers::Abstract;
+use base 'Bio::Phylo::Unparsers::Abstract';
 use Bio::Phylo::Util::Exceptions 'throw';
-use Bio::Phylo::Util::CONSTANT qw(:objecttypes looks_like_object);
-use vars qw(@ISA);
-
-@ISA=qw(Bio::Phylo::Unparsers::Abstract);
+use Bio::Phylo::Util::CONSTANT qw':objecttypes looks_like_object';
 
 =head1 NAME
 

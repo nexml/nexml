@@ -1,12 +1,6 @@
 package Bio::Phylo::Models::Substitution::Dna::HKY85;
-use Bio::Phylo::Models::Substitution::Dna::K80;
-use Bio::Phylo::Models::Substitution::Dna::F81;
 use strict;
-use vars '@ISA';
-@ISA = qw(
-	Bio::Phylo::Models::Substitution::Dna::K80
-	Bio::Phylo::Models::Substitution::Dna::F81
-);
+use base qw'Bio::Phylo::Models::Substitution::Dna::K80 Bio::Phylo::Models::Substitution::Dna::F81';
 
 my %purines = ( 'A' => 1, 'G' => 1 );
 

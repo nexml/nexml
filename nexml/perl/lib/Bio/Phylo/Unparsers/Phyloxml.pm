@@ -1,16 +1,10 @@
 # $Id$
 package Bio::Phylo::Unparsers::Phyloxml;
 use strict;
-use Bio::Phylo::Unparsers::Abstract;
+use base 'Bio::Phylo::Unparsers::Abstract';
 use Bio::Phylo::Util::Exceptions 'throw';
 use Bio::Phylo::Util::CONSTANT qw':objecttypes looks_like_object';
-use vars qw(@ISA);
-@ISA=qw(Bio::Phylo::Unparsers::Abstract);
-
-eval { require XML::Twig };
-if ( $@ ) {
-    throw 'ExtensionError' => "Error loading the XML::Twig extension: $@";
-}
+use Bio::Phylo::Util::Dependency 'XML::Twig';
 
 my $phyloxml_ns = 'http://www.phyloxml.org/1.10/terms#';
 

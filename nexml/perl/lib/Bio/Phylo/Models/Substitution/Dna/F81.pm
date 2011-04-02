@@ -1,8 +1,6 @@
 package Bio::Phylo::Models::Substitution::Dna::F81;
-use Bio::Phylo::Models::Substitution::Dna;
 use strict;
-use vars '@ISA';
-@ISA = qw(Bio::Phylo::Models::Substitution::Dna);
+use base 'Bio::Phylo::Models::Substitution::Dna';
 
 # subst rate
 sub get_rate {

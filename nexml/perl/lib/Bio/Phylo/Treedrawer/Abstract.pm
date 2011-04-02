@@ -1,8 +1,7 @@
 package Bio::Phylo::Treedrawer::Abstract;
+use strict;
 use Bio::Phylo::Util::Exceptions 'throw';
 use Bio::Phylo::Util::Logger ':levels';
-use strict;
-use warnings;
 
 my $logger = Bio::Phylo::Util::Logger->new;
 

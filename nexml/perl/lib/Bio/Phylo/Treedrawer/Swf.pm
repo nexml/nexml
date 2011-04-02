@@ -1,18 +1,13 @@
 package Bio::Phylo::Treedrawer::Swf;
 use strict;
+use base 'Bio::Phylo::Treedrawer::Abstract';
 use Bio::Phylo::Util::Exceptions 'throw';
 use Bio::Phylo::Util::CONSTANT 'looks_like_hash';
+use Bio::Phylo::Util::Dependency 'SWF::Builder';
 use Bio::Phylo::Util::Logger;
-use Bio::Phylo::Treedrawer::Abstract;
-use vars qw(@ISA $FONT);
-@ISA=qw(Bio::Phylo::Treedrawer::Abstract);
 
+our $FONT;
 my $logger = Bio::Phylo::Util::Logger->new;
-
-eval { require SWF::Builder };
-if ( $@ ) {
-    throw 'ExtensionError' => "Error loading the SWF::Builder extension: $@";
-}
 my $PI = '3.14159265358979323846';
 my %colors;
 

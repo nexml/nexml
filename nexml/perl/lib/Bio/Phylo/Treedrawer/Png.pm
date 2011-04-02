@@ -1,18 +1,12 @@
 package Bio::Phylo::Treedrawer::Png;
 use strict;
+use base 'Bio::Phylo::Treedrawer::Abstract';
 use Bio::Phylo::Util::Exceptions 'throw';
 use Bio::Phylo::Util::CONSTANT 'looks_like_hash';
+use Bio::Phylo::Util::Dependency qw'GD::Simple GD::Polyline GD::Polygon GD';
 use Bio::Phylo::Util::Logger;
-use Bio::Phylo::Treedrawer::Abstract;
-use vars qw(@ISA);
-@ISA=qw(Bio::Phylo::Treedrawer::Abstract);
 
 my $logger = Bio::Phylo::Util::Logger->new;
-
-eval { require GD::Simple; require GD::Polyline; require GD::Polygon; require GD };
-if ( $@ ) {
-    throw 'ExtensionError' => "Error loading the GD extension: $@";
-}
 my $PI = '3.14159265358979323846';
 my %colors;
 my $whiteHex = 'FFFFFF';

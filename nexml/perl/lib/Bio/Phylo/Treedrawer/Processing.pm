@@ -1,10 +1,8 @@
 package Bio::Phylo::Treedrawer::Processing;
 use strict;
+use base 'Bio::Phylo::Treedrawer::Abstract';
 use Bio::Phylo::Util::Logger;
 use Bio::Phylo::Util::Exceptions 'throw';
-use Bio::Phylo::Treedrawer::Abstract;
-use vars '@ISA';
-@ISA=qw(Bio::Phylo::Treedrawer::Abstract);
 
 =head1 NAME
 
@@ -22,6 +20,8 @@ learn how to create tree drawings.
 my $logger = Bio::Phylo::Util::Logger->new;
 my $black = 0;
 my $white = 255;
+my %colors;
+my $PI = 3.14159265;
 
 sub _new {
     my $class = shift;
@@ -33,16 +33,76 @@ sub _new {
 
 sub _draw_pies {
     my $self = shift;
-    $logger->warn(ref($self) . " can't draw pies");
+    my $api = $self->_api;
+    $self->_tree->visit_level_order(
+        sub{
+            my $node = shift;
+            if ( not $node->get_collapsed ) {
+                my $cx = sprintf("%.3f", $node->get_x);
+                my $cy = sprintf("%.3f", $node->get_y);
+                my $r;
+                if ( $node->is_internal ) {
+                    $r = sprintf("%.3f", $self->_drawer->get_node_radius($node));
+                }
+                else {
+                    $r = sprintf("%.3f", $self->_drawer->get_tip_radius($node));
+                }
+                if ( my $pievalues = $node->get_generic('pie') ) {
+                    my @keys  = keys %{$pievalues};
+                    my $start = 0;
+                    my $total;
+                    $total += $pievalues->{$_} for @keys;
+                    for my $i ( 0 .. $#keys ) {
+                        next if not $pievalues->{ $keys[$i] };
+                        my $slice = $pievalues->{ $keys[$i] } / $total * 2 * $PI;
+                        my $color = $colors{ $keys[$i] };
+                        if ( not $color ) {
+                            $colors{ $keys[$i] } = $color = int( ( $i / $#keys ) * 256 );
+                        }
+                        my $stop = $start + $slice;
+                        $$api .= "    drawArc($cx,$cy,$r,0,1,$color,$start,$stop);\n";
+                        $start += $slice;
+                    }
+                }
+            }
+        }
+    );
 }
 
 sub _draw_legend {
     my $self = shift;
-    $logger->warn(ref($self) . " can't draw a legend");    
+    if (%colors) {
+        my $api  = $self->_api;
+        my $tree = $self->_tree;
+        my $draw = $self->_drawer;
+        my @keys = keys %colors;
+        my $increment =
+          ( $tree->get_tallest_tip->get_x -
+              $tree->get_root->get_x ) / scalar @keys;
+        my $x = sprintf("%.3f", $tree->get_root->get_x + 5 );
+        foreach my $key (@keys) {
+            my $y      = sprintf("%.3f", $draw->get_height - 90 );
+            my $width  = sprintf("%.3f", $increment - 10 );
+            my $height = sprintf("%.3f", 10.0 );
+            my $color  = int $colors{$key};
+            $$api .= "    drawRectangle($x,$y,$width,$height,$color);\n";
+	    $self->_draw_text(
+		'-x' => int( $x ),
+		'-y' => int( $draw->get_height - 60 ),
+		'-text' => $key || ' ',
+	    );
+            $x += $increment;
+        }
+	$self->_draw_text(
+	    '-x' => int( $tree->get_tallest_tip->get_x + $draw->get_text_horiz_offset ),
+	    '-y' => int( $draw->get_height - 80 ),
+	    '-text' => 'Node value legend',
+		
+	);
+    }
 }
 
 sub _finish {
-    $logger->debug("finishing");
     my $self = shift;
     my $commands = $self->_api;
     my $tmpl = do { local $/; <DATA> };
@@ -58,7 +118,6 @@ sub _finish {
 }
 
 sub _draw_text {
-    $logger->debug("drawing text @_");
     my $self = shift;
     my %args = @_;
     my ( $x, $y, $text, $url, $stroke ) = @args{qw(-x -y -text -url -color)};
@@ -68,7 +127,6 @@ sub _draw_text {
 }
 
 sub _draw_line {
-    $logger->debug("drawing line @_");
     my $self = shift;
     my %args = @_;
     my @keys = qw(-x1 -y1 -x2 -y2 -width -color);
@@ -80,7 +138,6 @@ sub _draw_line {
 }
 
 sub _draw_curve {
-    $logger->debug("drawing curve @_");
     my $self = shift;
     my $api = $self->_api;
     my %args = @_;
@@ -96,7 +153,6 @@ sub _draw_curve {
 }
 
 sub _draw_multi {
-    $logger->debug("drawing multi @_");
     my $self = shift;
     my $api = $self->_api;    
     my %args = @_;
@@ -108,7 +164,6 @@ sub _draw_multi {
 }
 
 sub _draw_triangle {
-    $logger->debug("drawing multi @_");
     my $self = shift;
     my $api = $self->_api;    
     my %args = @_;
@@ -124,7 +179,6 @@ sub _draw_triangle {
 }
 
 sub _draw_circle {
-    $logger->debug("drawing circle @_");
     my $self = shift;
     my $api = $self->_api;
     my %args = @_;
@@ -182,7 +236,6 @@ __DATA__
 ArrayList coordinates = new ArrayList();
 
 void mouseClicked() {
-    println("mouseX = " + mouseX + " mouseY = " + mouseY);
     for (int i = coordinates.size()-1; i >= 0; i--) {
         HashMap co = (HashMap) coordinates.get(i);
         int minX = (Integer) co.get("minX");
@@ -230,7 +283,6 @@ void drawCircle(int x, int y, int radius, int lineColor, int lineWidth, int fill
         coordinate.put("minY",y-radius);
         coordinate.put("maxY",y+radius);
         coordinates.add(coordinate);
-        println(coordinate);
     }
 }
 
@@ -253,6 +305,25 @@ void drawCurve(float x1, float y1, float x3, float y3, int lineColor, int lineWi
     arc(x3,y1,ellipseWidth,ellipseHeight,start,stop);    
     strokeWeight(1);
     noStroke();
+}
+
+void drawArc(float x, float y, float radius, int lineColor, int lineWidth, int fillColor, float start, float stop) {
+    fill(fillColor);
+    stroke(lineColor);
+    strokeWeight(lineWidth);
+    arc(x,y,radius,radius,start,stop);
+    strokeWeight(1);
+    noStroke();
+    noFill();    
+}
+
+void drawRectangle(float x, float y, float width, float height, int fillColor) {
+    fill(fillColor);
+    stroke(0);
+    strokeWeight(1);
+    rect(x,y,width,height);
+    noStroke();
+    noFill();      
 }
 
 void drawTriangle(float x1, float y1, float x2, float y2, float x3, float y3, int lineColor, int lineWidth, int fillColor) {

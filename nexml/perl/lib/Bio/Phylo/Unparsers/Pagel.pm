@@ -1,11 +1,8 @@
 # $Id$
 package Bio::Phylo::Unparsers::Pagel;
 use strict;
-use Bio::Phylo::Forest::Tree ();
-use Bio::Phylo::Unparsers::Abstract;
-use vars qw(@ISA);
-
-@ISA=qw(Bio::Phylo::Unparsers::Abstract);
+use base 'Bio::Phylo::Unparsers::Abstract';
+use Bio::Phylo::Forest::Tree;
 
 =head1 NAME
 

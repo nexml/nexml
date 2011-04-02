@@ -1,36 +1,15 @@
 # $Id$
 package Bio::Phylo::Forest::Tree;
 use strict;
-use Bio::Phylo::Listable ();
-use Bio::Phylo::Forest::Node ();
-use Bio::Phylo::IO qw(unparse);
+use base 'Bio::Phylo::Listable';
 use Bio::Phylo::Util::Exceptions 'throw';
-use Bio::Phylo::Util::CONSTANT qw(
-	_TREE_
-	_FOREST_
-	_DOMCREATOR_
-	_TAXA_
-	_TAXON_
-	looks_like_number
-	looks_like_hash
-	looks_like_object
-	looks_like_implementor
-);
+use Bio::Phylo::Util::CONSTANT qw'/looks_like/ :objecttypes';
+use Bio::Phylo::Util::OptionalInterface 'Bio::Tree::TreeI';
+use Bio::Phylo::Forest::Node;
+use Bio::Phylo::IO 'unparse';
 use Bio::Phylo::Factory;
-use Scalar::Util qw(blessed);
-use List::Util qw(sum);
-use vars qw(@ISA);
-
-# classic @ISA manipulation, not using 'base'
-@ISA = qw(Bio::Phylo::Listable);
-
-eval { require Bio::Tree::TreeI };
-if ( not $@ ) {
-	push @ISA, 'Bio::Tree::TreeI';
-}
-else {
-	undef($@);
-}
+use Scalar::Util 'blessed';
+use List::Util 'sum';
 
 my $LOADED_WRAPPERS = 0;
 

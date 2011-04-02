@@ -1,10 +1,8 @@
 # $Id$
 package Bio::Phylo::Matrices;
 use strict;
-#use warnings FATAL => 'all';
-use Bio::Phylo::Listable ();
-use Bio::Phylo::Util::CONSTANT qw(_NONE_ _MATRICES_);
-use vars qw(@ISA);
+use base 'Bio::Phylo::Listable';
+use Bio::Phylo::Util::CONSTANT qw'_NONE_ _MATRICES_';
 
 =begin comment
 
@@ -13,9 +11,6 @@ This class has no internal state, no cleanup is necessary.
 =end comment
 
 =cut
-
-# classic @ISA manipulation, not using 'base'
-@ISA = qw(Bio::Phylo::Listable);
 
 {
 	my $TYPE      = _MATRICES_;

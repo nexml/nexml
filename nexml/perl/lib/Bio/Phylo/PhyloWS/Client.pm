@@ -1,23 +1,12 @@
 package Bio::Phylo::PhyloWS::Client;
 use strict;
+use base 'Bio::Phylo::PhyloWS';
 use Bio::Phylo::IO 'parse';
-use Bio::Phylo::PhyloWS ();
 use Bio::Phylo::Factory;
 use Bio::Phylo::Util::Logger;
 use Bio::Phylo::Util::Exceptions 'throw';
 use Bio::Phylo::Util::CONSTANT 'looks_like_hash';
-
-use vars qw(@ISA);
-@ISA=qw(Bio::Phylo::PhyloWS);
-
-eval { require LWP::UserAgent };
-if ( $@ ) {
-    throw 'ExtensionError' => "Error loading the LWP::UserAgent extension: $@";
-}
-eval { require XML::Twig };
-if ( $@ ) {
-    throw 'ExtensionError' => "Error loading the XML::Twig extension: $@";
-}
+use Bio::Phylo::Util::Dependency qw'LWP::UserAgent XML::Twig';
 
 {            
     my @fields = \( my ( %ua ) );

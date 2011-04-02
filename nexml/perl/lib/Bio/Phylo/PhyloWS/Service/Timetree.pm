@@ -1,28 +1,15 @@
 package Bio::Phylo::PhyloWS::Service::Timetree;
 use strict;
-use warnings;
+use base 'Bio::Phylo::PhyloWS::Service';
 use Bio::Phylo::IO 'parse';
 use Bio::Phylo::Factory;
-use Bio::Phylo::PhyloWS::Service ();
 use Bio::Phylo::Util::Logger;
 use Bio::Phylo::Util::Exceptions 'throw';
 use Bio::Phylo::Util::CONSTANT qw'looks_like_hash looks_like_instance';
+use Bio::Phylo::Util::Dependency qw'CQL::Parser LWP::UserAgent URI::Escape HTML::Tree HTML::Entities';
 use constant URL => 'http://timetree.org/time_e_query.php?';
-use vars '@ISA';
-@ISA=qw(Bio::Phylo::PhyloWS::Service);
 
 # http://localhost/nexml/service/timetree/phylows/tree/find?query=dcterms.title=Homo%20and%20dcterms.title=Pan
-
-my @dependencies = qw(CQL::Parser LWP::UserAgent URI::Escape HTML::Tree HTML::Entities);
-for my $class ( @dependencies ) {
-    my $path = $class;
-    $path =~ s|::|/|g;
-    $path .= '.pm';
-    eval { require $path };
-    if ( $@ ) {
-        throw 'ExtensionError' => "Error loading the $class extension: $@";
-    }
-}
 
 {
 

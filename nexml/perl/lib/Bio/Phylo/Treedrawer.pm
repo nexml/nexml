@@ -2,15 +2,9 @@
 package Bio::Phylo::Treedrawer;
 use strict;
 use Bio::Phylo::Util::Logger;
-use Bio::Phylo::Forest::DrawTree ();
+use Bio::Phylo::Forest::DrawTree;
 use Bio::Phylo::Util::Exceptions 'throw';
-use Bio::Phylo::Util::CONSTANT qw(
-    _TREE_
-    looks_like_number
-    looks_like_object
-    looks_like_hash
-    looks_like_class
-);
+use Bio::Phylo::Util::CONSTANT qw'_TREE_ /looks_like/';
 
 my @fields = qw(
 	WIDTH 
@@ -894,7 +888,7 @@ sub _get_scaley { shift->{'_SCALEY'} }
 
 =item draw()
 
-Creates tree drawing. Requires L<SVG>;
+Creates tree drawing.
 
  Type    : Unparsers
  Title   : draw
@@ -992,8 +986,6 @@ have already calculated the node coordinates separately.
            object into a drawing.
  Returns : SCALAR
  Args    :
- Notes   : This will only work if you have the SVG module
-           from CPAN installed on your system.
 
 =cut
 

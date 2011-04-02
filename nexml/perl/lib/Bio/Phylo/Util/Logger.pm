@@ -1,25 +1,15 @@
 package Bio::Phylo::Util::Logger;
 use strict;
+use base 'Exporter';
 use File::Spec;
 #use Filter::Simple;
 use Bio::Phylo::Util::CONSTANT qw'looks_like_hash looks_like_instance';
 use Bio::Phylo::Util::Exceptions 'throw';
 use Config;
-use vars qw(
-	$volume
-	$class_dir
-	$file
-	$VERBOSE
-	$AUTOLOAD
-	$TRACEBACK
-	@ISA
-	@EXPORT_OK
-	%EXPORT_TAGS
-);
+
+our ( $volume, $class_dir, $file, $VERBOSE, $AUTOLOAD, $TRACEBACK, @EXPORT_OK, %EXPORT_TAGS);
 
 BEGIN {
-	require Exporter;
-	@ISA = qw(Exporter);
 	@EXPORT_OK = qw(DEBUG INFO WARN ERROR FATAL);
 	%EXPORT_TAGS = ( 'levels' => [ @EXPORT_OK ] );
 	my $class_file = __FILE__;

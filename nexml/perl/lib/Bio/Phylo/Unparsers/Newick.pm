@@ -1,12 +1,9 @@
 # $Id$
 package Bio::Phylo::Unparsers::Newick;
 use strict;
-use Bio::Phylo::Forest::Tree ();
-use Bio::Phylo::Unparsers::Abstract;
-use Bio::Phylo::Util::CONSTANT qw(:objecttypes);
-use vars qw(@ISA);
-
-@ISA=qw(Bio::Phylo::Unparsers::Abstract);
+use base 'Bio::Phylo::Unparsers::Abstract';
+use Bio::Phylo::Forest::Tree;
+use Bio::Phylo::Util::CONSTANT ':objecttypes';
 
 =head1 NAME
 

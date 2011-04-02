@@ -1,9 +1,9 @@
 # $Id$
 package Bio::Phylo::Taxa::TaxaLinker;
-use Bio::Phylo ();
+use Bio::Phylo;
 use Bio::Phylo::Mediators::TaxaMediator;
 use Bio::Phylo::Util::Exceptions 'throw';
-use Bio::Phylo::Util::CONSTANT qw(_TAXA_ looks_like_object);
+use Bio::Phylo::Util::CONSTANT qw'_TAXA_ looks_like_object';
 use strict;
 
 my $logger   = Bio::Phylo->get_logger;

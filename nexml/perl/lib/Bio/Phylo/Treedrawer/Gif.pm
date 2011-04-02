@@ -1,13 +1,8 @@
 package Bio::Phylo::Treedrawer::Gif;
 use strict;
 use Bio::Phylo::Util::Exceptions 'throw';
-use vars qw(@ISA);
-
-eval { require Bio::Phylo::Treedrawer::Png };
-if ( $@ ) {
-    throw 'ExtensionError' => "Error loading the Bio::Phylo::Treedrawer::Png extension: $@";
-}
-@ISA=qw(Bio::Phylo::Treedrawer::Png);
+use Bio::Phylo::Util::Dependency 'Bio::Phylo::Treedrawer::Png';
+use base 'Bio::Phylo::Treedrawer::Png';
 
 =head1 NAME
 
@@ -37,7 +32,7 @@ sub _finish {
         return $gif;
     }
     else {
-        throw 'ExtensionError' => "Can't create GIF, libgd probably not compiled with it"
+        throw 'ExtensionError' => "Can't create GIF, libgd probably not compiled with it: $@"
     }
 }
 

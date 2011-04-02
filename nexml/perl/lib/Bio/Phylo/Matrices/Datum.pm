@@ -1,31 +1,13 @@
 # $Id$
 package Bio::Phylo::Matrices::Datum;
-use vars '@ISA';
 use strict;
-use Bio::Phylo::Factory;
-use Bio::Phylo::Taxa::TaxonLinker;
+use base qw'Bio::Phylo::Matrices::TypeSafeData Bio::Phylo::Taxa::TaxonLinker';
+use Bio::Phylo::Util::OptionalInterface 'Bio::Seq';
 use Bio::Phylo::Util::Exceptions 'throw';
-use Bio::Phylo::Matrices::TypeSafeData ();
-use Bio::Phylo::Util::CONSTANT qw(
-	:objecttypes 
-	looks_like_number 
-	looks_like_hash
-	looks_like_instance
-	looks_like_implementor
-);
-use Bio::Phylo::NeXML::Writable ();
-@ISA = qw(
-  Bio::Phylo::Matrices::TypeSafeData
-  Bio::Phylo::Taxa::TaxonLinker
-);
+use Bio::Phylo::Util::CONSTANT qw':objecttypes /looks_like/';
+use Bio::Phylo::NeXML::Writable;
+use Bio::Phylo::Factory;
 
-eval { require Bio::Seq };
-if ( not $@ ) {
-	push @ISA, 'Bio::Seq';
-}
-else {
-	undef($@);
-}
 my $LOADED_WRAPPERS = 0;
 
 {

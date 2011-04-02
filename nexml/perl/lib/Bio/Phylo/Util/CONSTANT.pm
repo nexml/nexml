@@ -1,14 +1,12 @@
 # $Id$
 package Bio::Phylo::Util::CONSTANT;
 use strict;
+use base 'Exporter';
 use Scalar::Util 'blessed';
 use Bio::Phylo::Util::Exceptions 'throw';
 BEGIN {
-    require Exporter;
-    use vars qw(@ISA @EXPORT_OK %EXPORT_TAGS);
+    our (@EXPORT_OK, %EXPORT_TAGS);
 
-    # classic subroutine exporting
-    @ISA       = qw(Exporter);
     @EXPORT_OK = qw(
     	_NONE_ 
     	_NODE_ 

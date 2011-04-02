@@ -1,17 +1,9 @@
 package Bio::Phylo::NeXML::Meta;
 use strict;
-use Bio::Phylo::Listable ();
-use Bio::Phylo::Util::CONSTANT qw(
-    _DOMCREATOR_
-    _META_
-    looks_like_number
-    looks_like_instance
-    looks_like_object
-);
+use base 'Bio::Phylo::Listable';
+use Bio::Phylo::Util::CONSTANT qw'_DOMCREATOR_ _META_ /looks_like/';
 use Bio::Phylo::Util::Exceptions 'throw';
 use Bio::Phylo::Factory;
-use vars qw(@ISA);
-@ISA=qw(Bio::Phylo::Listable);
 
 {
     my $fac = Bio::Phylo::Factory->new;
