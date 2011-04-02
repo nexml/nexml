@@ -21,22 +21,16 @@ http://testers.cpan.org/show/Bio-Phylo.html
 
 INSTALLATION
 
-Bio::Phylo has the following required dependencies:
-	Scalar::Util (core)
-	Test::More (core)
-	IO::File (core)
-	IO::String (non-core, but installs everywhere)
+Bio::Phylo has no dependencies for its core install.
+However, some additional functionality will not work
+(e.g. XML parsing) until the CPAN module that enables
+it has been installed (e.g. XML::Twig). You can install
+these at a later date if and when need arises. If any
+of such additional CPAN modules are found to be missing
+at installation time, a warning will be emitted, but
+installation can continue.
 
-And the following optional dependencies:
-	SVG (to draw trees as SVG vector drawings)
-	Math::Random (to simulate trees)
-	XML::Twig (to parse nexml)
-
-These modules are all available from
-http://www.cpan.org, and should install without
-problems on most platforms.
- 
-To install the Bio::Phylo distribution, run the
+To install the Bio::Phylo distribution itself, run the
 following commands: 
 
 perl Makefile.PL
@@ -58,7 +52,7 @@ BUGS
 
 Please report any bugs or feature requests to 
 bug-phylo@rt.cpan.org, or through the web interface 
-at http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Phylo. 
+at http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Bio-Phylo 
 I will be notified, and then you'll automatically 
 be notified of progress on your bug as I make changes. 
  
@@ -88,7 +82,7 @@ doi:10.1186/1471-2105-12-63
 
 COPYRIGHT & LICENSE
 
-Copyright 2005-2010 Rutger Vos, All Rights Reserved. 
+Copyright 2005-2011 Rutger Vos, All Rights Reserved. 
 This program is free software; you can redistribute 
 it and/or modify it under the same terms as Perl itself.
 
