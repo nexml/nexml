@@ -13,6 +13,8 @@ check_prereq( qw(
     List::Util
     SWF::Builder
     XML::XML2JSON
+    PDF::API2
+    GD
 ) );
 
 WriteMakefile(
@@ -20,7 +22,8 @@ WriteMakefile(
     'AUTHOR'       => 'Rutger Vos',
     'PL_FILES'     => {},
     'EXE_FILES'    => [],
-    'VERSION_FROM' => 'lib/Bio/Phylo.pm',  
+    'VERSION_FROM' => 'lib/Bio/Phylo.pm',
+    'LICENSE'      => 'perl',
     'clean'        => {},    
     'dist'         => { 'COMPRESS' => 'gzip -9f', 'SUFFIX' => 'gz', },
 );
