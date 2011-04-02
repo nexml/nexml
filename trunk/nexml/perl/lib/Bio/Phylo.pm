@@ -1,31 +1,22 @@
 # $Id$
 package Bio::Phylo;
 use strict;
-
-# we don't use 'our', for 5.005 compatibility
-use vars qw($VERSION $COMPAT $logger @ISA);
+use base 'Bio::Phylo::Identifiable';
 
 # Because we use a roll-your-own looks_like_number from
 # Bio::Phylo::Util::CONSTANT, here we don't have to worry
 # about older core S::U versions that don't have it...
-use Scalar::Util qw(weaken blessed);
+use Scalar::Util qw'weaken blessed';
 
 #... instead, Bio::Phylo::Util::CONSTANT can worry about it
 # in one location, perhaps using the S::U version, or a drop-in
-use Bio::Phylo::Util::CONSTANT qw(
-    looks_like_number
-    looks_like_hash
-    looks_like_instance
-);
+use Bio::Phylo::Util::CONSTANT '/looks_like/';
 use Bio::Phylo::Util::IDPool;             # creates unique object IDs
 use Bio::Phylo::Identifiable;             # for storing unique IDs inside an instance
 use Bio::Phylo::Util::Exceptions 'throw'; # defines exception classes and throws
 use Bio::Phylo::Util::Logger;             # for logging, like log4perl/log4j 
 
-BEGIN {
-	@ISA = qw(Bio::Phylo::Identifiable);
-    $logger = Bio::Phylo::Util::Logger->new;
-}
+our ($logger, $COMPAT) = Bio::Phylo::Util::Logger->new;
 
 # mediates one-to-many relationships between taxon and nodes, 
 # taxon and sequences, taxa and forests, taxa and matrices.
@@ -35,8 +26,9 @@ require Bio::Phylo::Mediators::TaxaMediator;
 # Include the revision number from subversion in $VERSION
 my $rev = '$Id$';
 $rev =~ s/^[^\d]+(\d+)\b.*$/$1/;
-$VERSION = "0.36";
+our $VERSION = "0.36";
 $VERSION .= "_$rev";
+
 {
     my $taxamediator = 'Bio::Phylo::Mediators::TaxaMediator';
     sub import {
@@ -825,7 +817,7 @@ Invocant destructor.
             }
             use strict;
         }
-        $logger->debug("done cleaning up '$self'"); # XXX
+        #$logger->debug("done cleaning up '$self'"); # XXX
 
         # cleanup from mediator
         $taxamediator->unregister($self);
@@ -857,7 +849,7 @@ Invocant destructor.
     # be inside-out objects).
     sub _cleanup {
         my $self = shift;
-        $logger->debug("cleaning up '$self'"); # XXX
+        #$logger->debug("cleaning up '$self'"); # XXX
         my $id = $self->get_id;
 
         # cleanup local fields

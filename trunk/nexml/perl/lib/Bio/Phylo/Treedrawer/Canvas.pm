@@ -1,11 +1,8 @@
 package Bio::Phylo::Treedrawer::Canvas;
+use strict;
+use base 'Bio::Phylo::Treedrawer::Abstract';
 use Bio::Phylo::Util::Exceptions 'throw';
 use Bio::Phylo::Util::Logger ':levels';
-use strict;
-use warnings;
-use Bio::Phylo::Treedrawer::Abstract;
-use vars '@ISA';
-@ISA=qw(Bio::Phylo::Treedrawer::Abstract);
 
 my $logger = Bio::Phylo::Util::Logger->new;
 

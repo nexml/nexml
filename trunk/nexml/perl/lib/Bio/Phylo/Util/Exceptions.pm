@@ -1,14 +1,11 @@
 package Bio::Phylo::Util::Exceptions;
 use strict;
-BEGIN {
-	require Exporter;
-	use vars qw($AUTOLOAD @EXPORT_OK @ISA);
-	@ISA=qw(Exporter);
-	@EXPORT_OK=qw(throw);
-}
+use base 'Exporter';
 use Bio::Phylo::Util::StackTrace;
 use Scalar::Util 'blessed';
 use overload 'bool' => sub { 1 }, 'fallback' => 1, '""' => \&as_string;
+
+our ( @EXPORT_OK, $AUTOLOAD ) = qw'throw';
 
 sub new {
 	my $class = shift;

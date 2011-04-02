@@ -1,19 +1,10 @@
 # $Id$
 package Bio::Phylo::Forest;
 use strict;
-use Bio::Phylo::Listable ();
-use Bio::Phylo::Taxa::TaxaLinker;
-use Bio::Phylo::Util::CONSTANT qw(
-	_NONE_
-	_FOREST_
-	_PROJECT_
-	_NODE_
-	looks_like_hash
-	looks_like_object
-);
+use base qw'Bio::Phylo::Listable Bio::Phylo::Taxa::TaxaLinker';
+use Bio::Phylo::Util::CONSTANT qw':objecttypes /looks_like/';
 use Bio::Phylo::Util::Exceptions 'throw';
 use Bio::Phylo::Factory;
-use vars qw(@ISA);
 
 =begin comment
 
@@ -22,9 +13,6 @@ This class has no internal state, no cleanup is necessary.
 =end comment
 
 =cut
-
-# classic @ISA manipulation, not using 'base'
-@ISA = qw(Bio::Phylo::Listable Bio::Phylo::Taxa::TaxaLinker);
 
 {
 

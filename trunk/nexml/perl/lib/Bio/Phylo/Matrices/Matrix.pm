@@ -1,33 +1,15 @@
 # $Id$
 package Bio::Phylo::Matrices::Matrix;
-use vars '@ISA';
 use strict;
+use base qw'Bio::Phylo::Matrices::TypeSafeData Bio::Phylo::Taxa::TaxaLinker';
+use Bio::Phylo::Util::OptionalInterface 'Bio::Align::AlignI';
+use Bio::Phylo::Util::CONSTANT qw':objecttypes /looks_like/';
+use Bio::Phylo::Util::Exceptions qw'throw';
+use Bio::Phylo::NeXML::Writable;
+use Bio::Phylo::Matrices::Datum;
+use Bio::Phylo::IO qw'unparse';
 use Bio::Phylo::Factory;
-use Bio::Phylo::Taxa::TaxaLinker;
-use Bio::Phylo::IO qw(unparse);
-use Bio::Phylo::Util::CONSTANT qw(
-	:objecttypes 
-	looks_like_hash 
-	looks_like_instance 
-	looks_like_number
-	looks_like_object
-);
-use Bio::Phylo::Util::Exceptions qw(throw);
-use Bio::Phylo::NeXML::Writable ();
-use Bio::Phylo::Matrices::TypeSafeData ();
-use Bio::Phylo::Matrices::Datum ();
-@ISA = qw(
-  Bio::Phylo::Matrices::TypeSafeData
-  Bio::Phylo::Taxa::TaxaLinker
-);
 
-eval { require Bio::Align::AlignI };
-if ( not $@ ) {
-	push @ISA, 'Bio::Align::AlignI';
-}
-else {
-	undef($@);
-}
 my $LOADED_WRAPPERS = 0;
 
 

@@ -1,18 +1,12 @@
 package Bio::Phylo::Treedrawer::Pdf;
 use strict;
+use base 'Bio::Phylo::Treedrawer::Abstract';
 use Bio::Phylo::Util::Exceptions 'throw';
 use Bio::Phylo::Util::CONSTANT 'looks_like_hash';
+use Bio::Phylo::Util::Dependency qw'PDF::API2::Lite PDF::API2::Annotation';
 use Bio::Phylo::Util::Logger;
-use Bio::Phylo::Treedrawer::Abstract;
-use vars qw(@ISA);
-@ISA=qw(Bio::Phylo::Treedrawer::Abstract);
 
 my $logger = Bio::Phylo::Util::Logger->new;
-
-eval { require PDF::API2::Lite; require PDF::API2::Annotation };
-if ( $@ ) {
-    throw 'ExtensionError' => "Error loading the PDF::API2::Lite extension: $@";
-}
 my $PI = '3.14159265358979323846';
 my %colors;
 

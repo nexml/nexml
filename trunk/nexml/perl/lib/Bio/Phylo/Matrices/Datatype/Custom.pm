@@ -1,8 +1,7 @@
 # $Id$
 package Bio::Phylo::Matrices::Datatype::Custom;
 use strict;
-use vars qw(@ISA);
-@ISA = qw(Bio::Phylo::Matrices::Datatype);
+use base 'Bio::Phylo::Matrices::Datatype';
 
 =head1 NAME
 

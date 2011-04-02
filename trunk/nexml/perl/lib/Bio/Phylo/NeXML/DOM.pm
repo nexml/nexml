@@ -1,16 +1,15 @@
 # $Id$
 package Bio::Phylo::NeXML::DOM;
 use strict;
-use Bio::Phylo ();
-use Bio::Phylo::Util::CONSTANT qw(_DOMCREATOR_ looks_like_class);
-use Bio::Phylo::Util::Exceptions qw( throw );
+use base 'Bio::Phylo';
+use Bio::Phylo::Util::CONSTANT qw'_DOMCREATOR_ looks_like_class';
+use Bio::Phylo::Util::Exceptions 'throw';
 use Bio::Phylo::Factory;
 use File::Spec::Unix;
 
 # store DOM factory object as a global here, to avoid proliferation of 
 # function arguments
-use vars qw(@ISA $DOM);
-@ISA = qw(Bio::Phylo);
+our $DOM;
 
 {
 

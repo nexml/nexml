@@ -1,17 +1,13 @@
 # $Id$
 package Bio::Phylo::Parsers::Nexus;
 use strict;
+use base 'Bio::Phylo::Parsers::Abstract';
 use Bio::Phylo::Factory;
-use Bio::Phylo::IO qw(parse);
-use Bio::Phylo::Util::CONSTANT qw(:objecttypes looks_like_instance);
-use Bio::Phylo::Util::Exceptions qw(throw);
-use Bio::Phylo::Parsers::Abstract;
-use vars qw(@ISA);
+use Bio::Phylo::IO 'parse';
+use Bio::Phylo::Util::CONSTANT qw':objecttypes looks_like_instance';
+use Bio::Phylo::Util::Exceptions 'throw';
 
 # TODO: handle mixed? distances, splits, bipartitions
-
-# classic @ISA manipulation, not using 'base'
-@ISA = qw(Bio::Phylo::Parsers::Abstract);
 
 my $TAXA = _TAXA_;
 

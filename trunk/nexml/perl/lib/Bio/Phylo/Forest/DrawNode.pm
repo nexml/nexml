@@ -1,8 +1,7 @@
 package Bio::Phylo::Forest::DrawNode;
 use strict;
-use Bio::Phylo::Forest::Node ();
-use vars '@ISA';
-@ISA=qw(Bio::Phylo::Forest::Node);
+use base 'Bio::Phylo::Forest::Node';
+
 {
 	# @fields array necessary for object destruction
 	my @fields = \( 

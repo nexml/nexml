@@ -1,17 +1,11 @@
 package Bio::Phylo::Parsers::Phyloxml;
 use strict;
-use Bio::Phylo::Parsers::Abstract;
+use base 'Bio::Phylo::Parsers::Abstract';
 use Bio::Phylo::Util::Exceptions 'throw';
-use Bio::Phylo::Factory;
+use Bio::Phylo::Util::Dependency 'XML::Twig';
 use Bio::Phylo::Util::CONSTANT qw'looks_like_instance';
 use Bio::Phylo::NeXML::Writable;
-use vars qw(@ISA);
-@ISA = qw(Bio::Phylo::Parsers::Abstract);
-
-eval { require XML::Twig };
-if ( $@ ) {
-	throw 'ExtensionError' => "Error loading the XML::Twig extension: $@";
-}
+use Bio::Phylo::Factory;
 
 =head1 NAME
 

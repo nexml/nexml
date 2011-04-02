@@ -1,18 +1,10 @@
 # $Id$
 package Bio::Phylo::Matrices::Datatype;
-use Bio::Phylo::NeXML::Writable ();
+use strict;
+use base 'Bio::Phylo::NeXML::Writable';
 use Bio::Phylo::Factory;
 use Bio::Phylo::Util::Exceptions 'throw';
-use Bio::Phylo::Util::CONSTANT qw(
-	_DOMCREATOR_ 
-	looks_like_hash 
-	looks_like_instance 
-	looks_like_implementor
-	looks_like_class
-);
-use strict;
-use vars '@ISA';
-@ISA = qw(Bio::Phylo::NeXML::Writable);
+use Bio::Phylo::Util::CONSTANT qw'_DOMCREATOR_ /looks_like/';
 
 {
     

@@ -1,10 +1,8 @@
 package Bio::Phylo::Matrices::Characters;
 use strict;
+use base 'Bio::Phylo::Matrices::TypeSafeData';
 use Bio::Phylo::Util::CONSTANT qw'_CHARACTERS_ _NONE_';
-use Bio::Phylo::Matrices::TypeSafeData;
 use Bio::Phylo::Factory;
-use vars '@ISA';
-@ISA=qw(Bio::Phylo::Matrices::TypeSafeData);
 
 =head1 NAME
 

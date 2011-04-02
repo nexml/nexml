@@ -3,13 +3,10 @@ package Bio::Phylo::Generator;
 use strict;
 use Bio::Phylo::Util::CONSTANT 'looks_like_hash';
 use Bio::Phylo::Util::Exceptions 'throw';
-use Bio::Phylo::Factory;
 use Bio::Phylo::Util::Logger;
+use Bio::Phylo::Util::Dependency 'Math::Random';
+use Bio::Phylo::Factory;
 
-eval { require Math::Random };
-if ( $@ ) {
-	throw 'ExtensionError' => "Error loading the Math::Random extension: $@";
-}
 Math::Random->import(qw'random_exponential random_uniform');
 
 {

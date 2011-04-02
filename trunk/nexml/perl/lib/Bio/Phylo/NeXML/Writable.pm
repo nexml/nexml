@@ -1,22 +1,10 @@
 # $Id$
 package Bio::Phylo::NeXML::Writable;
 use strict;
-use Bio::Phylo ();
+use base 'Bio::Phylo';
 use Bio::Phylo::Util::Exceptions 'throw';
 use Bio::Phylo::NeXML::DOM;
-use Bio::Phylo::Util::CONSTANT qw(
-	_DICTIONARY_ 
-	_META_ 
-	_DOMCREATOR_ 
-	looks_like_object 
-	looks_like_hash
-	looks_like_instance
-	looks_like_implementor
-	looks_like_class
-	:namespaces
-);
-use vars '@ISA';
-@ISA=qw(Bio::Phylo);
+use Bio::Phylo::Util::CONSTANT qw'/looks_like/ :namespaces :objecttypes';
 
 {
 

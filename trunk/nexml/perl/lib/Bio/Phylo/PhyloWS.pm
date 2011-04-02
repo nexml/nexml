@@ -1,18 +1,11 @@
 package Bio::Phylo::PhyloWS;
 use strict;
-use Bio::Phylo ();
+use base 'Bio::Phylo';
 use Bio::Phylo::Util::CONSTANT 'looks_like_hash';
 use Bio::Phylo::Util::Exceptions 'throw';
+use Bio::Phylo::Util::Dependency 'URI::URL';
 
-use vars qw(@ISA %MIMETYPE);
-@ISA=qw(Bio::Phylo);
-
-eval { require URI::URL };
-if ( $@ ) {
-    throw 'ExtensionError' => "Error loading the URI::URL extension: $@";
-}
-
-%MIMETYPE = (
+our %MIMETYPE = (
     'nexml'  => 'application/xml',
     'yaml'   => 'application/x-yaml',    
     'rdf'    => 'application/rdf+xml',    

@@ -1,11 +1,7 @@
 # $Id$
 package Bio::Phylo::Parsers::Table;
 use strict;
-use Bio::Phylo::Parsers::Abstract;
-use vars qw(@ISA);
-
-# classic @ISA manipulation, not using 'base'
-@ISA = qw(Bio::Phylo::Parsers::Abstract);
+use base 'Bio::Phylo::Parsers::Abstract';
 
 =head1 NAME
 

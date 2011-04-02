@@ -1,9 +1,9 @@
 # $Id$
 package Bio::Phylo::Matrices::Datatype::Protein;
-use Bio::Phylo::Matrices::Datatype ();
 use strict;
-use vars qw($LOOKUP @ISA $MISSING $GAP);
-@ISA = qw(Bio::Phylo::Matrices::Datatype);
+use base 'Bio::Phylo::Matrices::Datatype';
+
+our ($LOOKUP, $MISSING, $GAP);
 
 =head1 NAME
 

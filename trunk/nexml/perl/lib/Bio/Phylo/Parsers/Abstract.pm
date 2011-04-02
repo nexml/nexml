@@ -1,12 +1,11 @@
 package Bio::Phylo::Parsers::Abstract;
+use strict;
+use base 'Bio::Phylo::IO';
 use Bio::Phylo::Util::Exceptions 'throw';
-use Bio::Phylo::Util::CONSTANT qw(looks_like_hash);
+use Bio::Phylo::Util::CONSTANT 'looks_like_hash';
 use Bio::Phylo::Util::Logger;
 use Bio::Phylo::Factory;
-use Bio::Phylo::IO;
 use English;
-use vars '@ISA';
-@ISA=qw(Bio::Phylo::IO);
 
 =head1 NAME
 

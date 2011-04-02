@@ -2,7 +2,7 @@
 package Bio::Phylo::Taxa::TaxonLinker;
 use Bio::Phylo::Mediators::TaxaMediator;
 use Bio::Phylo::Util::Exceptions;
-use Bio::Phylo::Util::CONSTANT qw(_TAXON_ looks_like_object);
+use Bio::Phylo::Util::CONSTANT qw'_TAXON_ looks_like_object';
 use strict;
 
 {

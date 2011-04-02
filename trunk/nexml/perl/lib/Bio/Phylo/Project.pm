@@ -1,18 +1,10 @@
 package Bio::Phylo::Project;
-use Bio::Phylo::Listable ();
-use Bio::Phylo::Util::CONSTANT qw(
-	:namespaces
-	:objecttypes
-	looks_like_object
-	looks_like_instance
-	_NEXML_VERSION_
-);
+use strict;
+use base 'Bio::Phylo::Listable';
+use Bio::Phylo::Util::CONSTANT qw':namespaces :objecttypes /looks_like/ _NEXML_VERSION_';
 use Bio::Phylo::Util::Exceptions 'throw';
 use Bio::Phylo::Util::Logger;
 use Bio::Phylo::Factory;
-use vars '@ISA';
-use strict;
-@ISA=qw(Bio::Phylo::Listable);
 
 my $fac = Bio::Phylo::Factory->new;
 my $logger = Bio::Phylo::Util::Logger->new;
