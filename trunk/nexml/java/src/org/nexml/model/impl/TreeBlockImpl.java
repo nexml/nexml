@@ -1,6 +1,9 @@
 package org.nexml.model.impl;
 
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
+
 import org.nexml.model.FloatEdge;
 import org.nexml.model.IntEdge;
 import org.nexml.model.Network;
@@ -80,7 +83,7 @@ public class TreeBlockImpl extends OTUsLinkableImpl<Network<?>> implements
 	public Network<IntEdge> createIntNetwork() {
 		IntNetworkImpl network = new IntNetworkImpl(getDocument());
 		addThing(network);
-		getElement().appendChild(network.getElement());
+		attachFundamentalDataElement(network.getElement());
 		network.getElement().setAttributeNS(XSI_URI, XSI_TYPE, NEX_PRE + ":IntNetwork");
 		return network;
 	}
@@ -95,7 +98,7 @@ public class TreeBlockImpl extends OTUsLinkableImpl<Network<?>> implements
 	public Network<FloatEdge> createFloatNetwork() {
 		FloatNetworkImpl network = new FloatNetworkImpl(getDocument());
 		addThing(network);
-		getElement().appendChild(network.getElement());
+		attachFundamentalDataElement(network.getElement());
 		network.getElement().setAttributeNS(XSI_URI, XSI_TYPE, NEX_PRE + ":FloatNetwork");
 		return network;
 	}
@@ -118,7 +121,7 @@ public class TreeBlockImpl extends OTUsLinkableImpl<Network<?>> implements
 	 */
 	public Tree<FloatEdge> createFloatTree() {
 		FloatTreeImpl tree = new FloatTreeImpl(getDocument());
-		getElement().appendChild(tree.getElement());
+		attachFundamentalDataElement(tree.getElement());
 		tree.getElement().setAttributeNS(XSI_URI, XSI_TYPE, NEX_PRE + ":FloatTree");
 		return tree;
 	}
@@ -131,7 +134,7 @@ public class TreeBlockImpl extends OTUsLinkableImpl<Network<?>> implements
 	 */
 	public Tree<IntEdge> createIntTree() {
 		IntTreeImpl tree = new IntTreeImpl(getDocument());
-		getElement().appendChild(tree.getElement());
+		attachFundamentalDataElement(tree.getElement());
 		tree.getElement().setAttributeNS(XSI_URI, XSI_TYPE, NEX_PRE + ":IntTree");
 		return tree;
 	}
@@ -160,4 +163,13 @@ public class TreeBlockImpl extends OTUsLinkableImpl<Network<?>> implements
 	public Network<?> getSegment(int i) {
 		return getThings().get(i);
 	}
+
+	@Override
+	protected Set<String> getPermissibleSetContents() {
+		Set<String> permissibleSetContents = new HashSet<String>();
+		permissibleSetContents.add("tree");
+		permissibleSetContents.add("network");
+		return permissibleSetContents;
+	}
+
 }
