@@ -8,7 +8,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.nexml.model.Annotatable;
-import org.nexml.model.NetworkObject;
 import org.nexml.model.NexmlWritable;
 import org.nexml.model.SetManager;
 import org.nexml.model.Subset;
