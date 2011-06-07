@@ -3,7 +3,7 @@ package org.nexml.model;
 import java.util.Set;
 
 public interface CharacterStateSet extends
-		NexmlWritable {
+		NexmlWritable, Segmented<CharacterState> {
 	Set<CharacterState> getCharacterStates();
 
 	void setCharacterStates(Set<CharacterState> characterStates);
