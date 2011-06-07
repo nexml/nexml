@@ -2,7 +2,7 @@ package org.nexml.model;
 
 import java.util.Set;
 
-public interface Network<E extends Edge> extends Annotatable {
+public interface Network<E extends Edge> extends Annotatable, Segmented<NetworkObject>, SetManager {
 	/**
 	 * Creates a new edge object, paramerized by branch length
 	 * type. As edges require a source and a target, this must
@@ -71,5 +71,11 @@ public interface Network<E extends Edge> extends Annotatable {
 	 */
 	Set<Node> getOutNodes(Node source);
 	
+	/**
+	 * Gets the Edge object that connects Node source to Node target
+	 * @param source
+	 * @param target
+	 * @return
+	 */
 	Edge getEdge(Node source, Node target);
 }
