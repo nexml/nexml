@@ -5,7 +5,7 @@ import org.nexml.model.OTUsLinkable;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-abstract class OTUsLinkableImpl<T> extends SetManager<T> implements
+abstract class OTUsLinkableImpl<T> extends SetManagerImpl<T> implements
 		OTUsLinkable {
 
 	private OTUs mOTUs;
