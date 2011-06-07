@@ -1,6 +1,7 @@
 package org.nexml.model.impl;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.nexml.model.Edge;
@@ -11,7 +12,7 @@ import org.nexml.model.OTU;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-abstract class NetworkImpl<E extends Edge> extends SetManager<NetworkObject> implements Network<E> {
+abstract class NetworkImpl<E extends Edge> extends SetManagerImpl<NetworkObject> implements Network<E> {
 
     /**
      * Protected constructors that take a DOM document object but not
@@ -95,9 +96,14 @@ abstract class NetworkImpl<E extends Edge> extends SetManager<NetworkObject> imp
 	public Node createNode() {
 		NodeImpl node = new NodeImpl(getDocument());
 		addThing(node);
-		getElement().insertBefore(node.getElement(),
-				getElement().getFirstChild());
-		return node;
+		List<Element> edgeList = getChildrenByTagName(getElement(),"edge");
+		if ( edgeList.size() > 0 ) {
+			getElement().insertBefore(node.getElement(),edgeList.get(0));
+		}
+		else {		
+			attachFundamentalDataElement(node.getElement());
+		}
+		return node;		
 	}
 
 	/** {@inheritDoc} */
@@ -184,5 +190,14 @@ abstract class NetworkImpl<E extends Edge> extends SetManager<NetworkObject> imp
 			}
 		}
 		return null;
-	}
+	}	
+	
+	@Override
+	protected Set<String> getPermissibleSetContents() {
+		Set<String> permissibleSetContents = new HashSet<String>();
+		permissibleSetContents.add("node");
+		permissibleSetContents.add("rootedge");
+		permissibleSetContents.add("edge");
+		return permissibleSetContents;
+	}	
 }
