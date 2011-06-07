@@ -1,18 +1,24 @@
 package org.nexml.model.impl;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
+
+import org.nexml.model.Annotatable;
 import org.nexml.model.Annotation;
 import org.nexml.model.OTU;
 import org.nexml.model.OTUs;
+import org.nexml.model.Subset;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 /**
  * An {@code OTUs} implemented with DOM objects.
  */
-class OTUsImpl extends SetManager<OTU> implements OTUs {
+class OTUsImpl extends SetManagerImpl<OTU> implements OTUs {
 
 	/**
 	 * Get the (XML) tag name of otus.
@@ -83,8 +89,8 @@ class OTUsImpl extends SetManager<OTU> implements OTUs {
 	/** {@inheritDoc} */
 	public OTU createOTU() {
 		OTUImpl otu = new OTUImpl(getDocument());
-		addOTU(otu);
-		getElement().appendChild(otu.getElement());
+		addOTU(otu);	
+		attachFundamentalDataElement(otu.getElement());
 		return otu;
 	}
 
@@ -109,7 +115,12 @@ class OTUsImpl extends SetManager<OTU> implements OTUs {
 	 * @see org.nexml.model.OTUs#getOTUsFromSet(java.lang.String)
 	 */
 	public List<OTU> getOTUsFromSubset(String setName) {
-		return getSubset(setName);
+		Subset subset = getSubset(setName);
+		List<OTU> list = new ArrayList<OTU>();
+		for ( Annotatable thing : subset.getThings() ) {
+			list.add((OTU)thing);
+		}
+		return list;
 	}
 
 	/*
@@ -125,7 +136,7 @@ class OTUsImpl extends SetManager<OTU> implements OTUs {
 	 * @see org.nexml.model.OTUs#removeOTUFromSet(java.lang.String, org.nexml.model.OTU)
 	 */
 	public void removeOTUFromSubset(String setName, OTU otu) {
-		// TODO Auto-generated method stub
+		getSubset(setName).removeThing(otu);
 	}
 
 	/*
@@ -133,8 +144,7 @@ class OTUsImpl extends SetManager<OTU> implements OTUs {
 	 * @see java.lang.Iterable#iterator()
 	 */
 	public Iterator<OTU> iterator() {
-		// TODO Auto-generated method stub
-		return null;
+		return getThings().iterator();
 	}
 
 	/*
@@ -151,7 +161,7 @@ class OTUsImpl extends SetManager<OTU> implements OTUs {
 	 * @see org.nexml.model.OTUs#addAnnotationToSet(java.lang.String, org.nexml.model.Annotation)
 	 */
 	public void addAnnotationToSubset(String setName, Annotation annotation) {
-		// TODO Auto-generated method stub
+		getSubset(setName).addAnnotationValue(annotation.getProperty(), annotation.getPredicateNamespace(), annotation.getValue());
 
 	}
 
@@ -165,12 +175,9 @@ class OTUsImpl extends SetManager<OTU> implements OTUs {
 	}
 
 	@Override
-	public int getSegmentCount() {
-		return getThings().size();
-	}
-
-	@Override
-	public OTU getSegment(int index) {
-		return getThings().get(index);
+	protected Set<String> getPermissibleSetContents() {
+		Set<String> permissibleSetContents = new HashSet<String>();
+		permissibleSetContents.add("otu");
+		return permissibleSetContents;
 	}
 }
