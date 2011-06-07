@@ -72,7 +72,7 @@ abstract class CompoundCharacterStateImpl extends CharacterStateImpl
 					continue STATE;
 				}
 			}
-			Element member = getDocument().createElement("member");
+			Element member = getDocument().createElementNS(DEFAULT_NAMESPACE,"member");
 			member.setAttribute("state", state.getId());
 			getElement().appendChild(member);			
 		}
