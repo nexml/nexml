@@ -109,7 +109,7 @@ class ContinuousMatrixImpl extends MatrixImpl<Double> implements ContinuousMatri
 	public Character createCharacter() {
 		CharacterImpl character = new CharacterImpl(getDocument());
 		addThing(character);
-		getFormatElement().appendChild(character.getElement());
+		attachFundamentalDataElement(getFormatElement(), character.getElement());
 		return character;
 	}
 
