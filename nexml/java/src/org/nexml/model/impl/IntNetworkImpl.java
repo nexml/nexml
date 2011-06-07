@@ -53,7 +53,7 @@ class IntNetworkImpl extends NetworkImpl<IntEdge> {
 	public IntEdge createEdge(Node source, Node target) { 
 		IntEdgeImpl intEdge = new IntEdgeImpl(getDocument());
 		addThing(intEdge);
-		getElement().appendChild(intEdge.getElement());
+		attachFundamentalDataElement(intEdge.getElement());
 		intEdge.setSource(source);
 		intEdge.setTarget(target);		
 		return intEdge;
