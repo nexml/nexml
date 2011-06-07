@@ -54,7 +54,7 @@ class FloatNetworkImpl extends NetworkImpl<FloatEdge> implements Network<FloatEd
 	public FloatEdge createEdge(Node source, Node target) {
 		FloatEdgeImpl floatEdge = new FloatEdgeImpl(getDocument()); 
 		addThing(floatEdge);
-		getElement().appendChild(floatEdge.getElement());
+		attachFundamentalDataElement(floatEdge.getElement());
 		floatEdge.setSource(source);
 		floatEdge.setTarget(target);
 		return floatEdge;
