@@ -54,5 +54,10 @@ public interface MolecularMatrix extends Matrix<CharacterState> {
 	 */
 	CharacterStateSet getProteinCharacterStateSet();
 	
+	/**
+	 * Parses the provided character state string representation and
+	 * returns the CharacterState object that is most appropriate for the
+	 * provided subDataType (which would be something like MolecularMatrix.DNA)
+	 */
 	CharacterState parseSymbol(String symbol,String subDataType);
 }
