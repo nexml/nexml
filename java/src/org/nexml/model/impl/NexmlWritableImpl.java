@@ -138,6 +138,27 @@ abstract class NexmlWritableImpl implements NexmlWritable {
 		}
 		return result;
 	}
+	
+	/**
+	 * Fundamental data elements must be attached to their parent elements
+	 * after semantic metadata annotations and before subsets. This method
+	 * ensures they are attached in the correct location
+	 * 
+	 * @param element
+	 */
+	protected void attachFundamentalDataElement(Element element) {
+		attachFundamentalDataElement(getElement(), element);
+	}
+	
+	protected void attachFundamentalDataElement(Element parent, Element child) {
+		List<Element> sets = getChildrenByTagName(parent, "set");
+		if ( ! sets.isEmpty() ) {
+			parent.insertBefore(child, sets.get(0));			
+		}
+		else {
+			parent.appendChild(child);
+		}		
+	}
 
 	/**
 	 * Get the wrapped DOM element of this {@code NexmlWritable}.
