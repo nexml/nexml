@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * @param <T> should be either a {@code Double} or {@CharacterState}.
  */
-public interface Matrix<T> extends OTUsLinkable, Annotatable, Segmented {
+public interface Matrix<T> extends OTUsLinkable, Annotatable, Segmented<Character>, SetManager {
 	/**
 	 * Gets all matrix cell objects for the provided OTU
 	 * @param otu 
@@ -53,6 +53,15 @@ public interface Matrix<T> extends OTUsLinkable, Annotatable, Segmented {
 	 */
 	Character createCharacter(CharacterStateSet stateSet);
 	
+	/**
+	 * Parses the provided character state string representation and
+	 * returns whatever object is most appropriate given the context.
+	 * E.g. for continuous matrices, the provided symbol is assumed to
+	 * be a string representation of a double precision number, so the 
+	 * returned value is a Double
+	 * @param symbol
+	 * @return
+	 */
 	T parseSymbol(String symbol);
 	
 	/**
