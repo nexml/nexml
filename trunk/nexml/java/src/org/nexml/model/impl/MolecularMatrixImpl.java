@@ -153,7 +153,7 @@ class MolecularMatrixImpl extends
 		CharacterImpl character = new CharacterImpl(getDocument());
 		addThing(character);
 		character.setCharacterStateSet(characterStateSet);
-		getFormatElement().appendChild(character.getElement());
+		attachFundamentalDataElement(getFormatElement(), character.getElement());
 		return character;
 	}	
 	
