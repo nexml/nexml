@@ -118,9 +118,14 @@ class CategoricalMatrixImpl extends
 	public CharacterStateSet createCharacterStateSet() {
 		CharacterStateSetImpl characterStateSet = new CharacterStateSetImpl(getDocument());
 		List<Element> currentCharElements = getChildrenByTagName(getFormatElement(), "char");
+		List<Element> currentSetElements = getChildrenByTagName(getFormatElement(), "set");
 		if ( ! currentCharElements.isEmpty() ) {
 			Element firstCharElement = currentCharElements.get(0);
 			getFormatElement().insertBefore(characterStateSet.getElement(), firstCharElement);
+		}
+		else if ( ! currentSetElements.isEmpty() ) {
+			Element firstSetElement = currentSetElements.get(0);
+			getFormatElement().insertBefore(characterStateSet.getElement(), firstSetElement);
 		}
 		else {
 			getFormatElement().appendChild( characterStateSet.getElement() );
@@ -149,7 +154,7 @@ class CategoricalMatrixImpl extends
 		CharacterImpl character = new CharacterImpl(getDocument());
 		addThing(character);
 		character.setCharacterStateSet(characterStateSet);
-		getFormatElement().appendChild(character.getElement());
+		attachFundamentalDataElement(getFormatElement(), character.getElement());
 		return character;
 	}	
 	
@@ -182,7 +187,7 @@ class CategoricalMatrixImpl extends
 	    CharacterStateSetImpl characterStateSet = (CharacterStateSetImpl)result;
 	    if (mCharacterStateSets.add(characterStateSet)){
 	        if ( null == getFormatElement() ) {
-	            setFormatElement( getDocument().createElement("format") );
+	            setFormatElement( getDocument().createElementNS(DEFAULT_NAMESPACE,"format") );
 	            getElement().insertBefore( getFormatElement(), getElement().getFirstChild() );
 	        }
 	        getFormatElement().insertBefore( characterStateSet.getElement(), getFormatElement().getFirstChild() );
@@ -198,7 +203,7 @@ class CategoricalMatrixImpl extends
         CharacterStateSetImpl characterStateSet = (CharacterStateSetImpl)result;
         if (mCharacterStateSets.add(characterStateSet)){
             if ( null == getFormatElement() ) {
-                setFormatElement( getDocument().createElement("format") );
+                setFormatElement( getDocument().createElementNS(DEFAULT_NAMESPACE,"format") );
                 getElement().insertBefore( getFormatElement(), getElement().getFirstChild() );
             }
             getFormatElement().insertBefore( characterStateSet.getElement(), getFormatElement().getFirstChild() );
@@ -214,7 +219,7 @@ class CategoricalMatrixImpl extends
         CharacterStateSetImpl characterStateSet = (CharacterStateSetImpl)result;
         if (mCharacterStateSets.add(characterStateSet)){
             if ( null == getFormatElement() ) {
-                setFormatElement( getDocument().createElement("format") );
+                setFormatElement( getDocument().createElementNS(DEFAULT_NAMESPACE,"format") );
                 getElement().insertBefore( getFormatElement(), getElement().getFirstChild() );
             }
             getFormatElement().insertBefore( characterStateSet.getElement(), getFormatElement().getFirstChild() );
