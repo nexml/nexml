@@ -89,7 +89,7 @@ public abstract class TreeImpl<E extends Edge> extends NetworkImpl<E> implements
 			getElement().insertBefore(node.getElement(),edgeList.get(0));
 		}
 		else {		
-			getElement().appendChild(node.getElement());
+			attachFundamentalDataElement(node.getElement());
 		}
 		return node;
 	}
