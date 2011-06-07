@@ -12,7 +12,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 class CharacterStateSetImpl extends
-		SetManager<CharacterState> implements CharacterStateSet {
+		SetManagerImpl<CharacterState> implements CharacterStateSet {
 	Set<CharacterState> mCharacterStates = new HashSet<CharacterState>();
 	private UncertainCharacterState mMissing;
 	private UncertainCharacterState mGap;
@@ -238,6 +238,27 @@ class CharacterStateSetImpl extends
         }
         return createCharacterState(symbol);
     }
+
+	@Override
+	public int getSegmentCount() {
+		CharacterState[] list = (CharacterState[]) getCharacterStates().toArray();
+		return list.length;
+	}
+
+	@Override
+	public CharacterState getSegment(int index) {
+		CharacterState[] list = (CharacterState[]) getCharacterStates().toArray();
+		return list[index];
+	}
+	
+	@Override
+	protected Set<String> getPermissibleSetContents() {
+		Set<String> permissibleSetContents = new HashSet<String>();
+		permissibleSetContents.add("state");
+		permissibleSetContents.add("polymorphic_state_set");
+		permissibleSetContents.add("uncertain_state_set");
+		return permissibleSetContents;
+	}	
 
 	
 }
