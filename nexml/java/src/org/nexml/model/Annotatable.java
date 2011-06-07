@@ -20,9 +20,11 @@ import org.w3c.dom.Node;
 public interface Annotatable extends NexmlWritable {
     
 	/**
-	 * For a single annotation property (i.e. a predicate),
-	 * multiple annotation values may be returned. These
-	 * could be literal text content of a meta element,
+	 * Assuming the object this method is called on (i.e. the invocant)
+	 * is the subject of multiple triples that have the same predicate,
+	 * this method returns the objects of these triples.
+	 * 
+	 * These could be literal text content of a meta element,
 	 * a resource identifier (e.g. a url defined by the href
 	 * attribute value), and/or recursively nested meta 
 	 * annotations or other xml. This method returns all
@@ -32,12 +34,36 @@ public interface Annotatable extends NexmlWritable {
 	 */
     Set<Object> getAnnotationValues(String property);
     
+    /**
+     * Similar to getAnnotationValues, but here the triples use rel
+     * attributes instead of property attributes for predicates. The
+     * values in this case are either resources (URLs) or opaque XML.
+     * 
+     * @param rel
+     * @return
+     */
     Set<Object> getRelValues(String rel);
     
+    /**
+     * Returns all annotations whose predicate (property or rel attribute)
+     * match the argument.
+     * @param rel
+     * @return
+     */
     Set<Annotation> getAnnotations(String rel);
     
+    /**
+     * Gets all annotations attached to the object.
+     * @return
+     */
     Set<Annotation> getAllAnnotations();
     
+    /**
+     * Gets all attached annotations whose predicate (property or rel
+     * attribute) are defined in the provided namespace.
+     * @param uri
+     * @return
+     */
     Set<Annotation> getAllAnnotationsForURI(URI uri);
     
     /**
