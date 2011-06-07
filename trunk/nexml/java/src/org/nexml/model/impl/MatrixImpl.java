@@ -2,12 +2,16 @@ package org.nexml.model.impl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+
 import org.nexml.model.Character;
 import org.nexml.model.Matrix;
 import org.nexml.model.MatrixCell;
 import org.nexml.model.OTU;
+import org.nexml.model.Subset;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -122,7 +126,7 @@ abstract class MatrixImpl<T> extends OTUsLinkableImpl<Character> implements
 			}
 		}
 		if ( null == rowElement ) {
-			rowElement = getDocument().createElement("row");
+			rowElement = getDocument().createElementNS(DEFAULT_NAMESPACE,"row");
 			rowElement.setAttribute("otu", otu.getId());
 			identify(rowElement,true);
 			getMatrixElement().appendChild(rowElement);
@@ -145,7 +149,7 @@ abstract class MatrixImpl<T> extends OTUsLinkableImpl<Character> implements
 		if (null == matrixCell) {
 			matrixCell = new MatrixCellImpl<T>(getDocument());
 			if ( null == getMatrixElement() ) {
-				setMatrixElement( getDocument().createElement("matrix") );
+				setMatrixElement( getDocument().createElementNS(DEFAULT_NAMESPACE,"matrix") );
 				getElement().appendChild( getMatrixElement() );
 			}
 			getRowElement(otu).appendChild(matrixCell.getElement());
@@ -174,7 +178,7 @@ abstract class MatrixImpl<T> extends OTUsLinkableImpl<Character> implements
 		if ( null == mFormatElement ) {
 			List<Element> formatElements = getChildrenByTagName(getElement(), "format");
 			if ( formatElements.isEmpty() ) {
-				Element format = getDocument().createElement("format");
+				Element format = getDocument().createElementNS(DEFAULT_NAMESPACE,"format");
 				getElement().insertBefore(format, getMatrixElement());
 				setFormatElement(format);
 			}
@@ -188,6 +192,10 @@ abstract class MatrixImpl<T> extends OTUsLinkableImpl<Character> implements
 		return mFormatElement;
 	}
 	
+	public Subset createSubset(String subsetName) {
+		return createSubset(subsetName, getFormatElement());
+	}
+	
 	protected void setFormatElement(Element formatElement) {		
 		mFormatElement = formatElement;
 	}
@@ -196,7 +204,7 @@ abstract class MatrixImpl<T> extends OTUsLinkableImpl<Character> implements
 		if ( null == mMatrixElement ) {
 			List<Element> matrixElements = getChildrenByTagName(getElement(), "matrix");
 			if ( matrixElements.isEmpty() ) {
-				Element matrix = getDocument().createElement("matrix");
+				Element matrix = getDocument().createElementNS(DEFAULT_NAMESPACE,"matrix");
 				getElement().appendChild(matrix);
 				setMatrixElement(matrix);
 			}
@@ -259,7 +267,7 @@ abstract class MatrixImpl<T> extends OTUsLinkableImpl<Character> implements
     	}
     	
     	// then, create a new seq child element
-    	Element seqElement = getDocument().createElement("seq");
+    	Element seqElement = getDocument().createElementNS(DEFAULT_NAMESPACE,"seq");
     	seqElement.setTextContent(seq);
     	row.appendChild(seqElement);    	
     }
@@ -286,5 +294,12 @@ abstract class MatrixImpl<T> extends OTUsLinkableImpl<Character> implements
 	public Character getSegment(int index) {
 		return getCharacters().get(index);
 	}
+	
+	@Override
+	protected Set<String> getPermissibleSetContents() {
+		Set<String> permissibleSetContents = new HashSet<String>();
+		permissibleSetContents.add("char");
+		return permissibleSetContents;
+	}	
 	
 }
