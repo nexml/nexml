@@ -121,6 +121,7 @@ public class TreeBlockImpl extends OTUsLinkableImpl<Network<?>> implements
 	 */
 	public Tree<FloatEdge> createFloatTree() {
 		FloatTreeImpl tree = new FloatTreeImpl(getDocument());
+		addThing(tree);
 		attachFundamentalDataElement(tree.getElement());
 		tree.getElement().setAttributeNS(XSI_URI, XSI_TYPE, NEX_PRE + ":FloatTree");
 		return tree;
@@ -134,6 +135,7 @@ public class TreeBlockImpl extends OTUsLinkableImpl<Network<?>> implements
 	 */
 	public Tree<IntEdge> createIntTree() {
 		IntTreeImpl tree = new IntTreeImpl(getDocument());
+		addThing(tree);
 		attachFundamentalDataElement(tree.getElement());
 		tree.getElement().setAttributeNS(XSI_URI, XSI_TYPE, NEX_PRE + ":IntTree");
 		return tree;
