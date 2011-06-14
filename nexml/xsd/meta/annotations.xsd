@@ -52,13 +52,13 @@
 		<xs:anyAttribute namespace="##any" processContents="skip"/>
 	</xs:complexType>
 
-	<xs:complexType name="Meta" abstract="true" mixed="false">
+	<xs:complexType name="Meta" abstract="true" mixed="true">
 		<xs:complexContent>
 			<xs:extension base="Base"> </xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
 
-	<xs:complexType name="ResourceMeta" abstract="false" mixed="false">
+	<xs:complexType name="ResourceMeta" abstract="false" mixed="true">
 		<xs:annotation>
 			<xs:documentation>
 				Metadata annotations in which the object is a resource. If this element contains meta elements 
@@ -76,7 +76,7 @@
 		</xs:complexContent>
 	</xs:complexType>
 
-	<xs:complexType name="LiteralMeta" mixed="false" abstract="false">
+	<xs:complexType name="LiteralMeta" mixed="true" abstract="false">
 		<xs:annotation>
 			<xs:documentation>
 				Metadata annotations in which the object is a literal value. If the @content attribute is used, 
