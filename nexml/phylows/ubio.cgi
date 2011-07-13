@@ -16,16 +16,21 @@ BEGIN {
 use strict;
 use warnings;
 use CGI;
-use Bio::Phylo::PhyloWS::Service::Ubio;
+use Bio::Phylo::PhyloWS::Service::UbioNameBank;
 use Bio::Phylo::Util::Logger ':levels';
+
+my $script = $ENV{'SCRIPT_NAME'};
+$script =~ s/\.cgi$//;
+my $url = 'http://' . $ENV{'SERVER_NAME'} . $script . '/phylows/';
 
 my $logger = Bio::Phylo::Util::Logger->new;
 open my $fh, '>', 'ubio.log' or die $!;
 $logger->VERBOSE( '-level' => DEBUG );
 $logger->set_listeners( sub { print $fh shift } );
+$logger->info("Using URL: $url");
 
 eval {
-	my $service = Bio::Phylo::PhyloWS::Service::Ubio->new( '-url' => $ENV{'SCRIPT_URI'} );
+	my $service = Bio::Phylo::PhyloWS::Service::UbioNameBank->new( '-base_uri' => $url );
 	my $cgi = CGI->new;
 	$service->handle_request( $cgi );
 };
