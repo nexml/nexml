@@ -29,7 +29,7 @@
     <!-- Create the Trees -->
     <xsl:template match="nex:tree">
         <rdf:Description>
-            <xsl:attribute name="rdf:ID"><xsl:value-of select="../@id"/></xsl:attribute>
+            <xsl:attribute name="rdf:ID"><xsl:value-of select="@id"/></xsl:attribute>
             <xsl:if test="@label">
                 <xsl:call-template name="label"/>
             </xsl:if>
@@ -51,7 +51,7 @@
     <!-- Create a Network  -->
     <xsl:template match="nex:network">
         <rdf:Description>
-            <xsl:attribute name="rdf:ID"><xsl:value-of select="../@id"/></xsl:attribute>
+            <xsl:attribute name="rdf:ID"><xsl:value-of select="@id"/></xsl:attribute>
             <xsl:if test="@label">
                 <xsl:call-template name="label"/>
             </xsl:if>
