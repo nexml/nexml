@@ -7,7 +7,7 @@
 	xmlns:xml="http://www.w3.org/XML/1998/namespace" 
 	xmlns:xsd="http://www.w3.org/2001/XMLSchema#" 
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:cdao="http://www.evolutionaryontology.org/cdao.owl#"
+	xmlns:cdao="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#"
 	xsi:schemaLocation="http://www.nexml.org/2009 ../../xsd/nexml.xsd">
   <otus id="otus1" label="TaxonLabelSet11564">
     <otu id="otu2" label="Tympanoctomys_barrerae" about="#otu2">

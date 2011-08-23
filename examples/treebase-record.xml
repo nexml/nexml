@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<nex:nexml xmlns:nex="http://www.nexml.org/2009" xmlns="http://www.nexml.org/2009" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:prism="http://prismstandard.org/namespaces/1.2/basic/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:tb="http://treebase.org/terms#" xmlns:xsd="http://www.w3.org/2001/XMLSchema#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" about="#nex_nexml2" generator="org.nexml.model.impl.DocumentImpl" id="S794" version="0.9" xml:base="http://purl.org/PHYLO/TREEBASE/PHYLOWS/study/TB2:">
-  <meta href="http://purl.org/PHYLO/TREEBASE/PHYLOWS/study/TB2:A1269" id="meta1833" rel="tb:identifier.analysis" xsi:type="nex:ResourceMeta">
-    <meta href="http://purl.org/PHYLO/TREEBASE/PHYLOWS/study/TB2:As1269" id="meta1834" rel="tb:identifier.analysisstep" xsi:type="nex:ResourceMeta">
-      <meta href="http://purl.org/PHYLO/TREEBASE/PHYLOWS/study/TB2:Al1269" id="meta1837" rel="tb:identifier.algorithm" xsi:type="nex:ResourceMeta">
+<nex:nexml xmlns:nex="http://www.nexml.org/2009" xmlns="http://www.nexml.org/2009" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:prism="http://prismstandard.org/namespaces/1.2/basic/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:tb="http://treebase.org/terms#" xmlns:xsd="http://www.w3.org/2001/XMLSchema#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" about="#nex_nexml2" generator="org.nexml.model.impl.DocumentImpl" id="S794" version="0.9" xml:base="http://purl.org/phylo/treebase/phylows/study/TB2:">
+  <meta href="http://purl.org/phylo/treebase/phylows/study/TB2:A1269" id="meta1833" rel="tb:identifier.analysis" xsi:type="nex:ResourceMeta">
+    <meta href="http://purl.org/phylo/treebase/phylows/study/TB2:As1269" id="meta1834" rel="tb:identifier.analysisstep" xsi:type="nex:ResourceMeta">
+      <meta href="http://purl.org/phylo/treebase/phylows/study/TB2:Al1269" id="meta1837" rel="tb:identifier.algorithm" xsi:type="nex:ResourceMeta">
         <meta content="neighbor joining" datatype="xsd:string" id="meta1839" property="dc:description" xsi:type="nex:LiteralMeta"/>
         <meta content="other algorithm" datatype="xsd:string" id="meta1838" property="dc:type" xsi:type="nex:LiteralMeta"/>
       </meta>
-      <meta href="http://purl.org/PHYLO/TREEBASE/PHYLOWS/study/TB2:So1267" id="meta1835" rel="tb:identifier.software" xsi:type="nex:ResourceMeta">
+      <meta href="http://purl.org/phylo/treebase/phylows/study/TB2:So1267" id="meta1835" rel="tb:identifier.software" xsi:type="nex:ResourceMeta">
         <meta content="PAUP" datatype="xsd:string" id="meta1836" property="dc:title" xsi:type="nex:LiteralMeta"/>
       </meta>
     </meta>
@@ -27,13 +27,13 @@
   <meta content="S651" datatype="xsd:string" id="meta4" property="tb:identifier.study.tb1" xsi:type="nex:LiteralMeta"/>
   <meta content="794" datatype="xsd:string" id="meta3" property="tb:identifier.study" xsi:type="nex:LiteralMeta"/>
   <meta content="Study" datatype="xsd:string" id="meta1" property="prism:section" xsi:type="nex:LiteralMeta"/>
-  <otus id="Tls10691" label="TaxonLabelSet10691" xml:base="http://purl.org/PHYLO/TREEBASE/PHYLOWS/taxon/TB2:">
+  <otus id="Tls10691" label="TaxonLabelSet10691" xml:base="http://purl.org/phylo/treebase/phylows/taxon/TB2:">
     <otu about="#Tl126179" id="Tl126179" label="Grifola sordulenta">
       <meta content="12578" datatype="xsd:long" id="meta24" property="tb:identifier.taxon" xsi:type="nex:LiteralMeta"/>
       <meta content="29804" datatype="xsd:long" id="meta23" property="tb:identifier.taxonVariant" xsi:type="nex:LiteralMeta"/>
       <meta href="http://purl.uniprot.org/taxonomy/172312" id="meta22" rel="skos:closeMatch" xsi:type="nex:ResourceMeta"/>
       <meta href="http://www.ubio.org/authority/metadata.php?lsid=urn:lsid:ubio.org:namebank:3209417" id="meta21" rel="skos:closeMatch" xsi:type="nex:ResourceMeta"/>
-      <meta href="http://purl.org/PHYLO/TREEBASE/PHYLOWS/study/TB2:S794" id="meta20" rel="rdfs:isDefinedBy" xsi:type="nex:ResourceMeta"/>
+      <meta href="http://purl.org/phylo/treebase/phylows/study/TB2:S794" id="meta20" rel="rdfs:isDefinedBy" xsi:type="nex:ResourceMeta"/>
     </otu>
     <otu about="#Tl261" id="Tl261" label="Grifola frondosa WC836">
       <meta content="12577" datatype="xsd:long" id="meta31" property="tb:identifier.taxon" xsi:type="nex:LiteralMeta"/>
@@ -41,7 +41,7 @@
       <meta href="http://purl.uniprot.org/taxonomy/5627" id="meta29" rel="skos:closeMatch" xsi:type="nex:ResourceMeta"/>
       <meta content="Grifola frondosa" datatype="xsd:string" id="meta28" property="skos:altLabel" xsi:type="nex:LiteralMeta"/>
       <meta href="http://www.ubio.org/authority/metadata.php?lsid=urn:lsid:ubio.org:namebank:3234622" id="meta27" rel="skos:closeMatch" xsi:type="nex:ResourceMeta"/>
-      <meta href="http://purl.org/PHYLO/TREEBASE/PHYLOWS/study/TB2:S794" id="meta26" rel="rdfs:isDefinedBy" xsi:type="nex:ResourceMeta"/>
+      <meta href="http://purl.org/phylo/treebase/phylows/study/TB2:S794" id="meta26" rel="rdfs:isDefinedBy" xsi:type="nex:ResourceMeta"/>
     </otu>
     <otu about="#Tl238" id="Tl238" label="Grifola frondosa WC835">
       <meta content="12577" datatype="xsd:long" id="meta38" property="tb:identifier.taxon" xsi:type="nex:LiteralMeta"/>
@@ -49,7 +49,7 @@
       <meta href="http://purl.uniprot.org/taxonomy/5627" id="meta36" rel="skos:closeMatch" xsi:type="nex:ResourceMeta"/>
       <meta content="Grifola frondosa" datatype="xsd:string" id="meta35" property="skos:altLabel" xsi:type="nex:LiteralMeta"/>
       <meta href="http://www.ubio.org/authority/metadata.php?lsid=urn:lsid:ubio.org:namebank:3234622" id="meta34" rel="skos:closeMatch" xsi:type="nex:ResourceMeta"/>
-      <meta href="http://purl.org/PHYLO/TREEBASE/PHYLOWS/study/TB2:S794" id="meta33" rel="rdfs:isDefinedBy" xsi:type="nex:ResourceMeta"/>
+      <meta href="http://purl.org/phylo/treebase/phylows/study/TB2:S794" id="meta33" rel="rdfs:isDefinedBy" xsi:type="nex:ResourceMeta"/>
     </otu>
     <otu about="#Tl282" id="Tl282" label="Grifola frondosa WC834">
       <meta content="12577" datatype="xsd:long" id="meta45" property="tb:identifier.taxon" xsi:type="nex:LiteralMeta"/>
@@ -57,7 +57,7 @@
       <meta href="http://purl.uniprot.org/taxonomy/5627" id="meta43" rel="skos:closeMatch" xsi:type="nex:ResourceMeta"/>
       <meta content="Grifola frondosa" datatype="xsd:string" id="meta42" property="skos:altLabel" xsi:type="nex:LiteralMeta"/>
       <meta href="http://www.ubio.org/authority/metadata.php?lsid=urn:lsid:ubio.org:namebank:3234622" id="meta41" rel="skos:closeMatch" xsi:type="nex:ResourceMeta"/>
-      <meta href="http://purl.org/PHYLO/TREEBASE/PHYLOWS/study/TB2:S794" id="meta40" rel="rdfs:isDefinedBy" xsi:type="nex:ResourceMeta"/>
+      <meta href="http://purl.org/phylo/treebase/phylows/study/TB2:S794" id="meta40" rel="rdfs:isDefinedBy" xsi:type="nex:ResourceMeta"/>
     </otu>
     <otu about="#Tl266" id="Tl266" label="Grifola frondosa WC828">
       <meta content="12577" datatype="xsd:long" id="meta52" property="tb:identifier.taxon" xsi:type="nex:LiteralMeta"/>
@@ -65,7 +65,7 @@
       <meta href="http://purl.uniprot.org/taxonomy/5627" id="meta50" rel="skos:closeMatch" xsi:type="nex:ResourceMeta"/>
       <meta content="Grifola frondosa" datatype="xsd:string" id="meta49" property="skos:altLabel" xsi:type="nex:LiteralMeta"/>
       <meta href="http://www.ubio.org/authority/metadata.php?lsid=urn:lsid:ubio.org:namebank:3234622" id="meta48" rel="skos:closeMatch" xsi:type="nex:ResourceMeta"/>
-      <meta href="http://purl.org/PHYLO/TREEBASE/PHYLOWS/study/TB2:S794" id="meta47" rel="rdfs:isDefinedBy" xsi:type="nex:ResourceMeta"/>
+      <meta href="http://purl.org/phylo/treebase/phylows/study/TB2:S794" id="meta47" rel="rdfs:isDefinedBy" xsi:type="nex:ResourceMeta"/>
     </otu>
     <otu about="#Tl280" id="Tl280" label="Grifola frondosa WC808">
       <meta content="12577" datatype="xsd:long" id="meta59" property="tb:identifier.taxon" xsi:type="nex:LiteralMeta"/>
@@ -73,7 +73,7 @@
       <meta href="http://purl.uniprot.org/taxonomy/5627" id="meta57" rel="skos:closeMatch" xsi:type="nex:ResourceMeta"/>
       <meta content="Grifola frondosa" datatype="xsd:string" id="meta56" property="skos:altLabel" xsi:type="nex:LiteralMeta"/>
       <meta href="http://www.ubio.org/authority/metadata.php?lsid=urn:lsid:ubio.org:namebank:3234622" id="meta55" rel="skos:closeMatch" xsi:type="nex:ResourceMeta"/>
-      <meta href="http://purl.org/PHYLO/TREEBASE/PHYLOWS/study/TB2:S794" id="meta54" rel="rdfs:isDefinedBy" xsi:type="nex:ResourceMeta"/>
+      <meta href="http://purl.org/phylo/treebase/phylows/study/TB2:S794" id="meta54" rel="rdfs:isDefinedBy" xsi:type="nex:ResourceMeta"/>
     </otu>
     <otu about="#Tl257" id="Tl257" label="Grifola frondosa WC685">
       <meta content="12577" datatype="xsd:long" id="meta66" property="tb:identifier.taxon" xsi:type="nex:LiteralMeta"/>
@@ -81,7 +81,7 @@
       <meta href="http://purl.uniprot.org/taxonomy/5627" id="meta64" rel="skos:closeMatch" xsi:type="nex:ResourceMeta"/>
       <meta content="Grifola frondosa" datatype="xsd:string" id="meta63" property="skos:altLabel" xsi:type="nex:LiteralMeta"/>
       <meta href="http://www.ubio.org/authority/metadata.php?lsid=urn:lsid:ubio.org:namebank:3234622" id="meta62" rel="skos:closeMatch" xsi:type="nex:ResourceMeta"/>
-      <meta href="http://purl.org/PHYLO/TREEBASE/PHYLOWS/study/TB2:S794" id="meta61" rel="rdfs:isDefinedBy" xsi:type="nex:ResourceMeta"/>
+      <meta href="http://purl.org/phylo/treebase/phylows/study/TB2:S794" id="meta61" rel="rdfs:isDefinedBy" xsi:type="nex:ResourceMeta"/>
     </otu>
     <otu about="#Tl260" id="Tl260" label="Grifola frondosa WC659">
       <meta content="12577" datatype="xsd:long" id="meta73" property="tb:identifier.taxon" xsi:type="nex:LiteralMeta"/>
@@ -89,7 +89,7 @@
       <meta href="http://purl.uniprot.org/taxonomy/5627" id="meta71" rel="skos:closeMatch" xsi:type="nex:ResourceMeta"/>
       <meta content="Grifola frondosa" datatype="xsd:string" id="meta70" property="skos:altLabel" xsi:type="nex:LiteralMeta"/>
       <meta href="http://www.ubio.org/authority/metadata.php?lsid=urn:lsid:ubio.org:namebank:3234622" id="meta69" rel="skos:closeMatch" xsi:type="nex:ResourceMeta"/>
-      <meta href="http://purl.org/PHYLO/TREEBASE/PHYLOWS/study/TB2:S794" id="meta68" rel="rdfs:isDefinedBy" xsi:type="nex:ResourceMeta"/>
+      <meta href="http://purl.org/phylo/treebase/phylows/study/TB2:S794" id="meta68" rel="rdfs:isDefinedBy" xsi:type="nex:ResourceMeta"/>
     </otu>
     <otu about="#Tl270" id="Tl270" label="Grifola frondosa WC583">
       <meta content="12577" datatype="xsd:long" id="meta80" property="tb:identifier.taxon" xsi:type="nex:LiteralMeta"/>
@@ -97,7 +97,7 @@
       <meta href="http://purl.uniprot.org/taxonomy/5627" id="meta78" rel="skos:closeMatch" xsi:type="nex:ResourceMeta"/>
       <meta content="Grifola frondosa" datatype="xsd:string" id="meta77" property="skos:altLabel" xsi:type="nex:LiteralMeta"/>
       <meta href="http://www.ubio.org/authority/metadata.php?lsid=urn:lsid:ubio.org:namebank:3234622" id="meta76" rel="skos:closeMatch" xsi:type="nex:ResourceMeta"/>
-      <meta href="http://purl.org/PHYLO/TREEBASE/PHYLOWS/study/TB2:S794" id="meta75" rel="rdfs:isDefinedBy" xsi:type="nex:ResourceMeta"/>
+      <meta href="http://purl.org/phylo/treebase/phylows/study/TB2:S794" id="meta75" rel="rdfs:isDefinedBy" xsi:type="nex:ResourceMeta"/>
     </otu>
     <otu about="#Tl247" id="Tl247" label="Grifola frondosa WC582">
       <meta content="12577" datatype="xsd:long" id="meta87" property="tb:identifier.taxon" xsi:type="nex:LiteralMeta"/>
@@ -105,7 +105,7 @@
       <meta href="http://purl.uniprot.org/taxonomy/5627" id="meta85" rel="skos:closeMatch" xsi:type="nex:ResourceMeta"/>
       <meta content="Grifola frondosa" datatype="xsd:string" id="meta84" property="skos:altLabel" xsi:type="nex:LiteralMeta"/>
       <meta href="http://www.ubio.org/authority/metadata.php?lsid=urn:lsid:ubio.org:namebank:3234622" id="meta83" rel="skos:closeMatch" xsi:type="nex:ResourceMeta"/>
-      <meta href="http://purl.org/PHYLO/TREEBASE/PHYLOWS/study/TB2:S794" id="meta82" rel="rdfs:isDefinedBy" xsi:type="nex:ResourceMeta"/>
+      <meta href="http://purl.org/phylo/treebase/phylows/study/TB2:S794" id="meta82" rel="rdfs:isDefinedBy" xsi:type="nex:ResourceMeta"/>
     </otu>
     <otu about="#Tl256" id="Tl256" label="Grifola frondosa WC581">
       <meta content="12577" datatype="xsd:long" id="meta94" property="tb:identifier.taxon" xsi:type="nex:LiteralMeta"/>
@@ -113,7 +113,7 @@
       <meta href="http://purl.uniprot.org/taxonomy/5627" id="meta92" rel="skos:closeMatch" xsi:type="nex:ResourceMeta"/>
       <meta content="Grifola frondosa" datatype="xsd:string" id="meta91" property="skos:altLabel" xsi:type="nex:LiteralMeta"/>
       <meta href="http://www.ubio.org/authority/metadata.php?lsid=urn:lsid:ubio.org:namebank:3234622" id="meta90" rel="skos:closeMatch" xsi:type="nex:ResourceMeta"/>
-      <meta href="http://purl.org/PHYLO/TREEBASE/PHYLOWS/study/TB2:S794" id="meta89" rel="rdfs:isDefinedBy" xsi:type="nex:ResourceMeta"/>
+      <meta href="http://purl.org/phylo/treebase/phylows/study/TB2:S794" id="meta89" rel="rdfs:isDefinedBy" xsi:type="nex:ResourceMeta"/>
     </otu>
     <otu about="#Tl281" id="Tl281" label="Grifola frondosa WC557">
       <meta content="12577" datatype="xsd:long" id="meta101" property="tb:identifier.taxon" xsi:type="nex:LiteralMeta"/>
@@ -121,7 +121,7 @@
       <meta href="http://purl.uniprot.org/taxonomy/5627" id="meta99" rel="skos:closeMatch" xsi:type="nex:ResourceMeta"/>
       <meta content="Grifola frondosa" datatype="xsd:string" id="meta98" property="skos:altLabel" xsi:type="nex:LiteralMeta"/>
       <meta href="http://www.ubio.org/authority/metadata.php?lsid=urn:lsid:ubio.org:namebank:3234622" id="meta97" rel="skos:closeMatch" xsi:type="nex:ResourceMeta"/>
-      <meta href="http://purl.org/PHYLO/TREEBASE/PHYLOWS/study/TB2:S794" id="meta96" rel="rdfs:isDefinedBy" xsi:type="nex:ResourceMeta"/>
+      <meta href="http://purl.org/phylo/treebase/phylows/study/TB2:S794" id="meta96" rel="rdfs:isDefinedBy" xsi:type="nex:ResourceMeta"/>
     </otu>
     <otu about="#Tl244" id="Tl244" label="Grifola frondosa WC556">
       <meta content="12577" datatype="xsd:long" id="meta108" property="tb:identifier.taxon" xsi:type="nex:LiteralMeta"/>
@@ -129,7 +129,7 @@
       <meta href="http://purl.uniprot.org/taxonomy/5627" id="meta106" rel="skos:closeMatch" xsi:type="nex:ResourceMeta"/>
       <meta content="Grifola frondosa" datatype="xsd:string" id="meta105" property="skos:altLabel" xsi:type="nex:LiteralMeta"/>
       <meta href="http://www.ubio.org/authority/metadata.php?lsid=urn:lsid:ubio.org:namebank:3234622" id="meta104" rel="skos:closeMatch" xsi:type="nex:ResourceMeta"/>
-      <meta href="http://purl.org/PHYLO/TREEBASE/PHYLOWS/study/TB2:S794" id="meta103" rel="rdfs:isDefinedBy" xsi:type="nex:ResourceMeta"/>
+      <meta href="http://purl.org/phylo/treebase/phylows/study/TB2:S794" id="meta103" rel="rdfs:isDefinedBy" xsi:type="nex:ResourceMeta"/>
     </otu>
     <otu about="#Tl263" id="Tl263" label="Grifola frondosa WC555">
       <meta content="12577" datatype="xsd:long" id="meta115" property="tb:identifier.taxon" xsi:type="nex:LiteralMeta"/>
@@ -137,7 +137,7 @@
       <meta href="http://purl.uniprot.org/taxonomy/5627" id="meta113" rel="skos:closeMatch" xsi:type="nex:ResourceMeta"/>
       <meta content="Grifola frondosa" datatype="xsd:string" id="meta112" property="skos:altLabel" xsi:type="nex:LiteralMeta"/>
       <meta href="http://www.ubio.org/authority/metadata.php?lsid=urn:lsid:ubio.org:namebank:3234622" id="meta111" rel="skos:closeMatch" xsi:type="nex:ResourceMeta"/>
-      <meta href="http://purl.org/PHYLO/TREEBASE/PHYLOWS/study/TB2:S794" id="meta110" rel="rdfs:isDefinedBy" xsi:type="nex:ResourceMeta"/>
+      <meta href="http://purl.org/phylo/treebase/phylows/study/TB2:S794" id="meta110" rel="rdfs:isDefinedBy" xsi:type="nex:ResourceMeta"/>
     </otu>
     <otu about="#Tl279" id="Tl279" label="Grifola frondosa WC493">
       <meta content="12577" datatype="xsd:long" id="meta122" property="tb:identifier.taxon" xsi:type="nex:LiteralMeta"/>
@@ -145,7 +145,7 @@
       <meta href="http://purl.uniprot.org/taxonomy/5627" id="meta120" rel="skos:closeMatch" xsi:type="nex:ResourceMeta"/>
       <meta content="Grifola frondosa" datatype="xsd:string" id="meta119" property="skos:altLabel" xsi:type="nex:LiteralMeta"/>
       <meta href="http://www.ubio.org/authority/metadata.php?lsid=urn:lsid:ubio.org:namebank:3234622" id="meta118" rel="skos:closeMatch" xsi:type="nex:ResourceMeta"/>
-      <meta href="http://purl.org/PHYLO/TREEBASE/PHYLOWS/study/TB2:S794" id="meta117" rel="rdfs:isDefinedBy" xsi:type="nex:ResourceMeta"/>
+      <meta href="http://purl.org/phylo/treebase/phylows/study/TB2:S794" id="meta117" rel="rdfs:isDefinedBy" xsi:type="nex:ResourceMeta"/>
     </otu>
     <otu about="#Tl236" id="Tl236" label="Grifola frondosa WC483">
       <meta content="12577" datatype="xsd:long" id="meta129" property="tb:identifier.taxon" xsi:type="nex:LiteralMeta"/>
@@ -153,7 +153,7 @@
       <meta href="http://purl.uniprot.org/taxonomy/5627" id="meta127" rel="skos:closeMatch" xsi:type="nex:ResourceMeta"/>
       <meta content="Grifola frondosa" datatype="xsd:string" id="meta126" property="skos:altLabel" xsi:type="nex:LiteralMeta"/>
       <meta href="http://www.ubio.org/authority/metadata.php?lsid=urn:lsid:ubio.org:namebank:3234622" id="meta125" rel="skos:closeMatch" xsi:type="nex:ResourceMeta"/>
-      <meta href="http://purl.org/PHYLO/TREEBASE/PHYLOWS/study/TB2:S794" id="meta124" rel="rdfs:isDefinedBy" xsi:type="nex:ResourceMeta"/>
+      <meta href="http://purl.org/phylo/treebase/phylows/study/TB2:S794" id="meta124" rel="rdfs:isDefinedBy" xsi:type="nex:ResourceMeta"/>
     </otu>
     <otu about="#Tl252" id="Tl252" label="Grifola frondosa WC367">
       <meta content="12577" datatype="xsd:long" id="meta136" property="tb:identifier.taxon" xsi:type="nex:LiteralMeta"/>
@@ -161,7 +161,7 @@
       <meta href="http://purl.uniprot.org/taxonomy/5627" id="meta134" rel="skos:closeMatch" xsi:type="nex:ResourceMeta"/>
       <meta content="Grifola frondosa" datatype="xsd:string" id="meta133" property="skos:altLabel" xsi:type="nex:LiteralMeta"/>
       <meta href="http://www.ubio.org/authority/metadata.php?lsid=urn:lsid:ubio.org:namebank:3234622" id="meta132" rel="skos:closeMatch" xsi:type="nex:ResourceMeta"/>
-      <meta href="http://purl.org/PHYLO/TREEBASE/PHYLOWS/study/TB2:S794" id="meta131" rel="rdfs:isDefinedBy" xsi:type="nex:ResourceMeta"/>
+      <meta href="http://purl.org/phylo/treebase/phylows/study/TB2:S794" id="meta131" rel="rdfs:isDefinedBy" xsi:type="nex:ResourceMeta"/>
     </otu>
     <otu about="#Tl272" id="Tl272" label="Grifola frondosa WC364">
       <meta content="12577" datatype="xsd:long" id="meta143" property="tb:identifier.taxon" xsi:type="nex:LiteralMeta"/>
@@ -169,7 +169,7 @@
       <meta href="http://purl.uniprot.org/taxonomy/5627" id="meta141" rel="skos:closeMatch" xsi:type="nex:ResourceMeta"/>
       <meta content="Grifola frondosa" datatype="xsd:string" id="meta140" property="skos:altLabel" xsi:type="nex:LiteralMeta"/>
       <meta href="http://www.ubio.org/authority/metadata.php?lsid=urn:lsid:ubio.org:namebank:3234622" id="meta139" rel="skos:closeMatch" xsi:type="nex:ResourceMeta"/>
-      <meta href="http://purl.org/PHYLO/TREEBASE/PHYLOWS/study/TB2:S794" id="meta138" rel="rdfs:isDefinedBy" xsi:type="nex:ResourceMeta"/>
+      <meta href="http://purl.org/phylo/treebase/phylows/study/TB2:S794" id="meta138" rel="rdfs:isDefinedBy" xsi:type="nex:ResourceMeta"/>
     </otu>
     <otu about="#Tl249" id="Tl249" label="Grifola frondosa WC248">
       <meta content="12577" datatype="xsd:long" id="meta150" property="tb:identifier.taxon" xsi:type="nex:LiteralMeta"/>
@@ -177,7 +177,7 @@
       <meta href="http://purl.uniprot.org/taxonomy/5627" id="meta148" rel="skos:closeMatch" xsi:type="nex:ResourceMeta"/>
       <meta content="Grifola frondosa" datatype="xsd:string" id="meta147" property="skos:altLabel" xsi:type="nex:LiteralMeta"/>
       <meta href="http://www.ubio.org/authority/metadata.php?lsid=urn:lsid:ubio.org:namebank:3234622" id="meta146" rel="skos:closeMatch" xsi:type="nex:ResourceMeta"/>
-      <meta href="http://purl.org/PHYLO/TREEBASE/PHYLOWS/study/TB2:S794" id="meta145" rel="rdfs:isDefinedBy" xsi:type="nex:ResourceMeta"/>
+      <meta href="http://purl.org/phylo/treebase/phylows/study/TB2:S794" id="meta145" rel="rdfs:isDefinedBy" xsi:type="nex:ResourceMeta"/>
     </otu>
     <otu about="#Tl275" id="Tl275" label="Grifola frondosa M040">
       <meta content="12577" datatype="xsd:long" id="meta157" property="tb:identifier.taxon" xsi:type="nex:LiteralMeta"/>
@@ -185,7 +185,7 @@
       <meta href="http://purl.uniprot.org/taxonomy/5627" id="meta155" rel="skos:closeMatch" xsi:type="nex:ResourceMeta"/>
       <meta content="Grifola frondosa" datatype="xsd:string" id="meta154" property="skos:altLabel" xsi:type="nex:LiteralMeta"/>
       <meta href="http://www.ubio.org/authority/metadata.php?lsid=urn:lsid:ubio.org:namebank:3234622" id="meta153" rel="skos:closeMatch" xsi:type="nex:ResourceMeta"/>
-      <meta href="http://purl.org/PHYLO/TREEBASE/PHYLOWS/study/TB2:S794" id="meta152" rel="rdfs:isDefinedBy" xsi:type="nex:ResourceMeta"/>
+      <meta href="http://purl.org/phylo/treebase/phylows/study/TB2:S794" id="meta152" rel="rdfs:isDefinedBy" xsi:type="nex:ResourceMeta"/>
     </otu>
     <otu about="#Tl274" id="Tl274" label="Grifola frondosa M039">
       <meta content="12577" datatype="xsd:long" id="meta164" property="tb:identifier.taxon" xsi:type="nex:LiteralMeta"/>
@@ -193,7 +193,7 @@
       <meta href="http://purl.uniprot.org/taxonomy/5627" id="meta162" rel="skos:closeMatch" xsi:type="nex:ResourceMeta"/>
       <meta content="Grifola frondosa" datatype="xsd:string" id="meta161" property="skos:altLabel" xsi:type="nex:LiteralMeta"/>
       <meta href="http://www.ubio.org/authority/metadata.php?lsid=urn:lsid:ubio.org:namebank:3234622" id="meta160" rel="skos:closeMatch" xsi:type="nex:ResourceMeta"/>
-      <meta href="http://purl.org/PHYLO/TREEBASE/PHYLOWS/study/TB2:S794" id="meta159" rel="rdfs:isDefinedBy" xsi:type="nex:ResourceMeta"/>
+      <meta href="http://purl.org/phylo/treebase/phylows/study/TB2:S794" id="meta159" rel="rdfs:isDefinedBy" xsi:type="nex:ResourceMeta"/>
     </otu>
     <otu about="#Tl233" id="Tl233" label="Grifola frondosa M038">
       <meta content="12577" datatype="xsd:long" id="meta171" property="tb:identifier.taxon" xsi:type="nex:LiteralMeta"/>
@@ -201,7 +201,7 @@
       <meta href="http://purl.uniprot.org/taxonomy/5627" id="meta169" rel="skos:closeMatch" xsi:type="nex:ResourceMeta"/>
       <meta content="Grifola frondosa" datatype="xsd:string" id="meta168" property="skos:altLabel" xsi:type="nex:LiteralMeta"/>
       <meta href="http://www.ubio.org/authority/metadata.php?lsid=urn:lsid:ubio.org:namebank:3234622" id="meta167" rel="skos:closeMatch" xsi:type="nex:ResourceMeta"/>
-      <meta href="http://purl.org/PHYLO/TREEBASE/PHYLOWS/study/TB2:S794" id="meta166" rel="rdfs:isDefinedBy" xsi:type="nex:ResourceMeta"/>
+      <meta href="http://purl.org/phylo/treebase/phylows/study/TB2:S794" id="meta166" rel="rdfs:isDefinedBy" xsi:type="nex:ResourceMeta"/>
     </otu>
     <otu about="#Tl258" id="Tl258" label="Grifola frondosa M037">
       <meta content="12577" datatype="xsd:long" id="meta178" property="tb:identifier.taxon" xsi:type="nex:LiteralMeta"/>
@@ -209,7 +209,7 @@
       <meta href="http://purl.uniprot.org/taxonomy/5627" id="meta176" rel="skos:closeMatch" xsi:type="nex:ResourceMeta"/>
       <meta content="Grifola frondosa" datatype="xsd:string" id="meta175" property="skos:altLabel" xsi:type="nex:LiteralMeta"/>
       <meta href="http://www.ubio.org/authority/metadata.php?lsid=urn:lsid:ubio.org:namebank:3234622" id="meta174" rel="skos:closeMatch" xsi:type="nex:ResourceMeta"/>
-      <meta href="http://purl.org/PHYLO/TREEBASE/PHYLOWS/study/TB2:S794" id="meta173" rel="rdfs:isDefinedBy" xsi:type="nex:ResourceMeta"/>
+      <meta href="http://purl.org/phylo/treebase/phylows/study/TB2:S794" id="meta173" rel="rdfs:isDefinedBy" xsi:type="nex:ResourceMeta"/>
     </otu>
     <otu about="#Tl254" id="Tl254" label="Grifola frondosa M036">
       <meta content="12577" datatype="xsd:long" id="meta185" property="tb:identifier.taxon" xsi:type="nex:LiteralMeta"/>
@@ -217,7 +217,7 @@
       <meta href="http://purl.uniprot.org/taxonomy/5627" id="meta183" rel="skos:closeMatch" xsi:type="nex:ResourceMeta"/>
       <meta content="Grifola frondosa" datatype="xsd:string" id="meta182" property="skos:altLabel" xsi:type="nex:LiteralMeta"/>
       <meta href="http://www.ubio.org/authority/metadata.php?lsid=urn:lsid:ubio.org:namebank:3234622" id="meta181" rel="skos:closeMatch" xsi:type="nex:ResourceMeta"/>
-      <meta href="http://purl.org/PHYLO/TREEBASE/PHYLOWS/study/TB2:S794" id="meta180" rel="rdfs:isDefinedBy" xsi:type="nex:ResourceMeta"/>
+      <meta href="http://purl.org/phylo/treebase/phylows/study/TB2:S794" id="meta180" rel="rdfs:isDefinedBy" xsi:type="nex:ResourceMeta"/>
     </otu>
     <otu about="#Tl269" id="Tl269" label="Grifola frondosa M035">
       <meta content="12577" datatype="xsd:long" id="meta192" property="tb:identifier.taxon" xsi:type="nex:LiteralMeta"/>
@@ -225,7 +225,7 @@
       <meta href="http://purl.uniprot.org/taxonomy/5627" id="meta190" rel="skos:closeMatch" xsi:type="nex:ResourceMeta"/>
       <meta content="Grifola frondosa" datatype="xsd:string" id="meta189" property="skos:altLabel" xsi:type="nex:LiteralMeta"/>
       <meta href="http://www.ubio.org/authority/metadata.php?lsid=urn:lsid:ubio.org:namebank:3234622" id="meta188" rel="skos:closeMatch" xsi:type="nex:ResourceMeta"/>
-      <meta href="http://purl.org/PHYLO/TREEBASE/PHYLOWS/study/TB2:S794" id="meta187" rel="rdfs:isDefinedBy" xsi:type="nex:ResourceMeta"/>
+      <meta href="http://purl.org/phylo/treebase/phylows/study/TB2:S794" id="meta187" rel="rdfs:isDefinedBy" xsi:type="nex:ResourceMeta"/>
     </otu>
     <otu about="#Tl242" id="Tl242" label="Grifola frondosa M034">
       <meta content="12577" datatype="xsd:long" id="meta199" property="tb:identifier.taxon" xsi:type="nex:LiteralMeta"/>
@@ -233,7 +233,7 @@
       <meta href="http://purl.uniprot.org/taxonomy/5627" id="meta197" rel="skos:closeMatch" xsi:type="nex:ResourceMeta"/>
       <meta content="Grifola frondosa" datatype="xsd:string" id="meta196" property="skos:altLabel" xsi:type="nex:LiteralMeta"/>
       <meta href="http://www.ubio.org/authority/metadata.php?lsid=urn:lsid:ubio.org:namebank:3234622" id="meta195" rel="skos:closeMatch" xsi:type="nex:ResourceMeta"/>
-      <meta href="http://purl.org/PHYLO/TREEBASE/PHYLOWS/study/TB2:S794" id="meta194" rel="rdfs:isDefinedBy" xsi:type="nex:ResourceMeta"/>
+      <meta href="http://purl.org/phylo/treebase/phylows/study/TB2:S794" id="meta194" rel="rdfs:isDefinedBy" xsi:type="nex:ResourceMeta"/>
     </otu>
     <otu about="#Tl239" id="Tl239" label="Grifola frondosa M033">
       <meta content="12577" datatype="xsd:long" id="meta206" property="tb:identifier.taxon" xsi:type="nex:LiteralMeta"/>
@@ -241,7 +241,7 @@
       <meta href="http://purl.uniprot.org/taxonomy/5627" id="meta204" rel="skos:closeMatch" xsi:type="nex:ResourceMeta"/>
       <meta content="Grifola frondosa" datatype="xsd:string" id="meta203" property="skos:altLabel" xsi:type="nex:LiteralMeta"/>
       <meta href="http://www.ubio.org/authority/metadata.php?lsid=urn:lsid:ubio.org:namebank:3234622" id="meta202" rel="skos:closeMatch" xsi:type="nex:ResourceMeta"/>
-      <meta href="http://purl.org/PHYLO/TREEBASE/PHYLOWS/study/TB2:S794" id="meta201" rel="rdfs:isDefinedBy" xsi:type="nex:ResourceMeta"/>
+      <meta href="http://purl.org/phylo/treebase/phylows/study/TB2:S794" id="meta201" rel="rdfs:isDefinedBy" xsi:type="nex:ResourceMeta"/>
     </otu>
     <otu about="#Tl246" id="Tl246" label="Grifola frondosa M032">
       <meta content="12577" datatype="xsd:long" id="meta213" property="tb:identifier.taxon" xsi:type="nex:LiteralMeta"/>
@@ -249,7 +249,7 @@
       <meta href="http://purl.uniprot.org/taxonomy/5627" id="meta211" rel="skos:closeMatch" xsi:type="nex:ResourceMeta"/>
       <meta content="Grifola frondosa" datatype="xsd:string" id="meta210" property="skos:altLabel" xsi:type="nex:LiteralMeta"/>
       <meta href="http://www.ubio.org/authority/metadata.php?lsid=urn:lsid:ubio.org:namebank:3234622" id="meta209" rel="skos:closeMatch" xsi:type="nex:ResourceMeta"/>
-      <meta href="http://purl.org/PHYLO/TREEBASE/PHYLOWS/study/TB2:S794" id="meta208" rel="rdfs:isDefinedBy" xsi:type="nex:ResourceMeta"/>
+      <meta href="http://purl.org/phylo/treebase/phylows/study/TB2:S794" id="meta208" rel="rdfs:isDefinedBy" xsi:type="nex:ResourceMeta"/>
     </otu>
     <otu about="#Tl259" id="Tl259" label="Grifola frondosa M031">
       <meta content="12577" datatype="xsd:long" id="meta220" property="tb:identifier.taxon" xsi:type="nex:LiteralMeta"/>
@@ -257,7 +257,7 @@
       <meta href="http://purl.uniprot.org/taxonomy/5627" id="meta218" rel="skos:closeMatch" xsi:type="nex:ResourceMeta"/>
       <meta content="Grifola frondosa" datatype="xsd:string" id="meta217" property="skos:altLabel" xsi:type="nex:LiteralMeta"/>
       <meta href="http://www.ubio.org/authority/metadata.php?lsid=urn:lsid:ubio.org:namebank:3234622" id="meta216" rel="skos:closeMatch" xsi:type="nex:ResourceMeta"/>
-      <meta href="http://purl.org/PHYLO/TREEBASE/PHYLOWS/study/TB2:S794" id="meta215" rel="rdfs:isDefinedBy" xsi:type="nex:ResourceMeta"/>
+      <meta href="http://purl.org/phylo/treebase/phylows/study/TB2:S794" id="meta215" rel="rdfs:isDefinedBy" xsi:type="nex:ResourceMeta"/>
     </otu>
     <otu about="#Tl277" id="Tl277" label="Grifola frondosa M030">
       <meta content="12577" datatype="xsd:long" id="meta227" property="tb:identifier.taxon" xsi:type="nex:LiteralMeta"/>
@@ -265,7 +265,7 @@
       <meta href="http://purl.uniprot.org/taxonomy/5627" id="meta225" rel="skos:closeMatch" xsi:type="nex:ResourceMeta"/>
       <meta content="Grifola frondosa" datatype="xsd:string" id="meta224" property="skos:altLabel" xsi:type="nex:LiteralMeta"/>
       <meta href="http://www.ubio.org/authority/metadata.php?lsid=urn:lsid:ubio.org:namebank:3234622" id="meta223" rel="skos:closeMatch" xsi:type="nex:ResourceMeta"/>
-      <meta href="http://purl.org/PHYLO/TREEBASE/PHYLOWS/study/TB2:S794" id="meta222" rel="rdfs:isDefinedBy" xsi:type="nex:ResourceMeta"/>
+      <meta href="http://purl.org/phylo/treebase/phylows/study/TB2:S794" id="meta222" rel="rdfs:isDefinedBy" xsi:type="nex:ResourceMeta"/>
     </otu>
     <otu about="#Tl243" id="Tl243" label="Grifola frondosa M029">
       <meta content="12577" datatype="xsd:long" id="meta234" property="tb:identifier.taxon" xsi:type="nex:LiteralMeta"/>
@@ -273,7 +273,7 @@
       <meta href="http://purl.uniprot.org/taxonomy/5627" id="meta232" rel="skos:closeMatch" xsi:type="nex:ResourceMeta"/>
       <meta content="Grifola frondosa" datatype="xsd:string" id="meta231" property="skos:altLabel" xsi:type="nex:LiteralMeta"/>
       <meta href="http://www.ubio.org/authority/metadata.php?lsid=urn:lsid:ubio.org:namebank:3234622" id="meta230" rel="skos:closeMatch" xsi:type="nex:ResourceMeta"/>
-      <meta href="http://purl.org/PHYLO/TREEBASE/PHYLOWS/study/TB2:S794" id="meta229" rel="rdfs:isDefinedBy" xsi:type="nex:ResourceMeta"/>
+      <meta href="http://purl.org/phylo/treebase/phylows/study/TB2:S794" id="meta229" rel="rdfs:isDefinedBy" xsi:type="nex:ResourceMeta"/>
     </otu>
     <otu about="#Tl250" id="Tl250" label="Grifola frondosa M021">
       <meta content="12577" datatype="xsd:long" id="meta241" property="tb:identifier.taxon" xsi:type="nex:LiteralMeta"/>
@@ -281,7 +281,7 @@
       <meta href="http://purl.uniprot.org/taxonomy/5627" id="meta239" rel="skos:closeMatch" xsi:type="nex:ResourceMeta"/>
       <meta content="Grifola frondosa" datatype="xsd:string" id="meta238" property="skos:altLabel" xsi:type="nex:LiteralMeta"/>
       <meta href="http://www.ubio.org/authority/metadata.php?lsid=urn:lsid:ubio.org:namebank:3234622" id="meta237" rel="skos:closeMatch" xsi:type="nex:ResourceMeta"/>
-      <meta href="http://purl.org/PHYLO/TREEBASE/PHYLOWS/study/TB2:S794" id="meta236" rel="rdfs:isDefinedBy" xsi:type="nex:ResourceMeta"/>
+      <meta href="http://purl.org/phylo/treebase/phylows/study/TB2:S794" id="meta236" rel="rdfs:isDefinedBy" xsi:type="nex:ResourceMeta"/>
     </otu>
     <otu about="#Tl237" id="Tl237" label="Grifola frondosa M020">
       <meta content="12577" datatype="xsd:long" id="meta248" property="tb:identifier.taxon" xsi:type="nex:LiteralMeta"/>
@@ -289,7 +289,7 @@
       <meta href="http://purl.uniprot.org/taxonomy/5627" id="meta246" rel="skos:closeMatch" xsi:type="nex:ResourceMeta"/>
       <meta content="Grifola frondosa" datatype="xsd:string" id="meta245" property="skos:altLabel" xsi:type="nex:LiteralMeta"/>
       <meta href="http://www.ubio.org/authority/metadata.php?lsid=urn:lsid:ubio.org:namebank:3234622" id="meta244" rel="skos:closeMatch" xsi:type="nex:ResourceMeta"/>
-      <meta href="http://purl.org/PHYLO/TREEBASE/PHYLOWS/study/TB2:S794" id="meta243" rel="rdfs:isDefinedBy" xsi:type="nex:ResourceMeta"/>
+      <meta href="http://purl.org/phylo/treebase/phylows/study/TB2:S794" id="meta243" rel="rdfs:isDefinedBy" xsi:type="nex:ResourceMeta"/>
     </otu>
     <otu about="#Tl264" id="Tl264" label="Grifola frondosa M019">
       <meta content="12577" datatype="xsd:long" id="meta255" property="tb:identifier.taxon" xsi:type="nex:LiteralMeta"/>
@@ -297,7 +297,7 @@
       <meta href="http://purl.uniprot.org/taxonomy/5627" id="meta253" rel="skos:closeMatch" xsi:type="nex:ResourceMeta"/>
       <meta content="Grifola frondosa" datatype="xsd:string" id="meta252" property="skos:altLabel" xsi:type="nex:LiteralMeta"/>
       <meta href="http://www.ubio.org/authority/metadata.php?lsid=urn:lsid:ubio.org:namebank:3234622" id="meta251" rel="skos:closeMatch" xsi:type="nex:ResourceMeta"/>
-      <meta href="http://purl.org/PHYLO/TREEBASE/PHYLOWS/study/TB2:S794" id="meta250" rel="rdfs:isDefinedBy" xsi:type="nex:ResourceMeta"/>
+      <meta href="http://purl.org/phylo/treebase/phylows/study/TB2:S794" id="meta250" rel="rdfs:isDefinedBy" xsi:type="nex:ResourceMeta"/>
     </otu>
     <otu about="#Tl253" id="Tl253" label="Grifola frondosa M018">
       <meta content="12577" datatype="xsd:long" id="meta262" property="tb:identifier.taxon" xsi:type="nex:LiteralMeta"/>
@@ -305,7 +305,7 @@
       <meta href="http://purl.uniprot.org/taxonomy/5627" id="meta260" rel="skos:closeMatch" xsi:type="nex:ResourceMeta"/>
       <meta content="Grifola frondosa" datatype="xsd:string" id="meta259" property="skos:altLabel" xsi:type="nex:LiteralMeta"/>
       <meta href="http://www.ubio.org/authority/metadata.php?lsid=urn:lsid:ubio.org:namebank:3234622" id="meta258" rel="skos:closeMatch" xsi:type="nex:ResourceMeta"/>
-      <meta href="http://purl.org/PHYLO/TREEBASE/PHYLOWS/study/TB2:S794" id="meta257" rel="rdfs:isDefinedBy" xsi:type="nex:ResourceMeta"/>
+      <meta href="http://purl.org/phylo/treebase/phylows/study/TB2:S794" id="meta257" rel="rdfs:isDefinedBy" xsi:type="nex:ResourceMeta"/>
     </otu>
     <otu about="#Tl232" id="Tl232" label="Grifola frondosa M017">
       <meta content="12577" datatype="xsd:long" id="meta269" property="tb:identifier.taxon" xsi:type="nex:LiteralMeta"/>
@@ -313,7 +313,7 @@
       <meta href="http://purl.uniprot.org/taxonomy/5627" id="meta267" rel="skos:closeMatch" xsi:type="nex:ResourceMeta"/>
       <meta content="Grifola frondosa" datatype="xsd:string" id="meta266" property="skos:altLabel" xsi:type="nex:LiteralMeta"/>
       <meta href="http://www.ubio.org/authority/metadata.php?lsid=urn:lsid:ubio.org:namebank:3234622" id="meta265" rel="skos:closeMatch" xsi:type="nex:ResourceMeta"/>
-      <meta href="http://purl.org/PHYLO/TREEBASE/PHYLOWS/study/TB2:S794" id="meta264" rel="rdfs:isDefinedBy" xsi:type="nex:ResourceMeta"/>
+      <meta href="http://purl.org/phylo/treebase/phylows/study/TB2:S794" id="meta264" rel="rdfs:isDefinedBy" xsi:type="nex:ResourceMeta"/>
     </otu>
     <otu about="#Tl245" id="Tl245" label="Grifola frondosa M016">
       <meta content="12577" datatype="xsd:long" id="meta276" property="tb:identifier.taxon" xsi:type="nex:LiteralMeta"/>
@@ -321,7 +321,7 @@
       <meta href="http://purl.uniprot.org/taxonomy/5627" id="meta274" rel="skos:closeMatch" xsi:type="nex:ResourceMeta"/>
       <meta content="Grifola frondosa" datatype="xsd:string" id="meta273" property="skos:altLabel" xsi:type="nex:LiteralMeta"/>
       <meta href="http://www.ubio.org/authority/metadata.php?lsid=urn:lsid:ubio.org:namebank:3234622" id="meta272" rel="skos:closeMatch" xsi:type="nex:ResourceMeta"/>
-      <meta href="http://purl.org/PHYLO/TREEBASE/PHYLOWS/study/TB2:S794" id="meta271" rel="rdfs:isDefinedBy" xsi:type="nex:ResourceMeta"/>
+      <meta href="http://purl.org/phylo/treebase/phylows/study/TB2:S794" id="meta271" rel="rdfs:isDefinedBy" xsi:type="nex:ResourceMeta"/>
     </otu>
     <otu about="#Tl262" id="Tl262" label="Grifola frondosa M015">
       <meta content="12577" datatype="xsd:long" id="meta283" property="tb:identifier.taxon" xsi:type="nex:LiteralMeta"/>
@@ -329,7 +329,7 @@
       <meta href="http://purl.uniprot.org/taxonomy/5627" id="meta281" rel="skos:closeMatch" xsi:type="nex:ResourceMeta"/>
       <meta content="Grifola frondosa" datatype="xsd:string" id="meta280" property="skos:altLabel" xsi:type="nex:LiteralMeta"/>
       <meta href="http://www.ubio.org/authority/metadata.php?lsid=urn:lsid:ubio.org:namebank:3234622" id="meta279" rel="skos:closeMatch" xsi:type="nex:ResourceMeta"/>
-      <meta href="http://purl.org/PHYLO/TREEBASE/PHYLOWS/study/TB2:S794" id="meta278" rel="rdfs:isDefinedBy" xsi:type="nex:ResourceMeta"/>
+      <meta href="http://purl.org/phylo/treebase/phylows/study/TB2:S794" id="meta278" rel="rdfs:isDefinedBy" xsi:type="nex:ResourceMeta"/>
     </otu>
     <otu about="#Tl235" id="Tl235" label="Grifola frondosa M014">
       <meta content="12577" datatype="xsd:long" id="meta290" property="tb:identifier.taxon" xsi:type="nex:LiteralMeta"/>
@@ -337,7 +337,7 @@
       <meta href="http://purl.uniprot.org/taxonomy/5627" id="meta288" rel="skos:closeMatch" xsi:type="nex:ResourceMeta"/>
       <meta content="Grifola frondosa" datatype="xsd:string" id="meta287" property="skos:altLabel" xsi:type="nex:LiteralMeta"/>
       <meta href="http://www.ubio.org/authority/metadata.php?lsid=urn:lsid:ubio.org:namebank:3234622" id="meta286" rel="skos:closeMatch" xsi:type="nex:ResourceMeta"/>
-      <meta href="http://purl.org/PHYLO/TREEBASE/PHYLOWS/study/TB2:S794" id="meta285" rel="rdfs:isDefinedBy" xsi:type="nex:ResourceMeta"/>
+      <meta href="http://purl.org/phylo/treebase/phylows/study/TB2:S794" id="meta285" rel="rdfs:isDefinedBy" xsi:type="nex:ResourceMeta"/>
     </otu>
     <otu about="#Tl276" id="Tl276" label="Grifola frondosa M013">
       <meta content="12577" datatype="xsd:long" id="meta297" property="tb:identifier.taxon" xsi:type="nex:LiteralMeta"/>
@@ -345,7 +345,7 @@
       <meta href="http://purl.uniprot.org/taxonomy/5627" id="meta295" rel="skos:closeMatch" xsi:type="nex:ResourceMeta"/>
       <meta content="Grifola frondosa" datatype="xsd:string" id="meta294" property="skos:altLabel" xsi:type="nex:LiteralMeta"/>
       <meta href="http://www.ubio.org/authority/metadata.php?lsid=urn:lsid:ubio.org:namebank:3234622" id="meta293" rel="skos:closeMatch" xsi:type="nex:ResourceMeta"/>
-      <meta href="http://purl.org/PHYLO/TREEBASE/PHYLOWS/study/TB2:S794" id="meta292" rel="rdfs:isDefinedBy" xsi:type="nex:ResourceMeta"/>
+      <meta href="http://purl.org/phylo/treebase/phylows/study/TB2:S794" id="meta292" rel="rdfs:isDefinedBy" xsi:type="nex:ResourceMeta"/>
     </otu>
     <otu about="#Tl273" id="Tl273" label="Grifola frondosa M012">
       <meta content="12577" datatype="xsd:long" id="meta304" property="tb:identifier.taxon" xsi:type="nex:LiteralMeta"/>
@@ -353,7 +353,7 @@
       <meta href="http://purl.uniprot.org/taxonomy/5627" id="meta302" rel="skos:closeMatch" xsi:type="nex:ResourceMeta"/>
       <meta content="Grifola frondosa" datatype="xsd:string" id="meta301" property="skos:altLabel" xsi:type="nex:LiteralMeta"/>
       <meta href="http://www.ubio.org/authority/metadata.php?lsid=urn:lsid:ubio.org:namebank:3234622" id="meta300" rel="skos:closeMatch" xsi:type="nex:ResourceMeta"/>
-      <meta href="http://purl.org/PHYLO/TREEBASE/PHYLOWS/study/TB2:S794" id="meta299" rel="rdfs:isDefinedBy" xsi:type="nex:ResourceMeta"/>
+      <meta href="http://purl.org/phylo/treebase/phylows/study/TB2:S794" id="meta299" rel="rdfs:isDefinedBy" xsi:type="nex:ResourceMeta"/>
     </otu>
     <otu about="#Tl265" id="Tl265" label="Grifola frondosa M011">
       <meta content="12577" datatype="xsd:long" id="meta311" property="tb:identifier.taxon" xsi:type="nex:LiteralMeta"/>
@@ -361,7 +361,7 @@
       <meta href="http://purl.uniprot.org/taxonomy/5627" id="meta309" rel="skos:closeMatch" xsi:type="nex:ResourceMeta"/>
       <meta content="Grifola frondosa" datatype="xsd:string" id="meta308" property="skos:altLabel" xsi:type="nex:LiteralMeta"/>
       <meta href="http://www.ubio.org/authority/metadata.php?lsid=urn:lsid:ubio.org:namebank:3234622" id="meta307" rel="skos:closeMatch" xsi:type="nex:ResourceMeta"/>
-      <meta href="http://purl.org/PHYLO/TREEBASE/PHYLOWS/study/TB2:S794" id="meta306" rel="rdfs:isDefinedBy" xsi:type="nex:ResourceMeta"/>
+      <meta href="http://purl.org/phylo/treebase/phylows/study/TB2:S794" id="meta306" rel="rdfs:isDefinedBy" xsi:type="nex:ResourceMeta"/>
     </otu>
     <otu about="#Tl271" id="Tl271" label="Grifola frondosa M010">
       <meta content="12577" datatype="xsd:long" id="meta318" property="tb:identifier.taxon" xsi:type="nex:LiteralMeta"/>
@@ -369,7 +369,7 @@
       <meta href="http://purl.uniprot.org/taxonomy/5627" id="meta316" rel="skos:closeMatch" xsi:type="nex:ResourceMeta"/>
       <meta content="Grifola frondosa" datatype="xsd:string" id="meta315" property="skos:altLabel" xsi:type="nex:LiteralMeta"/>
       <meta href="http://www.ubio.org/authority/metadata.php?lsid=urn:lsid:ubio.org:namebank:3234622" id="meta314" rel="skos:closeMatch" xsi:type="nex:ResourceMeta"/>
-      <meta href="http://purl.org/PHYLO/TREEBASE/PHYLOWS/study/TB2:S794" id="meta313" rel="rdfs:isDefinedBy" xsi:type="nex:ResourceMeta"/>
+      <meta href="http://purl.org/phylo/treebase/phylows/study/TB2:S794" id="meta313" rel="rdfs:isDefinedBy" xsi:type="nex:ResourceMeta"/>
     </otu>
     <otu about="#Tl251" id="Tl251" label="Grifola frondosa M009">
       <meta content="12577" datatype="xsd:long" id="meta325" property="tb:identifier.taxon" xsi:type="nex:LiteralMeta"/>
@@ -377,7 +377,7 @@
       <meta href="http://purl.uniprot.org/taxonomy/5627" id="meta323" rel="skos:closeMatch" xsi:type="nex:ResourceMeta"/>
       <meta content="Grifola frondosa" datatype="xsd:string" id="meta322" property="skos:altLabel" xsi:type="nex:LiteralMeta"/>
       <meta href="http://www.ubio.org/authority/metadata.php?lsid=urn:lsid:ubio.org:namebank:3234622" id="meta321" rel="skos:closeMatch" xsi:type="nex:ResourceMeta"/>
-      <meta href="http://purl.org/PHYLO/TREEBASE/PHYLOWS/study/TB2:S794" id="meta320" rel="rdfs:isDefinedBy" xsi:type="nex:ResourceMeta"/>
+      <meta href="http://purl.org/phylo/treebase/phylows/study/TB2:S794" id="meta320" rel="rdfs:isDefinedBy" xsi:type="nex:ResourceMeta"/>
     </otu>
     <otu about="#Tl267" id="Tl267" label="Grifola frondosa M008">
       <meta content="12577" datatype="xsd:long" id="meta332" property="tb:identifier.taxon" xsi:type="nex:LiteralMeta"/>
@@ -385,7 +385,7 @@
       <meta href="http://purl.uniprot.org/taxonomy/5627" id="meta330" rel="skos:closeMatch" xsi:type="nex:ResourceMeta"/>
       <meta content="Grifola frondosa" datatype="xsd:string" id="meta329" property="skos:altLabel" xsi:type="nex:LiteralMeta"/>
       <meta href="http://www.ubio.org/authority/metadata.php?lsid=urn:lsid:ubio.org:namebank:3234622" id="meta328" rel="skos:closeMatch" xsi:type="nex:ResourceMeta"/>
-      <meta href="http://purl.org/PHYLO/TREEBASE/PHYLOWS/study/TB2:S794" id="meta327" rel="rdfs:isDefinedBy" xsi:type="nex:ResourceMeta"/>
+      <meta href="http://purl.org/phylo/treebase/phylows/study/TB2:S794" id="meta327" rel="rdfs:isDefinedBy" xsi:type="nex:ResourceMeta"/>
     </otu>
     <otu about="#Tl278" id="Tl278" label="Grifola frondosa M007">
       <meta content="12577" datatype="xsd:long" id="meta339" property="tb:identifier.taxon" xsi:type="nex:LiteralMeta"/>
@@ -393,7 +393,7 @@
       <meta href="http://purl.uniprot.org/taxonomy/5627" id="meta337" rel="skos:closeMatch" xsi:type="nex:ResourceMeta"/>
       <meta content="Grifola frondosa" datatype="xsd:string" id="meta336" property="skos:altLabel" xsi:type="nex:LiteralMeta"/>
       <meta href="http://www.ubio.org/authority/metadata.php?lsid=urn:lsid:ubio.org:namebank:3234622" id="meta335" rel="skos:closeMatch" xsi:type="nex:ResourceMeta"/>
-      <meta href="http://purl.org/PHYLO/TREEBASE/PHYLOWS/study/TB2:S794" id="meta334" rel="rdfs:isDefinedBy" xsi:type="nex:ResourceMeta"/>
+      <meta href="http://purl.org/phylo/treebase/phylows/study/TB2:S794" id="meta334" rel="rdfs:isDefinedBy" xsi:type="nex:ResourceMeta"/>
     </otu>
     <otu about="#Tl255" id="Tl255" label="Grifola frondosa M006">
       <meta content="12577" datatype="xsd:long" id="meta346" property="tb:identifier.taxon" xsi:type="nex:LiteralMeta"/>
@@ -401,7 +401,7 @@
       <meta href="http://purl.uniprot.org/taxonomy/5627" id="meta344" rel="skos:closeMatch" xsi:type="nex:ResourceMeta"/>
       <meta content="Grifola frondosa" datatype="xsd:string" id="meta343" property="skos:altLabel" xsi:type="nex:LiteralMeta"/>
       <meta href="http://www.ubio.org/authority/metadata.php?lsid=urn:lsid:ubio.org:namebank:3234622" id="meta342" rel="skos:closeMatch" xsi:type="nex:ResourceMeta"/>
-      <meta href="http://purl.org/PHYLO/TREEBASE/PHYLOWS/study/TB2:S794" id="meta341" rel="rdfs:isDefinedBy" xsi:type="nex:ResourceMeta"/>
+      <meta href="http://purl.org/phylo/treebase/phylows/study/TB2:S794" id="meta341" rel="rdfs:isDefinedBy" xsi:type="nex:ResourceMeta"/>
     </otu>
     <otu about="#Tl240" id="Tl240" label="Grifola frondosa M005">
       <meta content="12577" datatype="xsd:long" id="meta353" property="tb:identifier.taxon" xsi:type="nex:LiteralMeta"/>
@@ -409,7 +409,7 @@
       <meta href="http://purl.uniprot.org/taxonomy/5627" id="meta351" rel="skos:closeMatch" xsi:type="nex:ResourceMeta"/>
       <meta content="Grifola frondosa" datatype="xsd:string" id="meta350" property="skos:altLabel" xsi:type="nex:LiteralMeta"/>
       <meta href="http://www.ubio.org/authority/metadata.php?lsid=urn:lsid:ubio.org:namebank:3234622" id="meta349" rel="skos:closeMatch" xsi:type="nex:ResourceMeta"/>
-      <meta href="http://purl.org/PHYLO/TREEBASE/PHYLOWS/study/TB2:S794" id="meta348" rel="rdfs:isDefinedBy" xsi:type="nex:ResourceMeta"/>
+      <meta href="http://purl.org/phylo/treebase/phylows/study/TB2:S794" id="meta348" rel="rdfs:isDefinedBy" xsi:type="nex:ResourceMeta"/>
     </otu>
     <otu about="#Tl231" id="Tl231" label="Grifola frondosa M004">
       <meta content="12577" datatype="xsd:long" id="meta360" property="tb:identifier.taxon" xsi:type="nex:LiteralMeta"/>
@@ -417,7 +417,7 @@
       <meta href="http://purl.uniprot.org/taxonomy/5627" id="meta358" rel="skos:closeMatch" xsi:type="nex:ResourceMeta"/>
       <meta content="Grifola frondosa" datatype="xsd:string" id="meta357" property="skos:altLabel" xsi:type="nex:LiteralMeta"/>
       <meta href="http://www.ubio.org/authority/metadata.php?lsid=urn:lsid:ubio.org:namebank:3234622" id="meta356" rel="skos:closeMatch" xsi:type="nex:ResourceMeta"/>
-      <meta href="http://purl.org/PHYLO/TREEBASE/PHYLOWS/study/TB2:S794" id="meta355" rel="rdfs:isDefinedBy" xsi:type="nex:ResourceMeta"/>
+      <meta href="http://purl.org/phylo/treebase/phylows/study/TB2:S794" id="meta355" rel="rdfs:isDefinedBy" xsi:type="nex:ResourceMeta"/>
     </otu>
     <otu about="#Tl234" id="Tl234" label="Grifola frondosa M003">
       <meta content="12577" datatype="xsd:long" id="meta367" property="tb:identifier.taxon" xsi:type="nex:LiteralMeta"/>
@@ -425,7 +425,7 @@
       <meta href="http://purl.uniprot.org/taxonomy/5627" id="meta365" rel="skos:closeMatch" xsi:type="nex:ResourceMeta"/>
       <meta content="Grifola frondosa" datatype="xsd:string" id="meta364" property="skos:altLabel" xsi:type="nex:LiteralMeta"/>
       <meta href="http://www.ubio.org/authority/metadata.php?lsid=urn:lsid:ubio.org:namebank:3234622" id="meta363" rel="skos:closeMatch" xsi:type="nex:ResourceMeta"/>
-      <meta href="http://purl.org/PHYLO/TREEBASE/PHYLOWS/study/TB2:S794" id="meta362" rel="rdfs:isDefinedBy" xsi:type="nex:ResourceMeta"/>
+      <meta href="http://purl.org/phylo/treebase/phylows/study/TB2:S794" id="meta362" rel="rdfs:isDefinedBy" xsi:type="nex:ResourceMeta"/>
     </otu>
     <otu about="#Tl241" id="Tl241" label="Grifola frondosa M002">
       <meta content="12577" datatype="xsd:long" id="meta374" property="tb:identifier.taxon" xsi:type="nex:LiteralMeta"/>
@@ -433,7 +433,7 @@
       <meta href="http://purl.uniprot.org/taxonomy/5627" id="meta372" rel="skos:closeMatch" xsi:type="nex:ResourceMeta"/>
       <meta content="Grifola frondosa" datatype="xsd:string" id="meta371" property="skos:altLabel" xsi:type="nex:LiteralMeta"/>
       <meta href="http://www.ubio.org/authority/metadata.php?lsid=urn:lsid:ubio.org:namebank:3234622" id="meta370" rel="skos:closeMatch" xsi:type="nex:ResourceMeta"/>
-      <meta href="http://purl.org/PHYLO/TREEBASE/PHYLOWS/study/TB2:S794" id="meta369" rel="rdfs:isDefinedBy" xsi:type="nex:ResourceMeta"/>
+      <meta href="http://purl.org/phylo/treebase/phylows/study/TB2:S794" id="meta369" rel="rdfs:isDefinedBy" xsi:type="nex:ResourceMeta"/>
     </otu>
     <otu about="#Tl248" id="Tl248" label="Grifola frondosa M001">
       <meta content="12577" datatype="xsd:long" id="meta381" property="tb:identifier.taxon" xsi:type="nex:LiteralMeta"/>
@@ -441,11 +441,11 @@
       <meta href="http://purl.uniprot.org/taxonomy/5627" id="meta379" rel="skos:closeMatch" xsi:type="nex:ResourceMeta"/>
       <meta content="Grifola frondosa" datatype="xsd:string" id="meta378" property="skos:altLabel" xsi:type="nex:LiteralMeta"/>
       <meta href="http://www.ubio.org/authority/metadata.php?lsid=urn:lsid:ubio.org:namebank:3234622" id="meta377" rel="skos:closeMatch" xsi:type="nex:ResourceMeta"/>
-      <meta href="http://purl.org/PHYLO/TREEBASE/PHYLOWS/study/TB2:S794" id="meta376" rel="rdfs:isDefinedBy" xsi:type="nex:ResourceMeta"/>
+      <meta href="http://purl.org/phylo/treebase/phylows/study/TB2:S794" id="meta376" rel="rdfs:isDefinedBy" xsi:type="nex:ResourceMeta"/>
     </otu>
   </otus>
-  <characters about="#M83" id="M83" label="ITS and BT" otus="Tls10691" xml:base="http://purl.org/PHYLO/TREEBASE/PHYLOWS/matrix/TB2:" xsi:type="nex:DnaSeqs">
-    <meta href="http://purl.org/PHYLO/TREEBASE/PHYLOWS/study/TB2:As1269" id="meta1840" rel="tb:input.analysistep" xsi:type="nex:ResourceMeta"/>
+  <characters about="#M83" id="M83" label="ITS and BT" otus="Tls10691" xml:base="http://purl.org/phylo/treebase/phylows/matrix/TB2:" xsi:type="nex:DnaSeqs">
+    <meta href="http://purl.org/phylo/treebase/phylows/study/TB2:As1269" id="meta1840" rel="tb:input.analysistep" xsi:type="nex:ResourceMeta"/>
     <meta content="M1020" datatype="xsd:string" id="meta1619" property="tb:identifier.matrix.tb1" xsi:type="nex:LiteralMeta"/>
     <meta content="83" datatype="xsd:long" id="meta1618" property="tb:identifier.matrix" xsi:type="nex:LiteralMeta"/>
     <meta content="1161" datatype="xsd:integer" id="meta1617" property="tb:nchar.matrix" xsi:type="nex:LiteralMeta"/>
@@ -1689,7 +1689,7 @@
         <seq>AGTTCTGAAACGGGTTGTAGCTGGCCTTA-----CGAGGCATGTGCACGCCCTGCTCATCCACTCT-ACACCTGTGCACCATCTGTAGGTCGGTTTGGGTTCGGATGCTTCGCGGCGTTCGGGCTCGGGCCTTCCTATGTACT-TCACACACGCTTTAGTAT-CAGAATGTAATTGCGA----TAAAACGCACCTTATACAACTTTCAGCAACGGATCTCTTGGCTCTCGCATCGATGAAGAACGCAGCGAAATGCGATAAGTAATGTGAATTGCAGAATTCAGTGAATCATCGAATCTTTGAACGCACCTTGCGCTCCTTGGTATTCCGAGGAGCATGCCTGTTTGAGTGTCATGGAATCATCAACCCATATGTCCTTGTGTCG--GATGGGCTTGGA-TTTGGAGGCTTATGCCGGCCCTC-GTC--GGTCGGCTCCTCTTGAATGCATTAGCTCGATTCCTTGCGGATCGGCTCCCGGTGTGATAATTGTCTACGCCGTGACCGT-GAAGC----GTTTGGCGAGCTTCGAACCGTCCTATGGACAAACTTATATCTTGACATCTGACCTCCGAGGTGCGTGTCAAAATCAAGACGACGTTGCCCTCCATTAACAGCAGTCGTGACTTGTTAGCCCTACAACGCGACACTCTCTGTGCATCAACTCGTCGAGAACTCTGACCAGACGTTCTGCATTGATAACGAGGCATTATATGATATATGCTTCAGAACCCTCAAGCTCACTACACCAACTTATGGTGACCTTAACCACCTTGTATCGATTGTCATGTCCGGTATCACGACTTGCTTGCGTTTCCCTGGTCAGCTGAATTCTGACTTGCGGAAGTTGGCTGTCAACATGGGTAATGCTTTCCTTCAGACTGGCCTAGATGCGTT-TTTCTCATTCGATGTTTTCTTTTGCAGTTCCCTTCCCTCGTCTTCATTTCTTCATGACCGGCTTCGCGCCTTTGACCGCTCGGGGTAGCCAGCAATACCGCGCGGTCACCGTCCCTGAGCTGACGCAGCAAATGTTCGATGCCAAGAACATGATGGCTGCGTCCGACCCCAGGCATGGCCGCTACCTCACTGTAGGTGTTAATGTTTCTTCT----GTGTTCCG-------TCATCTGAAACCTGTTCCATAGGTTGCTGC</seq>
       </row>
       <row id="row1564" otu="Tl261">
-        <seq>AGTTCAGAAAAGGGTTGTCGCTGGCCTCAAAATCCGGGGCATGTGCACACCCTGCTCATCCACTCTCACACCTGTGCACTTTCTGTAGGTCGGTTCGGGATCTGGTCCCTCGCGGGGTCGGGTTCTGCGCCTTCCTATGTACAATCACAAACGCTTCAGTATTCAGAATGTCATTGCGATAATTAAAACGCATCTTATACAACTTTCAGCAACGGATCTCTTGGCTCTCGCATCGATGAAGAACGCAGCGAAATGCGATAAGTAATGTGAATTGCAGAATTCAGTGAATCATCGAATCTTTGAACGCACCTTGCGCTCCTTGGTATTCCGAGGAGCATGCCTGTTTGAGTGTCATGGAATTCTCAACCCACACATCCTTGTGATGTGGACGGGCTTGGACTTTGGAGGTTTCTGCCGGCCCCCCATTCGGGTCGGCTCCTCTGGAATGCATTAGCTCCATCCCTTGCGGATCGGCTCTCGGTGTGATAATTGTCTACGCCGTGGTCGTTGAAGCCTCAGTTGGGCGAGCTCACAATCGTCCCCTCCGGGACAATTCAATCTGACATCTGACCTCCGAGGTCTGTG-CGTTTCAAATGTTACGTTGGAGAAAATC--TGACGACCGTTGATCAT-AGCCCTACAACGCAACCCTCTCCGTGCATCAACTGGTCGAGAACTCTGATGAGACTTTCTGCATTGATAACGAGGCACTGTACGACATTTGCTTCCGGACACTGAAGCTGACGACACCGACATACGGCGATCTGAACCACCTCATTTCCATCGTCATGTCCGGTATTACAACTTGCTTGCGTTTCCCTGGTCAGCTGAACTCCGATCTCCGAAAGTTGGCTGTCAACATGGGTAA-GTTCTCACTT-GATTCCTTGTGATATAACACTTATGATTGACTGTTGAAATTT-TAGTCCCCTTCCCCCGTCTCCACTTCTTCATGACTGGTTTCGCGCCCTTGACTGCGCGCGGCAGCCAGCAGTACCGTGCTGTCACTGTACCCGAGCTGACTCAACAGATGTTCGATGCCAAGAACATGATGGCTGCGTCCGACCCCCGGCATGGGCGATACCTGACCGTATGCGGCTCCCC.TATTACG-GAGCGTACCAATCTGATCTATTTGTTACATTTTTCATAGGTTGCCGC</seq>
+        <seq>AGTTCAGAAAAGGGTTGTCGCTGGCCTCAAAATCCGGGGCATGTGCACACCCTGCTCATCCACTCTCACACCTGTGCACTTTCTGTAGGTCGGTTCGGGATCTGGTCCCTCGCGGGGTCGGGTTCTGCGCCTTCCTATGTACAATCACAAACGCTTCAGTATTCAGAATGTCATTGCGATAATTAAAACGCATCTTATACAACTTTCAGCAACGGATCTCTTGGCTCTCGCATCGATGAAGAACGCAGCGAAATGCGATAAGTAATGTGAATTGCAGAATTCAGTGAATCATCGAATCTTTGAACGCACCTTGCGCTCCTTGGTATTCCGAGGAGCATGCCTGTTTGAGTGTCATGGAATTCTCAACCCACACATCCTTGTGATGTGGACGGGCTTGGACTTTGGAGGTTTCTGCCGGCCCCCCATTCGGGTCGGCTCCTCTGGAATGCATTAGCTCCATCCCTTGCGGATCGGCTCTCGGTGTGATAATTGTCTACGCCGTGGTCGTTGAAGCCTCAGTTGGGCGAGCTCACAATCGTCCCCTCCGGGACAATTCAATCTGACATCTGACCTCCGAGGTCTGTG-CGTTTCAAATGTTACGTTGGAGAAAATC--TGACGACCGTTGATCAT-AGCCCTACAACGCAACCCTCTCCGTGCATCAACTGGTCGAGAACTCTGATGAGACTTTCTGCATTGATAACGAGGCACTGTACGACATTTGCTTCCGGACACTGAAGCTGACGACACCGACATACGGCGATCTGAACCACCTCATTTCCATCGTCATGTCCGGTATTACAACTTGCTTGCGTTTCCCTGGTCAGCTGAACTCCGATCTCCGAAAGTTGGCTGTCAACATGGGTAA-GTTCTCACTT-GATTCCTTGTGATATAACACTTATGATTGACTGTTGAAATTT-TAGTCCCCTTCCCCCGTCTCCACTTCTTCATGACTGGTTTCGCGCCCTTGACTGCGCGCGGCAGCCAGCAGTACCGTGCTGTCACTGTACCCGAGCTGACTCAACAGATGTTCGATGCCAAGAACATGATGGCTGCGTCCGACCCCCGGCATGGGCGATACCTGACCGTATGCGGCTCCCC?TATTACG-GAGCGTACCAATCTGATCTATTTGTTACATTTTTCATAGGTTGCCGC</seq>
       </row>
       <row id="row1565" otu="Tl238">
         <seq>AGTTCAGAAAAGGGTTGTCGCTGGCCTCAAAATCCGGGGCATGTGCACACCCTGCTCATCCACTCTCACACCTGTGCACTTTCTGTAGGTCGGTTCGGGATCTGGTCCCTCGCGGGGTCGGGTTCTGCGCCTTCCTATGTACAATCACAAACGCTTCAGTATTCAGAATGTCATTGCGATAATTAAAACGCATCTTATACAACTTTCAGCAACGGATCTCTTGGCTCTCGCATCGATGAAGAACGCAGCGAAATGCGATAAGTAATGTGAATTGCAGAATTCAGTGAATCATCGAATCTTTGAACGCACCTTGCGCTCCTTGGTATTCCGAGGAGCATGCCTGTTTGAGTGTCATGGAATTCTCAACCCACACATCCTTGTGATGTGGACGGGCTTGGACTTTGGAGGTTTCTGCCGGCCCCCCATTCGGGTCGGCTCCTCTGGAATGCATTAGCTCCATCCCTTGCGGATCGGCTCTCGGTGTGATAATTGTCTACGCCGTGGTCGTTGAAGCCTCAGTTGGGCGAGCTCACAATCGTCCCCTCCGGGACAATTCAATCTGACATCTGACCTCCGAGGTCTGTG-CGTTTCAAATGTCACGTTGGAGAAAATC--TGACGACCGTTGATCAT-AGCCCTACAACGCAACCCTCTCCGTGCACCAACTGGTCGAGAACTCTGATGAGACTTTCTGCATTGATAACGAGGCGCTGTACGACATTTGCTTCCGGACACTGAAGCTGACGACACCGACATACGGCGATCTGAACCACCTCATTTCCATCGTCATGTCCGGTATTACAACTTGCTTGCGTTTCCCTGGTCAGCTGAACTCCGATCTCCGAAAGTTGGCTGTCAACATGGGTAA-GTTCTCACTT-GATTCCTTGTGATATAACACTTATGATTGACTGTTAAAATTT-TAGTCCCCTTCCCCCGTCTCCACTTCTTCATGACTGGTTTCGCGCCCTTGACTGCGCGCGGCAGCCAGCAGTACCGTGCTGTCACTGTACCCGAGCTGACTCAACAGATGTTCGATGCCAAGAACATGATGGCTGCGTCCGATCCCCGGCATGGGCGATACCTGACCGTATGCGGCTCTCCTTATTACG-GAGCGTACCAATCTGATCTATTTGTTACATTTTTCATAGGTTGCCGC</seq>
@@ -1701,13 +1701,13 @@
         <seq>AGTTCAGAAAAGGGTTGTCGCTGGCCTCAAAATCCGGGGCATGTGCACACCCTGCTCATCCACTCTCACACCTGTGCACTTTCTGTAGGTCGGTTCGGGATCTGGTCCCTCGCGGGGTCGGGTTCTGCGCCTTCCTATGTACAATCACAAACGCTTCAGTATTCAGAATGTCATTGCGATAATTAAAACGCATCTTATACAACTTTCAGCAACGGATCTCTTGGCTCTCGCATCGATGAAGAACGCAGCGAAATGCGATAAGTAATGTGAATTGCAGAATTCAGTGAATCATCGAATCTTTGAACGCACCTTGCGCTCCTTGGTATTCCGAGGAGCATGCCTGTTTGAGTGTCATGGAATTCTCAACCCACACATCCTTGTGATGTGGACGGGCTTGGACTTTGGAGGTTTCTGCCGGCCCCCCATTCGGGTCGGCTCCTCTGGAATGCATTAGCTCCATCCCTTGCGGATCGGCTCTCGGTGTGATAATTGTCTACGCCGTGGTCGTTGAAGCCTCAGTTGGGCGAGCTCACAATCGTCCCCTCCGGGACAATTCAATCTGACATCTGACCTCCGAGGTCTGTG-CGTTTCAAATGTCACGTTGGAGAAAATC--TGACGACCGTTGATCAT-AGCCCTACAACGCAACCCTCTCCGTGCACCAACTGGTCGAGAACTCTGATGAGACTTTCTGCATTGATAACGAGGCGCTGTACGACATTTGCTTCCGGACACTGAAGCTGACGACACCGACATACGGCGATCTGAACCACCTCATTTCCATCGTCATGTCCGGTATTACAACTTGCTTGCGTTTCCCTGGTCAGCTGAACTCCGATCTCCGAAAGTTGGCTGTCAACATGGGTAA-GTTCTCACTT-GATTCCTTGTGATATAACACTTATGATTGACTGTTAAAATTT-TAGTCCCCTTCCCCCGTCTCCACTTCTTCATGACTGGTTTCGCGCCCTTGACTGCGCGCGGCAGCCAGCAGTACCGTGCTGTCACTGTACCCGAGCTGACTCAACAGATGTTCGATGCCAAGAACATGATGGCTGCGTCCGATCCCCGGCATGGGCGATACCTGACCGTATGCGGCTCTCCTTATTACG-GAGCGTACCAATCTGATCTATTTGTTACGTTTTTCATAGGTTGCCGC</seq>
       </row>
       <row id="row1568" otu="Tl280">
-        <seq>AGTTCAGAAAAGGGTTGTAGCTGGCCTCAAA-TCCGGGGCATGTGCACACCCTGCTCATCCACTCTCACACCTGTGCACTTTCTGTAGGTCGGTTCGGGATCTGGTCCCTCGCGGGGTCGGGTTCTGTGCCTTCCTATGTACAATCACAAACGCTTCAGTATTCAGAATGTCATTGCGATAATTAAAACGCATCTTATACAACTTTCAGCAACGGATCTCTTGGCTCTCGCATCGATGAAGAACGCAGCGAAATGCGATAAGTAATGTGAATTGCAGAATTCAGTGAATCATCGAATCTTTGAACGCACCTTGCGCTCCTTGGTATTCCGAGGAGCATGCCTGTTTGAGTGTCATGGAATTCTCAACCCACACGTCCTTGTGATGTGGACGGGCTTGGATATTGGAGGTTTCTGCCGGCCCCCCATTCGGGTCGGCTCCTCTGGAATGCATTAGCTCCATCCCTTGCGGATCGGCTCTCGGTGTGATAATTGTCTACGCCGTGGTCGTTGAAGCCTCAGTCGGGC.AGCTTATAATCGTCCCCTCCGGGACAATCGAATATGACATCTGACCTCCGAGGTCTGTG-CATTTCAAATGTCACGTTGGAGAAAATC--TGACGACCGTTGATCGT-AGCCCTACAACGCAACCCTCTCCGTGCACCAACTGGTCGAGAACTCTGATGAGACTTTCTGCATTGA.AACGAGGCCTTGTACGACATTTGCTTCCGGACACTGAAGCTGACGACACCGACATACGGCGACCTGAATCACCTCATTTCCATCGTCATGTCCGGTATTACAACTTGTTTGCGTTTCCCTGGTCAGCTGAACTCCGATCTCCGGAAGTTGGCTGTCAACATGGGTGA-GTTCTCACTT-GACGCCTTGTGACATGACACTTATCATTGACTGTTAAAAAAT-TAGTTCCCTTCCCCCGTCTCCACTTCTTCATGACCGGTTTCGCGCCCTTGACTGCGCGCGGCAGCCAGCAGTACCGTGCTGTCACTGTACCCGAGCTGACTCAACAGATGTTCGATGCCAAGAACATGATGGCTGCGTCCGACCCCCGGCATGGCCGATACCTCACTGTATGCAACATCC--TAGCACA-GAGCGTACCAATCTGATGTATCTGTTGCCTATTTTATAGGTTGCCGC</seq>
+        <seq>AGTTCAGAAAAGGGTTGTAGCTGGCCTCAAA-TCCGGGGCATGTGCACACCCTGCTCATCCACTCTCACACCTGTGCACTTTCTGTAGGTCGGTTCGGGATCTGGTCCCTCGCGGGGTCGGGTTCTGTGCCTTCCTATGTACAATCACAAACGCTTCAGTATTCAGAATGTCATTGCGATAATTAAAACGCATCTTATACAACTTTCAGCAACGGATCTCTTGGCTCTCGCATCGATGAAGAACGCAGCGAAATGCGATAAGTAATGTGAATTGCAGAATTCAGTGAATCATCGAATCTTTGAACGCACCTTGCGCTCCTTGGTATTCCGAGGAGCATGCCTGTTTGAGTGTCATGGAATTCTCAACCCACACGTCCTTGTGATGTGGACGGGCTTGGATATTGGAGGTTTCTGCCGGCCCCCCATTCGGGTCGGCTCCTCTGGAATGCATTAGCTCCATCCCTTGCGGATCGGCTCTCGGTGTGATAATTGTCTACGCCGTGGTCGTTGAAGCCTCAGTCGGGC?AGCTTATAATCGTCCCCTCCGGGACAATCGAATATGACATCTGACCTCCGAGGTCTGTG-CATTTCAAATGTCACGTTGGAGAAAATC--TGACGACCGTTGATCGT-AGCCCTACAACGCAACCCTCTCCGTGCACCAACTGGTCGAGAACTCTGATGAGACTTTCTGCATTGA?AACGAGGCCTTGTACGACATTTGCTTCCGGACACTGAAGCTGACGACACCGACATACGGCGACCTGAATCACCTCATTTCCATCGTCATGTCCGGTATTACAACTTGTTTGCGTTTCCCTGGTCAGCTGAACTCCGATCTCCGGAAGTTGGCTGTCAACATGGGTGA-GTTCTCACTT-GACGCCTTGTGACATGACACTTATCATTGACTGTTAAAAAAT-TAGTTCCCTTCCCCCGTCTCCACTTCTTCATGACCGGTTTCGCGCCCTTGACTGCGCGCGGCAGCCAGCAGTACCGTGCTGTCACTGTACCCGAGCTGACTCAACAGATGTTCGATGCCAAGAACATGATGGCTGCGTCCGACCCCCGGCATGGCCGATACCTCACTGTATGCAACATCC--TAGCACA-GAGCGTACCAATCTGATGTATCTGTTGCCTATTTTATAGGTTGCCGC</seq>
       </row>
       <row id="row1569" otu="Tl257">
-        <seq>AGTTCAGAAAAGGGTTGTCGCTGGCCTCAAAATCCGGGGCATGTGCACACCCTGCTCATCCACTCTCACACCTGTGCACTTTCTGTAGGTCGGTTCGGGATCTGGTCCCTCGCGGGGTCGGGTTCTGCGCCTTCCTATGTACAATCACAAACGCTTCAGTATTCAGAATGTCATTGCGATAATTAAAACGCATCTTATACAACTTTCAGCAACGGATCTCTTGGCTCTCGCATCGATGAAGAACGCAGCGAAATGCGATAAGTAATGTGAATTGCAGAATTCAGTGAATCATCGAATCTTTGAACGCACCTTGCGCTCCTTGGTATTCCGAGGAGCATGCCTGTTTGAGTGTCATGGAATTCTCAACCCACACATCCTTGTGATGTGGACGGGCTTGGACTTTGGAGGTTTCTGCCGGCCCCCCATTCGGGTCGGCTCCTCTGGAATGCATTAGCTCCATCCCTTGCGGATCGGCTCTCGGTGTGATAATTGTCTACGCCGTGGTCGTTGAAGCCTCAGTTGGGCGAGCTCACAATCGTCCCCTCCGGGACAATTCAATATGACATCTGACCTCCGAGGTCTGTG-CGTTTCAAATGTTACGTTGGAGAAAATC--TGACGACCGTTGATCAT-AGCCCTACAACGCAACCCTCTCCGTGCATCAACTGGTCGAGAACTCTGATGAGACTTTCTGCATTGATAACGAGGC.CTGTACGACATTTGCTTCCGGACACTGAAGCTGACGACACCGACATACGGCGATCTGAACCACCTCATTTCCATCGTCATGTCCGGTATTACAACTTGCTTGCGTTTCCCTGGTCAGCTGAACTCCGATCTCCGAAAGTTGGCTGTCAACATGGGTGA-GTTCTCACTT-GATTCCTTGTGATATGACACTTATGATTGACTGTTGAAATTT-TAGTCCCCTTCCCCCGTCTCCACTTCTTCATGACTGGTTTCGCGCCCTTGACTGCGCGCGGCAGCCAGCAGTACCGTGCTGTCACTGTACCCGAGCTGACTCAACAGATGTTCGATGCCAAGAACATGATGGCTGCGTCCGACCCCCGGCATGGGCGATACCTGACCGTATGCGGCTCTCCTTATTACG-GAGCGTACCAATCTGATCTATTTGTTACGTTTTTCATAGGTTGCCGC</seq>
+        <seq>AGTTCAGAAAAGGGTTGTCGCTGGCCTCAAAATCCGGGGCATGTGCACACCCTGCTCATCCACTCTCACACCTGTGCACTTTCTGTAGGTCGGTTCGGGATCTGGTCCCTCGCGGGGTCGGGTTCTGCGCCTTCCTATGTACAATCACAAACGCTTCAGTATTCAGAATGTCATTGCGATAATTAAAACGCATCTTATACAACTTTCAGCAACGGATCTCTTGGCTCTCGCATCGATGAAGAACGCAGCGAAATGCGATAAGTAATGTGAATTGCAGAATTCAGTGAATCATCGAATCTTTGAACGCACCTTGCGCTCCTTGGTATTCCGAGGAGCATGCCTGTTTGAGTGTCATGGAATTCTCAACCCACACATCCTTGTGATGTGGACGGGCTTGGACTTTGGAGGTTTCTGCCGGCCCCCCATTCGGGTCGGCTCCTCTGGAATGCATTAGCTCCATCCCTTGCGGATCGGCTCTCGGTGTGATAATTGTCTACGCCGTGGTCGTTGAAGCCTCAGTTGGGCGAGCTCACAATCGTCCCCTCCGGGACAATTCAATATGACATCTGACCTCCGAGGTCTGTG-CGTTTCAAATGTTACGTTGGAGAAAATC--TGACGACCGTTGATCAT-AGCCCTACAACGCAACCCTCTCCGTGCATCAACTGGTCGAGAACTCTGATGAGACTTTCTGCATTGATAACGAGGC?CTGTACGACATTTGCTTCCGGACACTGAAGCTGACGACACCGACATACGGCGATCTGAACCACCTCATTTCCATCGTCATGTCCGGTATTACAACTTGCTTGCGTTTCCCTGGTCAGCTGAACTCCGATCTCCGAAAGTTGGCTGTCAACATGGGTGA-GTTCTCACTT-GATTCCTTGTGATATGACACTTATGATTGACTGTTGAAATTT-TAGTCCCCTTCCCCCGTCTCCACTTCTTCATGACTGGTTTCGCGCCCTTGACTGCGCGCGGCAGCCAGCAGTACCGTGCTGTCACTGTACCCGAGCTGACTCAACAGATGTTCGATGCCAAGAACATGATGGCTGCGTCCGACCCCCGGCATGGGCGATACCTGACCGTATGCGGCTCTCCTTATTACG-GAGCGTACCAATCTGATCTATTTGTTACGTTTTTCATAGGTTGCCGC</seq>
       </row>
       <row id="row1570" otu="Tl260">
-        <seq>AGTTCAGAAAAGGGTTGTCGCTGGCCTCAAAATCCGGGGCATGTGCACACCCTGCTCATCCACTCTCACACCTGTGCACTTTCTGTAGGTCGGTTCGGGATCTGGTCCCTCGCGGGGTCGGGTTCTGCGCCTTCCTATGTACAATCACAAACGCTTCAGTATTCAGAATGTCATTGCGATAATTAAAACGCATCTTATACAACTTTCAGCAACGGATCTCTTGGCTCTCGCATCGATGAAGAACGCAGCGAAATGCGATAAGTAATGTGAATTGCAGAATTCAGTGAATCATCGAATCTTTGAACGCACCTTGCGCTCCTTGGTATTCCGAGGAGCATGCCTGTTTGAGTGTCATGGAATTCTCAACCCACACGTCCTTGTGATGTGGACGGGCTTGGACTTTGGAGGTTTCTGCCGGCCCCCCATTCGGGTCGGCTCCTCTGGAATGCATTAGCTCCATCCCTTGCGGATCGGCTCTCGGTGTGATAATTGTCTACGCCGTGGTCGTTGAAGCCTCAGTTGGGCGAGCTCACAATCGTCCCCTCCGGGACAATTCAATCTGACATCTGACCTCCGAGGTCTGTG-CGTTTCAAATGTCACGTTGGAGAAAATC--TGACGACCGTTGATCAT-AGCCCTACAACGCAACCCTCTCCGTGCA.CAACTGGTCGAGAACTCTGATGAGACTTTCTGCATTGATAACGAGGC.CTGTACGACATTTGCTTCCGGACACTGAAGCTGACGACACCGACATACGGCGATCTGAACCACCTCAT.TCCATCGTCATGTCCGGTATTACAACTTGCTTGCGTTTCCCTGGTCAGCTGAACTCCGATCTCCGAAAGTTGGCTGTCAACATGGGTAA-GTTCTCACTT-GATTCCTTGTGATATAACACTTATGATTGACTGTTAAAATTT-TAGTCCCCTTCCCCCGTCTCCACTTCTTCATGACTGGTTTCGCGCCCTTGACTGCGCGCGGCAGCCAGCAGTACCGTGCTGTCACTGTACCCGAGCTGACTCAACAGATGTTCGATGCCAAGAACATGATGGCTGCGTCCGACCCCCGGCATGGGCGATACCTGACCGTATGCGGCTCCCCTTATTACG-GAGCGTACCAATCTGATCTATTTGTTAC.TTTTTCATAGGTTGCCGC</seq>
+        <seq>AGTTCAGAAAAGGGTTGTCGCTGGCCTCAAAATCCGGGGCATGTGCACACCCTGCTCATCCACTCTCACACCTGTGCACTTTCTGTAGGTCGGTTCGGGATCTGGTCCCTCGCGGGGTCGGGTTCTGCGCCTTCCTATGTACAATCACAAACGCTTCAGTATTCAGAATGTCATTGCGATAATTAAAACGCATCTTATACAACTTTCAGCAACGGATCTCTTGGCTCTCGCATCGATGAAGAACGCAGCGAAATGCGATAAGTAATGTGAATTGCAGAATTCAGTGAATCATCGAATCTTTGAACGCACCTTGCGCTCCTTGGTATTCCGAGGAGCATGCCTGTTTGAGTGTCATGGAATTCTCAACCCACACGTCCTTGTGATGTGGACGGGCTTGGACTTTGGAGGTTTCTGCCGGCCCCCCATTCGGGTCGGCTCCTCTGGAATGCATTAGCTCCATCCCTTGCGGATCGGCTCTCGGTGTGATAATTGTCTACGCCGTGGTCGTTGAAGCCTCAGTTGGGCGAGCTCACAATCGTCCCCTCCGGGACAATTCAATCTGACATCTGACCTCCGAGGTCTGTG-CGTTTCAAATGTCACGTTGGAGAAAATC--TGACGACCGTTGATCAT-AGCCCTACAACGCAACCCTCTCCGTGCA?CAACTGGTCGAGAACTCTGATGAGACTTTCTGCATTGATAACGAGGC?CTGTACGACATTTGCTTCCGGACACTGAAGCTGACGACACCGACATACGGCGATCTGAACCACCTCAT?TCCATCGTCATGTCCGGTATTACAACTTGCTTGCGTTTCCCTGGTCAGCTGAACTCCGATCTCCGAAAGTTGGCTGTCAACATGGGTAA-GTTCTCACTT-GATTCCTTGTGATATAACACTTATGATTGACTGTTAAAATTT-TAGTCCCCTTCCCCCGTCTCCACTTCTTCATGACTGGTTTCGCGCCCTTGACTGCGCGCGGCAGCCAGCAGTACCGTGCTGTCACTGTACCCGAGCTGACTCAACAGATGTTCGATGCCAAGAACATGATGGCTGCGTCCGACCCCCGGCATGGGCGATACCTGACCGTATGCGGCTCCCCTTATTACG-GAGCGTACCAATCTGATCTATTTGTTAC?TTTTTCATAGGTTGCCGC</seq>
       </row>
       <row id="row1571" otu="Tl270">
         <seq>AGTTCAGAAAAGGGTTGTCGCTGGCCTCAAAATCCGGGGCATGTGCACACCCTGCTCATCCACTCTCACACCTGTGCACTTTCTGTAGGTCGGTTCGGGATCTGGTCCCTCGCGGGGTCGGGTTCTGCGCCTTCCTATGTACAATCACAAACGCTTCAGTATTCAGAATGTCATTGCGATAATTAAAACGCATCTTATACAACTTTCAGCAACGGATCTCTTGGCTCTCGCATCGATGAAGAACGCAGCGAAATGCGATAAGTAATGTGAATTGCAGAATTCAGTGAATCATCGAATCTTTGAACGCACCTTGCGCTCCTTGGTATTCCGAGGAGCATGCCTGTTTGAGTGTCATGGAATTCTCAACCCACACGTCCTTGTGATGTGGACGGGCTTGGACTTTGGAGGTTTCTGCCGGCCCCCCATTCGGGTCGGCTCCTCTGGAATGCATTAGCTCCATCCCTTGCGGATCGGCTCTCGGTGTGATAATTGTCTACGCCGTGGTCGTTGAAGCCTCAGTTGGGCGAGCTCACAATCGTCCCCTCCGGGACAATTCAATCTGACATCTGACCTCCGAGGTCTGTG-CGTTTCAAATGTCACGTTGGAGAAAATC--TGACGACCGTTGATCAT-AGCCCTACAACGCAACCCTCTCCGTGCATCAACTGGTCGAGAACTCTGATGAGACTTTCTGCATTGATAACGAGGCGCTGTACGACATTTGCTTCCGGACACTGAAGCTGACGACACCGACATACGGCGATCTGAACCACCTCATTTCCATCGTCATGTCCGGTATTACAACTTGCTTGCGTTTCCCTGGTCAGCTGAACTCCGATCTCCGAAAGTTGGCTGTCAACATGGGTGA-GTTCTCACTT-GATTCCTTGTGATATGACACTTATGATTGACTGTTGAAATTT-TAGTCCCCTTCCCCCGTCTCCACTTCTTCATGACTGGTTTCGCGCCCTTGACTGCGCGCGGCAGCCAGCAGTACCGTGCTGTCACTGTACCCGAGCTGACTCAACAGATGTTCGATGCCAAGAACATGATGGCTGCGTCCGATCCCCGGCATGGGCGATACCTGACCGTATGCGGCTCTCCTTATTACG-GAGCGTACCAATCTGATCTATTTGTTACATTTTTCATAGGTTGCCGC</seq>
@@ -1722,19 +1722,19 @@
         <seq>AGTACAGAAAAGGGTTGTCGCTGGCCTCAAAATTCGGGGCATGTGCACACCCTGCTCATCCACTCTCACACCTGTGCACTTTCTGTAGGTCGGTTCGGGATCGGGTCCCTCGCGGGGTCGGGTTCTGCGCCTTCCTATGTACAATCACAAACGCTTCAGTATTCAGAATGTCATTGCGATAATTAAAACGCATCTTATACAACTTTCAGCAACGGATCTCTTGGCTCTCGCATCGATGAAGAACGCAGCGAAATGCGATAAGTAATGTGAATTGCAGAATTCAGTGAATCATCGAATCTTTGAACGCACCTTGCGCTCCTTGGTATTCCGAGGAGCATGCCTGTTTGAGTGTCATGGAATTCTCAACCCACACATCCTTGCGATGTGGACGGGCTTGGACTTTGGAGGTTTCTGCCGGCCCCCCATTCGGGTCGGCTCCTCTGGAATGCATTAGCTCCATCCCTTGCGGATCGGCTCTCGGTGTGATAATTGTCTACGCCGTGGTCGTTGAAGCCTCAGTTGGGCGAGCTCACAATCGTCCCCCACGGGACAATTCAATATGACATCTGACCTCCGAGGTCTGTG-CGTTTCAAATGTTACGTTGGAGAAAATC--TGACGACCGTTGATCAT-AGCCCTACAACGCAACCCTCTCCGTGCACCAACTGGTCGAGAACTCTGATGAGACTTTCTGCATTGATAACGAGGCGCTGTACGACATTTGCTTCCGGACACTGAAGCTGACGACACCGACATACGGCGATCTGAACCACCTCATTTCCATCGTCATGTCCGGTATTACAACTTGCTTGCGTTTCCCTGGTCAGCTGAACTCCGATCTCCGAAAGTTGGCTGTCAACATGGGTGA-GTTCTCACTT-GATTCCTTGTGATATGACACTTATGATTGACTGTCAAAATTT-TAGTCCCCTTCCCCCGTCTCCACTTCTTCATGACTGGTTTCGCGCCCTTGACTGCGCGCGGCAGCCAGCAGTACCGTGCTGTCACTGTACCCGAGCTGACTCAACAGATGTTCGATGCCAAGAACATGATGGCTGCGTCCGACCCCCGGCATGGGCGATACCTGACCGTATGCGGCTCCCCTTATTACG-GAGCGTACCAATCTGATCTATTTGTTACGTTTTTCATAGGTTGCCGC</seq>
       </row>
       <row id="row1575" otu="Tl244">
-        <seq>AGTTCAGA.AAGGGTTGTCGCTGGCCTCAAAATTCGGGGCATGTGCACACCCTGCTCATCCACTCTCACACCTGTGCACTTTCTGTAGGTCGGTTCGGGATCTGGTCCCTCGCGGGGTCGGGTTCTGCGCCTTCCTATGTACAATCACAAACGCTTCAGTATTCAGAATGTCATTGCGATAATTAAAACGCATCTTATACAACTTTCAGCAACGGATCTCTTGGCTCTCGCATCGATGAAGAACGCAGCGAAATGCGATAAGTAATGTGAATTGCAGAATTCAGTGAATCATCGAATCTTTGAACGCACCTTGCGCTCCTTGGTATTCCGAGGAGCATGCCTGTTTGAGTGTCATGGAATTCTCAACCCACACATCCTTGCGATGTGGACGGGCTTGGACTTTGGAGGTTTCTGCCGGCCCCCCATTCGGGTCGGCTCCTCTGGAATGCATTAGCTCCATCCCTTGCGGATCGGCTCTCGGTGTGATAATTGTCTACGCCGCGGTCGTTGAAGCCTCAGTTGGGAGAGCT-ATAATCGTCCCCCACGGGACAAT-GAATTTGACATCTGACCTCCGAGGTCTGTG-CGTTTCAAATGTTACGTTGGAGAAAATC--TGACGACCGTTGATCAT-AGCCCTACAACGCAACCCTCTCCGTGCACCAACTGGTCGAGAACTCTGATGAGACTTTCTGCATTGATAACGAGGCGCTGTACGACATTTGCTTCCGGACACTGAAGCTGACGACACCGACATACGGCGATCTGAACCACCTCATTTCCATCGTCATGTCCGGTATTACAACTTGCTTGCGTTTCCCTGGTCAGCTGAACTCCGATCTCCGAAAGTTGGCTGTCAACATGGGTGA-GTTCTCACTT-GATTCCTTGTGATATGACACTTATGATTGACTGTCAAAATTT-TAGTCCCCTTCCCCCGTCTCCACTTCTTCATGACTGGTTTCGCGCCCTTGACTGCGCGCGGCAGCCAGCAGTACCGTGCTGTCACTGTACCCGAGCTGACTCAACAGATGTTCGATGCCAAGAACATGATGGCTGCGTCCGACCCCCGGCATGGGCGATACCTGACCGTATGCGGCTCCCCTTATTACG-GAGCGTACCAATCTGATCTATTTGTTACGTTTTTCATAGGTTGCCGC</seq>
+        <seq>AGTTCAGA?AAGGGTTGTCGCTGGCCTCAAAATTCGGGGCATGTGCACACCCTGCTCATCCACTCTCACACCTGTGCACTTTCTGTAGGTCGGTTCGGGATCTGGTCCCTCGCGGGGTCGGGTTCTGCGCCTTCCTATGTACAATCACAAACGCTTCAGTATTCAGAATGTCATTGCGATAATTAAAACGCATCTTATACAACTTTCAGCAACGGATCTCTTGGCTCTCGCATCGATGAAGAACGCAGCGAAATGCGATAAGTAATGTGAATTGCAGAATTCAGTGAATCATCGAATCTTTGAACGCACCTTGCGCTCCTTGGTATTCCGAGGAGCATGCCTGTTTGAGTGTCATGGAATTCTCAACCCACACATCCTTGCGATGTGGACGGGCTTGGACTTTGGAGGTTTCTGCCGGCCCCCCATTCGGGTCGGCTCCTCTGGAATGCATTAGCTCCATCCCTTGCGGATCGGCTCTCGGTGTGATAATTGTCTACGCCGCGGTCGTTGAAGCCTCAGTTGGGAGAGCT-ATAATCGTCCCCCACGGGACAAT-GAATTTGACATCTGACCTCCGAGGTCTGTG-CGTTTCAAATGTTACGTTGGAGAAAATC--TGACGACCGTTGATCAT-AGCCCTACAACGCAACCCTCTCCGTGCACCAACTGGTCGAGAACTCTGATGAGACTTTCTGCATTGATAACGAGGCGCTGTACGACATTTGCTTCCGGACACTGAAGCTGACGACACCGACATACGGCGATCTGAACCACCTCATTTCCATCGTCATGTCCGGTATTACAACTTGCTTGCGTTTCCCTGGTCAGCTGAACTCCGATCTCCGAAAGTTGGCTGTCAACATGGGTGA-GTTCTCACTT-GATTCCTTGTGATATGACACTTATGATTGACTGTCAAAATTT-TAGTCCCCTTCCCCCGTCTCCACTTCTTCATGACTGGTTTCGCGCCCTTGACTGCGCGCGGCAGCCAGCAGTACCGTGCTGTCACTGTACCCGAGCTGACTCAACAGATGTTCGATGCCAAGAACATGATGGCTGCGTCCGACCCCCGGCATGGGCGATACCTGACCGTATGCGGCTCCCCTTATTACG-GAGCGTACCAATCTGATCTATTTGTTACGTTTTTCATAGGTTGCCGC</seq>
       </row>
       <row id="row1576" otu="Tl263">
         <seq>AGTTCAGAAATGGGTTGTCGCTGGCCTCAAAATCCGGGGCATGTGCACACCCTGCTCATCCACTCTCACACCTGTGCACTTTCTGTAGGTCGGTTCGGGATCGGGTCCCTCGCGGGGTCGGGTTCTGCGCCTTCCTATGTACAATCACAAACGCTTCAGTATTCAGAATGTCATTGCGATAATTAAAACGCATCTTATACAACTTTCAGCAACGGATCTCTTGGCTCTCGCATCGATGAAGAACGCAGCGAAATGCGATAAGTAATGTGAATTGCAGAATTCAGTGAATCATCGAATCTTTGAACGCACCTTGCGCTCCTTGGTATTCCGAGGAGCATGCCTGTTTGAGTGTCATGGAATTCTCAACCCACACATCCTTGTGATGTGGACGGGCTTGGACTTTGGAGGTTTCTGCCGGCCCCCCATTCGGGTCGGCTCCTCTGGAATGCATTAGCTCCATCCCTTGCGGATCGGCTCTCGGTGTGATAATTGTCTACGCCGTGGTCGTTGAAGCCTCAGTTGGGCGAGCTCACAATCGTCCCCTCCGGGACAATTCAATATGACATCTGACCTCCGAGGTCTGTG-CATTTCACATGTTACGTTGGAGAAAATC--TGACGACCGTTGATCGT-AGCCCTACAACGCAACCCTCTCTGTGCACCAACTGGTCGAGAACTCTGATGAGACTTTCTGCATTGATAACGAGGCACTGTATGACATTTGCTTCCGGACACTGAAGCTGACGACACCGACATACGGCGATCTGAACCACCTCATTTCCATCGTCATGTCCGGTATTACAACTTGCTTGCGTTTCCCTGGTCAGTTGAACTCCGATCTCCGAAAGTTGGCTGTCAACATGGGTGA-GTTCTCACTT-GATTCCTTGTGATATGACACTTATGATTGACTGTTGAAATTT-TAGTCCCCTTCCCCCGTCTCCACTTCTTCATGACTGGTTTCGCGCCCTTGACTGCGCGCGGCAGCCAGCAGTACCGTGCTGTCACTGTACCCGAGCTGACTCAACAGATGTTCGATGCCAAGAACATGATGGCTGCGTCCGACCCCCGGCATGGGCGATACCTGACCGTATGCGGCTCCCCTTATTACG-GAGCGTACCAATCTGATCTATTTGTTACATTTTTCATAGGTTGCCGC</seq>
       </row>
       <row id="row1577" otu="Tl279">
-        <seq>AGTTCAGAAAAGGGTTGTAGCTGGCCTCAAA-TCCGGGGCATGTGCACACCCTGCTCATCCACTCTCACACCTGTGCACTTTCTGTAGGTCGGTTCGGGATCTGGTCCCTCGCGGGGTCGGGTTCTGTGCCTTCCTATGTACAATCACAAACGCTTCAGTATTCAGAATGTCATTGCGATAATTAAAACGCATCTTATACAACTTTCAGCAACGGATCTCTTGGCTCTCGCATCGATGAAGAACGCAGCGAAATGCGATAAGTAATGTGAATTGCAGAATTCAGTGAATCATCGAATCTTTGAACGCACCTTGCGCTCCTTGGTATTCCGAGGAGCATGCCTGTTTGAGTGTCATGGAATTCTCAACCCACACATCCTTGTGATGTGGACGGGCTTGGACTTTGGAGGCTCATGCCGGTCCCC-ATTCGGGTCGGCTCCTCTGGAATGCATTAGCTCCATCCCTTGCGGATCGGCTCTCGGTGTGATAATTGTCTACGCCGTGGTCGTTGAAGCCTCAGTCGGGCGAGCTTATAATCGTCCCCTCCGGGACAATCGAATATGACATCTGACCTCCGAGGTCTGTG-CATTTCAAATGTTACGTTGGAGAAAATC--TGACGACCGTTGATCAT-AGCCCTACAACGCAACCCTCTCCGTGCACCAACTGGTCGAGAACTCTGATGAGACTTTCTGCATTGATAACGAGGCGCTGTACGATATTTGCTTCCGGACACTGAAGCTGACGACACCCACATATGGCGATCTGAACCACCTCATTTCCATTGTCATGTCCGGCATTACAACTTGCTTGCGTTTCCCTGGTCAGCTGAACTCCGACCTCCGGAAGTTGGCTGTCAACATGGGTGA-GTTTTCACTT-GATTCCTTGTGATATGGCACTTATGATTGACTGTTGAAATTC-TAGTCCCCTTCCCCCGTCTCCACTTCTTCATGACTGGTTTCGCGCCCTTGACTGCGCGCGGCAGCCAGCAGTATCGTGCTGTCACTGTACCCGAGCTGACTCAACAGATGTTCGATGCGAAGAACATGATGGCTGCGTCCGACCCCCGGCATGGGCGATACCTGACCGTATGCGGCTCCCCCTATCACG-GAGCGTATCAATCTGATCTATTTGTT.C.TTTTTCATAGGTTGCCGC</seq>
+        <seq>AGTTCAGAAAAGGGTTGTAGCTGGCCTCAAA-TCCGGGGCATGTGCACACCCTGCTCATCCACTCTCACACCTGTGCACTTTCTGTAGGTCGGTTCGGGATCTGGTCCCTCGCGGGGTCGGGTTCTGTGCCTTCCTATGTACAATCACAAACGCTTCAGTATTCAGAATGTCATTGCGATAATTAAAACGCATCTTATACAACTTTCAGCAACGGATCTCTTGGCTCTCGCATCGATGAAGAACGCAGCGAAATGCGATAAGTAATGTGAATTGCAGAATTCAGTGAATCATCGAATCTTTGAACGCACCTTGCGCTCCTTGGTATTCCGAGGAGCATGCCTGTTTGAGTGTCATGGAATTCTCAACCCACACATCCTTGTGATGTGGACGGGCTTGGACTTTGGAGGCTCATGCCGGTCCCC-ATTCGGGTCGGCTCCTCTGGAATGCATTAGCTCCATCCCTTGCGGATCGGCTCTCGGTGTGATAATTGTCTACGCCGTGGTCGTTGAAGCCTCAGTCGGGCGAGCTTATAATCGTCCCCTCCGGGACAATCGAATATGACATCTGACCTCCGAGGTCTGTG-CATTTCAAATGTTACGTTGGAGAAAATC--TGACGACCGTTGATCAT-AGCCCTACAACGCAACCCTCTCCGTGCACCAACTGGTCGAGAACTCTGATGAGACTTTCTGCATTGATAACGAGGCGCTGTACGATATTTGCTTCCGGACACTGAAGCTGACGACACCCACATATGGCGATCTGAACCACCTCATTTCCATTGTCATGTCCGGCATTACAACTTGCTTGCGTTTCCCTGGTCAGCTGAACTCCGACCTCCGGAAGTTGGCTGTCAACATGGGTGA-GTTTTCACTT-GATTCCTTGTGATATGGCACTTATGATTGACTGTTGAAATTC-TAGTCCCCTTCCCCCGTCTCCACTTCTTCATGACTGGTTTCGCGCCCTTGACTGCGCGCGGCAGCCAGCAGTATCGTGCTGTCACTGTACCCGAGCTGACTCAACAGATGTTCGATGCGAAGAACATGATGGCTGCGTCCGACCCCCGGCATGGGCGATACCTGACCGTATGCGGCTCCCCCTATCACG-GAGCGTATCAATCTGATCTATTTGTT?C?TTTTTCATAGGTTGCCGC</seq>
       </row>
       <row id="row1578" otu="Tl236">
         <seq>AGTTCAGAAAAGGGTTGTAGCTGGCCTCAAA-TCCGGGGCATGTGCACACCCTGCTCATCCACTCTCACACCTGTGCACTTTCTGTAGGTCGGTTCGGGATCTGGTCCCTCGCGGGGTCGGGTTCTGTGCCTTCCTATGTACAATCACAAACGCTTCAGTATTCAGAATGTCATTGCGATAATTAAAACGCATCTTATACAACTTTCAGCAACGGATCTCTTGGCTCTCGCATCGATGAAGAACGCAGCGAAATGCGATAAGTAATGTGAATTGCAGAATTCAGTGAATCATCGAATCTTTGAACGCACCTTGCGCTCCTTGGTATTCCGAGGAGCATGCCTGTTTGAGTGTCATGGAATTCTCAACCCACACGTCCTTGTGATGTGGACGGGCTTGGACTTTGGAGGTTTCTGCCGGCCCCCCATTCGGGTCGGCTCCTCTGGAATGCATTAGCTCCATCCCTTGCGGATCGGCTCTCGGTGTGATAATTGTCTACGCCGTGGTCGTTGAAGCCTCAGTCGGGCGAGCTTATAATCGTCCCCTCCGGGACAATCGAATA-GACATCTGACCTCCGAGGTCTGTG-CATTTCAAATGTCACGTTGGAGAAAATC--TGACGACCGTTGATCGT-AGCCCTACAACGCAACCCTCTCCGTGCACCAACTGGTCGAGAACTCTGATGAGACTTTCTGCATTGATAACGAGGCCTTGTACGACATTTGCTTCCGGACACTGAAGCTGACGACACCGACATACGGCGACCTGAATCACCTCATTTCCATCGTCATGTCCGGTATTACAACTTGTTTGCGTTTCCCTGGTCAGCTGAACTCCGATCTCCGGAAGTTGGCTGTCAACATGGGTGA-GTTCTCACTT-GATGCCTTGTGACATGACACTTATCATTGACTGTTAAAAATT-TAGTTCCCTTCCCCCGTCTCCACTTCTTCATGACCGGTTTCGCGCCCTTGACTGCGCGCGGCAGCCAACAGTACCGTGCTGTCACTGTACCCGAGCTGACTCAACAGATGTTCGATGCCAAGAACATGATGGCTGCGTCCGACCCCCGGCATGGCCGATACCTCACTGTATGCAACATCC--TAGCACA-GAGCGTACCAATCTGATGTATCTGTTGCT--TTTTATAGGTTGCCGC</seq>
       </row>
       <row id="row1579" otu="Tl252">
-        <seq>AGTTCAGAAAAGGGTTGTAGCTGGCCTCAAA-TCCGGGGCATGTGCACACCCTGCTCATCCACTCTCACACCTGTGCACTTTCTGTAGGTCGGTTCGGGATCTGGTCCCTCGCGGGGTCGGGTTCTGTGCCTTCCTATGTACAATCACAAACGCTTCAGTATTCAGAATGTCATTGCGATAATTAAAACGCATCTTATACAACTTTCAGCAACGGATCTCTTGGCTCTCGCATCGATGAAGAACGCAGCGAAATGCGATAAGTAATGTGAATTGCAGAATTCAGTGAATCATCGAATCTTTGAACGCACCTTGCGCTCCTTGGTATTCCGAGGAGCATGCCTGTTTGAGTGTCATGGAATTCTCAACCCACACGTCCTTGTGATGTGGACGGGCTTGGACATTGGAGGTTTCTGCCGGCCCCCCATTCGGGTCGGCTCCTCTGGAATGCATTAGCTCCATCCCTTGCGGATCGGCTCTCGGTGTGATAATTGTCTACGCCGTGGTCGTTGAAGCCTCAGTCGGGCGAGCTTATAATCGTCCCCTCCGGGACAATCGAATATGACATCTGACCTCCGAGGTCTGTG-CATTTCAAATGTCACGTTGGAGAAAATC--TGACGACCGTTGATCGT-AGCCCTACAACGCAACCCTCTCCGTGCACCAACTGGTCGAGAACTCTGATGAGACTTTCTGCATTGATAACGAGGCCTTGTACGACATTTGCTTCCGGACACTGAAGCTGACGACACCGACATACGGCGACCTGAATCACCTCATTTCCATCGTCATGTCCGGTATTACAACTTGTTTGCGTTTCCCTGGTCAGCTGAACTCCGATCTCCGGAAGTTGGCTGTCAACATGGGTGA-GTTCTCACTT-GATGCCTTGTGACATGACACTTATCATTGACTGTTAAAAATT-TAGTTCCCTTCCCCCGTCTCCACTT.TTCATGACCGGTTTCGCGCCCTTGACTGCGCGCGGCAGCCAACAGTACCGTGCTGTCACTGTACCCGAGCTGACTCAACAGATGTTCGATGCCAAGAACATGATGG.TGCGTCCGACCCCCGGCATGGCCGATACCTCACTGTATGCAACATCC--TAGCACA-GAGCGTACCAATCTGATGTATCTGTTGCT--TTTTATAGGTTGCCGC</seq>
+        <seq>AGTTCAGAAAAGGGTTGTAGCTGGCCTCAAA-TCCGGGGCATGTGCACACCCTGCTCATCCACTCTCACACCTGTGCACTTTCTGTAGGTCGGTTCGGGATCTGGTCCCTCGCGGGGTCGGGTTCTGTGCCTTCCTATGTACAATCACAAACGCTTCAGTATTCAGAATGTCATTGCGATAATTAAAACGCATCTTATACAACTTTCAGCAACGGATCTCTTGGCTCTCGCATCGATGAAGAACGCAGCGAAATGCGATAAGTAATGTGAATTGCAGAATTCAGTGAATCATCGAATCTTTGAACGCACCTTGCGCTCCTTGGTATTCCGAGGAGCATGCCTGTTTGAGTGTCATGGAATTCTCAACCCACACGTCCTTGTGATGTGGACGGGCTTGGACATTGGAGGTTTCTGCCGGCCCCCCATTCGGGTCGGCTCCTCTGGAATGCATTAGCTCCATCCCTTGCGGATCGGCTCTCGGTGTGATAATTGTCTACGCCGTGGTCGTTGAAGCCTCAGTCGGGCGAGCTTATAATCGTCCCCTCCGGGACAATCGAATATGACATCTGACCTCCGAGGTCTGTG-CATTTCAAATGTCACGTTGGAGAAAATC--TGACGACCGTTGATCGT-AGCCCTACAACGCAACCCTCTCCGTGCACCAACTGGTCGAGAACTCTGATGAGACTTTCTGCATTGATAACGAGGCCTTGTACGACATTTGCTTCCGGACACTGAAGCTGACGACACCGACATACGGCGACCTGAATCACCTCATTTCCATCGTCATGTCCGGTATTACAACTTGTTTGCGTTTCCCTGGTCAGCTGAACTCCGATCTCCGGAAGTTGGCTGTCAACATGGGTGA-GTTCTCACTT-GATGCCTTGTGACATGACACTTATCATTGACTGTTAAAAATT-TAGTTCCCTTCCCCCGTCTCCACTT?TTCATGACCGGTTTCGCGCCCTTGACTGCGCGCGGCAGCCAACAGTACCGTGCTGTCACTGTACCCGAGCTGACTCAACAGATGTTCGATGCCAAGAACATGATGG?TGCGTCCGACCCCCGGCATGGCCGATACCTCACTGTATGCAACATCC--TAGCACA-GAGCGTACCAATCTGATGTATCTGTTGCT--TTTTATAGGTTGCCGC</seq>
       </row>
       <row id="row1580" otu="Tl272">
         <seq>AGTTCAGAAAAGGGTTGTAGCTGGCCTCAAA-TCCGGGGCATGTGCACACCCTGCTCATCCACTCTCACACCTGTGCACTTTCTGTAGGTCGGTTCGGGATCTGGTCCCTCGCGGGGTCGGGTTCTGTGCCTTCCTATGTACAATCACAAACGCTTCAGTATTCAGAATGTCATTGCGATAATTAAAACGCATCTTATACAACTTTCAGCAACGGATCTCTTGGCTCTCGCATCGATGAAGAACGCAGCGAAATGCGATAAGTAATGTGAATTGCAGAATTCAGTGAATCATCGAATCTTTGAACGCACCTTGCGCTCCTTGGTATTCCGAGGAGCATGCCTGTTTGAGTGTCATGGAATTCTCAACCCACACGTCCTTGTGATGTGGACGGGCTTGGACTTTGGAGGTTTCTGCCGGCCCCCCATTCGGGTCGGCTCCTCTGGAATGCATTAGCTCCATCCCTTGCGGATCGGCTCTCGGTGTGATAATTGTCTACGCCGTGGTCGTTGAAGCCTCAGTCGGGCGAGCTTATAATCGTCCCCTCCGGGACAATCGAATATGACATCTGACCTCCGAGGTCTGTG-CATTTCAAATGTCACGTTGGAGAAAATT--TGACGACCGTTGATCGT-AGCCCTACAACGCAACCCTCTCCGTGCACCAACTGGTCGAGAACTCTGATGAGACTTTCTGCATTGATAACGAGGCCTTGTACGACATTTGCTTCCGGACACTGAAGCTGACGACACCGACATACGGCGACCTGAATCACCTCATTTCCATCGTCATGTCCGGTATTACAACTTGTTTGCGTTTCCCTGGTCAGCTGAACTCCGATCTCCGGAAGTTGGCTGTCAACATGGGTGA-GTTCTCACTT-GATGCCTTGTGACATGACACTTATCATTGACTGTTAAAAATT-TAGTTCCCTTCCCCCGTCTCCACTTCTTCATGACCGGTTTCGCGCCCTTGACTGCGCGCGGCAGCCAGCAGTACCGTGCTGTCACTGTACCCGAGCTGACTCAACAGATGTTCGATGCCAAGAACATGATGGCTGCGTCCGACCCCCGGCATGGCCGATACCTCACTGTATGCAACATCC--TAGCACA-GAGCGTACCAATCTGATGTATCTGTTGCCTATTATATAGGTTGCCGC</seq>
@@ -1743,7 +1743,7 @@
         <seq>AGTTCAGAAAAGGGTTGTAGCTGGCCTCAAA-TCCGGGGCATGTGCACACCCTGCTCATCCACTCTCACACCTGTGCACTTTCTGTAGGTCGGTTCGGGATCTGGTCCCTCGCGGGGTCGGGTTCTGTGCCTTCCTATGTACAATCACAAACGCTTCAGTATTCAGAATGTCATTGCGATAATTAAAACGCATCTTATACAACTTTCAGCAACGGATCTCTTGGCTCTCGCATCGATGAAGAACGCAGCGAAATGCGATAAGTAATGTGAATTGCAGAATTCAGTGAATCATCGAATCTTTGAACGCACCTTGCGCTCCTTGGTATTCCGAGGAGCATGCCTGTTTGAGTGTCATGGAATTCTCAACCCACACGTCCTTGTGATGTGGACGGGCTTGGACTTTGGAGGTTTCTGCCGGCCCCCCATTCGGGTCGGCTCCTCTGGAATGCATTAGCTCCATCCCTTGCGGATCGGCTCTCGGTGTGATAATTGTCTACGCCGTGGTCGTTGAAGCCTCAGTCGGGCGAGCTTATAATCGTCCCCTCCGGGACAATCGAATATGACATCTGACCTCCGAGGTCTGTG-CATTTCAAATGTCACGTTGGAGAAAATC--TGACGACCGTTGATCGT-AGCCCTACAACGCAACCCTCTCCGTGCACCAACTGGTCGAGAACTCTGATGAGACTTTCTGCATTGATAACGAGGCACTGTACGACATTTGCTTCCGGACACTGAAGCTGACGACACCGACATACGGCGATCTGAATCACCTCATTTCCATCGTCATGTCCGGTATTACAACTTGTTTGCGTTTCCCTGGTCAGTTGAACTCCGATCTCCGGAAGTTGGCTGTCAACATGGGTGA-GTTCTCACTT-GATTCCTTGTGACATGACACTTATCATTGACTGTTAAAAATT-TAGTTCCCTTCCCCCGTCTCCACTTCTTCATGACCGGTTTCGCGCCCTTGACTGCGCGCGGCAGCCAGCAGTACCGTGCTGTCACTGTACCCGAGCTGACTCAACAGATGTTCGATGCCAAGAACATGATGGCTGCGTCCGACCCCCGGCATGGCCGATACCTCACTGTATGCAACATCC--TAGCACA-GAGCGTACCAATCTGATGTATCTGTTGCCTATTTTATAGGTTGCTGC</seq>
       </row>
       <row id="row1582" otu="Tl275">
-        <seq>AGTTCAGAAATGGGTTGTCGCTGGCCTCAAAATCCGGGGCATGTGCACACCCTGCTCATCCACTCTCACACCTGTGCACTTTCTGTAGGTCGGTTCGGGATC.GGTCCCTCGCGGGGTCGGGTTCTGCGCCTTCCTATGTACAATCACAAACGCTTCAGTATTCAGAATGTCATTGCGATAATTAAAACGCATCTTATACAACTTTCAGCAACGGATCTCTTGGCTCTCGCATCGATGAAGAACGCAGCGAAATGCGATAAGTAATGTGAATTGCAGAATTCAGTGAATCATCGAATCTTTGAACGCACCTTGCGCTCCTTGGTATTCCGAGGAGCATGCCTGTTTGAGTGTCATGGAATTCTCAACCCACACATCCTTGTGATGTGGACGGGCTTGGACTTTGGAGGTTTCTGCCGGCCCCCCATTCGGGTCGGCTCCTCTGGAATGCATTAGCTCCATCCCTTGCGGATCGGCTCTCGGTGTGATAATTGTCTACGCCGTGGTCGTTGAAGCCTCAGTTGGGCGAGCTCACAATCGTCCCCTCCGGGACAATTCAATCTGACATCTGACCTCCGAGGTCTGTG-CGTTTCAAATGTCACGTTGGAGAAAATC--TGACGACCGTTGATCAT-AGCCCTACAACGCAACCCTCTCCGTGCA.CAACTGGTCGAGAACTCTGATGAGACTTTCTGCATTGATAACGAGGC.CTGTACGACATTTGCTTCCGGACACTGAAGCTGACGACACCGACATACGGCGATCTGAACCACCTCATTTCCATCGTCATGTCCGGTATTACAACTTGCTTGCGTTTCCCTGGTCAGCTGAACTCCGATCTCCGAAAGTTGGCTGTCAACATGGGTGA-GTTCTCACTT-GATTCCTTGTGATATGACACTTATGATTGACTGTTGAAATTT-TAGTCCCCTTCCCCCGTCTCCACTTCTTCATGACTGGTTTCGCGCCCTTGACTGCGCGCGGCAGCCAGCAGTACCGTGCTGTCACTGTACCCGAGCTGACTCAACAGATGTTCGATGCCAAGAACATGATGGCTGCGTCCGACCCCCGGCATGGGCGATACCTGACCGTATGCGGCTC.CCTTATTACG-GAGCGTACCAATCTGATCTATTTGTTAC.TTTTTCATAGGTTGCCGC</seq>
+        <seq>AGTTCAGAAATGGGTTGTCGCTGGCCTCAAAATCCGGGGCATGTGCACACCCTGCTCATCCACTCTCACACCTGTGCACTTTCTGTAGGTCGGTTCGGGATC?GGTCCCTCGCGGGGTCGGGTTCTGCGCCTTCCTATGTACAATCACAAACGCTTCAGTATTCAGAATGTCATTGCGATAATTAAAACGCATCTTATACAACTTTCAGCAACGGATCTCTTGGCTCTCGCATCGATGAAGAACGCAGCGAAATGCGATAAGTAATGTGAATTGCAGAATTCAGTGAATCATCGAATCTTTGAACGCACCTTGCGCTCCTTGGTATTCCGAGGAGCATGCCTGTTTGAGTGTCATGGAATTCTCAACCCACACATCCTTGTGATGTGGACGGGCTTGGACTTTGGAGGTTTCTGCCGGCCCCCCATTCGGGTCGGCTCCTCTGGAATGCATTAGCTCCATCCCTTGCGGATCGGCTCTCGGTGTGATAATTGTCTACGCCGTGGTCGTTGAAGCCTCAGTTGGGCGAGCTCACAATCGTCCCCTCCGGGACAATTCAATCTGACATCTGACCTCCGAGGTCTGTG-CGTTTCAAATGTCACGTTGGAGAAAATC--TGACGACCGTTGATCAT-AGCCCTACAACGCAACCCTCTCCGTGCA?CAACTGGTCGAGAACTCTGATGAGACTTTCTGCATTGATAACGAGGC?CTGTACGACATTTGCTTCCGGACACTGAAGCTGACGACACCGACATACGGCGATCTGAACCACCTCATTTCCATCGTCATGTCCGGTATTACAACTTGCTTGCGTTTCCCTGGTCAGCTGAACTCCGATCTCCGAAAGTTGGCTGTCAACATGGGTGA-GTTCTCACTT-GATTCCTTGTGATATGACACTTATGATTGACTGTTGAAATTT-TAGTCCCCTTCCCCCGTCTCCACTTCTTCATGACTGGTTTCGCGCCCTTGACTGCGCGCGGCAGCCAGCAGTACCGTGCTGTCACTGTACCCGAGCTGACTCAACAGATGTTCGATGCCAAGAACATGATGGCTGCGTCCGACCCCCGGCATGGGCGATACCTGACCGTATGCGGCTC?CCTTATTACG-GAGCGTACCAATCTGATCTATTTGTTAC?TTTTTCATAGGTTGCCGC</seq>
       </row>
       <row id="row1583" otu="Tl274">
         <seq>AGTTCAGAAAAGGGTTGTCGCTGGCCTCAAAATCCGGGGCATGTGCACACCCTGCTCATCCACTCTCACACCTGTGCACTTTCTGTAGGTCGGTTCGGGATCTGGTCCCTCGCGGGGTCGGGTTCTGCGCCTTCCTATGTACAATCACAAACGCTTCAGTATTCAGAATGTCATTGCGATAATTAAAACGCATCTTATACAACTTTCAGCAACGGATCTCTTGGCTCTCGCATCGATGAAGAACGCAGCGAAATGCGATAAGTAATGTGAATTGCAGAATTCAGTGAATCATCGAATCTTTGAACGCACCTTGCGCTCCTTGGTATTCCGAGGAGCATGCCTGTTTGAGTGTCATGGAATTCTCAACCCACACGTCCTTGTGATGTGGACGGGCTTGGACTTTGGAGGTTTCTGCCGGCCCCCCATTCGGGTCGGCTCCTCTGGAATGCATTAGCTCCATCCCTTGCGGATCGGCTCTCGGTGTGATAATTGTCTACGCCGTGGTCGTTGAAGCCTCAGTTGGGCGAGCTCACAATCGTCCCCTCCGGGACAATTCAATCTGACATCTGACCTCCGAGGTCTGTG-CGTTTCAAATGTCACGTTGGAGAAAATC--TGACGACCGTTGATCAT-AGCCCTACAACGCAACCCTCTCCGTGCACCAACTGGTCGAGAACTCTGATGAGACTTTCTGCATTGATAACGAGGCACTGTACGACATTTGCTTCCGGACACTGAAGCTGACGACACCGACATACGGCGATCTGAACCACCTCATTTCCATCGTCATGTCCGGTATTACAACTTGCTTGCGTTTCCCTGGTCAGCTGAACTCCGATCTCCGAAAGTTGGCTGTCAACATGGGTGA-GTTCTCACTT-GATTCCTTGTGATATGACACTTATGATTGACTGTTAAAATTT-TAGTCCCCTTCCCCCGTCTCCACTTCTTCATGACTGGTTTCGCGCCCTTGACTGCGCGCGGCAGCCAGCAGTACCGTGCTGTCACTGTACCCGAGCTGACTCAACAGATGTTCGATGCCAAGAACATGATGGCTGCGTCCGACCCCCGGCATGGGCGATACCTGACCGTATGCGGCTCTCCTTATTACG-GAGCGTACCAATCTGATCTATTTGTTACGTTTTTCATAGGTTGCCGC</seq>
@@ -1755,7 +1755,7 @@
         <seq>AGTTCAGAAAAGGGTTGTCGCTGGCCTCAAAATCCGGGGCATGTGCACACCCTGCTCATCCACTCTCACACCTGTGCACTTTCTGTAGGTCGGTTCGGGATCTGGTCCCTCGCGGGGTCGGGTTCTGCGCCTTCCTATGTACAATCACAAACGCTTCAGTATTCAGAATGTCATTGCGATAATTAAAACGCATCTTATACAACTTTCAGCAACGGATCTCTTGGCTCTCGCATCGATGAAGAACGCAGCGAAATGCGATAAGTAATGTGAATTGCAGAATTCAGTGAATCATCGAATCTTTGAACGCACCTTGCGCTCCTTGGTATTCCGAGGAGCATGCCTGTTTGAGTGTCATGGAATTCTCAACCCACACGTCCTTGTGATGTGGACGGGCTTGGACTTTGGAGGTTTCTGCCGGCCCCCCATTCGGGTCGGCTCCTCTGGAATGCATTAGCTCCATCCCTTGCGGATCGGCTCTCGGTGTGATAATTGTCTACGCCGTGGTCGTTGAAGCCTCAGTTGGGCGAGCTCACAATCGTCCCCTCCGGGACAATTCAATCTGACATCTGACCTCCGAGGTCTGTG-CGTTTCAAATGTCACGTTGGAGAAAATC--TGACGACCGTTGATCAT-AGCCCTACAACGCAACCCTCTCCGTGCACCAACTGGTCGAGAACTCTGATGAGACTTTCTGCATTGATAACGAGGCGCTGTACGACATTTGCTTCCGGACACTGAAGCTGACGACACCGACATACGGCGATCTGAACCACCTCATTTCCATCGTCATGTCCGGTATTACAACTTGCTTGCGTTTCCCTGGTCAGCTGAACTCCGATCTCCGAAAGTTGGCTGTCAACATGGGTGA-GTTCTCACTT-GATTCCTTGTGATATAACACTTATGATTGACTGTTAAAATTT-TAGTCCCCTTCCCCCGTCTCCACTTCTTCATGACTGGTTTCGCGCCCTTGACTGCGCGCGGCAGCCAGCAGTACCGTGCTGTCACTGTACCCGAGCTGACTCAACAGATGTTCGATGCCAAGAACATGATGGCTGCGTCCGACCCCCGGCATGGGCGATACCTGACCGTATGCGGCTCCCCTTATTACG-GAGCGTACCAATCTGATCTATTTGTTACATTTTTCATAGGTTGCCGC</seq>
       </row>
       <row id="row1586" otu="Tl254">
-        <seq>AGTTCAGAAAAGGGTTGTCGCTGGCCTCAAAATCCGGGGCATGTGCACACCCTGCTCATCCACTCTCACACCTGTGCACTTTCTGTAGGTCGGTTCGGGATCTGGTCCCTCGCGGGGTCGGGTTCTGCGCCTTCCTATGTACAATCACAAACGCTTCAGTATTCAGAATGTCATTGCGATAATTAAAACGCATCTTATACAACTTTCAGCAACGGATCTCTTGGCTCTCGCATCGATGAAGAACGCAGCGAAATGCGATAAGTAATGTGAATTGCAGAATTCAGTGAATCATCGAATCTTTGAACGCACCTTGCGCTCCTTGGTATTCCGAGGAGCATGCCTGTTTGAGTGTCATGGAATTCTCAACCCACACATCCTTGTGATGTGGACGGGCTTGGACTTTGGAGGTTTCTGCCGGCCCCCCATTCGGGTCGGCTCCTCTGGAATGCATTAGCTCCATCCCTTGCGGATCGGCTCTCGGTGTGATAATTGTCTACGCCGTGGTCGTTGAAGCCTCAGTTGGGCGAGCTCACAATCGTCCCCTCCGGGACAATTCAATCTGACATCTGACCTCCGAGGTCTGTG-CGTTTCAAATGTCACGTTGGAGAAAATC--TGACGACCGTTGATCAT-AGCCCTACAACGCAACCCTCTCCGTGCACCAACTGGTCGAGAACTCTGATGAGACTTTCTGCATTGATAACGAGGC.CTGTACGACATTTGCTTCCGGACACTGAAGCTGACGACACCGACATACGGCGATCTGAACCACCTCATTTCCATCGTCATGTCCGGTATTACAACTTGCTTGCGTTTCCCTGGTCAGCTGAACTCCGATCTCCGAAAGTTGGCTGTCAACATGGGTGA-GTTCTCACTT-GATTCCTTGTGATATAACACTTATGATTGACTGTTAAAATTT-TAGTCCCCTTCCCCCGTCTCCACTTCTTCATGACTGGTTTCGCGCCCTTGACTGCGCGCGGCAGCCAGCAGTACCGTGCTGTCACTGTACCCGAGCTGACTCAACAGATGTTCGATGCCAAGAACATGATGGCTGCGTCCGACCCCCGGCATGGGCGATACCTGACCGTATGCGGCTCCCCTTATTACG-GAGCGTACCAATCTGATCTATTTGTTACATTTTTCATAGGTTGCCGC</seq>
+        <seq>AGTTCAGAAAAGGGTTGTCGCTGGCCTCAAAATCCGGGGCATGTGCACACCCTGCTCATCCACTCTCACACCTGTGCACTTTCTGTAGGTCGGTTCGGGATCTGGTCCCTCGCGGGGTCGGGTTCTGCGCCTTCCTATGTACAATCACAAACGCTTCAGTATTCAGAATGTCATTGCGATAATTAAAACGCATCTTATACAACTTTCAGCAACGGATCTCTTGGCTCTCGCATCGATGAAGAACGCAGCGAAATGCGATAAGTAATGTGAATTGCAGAATTCAGTGAATCATCGAATCTTTGAACGCACCTTGCGCTCCTTGGTATTCCGAGGAGCATGCCTGTTTGAGTGTCATGGAATTCTCAACCCACACATCCTTGTGATGTGGACGGGCTTGGACTTTGGAGGTTTCTGCCGGCCCCCCATTCGGGTCGGCTCCTCTGGAATGCATTAGCTCCATCCCTTGCGGATCGGCTCTCGGTGTGATAATTGTCTACGCCGTGGTCGTTGAAGCCTCAGTTGGGCGAGCTCACAATCGTCCCCTCCGGGACAATTCAATCTGACATCTGACCTCCGAGGTCTGTG-CGTTTCAAATGTCACGTTGGAGAAAATC--TGACGACCGTTGATCAT-AGCCCTACAACGCAACCCTCTCCGTGCACCAACTGGTCGAGAACTCTGATGAGACTTTCTGCATTGATAACGAGGC?CTGTACGACATTTGCTTCCGGACACTGAAGCTGACGACACCGACATACGGCGATCTGAACCACCTCATTTCCATCGTCATGTCCGGTATTACAACTTGCTTGCGTTTCCCTGGTCAGCTGAACTCCGATCTCCGAAAGTTGGCTGTCAACATGGGTGA-GTTCTCACTT-GATTCCTTGTGATATAACACTTATGATTGACTGTTAAAATTT-TAGTCCCCTTCCCCCGTCTCCACTTCTTCATGACTGGTTTCGCGCCCTTGACTGCGCGCGGCAGCCAGCAGTACCGTGCTGTCACTGTACCCGAGCTGACTCAACAGATGTTCGATGCCAAGAACATGATGGCTGCGTCCGACCCCCGGCATGGGCGATACCTGACCGTATGCGGCTCCCCTTATTACG-GAGCGTACCAATCTGATCTATTTGTTACATTTTTCATAGGTTGCCGC</seq>
       </row>
       <row id="row1587" otu="Tl269">
         <seq>AGTTCAGAAAAGGGTTGTAGCTGGCCTCAAA-TCCGGGGCATGTGCACACCCTGCTCATCCACTCTCACACCTGTGCACTTTCTGTAGGTCGGTTCGGGATCTGGTCCCTCGCGGGGTCGGGTTCTGTGCCTTCCTATGTACAATCACAAACGCTTCAGTATTCAGAATGTCATTGCGATAATTAAAACGCATCTTATACAACTTTCAGCAACGGATCTCTTGGCTCTCGCATCGATGAAGAACGCAGCGAAATGCGATAAGTAATGTGAATTGCAGAATTCAGTGAATCATCGAATCTTTGAACGCACCTTGCGCTCCTTGGTATTCCGAGGAGCATGCCTGTTTGAGTGTCATGGAATTCTCAACCCACACGTCCTTGTGATGTGGACGGGCTTGGATATTGGAGGTTTCTGCCGGCCCCCCATTCGGGTCGGCTCCTCTGGAATGCATTAGCTCCATCCCTTGCGGATCGGCTCTCGGTGTGATAATTGTCTACGCCGTGGTCGTTGAAGCCTCAGTCGGGCGAGCTTATAATCGTCCCCTCCGGGACAATCGAATATGACATCTGACCTCCGAGGTCTGCG-CATTTCAAATGTCACGTTGGAGAAAATC--TGACGACCGTTGATCGT-AGCCCTACAACGCAACCCTCTCCGTGCACCAACTGGTCGAGAACTCTGATGAGACTTTCTGCATTGATAACGAGGCTTTGTACGACATTTGCTTCCGGACACTGAAGCTGACGACACCGACATACGGCGACCTGAATCACCTCATTTCCATCGTCATGTCCGGTATTACAACTTGTTTGCGTTTCCCTGGTCAGCTGAACTCCGATCTCCGGAAGTTGGCTGTCAACATGGGTGA-GTTCTCACTT-GATGCCTTGTGACATGACACTTATCATTGACTGTTAAAAATT-TAGTTCCCTTCCCCCGTCTCCACTTCTTCATGACCGGTTTCGCGCCCTTGACTGCGCGCGGCAGCCAGCAGTACCGTGCTGTCACTGTACCCGAGCTGACTCAACAGATGTTCGATGCCAAGAACATGATGGCTGCGTCCGACCCCCGGCATGGCCGATACCTCACTGTATGCAACATCC--TAGCACA-GAGCGTACCAATCTGATGTATCTGTTGCCTATTTTATAGGTTGCCGC</seq>
@@ -1788,16 +1788,16 @@
         <seq>AGTTCAGAAAAGGGTTGTCGCTGGCCTCAAAATTCGGGGCATGTGCACACCCTGCTCATCCACTCTCACACCTGTGCACTTTCTGTAGGTCGGTTCGGGATCGGGTCCCTCGCGGGGTCGGGTTCTGCGCCTTCCTATGTACAATCACAAACGCTTCAGTATTCAGAATGTCATCGCGATAATTAAAACGCATCTTATACAACTTTCAGCAACGGATCTCTTGGCTCTCGCATCGATGAAGAACGCAGCGAAATGCGATAAGTAATGTGAATTGCAGAATTCAGTGAATCATCGAATCTTTGAACGCACCTTGCGCTCCTTGGTATTCCGAGGAGCATGCCTGTTTGAGTGTCATGGAATTCTCAACCCACACGTCCTTGTGACGTGGACGGGCTTGGACTTTGGAGGTTTCTGCCGGCCCCCCATTCGGGTCGGCTCCTCTGGAATGCATTAGCTCCATCCCTTGCGGATCGGCTCTCGGTGTGATAATTGTCTACGCCGCGGTCGTTGAAGCCTCGGTCGGGAGAGCTTATAATCGTCCCTTC-GGGACAATCGAATATGACATCTGACCTCCGAGGTCTGTG-CGTTTCAAATGTTACGTTGGAGAAAATC--TGACGACCGTTGATCAT-AGCCCTACAACGCAACCCTCTCCGTGCATCAACTGGTCGAGAACTCTGATGAGACTTTCTGCATTGATAACGAGGCACTTTACGACATTTGCTTCCGGACACTGAAGCTGACGACACCGACATACGGCGATCTGAACCACCTCATCTCCATCGTCATGTCCGGTATTACAACTTGCTTGCGTTTCCCTGGTCAGCTGAACTCCGATCTCCGAAAGTTGGCTGTCAACATGGGTGA-GTTCTCACTT-GATTCCTTGTGATATGACACTTATGATTGACTGTTGAAATTT-TAGTCCCCTTCCCCCGTCTCCACTTCTTCATGACTGGTTTCGCGCCCTTGACTGCGCGCGGCAGCCAGCAGTACCGTGCTGTCACTGTACCCGAGCTGACTCAACAGATGTTCGATGCCAAGAACATGATGGCTGCGTCCGACCCCCGGCATGGGCGATACCTGACCGTATGCGGCTCCCCCTATTACG-GAGCGTACCAATCTGATCTATTTGTTACATTTTTCATAGGTTGCCGC</seq>
       </row>
       <row id="row1597" otu="Tl253">
-        <seq>AGTTCAGAAAAGGGTTGTCGCTGGCCTCAAAATCCGGGGCATGTGCACACCCTGCTCATCCACTCTCACACCTGTGCACTTTCTGTAGGTCGGTTCGGGATC.GGTCCCTCGCGGGGTCGGGTTCTGCGCCTTCCTATGTACAATCACAAACGCTTCAGTATTCAGAATGTCATTGCGATAATTAAAACGCATCTTATACAACTTTCAGCAACGGATCTCTTGGCTCTCGCATCGATGAAGAACGCAGCGAAATGCGATAAGTAATGTGAATTGCAGAATTCAGTGAATCATCGAATCTTTGAACGCACCTTGCGCTCCTTGGTATTCCGAGGAGCATGCCTGTTTGAGTGTCATGGAATTCTCAACCCACACATCCTTGTGATGTGGACGGGCTTGGACTTTGGAGGTTTCTGCCGGCCCCCCATTCGGGTCGGCTCCTCTGGAATGCATTAGCTCCATCCCTTGCGGATCGGCTCTCGGTGTGATAATTGTCTACGCCGTGGTCGTTGAAGCCTCAGTTGGGCGAGCTCACAATAGTCCCCCACGGGACAATTCAATCTGACATCTGACCTCCGAGGTCTGTG-CGTTTCACATGTCACGTTGGAGAAAATC--TGA.GACCGTTGATC.T-AGCCCTACAACGCAACCCTCTCCGTGCACCAACTGGTCGAGAACTCTGATGAGACTTTCTGCATTGATAACGAGGCACTGTACGACATTTGCTTCCGGACACTGAAGCTGACGACACCGACATACGGCGATCTGAACCACCTCATTTCCATCGTCATGTCCGGTATTACAACTTGCTTGCGTTTCCCTGGTCAGCTGAACTCCGATCTCCGAAAGTTGGCTGTCAACATGGGTGA-GTTCTCACTT-GATTCCTTGTGATATGACACTTATGATTGACTGTTAAAATTT-TAGTCCCCTTCCCCCGTCTCCACTTCTTCATGACTGGTTTCGCGCCCTTGACTGCGCGCGGCAGCCAGCAGTACCGTGCTGTCACTGTACCCGAGCTGACTCAACAGATGTTCGATGCCAAGAACATGATGGCTGCGTCCGACCCCCGGCATGGGCGATACCTGACCGTATGCGGCTCCCCCTATTACG-GAGCGTACCAATCTGATCTATTTGTTAC.TTTTTCATAGGTTGCCGC</seq>
+        <seq>AGTTCAGAAAAGGGTTGTCGCTGGCCTCAAAATCCGGGGCATGTGCACACCCTGCTCATCCACTCTCACACCTGTGCACTTTCTGTAGGTCGGTTCGGGATC?GGTCCCTCGCGGGGTCGGGTTCTGCGCCTTCCTATGTACAATCACAAACGCTTCAGTATTCAGAATGTCATTGCGATAATTAAAACGCATCTTATACAACTTTCAGCAACGGATCTCTTGGCTCTCGCATCGATGAAGAACGCAGCGAAATGCGATAAGTAATGTGAATTGCAGAATTCAGTGAATCATCGAATCTTTGAACGCACCTTGCGCTCCTTGGTATTCCGAGGAGCATGCCTGTTTGAGTGTCATGGAATTCTCAACCCACACATCCTTGTGATGTGGACGGGCTTGGACTTTGGAGGTTTCTGCCGGCCCCCCATTCGGGTCGGCTCCTCTGGAATGCATTAGCTCCATCCCTTGCGGATCGGCTCTCGGTGTGATAATTGTCTACGCCGTGGTCGTTGAAGCCTCAGTTGGGCGAGCTCACAATAGTCCCCCACGGGACAATTCAATCTGACATCTGACCTCCGAGGTCTGTG-CGTTTCACATGTCACGTTGGAGAAAATC--TGA?GACCGTTGATC?T-AGCCCTACAACGCAACCCTCTCCGTGCACCAACTGGTCGAGAACTCTGATGAGACTTTCTGCATTGATAACGAGGCACTGTACGACATTTGCTTCCGGACACTGAAGCTGACGACACCGACATACGGCGATCTGAACCACCTCATTTCCATCGTCATGTCCGGTATTACAACTTGCTTGCGTTTCCCTGGTCAGCTGAACTCCGATCTCCGAAAGTTGGCTGTCAACATGGGTGA-GTTCTCACTT-GATTCCTTGTGATATGACACTTATGATTGACTGTTAAAATTT-TAGTCCCCTTCCCCCGTCTCCACTTCTTCATGACTGGTTTCGCGCCCTTGACTGCGCGCGGCAGCCAGCAGTACCGTGCTGTCACTGTACCCGAGCTGACTCAACAGATGTTCGATGCCAAGAACATGATGGCTGCGTCCGACCCCCGGCATGGGCGATACCTGACCGTATGCGGCTCCCCCTATTACG-GAGCGTACCAATCTGATCTATTTGTTAC?TTTTTCATAGGTTGCCGC</seq>
       </row>
       <row id="row1598" otu="Tl232">
-        <seq>AGTTCAGAAAAGGGTTGTCGCTGGCCTCAAAATCCGGGGCATGTGCACACCCTGCTCATCCACTCTCACACCTGTGCACTTTCTGTAGGTCGGTTCGGGATCTGGTCCCTCGCGGGGTCGGGTTCTGCGCCTTCCTATGTACAATCACAAACGCTTCAGTATTCAGAATGTCATTGCGATAATTAAAACGCATCTTATACAACTTTCAGCAACGGATCTCTTGGCTCTCGCATCGATGAAGAACGCAGCGAAATGCGATAAGTAATGTGAATTGCAGAATTCAGTGAATCATCGAATCTTTGAACGCACCTTGCGCTCCTTGGTATTCCGAGGAGCATGCCTGTTTGAGTGTCATGGAATTCTCAACCCACACATCCTTGTGATGTGGACGGGCTTGGACTTTGGAGGTTTCTGCCGGCCCCCCATTCGGGTCGGCTCCTCTGGAATGCATTAGCTCCATCCCTTGCGGATCGGCTCTCGGTGTGATAATTGTCTACGCCGTGGTCGTTGAAGCCTCAGTTGGGCGAGCTCACAATAGTCCCCTCCGGGACAATTCAATCTGACATCTGACCTCCGAGGTCTGTG-CATTTCACATGTCACGTTGGATAAAATC--TGATGACCGTTGATCAT-AGCCCTACAACGCAACCCTCTCCGTGCATCAACTGGTCGAGAACTCTGATGAGACTTTCTGCATTGATAA.GAGGCACTGTACGACATTTGCTTCCGGACACTGAAGCTGACGACACCGACATACGGCGATCTGAACCACCTCATTTCCATCGTCATGTCCGGTATTACAACTTGCTTGCGTTTCCCTGGTCAGCTGAACTCCGATCTCCGAAAGTTGGCTGTCAACATGGGTGA-GTTCTCACTT-GATTCCTTGTGATATGACATTTATGATTGACTGTTGAAATTT-TAGTCCCCTTCCCCCGTCTCCACTTCTTCATGACTGGTTTCGCGCCCTTGACTGCGCGCGGCAGCCAGCAGTACCGTGCTGTCACTGTACCCGAGCTGACTCAACAGATGTTCGATGCCAAGAACATGATGGCTGCGTCCGACCCCCGGCATGGGCGATACCTGACCGTATGCGGCTCCCCCTATTACG-GAGCGTACCAATCTGATCTATTTGTTACATTTTTCATAGGTTGCCGC</seq>
+        <seq>AGTTCAGAAAAGGGTTGTCGCTGGCCTCAAAATCCGGGGCATGTGCACACCCTGCTCATCCACTCTCACACCTGTGCACTTTCTGTAGGTCGGTTCGGGATCTGGTCCCTCGCGGGGTCGGGTTCTGCGCCTTCCTATGTACAATCACAAACGCTTCAGTATTCAGAATGTCATTGCGATAATTAAAACGCATCTTATACAACTTTCAGCAACGGATCTCTTGGCTCTCGCATCGATGAAGAACGCAGCGAAATGCGATAAGTAATGTGAATTGCAGAATTCAGTGAATCATCGAATCTTTGAACGCACCTTGCGCTCCTTGGTATTCCGAGGAGCATGCCTGTTTGAGTGTCATGGAATTCTCAACCCACACATCCTTGTGATGTGGACGGGCTTGGACTTTGGAGGTTTCTGCCGGCCCCCCATTCGGGTCGGCTCCTCTGGAATGCATTAGCTCCATCCCTTGCGGATCGGCTCTCGGTGTGATAATTGTCTACGCCGTGGTCGTTGAAGCCTCAGTTGGGCGAGCTCACAATAGTCCCCTCCGGGACAATTCAATCTGACATCTGACCTCCGAGGTCTGTG-CATTTCACATGTCACGTTGGATAAAATC--TGATGACCGTTGATCAT-AGCCCTACAACGCAACCCTCTCCGTGCATCAACTGGTCGAGAACTCTGATGAGACTTTCTGCATTGATAA?GAGGCACTGTACGACATTTGCTTCCGGACACTGAAGCTGACGACACCGACATACGGCGATCTGAACCACCTCATTTCCATCGTCATGTCCGGTATTACAACTTGCTTGCGTTTCCCTGGTCAGCTGAACTCCGATCTCCGAAAGTTGGCTGTCAACATGGGTGA-GTTCTCACTT-GATTCCTTGTGATATGACATTTATGATTGACTGTTGAAATTT-TAGTCCCCTTCCCCCGTCTCCACTTCTTCATGACTGGTTTCGCGCCCTTGACTGCGCGCGGCAGCCAGCAGTACCGTGCTGTCACTGTACCCGAGCTGACTCAACAGATGTTCGATGCCAAGAACATGATGGCTGCGTCCGACCCCCGGCATGGGCGATACCTGACCGTATGCGGCTCCCCCTATTACG-GAGCGTACCAATCTGATCTATTTGTTACATTTTTCATAGGTTGCCGC</seq>
       </row>
       <row id="row1599" otu="Tl245">
-        <seq>AGTTCAGAAAAGGGTTGTCGCTGGCCTCAAAATTCGGGGCATGTGCACACCCTGCTCATCCACTCTCACACCTGTGCACTTTCTGTAGGTCGGTTCGGGATCGGGTCCCTCGCGGGGTCGGGTTCTGCGCCTTCCTATGTACAATCACAAACGCTTCAGTATTCAGAATGTCATTGCGATAATTAAAACGCATCTTATACAACTTTCAGCAACGGATCTCTTGGCTCTCGCATCGATGAAGAACGCAGCGAAATGCGATAAGTAATGTGAATTGCAGAATTCAGTGAATCATCGAATCTTTGAACGCACCTTGCGCTCCTTGGTATTCCGAGGAGCATGCCTGTTTGAGTGTCATGGAATTCTCAACCCACACATCCTTGTGATGTGGACGGGCTTGGACTTTGGAGGTTTCTGCCGGCCCCCCATTCGGGTCGGCTCCTCTGGAATGCATTAGCTCCATCCCTTGCGGATCGGCTCTCGGTGTGATAATTGTCTACGCCGTGGTCGTTGAAGCCTCAGTTGGGCGAGCTCACAATAGTCCCCTACGGGACAATTCAATCTGACATCTGACCTCCGAGGTCTGTG-CATTTCACATGTCACGTTGGATAAAATC--TGATGACCGTTGATCGT-AGCCCTACAACGCAACCCTCTCCGTGCATCAACTGGTCGAGAACTCTGATGAGACTTTCTGCATTGATAACGAGGCACTGTACGACATTTGCTTCCGGACACTGAAGCTGACGACACCGACATACGGCGATCTGAACCACCTCATTTCCATCGTCATGTCCGGTATTACAACTTGCTTGCGTTTCCCTGGTCAGCTGAACTCCGATCTCCGAAAGTTGGCTGTCAACATGGGTGA-GTTCTCACTT-GATTCCTTGTGATATGACACTTATGATTGACTGTTGAAATTT-TAGTCCCCTTCCCCCGTCTCCACTTCTTCATGACTGGTTTCGCGCCCTTGACTGCGCGCGGCAGCCAGCAGTACCGTGCTGTCACTGTACCCGAGCTGACTCAACAGATGTTCGATGCCAAGAACATGATGGCTGCGTC.GACCCCCGGCATGGGCGATACCTGACCGTATGCGGCTCCCCCTATTACG-GAGCGTACCAATCTGATCTATTTGTTACGTTTTTCATAGGTTGCCGC</seq>
+        <seq>AGTTCAGAAAAGGGTTGTCGCTGGCCTCAAAATTCGGGGCATGTGCACACCCTGCTCATCCACTCTCACACCTGTGCACTTTCTGTAGGTCGGTTCGGGATCGGGTCCCTCGCGGGGTCGGGTTCTGCGCCTTCCTATGTACAATCACAAACGCTTCAGTATTCAGAATGTCATTGCGATAATTAAAACGCATCTTATACAACTTTCAGCAACGGATCTCTTGGCTCTCGCATCGATGAAGAACGCAGCGAAATGCGATAAGTAATGTGAATTGCAGAATTCAGTGAATCATCGAATCTTTGAACGCACCTTGCGCTCCTTGGTATTCCGAGGAGCATGCCTGTTTGAGTGTCATGGAATTCTCAACCCACACATCCTTGTGATGTGGACGGGCTTGGACTTTGGAGGTTTCTGCCGGCCCCCCATTCGGGTCGGCTCCTCTGGAATGCATTAGCTCCATCCCTTGCGGATCGGCTCTCGGTGTGATAATTGTCTACGCCGTGGTCGTTGAAGCCTCAGTTGGGCGAGCTCACAATAGTCCCCTACGGGACAATTCAATCTGACATCTGACCTCCGAGGTCTGTG-CATTTCACATGTCACGTTGGATAAAATC--TGATGACCGTTGATCGT-AGCCCTACAACGCAACCCTCTCCGTGCATCAACTGGTCGAGAACTCTGATGAGACTTTCTGCATTGATAACGAGGCACTGTACGACATTTGCTTCCGGACACTGAAGCTGACGACACCGACATACGGCGATCTGAACCACCTCATTTCCATCGTCATGTCCGGTATTACAACTTGCTTGCGTTTCCCTGGTCAGCTGAACTCCGATCTCCGAAAGTTGGCTGTCAACATGGGTGA-GTTCTCACTT-GATTCCTTGTGATATGACACTTATGATTGACTGTTGAAATTT-TAGTCCCCTTCCCCCGTCTCCACTTCTTCATGACTGGTTTCGCGCCCTTGACTGCGCGCGGCAGCCAGCAGTACCGTGCTGTCACTGTACCCGAGCTGACTCAACAGATGTTCGATGCCAAGAACATGATGGCTGCGTC?GACCCCCGGCATGGGCGATACCTGACCGTATGCGGCTCCCCCTATTACG-GAGCGTACCAATCTGATCTATTTGTTACGTTTTTCATAGGTTGCCGC</seq>
       </row>
       <row id="row1600" otu="Tl262">
-        <seq>AGTTCAGAAAAGGGTTGTAGCTGGCCTCAAA-TCCGGGGCATGTGCACACCCTGCTCATCCACTCTCACACCTGTGCACTTTCTGTAGGTCGGTTCGGGATCTGGTCCCTCGCGGGGTCGGGTTCTGTGCCTTCCTATGTACAATCACAAACGCTTCAGTATTCAGAATGTCATTGCGATAATTAAAACGCATCTTATACAACTTTCAGCAACGGATCTCTTGGCTCTCGCATCGATGAAGAACGCAGCGAAATGCGATAAGTAATGTGAATTGCAGAATTCAGTGAATCATCGAATCTTTGAACGCACCTTGCGCTCCTTGGTATTCCGAGGAGCATGCCTGTTTGAGTGTCATGGAATTCTCAACCCACACGTCCTTGTGATGTGGACGGGCTTGGACTTTGGAGGTTTCTGCCGGCCCCCCATTCGGGTCGGCTCCTCTGGAATGCATTAGCTCCATCCCTTGCGGATCGGCTCTCGGTGTGATAATTGTCTACGCCGTGGTCGTTGAAGCCTCAGTCGGGCGAGCTTATAATCGTCCCCTCCGGGACAATCGAATATGACATCTGACCTCCGAGGTCTGTG-CATTTCAAATGTCACGTTGGAGAAAATC--TGACGACCGTTGATCGT-AGCCCTACAACGCAACCCTCTCCGTGCACCAACTGGTCGAGAACTCTGATGAGACTTTCTGCATTGATAACGAGGCCTTGTACGACATTTGCTTCCGGACACTGAAGCTGACGACACCGACATACGGCGACCTGAATCACCTCATTTCCATCGTCATGTCCGGTATTACAACTTGTTTGCGTTTCCCTGGTCAGCTGAACTCCGATCTCCGGAAGTTGGCTGTCAACATGGGTGA-GTTCTCACTT-GA.GCCTTGTGACATGACACTTATCATTGACTGTTAAAAATT-TAGTTCCCTTCCCCCGTCTCCACTTCTTCATGACCGGTTTCGCGCCCTTGACTGCGCGCGGCAGCCAGCAGTACCGTGCTGTCACTGTACCCGAGCTGACTCAACAGATGTTCGATGCCAAGAACATGATGGCTGCGTCCGACCCCCGGCATGGCCGATACCTCACTGTATGCAACATCC--TAGCACA-GAGCGTACCAATCTGATGTATCTGTTGCCTATTATATAGGTTGCCGC</seq>
+        <seq>AGTTCAGAAAAGGGTTGTAGCTGGCCTCAAA-TCCGGGGCATGTGCACACCCTGCTCATCCACTCTCACACCTGTGCACTTTCTGTAGGTCGGTTCGGGATCTGGTCCCTCGCGGGGTCGGGTTCTGTGCCTTCCTATGTACAATCACAAACGCTTCAGTATTCAGAATGTCATTGCGATAATTAAAACGCATCTTATACAACTTTCAGCAACGGATCTCTTGGCTCTCGCATCGATGAAGAACGCAGCGAAATGCGATAAGTAATGTGAATTGCAGAATTCAGTGAATCATCGAATCTTTGAACGCACCTTGCGCTCCTTGGTATTCCGAGGAGCATGCCTGTTTGAGTGTCATGGAATTCTCAACCCACACGTCCTTGTGATGTGGACGGGCTTGGACTTTGGAGGTTTCTGCCGGCCCCCCATTCGGGTCGGCTCCTCTGGAATGCATTAGCTCCATCCCTTGCGGATCGGCTCTCGGTGTGATAATTGTCTACGCCGTGGTCGTTGAAGCCTCAGTCGGGCGAGCTTATAATCGTCCCCTCCGGGACAATCGAATATGACATCTGACCTCCGAGGTCTGTG-CATTTCAAATGTCACGTTGGAGAAAATC--TGACGACCGTTGATCGT-AGCCCTACAACGCAACCCTCTCCGTGCACCAACTGGTCGAGAACTCTGATGAGACTTTCTGCATTGATAACGAGGCCTTGTACGACATTTGCTTCCGGACACTGAAGCTGACGACACCGACATACGGCGACCTGAATCACCTCATTTCCATCGTCATGTCCGGTATTACAACTTGTTTGCGTTTCCCTGGTCAGCTGAACTCCGATCTCCGGAAGTTGGCTGTCAACATGGGTGA-GTTCTCACTT-GA?GCCTTGTGACATGACACTTATCATTGACTGTTAAAAATT-TAGTTCCCTTCCCCCGTCTCCACTTCTTCATGACCGGTTTCGCGCCCTTGACTGCGCGCGGCAGCCAGCAGTACCGTGCTGTCACTGTACCCGAGCTGACTCAACAGATGTTCGATGCCAAGAACATGATGGCTGCGTCCGACCCCCGGCATGGCCGATACCTCACTGTATGCAACATCC--TAGCACA-GAGCGTACCAATCTGATGTATCTGTTGCCTATTATATAGGTTGCCGC</seq>
       </row>
       <row id="row1601" otu="Tl235">
         <seq>AGTTCAGAAAAGGGTTGTAGCTGGCCTCAAA-TCCGGGGCATGTGCACACCCTGCTCATCCACTCTCACACCTGTGCACTTTCTGTAGGTCGGTTCGGGATCTGGTCCCTCGCGGGGTCGGGTTCTGTGCCTTCCTATGTACAATCACAAACGCTTCAGTATTCAGAATGTCATTGCGATAATTAAAACGCATCTTATACAACTTTCAGCAACGGATCTCTTGGCTCTCGCATCGATGAAGAACGCAGCGAAATGCGATAAGTAATGTGAATTGCAGAATTCAGTGAATCATCGAATCTTTGAACGCACCTTGCGCTCCTTGGTATTCCGAGGAGCATGCCTGTTTGAGTGTCATGGAATTCTCAACCCACACGTCCTTGTGATGTGGACGGGCTTGGATATTGGAGGTTTCTGCCGGCCCCCCATTCGGGTCGGCTCCTCTGGAATGCATTAGCTCCATCCCTTGCGGATCGGCTCTCGGTGTGATAATTGTCTACGCCGTGGTCGTTGAAGCCTCAGTCGGGCGAGCTTATAATCGTCCCCTCCGGGACAATCGAATATGACATCTGACCTCCGAGGTCTGCG-CATTTCAAATGTCACGTTGGAGAAAATC--TGACGACCGTTGATCGT-AGCCCTACAACGCAACCCTCTCCGTGCACCAACTGGTCGAGAACTCTGATGAGACTTTCTGCATTGATAACGAGGCCTTGTACGACATTTGCTTCCGGACACTGAAGCTGACGACACCGACATACGGCGACCTGAATCACCTCATTTCCATCGTCATGTCCGGTATTACAACTTGTTTGCGTTTCCCTGGTCAGCTGAACTCCGATCTCCGGAAGTTGGCTGTCAACATGGGTGA-GTTCTCACTT-GATGCCTTGTGACATGACACTTATCATTGACTGTTAAAAATT-TAGTTCCCTTCCCCCGTCTCCACTTCTTCATGACCGGTTTCGCGCCCTTGACTGCGCGCGGCAGCCAGCAGTACCGTGCTGTCACTGTACCCGAGCTGACTCAACAGATGTTCGATGCCAAGAACATGATGGCTGCGTCCGACCCCCGGCATGGCCGATACCTCACTGTATGCAACATCC--TAGCACA-GAGCGTACCAATCTGATGTATCTGTTGCCTATTTTATAGGTTGCCGC</seq>
@@ -1821,7 +1821,7 @@
         <seq>AGTTCAGAAAAGGGTTGTAGCTGGCCTCAAA-TCCGGGGCATGTGCACACCCTGCTCATCCACTCTCACACCTGTGCACTTTCTGTAGGTCGGTTCGGGATCTGGTCCCTCGCGGGGTCGGGTTCTGTGCCTTCCTATGTACAATCACAAACGCTTCAGTATTCAGAATGTCATTGCGATAATTAAAACGCATCTTATACAACTTTCAGCAACGGATCTCTTGGCTCTCGCATCGATGAAGAACGCAGCGAAATGCGATAAGTAATGTGAATTGCAGAATTCAGTGAATCATCGAATCTTTGAACGCACCTTGCGCTCCTTGGTATTCCGAGGAGCATGCCTGTTTGAGTGTCATGGAATTCTCAACCCACACGTCCTTGTGATGTGGACGGGCTTGGATATTGGAGGTTTCTGCCGGCCCCCCATTCGGGTCGGCTCCTCTGGAATGCATTAGCTCCATCCCTTGCGGATCGGCTCTCGGTGTGATAATTGTCTACGCCGTGGTCGTTGAAGCCTCAGTCGGGCGAGCTTATAATCGTCCCCTCCGGGACAATCGAATATGACATCTGACCTCCGAGGTCTGTG-CATTTCAAATGTCACGTTGGAGAAAATC--TGACGACCGTTGATCGT-AGCCCTACAACGCAACCCTCTCCGTGCACCAACTGGTCGAGAACTCTGATGAGACTTTCTGCATTGATAACGAGGCCTTGTACGACATTTGCTTCCGGACACTGAAGCTGACGACACCGACATACGGCGACCTGAATCACCTCATTTCCATCGTCATGTCCGGTATTACAACTTGTTTGCGTTTCCCTGGTCAGCTGAACTCCGATCTCCGGAAGTTGGCTGTCAACATGGGTGA-GTTCTCACTT-GACGCCTTGTGACATGACACTTATCATTGACTGTTAAAAATT-TAGTTCCCTTCCCCCGTCTCCACTTCTTCATGACCGGTTTCGCGCCCTTGACTGCGCGCGGCAGCCAGCAGTACCGTGCTGTCACTGTACCCGAGCTGACTCAACAGATGTTCGATGCCAAGAACATGATGGCTGCGTCCGACCCCCGGCATGGCCGATACCTCACTGTATGCAACATCC--TAGCACA-GAGCGTACCAATCTGATGTATCTGTTGCCTATTTTATAGGTTGCCGC</seq>
       </row>
       <row id="row1608" otu="Tl278">
-        <seq>AGTACAGAAAAGGGTTGTAGCTGGCCTCAAA-TCCGGGGCATGTGCACACCCTGCTCATCCACTCTCACACCTGTGCACTTTCTGTAGGTCGGTTCGGGATCTGGTCCCTCGCGGGGTCGGGTTCTGTGCCTTCCTATGTACAATCACAAACGCTTCAGTATTCAGAATGTCATTGCGATAATTAAAACGCATCTTATACAACTTTCAGCAACGGATCTCTTGGCTCTCGCATCGATGAAGAACGCAGCGAAATGCGATAAGTAATGTGAATTGCAGAATTCAGTGAATCATCGAATCTTTGAACGCACCTTGCGCTCCTTGGTATTCCGAGGAGCATGCCTGTTTGAGTGTCATGGAATTCTCAACCCACACGTCCTTGTGATGTGGACGGGCTTGGATATTGGAGGTTTCTGCCGGCCCCCCATTCGGGTCGGCTCCTCTGGAATGCATTAGCTCCATCCCTTGCGGATCGGCTCTCGGTGTGATAATTGTCTACGCCGTGGTCGTTGAAGCCTCAGTCGGGCGAGCTTATAATCGTCCCCTCCGGGACAATCGAATATGACATCTGACCTCCGAGGTCTGTG-CATTTCAAATGTCACGTTGGAGAAAATC--TGACGACCGTTGATCGT-AGCCCTACAACGCAACCCTCTCCGTGCACCAACTGGTCGAGAACTCTGATGAGACTTTCTGCATTGA.AACGAGGCACTGTACGACATTTGCTTCCGGACACTGAAGCTGACGACACCGACATACGGCGATCTGAATCACCTCATTTCCATCGTCATGTCCGGTATTACAACTTGTTTGCGTTTCCCTGGTCAGTTGAACTCCGATCTCCGGAAGTTGGCTGTCAACATGGGTGA-GTTCTCACTT-GATTCCTTGTGACATGACACTTATCATTGACTGTTAAAAATT-TAGTTCCCTTCCCCCGTCTCCACTTCTTCATGACCGGTTTCGCGCCCTTGACTGCGCGCGGCAGCCAGCAGTACCGTGCTGTCACTGTACCCGAGCTGACTCAACAGATGTTCGATGCCAAGAACATGATGGCTGCGTCCGACCCCCGGCATGGCCGATACCTCACTGTATGCAACATCC--TAGCACA-GAGCGTACCAATCTGATGTATCTGTTGCCTATTTTATAGGTTGCTGC</seq>
+        <seq>AGTACAGAAAAGGGTTGTAGCTGGCCTCAAA-TCCGGGGCATGTGCACACCCTGCTCATCCACTCTCACACCTGTGCACTTTCTGTAGGTCGGTTCGGGATCTGGTCCCTCGCGGGGTCGGGTTCTGTGCCTTCCTATGTACAATCACAAACGCTTCAGTATTCAGAATGTCATTGCGATAATTAAAACGCATCTTATACAACTTTCAGCAACGGATCTCTTGGCTCTCGCATCGATGAAGAACGCAGCGAAATGCGATAAGTAATGTGAATTGCAGAATTCAGTGAATCATCGAATCTTTGAACGCACCTTGCGCTCCTTGGTATTCCGAGGAGCATGCCTGTTTGAGTGTCATGGAATTCTCAACCCACACGTCCTTGTGATGTGGACGGGCTTGGATATTGGAGGTTTCTGCCGGCCCCCCATTCGGGTCGGCTCCTCTGGAATGCATTAGCTCCATCCCTTGCGGATCGGCTCTCGGTGTGATAATTGTCTACGCCGTGGTCGTTGAAGCCTCAGTCGGGCGAGCTTATAATCGTCCCCTCCGGGACAATCGAATATGACATCTGACCTCCGAGGTCTGTG-CATTTCAAATGTCACGTTGGAGAAAATC--TGACGACCGTTGATCGT-AGCCCTACAACGCAACCCTCTCCGTGCACCAACTGGTCGAGAACTCTGATGAGACTTTCTGCATTGA?AACGAGGCACTGTACGACATTTGCTTCCGGACACTGAAGCTGACGACACCGACATACGGCGATCTGAATCACCTCATTTCCATCGTCATGTCCGGTATTACAACTTGTTTGCGTTTCCCTGGTCAGTTGAACTCCGATCTCCGGAAGTTGGCTGTCAACATGGGTGA-GTTCTCACTT-GATTCCTTGTGACATGACACTTATCATTGACTGTTAAAAATT-TAGTTCCCTTCCCCCGTCTCCACTTCTTCATGACCGGTTTCGCGCCCTTGACTGCGCGCGGCAGCCAGCAGTACCGTGCTGTCACTGTACCCGAGCTGACTCAACAGATGTTCGATGCCAAGAACATGATGGCTGCGTCCGACCCCCGGCATGGCCGATACCTCACTGTATGCAACATCC--TAGCACA-GAGCGTACCAATCTGATGTATCTGTTGCCTATTTTATAGGTTGCTGC</seq>
       </row>
       <row id="row1609" otu="Tl255">
         <seq>AGTTCAGAAAAGGGTTGTAGCTGGCCTCAAA-TCCGGGGCATGTGCACACCCTGCTCATCCACTCTCACACCTGTGCACTTTCTGTAGGTCGGTTCGGGATCTGGTCCCTCGCGGGGTCGGGTTCTGTGCCTTCCTATGTACAATCACAAACGCTTCAGTATTCAGAATGTCATTGCGATAATTAAAACGCATCTTATACAACTTTCAGCAACGGATCTCTTGGCTCTCGCATCGATGAAGAACGCAGCGAAATGCGATAAGTAATGTGAATTGCAGAATTCAGTGAATCATCGAATCTTTGAACGCACCTTGCGCTCCTTGGTATTCCGAGGAGCATGCCTGTTTGAGTGTCATGGAATTCTCAACCCACACGTCCTTGTGATGTGGACGGGCTTGGACTTTGGAGGTTTCTGCCGGCCCCCCATTCGGGTCGGCTCCTCTGGAATGCATTAGCTCCATCCCTTGCGGATCGGCTCTCGGTGTGATAATTGTCTACGCCGTGGTCGTTGAAGCCTCAGTCGGGCGAGCTTATAATCGTCCCCTCCGGGACAATCGAATATGACATCTGACCTCCGAGGTCTGTG-CATTTCAAATGTCACGTTGGAGAAAATC--TGACGACCGTTGATCGT-AGCCCTACAACGCAACCCTCTCCGTGCACCAACTGGTCGAGAACTCTGATGAGACTTTCTGCATTGATAACGAGGCCTTGTACGACATTTGCTTCCGGACACTGAAGCTGACGACACCGACATACGGCGACCTGAATCACCTCATTTCCATCGTCATGTCCGGTATTACAACTTGTTTGCGTTTCCCTGGTCAGCTGAACTCCGATCTCCGGAAGTTGGCTGTCAACATGGGTGA-GTTCTCACTT-GACGCCTTGTGACATGACACTTATCATTGACTGTTAAAAAAT-TAGTTCCCTTCCCCCGTCTCCACTTCTTCATGACCGGTTTCGCGCCCTTGACTGCGCGCGGCAGCCAGCAGTACCGTGCTGTCACTGTACCCGAGCTGACTCAACAGATGTTCGATGCCAAGAACATGATGGCTGCGTCCGACCCCCGGCATGGCCGATACCTCACTGTATGCAACATCC--TAGCACA-GAGCGTACCAATCTGATGTATCTGTTGCCTATTTTATAGGTTGCCGC</seq>
@@ -1839,19 +1839,19 @@
         <seq>AGTTCAGAAAAGGGTTGTAGCTGGCCTCAAA-TCCGGGGCATGTGCACACCCTGCTCATCCACTCTCACACCTGTGCACTTTCTGTAGGTCGGTTCGGGATCTGGTCCCTCGCGGGGTCGGGTTCTGTGCCTTCCTATGTACAATCACAAACGCTTCAGTATTCAGAATGTCATTGCGATAATTAAAACGCATCTTATACAACTTTCAGCAACGGATCTCTTGGCTCTCGCATCGATGAAGAACGCAGCGAAATGCGATAAGTAATGTGAATTGCAGAATTCAGTGAATCATCGAATCTTTGAACGCACCTTGCGCTCCTTGGTATTCCGAGGAGCATGCCTGTTTGAGTGTCATGGAATTCTCAACCCACACGTCCTTGTGATGTGGACGGGCTTGGACTTTGGAGGTTTCTGCCGGCCCCCCATTCGGGTCGGCTCCTCTGGAATGCATTAGCTCCATCCCTTGCGGATCGGCTCTCGGTGTGATAATTGTCTACGCCGTGGTCGTTGAAGCCTCAGTCGGGCGAGCTTATAATCGTCCCCTCCGGGACAATCGAATATGACATCTGACCTCCGAGGTCTGTG-CATTTCAAATGTCACGTTGGAGAAAATT--TGACGACCGTTGATCGT-AGCCCTACAACGCAACCCTCTCCGTGCACCAACTGGTCGAGAACTCTGATGAGACTTTCTGCATTGACAACGAGGCCTTGTACGACATTTGCTTCCGGACACTGAAGCTGACGACACCGACATACGGCGACCTGAATCACCTCATTTCCATCGTCATGTCCGGTATTACAACTTGTTTGCGTTTCCCTGGTCAGCTGAACTCCGATCTCCGGAAGTTGGCTGTCAACATGGGTGA-GTTCTCACTT-GATGCCTTGTGACATGACACTTATCATTGACTGTTAAAAATT-TAGTTCCCTTCCCCCGTCTCCACTTCTTCATGACCGGTTTCGCGCCCTTGACTGCGCGCGGCAGCCAGCAGTACCGTGCTGTCACTGTACCCGAGCTGACTCAACAGATGTTCGATGCCAAGAACATGATGGCTGCGTCCGACCCCCGGCATGGCCGATACCTCACTGTATGCAACATCC--TAGCACA-GAGCGTACCAATCTGATGTATCTGTTGCCTATTTTATAGGTTGCCGC</seq>
       </row>
       <row id="row1614" otu="Tl248">
-        <seq>AGTTCAGAAAAGGGTTGTAGCTGGCCTCAAA-TCCGGGGCATGTGCACACCCTGCTCATCCACTCTCACACCTGTGCACTTTCTGTAGGTCGGTTCGGGATCTGGTCCCTCGCGGGGTCGGGTTCTGTGCCTTCCTATGTACAATCACAAACGCTTCAGTATTCAGAATGTCATTGCGATAATTAAAACGCATCTTATACAACTTTCAGCAACGGATCTCTTGGCTCTCGCATCGATGAAGAACGCAGCGAAATGCGATAAGTAATGTGAATTGCAGAATTCAGTGAATCATCGAATCTTTGAACGCACCTTGCGCTCCTTGGTATTCCGAGGAGCATGCCTGTTTGAGTGTCATGGAATTCTCAACCCACACGTCCTTGTGATGTGGACGGGCTTGGATATTGGAGGTTTCTGCCGGCCCCCCATTCGGGTCGGCTCCTCTGGAATGCATTAGCTCCATCCCTTGCGGATCGGCTCTCGGTGTGATAATTGTCTACGCCGTGGTCGTTGAAGCCTCAGTCGGGCGAGCTTATAATCGTCCCCTCCGGGACAATCGAATATGACATCTGACCTCCGAGGTCTGTG-CATTTCAAATGTCACGTTGGAGAAAATC--TGACGACCGTTGATCGT-AGCCCTACAACGCAACCCTCTCCGTGCACCAACTGGTCGAGAACTCTGATGAGACTTTCTGCATTGATAACGAGGCATTGTACGACATTTGCTTCCGGACACTGAAGCTGACGACACCGACATACGGCGA.CTGAATCACCTCATTTCCATCGTCATGTCCGGTATTACAACTTGTTTGCGTTTCCCTGGTCAGTTGAACTCCGATCTCCGGAAGTTGGCTGTCAACATGGGTGA-GTTCTCACTT-GA..CCTTGTGACATGACACTTATCATTGACTGTTAAAAAAT-TAGTTCCCTTCCCCCGTCTCCACTTCTTCATGACCGGTTTCGCGCCCTTGACTGCGCGCGGCAGCCAGCAGTACCGTGCTGTCACTGTACCCGAGCTGACTCAACAGATGTTCGATGCCAAGAACATGATGGCTGCGTCCGACCCCCGGCATGGCCGATACCTCACTGTATGCAACATCC--TAGCACA-GAGCGTACCAATCTGATGTATCTGTTGCCTATTTTATAGGTTGCCGC</seq>
+        <seq>AGTTCAGAAAAGGGTTGTAGCTGGCCTCAAA-TCCGGGGCATGTGCACACCCTGCTCATCCACTCTCACACCTGTGCACTTTCTGTAGGTCGGTTCGGGATCTGGTCCCTCGCGGGGTCGGGTTCTGTGCCTTCCTATGTACAATCACAAACGCTTCAGTATTCAGAATGTCATTGCGATAATTAAAACGCATCTTATACAACTTTCAGCAACGGATCTCTTGGCTCTCGCATCGATGAAGAACGCAGCGAAATGCGATAAGTAATGTGAATTGCAGAATTCAGTGAATCATCGAATCTTTGAACGCACCTTGCGCTCCTTGGTATTCCGAGGAGCATGCCTGTTTGAGTGTCATGGAATTCTCAACCCACACGTCCTTGTGATGTGGACGGGCTTGGATATTGGAGGTTTCTGCCGGCCCCCCATTCGGGTCGGCTCCTCTGGAATGCATTAGCTCCATCCCTTGCGGATCGGCTCTCGGTGTGATAATTGTCTACGCCGTGGTCGTTGAAGCCTCAGTCGGGCGAGCTTATAATCGTCCCCTCCGGGACAATCGAATATGACATCTGACCTCCGAGGTCTGTG-CATTTCAAATGTCACGTTGGAGAAAATC--TGACGACCGTTGATCGT-AGCCCTACAACGCAACCCTCTCCGTGCACCAACTGGTCGAGAACTCTGATGAGACTTTCTGCATTGATAACGAGGCATTGTACGACATTTGCTTCCGGACACTGAAGCTGACGACACCGACATACGGCGA?CTGAATCACCTCATTTCCATCGTCATGTCCGGTATTACAACTTGTTTGCGTTTCCCTGGTCAGTTGAACTCCGATCTCCGGAAGTTGGCTGTCAACATGGGTGA-GTTCTCACTT-GA??CCTTGTGACATGACACTTATCATTGACTGTTAAAAAAT-TAGTTCCCTTCCCCCGTCTCCACTTCTTCATGACCGGTTTCGCGCCCTTGACTGCGCGCGGCAGCCAGCAGTACCGTGCTGTCACTGTACCCGAGCTGACTCAACAGATGTTCGATGCCAAGAACATGATGGCTGCGTCCGACCCCCGGCATGGCCGATACCTCACTGTATGCAACATCC--TAGCACA-GAGCGTACCAATCTGATGTATCTGTTGCCTATTTTATAGGTTGCCGC</seq>
       </row>
     </matrix>
   </characters>
-  <trees about="#Tb6045" id="Tb6045" label="Tb6045" otus="Tls10691" xml:base="http://purl.org/PHYLO/TREEBASE/PHYLOWS/tree/TB2:">
-    <meta href="http://purl.org/PHYLO/TREEBASE/PHYLOWS/study/TB2:S794" id="meta1621" rel="rdfs:isDefinedBy" xsi:type="nex:ResourceMeta"/>
+  <trees about="#Tb6045" id="Tb6045" label="Tb6045" otus="Tls10691" xml:base="http://purl.org/phylo/treebase/phylows/tree/TB2:">
+    <meta href="http://purl.org/phylo/treebase/phylows/study/TB2:S794" id="meta1621" rel="rdfs:isDefinedBy" xsi:type="nex:ResourceMeta"/>
     <tree about="#Tr3926" id="Tr3926" label="Fig. 4" xsi:type="nex:FloatTree">
-      <meta href="http://purl.org/PHYLO/TREEBASE/PHYLOWS/study/TB2:As1269" id="meta1841" rel="tb:output.analysisstep" xsi:type="nex:ResourceMeta"/>
+      <meta href="http://purl.org/phylo/treebase/phylows/study/TB2:As1269" id="meta1841" rel="tb:output.analysisstep" xsi:type="nex:ResourceMeta"/>
       <meta content="52" datatype="xsd:integer" id="meta1627" property="tb:ntax.tree" xsi:type="nex:LiteralMeta"/>
       <meta content="Unrated" datatype="xsd:string" id="meta1626" property="tb:quality.tree" xsi:type="nex:LiteralMeta"/>
       <meta content="Single" datatype="xsd:string" id="meta1625" property="tb:type.tree" xsi:type="nex:LiteralMeta"/>
       <meta content="Species Tree" datatype="xsd:string" id="meta1624" property="tb:kind.tree" xsi:type="nex:LiteralMeta"/>
-      <meta href="http://purl.org/PHYLO/TREEBASE/PHYLOWS/study/TB2:S794" id="meta1623" rel="rdfs:isDefinedBy" xsi:type="nex:ResourceMeta"/>
+      <meta href="http://purl.org/phylo/treebase/phylows/study/TB2:S794" id="meta1623" rel="rdfs:isDefinedBy" xsi:type="nex:ResourceMeta"/>
       <node id="Tn274900"/>
       <node id="Tn274857" label="Grifola frondosa"/>
       <node id="Tn274833"/>
