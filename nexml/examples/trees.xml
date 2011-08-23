@@ -9,7 +9,7 @@
 	xmlns:xml="http://www.w3.org/XML/1998/namespace"
 	xsi:schemaLocation="http://www.nexml.org/2009 ../xsd/nexml.xsd"
 	xmlns:nex="http://www.nexml.org/2009"
-	xmlns:cdao="http://www.cs.nmsu.edu/~epontell/CURRENT.owl#"
+	xmlns:cdao="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#"
 	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
 	xmlns="http://www.nexml.org/2009">	        
 	<otus id="tax1" label="RootTaxaBlock">
