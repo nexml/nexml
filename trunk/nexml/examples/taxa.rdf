@@ -1,0 +1,17 @@
+<rdf:RDF xmlns:cdao="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#" xmlns:nex="http://www.nexml.org/2009" xmlns:owl="http://www.w3.org/2002/07/owl#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <rdf:Description rdf:about="http://example.org/t1">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#TU"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/t2">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#TU"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/t3">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#TU"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/t4">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#TU"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/t5">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#TU"/>
+  </rdf:Description>
+</rdf:RDF>

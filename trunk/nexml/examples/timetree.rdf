@@ -1,0 +1,1756 @@
+<rdf:RDF xmlns:cdao="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#" xmlns:nex="http://www.nexml.org/2009" xmlns:owl="http://www.w3.org/2002/07/owl#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <rdf:Description rdf:about="http://example.org/taxona">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#TU"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/taxonb">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#TU"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/tree6">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RootedTree"/>
+    <cdao:has_Root rdf:resource="http://example.org/node12"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node12">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree6"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node13">
+    <rdfs:label>Pan</rdfs:label>
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree6"/>
+    <cdao:represents_TU rdf:resource="http://example.org/taxona"/>
+    <cdao:has_Ancestor rdf:resource="http://example.org/node12"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node14">
+    <rdfs:label>Homo</rdfs:label>
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree6"/>
+    <cdao:represents_TU rdf:resource="http://example.org/taxonb"/>
+    <cdao:has_Ancestor rdf:resource="http://example.org/node12"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/edge13">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#DirectedEdge"/>
+    <cdao:has_Parent_Node rdf:resource="http://example.org/node12"/>
+    <cdao:has_Child_Node rdf:resource="http://example.org/node13"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree6"/>
+    <cdao:has_Annotation>
+      <rdf:Description>
+        <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#EdgeLength"/>
+        <cdao:has_Float_Value rdf:datatype="http://www.w3.org/1999/02/22-rdf-syntax-ns#float">6.6</cdao:has_Float_Value>
+      </rdf:Description>
+    </cdao:has_Annotation>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/edge14">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#DirectedEdge"/>
+    <cdao:has_Parent_Node rdf:resource="http://example.org/node12"/>
+    <cdao:has_Child_Node rdf:resource="http://example.org/node14"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree6"/>
+    <cdao:has_Annotation>
+      <rdf:Description>
+        <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#EdgeLength"/>
+        <cdao:has_Float_Value rdf:datatype="http://www.w3.org/1999/02/22-rdf-syntax-ns#float">6.6</cdao:has_Float_Value>
+      </rdf:Description>
+    </cdao:has_Annotation>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/tree15">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RootedTree"/>
+    <cdao:has_Root rdf:resource="http://example.org/node21"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node21">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree15"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node22">
+    <rdfs:label>Pan</rdfs:label>
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree15"/>
+    <cdao:represents_TU rdf:resource="http://example.org/taxona"/>
+    <cdao:has_Ancestor rdf:resource="http://example.org/node21"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node23">
+    <rdfs:label>Homo</rdfs:label>
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree15"/>
+    <cdao:represents_TU rdf:resource="http://example.org/taxonb"/>
+    <cdao:has_Ancestor rdf:resource="http://example.org/node21"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/edge22">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#DirectedEdge"/>
+    <cdao:has_Parent_Node rdf:resource="http://example.org/node21"/>
+    <cdao:has_Child_Node rdf:resource="http://example.org/node22"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree15"/>
+    <cdao:has_Annotation>
+      <rdf:Description>
+        <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#EdgeLength"/>
+        <cdao:has_Float_Value rdf:datatype="http://www.w3.org/1999/02/22-rdf-syntax-ns#float">5.8</cdao:has_Float_Value>
+      </rdf:Description>
+    </cdao:has_Annotation>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/edge23">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#DirectedEdge"/>
+    <cdao:has_Parent_Node rdf:resource="http://example.org/node21"/>
+    <cdao:has_Child_Node rdf:resource="http://example.org/node23"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree15"/>
+    <cdao:has_Annotation>
+      <rdf:Description>
+        <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#EdgeLength"/>
+        <cdao:has_Float_Value rdf:datatype="http://www.w3.org/1999/02/22-rdf-syntax-ns#float">5.8</cdao:has_Float_Value>
+      </rdf:Description>
+    </cdao:has_Annotation>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/tree24">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RootedTree"/>
+    <cdao:has_Root rdf:resource="http://example.org/node30"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node30">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree24"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node31">
+    <rdfs:label>Pan</rdfs:label>
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree24"/>
+    <cdao:represents_TU rdf:resource="http://example.org/taxona"/>
+    <cdao:has_Ancestor rdf:resource="http://example.org/node30"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node32">
+    <rdfs:label>Homo</rdfs:label>
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree24"/>
+    <cdao:represents_TU rdf:resource="http://example.org/taxonb"/>
+    <cdao:has_Ancestor rdf:resource="http://example.org/node30"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/edge31">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#DirectedEdge"/>
+    <cdao:has_Parent_Node rdf:resource="http://example.org/node30"/>
+    <cdao:has_Child_Node rdf:resource="http://example.org/node31"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree24"/>
+    <cdao:has_Annotation>
+      <rdf:Description>
+        <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#EdgeLength"/>
+        <cdao:has_Float_Value rdf:datatype="http://www.w3.org/1999/02/22-rdf-syntax-ns#float">6.1</cdao:has_Float_Value>
+      </rdf:Description>
+    </cdao:has_Annotation>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/edge32">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#DirectedEdge"/>
+    <cdao:has_Parent_Node rdf:resource="http://example.org/node30"/>
+    <cdao:has_Child_Node rdf:resource="http://example.org/node32"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree24"/>
+    <cdao:has_Annotation>
+      <rdf:Description>
+        <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#EdgeLength"/>
+        <cdao:has_Float_Value rdf:datatype="http://www.w3.org/1999/02/22-rdf-syntax-ns#float">6.1</cdao:has_Float_Value>
+      </rdf:Description>
+    </cdao:has_Annotation>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/tree33">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RootedTree"/>
+    <cdao:has_Root rdf:resource="http://example.org/node39"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node39">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree33"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node40">
+    <rdfs:label>Pan</rdfs:label>
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree33"/>
+    <cdao:represents_TU rdf:resource="http://example.org/taxona"/>
+    <cdao:has_Ancestor rdf:resource="http://example.org/node39"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node41">
+    <rdfs:label>Homo</rdfs:label>
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree33"/>
+    <cdao:represents_TU rdf:resource="http://example.org/taxonb"/>
+    <cdao:has_Ancestor rdf:resource="http://example.org/node39"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/edge40">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#DirectedEdge"/>
+    <cdao:has_Parent_Node rdf:resource="http://example.org/node39"/>
+    <cdao:has_Child_Node rdf:resource="http://example.org/node40"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree33"/>
+    <cdao:has_Annotation>
+      <rdf:Description>
+        <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#EdgeLength"/>
+        <cdao:has_Float_Value rdf:datatype="http://www.w3.org/1999/02/22-rdf-syntax-ns#float">6.8</cdao:has_Float_Value>
+      </rdf:Description>
+    </cdao:has_Annotation>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/edge41">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#DirectedEdge"/>
+    <cdao:has_Parent_Node rdf:resource="http://example.org/node39"/>
+    <cdao:has_Child_Node rdf:resource="http://example.org/node41"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree33"/>
+    <cdao:has_Annotation>
+      <rdf:Description>
+        <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#EdgeLength"/>
+        <cdao:has_Float_Value rdf:datatype="http://www.w3.org/1999/02/22-rdf-syntax-ns#float">6.8</cdao:has_Float_Value>
+      </rdf:Description>
+    </cdao:has_Annotation>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/tree42">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RootedTree"/>
+    <cdao:has_Root rdf:resource="http://example.org/node48"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node48">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree42"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node49">
+    <rdfs:label>Pan</rdfs:label>
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree42"/>
+    <cdao:represents_TU rdf:resource="http://example.org/taxona"/>
+    <cdao:has_Ancestor rdf:resource="http://example.org/node48"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node50">
+    <rdfs:label>Homo sapiens</rdfs:label>
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree42"/>
+    <cdao:represents_TU rdf:resource="http://example.org/taxonb"/>
+    <cdao:has_Ancestor rdf:resource="http://example.org/node48"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/edge49">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#DirectedEdge"/>
+    <cdao:has_Parent_Node rdf:resource="http://example.org/node48"/>
+    <cdao:has_Child_Node rdf:resource="http://example.org/node49"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree42"/>
+    <cdao:has_Annotation>
+      <rdf:Description>
+        <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#EdgeLength"/>
+        <cdao:has_Float_Value rdf:datatype="http://www.w3.org/1999/02/22-rdf-syntax-ns#float">6.3</cdao:has_Float_Value>
+      </rdf:Description>
+    </cdao:has_Annotation>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/edge50">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#DirectedEdge"/>
+    <cdao:has_Parent_Node rdf:resource="http://example.org/node48"/>
+    <cdao:has_Child_Node rdf:resource="http://example.org/node50"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree42"/>
+    <cdao:has_Annotation>
+      <rdf:Description>
+        <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#EdgeLength"/>
+        <cdao:has_Float_Value rdf:datatype="http://www.w3.org/1999/02/22-rdf-syntax-ns#float">6.3</cdao:has_Float_Value>
+      </rdf:Description>
+    </cdao:has_Annotation>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/tree51">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RootedTree"/>
+    <cdao:has_Root rdf:resource="http://example.org/node57"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node57">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree51"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node58">
+    <rdfs:label>Pan</rdfs:label>
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree51"/>
+    <cdao:represents_TU rdf:resource="http://example.org/taxona"/>
+    <cdao:has_Ancestor rdf:resource="http://example.org/node57"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node59">
+    <rdfs:label>Homo sapiens</rdfs:label>
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree51"/>
+    <cdao:represents_TU rdf:resource="http://example.org/taxonb"/>
+    <cdao:has_Ancestor rdf:resource="http://example.org/node57"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/edge58">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#DirectedEdge"/>
+    <cdao:has_Parent_Node rdf:resource="http://example.org/node57"/>
+    <cdao:has_Child_Node rdf:resource="http://example.org/node58"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree51"/>
+    <cdao:has_Annotation>
+      <rdf:Description>
+        <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#EdgeLength"/>
+        <cdao:has_Float_Value rdf:datatype="http://www.w3.org/1999/02/22-rdf-syntax-ns#float">8.1</cdao:has_Float_Value>
+      </rdf:Description>
+    </cdao:has_Annotation>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/edge59">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#DirectedEdge"/>
+    <cdao:has_Parent_Node rdf:resource="http://example.org/node57"/>
+    <cdao:has_Child_Node rdf:resource="http://example.org/node59"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree51"/>
+    <cdao:has_Annotation>
+      <rdf:Description>
+        <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#EdgeLength"/>
+        <cdao:has_Float_Value rdf:datatype="http://www.w3.org/1999/02/22-rdf-syntax-ns#float">8.1</cdao:has_Float_Value>
+      </rdf:Description>
+    </cdao:has_Annotation>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/tree60">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RootedTree"/>
+    <cdao:has_Root rdf:resource="http://example.org/node66"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node66">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree60"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node67">
+    <rdfs:label>Pan</rdfs:label>
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree60"/>
+    <cdao:represents_TU rdf:resource="http://example.org/taxona"/>
+    <cdao:has_Ancestor rdf:resource="http://example.org/node66"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node68">
+    <rdfs:label>Homo</rdfs:label>
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree60"/>
+    <cdao:represents_TU rdf:resource="http://example.org/taxonb"/>
+    <cdao:has_Ancestor rdf:resource="http://example.org/node66"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/edge67">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#DirectedEdge"/>
+    <cdao:has_Parent_Node rdf:resource="http://example.org/node66"/>
+    <cdao:has_Child_Node rdf:resource="http://example.org/node67"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree60"/>
+    <cdao:has_Annotation>
+      <rdf:Description>
+        <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#EdgeLength"/>
+        <cdao:has_Float_Value rdf:datatype="http://www.w3.org/1999/02/22-rdf-syntax-ns#float">6</cdao:has_Float_Value>
+      </rdf:Description>
+    </cdao:has_Annotation>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/edge68">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#DirectedEdge"/>
+    <cdao:has_Parent_Node rdf:resource="http://example.org/node66"/>
+    <cdao:has_Child_Node rdf:resource="http://example.org/node68"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree60"/>
+    <cdao:has_Annotation>
+      <rdf:Description>
+        <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#EdgeLength"/>
+        <cdao:has_Float_Value rdf:datatype="http://www.w3.org/1999/02/22-rdf-syntax-ns#float">6</cdao:has_Float_Value>
+      </rdf:Description>
+    </cdao:has_Annotation>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/tree69">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RootedTree"/>
+    <cdao:has_Root rdf:resource="http://example.org/node75"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node75">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree69"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node76">
+    <rdfs:label>Pan troglodytes</rdfs:label>
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree69"/>
+    <cdao:represents_TU rdf:resource="http://example.org/taxona"/>
+    <cdao:has_Ancestor rdf:resource="http://example.org/node75"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node77">
+    <rdfs:label>Homo sapiens</rdfs:label>
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree69"/>
+    <cdao:represents_TU rdf:resource="http://example.org/taxonb"/>
+    <cdao:has_Ancestor rdf:resource="http://example.org/node75"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/edge76">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#DirectedEdge"/>
+    <cdao:has_Parent_Node rdf:resource="http://example.org/node75"/>
+    <cdao:has_Child_Node rdf:resource="http://example.org/node76"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree69"/>
+    <cdao:has_Annotation>
+      <rdf:Description>
+        <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#EdgeLength"/>
+        <cdao:has_Float_Value rdf:datatype="http://www.w3.org/1999/02/22-rdf-syntax-ns#float">5.1</cdao:has_Float_Value>
+      </rdf:Description>
+    </cdao:has_Annotation>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/edge77">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#DirectedEdge"/>
+    <cdao:has_Parent_Node rdf:resource="http://example.org/node75"/>
+    <cdao:has_Child_Node rdf:resource="http://example.org/node77"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree69"/>
+    <cdao:has_Annotation>
+      <rdf:Description>
+        <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#EdgeLength"/>
+        <cdao:has_Float_Value rdf:datatype="http://www.w3.org/1999/02/22-rdf-syntax-ns#float">5.1</cdao:has_Float_Value>
+      </rdf:Description>
+    </cdao:has_Annotation>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/tree78">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RootedTree"/>
+    <cdao:has_Root rdf:resource="http://example.org/node84"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node84">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree78"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node85">
+    <rdfs:label>Pan troglodytes</rdfs:label>
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree78"/>
+    <cdao:represents_TU rdf:resource="http://example.org/taxona"/>
+    <cdao:has_Ancestor rdf:resource="http://example.org/node84"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node86">
+    <rdfs:label>Homo sapiens</rdfs:label>
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree78"/>
+    <cdao:represents_TU rdf:resource="http://example.org/taxonb"/>
+    <cdao:has_Ancestor rdf:resource="http://example.org/node84"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/edge85">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#DirectedEdge"/>
+    <cdao:has_Parent_Node rdf:resource="http://example.org/node84"/>
+    <cdao:has_Child_Node rdf:resource="http://example.org/node85"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree78"/>
+    <cdao:has_Annotation>
+      <rdf:Description>
+        <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#EdgeLength"/>
+        <cdao:has_Float_Value rdf:datatype="http://www.w3.org/1999/02/22-rdf-syntax-ns#float">5.1</cdao:has_Float_Value>
+      </rdf:Description>
+    </cdao:has_Annotation>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/edge86">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#DirectedEdge"/>
+    <cdao:has_Parent_Node rdf:resource="http://example.org/node84"/>
+    <cdao:has_Child_Node rdf:resource="http://example.org/node86"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree78"/>
+    <cdao:has_Annotation>
+      <rdf:Description>
+        <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#EdgeLength"/>
+        <cdao:has_Float_Value rdf:datatype="http://www.w3.org/1999/02/22-rdf-syntax-ns#float">5.1</cdao:has_Float_Value>
+      </rdf:Description>
+    </cdao:has_Annotation>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/tree87">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RootedTree"/>
+    <cdao:has_Root rdf:resource="http://example.org/node93"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node93">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree87"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node94">
+    <rdfs:label>Pan troglodytes</rdfs:label>
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree87"/>
+    <cdao:represents_TU rdf:resource="http://example.org/taxona"/>
+    <cdao:has_Ancestor rdf:resource="http://example.org/node93"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node95">
+    <rdfs:label>Homo sapiens</rdfs:label>
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree87"/>
+    <cdao:represents_TU rdf:resource="http://example.org/taxonb"/>
+    <cdao:has_Ancestor rdf:resource="http://example.org/node93"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/edge94">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#DirectedEdge"/>
+    <cdao:has_Parent_Node rdf:resource="http://example.org/node93"/>
+    <cdao:has_Child_Node rdf:resource="http://example.org/node94"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree87"/>
+    <cdao:has_Annotation>
+      <rdf:Description>
+        <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#EdgeLength"/>
+        <cdao:has_Float_Value rdf:datatype="http://www.w3.org/1999/02/22-rdf-syntax-ns#float">5.4</cdao:has_Float_Value>
+      </rdf:Description>
+    </cdao:has_Annotation>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/edge95">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#DirectedEdge"/>
+    <cdao:has_Parent_Node rdf:resource="http://example.org/node93"/>
+    <cdao:has_Child_Node rdf:resource="http://example.org/node95"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree87"/>
+    <cdao:has_Annotation>
+      <rdf:Description>
+        <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#EdgeLength"/>
+        <cdao:has_Float_Value rdf:datatype="http://www.w3.org/1999/02/22-rdf-syntax-ns#float">5.4</cdao:has_Float_Value>
+      </rdf:Description>
+    </cdao:has_Annotation>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/tree96">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RootedTree"/>
+    <cdao:has_Root rdf:resource="http://example.org/node102"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node102">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree96"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node103">
+    <rdfs:label>Pan troglodytes</rdfs:label>
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree96"/>
+    <cdao:represents_TU rdf:resource="http://example.org/taxona"/>
+    <cdao:has_Ancestor rdf:resource="http://example.org/node102"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node104">
+    <rdfs:label>Homo sapiens</rdfs:label>
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree96"/>
+    <cdao:represents_TU rdf:resource="http://example.org/taxonb"/>
+    <cdao:has_Ancestor rdf:resource="http://example.org/node102"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/edge103">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#DirectedEdge"/>
+    <cdao:has_Parent_Node rdf:resource="http://example.org/node102"/>
+    <cdao:has_Child_Node rdf:resource="http://example.org/node103"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree96"/>
+    <cdao:has_Annotation>
+      <rdf:Description>
+        <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#EdgeLength"/>
+        <cdao:has_Float_Value rdf:datatype="http://www.w3.org/1999/02/22-rdf-syntax-ns#float">7.5</cdao:has_Float_Value>
+      </rdf:Description>
+    </cdao:has_Annotation>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/edge104">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#DirectedEdge"/>
+    <cdao:has_Parent_Node rdf:resource="http://example.org/node102"/>
+    <cdao:has_Child_Node rdf:resource="http://example.org/node104"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree96"/>
+    <cdao:has_Annotation>
+      <rdf:Description>
+        <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#EdgeLength"/>
+        <cdao:has_Float_Value rdf:datatype="http://www.w3.org/1999/02/22-rdf-syntax-ns#float">7.5</cdao:has_Float_Value>
+      </rdf:Description>
+    </cdao:has_Annotation>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/tree105">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RootedTree"/>
+    <cdao:has_Root rdf:resource="http://example.org/node111"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node111">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree105"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node112">
+    <rdfs:label>Pan troglodytes</rdfs:label>
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree105"/>
+    <cdao:represents_TU rdf:resource="http://example.org/taxona"/>
+    <cdao:has_Ancestor rdf:resource="http://example.org/node111"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node113">
+    <rdfs:label>Homo sapiens</rdfs:label>
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree105"/>
+    <cdao:represents_TU rdf:resource="http://example.org/taxonb"/>
+    <cdao:has_Ancestor rdf:resource="http://example.org/node111"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/edge112">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#DirectedEdge"/>
+    <cdao:has_Parent_Node rdf:resource="http://example.org/node111"/>
+    <cdao:has_Child_Node rdf:resource="http://example.org/node112"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree105"/>
+    <cdao:has_Annotation>
+      <rdf:Description>
+        <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#EdgeLength"/>
+        <cdao:has_Float_Value rdf:datatype="http://www.w3.org/1999/02/22-rdf-syntax-ns#float">7.6</cdao:has_Float_Value>
+      </rdf:Description>
+    </cdao:has_Annotation>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/edge113">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#DirectedEdge"/>
+    <cdao:has_Parent_Node rdf:resource="http://example.org/node111"/>
+    <cdao:has_Child_Node rdf:resource="http://example.org/node113"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree105"/>
+    <cdao:has_Annotation>
+      <rdf:Description>
+        <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#EdgeLength"/>
+        <cdao:has_Float_Value rdf:datatype="http://www.w3.org/1999/02/22-rdf-syntax-ns#float">7.6</cdao:has_Float_Value>
+      </rdf:Description>
+    </cdao:has_Annotation>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/tree114">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RootedTree"/>
+    <cdao:has_Root rdf:resource="http://example.org/node120"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node120">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree114"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node121">
+    <rdfs:label>Pan</rdfs:label>
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree114"/>
+    <cdao:represents_TU rdf:resource="http://example.org/taxona"/>
+    <cdao:has_Ancestor rdf:resource="http://example.org/node120"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node122">
+    <rdfs:label>Homo sapiens</rdfs:label>
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree114"/>
+    <cdao:represents_TU rdf:resource="http://example.org/taxonb"/>
+    <cdao:has_Ancestor rdf:resource="http://example.org/node120"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/edge121">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#DirectedEdge"/>
+    <cdao:has_Parent_Node rdf:resource="http://example.org/node120"/>
+    <cdao:has_Child_Node rdf:resource="http://example.org/node121"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree114"/>
+    <cdao:has_Annotation>
+      <rdf:Description>
+        <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#EdgeLength"/>
+        <cdao:has_Float_Value rdf:datatype="http://www.w3.org/1999/02/22-rdf-syntax-ns#float">7.4</cdao:has_Float_Value>
+      </rdf:Description>
+    </cdao:has_Annotation>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/edge122">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#DirectedEdge"/>
+    <cdao:has_Parent_Node rdf:resource="http://example.org/node120"/>
+    <cdao:has_Child_Node rdf:resource="http://example.org/node122"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree114"/>
+    <cdao:has_Annotation>
+      <rdf:Description>
+        <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#EdgeLength"/>
+        <cdao:has_Float_Value rdf:datatype="http://www.w3.org/1999/02/22-rdf-syntax-ns#float">7.4</cdao:has_Float_Value>
+      </rdf:Description>
+    </cdao:has_Annotation>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/tree123">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RootedTree"/>
+    <cdao:has_Root rdf:resource="http://example.org/node129"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node129">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree123"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node130">
+    <rdfs:label>Pan troglodytes</rdfs:label>
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree123"/>
+    <cdao:represents_TU rdf:resource="http://example.org/taxona"/>
+    <cdao:has_Ancestor rdf:resource="http://example.org/node129"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node131">
+    <rdfs:label>Homo sapiens</rdfs:label>
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree123"/>
+    <cdao:represents_TU rdf:resource="http://example.org/taxonb"/>
+    <cdao:has_Ancestor rdf:resource="http://example.org/node129"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/edge130">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#DirectedEdge"/>
+    <cdao:has_Parent_Node rdf:resource="http://example.org/node129"/>
+    <cdao:has_Child_Node rdf:resource="http://example.org/node130"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree123"/>
+    <cdao:has_Annotation>
+      <rdf:Description>
+        <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#EdgeLength"/>
+        <cdao:has_Float_Value rdf:datatype="http://www.w3.org/1999/02/22-rdf-syntax-ns#float">7.1</cdao:has_Float_Value>
+      </rdf:Description>
+    </cdao:has_Annotation>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/edge131">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#DirectedEdge"/>
+    <cdao:has_Parent_Node rdf:resource="http://example.org/node129"/>
+    <cdao:has_Child_Node rdf:resource="http://example.org/node131"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree123"/>
+    <cdao:has_Annotation>
+      <rdf:Description>
+        <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#EdgeLength"/>
+        <cdao:has_Float_Value rdf:datatype="http://www.w3.org/1999/02/22-rdf-syntax-ns#float">7.1</cdao:has_Float_Value>
+      </rdf:Description>
+    </cdao:has_Annotation>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/tree132">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RootedTree"/>
+    <cdao:has_Root rdf:resource="http://example.org/node138"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node138">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree132"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node139">
+    <rdfs:label>Pan troglodytes</rdfs:label>
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree132"/>
+    <cdao:represents_TU rdf:resource="http://example.org/taxona"/>
+    <cdao:has_Ancestor rdf:resource="http://example.org/node138"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node140">
+    <rdfs:label>Homo sapiens</rdfs:label>
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree132"/>
+    <cdao:represents_TU rdf:resource="http://example.org/taxonb"/>
+    <cdao:has_Ancestor rdf:resource="http://example.org/node138"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/edge139">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#DirectedEdge"/>
+    <cdao:has_Parent_Node rdf:resource="http://example.org/node138"/>
+    <cdao:has_Child_Node rdf:resource="http://example.org/node139"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree132"/>
+    <cdao:has_Annotation>
+      <rdf:Description>
+        <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#EdgeLength"/>
+        <cdao:has_Float_Value rdf:datatype="http://www.w3.org/1999/02/22-rdf-syntax-ns#float">7.1</cdao:has_Float_Value>
+      </rdf:Description>
+    </cdao:has_Annotation>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/edge140">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#DirectedEdge"/>
+    <cdao:has_Parent_Node rdf:resource="http://example.org/node138"/>
+    <cdao:has_Child_Node rdf:resource="http://example.org/node140"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree132"/>
+    <cdao:has_Annotation>
+      <rdf:Description>
+        <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#EdgeLength"/>
+        <cdao:has_Float_Value rdf:datatype="http://www.w3.org/1999/02/22-rdf-syntax-ns#float">7.1</cdao:has_Float_Value>
+      </rdf:Description>
+    </cdao:has_Annotation>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/tree141">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RootedTree"/>
+    <cdao:has_Root rdf:resource="http://example.org/node147"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node147">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree141"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node148">
+    <rdfs:label>Pan troglodytes</rdfs:label>
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree141"/>
+    <cdao:represents_TU rdf:resource="http://example.org/taxona"/>
+    <cdao:has_Ancestor rdf:resource="http://example.org/node147"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node149">
+    <rdfs:label>Homo sapiens</rdfs:label>
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree141"/>
+    <cdao:represents_TU rdf:resource="http://example.org/taxonb"/>
+    <cdao:has_Ancestor rdf:resource="http://example.org/node147"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/edge148">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#DirectedEdge"/>
+    <cdao:has_Parent_Node rdf:resource="http://example.org/node147"/>
+    <cdao:has_Child_Node rdf:resource="http://example.org/node148"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree141"/>
+    <cdao:has_Annotation>
+      <rdf:Description>
+        <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#EdgeLength"/>
+        <cdao:has_Float_Value rdf:datatype="http://www.w3.org/1999/02/22-rdf-syntax-ns#float">8.3</cdao:has_Float_Value>
+      </rdf:Description>
+    </cdao:has_Annotation>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/edge149">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#DirectedEdge"/>
+    <cdao:has_Parent_Node rdf:resource="http://example.org/node147"/>
+    <cdao:has_Child_Node rdf:resource="http://example.org/node149"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree141"/>
+    <cdao:has_Annotation>
+      <rdf:Description>
+        <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#EdgeLength"/>
+        <cdao:has_Float_Value rdf:datatype="http://www.w3.org/1999/02/22-rdf-syntax-ns#float">8.3</cdao:has_Float_Value>
+      </rdf:Description>
+    </cdao:has_Annotation>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/tree150">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RootedTree"/>
+    <cdao:has_Root rdf:resource="http://example.org/node156"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node156">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree150"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node157">
+    <rdfs:label>Pan troglodytes</rdfs:label>
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree150"/>
+    <cdao:represents_TU rdf:resource="http://example.org/taxona"/>
+    <cdao:has_Ancestor rdf:resource="http://example.org/node156"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node158">
+    <rdfs:label>Homo sapiens</rdfs:label>
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree150"/>
+    <cdao:represents_TU rdf:resource="http://example.org/taxonb"/>
+    <cdao:has_Ancestor rdf:resource="http://example.org/node156"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/edge157">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#DirectedEdge"/>
+    <cdao:has_Parent_Node rdf:resource="http://example.org/node156"/>
+    <cdao:has_Child_Node rdf:resource="http://example.org/node157"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree150"/>
+    <cdao:has_Annotation>
+      <rdf:Description>
+        <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#EdgeLength"/>
+        <cdao:has_Float_Value rdf:datatype="http://www.w3.org/1999/02/22-rdf-syntax-ns#float">9.2</cdao:has_Float_Value>
+      </rdf:Description>
+    </cdao:has_Annotation>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/edge158">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#DirectedEdge"/>
+    <cdao:has_Parent_Node rdf:resource="http://example.org/node156"/>
+    <cdao:has_Child_Node rdf:resource="http://example.org/node158"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree150"/>
+    <cdao:has_Annotation>
+      <rdf:Description>
+        <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#EdgeLength"/>
+        <cdao:has_Float_Value rdf:datatype="http://www.w3.org/1999/02/22-rdf-syntax-ns#float">9.2</cdao:has_Float_Value>
+      </rdf:Description>
+    </cdao:has_Annotation>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/tree159">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RootedTree"/>
+    <cdao:has_Root rdf:resource="http://example.org/node165"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node165">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree159"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node166">
+    <rdfs:label>Pan</rdfs:label>
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree159"/>
+    <cdao:represents_TU rdf:resource="http://example.org/taxona"/>
+    <cdao:has_Ancestor rdf:resource="http://example.org/node165"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node167">
+    <rdfs:label>Homo</rdfs:label>
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree159"/>
+    <cdao:represents_TU rdf:resource="http://example.org/taxonb"/>
+    <cdao:has_Ancestor rdf:resource="http://example.org/node165"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/edge166">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#DirectedEdge"/>
+    <cdao:has_Parent_Node rdf:resource="http://example.org/node165"/>
+    <cdao:has_Child_Node rdf:resource="http://example.org/node166"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree159"/>
+    <cdao:has_Annotation>
+      <rdf:Description>
+        <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#EdgeLength"/>
+        <cdao:has_Float_Value rdf:datatype="http://www.w3.org/1999/02/22-rdf-syntax-ns#float">11</cdao:has_Float_Value>
+      </rdf:Description>
+    </cdao:has_Annotation>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/edge167">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#DirectedEdge"/>
+    <cdao:has_Parent_Node rdf:resource="http://example.org/node165"/>
+    <cdao:has_Child_Node rdf:resource="http://example.org/node167"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree159"/>
+    <cdao:has_Annotation>
+      <rdf:Description>
+        <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#EdgeLength"/>
+        <cdao:has_Float_Value rdf:datatype="http://www.w3.org/1999/02/22-rdf-syntax-ns#float">11</cdao:has_Float_Value>
+      </rdf:Description>
+    </cdao:has_Annotation>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/tree168">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RootedTree"/>
+    <cdao:has_Root rdf:resource="http://example.org/node174"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node174">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree168"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node175">
+    <rdfs:label>Pan troglodytes</rdfs:label>
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree168"/>
+    <cdao:represents_TU rdf:resource="http://example.org/taxona"/>
+    <cdao:has_Ancestor rdf:resource="http://example.org/node174"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node176">
+    <rdfs:label>Homo sapiens</rdfs:label>
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree168"/>
+    <cdao:represents_TU rdf:resource="http://example.org/taxonb"/>
+    <cdao:has_Ancestor rdf:resource="http://example.org/node174"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/edge175">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#DirectedEdge"/>
+    <cdao:has_Parent_Node rdf:resource="http://example.org/node174"/>
+    <cdao:has_Child_Node rdf:resource="http://example.org/node175"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree168"/>
+    <cdao:has_Annotation>
+      <rdf:Description>
+        <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#EdgeLength"/>
+        <cdao:has_Float_Value rdf:datatype="http://www.w3.org/1999/02/22-rdf-syntax-ns#float">6.2</cdao:has_Float_Value>
+      </rdf:Description>
+    </cdao:has_Annotation>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/edge176">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#DirectedEdge"/>
+    <cdao:has_Parent_Node rdf:resource="http://example.org/node174"/>
+    <cdao:has_Child_Node rdf:resource="http://example.org/node176"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree168"/>
+    <cdao:has_Annotation>
+      <rdf:Description>
+        <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#EdgeLength"/>
+        <cdao:has_Float_Value rdf:datatype="http://www.w3.org/1999/02/22-rdf-syntax-ns#float">6.2</cdao:has_Float_Value>
+      </rdf:Description>
+    </cdao:has_Annotation>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/tree177">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RootedTree"/>
+    <cdao:has_Root rdf:resource="http://example.org/node183"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node183">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree177"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node184">
+    <rdfs:label>Pan troglodytes</rdfs:label>
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree177"/>
+    <cdao:represents_TU rdf:resource="http://example.org/taxona"/>
+    <cdao:has_Ancestor rdf:resource="http://example.org/node183"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node185">
+    <rdfs:label>Homo sapiens</rdfs:label>
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree177"/>
+    <cdao:represents_TU rdf:resource="http://example.org/taxonb"/>
+    <cdao:has_Ancestor rdf:resource="http://example.org/node183"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/edge184">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#DirectedEdge"/>
+    <cdao:has_Parent_Node rdf:resource="http://example.org/node183"/>
+    <cdao:has_Child_Node rdf:resource="http://example.org/node184"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree177"/>
+    <cdao:has_Annotation>
+      <rdf:Description>
+        <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#EdgeLength"/>
+        <cdao:has_Float_Value rdf:datatype="http://www.w3.org/1999/02/22-rdf-syntax-ns#float">5.2</cdao:has_Float_Value>
+      </rdf:Description>
+    </cdao:has_Annotation>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/edge185">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#DirectedEdge"/>
+    <cdao:has_Parent_Node rdf:resource="http://example.org/node183"/>
+    <cdao:has_Child_Node rdf:resource="http://example.org/node185"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree177"/>
+    <cdao:has_Annotation>
+      <rdf:Description>
+        <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#EdgeLength"/>
+        <cdao:has_Float_Value rdf:datatype="http://www.w3.org/1999/02/22-rdf-syntax-ns#float">5.2</cdao:has_Float_Value>
+      </rdf:Description>
+    </cdao:has_Annotation>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/tree186">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RootedTree"/>
+    <cdao:has_Root rdf:resource="http://example.org/node192"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node192">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree186"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node193">
+    <rdfs:label>Pan troglodytes</rdfs:label>
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree186"/>
+    <cdao:represents_TU rdf:resource="http://example.org/taxona"/>
+    <cdao:has_Ancestor rdf:resource="http://example.org/node192"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node194">
+    <rdfs:label>Homo sapiens</rdfs:label>
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree186"/>
+    <cdao:represents_TU rdf:resource="http://example.org/taxonb"/>
+    <cdao:has_Ancestor rdf:resource="http://example.org/node192"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/edge193">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#DirectedEdge"/>
+    <cdao:has_Parent_Node rdf:resource="http://example.org/node192"/>
+    <cdao:has_Child_Node rdf:resource="http://example.org/node193"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree186"/>
+    <cdao:has_Annotation>
+      <rdf:Description>
+        <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#EdgeLength"/>
+        <cdao:has_Float_Value rdf:datatype="http://www.w3.org/1999/02/22-rdf-syntax-ns#float">5.4</cdao:has_Float_Value>
+      </rdf:Description>
+    </cdao:has_Annotation>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/edge194">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#DirectedEdge"/>
+    <cdao:has_Parent_Node rdf:resource="http://example.org/node192"/>
+    <cdao:has_Child_Node rdf:resource="http://example.org/node194"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree186"/>
+    <cdao:has_Annotation>
+      <rdf:Description>
+        <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#EdgeLength"/>
+        <cdao:has_Float_Value rdf:datatype="http://www.w3.org/1999/02/22-rdf-syntax-ns#float">5.4</cdao:has_Float_Value>
+      </rdf:Description>
+    </cdao:has_Annotation>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/tree195">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RootedTree"/>
+    <cdao:has_Root rdf:resource="http://example.org/node201"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node201">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree195"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node202">
+    <rdfs:label>Pan troglodytes</rdfs:label>
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree195"/>
+    <cdao:represents_TU rdf:resource="http://example.org/taxona"/>
+    <cdao:has_Ancestor rdf:resource="http://example.org/node201"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node203">
+    <rdfs:label>Homo sapiens</rdfs:label>
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree195"/>
+    <cdao:represents_TU rdf:resource="http://example.org/taxonb"/>
+    <cdao:has_Ancestor rdf:resource="http://example.org/node201"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/edge202">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#DirectedEdge"/>
+    <cdao:has_Parent_Node rdf:resource="http://example.org/node201"/>
+    <cdao:has_Child_Node rdf:resource="http://example.org/node202"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree195"/>
+    <cdao:has_Annotation>
+      <rdf:Description>
+        <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#EdgeLength"/>
+        <cdao:has_Float_Value rdf:datatype="http://www.w3.org/1999/02/22-rdf-syntax-ns#float">5.6</cdao:has_Float_Value>
+      </rdf:Description>
+    </cdao:has_Annotation>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/edge203">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#DirectedEdge"/>
+    <cdao:has_Parent_Node rdf:resource="http://example.org/node201"/>
+    <cdao:has_Child_Node rdf:resource="http://example.org/node203"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree195"/>
+    <cdao:has_Annotation>
+      <rdf:Description>
+        <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#EdgeLength"/>
+        <cdao:has_Float_Value rdf:datatype="http://www.w3.org/1999/02/22-rdf-syntax-ns#float">5.6</cdao:has_Float_Value>
+      </rdf:Description>
+    </cdao:has_Annotation>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/tree204">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RootedTree"/>
+    <cdao:has_Root rdf:resource="http://example.org/node210"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node210">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree204"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node211">
+    <rdfs:label>Pan troglodytes</rdfs:label>
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree204"/>
+    <cdao:represents_TU rdf:resource="http://example.org/taxona"/>
+    <cdao:has_Ancestor rdf:resource="http://example.org/node210"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node212">
+    <rdfs:label>Homo sapiens</rdfs:label>
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree204"/>
+    <cdao:represents_TU rdf:resource="http://example.org/taxonb"/>
+    <cdao:has_Ancestor rdf:resource="http://example.org/node210"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/edge211">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#DirectedEdge"/>
+    <cdao:has_Parent_Node rdf:resource="http://example.org/node210"/>
+    <cdao:has_Child_Node rdf:resource="http://example.org/node211"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree204"/>
+    <cdao:has_Annotation>
+      <rdf:Description>
+        <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#EdgeLength"/>
+        <cdao:has_Float_Value rdf:datatype="http://www.w3.org/1999/02/22-rdf-syntax-ns#float">7.3</cdao:has_Float_Value>
+      </rdf:Description>
+    </cdao:has_Annotation>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/edge212">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#DirectedEdge"/>
+    <cdao:has_Parent_Node rdf:resource="http://example.org/node210"/>
+    <cdao:has_Child_Node rdf:resource="http://example.org/node212"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree204"/>
+    <cdao:has_Annotation>
+      <rdf:Description>
+        <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#EdgeLength"/>
+        <cdao:has_Float_Value rdf:datatype="http://www.w3.org/1999/02/22-rdf-syntax-ns#float">7.3</cdao:has_Float_Value>
+      </rdf:Description>
+    </cdao:has_Annotation>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/tree213">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RootedTree"/>
+    <cdao:has_Root rdf:resource="http://example.org/node219"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node219">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree213"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node220">
+    <rdfs:label>Pan troglodytes</rdfs:label>
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree213"/>
+    <cdao:represents_TU rdf:resource="http://example.org/taxona"/>
+    <cdao:has_Ancestor rdf:resource="http://example.org/node219"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node221">
+    <rdfs:label>Homo sapiens</rdfs:label>
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree213"/>
+    <cdao:represents_TU rdf:resource="http://example.org/taxonb"/>
+    <cdao:has_Ancestor rdf:resource="http://example.org/node219"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/edge220">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#DirectedEdge"/>
+    <cdao:has_Parent_Node rdf:resource="http://example.org/node219"/>
+    <cdao:has_Child_Node rdf:resource="http://example.org/node220"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree213"/>
+    <cdao:has_Annotation>
+      <rdf:Description>
+        <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#EdgeLength"/>
+        <cdao:has_Float_Value rdf:datatype="http://www.w3.org/1999/02/22-rdf-syntax-ns#float">7.4</cdao:has_Float_Value>
+      </rdf:Description>
+    </cdao:has_Annotation>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/edge221">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#DirectedEdge"/>
+    <cdao:has_Parent_Node rdf:resource="http://example.org/node219"/>
+    <cdao:has_Child_Node rdf:resource="http://example.org/node221"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree213"/>
+    <cdao:has_Annotation>
+      <rdf:Description>
+        <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#EdgeLength"/>
+        <cdao:has_Float_Value rdf:datatype="http://www.w3.org/1999/02/22-rdf-syntax-ns#float">7.4</cdao:has_Float_Value>
+      </rdf:Description>
+    </cdao:has_Annotation>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/tree222">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RootedTree"/>
+    <cdao:has_Root rdf:resource="http://example.org/node228"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node228">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree222"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node229">
+    <rdfs:label>Pan</rdfs:label>
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree222"/>
+    <cdao:represents_TU rdf:resource="http://example.org/taxona"/>
+    <cdao:has_Ancestor rdf:resource="http://example.org/node228"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node230">
+    <rdfs:label>Homo sapiens</rdfs:label>
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree222"/>
+    <cdao:represents_TU rdf:resource="http://example.org/taxonb"/>
+    <cdao:has_Ancestor rdf:resource="http://example.org/node228"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/edge229">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#DirectedEdge"/>
+    <cdao:has_Parent_Node rdf:resource="http://example.org/node228"/>
+    <cdao:has_Child_Node rdf:resource="http://example.org/node229"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree222"/>
+    <cdao:has_Annotation>
+      <rdf:Description>
+        <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#EdgeLength"/>
+        <cdao:has_Float_Value rdf:datatype="http://www.w3.org/1999/02/22-rdf-syntax-ns#float">6.6</cdao:has_Float_Value>
+      </rdf:Description>
+    </cdao:has_Annotation>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/edge230">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#DirectedEdge"/>
+    <cdao:has_Parent_Node rdf:resource="http://example.org/node228"/>
+    <cdao:has_Child_Node rdf:resource="http://example.org/node230"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree222"/>
+    <cdao:has_Annotation>
+      <rdf:Description>
+        <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#EdgeLength"/>
+        <cdao:has_Float_Value rdf:datatype="http://www.w3.org/1999/02/22-rdf-syntax-ns#float">6.6</cdao:has_Float_Value>
+      </rdf:Description>
+    </cdao:has_Annotation>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/tree231">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RootedTree"/>
+    <cdao:has_Root rdf:resource="http://example.org/node237"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node237">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree231"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node238">
+    <rdfs:label>Pan troglodytes</rdfs:label>
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree231"/>
+    <cdao:represents_TU rdf:resource="http://example.org/taxona"/>
+    <cdao:has_Ancestor rdf:resource="http://example.org/node237"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node239">
+    <rdfs:label>Homo sapiens</rdfs:label>
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree231"/>
+    <cdao:represents_TU rdf:resource="http://example.org/taxonb"/>
+    <cdao:has_Ancestor rdf:resource="http://example.org/node237"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/edge238">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#DirectedEdge"/>
+    <cdao:has_Parent_Node rdf:resource="http://example.org/node237"/>
+    <cdao:has_Child_Node rdf:resource="http://example.org/node238"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree231"/>
+    <cdao:has_Annotation>
+      <rdf:Description>
+        <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#EdgeLength"/>
+        <cdao:has_Float_Value rdf:datatype="http://www.w3.org/1999/02/22-rdf-syntax-ns#float">5.41</cdao:has_Float_Value>
+      </rdf:Description>
+    </cdao:has_Annotation>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/edge239">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#DirectedEdge"/>
+    <cdao:has_Parent_Node rdf:resource="http://example.org/node237"/>
+    <cdao:has_Child_Node rdf:resource="http://example.org/node239"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree231"/>
+    <cdao:has_Annotation>
+      <rdf:Description>
+        <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#EdgeLength"/>
+        <cdao:has_Float_Value rdf:datatype="http://www.w3.org/1999/02/22-rdf-syntax-ns#float">5.41</cdao:has_Float_Value>
+      </rdf:Description>
+    </cdao:has_Annotation>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/tree240">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RootedTree"/>
+    <cdao:has_Root rdf:resource="http://example.org/node246"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node246">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree240"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node247">
+    <rdfs:label>Pan troglodytes</rdfs:label>
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree240"/>
+    <cdao:represents_TU rdf:resource="http://example.org/taxona"/>
+    <cdao:has_Ancestor rdf:resource="http://example.org/node246"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node248">
+    <rdfs:label>Homo sapiens</rdfs:label>
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree240"/>
+    <cdao:represents_TU rdf:resource="http://example.org/taxonb"/>
+    <cdao:has_Ancestor rdf:resource="http://example.org/node246"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/edge247">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#DirectedEdge"/>
+    <cdao:has_Parent_Node rdf:resource="http://example.org/node246"/>
+    <cdao:has_Child_Node rdf:resource="http://example.org/node247"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree240"/>
+    <cdao:has_Annotation>
+      <rdf:Description>
+        <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#EdgeLength"/>
+        <cdao:has_Float_Value rdf:datatype="http://www.w3.org/1999/02/22-rdf-syntax-ns#float">6.7</cdao:has_Float_Value>
+      </rdf:Description>
+    </cdao:has_Annotation>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/edge248">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#DirectedEdge"/>
+    <cdao:has_Parent_Node rdf:resource="http://example.org/node246"/>
+    <cdao:has_Child_Node rdf:resource="http://example.org/node248"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree240"/>
+    <cdao:has_Annotation>
+      <rdf:Description>
+        <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#EdgeLength"/>
+        <cdao:has_Float_Value rdf:datatype="http://www.w3.org/1999/02/22-rdf-syntax-ns#float">6.7</cdao:has_Float_Value>
+      </rdf:Description>
+    </cdao:has_Annotation>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/tree249">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RootedTree"/>
+    <cdao:has_Root rdf:resource="http://example.org/node255"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node255">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree249"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node256">
+    <rdfs:label>Pan</rdfs:label>
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree249"/>
+    <cdao:represents_TU rdf:resource="http://example.org/taxona"/>
+    <cdao:has_Ancestor rdf:resource="http://example.org/node255"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node257">
+    <rdfs:label>Homo</rdfs:label>
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree249"/>
+    <cdao:represents_TU rdf:resource="http://example.org/taxonb"/>
+    <cdao:has_Ancestor rdf:resource="http://example.org/node255"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/edge256">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#DirectedEdge"/>
+    <cdao:has_Parent_Node rdf:resource="http://example.org/node255"/>
+    <cdao:has_Child_Node rdf:resource="http://example.org/node256"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree249"/>
+    <cdao:has_Annotation>
+      <rdf:Description>
+        <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#EdgeLength"/>
+        <cdao:has_Float_Value rdf:datatype="http://www.w3.org/1999/02/22-rdf-syntax-ns#float">4.3</cdao:has_Float_Value>
+      </rdf:Description>
+    </cdao:has_Annotation>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/edge257">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#DirectedEdge"/>
+    <cdao:has_Parent_Node rdf:resource="http://example.org/node255"/>
+    <cdao:has_Child_Node rdf:resource="http://example.org/node257"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree249"/>
+    <cdao:has_Annotation>
+      <rdf:Description>
+        <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#EdgeLength"/>
+        <cdao:has_Float_Value rdf:datatype="http://www.w3.org/1999/02/22-rdf-syntax-ns#float">4.3</cdao:has_Float_Value>
+      </rdf:Description>
+    </cdao:has_Annotation>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/tree258">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RootedTree"/>
+    <cdao:has_Root rdf:resource="http://example.org/node264"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node264">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree258"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node265">
+    <rdfs:label>Pan</rdfs:label>
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree258"/>
+    <cdao:represents_TU rdf:resource="http://example.org/taxona"/>
+    <cdao:has_Ancestor rdf:resource="http://example.org/node264"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node266">
+    <rdfs:label>Homo</rdfs:label>
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree258"/>
+    <cdao:represents_TU rdf:resource="http://example.org/taxonb"/>
+    <cdao:has_Ancestor rdf:resource="http://example.org/node264"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/edge265">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#DirectedEdge"/>
+    <cdao:has_Parent_Node rdf:resource="http://example.org/node264"/>
+    <cdao:has_Child_Node rdf:resource="http://example.org/node265"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree258"/>
+    <cdao:has_Annotation>
+      <rdf:Description>
+        <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#EdgeLength"/>
+        <cdao:has_Float_Value rdf:datatype="http://www.w3.org/1999/02/22-rdf-syntax-ns#float">13</cdao:has_Float_Value>
+      </rdf:Description>
+    </cdao:has_Annotation>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/edge266">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#DirectedEdge"/>
+    <cdao:has_Parent_Node rdf:resource="http://example.org/node264"/>
+    <cdao:has_Child_Node rdf:resource="http://example.org/node266"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree258"/>
+    <cdao:has_Annotation>
+      <rdf:Description>
+        <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#EdgeLength"/>
+        <cdao:has_Float_Value rdf:datatype="http://www.w3.org/1999/02/22-rdf-syntax-ns#float">13</cdao:has_Float_Value>
+      </rdf:Description>
+    </cdao:has_Annotation>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/tree267">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RootedTree"/>
+    <cdao:has_Root rdf:resource="http://example.org/node273"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node273">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree267"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node274">
+    <rdfs:label>Pan troglodytes</rdfs:label>
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree267"/>
+    <cdao:represents_TU rdf:resource="http://example.org/taxona"/>
+    <cdao:has_Ancestor rdf:resource="http://example.org/node273"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node275">
+    <rdfs:label>Homo sapiens</rdfs:label>
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree267"/>
+    <cdao:represents_TU rdf:resource="http://example.org/taxonb"/>
+    <cdao:has_Ancestor rdf:resource="http://example.org/node273"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/edge274">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#DirectedEdge"/>
+    <cdao:has_Parent_Node rdf:resource="http://example.org/node273"/>
+    <cdao:has_Child_Node rdf:resource="http://example.org/node274"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree267"/>
+    <cdao:has_Annotation>
+      <rdf:Description>
+        <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#EdgeLength"/>
+        <cdao:has_Float_Value rdf:datatype="http://www.w3.org/1999/02/22-rdf-syntax-ns#float">5.5</cdao:has_Float_Value>
+      </rdf:Description>
+    </cdao:has_Annotation>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/edge275">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#DirectedEdge"/>
+    <cdao:has_Parent_Node rdf:resource="http://example.org/node273"/>
+    <cdao:has_Child_Node rdf:resource="http://example.org/node275"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree267"/>
+    <cdao:has_Annotation>
+      <rdf:Description>
+        <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#EdgeLength"/>
+        <cdao:has_Float_Value rdf:datatype="http://www.w3.org/1999/02/22-rdf-syntax-ns#float">5.5</cdao:has_Float_Value>
+      </rdf:Description>
+    </cdao:has_Annotation>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/tree276">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RootedTree"/>
+    <cdao:has_Root rdf:resource="http://example.org/node282"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node282">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree276"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node283">
+    <rdfs:label>Pan troglodytes</rdfs:label>
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree276"/>
+    <cdao:represents_TU rdf:resource="http://example.org/taxona"/>
+    <cdao:has_Ancestor rdf:resource="http://example.org/node282"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node284">
+    <rdfs:label>Homo sapiens</rdfs:label>
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree276"/>
+    <cdao:represents_TU rdf:resource="http://example.org/taxonb"/>
+    <cdao:has_Ancestor rdf:resource="http://example.org/node282"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/edge283">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#DirectedEdge"/>
+    <cdao:has_Parent_Node rdf:resource="http://example.org/node282"/>
+    <cdao:has_Child_Node rdf:resource="http://example.org/node283"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree276"/>
+    <cdao:has_Annotation>
+      <rdf:Description>
+        <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#EdgeLength"/>
+        <cdao:has_Float_Value rdf:datatype="http://www.w3.org/1999/02/22-rdf-syntax-ns#float">3.6</cdao:has_Float_Value>
+      </rdf:Description>
+    </cdao:has_Annotation>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/edge284">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#DirectedEdge"/>
+    <cdao:has_Parent_Node rdf:resource="http://example.org/node282"/>
+    <cdao:has_Child_Node rdf:resource="http://example.org/node284"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree276"/>
+    <cdao:has_Annotation>
+      <rdf:Description>
+        <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#EdgeLength"/>
+        <cdao:has_Float_Value rdf:datatype="http://www.w3.org/1999/02/22-rdf-syntax-ns#float">3.6</cdao:has_Float_Value>
+      </rdf:Description>
+    </cdao:has_Annotation>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/tree285">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RootedTree"/>
+    <cdao:has_Root rdf:resource="http://example.org/node291"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node291">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree285"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node292">
+    <rdfs:label>Pan troglodytes</rdfs:label>
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree285"/>
+    <cdao:represents_TU rdf:resource="http://example.org/taxona"/>
+    <cdao:has_Ancestor rdf:resource="http://example.org/node291"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node293">
+    <rdfs:label>Homo sapiens</rdfs:label>
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree285"/>
+    <cdao:represents_TU rdf:resource="http://example.org/taxonb"/>
+    <cdao:has_Ancestor rdf:resource="http://example.org/node291"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/edge292">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#DirectedEdge"/>
+    <cdao:has_Parent_Node rdf:resource="http://example.org/node291"/>
+    <cdao:has_Child_Node rdf:resource="http://example.org/node292"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree285"/>
+    <cdao:has_Annotation>
+      <rdf:Description>
+        <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#EdgeLength"/>
+        <cdao:has_Float_Value rdf:datatype="http://www.w3.org/1999/02/22-rdf-syntax-ns#float">4</cdao:has_Float_Value>
+      </rdf:Description>
+    </cdao:has_Annotation>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/edge293">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#DirectedEdge"/>
+    <cdao:has_Parent_Node rdf:resource="http://example.org/node291"/>
+    <cdao:has_Child_Node rdf:resource="http://example.org/node293"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree285"/>
+    <cdao:has_Annotation>
+      <rdf:Description>
+        <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#EdgeLength"/>
+        <cdao:has_Float_Value rdf:datatype="http://www.w3.org/1999/02/22-rdf-syntax-ns#float">4</cdao:has_Float_Value>
+      </rdf:Description>
+    </cdao:has_Annotation>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/tree294">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RootedTree"/>
+    <cdao:has_Root rdf:resource="http://example.org/node300"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node300">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree294"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node301">
+    <rdfs:label>Pan</rdfs:label>
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree294"/>
+    <cdao:represents_TU rdf:resource="http://example.org/taxona"/>
+    <cdao:has_Ancestor rdf:resource="http://example.org/node300"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node302">
+    <rdfs:label>Homo sapiens</rdfs:label>
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree294"/>
+    <cdao:represents_TU rdf:resource="http://example.org/taxonb"/>
+    <cdao:has_Ancestor rdf:resource="http://example.org/node300"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/edge301">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#DirectedEdge"/>
+    <cdao:has_Parent_Node rdf:resource="http://example.org/node300"/>
+    <cdao:has_Child_Node rdf:resource="http://example.org/node301"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree294"/>
+    <cdao:has_Annotation>
+      <rdf:Description>
+        <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#EdgeLength"/>
+        <cdao:has_Float_Value rdf:datatype="http://www.w3.org/1999/02/22-rdf-syntax-ns#float">5.12</cdao:has_Float_Value>
+      </rdf:Description>
+    </cdao:has_Annotation>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/edge302">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#DirectedEdge"/>
+    <cdao:has_Parent_Node rdf:resource="http://example.org/node300"/>
+    <cdao:has_Child_Node rdf:resource="http://example.org/node302"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree294"/>
+    <cdao:has_Annotation>
+      <rdf:Description>
+        <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#EdgeLength"/>
+        <cdao:has_Float_Value rdf:datatype="http://www.w3.org/1999/02/22-rdf-syntax-ns#float">5.12</cdao:has_Float_Value>
+      </rdf:Description>
+    </cdao:has_Annotation>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/tree303">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RootedTree"/>
+    <cdao:has_Root rdf:resource="http://example.org/node309"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node309">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree303"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node310">
+    <rdfs:label>Pan</rdfs:label>
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree303"/>
+    <cdao:represents_TU rdf:resource="http://example.org/taxona"/>
+    <cdao:has_Ancestor rdf:resource="http://example.org/node309"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node311">
+    <rdfs:label>Homo sapiens</rdfs:label>
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree303"/>
+    <cdao:represents_TU rdf:resource="http://example.org/taxonb"/>
+    <cdao:has_Ancestor rdf:resource="http://example.org/node309"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/edge310">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#DirectedEdge"/>
+    <cdao:has_Parent_Node rdf:resource="http://example.org/node309"/>
+    <cdao:has_Child_Node rdf:resource="http://example.org/node310"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree303"/>
+    <cdao:has_Annotation>
+      <rdf:Description>
+        <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#EdgeLength"/>
+        <cdao:has_Float_Value rdf:datatype="http://www.w3.org/1999/02/22-rdf-syntax-ns#float">5.55</cdao:has_Float_Value>
+      </rdf:Description>
+    </cdao:has_Annotation>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/edge311">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#DirectedEdge"/>
+    <cdao:has_Parent_Node rdf:resource="http://example.org/node309"/>
+    <cdao:has_Child_Node rdf:resource="http://example.org/node311"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree303"/>
+    <cdao:has_Annotation>
+      <rdf:Description>
+        <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#EdgeLength"/>
+        <cdao:has_Float_Value rdf:datatype="http://www.w3.org/1999/02/22-rdf-syntax-ns#float">5.55</cdao:has_Float_Value>
+      </rdf:Description>
+    </cdao:has_Annotation>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/tree312">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RootedTree"/>
+    <cdao:has_Root rdf:resource="http://example.org/node318"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node318">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree312"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node319">
+    <rdfs:label>Pan troglodytes</rdfs:label>
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree312"/>
+    <cdao:represents_TU rdf:resource="http://example.org/taxona"/>
+    <cdao:has_Ancestor rdf:resource="http://example.org/node318"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node320">
+    <rdfs:label>Homo sapiens</rdfs:label>
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree312"/>
+    <cdao:represents_TU rdf:resource="http://example.org/taxonb"/>
+    <cdao:has_Ancestor rdf:resource="http://example.org/node318"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/edge319">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#DirectedEdge"/>
+    <cdao:has_Parent_Node rdf:resource="http://example.org/node318"/>
+    <cdao:has_Child_Node rdf:resource="http://example.org/node319"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree312"/>
+    <cdao:has_Annotation>
+      <rdf:Description>
+        <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#EdgeLength"/>
+        <cdao:has_Float_Value rdf:datatype="http://www.w3.org/1999/02/22-rdf-syntax-ns#float">4.87</cdao:has_Float_Value>
+      </rdf:Description>
+    </cdao:has_Annotation>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/edge320">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#DirectedEdge"/>
+    <cdao:has_Parent_Node rdf:resource="http://example.org/node318"/>
+    <cdao:has_Child_Node rdf:resource="http://example.org/node320"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree312"/>
+    <cdao:has_Annotation>
+      <rdf:Description>
+        <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#EdgeLength"/>
+        <cdao:has_Float_Value rdf:datatype="http://www.w3.org/1999/02/22-rdf-syntax-ns#float">4.87</cdao:has_Float_Value>
+      </rdf:Description>
+    </cdao:has_Annotation>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/tree321">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RootedTree"/>
+    <cdao:has_Root rdf:resource="http://example.org/node327"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node327">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree321"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node328">
+    <rdfs:label>Pan troglodytes</rdfs:label>
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree321"/>
+    <cdao:represents_TU rdf:resource="http://example.org/taxona"/>
+    <cdao:has_Ancestor rdf:resource="http://example.org/node327"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node329">
+    <rdfs:label>Homo sapiens</rdfs:label>
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree321"/>
+    <cdao:represents_TU rdf:resource="http://example.org/taxonb"/>
+    <cdao:has_Ancestor rdf:resource="http://example.org/node327"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/edge328">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#DirectedEdge"/>
+    <cdao:has_Parent_Node rdf:resource="http://example.org/node327"/>
+    <cdao:has_Child_Node rdf:resource="http://example.org/node328"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree321"/>
+    <cdao:has_Annotation>
+      <rdf:Description>
+        <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#EdgeLength"/>
+        <cdao:has_Float_Value rdf:datatype="http://www.w3.org/1999/02/22-rdf-syntax-ns#float">6.4</cdao:has_Float_Value>
+      </rdf:Description>
+    </cdao:has_Annotation>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/edge329">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#DirectedEdge"/>
+    <cdao:has_Parent_Node rdf:resource="http://example.org/node327"/>
+    <cdao:has_Child_Node rdf:resource="http://example.org/node329"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree321"/>
+    <cdao:has_Annotation>
+      <rdf:Description>
+        <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#EdgeLength"/>
+        <cdao:has_Float_Value rdf:datatype="http://www.w3.org/1999/02/22-rdf-syntax-ns#float">6.4</cdao:has_Float_Value>
+      </rdf:Description>
+    </cdao:has_Annotation>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/tree330">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RootedTree"/>
+    <cdao:has_Root rdf:resource="http://example.org/node336"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node336">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree330"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node337">
+    <rdfs:label>Pan</rdfs:label>
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree330"/>
+    <cdao:represents_TU rdf:resource="http://example.org/taxona"/>
+    <cdao:has_Ancestor rdf:resource="http://example.org/node336"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node338">
+    <rdfs:label>Homo sapiens</rdfs:label>
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree330"/>
+    <cdao:represents_TU rdf:resource="http://example.org/taxonb"/>
+    <cdao:has_Ancestor rdf:resource="http://example.org/node336"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/edge337">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#DirectedEdge"/>
+    <cdao:has_Parent_Node rdf:resource="http://example.org/node336"/>
+    <cdao:has_Child_Node rdf:resource="http://example.org/node337"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree330"/>
+    <cdao:has_Annotation>
+      <rdf:Description>
+        <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#EdgeLength"/>
+        <cdao:has_Float_Value rdf:datatype="http://www.w3.org/1999/02/22-rdf-syntax-ns#float">10.4</cdao:has_Float_Value>
+      </rdf:Description>
+    </cdao:has_Annotation>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/edge338">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#DirectedEdge"/>
+    <cdao:has_Parent_Node rdf:resource="http://example.org/node336"/>
+    <cdao:has_Child_Node rdf:resource="http://example.org/node338"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree330"/>
+    <cdao:has_Annotation>
+      <rdf:Description>
+        <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#EdgeLength"/>
+        <cdao:has_Float_Value rdf:datatype="http://www.w3.org/1999/02/22-rdf-syntax-ns#float">10.4</cdao:has_Float_Value>
+      </rdf:Description>
+    </cdao:has_Annotation>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/tree339">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RootedTree"/>
+    <cdao:has_Root rdf:resource="http://example.org/node345"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node345">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree339"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node346">
+    <rdfs:label>Pan</rdfs:label>
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree339"/>
+    <cdao:represents_TU rdf:resource="http://example.org/taxona"/>
+    <cdao:has_Ancestor rdf:resource="http://example.org/node345"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/node347">
+    <rdfs:label>Homo sapiens</rdfs:label>
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree339"/>
+    <cdao:represents_TU rdf:resource="http://example.org/taxonb"/>
+    <cdao:has_Ancestor rdf:resource="http://example.org/node345"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/edge346">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#DirectedEdge"/>
+    <cdao:has_Parent_Node rdf:resource="http://example.org/node345"/>
+    <cdao:has_Child_Node rdf:resource="http://example.org/node346"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree339"/>
+    <cdao:has_Annotation>
+      <rdf:Description>
+        <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#EdgeLength"/>
+        <cdao:has_Float_Value rdf:datatype="http://www.w3.org/1999/02/22-rdf-syntax-ns#float">13.7</cdao:has_Float_Value>
+      </rdf:Description>
+    </cdao:has_Annotation>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/edge347">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#DirectedEdge"/>
+    <cdao:has_Parent_Node rdf:resource="http://example.org/node345"/>
+    <cdao:has_Child_Node rdf:resource="http://example.org/node347"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree339"/>
+    <cdao:has_Annotation>
+      <rdf:Description>
+        <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#EdgeLength"/>
+        <cdao:has_Float_Value rdf:datatype="http://www.w3.org/1999/02/22-rdf-syntax-ns#float">13.7</cdao:has_Float_Value>
+      </rdf:Description>
+    </cdao:has_Annotation>
+  </rdf:Description>
+</rdf:RDF>

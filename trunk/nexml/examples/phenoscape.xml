@@ -1,6 +1,7 @@
 <nex:nexml 
     generator="Bio::Phylo::Project v.0.17_RC9_1175" 
     version="0.9" 
+    xml:base="http://example.org/"
     xmlns="http://www.nexml.org/2009" 
     xmlns:nex="http://www.nexml.org/2009" 
     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" 
@@ -17,7 +18,7 @@
             about="#aaa0ec8a9-7b38-411f-9c4d-f4a47bcffac3" 
             id="aaa0ec8a9-7b38-411f-9c4d-f4a47bcffac3" 
             label="Nannostomus unifasciatus"
-            xmlns:dwc="http://I-GUESS-THIS-SHOULD-BE-DARWINCORE.org#">
+            xmlns:dwc="http://rs.tdwg.org/dwc/terms/">
             <meta 
                 href="http://purl.org/obo/owl/TTO#TTO_1030115" 
                 id="ad37ab715-8dc6-4959-9b20-c58d5edaef29" 

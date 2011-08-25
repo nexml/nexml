@@ -8,10 +8,8 @@
     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
     xmlns:cdao="&cdao_ns;"    
-    xmlns:owl="http://www.w3.org/2002/07/owl#" 
-    xmlns:dc="http://purl.org/dc/elements/1.1/"
+    xmlns:owl="http://www.w3.org/2002/07/owl#"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:h="http://www.w3.org/1999/xhtml"
     xmlns="http://www.w3.org/1999/XSL/Transform">
     
     <!-- PARTS OF THIS STYLESHEET WERE ADAPTED FROM RDFa2RDFXML.xsl, whose copyright statement is reproduced below -->
@@ -27,7 +25,7 @@
     <output indent="yes" method="xml" media-type="application/rdf+xml" encoding="UTF-8" omit-xml-declaration="yes"/>
     
     <!-- base of the current HTML doc -->
-    <variable name="html_base" select="//*/h:head/h:base[position()=1]/@href"/>
+    <variable name="html_base"/>
     
     <!-- default HTML vocabulary namespace -->
     <variable name="default_voc" select="'http://www.w3.org/1999/xhtml/vocab#'"/>
@@ -74,7 +72,6 @@
         id attribute into an rdf:about attribute containing the concatenation of the base URI of the otu 
         element (or its nearest ancestor) with the id attribute.
     -->
-    <!-- TODO: add metadata annotation processing here -->
     <template name="defaults">        
         <call-template name="compute-uri-about"/>        
         <if test="@label">
@@ -82,7 +79,6 @@
                 <value-of select="@label"/>
             </rdfs:label>
         </if> 
-        <apply-templates mode="rdf2rdfxml"/>        
     </template>
     
     <!-- 
@@ -134,8 +130,52 @@
     <template match="/nex:nexml">
         <rdf:RDF xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
             xmlns:owl="http://www.w3.org/2002/07/owl#">
-            <apply-templates select="descendant::*"/>
+            <apply-templates select="descendant::*"/>      
+            <apply-templates mode="rdf2rdfxml"/>            
         </rdf:RDF>
+    </template>
+    
+    <!-- 
+        The rdf2rdfxml templates pass through text content. This causes problems in cases
+        where core nexml (not rdfa annotations with literal text content) are encountered.
+        Luckily, the only instance of this is in <seq> elements. Hence, we need to capture
+        them here and do nothing so that they don't end up in the produced rdf
+    -->        
+    <template match="//nex:seq" mode="rdf2rdfxml"/>
+    
+    <!-- process on taxon/character/node/tree/etc sets -->
+    <template match="nex:set">
+        <variable name="idsraw">
+            <value-of select="concat(@otu,' ',@otus,' ',@trees,' ',@tree,' ',@network,' ',@node,' ',@edge,' ',@rootedge,' ',@characters,' ',@states,' ',@state,' ',@polymorphic_state_set,' ',@uncertain_state_set,' ',@member,' ',@char,' ',@row,' ',@cell)"/>
+        </variable>
+        <variable name="ids" select="concat(normalize-space($idsraw),' ')"/>
+        <rdf:Description>
+            <call-template name="defaults"/>
+            <cdao:SetOfThings>
+                <rdf:Bag>
+                    <call-template name="processsetmembers">
+                        <with-param name="ids" select="$ids"/>
+                    </call-template>
+                </rdf:Bag>
+            </cdao:SetOfThings>
+        </rdf:Description>        
+    </template>
+    
+    <!-- recurse through list of id reference to populate rdf:Bag of set members -->
+    <template name="processsetmembers">
+        <param name="ids"/>
+        <variable name="id" select="substring-before($ids,' ')"/>
+        <variable name="remainder" select="substring-after($ids,' ')"/>
+        <rdf:li>
+            <call-template name="compute-uri-resource-by-idref">
+                <with-param name="idref" select="$id"/>
+            </call-template>
+        </rdf:li>        
+        <if test="string-length($remainder) &gt; 0">
+            <call-template name="processsetmembers">
+                <with-param name="ids" select="$remainder"/>
+            </call-template>
+        </if>
     </template>
     
     <!-- match RDFa element -->
@@ -558,16 +598,19 @@
                 <with-param name="index" select="$index+1"/>
             </call-template>  
         </if>            
-    </template>
+    </template>   
     
     <!-- Process a matrix. -->
     <template match="nex:matrix">
         <variable name="charactersid" select="../@id"/>
         <variable name="otusid" select="../@otus"/>
         <rdf:Description>
-            <call-template name="compute-uri-resource-by-idref">
-                <with-param name="idref" select="$charactersid"/>
-            </call-template>
+            <call-template name="compute-uri-about"><with-param name="id" select="$charactersid"></with-param></call-template>
+            <if test="../@label">
+                <rdfs:label>
+                    <value-of select="../@label"/>
+                </rdfs:label>
+            </if>
             <rdf:type rdf:resource="&cdao_ns;CharacterStateDataMatrix"/>
             <for-each select="../nex:format/nex:char">
                 <cdao:has_Character>
@@ -780,7 +823,7 @@
             <when test="$node/attribute::href and not($node/attribute::rel or $node/attribute::rev)"> <!-- enforcing the href as subject if no rel or rev -->
                 <call-template name="expand-curie-or-uri"><with-param name="curie_or_uri" select="$node/attribute::href"/></call-template>
             </when>
-            <when test="$node/self::h:head or $node/self::h:body or $node/self::h:html"><value-of select="$this"/></when> <!-- enforcing the doc as subject -->     
+            <!--when test="$node/self::h:head or $node/self::h:body or $node/self::h:html"><value-of select="$this"/></when> <!-//- enforcing the doc as subject -->     
             <when test="$node/attribute::id"> <!-- we have an id attribute to extend -->
                 <value-of select="concat($this,'#',$node/attribute::id)"/>
             </when>
@@ -901,9 +944,9 @@
         <choose>
             
             <!-- current node is a meta or a link in the head and with no about attribute -->
-            <when test="(self::h:link or self::h:meta) and ( ancestor::h:head ) and not(attribute::about)">
+            <!--when test="(self::h:link or self::h:meta) and ( ancestor::h:head ) and not(attribute::about)">
                 <value-of select="$this"/>
-            </when>
+            </when-->
             
             <!-- an attribute about was specified on the node -->
             <when test="self::*/attribute::about">
@@ -922,9 +965,9 @@
             </when>
             
             <!-- current node is a meta or a link in the body and with no about attribute -->
-            <when test="(self::h:link or self::h:meta) and not( ancestor::h:head ) and not(attribute::about)">
+            <!--when test="(self::h:link or self::h:meta) and not( ancestor::h:head ) and not(attribute::about)">
                 <call-template name="self-curie-or-uri"><with-param name="node" select="parent::*"/></call-template>
-            </when>
+            </when-->
             
             <!-- an about was specified on its parent or the parent had a rel or a rev attribute but no href or an typeof. -->
             <when test="ancestor::*[attribute::about or attribute::src or attribute::typeof or attribute::resource or attribute::href or attribute::rel or attribute::rev][position()=1]">
@@ -1035,18 +1078,22 @@
         
         <choose>
             <when test="string-length($predicate-ns)&gt;0"> <!-- there is a known namespace for the predicate -->
-                <!--element name="rdf:Description" namespace="http://www.w3.org/1999/02/22-rdf-syntax-ns#"-->
-                    <!--choose>
+                <element name="rdf:Description" namespace="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+                    <choose>
                         <when test="starts-with($subject,'blank:node:')"><attribute name="rdf:nodeID"><value-of select="substring-after($subject,'blank:node:')"/></attribute></when>
-                        <otherwise><attribute name="rdf:about"><value-of select="$subject"/></attribute></otherwise>
-                    </choose-->
+                        <otherwise>
+                            <!-- XXX changed this to compute the absolute URI instead -->
+                            <!--attribute name="rdf:about"><value-of select="$subject"/></attribute-->
+                            <call-template name="compute-uri-about"><with-param name="id" select="substring($subject,2)"></with-param></call-template>
+                        </otherwise>
+                    </choose>
                     <element name="{$predicate-name}" namespace="{$predicate-ns}">
                         <choose>
                             <when test="starts-with($object,'blank:node:')"><attribute name="rdf:nodeID"><value-of select="substring-after($object,'blank:node:')"/></attribute></when>
                             <otherwise><attribute name="rdf:resource"><value-of select="$object"/></attribute></otherwise>
                         </choose>
                     </element>     
-                <!--/element-->
+                </element>
             </when>
             <otherwise> <!-- no namespace generate a comment for debug -->
                 <xsl:comment>No namespace for the rel or rev value ; could not produce the triple for: <value-of select="$subject"/> - <value-of select="$single-predicate"/> - <value-of select="$object"/></xsl:comment>
@@ -1086,11 +1133,15 @@
         
         <choose>
             <when test="string-length($predicate-ns)&gt;0"> <!-- there is a known namespace for the predicate -->
-                <!--element name="rdf:Description" namespace="http://www.w3.org/1999/02/22-rdf-syntax-ns#"-->
-                    <!--choose>
+                <element name="rdf:Description" namespace="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+                    <choose>
                         <when test="starts-with($subject,'blank:node:')"><attribute name="rdf:nodeID"><value-of select="substring-after($subject,'blank:node:')"/></attribute></when>
-                        <otherwise><attribute name="rdf:about"><value-of select="$subject"/></attribute></otherwise>
-                    </choose-->
+                        <otherwise>
+                            <!--attribute name="rdf:about"><value-of select="$subject"/></attribute-->
+                            <!-- XXX changed this to compute the absolute URI instead -->
+                            <call-template name="compute-uri-about"><with-param name="id" select="substring($subject,2)"></with-param></call-template>
+                        </otherwise>
+                    </choose>
                     <element name="{$predicate-name}" namespace="{$predicate-ns}">
                         <if test="string-length($language)&gt;0"><attribute name="xml:lang"><value-of select="$language"/></attribute></if>
                         <choose>
@@ -1137,7 +1188,7 @@
                             </otherwise>
                         </choose>
                     </element>        
-                <!--/element-->
+                </element>
             </when>
             <otherwise> <!-- generate a comment for debug -->
                 <xsl:comment>Could not produce the triple for: <value-of select="$subject"/> - <value-of select="$single-predicate"/> - <value-of select="$object"/></xsl:comment>
@@ -1195,6 +1246,6 @@
     </template>    
     
     <!-- Do nothing with the things we aren't interested in processing. -->
-    <template match="*" priority="-1"/>
+    <template match="text()|@*|*" priority="-1"/>   
 
 </stylesheet>

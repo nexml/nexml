@@ -1,0 +1,123 @@
+<rdf:RDF xmlns:cdao="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#" xmlns:nex="http://www.nexml.org/2009" xmlns:owl="http://www.w3.org/2002/07/owl#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <rdf:Description rdf:about="http://example.org/otu2">
+    <rdfs:label>taxon_1</rdfs:label>
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#TU"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/otu3">
+    <rdfs:label>taxon_2</rdfs:label>
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#TU"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/otu4">
+    <rdfs:label>taxon_3</rdfs:label>
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#TU"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/c1">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#ContinuousCharacter"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/c2">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#ContinuousCharacter"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/c3">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#ContinuousCharacter"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/characters5">
+    <rdfs:label>Character_Matrix</rdfs:label>
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#CharacterStateDataMatrix"/>
+    <cdao:has_Character rdf:resource="http://example.org/c1"/>
+    <cdao:has_Character rdf:resource="http://example.org/c2"/>
+    <cdao:has_Character rdf:resource="http://example.org/c3"/>
+    <cdao:has_TU rdf:resource="http://example.org/otu2"/>
+    <cdao:has_TU rdf:resource="http://example.org/otu3"/>
+    <cdao:has_TU rdf:resource="http://example.org/otu4"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu2-c1">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#ContinuousStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu2"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c1"/>
+    <cdao:has_Continuous_State>
+      <cdao:Continuous>
+        <cdao:has_Value>-3.235002086913893</cdao:has_Value>
+      </cdao:Continuous>
+    </cdao:has_Continuous_State>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu2-c2">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#ContinuousStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu2"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c2"/>
+    <cdao:has_Continuous_State>
+      <cdao:Continuous>
+        <cdao:has_Value>-2.1606791576338282</cdao:has_Value>
+      </cdao:Continuous>
+    </cdao:has_Continuous_State>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu2-c3">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#ContinuousStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu2"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c3"/>
+    <cdao:has_Continuous_State>
+      <cdao:Continuous>
+        <cdao:has_Value>0.5452034711331655</cdao:has_Value>
+      </cdao:Continuous>
+    </cdao:has_Continuous_State>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu3-c1">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#ContinuousStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu3"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c1"/>
+    <cdao:has_Continuous_State>
+      <cdao:Continuous>
+        <cdao:has_Value>-0.7490086283816584</cdao:has_Value>
+      </cdao:Continuous>
+    </cdao:has_Continuous_State>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu3-c2">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#ContinuousStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu3"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c2"/>
+    <cdao:has_Continuous_State>
+      <cdao:Continuous>
+        <cdao:has_Value>-1.04861533378001</cdao:has_Value>
+      </cdao:Continuous>
+    </cdao:has_Continuous_State>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu3-c3">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#ContinuousStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu3"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c3"/>
+    <cdao:has_Continuous_State>
+      <cdao:Continuous>
+        <cdao:has_Value>0.26961886769531074</cdao:has_Value>
+      </cdao:Continuous>
+    </cdao:has_Continuous_State>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu4-c1">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#ContinuousStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu4"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c1"/>
+    <cdao:has_Continuous_State>
+      <cdao:Continuous>
+        <cdao:has_Value>1.7426420779300011</cdao:has_Value>
+      </cdao:Continuous>
+    </cdao:has_Continuous_State>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu4-c2">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#ContinuousStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu4"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c2"/>
+    <cdao:has_Continuous_State>
+      <cdao:Continuous>
+        <cdao:has_Value>-0.9587319012298505</cdao:has_Value>
+      </cdao:Continuous>
+    </cdao:has_Continuous_State>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu4-c3">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#ContinuousStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu4"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c3"/>
+    <cdao:has_Continuous_State>
+      <cdao:Continuous>
+        <cdao:has_Value>-3.158228641255374</cdao:has_Value>
+      </cdao:Continuous>
+    </cdao:has_Continuous_State>
+  </rdf:Description>
+</rdf:RDF>

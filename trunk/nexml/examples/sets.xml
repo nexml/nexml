@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <nex:nexml 
     version="0.9"
+    xml:base="http://example.org/"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     generator="handmade"
     xmlns:nex="http://www.nexml.org/2009"
@@ -15,8 +16,8 @@
         <otu id="t3"/>
         <otu id="t4"/>
         <otu id="t5"/>
-        <set otu="t1 t2" id="set1">
-            <meta id="m1" xsi:type="nex:LiteralMeta" content="1" datatype="xsd:integer" property="hasInt"/>
+        <set otu="t1 t2" id="set1" about="#set1">
+            <meta id="m1" xsi:type="nex:LiteralMeta" content="1" datatype="xsd:integer" xmlns:foo="http://example.org/foo#" property="foo:hasInt"/>
         </set>        
     </otus>
     <trees otus="taxa1" id="trees1">       

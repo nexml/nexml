@@ -1,0 +1,38 @@
+<rdf:RDF xmlns:cdao="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#" xmlns:nex="http://www.nexml.org/2009" xmlns:owl="http://www.w3.org/2002/07/owl#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <rdf:Description rdf:about="http://example.org/base/otu1">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#TU"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/base/otu1">
+    <kt:hasURL rdf:resource="http://example.org" xmlns:kt="http://example.org/knownTypes#"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/base/otu1">
+    <kt:hasString rdf:datatype="http://www.w3.org/2001/XMLSchema#string" xmlns:kt="http://example.org/knownTypes#">bar</kt:hasString>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/base/otu1">
+    <kt:hasShort rdf:datatype="http://www.w3.org/2001/XMLSchema#short" xmlns:kt="http://example.org/knownTypes#">5</kt:hasShort>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/base/otu1">
+    <kt:hasLong rdf:datatype="http://www.w3.org/2001/XMLSchema#long" xmlns:kt="http://example.org/knownTypes#">10</kt:hasLong>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/base/otu1">
+    <kt:hasFloat rdf:datatype="http://www.w3.org/2001/XMLSchema#float" xmlns:kt="http://example.org/knownTypes#">1.6</kt:hasFloat>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/base/otu1">
+    <kt:hasDouble rdf:datatype="http://www.w3.org/2001/XMLSchema#double" xmlns:kt="http://example.org/knownTypes#">1.5</kt:hasDouble>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/base/otu1">
+    <kt:hasQName rdf:datatype="http://www.w3.org/2001/XMLSchema#QName" xmlns:kt="http://example.org/knownTypes#">foo</kt:hasQName>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/base/otu1">
+    <kt:hasByte rdf:datatype="http://www.w3.org/2001/XMLSchema#byte" xmlns:kt="http://example.org/knownTypes#">1</kt:hasByte>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/base/otu1">
+    <kt:hasBoolean rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean" xmlns:kt="http://example.org/knownTypes#">true</kt:hasBoolean>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/base/otu1">
+    <kt:hasBigInteger rdf:datatype="http://www.w3.org/2001/XMLSchema#integer" xmlns:kt="http://example.org/knownTypes#">1</kt:hasBigInteger>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/base/otu1">
+    <kt:hasBigDecimal rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal" xmlns:kt="http://example.org/knownTypes#">0.1</kt:hasBigDecimal>
+  </rdf:Description>
+</rdf:RDF>
