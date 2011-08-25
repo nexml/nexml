@@ -7,7 +7,8 @@
     refer to 'taxa.xml' 
 -->
 <nex:nexml 
-    version="0.9" 
+    version="0.9"
+    xml:base="http://example.org/" 
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.nexml.org/2009 ../xsd/nexml.xsd"
     xmlns:nex="http://www.nexml.org/2009"

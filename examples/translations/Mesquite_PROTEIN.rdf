@@ -1,0 +1,210 @@
+<rdf:RDF xmlns:cdao="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#" xmlns:nex="http://www.nexml.org/2009" xmlns:owl="http://www.w3.org/2002/07/owl#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <rdf:Description rdf:about="http://example.org/otu2">
+    <rdfs:label>taxon_1</rdfs:label>
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#TU"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/otu3">
+    <rdfs:label>taxon_2</rdfs:label>
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#TU"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/otu4">
+    <rdfs:label>taxon_3</rdfs:label>
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#TU"/>
+  </rdf:Description>
+  <owl:Class rdf:about="http://example.org/states7">
+    <rdfs:subClassOf rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Standard"/>
+  </owl:Class>
+  <rdf:Description rdf:about="http://example.org/s1">
+    <rdf:type rdf:resource="http://example.org/states7"/>
+    <rdfs:label>*</rdfs:label>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/s2">
+    <rdf:type rdf:resource="http://example.org/states7"/>
+    <rdfs:label>A</rdfs:label>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/s3">
+    <rdf:type rdf:resource="http://example.org/states7"/>
+    <rdfs:label>C</rdfs:label>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/s4">
+    <rdf:type rdf:resource="http://example.org/states7"/>
+    <rdfs:label>D</rdfs:label>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/s5">
+    <rdf:type rdf:resource="http://example.org/states7"/>
+    <rdfs:label>E</rdfs:label>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/s6">
+    <rdf:type rdf:resource="http://example.org/states7"/>
+    <rdfs:label>F</rdfs:label>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/s7">
+    <rdf:type rdf:resource="http://example.org/states7"/>
+    <rdfs:label>G</rdfs:label>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/s8">
+    <rdf:type rdf:resource="http://example.org/states7"/>
+    <rdfs:label>H</rdfs:label>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/s9">
+    <rdf:type rdf:resource="http://example.org/states7"/>
+    <rdfs:label>I</rdfs:label>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/s10">
+    <rdf:type rdf:resource="http://example.org/states7"/>
+    <rdfs:label>K</rdfs:label>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/s11">
+    <rdf:type rdf:resource="http://example.org/states7"/>
+    <rdfs:label>L</rdfs:label>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/s12">
+    <rdf:type rdf:resource="http://example.org/states7"/>
+    <rdfs:label>M</rdfs:label>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/s13">
+    <rdf:type rdf:resource="http://example.org/states7"/>
+    <rdfs:label>N</rdfs:label>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/s14">
+    <rdf:type rdf:resource="http://example.org/states7"/>
+    <rdfs:label>P</rdfs:label>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/s15">
+    <rdf:type rdf:resource="http://example.org/states7"/>
+    <rdfs:label>Q</rdfs:label>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/s16">
+    <rdf:type rdf:resource="http://example.org/states7"/>
+    <rdfs:label>R</rdfs:label>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/s17">
+    <rdf:type rdf:resource="http://example.org/states7"/>
+    <rdfs:label>S</rdfs:label>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/s18">
+    <rdf:type rdf:resource="http://example.org/states7"/>
+    <rdfs:label>T</rdfs:label>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/s19">
+    <rdf:type rdf:resource="http://example.org/states7"/>
+    <rdfs:label>U</rdfs:label>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/s20">
+    <rdf:type rdf:resource="http://example.org/states7"/>
+    <rdfs:label>V</rdfs:label>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/s21">
+    <rdf:type rdf:resource="http://example.org/states7"/>
+    <rdfs:label>W</rdfs:label>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/s22">
+    <rdf:type rdf:resource="http://example.org/states7"/>
+    <rdfs:label>X</rdfs:label>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/s23">
+    <rdf:type rdf:resource="http://example.org/states7"/>
+    <rdfs:label>Y</rdfs:label>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/s24">
+    <rdf:type rdf:resource="http://example.org/states7"/>
+    <rdfs:label>B</rdfs:label>
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#UncertainStateDomain"/>
+    <cdao:has rdf:resource="http://example.org/s4"/>
+    <cdao:has rdf:resource="http://example.org/s13"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/s25">
+    <rdf:type rdf:resource="http://example.org/states7"/>
+    <rdfs:label>Z</rdfs:label>
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#UncertainStateDomain"/>
+    <cdao:has rdf:resource="http://example.org/s5"/>
+    <cdao:has rdf:resource="http://example.org/s15"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/s26">
+    <rdf:type rdf:resource="http://example.org/states7"/>
+    <rdfs:label>-</rdfs:label>
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#UncertainStateDomain"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/s27">
+    <rdf:type rdf:resource="http://example.org/states7"/>
+    <rdfs:label>?</rdfs:label>
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#UncertainStateDomain"/>
+    <cdao:has rdf:resource="http://example.org/s1"/>
+    <cdao:has rdf:resource="http://example.org/s2"/>
+    <cdao:has rdf:resource="http://example.org/s3"/>
+    <cdao:has rdf:resource="http://example.org/s4"/>
+    <cdao:has rdf:resource="http://example.org/s5"/>
+    <cdao:has rdf:resource="http://example.org/s6"/>
+    <cdao:has rdf:resource="http://example.org/s7"/>
+    <cdao:has rdf:resource="http://example.org/s8"/>
+    <cdao:has rdf:resource="http://example.org/s9"/>
+    <cdao:has rdf:resource="http://example.org/s10"/>
+    <cdao:has rdf:resource="http://example.org/s11"/>
+    <cdao:has rdf:resource="http://example.org/s12"/>
+    <cdao:has rdf:resource="http://example.org/s13"/>
+    <cdao:has rdf:resource="http://example.org/s14"/>
+    <cdao:has rdf:resource="http://example.org/s15"/>
+    <cdao:has rdf:resource="http://example.org/s16"/>
+    <cdao:has rdf:resource="http://example.org/s17"/>
+    <cdao:has rdf:resource="http://example.org/s18"/>
+    <cdao:has rdf:resource="http://example.org/s19"/>
+    <cdao:has rdf:resource="http://example.org/s20"/>
+    <cdao:has rdf:resource="http://example.org/s21"/>
+    <cdao:has rdf:resource="http://example.org/s22"/>
+    <cdao:has rdf:resource="http://example.org/s23"/>
+    <cdao:has rdf:resource="http://example.org/s24"/>
+    <cdao:has rdf:resource="http://example.org/s25"/>
+    <cdao:has rdf:resource="http://example.org/s26"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/c1">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Character"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/c2">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Character"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/characters5">
+    <rdfs:label>Character_Matrix</rdfs:label>
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#CharacterStateDataMatrix"/>
+    <cdao:has_Character rdf:resource="http://example.org/c1"/>
+    <cdao:has_Character rdf:resource="http://example.org/c2"/>
+    <cdao:has_TU rdf:resource="http://example.org/otu2"/>
+    <cdao:has_TU rdf:resource="http://example.org/otu3"/>
+    <cdao:has_TU rdf:resource="http://example.org/otu4"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu2-c1">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#CharacterStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu2"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c1"/>
+    <cdao:has_State rdf:resource="http://example.org/s26"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu2-c2">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#CharacterStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu2"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c2"/>
+    <cdao:has_State rdf:resource="http://example.org/s27"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu3-c1">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#CharacterStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu3"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c1"/>
+    <cdao:has_State rdf:resource="http://example.org/s1"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu3-c2">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#CharacterStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu3"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c2"/>
+    <cdao:has_State rdf:resource="http://example.org/s2"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu4-c1">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#CharacterStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu4"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c1"/>
+    <cdao:has_State rdf:resource="http://example.org/s24"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu4-c2">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#CharacterStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu4"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c2"/>
+    <cdao:has_State rdf:resource="http://example.org/s25"/>
+  </rdf:Description>
+</rdf:RDF>

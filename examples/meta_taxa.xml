@@ -2,6 +2,7 @@
 <nex:nexml 
     generator="Bio::Phylo::Project v.0.17_RC9_1175" 
     version="0.9" 
+    xml:base="http://example.org/"
     xmlns="http://www.nexml.org/2009" 
     xmlns:nex="http://www.nexml.org/2009" 
     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" 
