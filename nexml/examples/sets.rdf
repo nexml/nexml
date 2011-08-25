@@ -1,0 +1,72 @@
+<rdf:RDF xmlns:cdao="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#" xmlns:nex="http://www.nexml.org/2009" xmlns:owl="http://www.w3.org/2002/07/owl#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <rdf:Description rdf:about="http://example.org/t1">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#TU"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/t2">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#TU"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/t3">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#TU"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/t4">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#TU"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/t5">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#TU"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/set1">
+    <cdao:SetOfThings>
+      <rdf:Bag>
+        <rdf:li rdf:resource="http://example.org/t1"/>
+        <rdf:li rdf:resource="http://example.org/t2"/>
+      </rdf:Bag>
+    </cdao:SetOfThings>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/tree1">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#UnrootedTree"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/n1">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree1"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/n2">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree1"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/n3">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Node"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree1"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/e1">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Edge"/>
+    <cdao:has_Node rdf:resource="http://example.org/n1"/>
+    <cdao:has_Node rdf:resource="http://example.org/n2"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree1"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/e2">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Edge"/>
+    <cdao:has_Node rdf:resource="http://example.org/n1"/>
+    <cdao:has_Node rdf:resource="http://example.org/n3"/>
+    <cdao:belongs_to_Tree rdf:resource="http://example.org/tree1"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/set2">
+    <cdao:SetOfThings>
+      <rdf:Bag>
+        <rdf:li rdf:resource="http://example.org/n1"/>
+        <rdf:li rdf:resource="http://example.org/e1"/>
+        <rdf:li rdf:resource="http://example.org/root"/>
+      </rdf:Bag>
+    </cdao:SetOfThings>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/set3">
+    <cdao:SetOfThings>
+      <rdf:Bag>
+        <rdf:li rdf:resource="http://example.org/tree1"/>
+        <rdf:li rdf:resource="http://example.org/tree1"/>
+      </rdf:Bag>
+    </cdao:SetOfThings>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/set1">
+    <foo:hasInt rdf:datatype="http://www.w3.org/2001/XMLSchema#integer" xmlns:foo="http://example.org/foo#">1</foo:hasInt>
+  </rdf:Description>
+</rdf:RDF>

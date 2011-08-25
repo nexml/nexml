@@ -1,0 +1,1563 @@
+<rdf:RDF xmlns:cdao="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#" xmlns:nex="http://www.nexml.org/2009" xmlns:owl="http://www.w3.org/2002/07/owl#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <rdf:Description rdf:about="http://example.org/otu5">
+    <rdfs:label>'Homo sapiens'</rdfs:label>
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#TU"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/otu7">
+    <rdfs:label>Pan_paniscus</rdfs:label>
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#TU"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/otu9">
+    <rdfs:label>Gorilla_gorilla</rdfs:label>
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#TU"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/otu11">
+    <rdfs:label>Pongo_pigmaeus</rdfs:label>
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#TU"/>
+  </rdf:Description>
+  <owl:Class rdf:about="http://example.org/states3">
+    <rdfs:subClassOf rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#Standard"/>
+  </owl:Class>
+  <rdf:Description rdf:about="http://example.org/s1">
+    <rdf:type rdf:resource="http://example.org/states3"/>
+    <rdfs:label>A</rdfs:label>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/s2">
+    <rdf:type rdf:resource="http://example.org/states3"/>
+    <rdfs:label>C</rdfs:label>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/s3">
+    <rdf:type rdf:resource="http://example.org/states3"/>
+    <rdfs:label>G</rdfs:label>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/s4">
+    <rdf:type rdf:resource="http://example.org/states3"/>
+    <rdfs:label>U</rdfs:label>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/s5">
+    <rdf:type rdf:resource="http://example.org/states3"/>
+    <rdfs:label>K</rdfs:label>
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#UncertainStateDomain"/>
+    <cdao:has rdf:resource="http://example.org/s3"/>
+    <cdao:has rdf:resource="http://example.org/s4"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/s6">
+    <rdf:type rdf:resource="http://example.org/states3"/>
+    <rdfs:label>M</rdfs:label>
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#UncertainStateDomain"/>
+    <cdao:has rdf:resource="http://example.org/s1"/>
+    <cdao:has rdf:resource="http://example.org/s2"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/s7">
+    <rdf:type rdf:resource="http://example.org/states3"/>
+    <rdfs:label>R</rdfs:label>
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#UncertainStateDomain"/>
+    <cdao:has rdf:resource="http://example.org/s1"/>
+    <cdao:has rdf:resource="http://example.org/s3"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/s8">
+    <rdf:type rdf:resource="http://example.org/states3"/>
+    <rdfs:label>S</rdfs:label>
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#UncertainStateDomain"/>
+    <cdao:has rdf:resource="http://example.org/s2"/>
+    <cdao:has rdf:resource="http://example.org/s3"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/s9">
+    <rdf:type rdf:resource="http://example.org/states3"/>
+    <rdfs:label>W</rdfs:label>
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#UncertainStateDomain"/>
+    <cdao:has rdf:resource="http://example.org/s1"/>
+    <cdao:has rdf:resource="http://example.org/s4"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/s10">
+    <rdf:type rdf:resource="http://example.org/states3"/>
+    <rdfs:label>Y</rdfs:label>
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#UncertainStateDomain"/>
+    <cdao:has rdf:resource="http://example.org/s2"/>
+    <cdao:has rdf:resource="http://example.org/s4"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/s11">
+    <rdf:type rdf:resource="http://example.org/states3"/>
+    <rdfs:label>B</rdfs:label>
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#UncertainStateDomain"/>
+    <cdao:has rdf:resource="http://example.org/s2"/>
+    <cdao:has rdf:resource="http://example.org/s3"/>
+    <cdao:has rdf:resource="http://example.org/s4"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/s12">
+    <rdf:type rdf:resource="http://example.org/states3"/>
+    <rdfs:label>D</rdfs:label>
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#UncertainStateDomain"/>
+    <cdao:has rdf:resource="http://example.org/s1"/>
+    <cdao:has rdf:resource="http://example.org/s3"/>
+    <cdao:has rdf:resource="http://example.org/s4"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/s13">
+    <rdf:type rdf:resource="http://example.org/states3"/>
+    <rdfs:label>H</rdfs:label>
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#UncertainStateDomain"/>
+    <cdao:has rdf:resource="http://example.org/s1"/>
+    <cdao:has rdf:resource="http://example.org/s2"/>
+    <cdao:has rdf:resource="http://example.org/s4"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/s14">
+    <rdf:type rdf:resource="http://example.org/states3"/>
+    <rdfs:label>V</rdfs:label>
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#UncertainStateDomain"/>
+    <cdao:has rdf:resource="http://example.org/s1"/>
+    <cdao:has rdf:resource="http://example.org/s2"/>
+    <cdao:has rdf:resource="http://example.org/s3"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/s15">
+    <rdf:type rdf:resource="http://example.org/states3"/>
+    <rdfs:label>N</rdfs:label>
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#UncertainStateDomain"/>
+    <cdao:has rdf:resource="http://example.org/s3"/>
+    <cdao:has rdf:resource="http://example.org/s1"/>
+    <cdao:has rdf:resource="http://example.org/s4"/>
+    <cdao:has rdf:resource="http://example.org/s2"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/s16">
+    <rdf:type rdf:resource="http://example.org/states3"/>
+    <rdfs:label>X</rdfs:label>
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#UncertainStateDomain"/>
+    <cdao:has rdf:resource="http://example.org/s3"/>
+    <cdao:has rdf:resource="http://example.org/s1"/>
+    <cdao:has rdf:resource="http://example.org/s4"/>
+    <cdao:has rdf:resource="http://example.org/s2"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/s17">
+    <rdf:type rdf:resource="http://example.org/states3"/>
+    <rdfs:label>-</rdfs:label>
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#UncertainStateDomain"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/s18">
+    <rdf:type rdf:resource="http://example.org/states3"/>
+    <rdfs:label>?</rdfs:label>
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#UncertainStateDomain"/>
+    <cdao:has rdf:resource="http://example.org/s1"/>
+    <cdao:has rdf:resource="http://example.org/s2"/>
+    <cdao:has rdf:resource="http://example.org/s3"/>
+    <cdao:has rdf:resource="http://example.org/s4"/>
+    <cdao:has rdf:resource="http://example.org/s5"/>
+    <cdao:has rdf:resource="http://example.org/s6"/>
+    <cdao:has rdf:resource="http://example.org/s7"/>
+    <cdao:has rdf:resource="http://example.org/s8"/>
+    <cdao:has rdf:resource="http://example.org/s9"/>
+    <cdao:has rdf:resource="http://example.org/s10"/>
+    <cdao:has rdf:resource="http://example.org/s11"/>
+    <cdao:has rdf:resource="http://example.org/s12"/>
+    <cdao:has rdf:resource="http://example.org/s13"/>
+    <cdao:has rdf:resource="http://example.org/s14"/>
+    <cdao:has rdf:resource="http://example.org/s15"/>
+    <cdao:has rdf:resource="http://example.org/s16"/>
+    <cdao:has rdf:resource="http://example.org/s17"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/c1">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueCharacter"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/c2">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueCharacter"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/c3">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueCharacter"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/c4">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueCharacter"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/c5">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueCharacter"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/c6">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueCharacter"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/c7">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueCharacter"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/c8">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueCharacter"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/c9">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueCharacter"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/c10">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueCharacter"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/c11">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueCharacter"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/c12">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueCharacter"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/c13">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueCharacter"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/c14">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueCharacter"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/c15">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueCharacter"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/c16">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueCharacter"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/c17">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueCharacter"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/c18">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueCharacter"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/c19">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueCharacter"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/c20">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueCharacter"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/c21">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueCharacter"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/c22">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueCharacter"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/c23">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueCharacter"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/c24">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueCharacter"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/c25">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueCharacter"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/c26">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueCharacter"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/c27">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueCharacter"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/c28">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueCharacter"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/c29">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueCharacter"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/c30">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueCharacter"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/c31">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueCharacter"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/c32">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueCharacter"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/c33">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueCharacter"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/c34">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueCharacter"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/c35">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueCharacter"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/c36">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueCharacter"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/c37">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueCharacter"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/c38">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueCharacter"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/c39">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueCharacter"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/c40">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueCharacter"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/c41">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueCharacter"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/c42">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueCharacter"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/c43">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueCharacter"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/c44">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueCharacter"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/c45">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueCharacter"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/c46">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueCharacter"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/c47">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueCharacter"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/c48">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueCharacter"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/c49">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueCharacter"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/c50">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueCharacter"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/characters1">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#CharacterStateDataMatrix"/>
+    <cdao:has_Character rdf:resource="http://example.org/c1"/>
+    <cdao:has_Character rdf:resource="http://example.org/c2"/>
+    <cdao:has_Character rdf:resource="http://example.org/c3"/>
+    <cdao:has_Character rdf:resource="http://example.org/c4"/>
+    <cdao:has_Character rdf:resource="http://example.org/c5"/>
+    <cdao:has_Character rdf:resource="http://example.org/c6"/>
+    <cdao:has_Character rdf:resource="http://example.org/c7"/>
+    <cdao:has_Character rdf:resource="http://example.org/c8"/>
+    <cdao:has_Character rdf:resource="http://example.org/c9"/>
+    <cdao:has_Character rdf:resource="http://example.org/c10"/>
+    <cdao:has_Character rdf:resource="http://example.org/c11"/>
+    <cdao:has_Character rdf:resource="http://example.org/c12"/>
+    <cdao:has_Character rdf:resource="http://example.org/c13"/>
+    <cdao:has_Character rdf:resource="http://example.org/c14"/>
+    <cdao:has_Character rdf:resource="http://example.org/c15"/>
+    <cdao:has_Character rdf:resource="http://example.org/c16"/>
+    <cdao:has_Character rdf:resource="http://example.org/c17"/>
+    <cdao:has_Character rdf:resource="http://example.org/c18"/>
+    <cdao:has_Character rdf:resource="http://example.org/c19"/>
+    <cdao:has_Character rdf:resource="http://example.org/c20"/>
+    <cdao:has_Character rdf:resource="http://example.org/c21"/>
+    <cdao:has_Character rdf:resource="http://example.org/c22"/>
+    <cdao:has_Character rdf:resource="http://example.org/c23"/>
+    <cdao:has_Character rdf:resource="http://example.org/c24"/>
+    <cdao:has_Character rdf:resource="http://example.org/c25"/>
+    <cdao:has_Character rdf:resource="http://example.org/c26"/>
+    <cdao:has_Character rdf:resource="http://example.org/c27"/>
+    <cdao:has_Character rdf:resource="http://example.org/c28"/>
+    <cdao:has_Character rdf:resource="http://example.org/c29"/>
+    <cdao:has_Character rdf:resource="http://example.org/c30"/>
+    <cdao:has_Character rdf:resource="http://example.org/c31"/>
+    <cdao:has_Character rdf:resource="http://example.org/c32"/>
+    <cdao:has_Character rdf:resource="http://example.org/c33"/>
+    <cdao:has_Character rdf:resource="http://example.org/c34"/>
+    <cdao:has_Character rdf:resource="http://example.org/c35"/>
+    <cdao:has_Character rdf:resource="http://example.org/c36"/>
+    <cdao:has_Character rdf:resource="http://example.org/c37"/>
+    <cdao:has_Character rdf:resource="http://example.org/c38"/>
+    <cdao:has_Character rdf:resource="http://example.org/c39"/>
+    <cdao:has_Character rdf:resource="http://example.org/c40"/>
+    <cdao:has_Character rdf:resource="http://example.org/c41"/>
+    <cdao:has_Character rdf:resource="http://example.org/c42"/>
+    <cdao:has_Character rdf:resource="http://example.org/c43"/>
+    <cdao:has_Character rdf:resource="http://example.org/c44"/>
+    <cdao:has_Character rdf:resource="http://example.org/c45"/>
+    <cdao:has_Character rdf:resource="http://example.org/c46"/>
+    <cdao:has_Character rdf:resource="http://example.org/c47"/>
+    <cdao:has_Character rdf:resource="http://example.org/c48"/>
+    <cdao:has_Character rdf:resource="http://example.org/c49"/>
+    <cdao:has_Character rdf:resource="http://example.org/c50"/>
+    <cdao:has_TU rdf:resource="http://example.org/otu5"/>
+    <cdao:has_TU rdf:resource="http://example.org/otu7"/>
+    <cdao:has_TU rdf:resource="http://example.org/otu9"/>
+    <cdao:has_TU rdf:resource="http://example.org/otu11"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu5-c1">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu5"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c1"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s1"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu5-c2">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu5"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c2"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s3"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu5-c3">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu5"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c3"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s4"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu5-c4">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu5"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c4"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s2"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu5-c5">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu5"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c5"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s3"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu5-c6">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu5"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c6"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s1"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu5-c7">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu5"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c7"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s3"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu5-c8">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu5"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c8"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s4"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu5-c9">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu5"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c9"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s2"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu5-c10">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu5"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c10"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s17"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu5-c11">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu5"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c11"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s17"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu5-c12">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu5"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c12"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s17"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu5-c13">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu5"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c13"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s3"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu5-c14">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu5"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c14"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s2"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu5-c15">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu5"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c15"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s1"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu5-c16">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu5"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c16"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s3"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu5-c17">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu5"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c17"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s1"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu5-c18">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu5"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c18"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s1"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu5-c19">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu5"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c19"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s1"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu5-c20">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu5"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c20"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s2"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu5-c21">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu5"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c21"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s3"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu5-c22">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu5"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c22"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s2"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu5-c23">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu5"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c23"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s1"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu5-c24">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu5"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c24"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s4"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu5-c25">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu5"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c25"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s3"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu5-c26">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu5"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c26"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s1"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu5-c27">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu5"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c27"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s2"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu5-c28">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu5"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c28"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s17"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu5-c29">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu5"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c29"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s3"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu5-c30">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu5"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c30"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s1"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu5-c31">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu5"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c31"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s2"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu5-c32">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu5"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c32"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s2"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu5-c33">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu5"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c33"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s1"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu5-c34">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu5"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c34"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s2"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu5-c35">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu5"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c35"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s1"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu5-c36">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu5"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c36"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s4"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu5-c37">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu5"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c37"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s4"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu5-c38">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu5"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c38"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s4"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu5-c39">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu5"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c39"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s4"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu5-c40">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu5"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c40"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s17"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu5-c41">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu5"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c41"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s2"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu5-c42">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu5"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c42"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s2"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu5-c43">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu5"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c43"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s4"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu5-c44">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu5"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c44"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s4"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu5-c45">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu5"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c45"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s3"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu5-c46">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu5"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c46"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s2"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu5-c47">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu5"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c47"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s1"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu5-c48">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu5"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c48"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s1"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu5-c49">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu5"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c49"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s1"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu5-c50">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu5"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c50"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s3"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu7-c1">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu7"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c1"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s1"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu7-c2">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu7"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c2"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s3"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu7-c3">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu7"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c3"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s4"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu7-c4">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu7"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c4"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s2"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu7-c5">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu7"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c5"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s3"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu7-c6">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu7"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c6"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s2"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu7-c7">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu7"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c7"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s3"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu7-c8">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu7"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c8"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s4"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu7-c9">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu7"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c9"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s2"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu7-c10">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu7"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c10"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s3"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu7-c11">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu7"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c11"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s17"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu7-c12">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu7"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c12"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s17"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu7-c13">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu7"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c13"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s3"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu7-c14">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu7"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c14"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s2"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu7-c15">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu7"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c15"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s1"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu7-c16">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu7"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c16"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s3"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu7-c17">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu7"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c17"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s1"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu7-c18">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu7"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c18"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s1"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu7-c19">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu7"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c19"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s1"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu7-c20">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu7"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c20"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s2"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu7-c21">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu7"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c21"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s3"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu7-c22">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu7"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c22"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s2"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu7-c23">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu7"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c23"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s1"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu7-c24">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu7"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c24"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s4"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu7-c25">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu7"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c25"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s3"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu7-c26">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu7"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c26"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s1"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu7-c27">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu7"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c27"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s2"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu7-c28">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu7"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c28"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s3"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu7-c29">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu7"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c29"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s3"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu7-c30">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu7"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c30"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s1"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu7-c31">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu7"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c31"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s2"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu7-c32">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu7"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c32"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s2"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu7-c33">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu7"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c33"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s1"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu7-c34">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu7"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c34"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s2"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu7-c35">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu7"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c35"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s1"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu7-c36">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu7"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c36"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s4"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu7-c37">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu7"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c37"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s2"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu7-c38">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu7"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c38"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s1"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu7-c39">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu7"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c39"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s4"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu7-c40">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu7"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c40"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s17"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu7-c41">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu7"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c41"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s2"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu7-c42">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu7"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c42"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s2"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu7-c43">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu7"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c43"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s4"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu7-c44">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu7"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c44"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s4"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu7-c45">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu7"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c45"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s3"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu7-c46">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu7"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c46"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s2"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu7-c47">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu7"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c47"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s1"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu7-c48">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu7"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c48"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s1"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu7-c49">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu7"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c49"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s1"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu7-c50">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu7"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c50"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s3"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu9-c1">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu9"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c1"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s1"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu9-c2">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu9"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c2"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s3"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu9-c3">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu9"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c3"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s4"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu9-c4">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu9"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c4"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s2"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu9-c5">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu9"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c5"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s3"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu9-c6">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu9"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c6"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s2"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu9-c7">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu9"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c7"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s3"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu9-c8">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu9"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c8"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s4"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu9-c9">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu9"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c9"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s2"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu9-c10">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu9"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c10"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s3"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu9-c11">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu9"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c11"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s17"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu9-c12">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu9"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c12"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s17"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu9-c13">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu9"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c13"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s3"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu9-c14">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu9"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c14"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s2"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu9-c15">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu9"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c15"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s1"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu9-c16">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu9"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c16"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s3"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu9-c17">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu9"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c17"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s1"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu9-c18">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu9"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c18"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s4"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu9-c19">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu9"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c19"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s1"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu9-c20">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu9"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c20"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s2"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu9-c21">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu9"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c21"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s3"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu9-c22">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu9"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c22"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s2"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu9-c23">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu9"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c23"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s1"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu9-c24">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu9"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c24"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s4"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu9-c25">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu9"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c25"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s2"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu9-c26">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu9"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c26"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s1"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu9-c27">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu9"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c27"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s2"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu9-c28">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu9"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c28"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s3"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu9-c29">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu9"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c29"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s3"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu9-c30">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu9"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c30"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s1"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu9-c31">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu9"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c31"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s2"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu9-c32">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu9"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c32"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s17"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu9-c33">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu9"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c33"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s1"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu9-c34">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu9"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c34"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s2"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu9-c35">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu9"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c35"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s1"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu9-c36">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu9"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c36"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s4"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu9-c37">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu9"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c37"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s2"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu9-c38">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu9"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c38"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s1"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu9-c39">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu9"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c39"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s4"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu9-c40">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu9"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c40"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s2"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu9-c41">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu9"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c41"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s2"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu9-c42">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu9"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c42"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s2"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu9-c43">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu9"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c43"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s4"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu9-c44">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu9"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c44"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s2"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu9-c45">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu9"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c45"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s3"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu9-c46">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu9"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c46"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s2"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu9-c47">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu9"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c47"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s1"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu9-c48">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu9"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c48"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s3"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu9-c49">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu9"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c49"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s1"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu9-c50">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu9"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c50"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s3"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu11-c1">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu11"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c1"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s1"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu11-c2">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu11"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c2"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s3"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu11-c3">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu11"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c3"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s4"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu11-c4">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu11"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c4"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s2"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu11-c5">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu11"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c5"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s3"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu11-c6">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu11"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c6"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s2"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu11-c7">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu11"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c7"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s3"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu11-c8">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu11"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c8"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s4"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu11-c9">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu11"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c9"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s2"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu11-c10">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu11"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c10"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s3"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu11-c11">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu11"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c11"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s1"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu11-c12">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu11"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c12"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s1"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu11-c13">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu11"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c13"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s3"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu11-c14">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu11"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c14"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s2"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu11-c15">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu11"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c15"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s1"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu11-c16">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu11"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c16"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s3"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu11-c17">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu11"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c17"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s1"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu11-c18">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu11"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c18"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s17"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu11-c19">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu11"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c19"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s17"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu11-c20">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu11"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c20"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s2"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu11-c21">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu11"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c21"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s3"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu11-c22">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu11"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c22"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s2"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu11-c23">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu11"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c23"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s1"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu11-c24">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu11"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c24"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s4"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu11-c25">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu11"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c25"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s3"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu11-c26">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu11"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c26"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s1"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu11-c27">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu11"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c27"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s2"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu11-c28">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu11"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c28"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s3"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu11-c29">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu11"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c29"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s3"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu11-c30">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu11"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c30"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s1"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu11-c31">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu11"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c31"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s2"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu11-c32">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu11"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c32"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s2"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu11-c33">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu11"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c33"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s1"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu11-c34">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu11"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c34"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s2"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu11-c35">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu11"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c35"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s1"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu11-c36">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu11"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c36"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s4"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu11-c37">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu11"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c37"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s2"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu11-c38">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu11"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c38"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s1"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu11-c39">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu11"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c39"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s4"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu11-c40">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu11"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c40"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s2"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu11-c41">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu11"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c41"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s2"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu11-c42">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu11"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c42"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s2"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu11-c43">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu11"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c43"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s4"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu11-c44">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu11"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c44"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s4"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu11-c45">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu11"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c45"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s3"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu11-c46">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu11"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c46"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s2"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu11-c47">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu11"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c47"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s1"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu11-c48">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu11"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c48"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s3"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu11-c49">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu11"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c49"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s1"/>
+  </rdf:Description>
+  <rdf:Description rdf:ID="otu11-c50">
+    <rdf:type rdf:resource="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#RNAResidueStateDatum"/>
+    <cdao:belongs_to_TU rdf:resource="http://example.org/otu11"/>
+    <cdao:belongs_to_Character rdf:resource="http://example.org/c50"/>
+    <cdao:has_RNA_State rdf:resource="http://example.org/s3"/>
+  </rdf:Description>
+</rdf:RDF>

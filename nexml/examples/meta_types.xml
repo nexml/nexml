@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <nex:nexml 
 	generator="Bio::Phylo::Project v.0.17_RC9_1175" 
-	version="0.9" 
+	version="0.9"
+	xml:base="http://example.org/base/" 
 	xmlns="http://www.nexml.org/2009"
 	xmlns:kt="http://example.org/knownTypes#"
 	xmlns:nex="http://www.nexml.org/2009" 
