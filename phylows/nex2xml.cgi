@@ -1,34 +1,40 @@
 #!/usr/bin/perl
 use CGI::Carp 'fatalsToBrowser';
 BEGIN {
-    use lib '../perllib';	
-    use lib '../perllib/arch';
-    unshift @INC, 'perl/lib';
-    unshift @INC, 'site/lib';
+    use lib '../../perllib';	
+    use lib '../../perllib/arch';
+    use lib '../../bio-phylo/lib';
+    unshift @INC, '../site/lib';
 }
-use strict;
-use warnings;
 use util;
 use util::siteFactory;
-use Bio::Phylo::Util::Logger;
+use strict;
+use warnings;
 use Template;
 use File::Temp;
-use XML::XML2JSON;
 use CGI ':standard';
+use UNIVERSAL 'isa';
+use Bio::Phylo::IO 'parse';
+use Bio::Phylo::Util::Logger;
+use Bio::Phylo::Util::Exceptions 'throw';
+use constant MAX_SIZE => 2_000_000;
+use constant COMPACT  =>   500_000;
 
 my ( 
     @logmessages, # messages from the logger object, formatted for template
     @exceptions,  # trapped exception and stack traces, unformatted
-    $blocks,      # nexus blocks, if any
+    $project,     # nexus blocks, if any
     $filename,    # filename as returned from upload + read
-    @lines        # lines in file
+    @lines,       # lines in file
+    $bytes,       # bytes in file
+    $status,      # status line
 );
 
 my $q = CGI->new;
 my $logger = Bio::Phylo::Util::Logger->new;
 $logger->VERBOSE(
-    '-level' => 4,
-    '-class' => 'main'
+    '-level' => 3,
+    '-class' => 'Bio::Phylo::Parsers::Nexus'
 );
 $logger->set_listeners(
     sub {
@@ -48,28 +54,39 @@ $logger->set_listeners(
     }
 );
 eval {
-    ( $filename, @lines ) = read_file( $q->param('file') || \*STDIN );
-    my $xml2json = XML::XML2JSON->new;
-    $blocks = $xml2json->convert(join '', @lines);
+    ( $filename, $bytes, @lines ) = read_file( $q->param('file') );
+    throw 'FileError' => "File too big, $bytes > " . MAX_SIZE . ' bytes' if $bytes > MAX_SIZE;
+    $project = parse( 
+        '-format'     => 'nexus',
+        '-string'     => join("\n",@lines),
+        '-as_project' => 1,
+    )
 };
 if ( $@ ) {
-    if ( UNIVERSAL::isa( $@, 'Bio::Phylo::Util::Exceptions' ) ) {
-        push @exceptions, $@->error . ' (' . $@->description . ')';
+    if ( isa( $@, 'Bio::Phylo::Util::Exceptions' ) ) {
+        $status = $@->error;
+        push @exceptions, $@->error;
         for my $frame ( @{ $@->trace } ) {
-            my $file = $frame->[1];
-            my $line = $frame->[2];       
+            my $file   = $frame->[1];
+            my $line   = $frame->[2];       
             my $method = $frame->[3];
-            push @exceptions, "---STACK: [${method}]\n";
+            push @exceptions, "---STACK: ${method}\n";
         }
     }
     else {
+        $status = $@;
         push @exceptions, $@; 
     }
 };
 if ( not $@ ) {
-    print header('application/json', 201);
-    print $blocks;
-    exit(0);
+    if ( isa( $project, 'Bio::Phylo::Project' ) ) {
+        print header('application/xml', 201);
+        print $project->to_xml( '-compact' => $bytes > COMPACT );
+        exit(0);
+    }
+    else {
+        push @exceptions, "No public nexus blocks in upload";    
+    }
 }
 
 my @formatted = @logmessages;
@@ -105,24 +122,37 @@ my $vars = $fac->create_template_vars(
 );
 
 # write http header
-print header('text/html', 400); # response code (201 or 400) here as second arg
+print $q->header(
+    '-type'   => 'text/html', 
+    '-status' => "400 $status",
+);
 
 # write results
 $template->process( 'validator.tmpl', $vars ) || die $template->error();
 
+# clean up temp file
+unlink $filename;
+
 sub read_file {
-	my $file = shift;
+	my $file  = shift;
+	my $bytes = 0;	
 	my @lines;
-	if ( fileno( $file ) ) {
-		@lines = <$file>;
+	if ( $file ) {
+        if ( fileno( $file ) ) {
+            @lines = <$file>;
+        }
+        else {
+            open my $fh, '<', $file or die "Can't open file to validate: $!";
+            @lines = <$fh>;
+            close $fh;
+        }
 	}
 	else {
-		open my $fh, '<', $file or die "Can't open file to translate: $!";
-		@lines = <$fh>;
-		close $fh;
+	    @lines = <>;
 	}
+	$bytes += length($_) for @lines;
 	my ( $fh, $filename ) = File::Temp::tempfile;
 	$fh->print( @lines );
 	$fh->close;
-	return $filename, @lines;
+	return $filename, $bytes, @lines;
 }

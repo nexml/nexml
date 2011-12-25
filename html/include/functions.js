@@ -55,9 +55,9 @@ function submitForm () {
     	}
     }
     if ( action == null ) {
-        action = '/nexml/validator';
+        action = '/nexml/phylows/validator';
     }
-    form.action = '/nexml/' + action;
+    form.action = action;
     form.submit();
 }
 
