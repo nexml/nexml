@@ -89,26 +89,47 @@
         Secondly, we're implementing NeXML read/write abilities in a number of
         software packages:<br/>
         <table id="implementations">
+			<tr>
+				<td>
+			        <img alt="TreeBASE" src="<% paths.strip(paths.include('treebase.jpg')) %>"/>
+			    </td>
+			    <td>
+			        <a href="http://www.treebase.org">
+			        TreeBASE</a> now supports serialization to NeXML.<br/>
+			    </td>
+			</tr>			
         	<tr>
         		<td>
 			        <img alt="Mesquite" src="<% paths.strip(paths.include('mesquite.gif')) %>"/>
         		</td>
         		<td>
-			        <a href="http://mesquiteproject.org">Mesquite</a> now supports 
-			        reading and writing of NeXML. This implementation has been developed by Peter 
-			        Midford and Rutger Vos.<br/>
+			        The <a href="http://mesquiteproject.org">Mesquite</a> project
+					now supports <a href="http://nexml-dev.nescent.org/nexml/java/">reading
+					and writing</a> of NeXML. Wayne Maddison and Peter Midford
+					helped start an implementation that is currently being
+					maintained by Rutger Vos.<br/>
 				</td>
 			</tr>
         	<tr>
         		<td>
 	        		<img alt="DAMBE" src="<% paths.strip(paths.include('dambe.gif')) %>"/>
         		</td>
-        		<td>
-			        At the most recent EvoInfo meeting, Xuhua Xia demonstrated
-			        <a href="http://dambe.bio.uottawa.ca/dambe.asp">DAMBE</a>'s 
-			        abilities to read and write NeXML data transparently.<br/>
+        		<td>			        
+			        Xuhua Xia's <a href="http://dambe.bio.uottawa.ca/dambe.asp">DAMBE</a>
+					version 5.2.31 for Windows Vista/7 reads and writes NeXML
+					data.<br/>
         		</td>
         	</tr>
+			<tr>
+				<td>
+			        <img alt="PhenoScape" src="<% paths.strip(paths.include('phenoscape_logo.jpg')) %>"/>
+			    </td>
+			    <td>
+			        The <a href="http://www.phenoscape.org">PhenoScape</a> 
+			        project uses NeXML to annotate complex morphological character
+			        states with ontology terms in its Phenex editor.<br/>
+			    </td>
+			</tr>			
         	<tr>
         		<td>
 			        <img alt="R" src="<% paths.strip(paths.include('Rlogo.jpg')) %>"/>
@@ -127,28 +148,46 @@
 			    <td>
 			        Jeet Sukumaran has implemented NeXML I/O for python in the 
 			        <a href="http://packages.python.org/DendroPy">DendroPy</a> package.<br/>
+					There are many DendroPy
+					<a href="http://nexml-dev.nescent.org/manual">code samples</a>
+					for dealing with NeXML data in the wiki manual.
 			    </td>
+			</tr>
 			<tr>
 				<td>
 			        <img alt="BioPerl" src="<% paths.strip(paths.include('BioPerlLogo.png')) %>"/>
 			    </td>
 			    <td>
-			        Chase Miller has implemented NeXML I/O for
-			        <a href="http://www.bioperl.org">BioPerl</a>'s TreeIO and
-			        AlignIO interfaces, which under the hood reuse Rutger Vos's
+			        Chase Miller has implemented
+					<a href="http://doc.bioperl.org/releases/bioperl-current/bioperl-live/Bio/NexmlIO.html">Bio::NexmlIO</a> for
+			        <a href="http://www.bioperl.org">BioPerl</a>, which under
+					the hood reuse Rutger Vos's
 			        <a href="http://search.cpan.org/dist/Bio-Phylo/">Bio::Phylo</a>
 			        parser libraries.<br/>
 			    </td>
+			</tr>
 			<tr>
 				<td>
-			        <img alt="HIVQuery" src="<% paths.strip(paths.include('hivq.jpg')) %>"/>
+			        <img alt="BioRuby" src="<% paths.strip(paths.include('bioruby-gem.png')) %>"/>
 			    </td>
 			    <td>
-			        Mark Jensen has implemented NeXML compatability for the
-			        <a href="http://fortinbras.us/">HIVQuery</a> web
-			        application.<br/>
+			        Anurag Priyam and Rutger Vos have developed a 
+			        <a href="http://rubygems.org/gems/bio-nexml">NeXML I/O plugin</a>
+			        for the
+			        <a href="http://www.bioruby.org">
+			        BioRuby</a> open source bioinformatics library for Ruby.<br/>
 			    </td>
-			</tr>	
+			</tr>
+			<tr>
+				<td>
+			        <img alt="ETE" src="<% paths.strip(paths.include('ete_logo.png')) %>"/>
+			    </td>
+			    <td>
+			        Jaime Huerta-Cepas is working on NeXML I/O for the
+			        <a href="http://ete.cgenomics.org/">
+			        ETE</a> Python environment for tree exploration.<br/>
+			    </td>
+			</tr>
 			<tr>
 				<td>
 			        <img alt="mx" src="<% paths.strip(paths.include('mx_icon.png')) %>"/>
@@ -182,43 +221,12 @@
 			</tr>
 			<tr>
 				<td>
-			        <img alt="BioRuby" src="<% paths.strip(paths.include('bioruby-gem.png')) %>"/>
+			        <img alt="HIVQuery" src="<% paths.strip(paths.include('hivq.jpg')) %>"/>
 			    </td>
 			    <td>
-			        Anurag Priyam and Rutger Vos have developed a 
-			        <a href="http://rubygems.org/gems/bio-nexml">NeXML I/O plugin</a>
-			        for the
-			        <a href="http://www.bioruby.org">
-			        BioRuby</a> open source bioinformatics library for Ruby.<br/>
-			    </td>
-			</tr>
-			<tr>
-				<td>
-			        <img alt="ETE" src="<% paths.strip(paths.include('ete_logo.png')) %>"/>
-			    </td>
-			    <td>
-			        Jaime Huerta-Cepas is working on NeXML I/O for the
-			        <a href="http://ete.cgenomics.org/">
-			        ETE</a> Python environment for tree exploration.<br/>
-			    </td>
-			</tr>			
-			<tr>
-				<td>
-			        <img alt="TreeBASE" src="<% paths.strip(paths.include('treebase.jpg')) %>"/>
-			    </td>
-			    <td>
-			        <a href="http://www.treebase.org">
-			        TreeBASE</a> now supports serialization to NeXML.<br/>
-			    </td>
-			</tr>	
-			<tr>
-				<td>
-			        <img alt="PhenoScape" src="<% paths.strip(paths.include('phenoscape_logo.jpg')) %>"/>
-			    </td>
-			    <td>
-			        The <a href="http://www.phenoscape.org">PhenoScape</a> 
-			        project uses NeXML to annotate complex morphological character
-			        states with ontology terms in its Phenex editor.<br/>
+			        Mark Jensen has implemented NeXML compatability for the
+			        <a href="http://fortinbras.us/">HIVQuery</a> web
+			        application.<br/>
 			    </td>
 			</tr>			
     	</table>
