@@ -1,10 +1,10 @@
 #!/usr/bin/perl
 use CGI::Carp 'fatalsToBrowser';
 BEGIN {
-    use lib '../perllib';	
-    use lib '../perllib/arch';
-    unshift @INC, 'perl/lib';
-    unshift @INC, 'site/lib';
+    use lib '../../perllib';	
+    use lib '../../perllib/arch';
+    use lib '../../bio-phylo/lib';
+    unshift @INC, '../site/lib';
 }
 use util;
 use util::siteFactory;
@@ -34,7 +34,7 @@ my $q = CGI->new;
 my $logger = Bio::Phylo::Util::Logger->new;
 $logger->VERBOSE(
     '-level' => 3,
-    '-class' => 'Bio::Phylo::Parsers::Nexus'
+    '-class' => 'Bio::Phylo::Parsers::Newick'
 );
 $logger->set_listeners(
     sub {
@@ -57,7 +57,7 @@ eval {
     ( $filename, $bytes, @lines ) = read_file( $q->param('file') );
     throw 'FileError' => "File too big, $bytes > " . MAX_SIZE . ' bytes' if $bytes > MAX_SIZE;
     $project = parse( 
-        '-format'     => 'nexus',
+        '-format'     => 'newick',
         '-string'     => join("\n",@lines),
         '-as_project' => 1,
     )
@@ -85,7 +85,7 @@ if ( not $@ ) {
         exit(0);
     }
     else {
-        push @exceptions, "No public nexus blocks in upload";    
+        push @exceptions, "No newick data in upload";    
     }
 }
 
