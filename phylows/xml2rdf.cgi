@@ -52,7 +52,7 @@ my ( $fh, $name ) = File::Temp::tempfile;
 print $fh $content;
 close $fh;
 
-my $cdao = `java -cp downloads/validator.jar transformer.NeXML2CDAO $name .`;
+my $cdao = `java -cp ../downloads/validator.jar transformer.NeXML2CDAO $name ../`;
 unlink $name;
 
 print "content-type: application/rdf+xml\n\n";
