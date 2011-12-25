@@ -24,7 +24,7 @@ $script =~ s/\.cgi$//;
 my $url = 'http://' . $ENV{'SERVER_NAME'} . $script . '/phylows/';
 
 my $logger = Bio::Phylo::Util::Logger->new;
-open my $fh, '>', 'ubio.log' or die $!;
+open my $fh, '>', 'ubionb.log' or die $!;
 $logger->VERBOSE( '-level' => DEBUG );
 $logger->set_listeners( sub { print $fh shift } );
 $logger->info("Using URL: $url");
