@@ -93,18 +93,18 @@
         <!-- validate form -->   
         <div id="validateDiv">
             <form 
-                action="/nexml/validator" 
+                action="/nexml/phylows/validator" 
                 enctype="multipart/form-data" 
                 method="post" 
                 id="validateForm">
                 <fieldset id="validateFieldset">
                     <legend class="hide">Process nexml data</legend>
                     <select id="validateSelect">
-                    	<option value="validator.cgi">validate</option>
-                    	<option value="nex2xml.cgi">nexus -> nexml</option>
-                    	<option value="newick2xml.cgi">newick -> nexml</option>
-                    	<option value="xml2json.cgi">nexml -> json</option>
-                    	<option value="xml2rdf.cgi">nexml -> rdf</option>
+                    	<option value="/nexml/phylows/validator">validate</option>
+                    	<option value="/nexml/phylows/nex2xml">nexus -> nexml</option>
+                    	<option value="/nexml/phylows/newick2xml">newick -> nexml</option>
+                    	<option value="/nexml/phylows/xml2json">nexml -> json</option>
+                    	<option value="/nexml/phylows/xml2rdf">nexml -> rdf</option>
                     </select>
                     <input type="file" name="file" id="validateUpload"/>
                     <input type="button" onclick="submitForm()" id="validateSubmit" value="Submit"/>

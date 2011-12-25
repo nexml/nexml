@@ -1,9 +1,9 @@
 #!/usr/bin/perl
 BEGIN {
-    use lib '../perllib';	
-    use lib '../perllib/arch';
-    unshift @INC, 'perl/lib';
-    unshift @INC, 'site/lib';
+    use lib '../../perllib';	
+    use lib '../../perllib/arch';
+    use lib '../../bio-phylo/lib';
+    unshift @INC, '../site/lib';
 }
 use CGI::Carp 'fatalsToBrowser';
 use util;
