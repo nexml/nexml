@@ -2,22 +2,26 @@
 <!-- HEADING: Overview -->
 <p>
     The <a rel="nofollow" href="http://www.citeulike.org/user/rvosa/article/2011773">
-    NEXUS file format</a> is a commonly used format for
-    phylogenetic data. Unfortunately, over time, the format
+    NEXUS flat file format</a> is a commonly used syntax for
+    phylogenetic data. Unfortunately, over time, NEXUS
     has become overloaded - which has caused various
     <a rel="nofollow" href="https://www.nescent.org/wg_evoinfo/NEXUS_Problems">
     problems</a>. Meanwhile, new technologies around the
     <a rel="nofollow" href="http://www.w3.org/XML/">XML</a> standard have
     emerged. These technologies have the potential to greatly
-    simplify, and improve robustness, in the processing of rich phylogenetic data.
+    simplify, and improve robustness, in the processing of rich phylogenetic
+	data. This website is the home for the community-driven NeXML project, which
+	seeks to leverage XML technologies in the development of a new data standard
+	that translates NEXUS concepts into a syntax that is more easily validated
+	and processed. This approach promises several advantages:
 </p>
 <ul>
 <li class="rss">
     <strong>Syntax validation</strong> &mdash; some of the issues hampering
     interoperability are caused by the fact that no formal
     specification exists for NEXUS and other flat files, and no unambiguous way
-    to validate them. Thanks to <a rel="nofollow" href="http://www.w3.org/XML/Schema">
-    XML Schema</a> we can now define a grammar against which
+    to validate them. Using <a rel="nofollow" href="http://www.w3.org/XML/Schema">
+    XML Schema</a> we have defined a versioned grammar against which
     data files can be validated syntactically.
 </li>
 <li class="rss">
@@ -27,7 +31,10 @@
 	With the wider <a rel="nofollow" href="https://www.nescent.org/wg_evoinfo/">
     EvoInfo working group</a> we are developing an <a href="http://www.evolutionaryontology.org">
     ontology</a> on which we are mapping NeXML schema types so that the semantics
-    of data files become well-defined.
+    of data files become well-defined. In addition, NeXML has a facility for
+	annotating fundamental phylogenetic data objects (such as trees, character
+	state matrices and taxa) with ontology predicates and objects using
+	<a href="http://www.w3.org/TR/xhtml-rdfa-primer/">RDFa</a>.
 </li>
 <li class="rss">
     <strong>Web services</strong> &mdash; a number of different
@@ -35,12 +42,10 @@
     <a rel="nofollow" href="http://en.wikipedia.org/wiki/Representational_State_Transfer">REST</a>
     and <a rel="nofollow" href="http://www.w3.org/TR/soap/">SOAP</a>) have
     emerged allowing disparate, xml-based services to be glued together
-    over the internet. Using such services, researchers can
-    "farm out" their calculations to dedicated servers, such
-    as those of the <a rel="nofollow" href="http://www.phylo.org">CIPRES
-    project</a>. The wider plan is to integrate such services in
-    an <a href="https://www.nescent.org/wg_evoinfo/General_Ontology">ontology</a>-mediated 
-    architecture.
+    over the internet. For example, the
+	<a href="http://evoinfo.nescent.org/PhyloWS" rel="nofollow">PhyloWS</a>
+	initiative seeks to develop conventions for RESTful phylogenetic web
+	services for which NeXML is one of the preferred response formats.
 </li>
 <!--li class="rss">
     <strong>Native XML databases</strong> &mdash; relational
@@ -58,7 +63,7 @@
     come together as part of the <a href="http://www.nescent.org">
     NESCent</a> working group for <a href="https://www.nescent.org/wg_evoinfo">
     evolutionary informatics</a> to develop a
-    <a href="https://www.nescent.org/wg_evoinfo/Future_Data_Exchange_Standard">
+    <a href="/manual">
     new data exchange standard</a> based on these technologies.
 </p>
 <p class="internallink">
@@ -76,8 +81,10 @@
     <li class="rss">
         In the first place, we're designing an XML schema. This
         schema (designated as namespace http://www.nexml.org/2009)
-        is documented on our
-        <a href="https://www.nescent.org/wg_evoinfo/Future_Data_Exchange_Standard">wiki</a>;
+        is explained on our
+        <a href="/manual">wiki</a> and
+		<a href="/nexml/html/doc/schema-1/">formally
+		documented</a>;
         the bleeding edge version is available from <a href="/code">svn</a>;
         the <a href="/nexml/xsd">source code can be browsed</a> on our
         site (it's a check out from our repository which is updated
@@ -86,8 +93,8 @@
         page.
     </li>
     <li class="rss">
-        Secondly, we're implementing NeXML read/write abilities in a number of
-        software packages:<br/>
+        Secondly, we're implementing NeXML read and/or write abilities in a
+		number of software applications:<br/>
         <table id="implementations">
 			<tr>
 				<td>
@@ -251,9 +258,9 @@
 <ul>
 	<li class="rss">
 		<strong>Get informed</strong> &mdash; information about the NeXML
-		project is distributed over the <a href="http://www.nescent.org/wg_evoinfo/Future_Data_Exchange_Standard">wiki</a>
+		project is distributed over the <a href="/manual">manual</a>
 		(for an overview of vision, plans, implementation),
-		<a href="http://www.nexml.org/nexml/html/doc/schema-1/">documentation</a>
+		<a href="/nexml/html/doc/schema-1/">documentation</a>
 		(for formal description of the schema) and the
 		<a href="https://lists.sourceforge.net/lists/listinfo/nexml-discuss">mailing list</a>
 		(for immediate plans and discussion).
