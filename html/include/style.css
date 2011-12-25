@@ -211,7 +211,6 @@ li.external {
 
 .icon { 
     text-decoration: none;  
-    vertical-align: middle;
     border: none
 }
 
@@ -249,8 +248,13 @@ img.app {
 }
 
 .linkshare {
-    padding-left: 10px;
-    padding-bottom: 1em
+    padding-left: 10px !important;
+    padding-bottom: 1em !important;
+    vertical-align: middle !important
+}
+
+.linkshare > div, .linkshare > div > iframe, .s5 {
+    display: inline !important
 }
 
 .date { 
