@@ -1,13 +1,17 @@
 var NeXML = {};
 (function() {
+	if ( null == NeXMLAttributePrefix ) {
+		NeXMLAttributePrefix = '@';
+	}
+	var prefix = NeXMLAttributePrefix;
     /*----------------------------------------------------------------*/    
     /* MIXINS */
     var Base = {
         getId : function () {
-            return this['@id'];
+            return this[prefix + 'id'];
         },
         getAbout : function () {
-            return this['@about'];
+            return this[prefix + 'about'];
         },
         getMeta : function () {
             return this.meta;
@@ -15,17 +19,17 @@ var NeXML = {};
     };
     var Labeled = {
         getLabel : function () {
-            return this['@label'];
+            return this[prefix + 'label'];
         }   
     };
     var OTUsLinker = {
         getOTUsId : function () {
-            return this['@otus'];
+            return this[prefix + 'otus'];
         }
     };
     var OTULinker = {
         getOTUId : function () {
-            return this['@otu'];
+            return this[prefix + 'otu'];
         }
     };
     var Listable = {
@@ -49,7 +53,7 @@ var NeXML = {};
     };
     var Polymorphic = {
         getXsiType : function () {
-            return this['@xsi:type'];
+            return this[prefix + 'xsi:type'];
         }
     };
     /*----------------------------------------------------------------*/ 
@@ -84,16 +88,16 @@ var NeXML = {};
     }
     Annotation.prototype = {
         getProperty : function () {
-            return this['@property'];
+            return this[prefix + 'property'];
         },
         getContent : function () {
-            return this['@content'];
+            return this[prefix + 'content'];
         },
         getDatatype : function () {
-            return this['@datatype'];
+            return this[prefix + 'datatype'];
         },
         getRel : function () {
-            return this['@rel'];
+            return this[prefix + 'rel'];
         }
     };     
     /*----------------------------------------------------------------*/ 
@@ -119,7 +123,7 @@ var NeXML = {};
     }
     Node.prototype = {
         isRoot : function () {
-            return this['@root'] === 'true' ? true : false;
+            return this[prefix + 'root'] === 'true' ? true : false;
         }
     };
     
@@ -128,10 +132,10 @@ var NeXML = {};
     }
     RootEdge.prototype = { 
         getTargetId : function () {
-            return this['@target'];
+            return this[prefix + 'target'];
         },
         getLength : function () {
-            return this['@length'];
+            return this[prefix + 'length'];
         }
     };
     
@@ -140,7 +144,7 @@ var NeXML = {};
     }    
     Edge.prototype = {
         getSourceId : function () {
-            return this['@source'];
+            return this[prefix + 'source'];
         }
     };
     
@@ -159,7 +163,7 @@ var NeXML = {};
         getChildNodes : function (node) {
             var nodeId = node.getId();
             var result = [];
-            var outEdges = this.getThingsByAttributeValue('edge', '@source', nodeId);
+            var outEdges = this.getThingsByAttributeValue('edge', prefix + 'source', nodeId);
             if ( outEdges.length > 0 ) {
                 for (var i = 0; i < outEdges.length; i++) {
                     var childId = outEdges[i].getTargetId();
@@ -170,7 +174,7 @@ var NeXML = {};
         },
         getParentNode : function (child) {
             var childId = child.getId();
-            var inEdges = this.getThingsByAttributeValue('edge', '@target', childId);
+            var inEdges = this.getThingsByAttributeValue('edge', prefix + 'target', childId);
             if (inEdges.length > 0) {
                 var parentId = inEdges[0].getSourceId();
                 return this.getThingById('node', parentId);
@@ -202,7 +206,7 @@ var NeXML = {};
         getChildNodes  : Tree.prototype.getChildNodes,
         getParentNodes : function (child) {
             var childId = child.getId();
-            var inEdges = this.getThingsByAttributeValue('edge', '@target', childId);
+            var inEdges = this.getThingsByAttributeValue('edge', prefix + 'target', childId);
             var parents = [];
             if (inEdges.length > 0) {
                 for (var i = 0; i < inEdges.length; i++) {
@@ -234,7 +238,7 @@ var NeXML = {};
     }
     State.prototype = {
         getSymbol : function () {
-            return this['@symbol'];
+            return this[prefix + 'symbol'];
         }
     };
     
@@ -265,7 +269,7 @@ var NeXML = {};
     }
     Char.prototype = {
         getStatesId : function () {
-            return this['@states'];
+            return this[prefix + 'states'];
         }
     };
     
@@ -274,10 +278,10 @@ var NeXML = {};
     }
     Cell.prototype = {
         getStateId : function () {
-            return this['@state'];
+            return this[prefix + 'state'];
         },
         getCharId : function () {
-            return this['@char'];
+            return this[prefix + 'char'];
         }
     };
     
@@ -392,10 +396,10 @@ var NeXML = {};
             return this.meta;
         },    
         getVersion : function () {
-            return this['@version'];
+            return this[prefix + 'version'];
         },
         getGenerator : function () {
-            return this['@generator'];
+            return this[prefix + 'generator'];
         },
         getOTUsList : function () {
             return this.otus;
