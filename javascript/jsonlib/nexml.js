@@ -101,6 +101,9 @@ var NeXML = {};
         },
         getRel : function () {
             return this[prefix + 'rel'];
+        },
+        getHref : function () {
+        	return this[prefix + 'href'];
         }
     };     
     /*----------------------------------------------------------------*/ 
