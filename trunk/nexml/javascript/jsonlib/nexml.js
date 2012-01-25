@@ -1,9 +1,12 @@
 var NeXML = {};
 (function() {
-	if ( null == NeXMLAttributePrefix ) {
-		NeXMLAttributePrefix = '@';
-	}
-	var prefix = NeXMLAttributePrefix;
+    var prefix;
+    if ( typeof NeXMLAttributePrefix === 'undefined' ) {
+	prefix = '@';
+    }
+    else {
+        prefix = NeXMLAttributePrefix;
+    }
     /*----------------------------------------------------------------*/    
     /* MIXINS */
     var Base = {
