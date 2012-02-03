@@ -222,12 +222,27 @@ abstract class NexmlWritableImpl implements NexmlWritable {
 		getElement().setAttribute("id", id);
 	}
 	
+	/*
+	 * (non-Javadoc)
+	 * @see org.nexml.model.NexmlWritable#getAbout()
+	 */
+	public String getAbout() {
+		return getElement().getAttribute("about");
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see org.nexml.model.NexmlWritable#setAbout(java.lang.String)
+	 */
+	public void setAbout(String about) {
+		getElement().setAttribute("about", about);
+	}
+	
 	/**
 	 * This method returns the NeXML element name that the
 	 * {@code NexmlWritable} object is equivalent to.
 	 * @return the (XML) tag name of this {@code NexmlWritable}.
 	 */
-
 	abstract String getTagName();
 	
 	protected void setNameSpace(Element element,String prefix, String nameSpaceURI) {
@@ -268,6 +283,10 @@ abstract class NexmlWritableImpl implements NexmlWritable {
 		}
 	}	
 	
+	/*
+	 * (non-Javadoc)
+	 * @see org.nexml.model.NexmlWritable#getBaseURI()
+	 */
 	public URI getBaseURI() {
 		if ( null == mBaseURI ) {
 			Element element = getElement();
@@ -288,6 +307,10 @@ abstract class NexmlWritableImpl implements NexmlWritable {
 		return mBaseURI;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see org.nexml.model.NexmlWritable#setBaseURI(java.net.URI)
+	 */
 	public void setBaseURI(URI baseURI) {
 		mBaseURI = baseURI;
 		getElement().setAttribute("xml:base",baseURI.toString());
