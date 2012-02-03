@@ -43,6 +43,26 @@ public interface NexmlWritable {
 	 * @return
 	 */	
 	void setId(String id);
+	
+	
+	/**
+	 * Sets the value of the about attribute. This must be
+	 * a string of type NCName prefixed with a hash (#)
+	 * sign, i.e. ^#[a-zA-Z_][a-zA-Z0-9_\-]*$
+	 * 
+	 *  NOTE: unless you have specific reason to want to
+	 *  change the default auto-generated identifiers
+	 *  there is no need to use this method ever.
+	 */	
+	void setAbout(String about);
+	
+	/**
+	 * Gets the value of the about attribute. This must be
+	 * a string of type NCName prefixed with a hash (#)
+	 * sign, i.e. ^#[a-zA-Z_][a-zA-Z0-9_\-]*$
+	 * @return
+	 */
+	String getAbout();	
 
 	/**
 	 * Sets the xml:base attribute for the focal element.
