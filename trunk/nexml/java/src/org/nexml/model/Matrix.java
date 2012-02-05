@@ -12,6 +12,13 @@ public interface Matrix<T> extends OTUsLinkable, Annotatable, Segmented<Characte
 	 * @return a list of matrix cells
 	 */
 	List<MatrixCell<T>> getRow(OTU otu);
+	
+	/**
+	 * Gets the row object for the provided OTU
+	 * @param otu
+	 * @return
+	 */
+	MatrixRow<T> getRowObject(OTU otu);
 
 	/**
 	 * Gets all matrix cell objects for the provided column (character)

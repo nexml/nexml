@@ -17,4 +17,16 @@ public interface Character extends Annotatable {
 	 * column, including their ambiguity mappings.
 	 */	
 	void setCharacterStateSet(CharacterStateSet characterStateSet);
+	
+//	/**
+//	 * Returns the index (i.e. column number) of the focal character
+//	 * @return
+//	 */
+//	int getIndex();
+//	
+//	/**
+//	 * Sets the index (i.e. column number) of the focal character
+//	 * @param index
+//	 */
+//	void setIndex(int index);
 }
