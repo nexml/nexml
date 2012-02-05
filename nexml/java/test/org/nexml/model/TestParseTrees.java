@@ -18,7 +18,7 @@ public class TestParseTrees {
 	public void parseFloatTree() throws Throwable {
 		String nexmlRoot = System.getenv("NEXML_ROOT");
 		if ( nexmlRoot == null ) {
-			nexmlRoot = "/Users/rvosa/Documents/workspace/nexml/trunk/nexml";
+			nexmlRoot = "/Users/rvosa/Dropbox/documents/projects/current/nexml/src/nexml/trunk/nexml";
 		}		
 		Document document = DocumentFactory.parse(new File(nexmlRoot+"/examples/trees.xml"));
 		//System.out.println(document.getXmlString());
@@ -49,7 +49,7 @@ public class TestParseTrees {
 	public void parseIntTree() throws Throwable {
 		String nexmlRoot = System.getenv("NEXML_ROOT");
 		if ( nexmlRoot == null ) {
-			nexmlRoot = "/Users/rvosa/Documents/workspace/nexml/trunk/nexml";
+			nexmlRoot = "/Users/rvosa/Dropbox/documents/projects/current/nexml/src/nexml/trunk/nexml";
 		}	
 		Document document = DocumentFactory.parse(new File(nexmlRoot+
 						"/examples/02_dogfish_no_taxrefs.xml"));
