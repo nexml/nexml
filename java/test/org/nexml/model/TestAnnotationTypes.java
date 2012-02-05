@@ -105,7 +105,7 @@ public class TestAnnotationTypes {
 	public void parseMetaTypes() {
 		String nexmlRoot = System.getenv("NEXML_ROOT");
 		if ( nexmlRoot == null ) {
-			nexmlRoot = "/Users/rvosa/Documents/workspace/nexml/trunk/nexml";
+			nexmlRoot = "/Users/rvosa/Dropbox/documents/projects/current/nexml/src/nexml/trunk/nexml";
 		}
 		File file = new File(nexmlRoot+"/examples/meta_types.xml");
 		Document doc = null;
