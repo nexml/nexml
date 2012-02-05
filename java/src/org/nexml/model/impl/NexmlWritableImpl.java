@@ -55,7 +55,9 @@ abstract class NexmlWritableImpl implements NexmlWritable {
 	protected NexmlWritableImpl(Document document) {
 		mDocument = document;
 		mElement = document.createElementNS(DEFAULT_NAMESPACE, getTagName());
-		identify(mElement);
+		if ( isIdentifiable() ) {
+			identify(mElement);
+		}
 	}
 	
 	/**
@@ -77,6 +79,10 @@ abstract class NexmlWritableImpl implements NexmlWritable {
 		seenIdStrings.put(id,new Boolean(true));
 		objectCounter++;	
 		return id;
+	}
+	
+	protected boolean isIdentifiable() {
+		return true;
 	}
 	
 	protected String identify(Element element) {
