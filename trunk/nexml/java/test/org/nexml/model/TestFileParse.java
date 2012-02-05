@@ -21,9 +21,9 @@ public class TestFileParse {
 	public void parseCharacters() {
 		String nexmlRoot = System.getenv("NEXML_ROOT");
 		if ( nexmlRoot == null ) {
-			nexmlRoot = "/Users/rvosa/Documents/workspace/nexml/trunk/nexml";
+			nexmlRoot = "/Users/rvosa/Dropbox/documents/projects/current/nexml/src/nexml/trunk/nexml";
 		}
-		File file = new File(nexmlRoot+"/examples/trees.xml");
+		File file = new File(nexmlRoot+"/examples/characters.xml");
 		Document doc = null;
 		try {
 			doc = DocumentFactory.parse(file);
