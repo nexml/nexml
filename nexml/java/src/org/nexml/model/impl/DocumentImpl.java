@@ -93,7 +93,7 @@ public class DocumentImpl extends AnnotatableImpl implements Document {
 			
 			String xsiType = charsBlock.getAttribute(XSI_TYPE);
 			Matrix<?> matrix = null;
-			xsiType = xsiType.replaceAll("Seqs", "Cells");
+			//xsiType = xsiType.replaceAll("Seqs", "Cells");
 			charsBlock.setAttribute(XSI_TYPE, xsiType);
 			if (xsiType.indexOf("Continuous") > 0) {
 				matrix = new ContinuousMatrixImpl(getDocument(), charsBlock, 

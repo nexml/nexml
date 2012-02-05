@@ -7,7 +7,6 @@ import java.util.Set;
 import org.nexml.model.Character;
 import org.nexml.model.CharacterState;
 import org.nexml.model.CharacterStateSet;
-import org.nexml.model.MatrixCell;
 import org.nexml.model.MolecularMatrix;
 import org.nexml.model.OTU;
 import org.w3c.dom.Document;
@@ -59,36 +58,17 @@ class MolecularMatrixImpl extends
 		for ( Element stateSetElement : getChildrenByTagName( getFormatElement(), CharacterStateSetImpl.getTagNameClass() ) ) {
 			mMolecularCharacterStates = createCharacterStateSet(stateSetElement,typeName);  // make specific types
 		}
+		
 		for ( Element characterElement : getChildrenByTagName( getFormatElement(), CharacterImpl.getTagNameClass() ) ) {
 			createCharacter(characterElement);
 		}
+		
 		for ( Element row : getChildrenByTagName( getMatrixElement(), "row") ) {
 			OTU otu = otus.getThingById(row.getAttribute("otu"));
-			for (Element cellElement : getChildrenByTagName(row, MatrixCellImpl.getTagNameClass() ) ) {
-				Character character = getThingById(cellElement.getAttribute("char"));
-				String stateId = cellElement.getAttribute("state");
-				CharacterState state = character.getCharacterStateSet().lookupCharacterStateById(stateId);
-				MatrixCell<CharacterState> matrixCell = createMatrixCell(otu, character, cellElement);				
-				matrixCell.setValue(state);
-			}
-			for ( Element seqElement : getChildrenByTagName(row, "seq")) {
-				String seq = seqElement.getTextContent();
-				String[] states = element.getAttribute(XSI_TYPE).indexOf("Standard") > 0 
-					? seq.split("\\s+") : seq.split("\\s*");
-				int k = 0;
-				STATE: for ( int j = 0; j < states.length; j++ ) {
-					if ( states[j].length() == 0 ) {
-						continue STATE;
-					}
-					Character character = getCharacterByIndex(k);
-					CharacterState state = character.getCharacterStateSet().lookupCharacterStateBySymbol(states[j]);
-					getCell(otu, character).setValue(state);							
-					k++;
-				}
-				row.removeChild(seqElement);
-			}
+			MatrixRowImpl<CharacterState> matrixRow = new MatrixRowImpl<CharacterState>(getDocument(),row);
+			matrixRow.setOTU(otu);
+			mMatrixRows.put(otu, matrixRow);
 		}
-		setType(typeName);
 		setOTUs(otus);
 	}	
 	
@@ -259,6 +239,11 @@ class MolecularMatrixImpl extends
 		else {
 			throw new Error("No default state set for type "+getType());
 		}
+	}
+
+	@Override
+	String getSplitString() {
+		return "";
 	}
 
  }

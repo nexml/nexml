@@ -44,7 +44,6 @@ class MatrixCellImpl<T> extends AnnotatableImpl implements
      */
 	protected MatrixCellImpl(Document document,Element element) {
 		super(document,element);
-		element.removeAttribute("id");
 	}	
 
 	/*
@@ -80,7 +79,14 @@ class MatrixCellImpl<T> extends AnnotatableImpl implements
 		}
 		else {
 			// Categorical, i.e. CharacterState
-			getElement().setAttribute("state", ((CharacterState)value).getId());
+			Element element = getElement();
+			CharacterState state = (CharacterState)value;			
+			element.setAttribute("state", state.getId());
 		}
+	}
+	
+	@Override
+	protected boolean isIdentifiable() {
+		return false;
 	}
 }

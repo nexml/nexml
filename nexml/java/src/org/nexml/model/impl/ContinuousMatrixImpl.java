@@ -6,6 +6,7 @@ import java.util.Map;
 import org.nexml.model.Character;
 import org.nexml.model.CharacterStateSet;
 import org.nexml.model.ContinuousMatrix;
+import org.nexml.model.MatrixRow;
 import org.nexml.model.OTU;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -62,28 +63,9 @@ class ContinuousMatrixImpl extends MatrixImpl<Double> implements ContinuousMatri
 		setMatrixElement(matrix);
 		for ( Element rowElement : getChildrenByTagName(matrix, "row") ) {
 			OTU otu = otus.getThingById(rowElement.getAttribute("otu"));
-			rowElement.setAttribute("otu", otu.getId());
-			for ( Element cellElement : getChildrenByTagName(rowElement, "cell") ) {
-				MatrixCellImpl<Double> matrixCell = new MatrixCellImpl<Double>(getDocument(),cellElement);
-				setCell(otu, charactersById.get(cellElement.getAttribute("char")), matrixCell);
-				cellElement.setAttribute("char", charactersById.get(cellElement.getAttribute("char")).getId());
-				matrixCell.setValue(Double.parseDouble(cellElement.getAttribute("state")));
-			}
-			for ( Element seq : getChildrenByTagName(rowElement, "seq")) {
-				String sequence = seq.getTextContent();
-				String[] states = sequence.split("\\s+");
-				int k = 0;
-				STATE: for ( int j = 0; j < states.length; j++ ) {
-					if ( states[j].length() == 0 ) {
-						continue STATE;
-					}
-					Character character = null;
-					character = getCharacterByIndex(k);
-					getCell(otu, character).setValue(Double.parseDouble(states[j]));							
-					k++;
-				}	
-				rowElement.removeChild(seq);
-			}
+			MatrixRow<Double> matrixRow = new MatrixRowImpl<Double>(getDocument(),rowElement);
+			matrixRow.setOTU(otu);
+			mMatrixRows.put(otu, matrixRow);
 		}		
 	}
 
@@ -120,5 +102,11 @@ class ContinuousMatrixImpl extends MatrixImpl<Double> implements ContinuousMatri
 	public Double parseSymbol(String symbol) {
 		return Double.parseDouble(symbol);
 	}
+
+	@Override
+	String getSplitString() {
+		return "\\s+";
+	}
+
 
 }
