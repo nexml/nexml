@@ -3,15 +3,15 @@
 <p>
     The <a rel="nofollow" href="http://www.citeulike.org/user/rvosa/article/2011773">
     NEXUS flat file format</a> is a commonly used syntax for
-    phylogenetic data. Unfortunately, over time, NEXUS
-    has become overloaded - which has caused various
+    phylogenetic data. Unfortunately, over time, non-compliant NEXUS implementations
+    have overloaded the standard - which has caused various
     <a rel="nofollow" href="https://www.nescent.org/wg_evoinfo/NEXUS_Problems">
-    problems</a>. Meanwhile, new technologies around the
+    problems</a>. Meanwhile, mature technologies around the
     <a rel="nofollow" href="http://www.w3.org/XML/">XML</a> standard have
     emerged. These technologies have the potential to greatly
-    simplify, and improve robustness, in the processing of rich phylogenetic
+    simplify and improve robustness in the processing of rich phylogenetic
 	data. This website is the home for the community-driven NeXML project, which
-	seeks to leverage XML technologies in the development of a new data standard
+	seeks to leverage XML technologies in the development of a data standard
 	that translates NEXUS concepts into a syntax that is more easily validated
 	and processed. This approach promises several advantages:
 </p>
@@ -22,10 +22,12 @@
     specification exists for NEXUS and other flat files, and no unambiguous way
     to validate them. Using <a rel="nofollow" href="http://www.w3.org/XML/Schema">
     XML Schema</a> we have defined a versioned grammar against which
-    data files can be validated syntactically.
+    data files can be validated syntactically. In addition, this website has a validation
+    service (the orange box in the center of every page) that also checks the semantics
+    of uploaded NeXML files beyond ways that can be expressed in XSD schema language.
 </li>
 <li class="rss">
-	<strong>Semantic annotation</strong> &mdash; another issue in current file
+	<strong>Semantic annotation</strong> &mdash; an issue in current file
 	formats is that their semantics are not well-defined. For example, what does
 	it mean to use an ambiguity code in a matrix? Is it uncertainty or polymorphism?
 	With the wider <a rel="nofollow" href="https://www.nescent.org/wg_evoinfo/">
@@ -59,12 +61,12 @@
 </li-->
 </ul>
 <p>
-    Therefore, a group of developers of phylogenetic software have
-    come together as part of the <a href="http://www.nescent.org">
+    Because of the advantages of NeXML over current standards, developers of phylogenetic 
+    software have come together as part of the <a href="http://www.nescent.org">
     NESCent</a> working group for <a href="https://www.nescent.org/wg_evoinfo">
-    evolutionary informatics</a> to develop a
+    evolutionary informatics</a> to develop this
     <a href="/manual">
-    new data exchange standard</a> based on these technologies.
+    new data exchange standard</a> based on XML technologies.
 </p>
 <p class="internallink">
 
@@ -74,26 +76,22 @@
     What are we doing about it?
 </h3>
 <p>
-    NeXML development is being undertaken in a number of
-    subprojects:
+    NeXML development is being undertaken along a number of tracks:
 </p>
 <ul>
     <li class="rss">
-        In the first place, we're designing an XML schema. This
-        schema (designated as namespace http://www.nexml.org/2009)
+        In the first place, there's an XML schema. This
+        schema (currently designated as namespace http://www.nexml.org/2009)
         is explained on our
         <a href="/manual">wiki</a> and
 		<a href="/nexml/html/doc/schema-1/">formally
-		documented</a>;
-        the bleeding edge version is available from <a href="/code">svn</a>;
+		documented</a>; the latest version is available from 
+		<a href="https://github.com/nexml/nexml/tree/master/xsd">git</a>;
         the <a href="/nexml/xsd">source code can be browsed</a> on our
-        site (it's a check out from our repository which is updated
-        every five minutes); for bug reports and feature requests please
-        visit our <a href="/nexml/html/index/tracker">issue tracker</a>
-        page.
+        site.
     </li>
     <li class="rss">
-        Secondly, we're implementing NeXML read and/or write abilities in a
+        Secondly, the community is implementing NeXML read and/or write abilities in a
 		number of software applications:<br/>
         <table id="implementations">
 			<tr>
@@ -102,7 +100,7 @@
 			    </td>
 			    <td>
 			        <a href="http://www.treebase.org">
-			        TreeBASE</a> now supports serialization to NeXML.<br/>
+			        TreeBASE</a> supports serialization to NeXML.<br/>
 			    </td>
 			</tr>			
         	<tr>
@@ -111,9 +109,9 @@
         		</td>
         		<td>
 			        The <a href="http://mesquiteproject.org">Mesquite</a> project
-					now supports <a href="http://nexml-dev.nescent.org/nexml/java/">reading
+					supports <a href="http://nexml-dev.nescent.org/nexml/java/">reading
 					and writing</a> of NeXML. Wayne Maddison and Peter Midford
-					helped start an implementation that is currently being
+					helped start an implementation for this that is currently being
 					maintained by Rutger Vos.<br/>
 				</td>
 			</tr>
@@ -138,7 +136,7 @@
 					<a href="http://phenoscape.org/wiki/Phenex">Phenex editor</a>.<br/>
 			    </td>
 			</tr>			
-        	<tr>
+        	<!--tr>
         		<td>
 			        <img alt="R" src="<% paths.strip(paths.include('Rlogo.jpg')) %>"/>
 			    </td>
@@ -148,7 +146,7 @@
 			        R</a> reads and writes tree descriptions, with character matrices under way. 
 			        This implementation is being developed by Aaron Mackey.<br/>
 			    </td>
-			</tr>
+			</tr-->
 			<tr>
 				<td>
 			        <img alt="DendroPy" src="<% paths.strip(paths.include('dendropy1.png')) %>"/>
@@ -191,7 +189,7 @@
 			        <img alt="ETE" src="<% paths.strip(paths.include('ete_logo.png')) %>"/>
 			    </td>
 			    <td>
-			        Jaime Huerta-Cepas is working on NeXML I/O for the
+			        Jaime Huerta-Cepas' team is working on NeXML I/O for the
 			        <a href="http://ete.cgenomics.org/">
 			        ETE</a> Python environment for tree exploration.<br/>
 			    </td>
@@ -241,8 +239,8 @@
 			        <img alt="DendroScope" src="<% paths.strip(paths.include('dendroscope.jpg')) %>"/>
 			    </td>
 			    <td>
-			        <a href="http://ab.inf.uni-tuebingen.de/software/dendroscope/">DendroScope</a>
-					now uses NeXML as its primary file format for storing visualization (styling)
+			        Daniel Huson's <a href="http://ab.inf.uni-tuebingen.de/software/dendroscope/">DendroScope</a>
+			        development team has adopted NeXML as its primary file format for storing visualization (styling)
 					metadata. However, at present, its implementation is <strong>not</strong> fully
 					compliant so should not be taken as a template to generate NeXML output.
 			    </td>
