@@ -47,7 +47,7 @@
 			</xs:documentation>
 		</xs:annotation>
 		<xs:sequence/>
-		<!-- <xs:attributeGroup ref="xml:specialAttrs" /> -->		
+		<xs:attribute ref="xml:base" />
 		<!--xs:attribute name="id" type="xs:ID" use="optional"/-->
 		<xs:anyAttribute namespace="##any" processContents="skip"/>
 	</xs:complexType>
