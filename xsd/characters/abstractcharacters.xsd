@@ -237,7 +237,7 @@
                 &gt; 9, and hence need to be space-separated).
             </xs:documentation>
         </xs:annotation>
-        <xs:list itemType="xs:double"/>
+        <xs:list itemType="xs:string"/>
     </xs:simpleType>
 
     <xs:complexType name="AbstractSeqRow" abstract="true">

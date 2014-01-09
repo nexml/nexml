@@ -47,7 +47,17 @@
 			</xs:documentation>
 		</xs:annotation>
 		<xs:sequence/>
-		<!-- <xs:attributeGroup ref="xml:specialAttrs" /> -->		
+		<!-- It is probable that we want to allow every
+             attribute that is in xs:attributeGroup ref="xml:specialAttrs"
+             However, doing this causes clashes between xml:id
+             and the id attribute in IDTagged (which is 
+             an extension of Base).  Thus, we are 
+             just allowing xml:base here from the xml:specialAttrs
+             group. xml:base is included in several elements by 
+             treebase in NeXML exports, so it would be nice to allow
+             it.
+             -->
+        <xs:attribute ref="xml:base" />
 		<!--xs:attribute name="id" type="xs:ID" use="optional"/-->
 		<xs:anyAttribute namespace="##any" processContents="skip"/>
 	</xs:complexType>
