@@ -7,39 +7,13 @@ BEGIN {
     require Exporter;
     use vars qw(@ISA @EXPORT_OK %EXPORT_TAGS);
     @ISA       = qw(Exporter);
-    @EXPORT_OK = qw(svninfo include htmlify);
+    @EXPORT_OK = qw(include htmlify);
     %EXPORT_TAGS = ( 'all' => [ @EXPORT_OK ] );
 }
 
 =head1 SUBROUTINES
 
 =over
-
-=item svninfo()
-
- Title:    svninfo()
- Type:     Function
- Usage:    my %info = svninfo($file);
- Returns:  A hash keyed in the names of `svn info $file` fields
- Comments: Requires either env var $SVN with path to subversion
-           executable, or if undefined, svn on $PATH
-
-=cut
-
-sub svninfo {
-    my $file = shift;
-    my %info;
-    my $svn = $ENV{'SVN'} || 'svn';
-    my $info = `${svn} info ${file}`;
-    for my $line ( split /\n/, $info ) {
-        if ( $line =~ m/^(.*?): (.*)$/ ) {
-            my ( $key, $value ) = ( $1, $2 );
-            $key =~ s/\s*//g;
-            $info{$key} = $value;
-        }
-    }
-    return %info;
-}
 
 =item include()
 

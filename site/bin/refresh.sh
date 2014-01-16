@@ -20,8 +20,8 @@ if [ -z "$NEXML_ROOT" ]; then
 	export NEXML_ROOT="$NEXML_HOME/nexml"
 fi
 
-# needed to do svn updates of the code base
-export SVN=`which svn`
+# needed to do git pulls of the code base
+export GIT=`which git`
 # needed to do xsl transforms to generate RSS feeds
 export XSLTPROC=`which xsltproc`
 # needed to generate inheritance and inclusion graphs of the schema
@@ -50,15 +50,12 @@ echo "Last updated: $timestamp" > $NEXML_ROOT/html/include/refreshDate.txt
 
 ##########################################################
 # DO AN SVN UPDATE, BUILD RSS FEED FROM LOG
-# go into nexml/ dir, do an svn update
+# go into nexml/ dir, do a git pull
 cd $NEXML_ROOT
-$SVN up --username=guest --password=guest --quiet
-# do an svn logging operation, write last 10 items as xml
-$SVN log $NEXML_ROOT --limit 10 -v --xml > $NEXML_HOME/templog.xml
-# apply style sheet to transform log xml into rss feed
-$XSLTPROC $NEXML_ROOT/xslt/svnlog.xslt $NEXML_HOME/templog.xml > $NEXML_HOME/nexml.rss
-# delete tempfile
-rm $NEXML_HOME/templog.xml
+$GIT pull
+
+# FIXME: it might be nice - but not necessary - for the
+# website to display git commit messages as an RSS feed.
 
 #########################################################
 # BUILD RELEASES

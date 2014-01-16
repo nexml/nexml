@@ -10,7 +10,7 @@ BEGIN {
 use strict;
 use warnings;
 use xs::schema;
-use util 'svninfo';
+use util;
 use util::siteFactory;
 use Template;
 use Cwd;
@@ -62,10 +62,6 @@ $logger->debug("baseFile is $baseFile");
 my $currentFile = $ARGV[1] || $baseFile;
 $logger->debug("currentFile is $currentFile");
 
-# a function exported by util.pm, does a `svninfo` and
-# turns the results into a hash so we can put it in a page
-my %svninfo = svninfo($currentFile);
-
 # the schema object, creates a representation of the nexml
 # schema which we can place in the templates in an MVC-style
 my $schema = xs::schema->new( $baseFile );
@@ -104,7 +100,6 @@ my $vars = {
     'schema'      => $schema,
     'currentFile' => $currentFile,
     'baseFile'    => $baseFile,
-    'svninfo'     => \%svninfo,
     'title'       => 'nexml schema 1.0',
     'mainHeading' => 'Overview',
     'currentURL'  => 'http://' . $hostname . $subtree,

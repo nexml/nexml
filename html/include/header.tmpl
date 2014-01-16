@@ -117,19 +117,5 @@
         
         <% INCLUDE 'breadCrumbs.tmpl' %>  
         
-        <% README %>
-        
-        <% IF svnPath %>
-            <div class="infoBox">
-                <div class="infoHeader">
-                    To download the contents of this folder using 
-                    <a href="http://subversion.tigris.org">svn</a>:
-                </div>
-                <div class="infoContent" style="white-space:nowrap">
-                    svn co \<br/>
-                    &nbsp;&nbsp;&nbsp;&nbsp;<% svnPath %> \<br/>
-                    &nbsp;&nbsp;&nbsp;&nbsp;<% paths.breadCrumbs(currentURL).-1.name %>
-                </div>
-            </div>
-        <% END %>        
+        <% README %>    
         

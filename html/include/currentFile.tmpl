@@ -25,14 +25,6 @@
     </ul>
 <% END %>
 <small class="credit">
-    This page summarizes the contents of schema file "~<% paths.strip(currentFile) %>"
-    as of revision <% svninfo.Revision %>. That schema file was last modified by
-    <% svninfo.LastChangedAuthor %> on <% svninfo.LastChangedDate %>, and this
-    HTML summary page was generated on <% currentDate %>.
+    This page summarizes the contents of schema file "~<% paths.strip(currentFile) %>".
+    Generated on <% currentDate %>.
 </small>
-
-<!--
-<% FOREACH msg = logMessages %>
-	<%= msg %>
-<% END %>
--->
