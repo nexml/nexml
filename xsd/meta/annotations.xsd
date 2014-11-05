@@ -96,7 +96,7 @@
 		<xs:complexContent mixed="true">
 			<xs:extension base="Meta">
 				<xs:sequence>
-					<xs:any minOccurs="0" maxOccurs="unbounded"/>
+					<xs:any minOccurs="0" maxOccurs="unbounded" processContents="lax" />
 				</xs:sequence>
 				<xs:attribute name="property" type="xs:QName" use="required"/>
 				<xs:attribute name="datatype" type="xs:QName" use="optional"/>
